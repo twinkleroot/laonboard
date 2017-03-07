@@ -11,21 +11,22 @@
 |
 */
 
-Route::get('/', [
-     'as' => 'home',
-     function () {
-         return view('welcome');
-     }
- ]);
+// Route::get('/', [
+//      'as' => 'home',
+//      function () {
+//          return view('welcome');
+//      }
+//  ]);
+
+
+// Route::get('/home', function() {
+//    return redirect(route('home'));
+// });
+
+Route::get('/', 'WelcomeController@index');
+
+Route::get('/home', 'HomeController@index');
+
+Route::resource('users', 'UsersController');
 
 Auth::routes();
-
-Route::get('/home', function() {
-   return redirect(route('home'));
-});
-
-Route::get('/welcome', function() {
-   return view('welcome');
-});
-
-// Route::get('/home', 'HomeController@index');
