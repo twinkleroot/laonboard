@@ -14,7 +14,7 @@
 Route::get('/', [
      'as' => 'home',
      function () {
-         return '제 이름은 "home" 입니다.';
+         return view('welcome');
      }
  ]);
 
