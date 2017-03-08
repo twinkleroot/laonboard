@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    LaBoard | 로그인
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row">

@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    LaBoard
+@endsection
+
 {{-- @section('content')
     @include('footer')
     @include('center')
