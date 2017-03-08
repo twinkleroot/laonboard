@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\User;
 
 class UsersController extends Controller
 {
@@ -13,7 +14,8 @@ class UsersController extends Controller
      */
     public function index()
     {
-        return __METHOD__ . ' 은(는) User 컬렉션을 조회합니다.';
+        $users = User::get();
+        return view('admin.user.index')->with('users', $users);
     }
 
     /**
