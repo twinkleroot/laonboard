@@ -15,8 +15,8 @@
         <div class="panel panel-default">
             <div class="panel-heading">회원 관리</div>
             <div class="panel-heading"><a class="btn btn-primary" href={{ route('users.create')}}>회원 추가</a></div>
-            <?php $id = ''; ?>
-            <form class="form-horizontal" role="form" method="POST" action="{{ route('users.destroy', $id) }}">
+            <?php $ids = ''; ?>
+            <form class="form-horizontal" role="form" method="POST" action="{{ route('users.destroy', $ids) }}">
             <div class="panel-body">
                 {{ csrf_field() }}
                 <table class="table table-hover">
