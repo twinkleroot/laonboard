@@ -14,8 +14,11 @@
     <div class="col-md-8 col-md-offset-2">
         <div class="panel panel-default">
             <div class="panel-heading">회원 관리</div>
-            <div class="panel-heading"><a class="btn btn-default" href={{ route('users.create')}}>회원 추가</a></div>
+            <div class="panel-heading"><a class="btn btn-primary" href={{ route('users.create')}}>회원 추가</a></div>
+            <?php $id = ''; ?>
+            <form class="form-horizontal" role="form" method="POST" action="{{ route('users.destroy', $id) }}">
             <div class="panel-body">
+                {{ csrf_field() }}
                 <table class="table table-hover">
                     <thead>
                         <th class="text-center"><input type="checkbox" name="checkAll" id="checkAll" /></th>
@@ -41,30 +44,42 @@
                     <tbody>
                     @foreach ($users as $user)
                         <tr>
-                            <td><input type="checkbox" name="id" id="userId" value={{ $user->id }}/></td>
-                            <td>{{ $user->email }}</td>
-                            <td>{{ $user->name }}</td>
-                            <td>{{ $user->nick }}</td>
-                            {{-- <td>{{ $user->email_certify }}</td> --}}
-                            <td>{{ $user->open }}</td>
-                            <td>{{ $user->mailing }}</td>
-                            <td>{{ $user->sms }}</td>
-                            {{-- <td>{{ $user->adult }}</td> --}}
-                            {{-- <td>{{ $user->intercept_date }}</td> --}}
-                            <td>{{ $user->hp }}</td>
-                            <td>{{ $user->tel }}</td>
-                            <td>{{ $user->level }}</td>
-                            <td>{{ $user->point }}</td>
-                            <td>{{ $user->today_login }}</td>
-                            <td>{{ $user->datetime }}</td>
-                            {{-- <td>{{ $user->nick }}</td> --}}
-                            <td><a class="btn btn-primary" href="{{ route('users.edit', $user->id) }}">수정</a></td>
+                            <td class="text-center"><input type="checkbox" name="id" id="userId" value={{ $user->id }}/></td>
+                            <td class="text-center">{{ $user->email }}</td>
+                            <td class="text-center">{{ $user->name }}</td>
+                            <td class="text-center">{{ $user->nick }}</td>
+                            {{-- <td class="text-center">{{ $user->email_certify }}</td> --}}
+                            <td class="text-center"><input type='checkbox' value='1' {{ ($user->open == '1' ? 'checked' : '') }}/></td>
+                            <td class="text-center"><input type='checkbox' value='1' {{ ($user->mailing == '1' ? 'checked' : '') }}/></td>
+                            <td class="text-center"><input type='checkbox' value='1' {{ ($user->sms == '1' ? 'checked' : '') }}/></td>
+                            {{-- <td class="text-center">{{ $user->adult }}</td> --}}
+                            {{-- <td class="text-center">{{ $user->intercept_date }}</td> --}}
+                            <td class="text-center">{{ $user->hp }}</td>
+                            <td class="text-center">{{ $user->tel }}</td>
+                            <td class="text-center">
+                                <select>
+                                    @for ($i=1; $i <= 10; $i++)
+                                        <option value={{ $i }} {{ $user->level == $i ? 'selected' : '' }}>
+                                            {{ $i }}
+                                        </option>
+                                    @endfor
+                                </select>
+                            </td>
+                            <td class="text-center">{{ $user->point }}</td>
+                            <td class="text-center">{{ $user->today_login }}</td>
+                            <td class="text-center">{{ $user->datetime }}</td>
+                            {{-- <td class="text-center">{{ $user->nick }}</td> --}}
+                            <td class="text-center"><a class="btn btn-primary" href="{{ route('users.edit', $user->id) }}">수정</a></td>
                         </tr>
                     @endforeach
                     </tbody>
                 </table>
             </div>
-            <div class="panel-heading"><a class="btn btn-default" href={{ route('users.destroy')}}>선택 삭제</a></div>
+            <div class="panel-heading">
+                <input type="submit" class="btn btn-primary" value="선택 수정"/>
+                <input type="submit" class="btn btn-primary" value="선택 삭제"/>
+            </div>
+            </form>
         </div>
     </div>
 </div>
