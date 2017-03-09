@@ -19,6 +19,7 @@
             'csrfToken' => csrf_token(),
         ]) !!};
     </script>
+    <script src="{!! url('js/jquery-3.1.1.min.js') !!}"></script>
 </head>
 <body>
     <div id="app">
@@ -53,7 +54,9 @@
                             <li><a href="{{ route('login') }}">로그인</a></li>
                             <li><a href="{{ route('register') }}">회원가입</a></li>
                         @else
-                            <li><a href="{{ route('users.index') }}">회원 관리</a></li>
+                            @if(Auth::user()->level == 10)
+                                <li><a href="{{ route('users.index') }}">회원 관리</a></li>
+                            @endif
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     {{ Auth::user()->nick }} <span class="caret"></span>

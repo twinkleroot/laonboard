@@ -29,6 +29,8 @@ Route::get('/', 'WelcomeController@index');
 Route::get('/home', 'HomeController@index');
 
 Route::group(['middleware' => 'auth'], function() {
+    Route::put('users/selected_update',
+        ['as' => 'users.selectedUpdate', 'uses' => 'Admin\UsersController@selectedUpdate']);
     Route::resource('users', 'Admin\UsersController');
 });
 

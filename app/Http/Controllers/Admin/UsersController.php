@@ -15,7 +15,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = User::get();
+        $users = User::orderBy('level', 'desc')->get();
         return view('admin.user.index')->with('users', $users);
     }
 
@@ -140,13 +140,55 @@ class UsersController extends Controller
     }
 
     /**
+    *  선택 수정 기능
+    */
+    public function selectedUpdate(Request $request)
+    {
+        $ids = $request->get('ids');
+        $opens = $request->get('opens');
+        $mailings = $request->get('mailings');
+        $smss = $request->get('smss');
+        $levels = $request->get('levels');
+
+        $idArr = explode(',', $ids);
+        $openArr = explode(',', $opens);
+        $mailingArr = explode(',', $mailings);
+        $smsArr = explode(',', $smss);
+        $levelArr = explode(',', $levels);
+        dump($idArr);
+        dump($openArr);
+        dump($mailingArr);
+        dump($smsArr);
+        dump($levelArr);
+
+        // foreach($idArr as $id) {
+        //     $user = User::find($id);
+        //
+        //     $user->update([
+        //         // 'certify' => $request->get('certify'),
+        //         'open' => $request->get('open') == '1' ? 1 : 0,
+        //         'mailing' => $request->get('mailing') == '1' ? 1 : 0,
+        //         'sms' => $request->get('sms') == '1' ? 1 : 0,
+        //         // 'adult' => $request->get('adult') == '1' ? 1 : 0,
+        //         // 'intercept_date' => $request->get('intercept_date') != '' ? 1 : 0 ,
+        //         'level' => $request->get('level'),
+        //     ]);
+        // }
+        //
+        // return redirect('/users')->with('message', '선택한 회원정보가 수정되었습니다.');
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($ids)
+    public function destroy(Request $request, $id)
     {
-        //
+        $ids = $request->get('ids');
+        $deletedUser = User::whereRaw('id in (' . $ids . ') ')->delete();
+
+        return redirect('/users')->with('message', '선택한 회원정보가 삭제되었습니다.');
     }
 }
