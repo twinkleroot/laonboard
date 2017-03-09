@@ -1,5 +1,6 @@
 <?php
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,7 +29,7 @@ Route::get('/', 'WelcomeController@index');
 Route::get('/home', 'HomeController@index');
 
 Route::group(['middleware' => 'auth'], function() {
-    Route::resource('users', 'UsersController');
+    Route::resource('users', 'Admin\UsersController');
 });
 
 Auth::routes();
