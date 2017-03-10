@@ -5,12 +5,9 @@ $ git clone git@github.com:gnuboard/laratest.git <br /><br />
 $ php artisan migrate <br /><br />
 
 3. MySQL 버전이 5.7.9 미만인 경우(5.7.9부터는 기본 ROW__FORMAT 이 DYNAMIC 임) <br />
-unique 키, index 생성하는 부분에서 에러가 난다. <br />
-mysql에서 <br /><br />
-
+unique 키, index 생성하는 부분에서 에러가 난다. MySQL에서 <br />
 ALTER TABLE 테이블이름(users) ROW_FORMAT = DYNAMIC; <br />
-ALTER TABLE 테이블이름(password_resets) ROW_FORMAT = DYNAMIC; <br /><br />
-
+ALTER TABLE 테이블이름(password_resets) ROW_FORMAT = DYNAMIC; <br />
 해준 후 다시 migrate 한다. <br /><br />
 
 4. seed 데이터 생성(관리자 데이터 생성) <br />
