@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
+use Illuminate\Support\Facades\Password;
 
 class UsersController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -104,14 +106,15 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = User::find($id);
-        $password = $user->password;
-        if($request->get('password') !== '') {
-            $password = bcrypt($request->get('password'));
+        $user = User::findOrFail($id);
+
+        if($request->get('change_password') !== '') {
+            $user->password = bcrypt($request->get('change_password'));
+
+            $user->save();
         }
 
         $user->update([
-            'password' => $password,
             'name' => $request->get('name'),
             'nick' => $request->get('nick'),
             'level' => $request->get('level'),
@@ -154,28 +157,26 @@ class UsersController extends Controller
         $openArr = explode(',', $opens);
         $mailingArr = explode(',', $mailings);
         $smsArr = explode(',', $smss);
-        $levelArr = explode(',', $levels);
-        dump($idArr);
-        dump($openArr);
-        dump($mailingArr);
-        dump($smsArr);
-        dump($levelArr);
+        // $levelArr = explode(',', $levels);
+        // dump($levelArr);
 
-        // foreach($idArr as $id) {
-        //     $user = User::find($id);
-        //
-        //     $user->update([
-        //         // 'certify' => $request->get('certify'),
-        //         'open' => $request->get('open') == '1' ? 1 : 0,
-        //         'mailing' => $request->get('mailing') == '1' ? 1 : 0,
-        //         'sms' => $request->get('sms') == '1' ? 1 : 0,
-        //         // 'adult' => $request->get('adult') == '1' ? 1 : 0,
-        //         // 'intercept_date' => $request->get('intercept_date') != '' ? 1 : 0 ,
-        //         'level' => $request->get('level'),
-        //     ]);
-        // }
-        //
-        // return redirect('/users')->with('message', '선택한 회원정보가 수정되었습니다.');
+        $index = 0;
+        foreach($idArr as $id) {
+            $user = User::find($id);
+
+            $user->update([
+                // 'certify' => $request->get('certify'),
+                'open' => $openArr[$index] == '1' ? 1 : 0,
+                'mailing' => $mailingArr[$index] == '1' ? 1 : 0,
+                'sms' => $smsArr[$index] == '1' ? 1 : 0,
+                // 'adult' => $request->get('adult') == '1' ? 1 : 0,
+                // 'intercept_date' => $request->get('intercept_date') != '' ? 1 : 0 ,
+                // 'level' => $request->get('level'),
+            ]);
+            $index++;
+        }
+
+        return redirect('/users')->with('message', '선택한 회원정보가 수정되었습니다.');
     }
 
     /**
