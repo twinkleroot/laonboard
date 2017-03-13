@@ -130,14 +130,12 @@
 
                         {{-- <div class="form-group{{ $errors->has('addr1') ? ' has-error' : '' }}">
                             <label for="addr1" class="col-md-4 control-label">주소</label>
-
                             <div class="col-md-6">
                                 <input id="reg_zip" type="text" name="zip" value="{{ old('zip') }}">
                                 <button>주소 검색</button>
                                 <input id="addr1" type="text" name="addr1" value="{{ old('addr1') }}">기본주소
                                 <input id="addr2" type="text" name="addr2" value="{{ old('addr2') }}">상세주소
                                 <input id="addr3" type="text" name="addr3" value="{{ old('addr3') }}">참고항목
-
                                 @if ($errors->has('addr1'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('addr1') }}</strong>

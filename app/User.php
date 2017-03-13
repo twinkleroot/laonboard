@@ -22,8 +22,10 @@ class User extends Authenticatable
         'login_ip', 'ip', 'email_certify', 'email_certify2',
         'memo', 'lost_certify', 'mailing', 'sms', 'open',
         'profile', 'memo_call','leave_date', 'intercept_date',
-        // nick_date, today_login, open_date 제외
+        'today_login', 'nick_date', 'open_date',
     ];
+
+    protected $dates = ['today_login', 'email_certify', ];
 
     /**
      * The attributes that should be hidden for arrays.

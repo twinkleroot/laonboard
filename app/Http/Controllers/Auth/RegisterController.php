@@ -6,6 +6,7 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Carbon\Carbon;
 
 class RegisterController extends Controller
 {
@@ -77,6 +78,7 @@ class RegisterController extends Controller
             'sms' => isset($data['sms']) ? : 0,
             'open' => isset($data['open']) ? : 0,
             'recommend' => $data['recommend'],
+            'today_login' => Carbon::now(),
             // 'level' => $config['level'],
             'level' => 2,
             // 'point' => $config['point'],

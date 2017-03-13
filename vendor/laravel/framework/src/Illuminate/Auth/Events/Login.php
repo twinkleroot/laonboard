@@ -3,6 +3,7 @@
 namespace Illuminate\Auth\Events;
 
 use Illuminate\Queue\SerializesModels;
+use App\Http\Requests\Request;
 
 class Login
 {
