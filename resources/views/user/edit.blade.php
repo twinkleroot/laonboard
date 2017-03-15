@@ -256,7 +256,7 @@
                                 <button type="submit" class="btn btn-primary">
                                     변경하기
                                 </button>
-                                <a class="btn btn-primary" href="{{ route('/') }}">취소</a>
+                                <a class="btn btn-primary" href="{{ route('index') }}">취소</a>
                             </div>
                         </div>
                     </form>

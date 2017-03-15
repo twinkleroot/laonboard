@@ -13,7 +13,7 @@
 */
 
 // 기본 홈
-Route::get('/', ['as' => '/', 'uses' => 'WelcomeController@index']);
+Route::get('/index', ['as' => 'index', 'uses' => 'WelcomeController@index']);
 
 Route::get('/', 'ThemeController@index');
 
