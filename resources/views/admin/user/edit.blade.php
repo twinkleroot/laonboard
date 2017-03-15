@@ -17,20 +17,41 @@
                             <th>이메일</th>
                             <td><input type="text" class="form-control" value="{{ $user->email }}" readonly/></td>
                             <th>비밀번호</th>
-                            <td><input type="password" name="change_password" class="form-control" value="" /></td>
+                            <td @if($errors->get('password')) class="has-error" @endif>
+                                <input type="password" name="change_password" class="form-control" value="" />
+                                @foreach ($errors->get('password') as $message)
+                                    <span class="help-block">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @endforeach
+                            </td>
                         </tr>
                         <tr>
                             <th>이름</th>
-                            <td><input type="text" class="form-control" name="name" value="{{ $user->name }}" /></td>
+                            <td @if($errors->get('name')) class="has-error" @endif>
+                                <input type="text" class="form-control" name="name" value="{{ $user->name }}" />
+                                @foreach ($errors->get('name') as $message)
+                                    <span class="help-block">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @endforeach
+                            </td>
                             <th>닉네임</th>
-                            <td><input type="text" class="form-control" name="nick" value="{{ $user->nick }}" /></td>
+                            <td @if($errors->get('nick')) class="has-error" @endif>
+                                <input type="text" class="form-control" name="nick" value="{{ $user->nick }}" />
+                                @foreach ($errors->get('nick') as $message)
+                                    <span class="help-block">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @endforeach
+                            </td>
                         </tr>
                         <tr>
                             <th>회원 권한</th>
                             <td>
                                 <select name='level' class='level'>
                                     @for ($i=1; $i<=10; $i++)
-                                        <option value='{{ $i }}' {{ $user->level == $i ? 'selected' : '' }}>
+                                        <option value='{{ $i }}' @if($user->level == $i) selected @endif>
                                             {{ $i }}
                                         </option>
                                     @endfor
@@ -45,9 +66,23 @@
                         </tr>
                         <tr>
                             <th>휴대폰번호</th>
-                            <td><input type="text" class="form-control" name="hp" value="{{ $user->hp }}" /></td>
+                            <td @if($errors->get('hp')) class="has-error" @endif>
+                                <input type="text" class="form-control" name="hp" value="{{ $user->hp }}" />
+                                @foreach ($errors->get('hp') as $message)
+                                    <span class="help-block">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @endforeach
+                            </td>
                             <th>전화번호</th>
-                            <td><input type="text" class="form-control" name="tel" value="{{ $user->tel }}" /></td>
+                            <td @if($errors->get('tel')) class="has-error" @endif>
+                                <input type="text" class="form-control" name="tel" value="{{ $user->tel }}" />
+                                @foreach ($errors->get('tel') as $message)
+                                    <span class="help-block">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @endforeach
+                            </td>
                         </tr>
                         <tr>
                             <th>본인확인방법</th>

@@ -33,8 +33,8 @@ class User extends Authenticatable
         'email' => 'required|email|max:255|unique:users',
         'password' => 'required|min:6',
         'nick' => 'required|nick_length:2,4|unique:users|alpha_num',
-        'tel' => 'nullable|integer',
-        'hp' => 'nullable|integer',
+        'tel' => 'nullable|numeric',
+        'hp' => 'nullable|numeric',
     ];
 
 
