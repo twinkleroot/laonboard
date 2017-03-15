@@ -15,21 +15,49 @@
                     <table class="table table-hover">
                         <tr>
                             <th>이메일</th>
-                            <td><input type="text" class="form-control" name="email" value="{{ $user->email }}" required/></td>
+                            <td @if($errors->get('email')) class="has-error" @endif>
+                                <input type="text" class="form-control" name="email" value="{{ $user->email }}" required/>
+                                @foreach ($errors->get('email') as $message)
+                                    <span class="help-block">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @endforeach
+                            </td>
                             <th>비밀번호</th>
-                            <td><input type="password" class="form-control" name="password" value="" required/></td>
+                            <td @if($errors->get('password')) class="has-error" @endif>
+                                <input type="password" class="form-control" name="password" value="" required/>
+                                @foreach ($errors->get('password') as $message)
+                                    <span class="help-block">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @endforeach
+                            </td>
                         </tr>
                         <tr>
                             <th>이름</th>
-                            <td><input type="text" class="form-control" name="name" value="" required/></td>
+                            <td @if($errors->get('name')) class="has-error" @endif>
+                                <input type="text" class="form-control" name="name" value="" required/>
+                                @foreach ($errors->get('name') as $message)
+                                    <span class="help-block">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @endforeach
+                            </td>
                             <th>닉네임</th>
-                            <td><input type="text" class="form-control" name="nick" value="" required/></td>
+                            <td @if($errors->get('nick')) class="has-error" @endif>
+                                <input type="text" class="form-control" name="nick" value="" required/>
+                                @foreach ($errors->get('nick') as $message)
+                                    <span class="help-block">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @endforeach
+                            </td>
                         </tr>
                         <tr>
                             <th>회원 권한</th>
-                            <td><input type="text" class="form-control" name="level" value="2" /></td>
+                            <td><input type="text" class="form-control" name="level" value="{{ config('gnu.joinLevel') }}" /></td>
                             <th>포인트</th>
-                            <td><input type="text" class="form-control" name="point" value="0" /></td>
+                            <td><input type="text" class="form-control" name="point" value="{{ config('gnu.joinPoint') }}" /></td>
                         </tr>
                         <tr>
                             <th>홈페이지</th>

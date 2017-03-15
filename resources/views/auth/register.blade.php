@@ -74,7 +74,7 @@
                                 <p>
                                     공백없이 한글, 영문, 숫자만 입력 가능 <br />
                                     (한글2자, 영문4자 이상)<br />
-                                    닉 네임을 바꾸시면 60일 이내에는 변경할 수 없습니다.
+                                    닉 네임을 바꾸시면 {{ config('gnu.nickDate') }}일 이내에는 변경할 수 없습니다.
                                 </p>
                                 <input id="nick" type="text" class="form-control" name="nick" value="{{ old('nick') }}" required autofocus>
 
@@ -85,7 +85,7 @@
                                 @endif
                             </div>
                         </div>
-
+                        @if(config('gnu.homepage') == 1)
                         <div class="form-group{{ $errors->has('homepage') ? ' has-error' : '' }}">
                             <label for="homepage" class="col-md-4 control-label">홈페이지</label>
 
@@ -99,7 +99,9 @@
                                 @endif
                             </div>
                         </div>
+                        @endif
 
+                        @if(config('gnu.tel') == 1)
                         <div class="form-group{{ $errors->has('tel') ? ' has-error' : '' }}">
                             <label for="tel" class="col-md-4 control-label">전화번호</label>
 
@@ -113,7 +115,9 @@
                                 @endif
                             </div>
                         </div>
+                        @endif
 
+                        @if(config('gnu.hp') == 1)
                         <div class="form-group{{ $errors->has('hp') ? ' has-error' : '' }}">
                             <label for="hp" class="col-md-4 control-label">휴대폰번호</label>
 
@@ -127,27 +131,29 @@
                                 @endif
                             </div>
                         </div>
+                        @endif
 
-                        {{-- <div class="form-group{{ $errors->has('addr1') ? ' has-error' : '' }}">
+                        @if(config('gnu.addr') == 1)
+                        <div class="form-group{{ $errors->has('addr1') ? ' has-error' : '' }}">
                             <label for="addr1" class="col-md-4 control-label">주소</label>
-
                             <div class="col-md-6">
                                 <input id="reg_zip" type="text" name="zip" value="{{ old('zip') }}">
                                 <button>주소 검색</button>
                                 <input id="addr1" type="text" name="addr1" value="{{ old('addr1') }}">기본주소
                                 <input id="addr2" type="text" name="addr2" value="{{ old('addr2') }}">상세주소
                                 <input id="addr3" type="text" name="addr3" value="{{ old('addr3') }}">참고항목
-
                                 @if ($errors->has('addr1'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('addr1') }}</strong>
                                     </span>
                                 @endif
                             </div>
-                        </div> --}}
+                        </div>
+                        @endif
 
                         <div class="panel-heading">기타 개인설정</div>
 
+                        @if(config('gnu.signature') == 1)
                         <div class="form-group{{ $errors->has('signature') ? ' has-error' : '' }}">
                             <label for="signature" class="col-md-4 control-label">서명</label>
 
@@ -161,7 +167,9 @@
                                 @endif
                             </div>
                         </div>
+                        @endif
 
+                        @if(config('gnu.profile') == 1)
                         <div class="form-group{{ $errors->has('profile') ? ' has-error' : '' }}">
                             <label for="profile" class="col-md-4 control-label">자기소개</label>
 
@@ -175,6 +183,7 @@
                                 @endif
                             </div>
                         </div>
+                        @endif
 
                         <div class="form-group{{ $errors->has('mailing') ? ' has-error' : '' }}">
                             <label for="mailing" class="col-md-4 control-label">메일링서비스</label>
@@ -211,7 +220,7 @@
 
                             <div class="col-md-6">
                                 <p>
-                                    정보공개를 바꾸시면 0일 이내에는 변경이 안됩니다.
+                                    정보공개를 바꾸시면 {{ config('gnu.openDate') }}일 이내에는 변경이 안됩니다.
                                 </p>
                                 <input id="open" type="checkbox" name="open" value="1">
                                 다른분들이 나의 정보를 볼 수 있도록 합니다.

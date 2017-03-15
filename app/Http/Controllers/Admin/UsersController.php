@@ -1,12 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Password;
 
 class UsersController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +18,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = User::get();
+        $users = User::orderBy('level', 'desc')->get();
         return view('admin.user.index')->with('users', $users);
     }
 
@@ -38,6 +42,14 @@ class UsersController extends Controller
     public function store(Request $request)
     {
         $password = bcrypt($request->get('password'));
+
+        $validator = Validator::make($request->all(), User::$rules);
+
+        if ($validator->fails()) {
+            return redirect('users/create')
+                        ->withErrors($validator)
+                        ->withInput();
+        }
 
         $user = new User([
             'email' => $request->get('email'),
@@ -103,14 +115,15 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = User::find($id);
-        $password = $user->password;
-        if($request->get('password') !== '') {
-            $password = bcrypt($request->get('password'));
+        $user = User::findOrFail($id);
+
+        if($request->get('change_password') !== '') {
+            $user->password = bcrypt($request->get('change_password'));
+
+            $user->save();
         }
 
         $user->update([
-            'password' => $password,
             'name' => $request->get('name'),
             'nick' => $request->get('nick'),
             'level' => $request->get('level'),
@@ -139,13 +152,53 @@ class UsersController extends Controller
     }
 
     /**
+    *  선택 수정 기능
+    */
+    public function selectedUpdate(Request $request)
+    {
+        $ids = $request->get('ids');
+        $opens = $request->get('opens');
+        $mailings = $request->get('mailings');
+        $smss = $request->get('smss');
+        $levels = $request->get('levels');
+
+        $idArr = explode(',', $ids);
+        $openArr = explode(',', $opens);
+        $mailingArr = explode(',', $mailings);
+        $smsArr = explode(',', $smss);
+        // $levelArr = explode(',', $levels);
+        // dump($levelArr);
+
+        $index = 0;
+        foreach($idArr as $id) {
+            $user = User::find($id);
+
+            $user->update([
+                // 'certify' => $request->get('certify'),
+                'open' => $openArr[$index] == '1' ? 1 : 0,
+                'mailing' => $mailingArr[$index] == '1' ? 1 : 0,
+                'sms' => $smsArr[$index] == '1' ? 1 : 0,
+                // 'adult' => $request->get('adult') == '1' ? 1 : 0,
+                // 'intercept_date' => $request->get('intercept_date') != '' ? 1 : 0 ,
+                // 'level' => $request->get('level'),
+            ]);
+            $index++;
+        }
+
+        return redirect('/users')->with('message', '선택한 회원정보가 수정되었습니다.');
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $ids = $request->get('ids');
+        $deletedUser = User::whereRaw('id in (' . $ids . ') ')->delete();
+
+        return redirect('/users')->with('message', '선택한 회원정보가 삭제되었습니다.');
     }
 }
