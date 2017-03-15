@@ -4,6 +4,7 @@
     LaBoard
 @endsection
 
+
 {{-- @section('content')
     @include('footer')
     @include('center')

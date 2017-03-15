@@ -25,10 +25,22 @@
 
 Route::get('/', 'WelcomeController@index');
 
+Route::get('/', 'ThemeController@index');
+
 Route::get('/home', 'HomeController@index');
 
 Route::group(['middleware' => 'auth'], function() {
-    Route::resource('users', 'UsersController');
+    Route::put('users/selected_update',
+        ['as' => 'users.selectedUpdate', 'uses' => 'Admin\UsersController@selectedUpdate']);
+    Route::resource('users', 'Admin\UsersController');
 });
 
 Auth::routes();
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index');
