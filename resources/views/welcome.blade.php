@@ -1,17 +1,13 @@
 @extends('layouts.app')
 
 @section('title')
-    LaBoard
+    LaBoard | 환영합니다.
 @endsection
 
-
-{{-- @section('content')
-    @include('footer')
-    @include('center')
+@section('content')
+@if(Session::has('message'))
+  <div class="alert alert-info">
+    {{Session::get('message') }}
+  </div>
+@endif
 @endsection
-
-@section('script')
-  <script>
-      alert("저는 자식 뷰의 'script' 섹션입니다.");
-  </script>
-@endsection --}}

@@ -18,10 +18,8 @@
 
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                             <label for="email" class="col-md-4 control-label">이메일</label>
-
                             <div class="col-md-6">
                                 <input id="email" type="email" class="form-control" name="email" value="{{ $user->email }}" readonly>
-
                                 @if ($errors->has('email'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('email') }}</strong>
@@ -31,11 +29,9 @@
                         </div>
 
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                            <label for="password" class="col-md-4 control-label">비밀번호</label>
-
+                            <label for="change_password" class="col-md-4 control-label">비밀번호</label>
                             <div class="col-md-6">
-                                <input id="password" type="password" class="form-control" name="password" required>
-
+                                <input id="password" type="password" class="form-control" name="change_password" required>
                                 @if ($errors->has('password'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('password') }}</strong>
@@ -45,10 +41,9 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="password-confirm" class="col-md-4 control-label">비밀번호 확인</label>
-
+                            <label for="change_password_confirmation" class="col-md-4 control-label">비밀번호 확인</label>
                             <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+                                <input id="password_confirm" type="password" class="form-control" name="change_password_confirmation" required>
                             </div>
                         </div>
 
@@ -68,6 +63,7 @@
                             </div>
                         </div>
 
+                        @if($nickChangable)
                         <div class="form-group{{ $errors->has('nick') ? ' has-error' : '' }}">
                             <label for="nick" class="col-md-4 control-label">닉네임</label>
 
@@ -75,7 +71,7 @@
                                 <p>
                                     공백없이 한글, 영문, 숫자만 입력 가능 <br />
                                     (한글2자, 영문4자 이상)<br />
-                                    닉 네임을 바꾸시면 {{ config('gnu.nickDate') }}일 이내에는 변경할 수 없습니다.
+                                    닉네임을 바꾸시면 {{ config('gnu.nickDate') }}일 이내에는 변경할 수 없습니다.
                                 </p>
                                 <input id="nick" type="text" class="form-control" name="nick" value="{{ $user->nick }}" required autofocus>
 
@@ -86,6 +82,8 @@
                                 @endif
                             </div>
                         </div>
+                        @endif
+                        
                         @if(config('gnu.homepage') == 1)
                         <div class="form-group{{ $errors->has('homepage') ? ' has-error' : '' }}">
                             <label for="homepage" class="col-md-4 control-label">홈페이지</label>
@@ -222,33 +220,31 @@
                         <div class="form-group{{ $errors->has('open') ? ' has-error' : '' }}">
                             <label for="open" class="col-md-4 control-label">정보공개</label>
 
-                            <div class="col-md-6">
-                                <p>
-                                    정보공개를 바꾸시면 {{ config('gnu.openDate') }}일 이내에는 변경이 안됩니다.
-                                </p>
-                                <input id="open" type="checkbox" name="open" value="1" @if($user->open == 1) checked @endif>
-                                다른분들이 나의 정보를 볼 수 있도록 합니다.
+                            @if($openChangable)
+                                <div class="col-md-6">
+                                    <p>
+                                        정보공개를 바꾸시면 {{ config('gnu.openDate') }}일 이내에는 변경이 안됩니다.
+                                    </p>
+                                    <input id="open" type="checkbox" name="open" value="1" @if($user->open == 1) checked @endif>
+                                    다른분들이 나의 정보를 볼 수 있도록 합니다.
 
-                                @if ($errors->has('open'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('open') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group{{ $errors->has('recommend') ? ' has-error' : '' }}">
-                            <label for="recommend" class="col-md-4 control-label">추천인아이디</label>
-
-                            <div class="col-md-6">
-                                <input id="recommend" type="text" class="form-control" name="recommend" value="{{ $user->recommend }}">
-
-                                @if ($errors->has('recommend'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('recommend') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
+                                    @if ($errors->has('open'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->first('open') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
+                            @else
+                                <div class="col-md-6">
+                                    <p>
+                                        정보공개는 수정후 {{ config('gnu.openDate') }}일 이내,
+                                        {{ $dueDate->year }}년
+                                        {{ $dueDate->month }}월
+                                        {{ $dueDate->day }}일 까지는 변경이 안됩니다.<br />
+                                        이렇게 하는 이유는 잦은 정보공개 수정으로 인하여 쪽지를 보낸 후 받지 않는 경우를 막기 위해서 입니다.
+                                    </p>
+                                </div>
+                            @endif
                         </div>
 
                         <div class="form-group">

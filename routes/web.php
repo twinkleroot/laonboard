@@ -28,6 +28,8 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::get('user/edit', ['as' => 'user.edit', 'uses' => 'User\UserController@edit']);
     Route::put('user/update', ['as' => 'user.update', 'uses' => 'User\UserController@update']);
+    Route::get('user/password_confirm', ['as' => 'user.getPasswordConfirm', 'uses' => 'User\UserController@getPasswordConfirm']);
+    Route::post('user/password_confirm', ['as' => 'user.postPasswordConfirm', 'uses' => 'User\UserController@postPasswordConfirm']);
 });
 
 // 인증에 관련한 라우트들

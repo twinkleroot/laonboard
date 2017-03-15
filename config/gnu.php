@@ -2,7 +2,7 @@
 
 return [
         'nickDate' => 30,
-        'openDate' => 3,
+        'openDate' => 2,
         'homepage' => 1,
         'tel' => 1,
         'hp' => 1,

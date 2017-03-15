@@ -65,7 +65,7 @@
                                 <ul class="dropdown-menu" role="menu">
                                     @if(Auth::user()->level < 10)
                                     <li>
-                                        <a href="{{ route('user.edit') }}">회원 정보 수정</a>
+                                        <a href="{{ route('user.getPasswordConfirm') }}">회원 정보 수정</a>
                                     </li>
                                     @endif
                                     <li>
