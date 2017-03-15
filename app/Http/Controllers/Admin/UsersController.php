@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Password;
 
 class UsersController extends Controller
@@ -41,6 +42,14 @@ class UsersController extends Controller
     public function store(Request $request)
     {
         $password = bcrypt($request->get('password'));
+
+        $validator = Validator::make($request->all(), User::$rules);
+
+        if ($validator->fails()) {
+            return redirect('users/create')
+                        ->withErrors($validator)
+                        ->withInput();
+        }
 
         $user = new User([
             'email' => $request->get('email'),

@@ -5,30 +5,33 @@ namespace App\Listeners;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class LoginSuccessful
 {
+
+    public $request;
     /**
      * Create the event listener.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Request $request)
     {
-        //
+        $this->request = $request;
     }
 
     /**
      * Handle the event.
      *
      * @param  Login  $event
+     * @return void
      */
     public function handle(Login $event)
     {
         $event->user->today_login = Carbon::now();
-        // dump($event->user->today_login);
-        // $event->user->ip = $event->request->ip();
+        $event->user->login_ip = $this->request->ip();
 
         $event->user->save();
     }

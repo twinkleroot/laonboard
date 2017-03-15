@@ -63,6 +63,11 @@
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
+                                    @if(Auth::user()->level < 10)
+                                    <li>
+                                        <a href="{{ route('user.edit') }}">회원 정보 수정</a>
+                                    </li>
+                                    @endif
                                     <li>
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();

@@ -316,6 +316,8 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         'AddColumnUserTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_07_172208_add_column_user_table.php',
         'AddIndexTokenOnPasswordResetsTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_09_180131_add_index_token_on_password_resets_table.php',
         'AddUniqueKeyEmailOnUsersTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_09_110203_add_unique_key_email_on_users_table.php',
+        'ChangeZipDatetimeNickdateOpendateColumnOnUsers' => __DIR__ . '/../..' . '/database/migrations/2017_03_14_122901_change_zip_datetime_nickdate_opendate_column_on_users.php',
+        'CreateNickdateOpendateColumnOnUsers' => __DIR__ . '/../..' . '/database/migrations/2017_03_14_134228_create_nickdate_opendate_column_on_users.php',
         'CreatePasswordResetsTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
         'CreateUsersTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_12_000000_create_users_table.php',
         'DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeds/DatabaseSeeder.php',

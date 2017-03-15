@@ -6,6 +6,7 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class RegisterController extends Controller
@@ -23,6 +24,7 @@ class RegisterController extends Controller
 
     use RegistersUsers;
 
+    public $request;
     /**
      * Where to redirect users after registration.
      *
@@ -35,9 +37,10 @@ class RegisterController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Request $request)
     {
         $this->middleware('guest');
+        $this->request = $request;
     }
 
     /**
@@ -51,9 +54,12 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|min:6|confirmed',
-            'nick' => 'required|min:2|max:8',
+            'password' => 'required|min:6',
+            'nick' => 'required|nick_length:2,4|unique:users|alpha_num',
+            'tel' => 'nullable|integer',
+            'hp' => 'nullable|integer',
         ]);
+
     }
 
     /**
@@ -64,25 +70,31 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $nowDate = Carbon::now()->toDateString();
+
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
             'nick' => $data['nick'],
-            'homepage' => $data['homepage'],
-            'tel' => $data['tel'],
-            'hp' => $data['hp'],
-            'signature' => $data['signature'],
-            'profile' => $data['profile'],
-            'mailing' => isset($data['mailing']) ? : 0,
-            'sms' => isset($data['sms']) ? : 0,
-            'open' => isset($data['open']) ? : 0,
-            'recommend' => $data['recommend'],
+            'nick_date' => $nowDate,
+            'homepage' => isset($data['homepage']) ? $data['homepage'] : null,
+            'tel' => isset($data['tel']) ? $data['tel'] : null,
+            'hp' => isset($data['hp']) ? $data['hp'] : null,
+            'birth' => isset($data['birth']) ? $data['birth'] : null,
+            'sex' => isset($data['sex']) ? $data['sex'] : null,
+            'signature' => isset($data['signature']) ? $data['signature'] : null,
+            'profile' => isset($data['profile']) ? $data['profile'] : null,
+            'mailing' => isset($data['mailing']) ? $data['mailing'] : 0,
+            'sms' => isset($data['sms']) ? $data['sms'] : 0,
+            'open' => isset($data['open']) ? $data['open'] : 0,
+            'open_date' => isset($data['open']) ? $nowDate : null,
+            'recommend' => isset($data['recommend']) ? $data['recommend'] : null,
             'today_login' => Carbon::now(),
-            // 'level' => $config['level'],
-            'level' => 2,
-            // 'point' => $config['point'],
-            'point' => 1000,
+            'login_ip' => $this->request->ip(),
+            'ip' => $this->request->ip(),
+            'level' => config('gnu.joinLevel'),
+            'point' => config('gnu.joinPoint'),
 
         ]);
     }
