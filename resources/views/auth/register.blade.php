@@ -4,6 +4,11 @@
     LaBoard | 회원 가입
 @endsection
 
+@section('include_script')
+    <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+    <script src="{{ url('js/postcode.js') }}"></script>
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row">
@@ -44,10 +49,10 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="password-confirm" class="col-md-4 control-label">비밀번호 확인</label>
+                            <label for="password_confirmation" class="col-md-4 control-label">비밀번호 확인</label>
 
                             <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+                                <input type="password" class="form-control" name="password_confirmation" required>
                             </div>
                         </div>
 
@@ -134,22 +139,20 @@
                         @endif
 
                         @if(config('gnu.addr') == 1)
-                            <div class="form-group{{ $errors->has('addr1') ? ' has-error' : '' }}">
-                                <label for="addr1" class="col-md-4 control-label">주소</label>
+                            <div class="form-group">
+                                <label for="addr1" class="col-md-4 control-label">@lang('messages.address')</label>
                                 <div class="col-md-6">
-                                    <input id="reg_zip" type="text" class="" name="zip" value="{{ old('zip') }}">
-                                        <button>주소 검색</button>
-                                    <input id="addr1" type="text" class="" name="addr1" value="{{ old('addr1') }}">
-                                        <label for="addr1" class="control-label">기본주소</label>
-                                    <input id="addr2" type="text" class="" name="addr2" value="{{ old('addr2') }}">
-                                        <label for="addr2" class="control-label">상세주소</label>
-                                    <input id="addr3" type="text" class="" name="addr3" value="{{ old('addr3') }}">
-                                        <label for="addr3" class="control-label">참고항목</label>
-                                    @if ($errors->has('addr1'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('addr1') }}</strong>
-                                        </span>
-                                    @endif
+
+                                    <input type="text" id="zip" name="zip" class="form-control" value="{{ old('zip') }}" placeholder="@lang('messages.zip')">
+                                    <input type="button" onclick="execDaumPostcode()" value="@lang('messages.address_search')"><br>
+
+                                    <div id="wrap" style="display:none;border:1px solid;width:500px;height:300px;margin:5px 0;position:relative">
+                                        <img src="//t1.daumcdn.net/localimg/localimages/07/postcode/320/close.png"
+                                            style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1"
+                                             id="btnFoldWrap" onclick="foldDaumPostcode()" alt="접기 버튼">
+                                    </div>
+                                    <input type="text" id="addr1" name="addr1" class="form-control" value="{{ old('addr1') }}" placeholder="@lang('messages.address1')">
+                                    <input type="text" id="addr2" name="addr2" class="form-control" value="{{ old('addr2') }}" placeholder="@lang('messages.address2')">
                                 </div>
                             </div>
                         @endif

@@ -4,6 +4,11 @@
     LaBoard | 회원 수정
 @endsection
 
+@section('include_script')
+    <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+    <script src="{{ url('js/postcode.js') }}"></script>
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row">
@@ -110,7 +115,18 @@
                         </tr>
                         <tr>
                             <th>주소</th>
-                            <td></td>
+                            <td>
+                                <input type="text" id="zip" name="zip" class="form-control" value="{{ $user->zip }}" placeholder="@lang('messages.zip')">
+                                <input type="button" onclick="execDaumPostcode()" value="@lang('messages.address_search')"><br>
+
+                                <div id="wrap" style="display:none;border:1px solid;width:500px;height:300px;margin:5px 0;position:relative">
+                                    <img src="//t1.daumcdn.net/localimg/localimages/07/postcode/320/close.png"
+                                        style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1"
+                                         id="btnFoldWrap" onclick="foldDaumPostcode()" alt="접기 버튼">
+                                </div>
+                                <input type="text" id="addr1" name="addr1" class="form-control" value="{{ $user->addr1 }}" placeholder="@lang('messages.address1')">
+                                <input type="text" id="addr2" name="addr2" class="form-control" value="{{ $user->addr2 }}" placeholder="@lang('messages.address2')">
+                            </td>
                         </tr>
                         <tr>
                             <th>회원아이콘</th>

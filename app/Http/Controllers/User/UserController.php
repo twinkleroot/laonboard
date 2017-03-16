@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Auth;
+use App\User;
 use Carbon\Carbon;
 
 class UserController extends Controller
@@ -29,7 +30,7 @@ class UserController extends Controller
             $openChangable = true;
         } else {
             $openDiff = $current->diffInDays($openDate);
-            if($openDiff > config('gnu.openDate')) {
+            if($openDiff >= config('gnu.openDate')) {
                 $openChangable = true;
             }
             $dueDate = $openDate->addDays(config('gnu.openDate'));
@@ -41,44 +42,6 @@ class UserController extends Controller
             ->with('openChangable', $openChangable)
             ->with('dueDate', $dueDate);
             ;
-    }
-
-    public function update(Request $request)
-    {
-        $user = Auth::user();
-        if($request->get('change_password') !== '') {
-            $user->password = bcrypt($request->get('change_password'));
-            $user->save();
-        }
-
-        $nowDate = Carbon::now()->toDateString();
-
-        $user->update([
-            'nick' => isset($request['nick']) ? $request['nick'] : $user->nick ,
-            'nick_date' => isset($request['nick']) ? $nowDate : $user->nick_date ,
-            'homepage' => $request->get('homepage'),
-            'hp' => $request->get('hp'),
-            'tel' => $request->get('tel'),
-            'addr1' => $request->get('addr1'),
-            'addr2' => $request->get('addr2'),
-            'addr3' => $request->get('addr3'),
-            'zip' => $request->get('zip'),
-            'signature' => $request->get('signature'),
-            'profile' => $request->get('profile'),
-            'memo' => $request->get('memo'),
-            'mailing' => $request->get('mailing'),
-            'sms' => $request->get('sms'),
-            // 'open' => isset($request['open']) ? $request['open'] : 0,
-            // 'open_date' => isset($request['open']) ? $nowDate : null,
-        ]);
-
-        if(!isset($request['open']) && $user->open != $request['open']) {
-            $user->open = $request['open'];
-        }
-
-        $user->update();
-
-        return redirect('/index')->with('message', $user->nick . '님의 회원정보가 변경되었습니다.');
     }
 
     public function getPasswordConfirm()
@@ -98,6 +61,47 @@ class UserController extends Controller
         } else {
             return redirect(route('user.getPasswordConfirm'))->with('message', '비밀번호가 틀립니다.');
         }
+    }
+
+    public function update(Request $request)
+    {
+
+        $this->validate($request, User::$rulesUpdate);
+
+        $user = Auth::user();
+        if($request->get('password') !== '') {
+            $user->password = bcrypt($request->get('password'));
+            $user->save();
+        }
+
+        $nowDate = Carbon::now()->toDateString();
+
+        $user->update([
+            'nick' => !is_null($request->get('nick')) ? $request->get('nick') : $user->nick,
+            'nick_date' => !is_null($request->get('nick')) ? $nowDate : $user->nick_date,
+            'homepage' => $request->get('homepage'),
+            'hp' => $request->get('hp'),
+            'tel' => $request->get('tel'),
+            'addr1' => $request->get('addr1'),
+            'addr2' => $request->get('addr2'),
+            'addr3' => $request->get('addr3'),
+            'zip' => $request->get('zip'),
+            'signature' => $request->get('signature'),
+            'profile' => $request->get('profile'),
+            'memo' => $request->get('memo'),
+            'mailing' => !is_null($request->get('mailing')) ? $request->get('mailing') : 0,
+            'sms' => !is_null($request->get('sms')) ? $request->get('sms') : 0,
+        ]);
+
+        // open입력값이 널이 아니고 기존에 open값과 open입력값이 다르다면 기존 open 값에 open 입력값을 넣는다.
+        if(!is_null($request->get('open')) && $user->open != $request->get('open')) {
+            $user->open = $request->get('open');
+            $user->open_date = $nowDate;
+            $user->save();
+        }
+
+
+        return redirect('/index')->with('message', $user->nick . '님의 회원정보가 변경되었습니다.');
     }
 
 }

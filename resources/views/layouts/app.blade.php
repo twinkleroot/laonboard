@@ -19,7 +19,10 @@
             'csrfToken' => csrf_token(),
         ]) !!};
     </script>
-    <script src="{!! url('js/jquery-3.1.1.min.js') !!}"></script>
+
+    @yield('include_script')
+    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ url('js/jquery-3.1.1.min.js') }}"></script>
 </head>
 <body>
     <div id="app">
@@ -90,7 +93,5 @@
         @yield('content')
     </div>
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

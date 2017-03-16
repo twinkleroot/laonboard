@@ -4,6 +4,11 @@
     LaBoard | 회원 추가
 @endsection
 
+@section('include_script')
+    <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+    <script src="{{ url('js/postcode.js') }}"></script>
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row">
@@ -109,22 +114,33 @@
                         <tr>
                             <th>본인확인</th>
                             <td>
-                                <input type="radio" name="certify" id="certify_yes" value="1" />
+                                <input type="radio" name="certify" id="certify_yes" @if(old('certify')=='1') checked @endif value="1" />
                                     <label for="certify_yes">예</label>
-                                <input type="radio" name="certify" id="certify_no" checked value="0" />
+                                <input type="radio" name="certify" id="certify_no" @if(old('certify')=='0') checked @endif value="0" />
                                     <label for="certify_no">아니오</label>
                             </td>
                             <th>성인인증</th>
                             <td>
-                                <input type="radio" name="adult" id="adult_yes" value="1" />
+                                <input type="radio" name="adult" id="adult_yes" @if(old('adult')=='1') checked @endif value="1" />
                                     <label for="adult_yes">예</label>
-                                <input type="radio" name="adult" id="adult_no" checked value="0" />
+                                <input type="radio" name="adult" id="adult_no" @if(old('adult')=='0') checked @endif value="0" />
                                     <label for="adult_no">아니오</label>
                             </td>
                         </tr>
                         <tr>
                             <th>주소</th>
-                            <td></td>
+                            <td>
+                                <input type="text" id="zip" name="zip" class="form-control" value="{{ old('zip') }}" placeholder="@lang('messages.zip')">
+                                <input type="button" onclick="execDaumPostcode()" value="@lang('messages.address_search')"><br>
+
+                                <div id="wrap" style="display:none;border:1px solid;width:500px;height:300px;margin:5px 0;position:relative">
+                                    <img src="//t1.daumcdn.net/localimg/localimages/07/postcode/320/close.png"
+                                        style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1"
+                                         id="btnFoldWrap" onclick="foldDaumPostcode()" alt="접기 버튼">
+                                </div>
+                                <input type="text" id="addr1" name="addr1" class="form-control" value="{{ old('addr1') }}" placeholder="@lang('messages.address1')">
+                                <input type="text" id="addr2" name="addr2" class="form-control" value="{{ old('addr2') }}" placeholder="@lang('messages.address2')">
+                            </td>
                         </tr>
                         <tr>
                             <th>회원아이콘</th>
@@ -135,25 +151,25 @@
                         <tr>
                             <th>메일 수신</th>
                             <td>
-                                <input type="radio" name="mailing" id="mailing_yes" checked value="1" />
+                                <input type="radio" name="mailing" id="mailing_yes" @if(old('mailing')=='1') checked @endif value="1" />
                                     <label for="mailing_yes">예</label>
-                                <input type="radio" name="mailing" id="mailing_no" value="0" />
+                                <input type="radio" name="mailing" id="mailing_no" @if(old('mailing')=='0') checked @endif value="0" />
                                     <label for="mailing_no">아니오</label>
                             </td>
                             <th>SMS 수신</th>
                             <td>
-                                <input type="radio" name="sms" id="sms_yes" value="1" />
+                                <input type="radio" name="sms" id="sms_yes" @if(old('sms')=='1') checked @endif value="1" />
                                     <label for="sms_yes">예</label>
-                                <input type="radio" name="sms" id="sms_no" checked value="0" />
+                                <input type="radio" name="sms" id="sms_no" @if(old('sms')=='0') checked @endif value="0" />
                                     <label for="sms_no">아니오</label>
                             </td>
                         </tr>
                         <tr>
                             <th>정보 공개</th>
                             <td>
-                                <input type="radio" name="open" id="open_yes" checked value="1" />
+                                <input type="radio" name="open" id="open_yes" @if(old('open')=='1') checked @endif value="1" />
                                     <label for="open_yes">예</label>
-                                <input type="radio" name="open" id="open_no" value="0" />
+                                <input type="radio" name="open" id="open_no" @if(old('open')=='0') checked @endif value="0" />
                                     <label for="open_no">아니오</label>
                             </td>
                         </tr>

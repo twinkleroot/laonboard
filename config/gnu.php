@@ -2,10 +2,10 @@
 
 return [
         'nickDate' => 30,
-        'openDate' => 2,
+        'openDate' => 0,
         'homepage' => 1,
-        'tel' => 0,
-        'hp' => 0,
+        'tel' => 1,
+        'hp' => 1,
         'signature' => 1,
         'profile' => 1,
         'addr' => 1,
