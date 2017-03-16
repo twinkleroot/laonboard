@@ -36,7 +36,7 @@
                     </button>
 
                     <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}">
+                    <a class="navbar-brand" href="{{ url('/index') }}">
                         {{ config('app.name', 'LaBoard') }}
                     </a>
                 </div>

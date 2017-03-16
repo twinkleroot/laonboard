@@ -68,10 +68,17 @@ class UserController extends Controller
             'memo' => $request->get('memo'),
             'mailing' => $request->get('mailing'),
             'sms' => $request->get('sms'),
-            'open' => isset($request['open']) ? $request['open'] : 0,
-            'open_date' => isset($request['open']) ? $nowDate : null,
+            // 'open' => isset($request['open']) ? $request['open'] : 0,
+            // 'open_date' => isset($request['open']) ? $nowDate : null,
         ]);
-        return redirect('/index')->with('message', $request->get('nick') . '님의 회원정보가 변경되었습니다.');
+
+        if(!isset($request['open']) && $user->open != $request['open']) {
+            $user->open = $request['open'];
+        }
+
+        $user->update();
+
+        return redirect('/index')->with('message', $user->nick . '님의 회원정보가 변경되었습니다.');
     }
 
     public function getPasswordConfirm()
@@ -89,7 +96,7 @@ class UserController extends Controller
         if(Auth::attempt(['email' => $email, 'password' => $request->get('password') ], false, false)) {
             return redirect(route('user.edit'));
         } else {
-            return 'hello!';
+            return redirect(route('user.getPasswordConfirm'))->with('message', '비밀번호가 틀립니다.');
         }
     }
 
