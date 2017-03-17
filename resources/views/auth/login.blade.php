@@ -57,9 +57,15 @@
                                 <button type="submit" class="btn btn-primary">
                                     로그인
                                 </button>
-
                                 <a class="btn btn-link" href="{{ route('password.request') }}">
                                     비밀번호 찾기
+                                </a>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-8 col-md-offset-4">
+                                <a class="btn btn-primary" href="{{ route('social.naver') }}">
+                                    네이버로 로그인
                                 </a>
                             </div>
                         </div>

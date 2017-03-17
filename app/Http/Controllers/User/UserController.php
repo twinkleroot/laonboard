@@ -25,7 +25,7 @@ class UserController extends Controller
         $openChangable = false;
         $dueDate = $current;
         $openDate = $user->open_date;
-        // dump($current->diffInDays($openDate));
+
         if(is_null($openDate)) {
             $openChangable = true;
         } else {
@@ -44,13 +44,17 @@ class UserController extends Controller
             ;
     }
 
-    public function getPasswordConfirm()
+    public function checkPassword()
     {
         $user = Auth::user();
-        return view('user.password_confirm')->with('email', $user->email);
+        if(is_null($user->password)) {
+            return view('user.set_password');
+        } else {
+            return view('user.confirm_password')->with('email', $user->email);
+        }
     }
 
-    public function postPasswordConfirm(Request $request)
+    public function confirmPassword(Request $request)
     {
         $user = Auth::user();
         $email = $user->email;
@@ -61,6 +65,17 @@ class UserController extends Controller
         } else {
             return redirect(route('user.getPasswordConfirm'))->with('message', '비밀번호가 틀립니다.');
         }
+    }
+
+    public function setPassword(Request $request)
+    {
+        $this->validate($request, User::$rulesSetPassword);
+
+        $user = Auth::user();
+        $user->password = bcrypt($request->get('password'));
+        $user->save();
+
+        return redirect(route('user.edit'));
     }
 
     public function update(Request $request)
@@ -77,8 +92,8 @@ class UserController extends Controller
         $nowDate = Carbon::now()->toDateString();
 
         $user->update([
-            'nick' => !is_null($request->get('nick')) ? $request->get('nick') : $user->nick,
-            'nick_date' => !is_null($request->get('nick')) ? $nowDate : $user->nick_date,
+            'nick' => $request->has('nick') ? $request->get('nick') : $user->nick,
+            'nick_date' => $request->has('nick') ? $nowDate : $user->nick_date,
             'homepage' => $request->get('homepage'),
             'hp' => $request->get('hp'),
             'tel' => $request->get('tel'),
@@ -89,17 +104,16 @@ class UserController extends Controller
             'signature' => $request->get('signature'),
             'profile' => $request->get('profile'),
             'memo' => $request->get('memo'),
-            'mailing' => !is_null($request->get('mailing')) ? $request->get('mailing') : 0,
-            'sms' => !is_null($request->get('sms')) ? $request->get('sms') : 0,
+            'mailing' => $request->has('mailing') ? $request->get('mailing') : 0,
+            'sms' => $request->has('sms') ? $request->get('sms') : 0,
         ]);
 
-        // open입력값이 널이 아니고 기존에 open값과 open입력값이 다르다면 기존 open 값에 open 입력값을 넣는다.
-        if(!is_null($request->get('open')) && $user->open != $request->get('open')) {
+        // 정보공개 체크박스에 체크를 했거나 기존에 open값과 open입력값이 다르다면 기존 open 값에 open 입력값을 넣는다.
+        if($request->has('open') || $user->open != $request->get('open')) {
             $user->open = $request->get('open');
             $user->open_date = $nowDate;
             $user->save();
         }
-
 
         return redirect('/index')->with('message', $user->nick . '님의 회원정보가 변경되었습니다.');
     }

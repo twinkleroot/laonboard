@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Event;
+use SocialiteProviders\Manager\SocialiteWasCalled;
+use SocialiteProviders\Naver\NaverExtendSocialite;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -18,8 +20,14 @@ class EventServiceProvider extends ServiceProvider
 		// 	'App\Listeners\EventListener',
 		// ],
 
+		// 로그인 성공 후 이벤트
 		'\Illuminate\Auth\Events\Login' => [
         	'App\Listeners\LoginSuccessful',
+    	],
+
+		// 소셜 로그인 : 네이버
+		SocialiteWasCalled::class => [
+        	NaverExtendSocialite::class,
     	],
 
 	];

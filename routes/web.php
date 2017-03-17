@@ -18,7 +18,7 @@ Route::get('/index', ['as' => 'index', 'uses' => 'WelcomeController@index']);
 Route::get('/', 'ThemeController@index');
 
 // 로그인 후 리다이렉트 되는 페이지
-Route::get('/home', 'HomeController@index');
+Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index'] );
 
 // 인증이 필요한 라우트 그룹
 Route::group(['middleware' => 'auth'], function() {
@@ -28,9 +28,14 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::get('user/edit', ['as' => 'user.edit', 'uses' => 'User\UserController@edit']);
     Route::put('user/update', ['as' => 'user.update', 'uses' => 'User\UserController@update']);
-    Route::get('user/password_confirm', ['as' => 'user.getPasswordConfirm', 'uses' => 'User\UserController@getPasswordConfirm']);
-    Route::post('user/password_confirm', ['as' => 'user.postPasswordConfirm', 'uses' => 'User\UserController@postPasswordConfirm']);
+    Route::get('user/check_password', ['as' => 'user.checkPassword', 'uses' => 'User\UserController@checkPassword']);
+    Route::post('user/set_password', ['as' => 'user.setPassword', 'uses' => 'User\UserController@setPassword']);
+    Route::post('user/confirm_password', ['as' => 'user.confirmPassword', 'uses' => 'User\UserController@confirmPassword']);
 });
 
 // 인증에 관련한 라우트들
 Auth::routes();
+
+// 소셜 로그인 - 네이버
+Route::get('social/naver', ['as' => 'social.naver', 'uses' => 'Auth\SocialController@redirectToProvider']);
+Route::get('social/naver/callback', ['as' => 'social.naver.callback', 'uses' => 'Auth\SocialController@handleProviderCallback']);

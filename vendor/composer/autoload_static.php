@@ -10,6 +10,9 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
         '1d1b89d124cc9cb8219922c9d5569199' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest.php',
+        'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
+        'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
+        '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         'e7223560d890eab89cda23685e711e2c' => __DIR__ . '/..' . '/psy/psysh/src/Psy/functions.php',
@@ -51,6 +54,9 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
             'Symfony\\Component\\Debug\\' => 24,
             'Symfony\\Component\\CssSelector\\' => 30,
             'Symfony\\Component\\Console\\' => 26,
+            'SocialiteProviders\\Naver\\' => 25,
+            'SocialiteProviders\\Manager\\Test\\' => 32,
+            'SocialiteProviders\\Manager\\' => 27,
         ),
         'R' => 
         array (
@@ -60,6 +66,7 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         array (
             'Psy\\' => 4,
             'Psr\\Log\\' => 8,
+            'Psr\\Http\\Message\\' => 17,
             'PhpParser\\' => 10,
         ),
         'M' => 
@@ -68,12 +75,20 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         ),
         'L' => 
         array (
+            'League\\OAuth1\\' => 14,
             'League\\Flysystem\\' => 17,
             'Laravel\\Tinker\\' => 15,
+            'Laravel\\Socialite\\' => 18,
         ),
         'I' => 
         array (
             'Illuminate\\' => 11,
+        ),
+        'G' => 
+        array (
+            'GuzzleHttp\\Psr7\\' => 16,
+            'GuzzleHttp\\Promise\\' => 19,
+            'GuzzleHttp\\' => 11,
         ),
         'F' => 
         array (
@@ -179,6 +194,18 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         array (
             0 => __DIR__ . '/..' . '/symfony/console',
         ),
+        'SocialiteProviders\\Naver\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/socialiteproviders/naver',
+        ),
+        'SocialiteProviders\\Manager\\Test\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/socialiteproviders/manager/tests',
+        ),
+        'SocialiteProviders\\Manager\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/socialiteproviders/manager/src',
+        ),
         'Ramsey\\Uuid\\' => 
         array (
             0 => __DIR__ . '/..' . '/ramsey/uuid/src',
@@ -191,6 +218,10 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
         ),
+        'Psr\\Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+        ),
         'PhpParser\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
@@ -198,6 +229,10 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
+        ),
+        'League\\OAuth1\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/league/oauth1-client/src',
         ),
         'League\\Flysystem\\' => 
         array (
@@ -207,9 +242,25 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         array (
             0 => __DIR__ . '/..' . '/laravel/tinker/src',
         ),
+        'Laravel\\Socialite\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/laravel/socialite/src',
+        ),
         'Illuminate\\' => 
         array (
             0 => __DIR__ . '/..' . '/laravel/framework/src/Illuminate',
+        ),
+        'GuzzleHttp\\Psr7\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
+        ),
+        'GuzzleHttp\\Promise\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/promises/src',
+        ),
+        'GuzzleHttp\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
         ),
         'Faker\\' => 
         array (
@@ -315,12 +366,14 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
     public static $classMap = array (
         'AddColumnUserTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_07_172208_add_column_user_table.php',
         'AddIndexTokenOnPasswordResetsTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_09_180131_add_index_token_on_password_resets_table.php',
+        'AddNullableToPasswordColumnOnUsersTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_17_112912_add_nullable_to_password_column_on_users_table.php',
+        'AddSocialLoginColumnOnUsersTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_17_115255_add_social_login_column_on_users_table.php',
         'AddUniqueKeyEmailOnUsersTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_09_110203_add_unique_key_email_on_users_table.php',
         'ChangeZipDatetimeNickdateOpendateColumnOnUsers' => __DIR__ . '/../..' . '/database/migrations/2017_03_14_122901_change_zip_datetime_nickdate_opendate_column_on_users.php',
-        'CreateNickdateOpendateColumnOnUsers' => __DIR__ . '/../..' . '/database/migrations/2017_03_14_134228_create_nickdate_opendate_column_on_users.php',
         'CreatePasswordResetsTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
         'CreateUsersTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_12_000000_create_users_table.php',
         'DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeds/DatabaseSeeder.php',
+        'DropAddr2ColumnOnUsersTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_17_115517_drop_addr2_column_on_users_table.php',
         'File_Iterator' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Iterator.php',
         'File_Iterator_Facade' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Facade.php',
         'File_Iterator_Factory' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Factory.php',

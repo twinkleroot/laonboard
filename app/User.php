@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\SocialLogin;
 
 class User extends Authenticatable
 {
@@ -19,13 +20,12 @@ class User extends Authenticatable
     protected $fillable = [
         'name', 'email', 'password', 'nick', 'homepage',
         'level', 'sex', 'birth', 'tel', 'hp', 'certify',
-        'adult', 'dupinfo', 'addr1', 'addr2', 'addr3',
+        'adult', 'dupinfo', 'addr1', 'addr2',
         'addr_jibeon', 'signature', 'recommend', 'point',
         'login_ip', 'ip', 'email_certify', 'email_certify2',
         'memo', 'lost_certify', 'mailing', 'sms', 'open',
-        'profile', 'memo_call','leave_date', 'intercept_date',
+        'profile', 'memo_call', 'leave_date', 'intercept_date',
         'today_login', 'nick_date', 'open_date', 'zip',
-        // zip 아직 안넣음.
     ];
 
     public static $rulesRegister = [
@@ -46,6 +46,10 @@ class User extends Authenticatable
         'hp' => 'nullable|numeric',
     ];
 
+    public static $rulesSetPassword = [
+        'password' => 'required|min:6|confirmed',
+        'password_confirmation' => 'required|min:6',
+    ];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -55,4 +59,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function socialLogins()
+    {
+        return $this->hasMany(SocialLogin::class);
+    }
 }
