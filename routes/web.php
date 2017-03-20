@@ -39,3 +39,5 @@ Auth::routes();
 // 소셜 로그인 - 네이버
 Route::get('social/naver', ['as' => 'social.naver', 'uses' => 'Auth\SocialController@redirectToProvider']);
 Route::get('social/naver/callback', ['as' => 'social.naver.callback', 'uses' => 'Auth\SocialController@handleProviderCallback']);
+
+Route::post('register/reCaptcha', ['as' => 'register.reCaptcha', 'uses' => 'Auth\RegisterController@checkRecaptcha']);

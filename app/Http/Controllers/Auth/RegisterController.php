@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\ReCaptcha;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -52,6 +53,16 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, User::$rulesRegister);
+    }
+
+    // 구글 리캡챠 체크
+    public function checkRecaptcha(Request $request)
+    {
+        if(ReCaptcha::reCaptcha($request)) {
+            $this->create($request);
+        } else {
+            return view('auth.register')->withErrors(['reCapcha' => '캡챠 관련 에러 입니다.']);
+        }
     }
 
     /**

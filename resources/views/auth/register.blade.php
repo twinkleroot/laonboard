@@ -4,6 +4,10 @@
     LaBoard | 회원 가입
 @endsection
 
+@section('include_script')
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row">
@@ -11,7 +15,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">회원 가입</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ route('register') }}">
+                    <form class="form-horizontal" role="form" method="POST" action="{{ route('register.reCaptcha') }}">
                         {{ csrf_field() }}
                         <div class="panel-heading">사이트 이용정보 입력</div>
 
@@ -69,7 +73,15 @@
                                 @endif
                             </div>
                         </div>
-
+                        <div class="form-group{{ $errors->has('reCapcha') ? ' has-error' : '' }}">
+                            <div class="g-recaptcha col-md-6" data-sitekey="6LcKohkUAAAAANcgIst0HFMMT81Wq5HIxpiHhXGZ">
+                            </div>
+                            @if ($errors->has('reCapcha'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('reCapcha') }}</strong>
+                                </span>
+                            @endif
+                        </div>
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">

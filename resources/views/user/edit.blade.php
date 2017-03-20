@@ -5,6 +5,7 @@
 @endsection
 
 @section('include_script')
+    <script src='https://www.google.com/recaptcha/api.js'></script>
     <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
     <script src="{{ url('js/postcode.js') }}"></script>
 @endsection
@@ -257,6 +258,15 @@
                             </div>
                         </div>
                         @endif
+                        <div class="form-group{{ $errors->has('reCapcha') ? ' has-error' : '' }}">
+                            <div class="g-recaptcha col-md-6" data-sitekey="6LcKohkUAAAAANcgIst0HFMMT81Wq5HIxpiHhXGZ">
+                            </div>
+                            @if ($errors->has('reCapcha'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('reCapcha') }}</strong>
+                                </span>
+                            @endif
+                        </div>
 
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
