@@ -16,6 +16,7 @@ $ php artisan db:seed <br />
 5. 테스트 데이터 생성(Users) – 숫자는 원하는 데이터 개수만큼 넣는다. <br />
 $ php artisan tinker <br />
 \>\>\> factory(App\User::class, 10)->create(); <br />
+\>\>\> quit <br />
 
 ## License
 
