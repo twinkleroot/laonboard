@@ -61,7 +61,7 @@ class RegisterController extends Controller
         if(ReCaptcha::reCaptcha($request)) {
             $this->create($request);
         } else {
-            return view('auth.register')->withErrors(['reCapcha' => '캡챠 관련 에러 입니다.']);
+            return view('auth.register')->withErrors(['reCapcha' => '자동등록방지 입력이 틀렸습니다. 다시 입력해 주십시오.']);
         }
     }
 

@@ -120,7 +120,7 @@ class UserController extends Controller
 
         // 구글 리캡챠 체크
         if(!ReCaptcha::reCaptcha($request)) {
-            return view('user.edit')->withErrors(['reCapcha' => '캡챠 관련 에러 입니다.'])
+            return view('user.edit')->withErrors(['reCapcha' => '자동등록방지 입력이 틀렸습니다. 다시 입력해 주십시오.'])
             ->with('user', $user)
             ->with('nickChangable', $this->nickChangable($user, Carbon::now())) // 닉네임 변경여부
             ->with('openChangable', $openChangable[0])                          // 정보공개 변경 여부
