@@ -29,17 +29,13 @@ class User extends Authenticatable
     ];
 
     public static $rulesRegister = [
-        'name' => 'required|max:255',
         'email' => 'required|email|max:255|unique:users',
         'password' => 'required|min:6|confirmed',
         'password_confirmation' => 'required|min:6',
         'nick' => 'required|nick_length:2,4|unique:users|alpha_num',
-        'tel' => 'nullable|numeric',
-        'hp' => 'nullable|numeric',
     ];
 
     public static $rulesUpdate = [
-        'name' => 'required|max:255',
         'password' => 'required|min:6|confirmed',
         'password_confirmation' => 'required|min:6',
         'tel' => 'nullable|numeric',

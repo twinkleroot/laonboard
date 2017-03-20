@@ -65,29 +65,20 @@ class RegisterController extends Controller
         $nowDate = Carbon::now()->toDateString();
 
         return User::create([
-            'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
             'nick' => $data['nick'],
             'nick_date' => $nowDate,
-            'homepage' => isset($data['homepage']) ? $data['homepage'] : null,
-            'tel' => isset($data['tel']) ? $data['tel'] : null,
-            'hp' => isset($data['hp']) ? $data['hp'] : null,
-            'birth' => isset($data['birth']) ? $data['birth'] : null,
-            'sex' => isset($data['sex']) ? $data['sex'] : null,
-            'signature' => isset($data['signature']) ? $data['signature'] : null,
-            'profile' => isset($data['profile']) ? $data['profile'] : null,
-            'mailing' => isset($data['mailing']) ? $data['mailing'] : 0,
-            'sms' => isset($data['sms']) ? $data['sms'] : 0,
-            'open' => isset($data['open']) ? $data['open'] : 0,
-            'open_date' => isset($data['open']) ? $nowDate : null,
-            'recommend' => isset($data['recommend']) ? $data['recommend'] : null,
+            'mailing' => 1,
+            'sms' => 1,
+            'open' => 1,
+            'open_date' => $nowDate,
             'today_login' => Carbon::now(),
             'login_ip' => $this->request->ip(),
             'ip' => $this->request->ip(),
             'level' => config('gnu.joinLevel'),
             'point' => config('gnu.joinPoint'),
-
         ]);
     }
+
 }

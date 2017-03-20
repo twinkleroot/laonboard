@@ -16,12 +16,15 @@ class UserController extends Controller
         $user = Auth::user();
         $current = Carbon::now();
 
+        // 현재 시간과 로그인한 유저의 닉네임변경시간과의 차이
         $nickDiff = $current->diffInDays($user->nick_date);
+        // 닉네임 변경 여부
         $nickChangable = false;
         if($nickDiff > config('gnu.nickDate')) {
             $nickChangable = true;
         }
 
+        // 정보공개 변경 여부
         $openChangable = false;
         $dueDate = $current;
         $openDate = $user->open_date;
@@ -36,11 +39,20 @@ class UserController extends Controller
             $dueDate = $openDate->addDays(config('gnu.openDate'));
         }
 
+        // 추천인 닉네임 구하기
+        $recommendedNick = '';
+        if(!is_null($user->recommend)) {
+            $recommendedNick = User::where([
+                'id' => $user->recommend,
+            ])->first()->nick;
+        }
+
         return view('user.edit')
             ->with('user', $user)
             ->with('nickChangable', $nickChangable)
             ->with('openChangable', $openChangable)
-            ->with('dueDate', $dueDate);
+            ->with('dueDate', $dueDate)
+            ->with('recommend', $recommendedNick);
             ;
     }
 
@@ -89,7 +101,22 @@ class UserController extends Controller
             $user->save();
         }
 
+        // 현재 시간 date type으로 받기
         $nowDate = Carbon::now()->toDateString();
+
+        // 추천인 닉네임 받은 것을 해당 닉네임의 id로 조회
+        $recommendedId = '';
+        if($request->get('recommend') !== '') {
+            $recommendedUser = User::where([
+                'nick' => $request->get('recommend'),
+            ])->first();
+
+            if(is_null($recommendedUser)) {
+                return redirect(route('user.edit'))
+                        ->withErrors(['recommend' => '추천인이 존재하지 않습니다.']);
+            }
+            $recommendedId = $recommendedUser->id;
+        }
 
         $user->update([
             'nick' => $request->has('nick') ? $request->get('nick') : $user->nick,
@@ -106,6 +133,7 @@ class UserController extends Controller
             'memo' => $request->get('memo'),
             'mailing' => $request->has('mailing') ? $request->get('mailing') : 0,
             'sms' => $request->has('sms') ? $request->get('sms') : 0,
+            'recommend' => $recommendedId,
         ]);
 
         // 정보공개 체크박스에 체크를 했거나 기존에 open값과 open입력값이 다르다면 기존 open 값에 open 입력값을 넣는다.
