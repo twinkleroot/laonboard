@@ -1,4 +1,4 @@
-@extends('theme')
+@extends('layouts.app')
 @yield('title')
 
 
@@ -7,10 +7,8 @@
 @endsection
 
 @section('content')
-    @include('themes.default.register')
-@endsection
+    {{--@include('themes.default.register')--}}
 
-{{--
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -97,4 +95,4 @@
         </div>
     </div>
 </div>
---}}
+@endsection
