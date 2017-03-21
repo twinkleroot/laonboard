@@ -1,10 +1,11 @@
-@extends('layouts.app')
-
-@section('title')
-    LaBoard | 로그인
-@endsection
+@extends('theme')
+@yield('title')
 
 @section('content')
+    @include('themes.default.login')
+@endsection
+
+{{--
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -75,4 +76,4 @@
         </div>
     </div>
 </div>
-@endsection
+--}}
