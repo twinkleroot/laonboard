@@ -7,7 +7,7 @@
 @section('content')
 @if(Session::has('message'))
   <div class="alert alert-info">
-    {{Session::get('message') }}
+    {{ Session::get('message') }}
   </div>
 @endif
 <div class="row">
@@ -20,6 +20,7 @@
                 <input type="hidden" id='opens' name='opens' value='' />
                 <input type="hidden" id='mailings' name='mailings' value='' />
                 <input type="hidden" id='smss' name='smss' value='' />
+                <input type="hidden" id='intercepts' name='intercepts' value='' />
                 <input type="hidden" id='levels' name='levels' value='' />
                 <input type="hidden" id='_method' name='_method' value='' />
                 <div class="panel-body">
@@ -30,19 +31,19 @@
                             <th class="text-center">이메일</th>
                             <th class="text-center">이름</th>
                             <th class="text-center">닉네임</th>
-                            {{-- <th>메일인증</th> --}}
+                            {{-- <th class="text-center">메일인증</th> --}}
                             <th class="text-center">정보<br />공개</th>
                             <th class="text-center">메일<br />수신</th>
                             <th class="text-center">SMS<br />수신</th>
-                            {{-- <th>성인인증</th> --}}
-                            {{-- <th>접근차단</th> --}}
+                            {{-- <th class="text-center">성인인증</th> --}}
+                            <th class="text-center">접근차단</th>
                             <th class="text-center">휴대폰</th>
                             <th class="text-center">전화<br />번호</th>
                             <th class="text-center">상태<br />/권한</th>
                             <th class="text-center">포인트</th>
                             <th class="text-center">최종<br />접속</th>
                             <th class="text-center">가입일</th>
-                            {{-- <th>접근그룹</th> --}}
+                            {{-- <th class="text-center">접근그룹</th> --}}
                             <th class="text-center">관리</th>
                         </thead>
 
@@ -56,26 +57,33 @@
                                 <td class="text-center">{{ $user->nick }}</td>
                                 {{-- <td class="text-center">{{ $user->email_certify }}</td> --}}
                                 <td class="text-center">
-                                    <input type='checkbox' id='open_{{ $user->id }}' value='1' {{ ($user->open == '1' ? 'checked' : '') }}/></td>
+                                    <input type='checkbox' id='open_{{ $user->id }}' value='1'
+                                        {{ ($user->open == '1' ? 'checked' : '') }}/></td>
                                 <td class="text-center">
-                                    <input type='checkbox' id='mailing_{{ $user->id }}' value='1' {{ ($user->mailing == '1' ? 'checked' : '') }}/></td>
+                                    <input type='checkbox' id='mailing_{{ $user->id }}' value='1'
+                                        {{ ($user->mailing == '1' ? 'checked' : '') }}/></td>
                                 <td class="text-center">
-                                    <input type='checkbox' id='sms_{{ $user->id }}' value='1' {{ ($user->sms == '1' ? 'checked' : '') }}/></td>
+                                    <input type='checkbox' id='sms_{{ $user->id }}' value='1'
+                                        {{ ($user->sms == '1' ? 'checked' : '') }}/></td>
                                 {{-- <td class="text-center">
-                                    <input type='checkbox' name='adult' value='1' {{ ($user->adult == '1' ? 'checked' : '') }}/></td> --}}
-                                {{-- <td class="text-center">
-                                    <input type='checkbox' name='intercept_date' value='1' {{ ($user->intercept_date == '1' ? 'checked' : '') }}/></td> --}}
+                                    <input type='checkbox' name='adult' value='1'
+                                        {{ ($user->adult == '1' ? 'checked' : '') }}/></td> --}}
+                                <td class="text-center">
+                                    @if(is_null($user->leave_date))
+                                        <input type='checkbox' id='intercept_date_{{ $user->id }}' value='1'
+                                            {{ !is_null($user->intercept_date) ? 'checked' : '' }}/></td>
+                                    @endif
                                 <td class="text-center">{{ $user->hp }}</td>
                                 <td class="text-center">{{ $user->tel }}</td>
                                 <td class="text-center">
-                                    @if($user->leave_date != '')
+                                    @if(!is_null($user->leave_date))
                                         탈퇴함
-                                    @elseif ($user->intercept_date != '')
+                                    @elseif (!is_null($user->intercept_date))
                                         차단됨
                                     @else
                                         정상
                                     @endif
-                                    <select name='level[]' class='level'>
+                                    <select id='level_{{ $user->id }}'>
                                         @for ($i=1; $i<=10; $i++)
                                             <option value='{{ $i }}' {{ $user->level == $i ? 'selected' : '' }}>
                                                 {{ $i }}
@@ -86,7 +94,7 @@
                                 <td class="text-center">{{ $user->point }}</td>
                                 <td class="text-center">{{ $user->today_login }}</td>
                                 <td class="text-center">@date($user->created_at)</td>
-                                {{-- <td class="text-center">{{ $user->nick }}</td> --}}
+                                {{-- <td class="text-center">{{ $user->group }}</td> --}}
                                 <td class="text-center">
                                     <a class="btn btn-primary" href="{{ route('users.edit', $user->id) }}">수정</a></td>
                             </tr>
@@ -107,29 +115,42 @@ $(function(){
 
     // 선택 삭제 버튼 클릭
     $('#selected_delete').click(function(){
-        var id_array = selectIdsByCheckBox(".userId");
+        var selected_id_array = selectIdsByCheckBox(".userId");
 
-        $('#ids').val(id_array);
+        if(selected_id_array.length == 0) {
+            alert('회원을 선택해 주세요.')
+            return;
+        }
+
+        $('#ids').val(selected_id_array);
         $('#_method').val('DELETE');
         <?php $ids=''; ?>
-        $('#selectForm').attr('action', '{!! route('users.destroy', $ids) !!}' + '/' + id_array);
+        $('#selectForm').attr('action', '{!! route('users.destroy', $ids) !!}' + '/' + selected_id_array);
         $('#selectForm').submit();
     });
 
     // 선택 수정 버튼 클릭
     $('#selected_update').click(function(){
-        var id_array = selectIdsByCheckBox(".userId");
-        var open_array = selectOthersByCheckBox("open", id_array);
-        var mailing_array = selectOthersByCheckBox("mailing", id_array);
-        var sms_array = selectOthersByCheckBox("sms", id_array);
-        // var level_array = selectsBySelectOption(".level", id_array);
 
-        $('#ids').val(id_array);
-        alert($('#ids').val());
+        var selected_id_array = selectIdsByCheckBox(".userId");
+
+        if(selected_id_array.length == 0) {
+            alert('회원을 선택해 주세요.')
+            return;
+        }
+
+        var open_array = selectOthersByCheckBox("open", selected_id_array);
+        var mailing_array = selectOthersByCheckBox("mailing", selected_id_array);
+        var sms_array = selectOthersByCheckBox("sms", selected_id_array);
+        var intercept_array = selectOthersByCheckBox("intercept_date", selected_id_array);
+        var level_array = selectsBySelectOption("level", selected_id_array);
+
+        $('#ids').val(selected_id_array);
         $('#opens').val(open_array);
         $('#mailings').val(mailing_array);
         $('#smss').val(sms_array);
-        // $('#levels').val(level_array);
+        $('#intercepts').val(intercept_array);
+        $('#levels').val(level_array);
         $('#_method').val('PUT');
         $('#selectForm').attr('action', '{!! route('users.selectedUpdate') !!}');
         $('#selectForm').submit();
@@ -151,12 +172,12 @@ function selectIdsByCheckBox(className) {
     return send_array;
 }
 
-function selectOthersByCheckBox(className, id_array) {
+function selectOthersByCheckBox(id, selected_id_array) {
     var send_array = Array();
     var send_cnt = 0;
 
-    for(i=0; i<id_array.length; i++) {
-        var chkbox = $('input[id= ' + className + '_' + id_array[i] + ']');
+    for(i=0; i<selected_id_array.length; i++) {
+        var chkbox = $('input[id= ' + id + '_' + selected_id_array[i] + ']');
         if(chkbox.is(':checked')) {
             send_array[send_cnt] = chkbox.val();
         } else {
@@ -168,16 +189,10 @@ function selectOthersByCheckBox(className, id_array) {
     return send_array;
 }
 
-function selectsBySelectOption(className, id_array) {
+function selectsBySelectOption(id, selected_id_array) {
     var send_array = Array();
-    var send_cnt = 0;
-    var selectOption = $(className);
-
-    for(i=0; i<selectOption.length; i++) {
-        if(selectOption[i].selected == true) {
-            send_array[send_cnt] = selectOption[i].value;
-            send_cnt++;
-        }
+    for(i=0; i<selected_id_array.length; i++) {
+        send_array[i] = $('select[id=' + id + '_' + selected_id_array[i] + ']').val();
     }
 
     return send_array;

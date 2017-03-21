@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Password;
+use Carbon\Carbon;
 
 class UsersController extends Controller
 {
@@ -46,7 +47,7 @@ class UsersController extends Controller
         $validator = Validator::make($request->all(), User::$rules);
 
         if ($validator->fails()) {
-            return redirect('users/create')
+            return redirect(route('users.create'))
                         ->withErrors($validator)
                         ->withInput();
         }
@@ -65,7 +66,7 @@ class UsersController extends Controller
             'adult' => $request->get('adult'),
             'addr1' => $request->get('addr1'),
             'addr2' => $request->get('addr2'),
-            'addr3' => $request->get('addr3'),
+            // 'addr3' => $request->get('addr3'),
             'zip' => $request->get('zip'),
             'mailing' => $request->get('mailing'),
             'sms' => $request->get('sms'),
@@ -80,7 +81,7 @@ class UsersController extends Controller
 
         $user->save();
 
-        return redirect('/users')->with('message', $user->nick . ' 회원이 추가되었습니다.');
+        return redirect(route('users.index'))->with('message', $user->nick . ' 회원이 추가되었습니다.');
     }
 
     /**
@@ -135,7 +136,6 @@ class UsersController extends Controller
             'adult' => $request->get('adult'),
             // 'addr1' => $request->get('addr1'),
             // 'addr2' => $request->get('addr2'),
-            // 'addr3' => $request->get('addr3'),
             // 'zip' => $request->get('zip'),
             'mailing' => $request->get('mailing'),
             'sms' => $request->get('sms'),
@@ -148,7 +148,7 @@ class UsersController extends Controller
             // 본인확인방법, 회원아이콘은 다른데서 변경하는 듯.
         ]);
 
-        return redirect('/users')->with('message', $user->nick . '의 회원정보가 수정되었습니다.');
+        return redirect(route('users.index'))->with('message', $user->nick . '의 회원정보가 수정되었습니다.');
     }
 
     /**
@@ -160,32 +160,37 @@ class UsersController extends Controller
         $opens = $request->get('opens');
         $mailings = $request->get('mailings');
         $smss = $request->get('smss');
+        $intercepts = $request->get('intercepts');
         $levels = $request->get('levels');
 
         $idArr = explode(',', $ids);
         $openArr = explode(',', $opens);
         $mailingArr = explode(',', $mailings);
         $smsArr = explode(',', $smss);
-        // $levelArr = explode(',', $levels);
-        // dump($levelArr);
+        $interceptArr = explode(',', $intercepts);
+        $levelArr = explode(',', $levels);
 
         $index = 0;
         foreach($idArr as $id) {
             $user = User::find($id);
 
-            $user->update([
-                // 'certify' => $request->get('certify'),
-                'open' => $openArr[$index] == '1' ? 1 : 0,
-                'mailing' => $mailingArr[$index] == '1' ? 1 : 0,
-                'sms' => $smsArr[$index] == '1' ? 1 : 0,
-                // 'adult' => $request->get('adult') == '1' ? 1 : 0,
-                // 'intercept_date' => $request->get('intercept_date') != '' ? 1 : 0 ,
-                // 'level' => $request->get('level'),
-            ]);
-            $index++;
+            if(!is_null($user)) {
+                $user->update([
+                    // 'certify' => $request->get('certify'),
+                    'open' => $openArr[$index] == '1' ? 1 : 0,
+                    'mailing' => $mailingArr[$index] == '1' ? 1 : 0,
+                    'sms' => $smsArr[$index] == '1' ? 1 : 0,
+                    // 'adult' => $request->get('adult') == '1' ? 1 : 0,
+                    'intercept_date' => $interceptArr[$index] == 1 ? Carbon::now()->format('Ymj') : null ,
+                    'level' => $levelArr[$index],
+                ]);
+                $index++;
+            } else {
+                abort('500', '정보를 수정할 회원이 존재하지 않습니다. 회원이 잘 선택 되었는지 확인해 주세요.');
+            }
         }
 
-        return redirect('/users')->with('message', '선택한 회원정보가 수정되었습니다.');
+        return redirect(route('users.index'))->with('message', '선택한 회원정보가 수정되었습니다.');
     }
 
     /**
@@ -199,6 +204,6 @@ class UsersController extends Controller
         $ids = $request->get('ids');
         $deletedUser = User::whereRaw('id in (' . $ids . ') ')->delete();
 
-        return redirect('/users')->with('message', '선택한 회원정보가 삭제되었습니다.');
+        return redirect(route('users.index'))->with('message', '선택한 회원정보가 삭제되었습니다.');
     }
 }
