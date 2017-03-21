@@ -23,13 +23,11 @@ Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index'] );
 // 인증이 필요한 라우트 그룹
 Route::group(['middleware' => 'auth'], function() {
     // 관리자\회원관리에 관련된 CRUD 컨트롤러
-    Route::resource('users', 'Admin\UsersController');
+    Route::resource('admin/users', 'Admin\UsersController');
     // 리소스 컨트롤러에 더해서 필요한 기능
-    Route::put('users/selected_update',
-        ['as' => 'users.selectedUpdate', 'uses' => 'Admin\UsersController@selectedUpdate']);
+    Route::put('users/selected_update', ['as' => 'users.selectedUpdate', 'uses' => 'Admin\UsersController@selectedUpdate']);
     // 환경 설정
-    Route::get('config/env/join',
-        ['as' => 'config.env.join', 'uses' => 'Admin\ConfigController@configEnv']);
+    Route::get('admin/config', ['as' => 'admin.config', 'uses' => 'Admin\ConfigController@index']);
 
     // 사용자가 회원 정보 수정할 때 관련한 라우트들
     Route::get('user/edit', ['as' => 'user.edit', 'uses' => 'User\UserController@edit']);
