@@ -1,16 +1,14 @@
-@extends('theme')
-@yield('title')
+@extends('layouts.app')
 
+@section('title')
+    LaBoard | 회원 가입
+@endsection
 
 @section('include_script')
     <script src='https://www.google.com/recaptcha/api.js'></script>
 @endsection
 
 @section('content')
-    @include('themes.default.register')
-@endsection
-
-{{--
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -97,4 +95,4 @@
         </div>
     </div>
 </div>
---}}
+@endsection
