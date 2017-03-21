@@ -58,7 +58,7 @@
                             <li><a href="{{ route('register') }}">회원가입</a></li>
                         @else
                             @if(Auth::user()->level == 10)
-                                <li><a href="{{ route('users.index') }}">환경 설정</a></li>
+                                <li><a href="{{ route('admin.config') }}">환경 설정</a></li>
                                 <li><a href="{{ route('users.index') }}">회원 관리</a></li>
                             @endif
                             <li class="dropdown">
