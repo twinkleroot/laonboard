@@ -1,9 +1,10 @@
-@extends('layouts.app')
+@extends('theme')
 @yield('title')
 
-{{-- @include('themes.default.login') --}}
-
 @section('content')
+{{--@include('themes.default.login')--}}
+
+
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -74,4 +75,5 @@
         </div>
     </div>
 </div>
+
 @endsection

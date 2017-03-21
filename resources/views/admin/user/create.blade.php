@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('theme')
 
 @section('title')
     LaBoard | 회원 추가

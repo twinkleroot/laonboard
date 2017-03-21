@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('theme')
 
 @section('title')
     LaBoard | 비밀번호 재설정

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('theme')
 @yield('title')
 
 
@@ -7,7 +7,7 @@
 @endsection
 
 @section('content')
-    {{--@include('themes.default.register')--}}
+{{--@include('themes.default.register')--}}
 
 <div class="container">
     <div class="row">
