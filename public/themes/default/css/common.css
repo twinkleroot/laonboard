@@ -1,0 +1,130 @@
+@charset "UTF-8";
+
+/* header */
+#header {
+	width: 100%;
+	background: #fff;
+	border-bottom: 1px solid #d8d8d8;
+	margin-bottom: 40px;
+}
+#header .logo {
+	float: left;
+	margin: 0 0 0 15px;
+	line-height: 80px;
+}
+#header a {
+	color: #333;
+	text-decoration: none;
+}
+#header a:hover {
+	color: #587ef6 !important;
+	text-decoration: underline;
+}
+#header a:active,
+#header a:visited {
+	color: #333;
+	text-decoration: none;
+}
+#header ul {
+	padding: 0px;
+}
+#header ul li {
+	list-style: none;
+}
+#header .gnb {
+	margin: 0;
+}
+#header .gnb .gnb-li {
+	list-style: none;
+	border-bottom: 1px solid #d8d8d8;
+}
+#header .navbar-nav .gnb-li a {
+	display: block;
+	width: 100%;
+	padding: 15px;
+}
+#header .gnb .gnb-li:last-child {
+	border: 0;
+}
+#header .user {
+	font-size: 2em;
+	vertical-align: middle;
+	color: #587ef6;
+}
+.btn-sir {
+	color: #fff !important;
+	background-color: #587ef6;
+	border-color: #587ef6;
+}
+.btn-sir:hover {
+	background-color: #3e63d6;
+	border-color: #3e63d6;
+}
+.navbar-toggle {
+	border-color: #ddd;
+	line-height: 80px;
+	margin: 23px 15px;
+}
+.navbar-toggle .icon-bar {
+	background-color: #ccc;
+}
+#navbar {
+	border-top: 1px solid #d8d8d8;
+	padding: 0;
+}
+
+@media (min-width: 768px) {
+	#header .logo {
+		margin: 0;
+	}
+	#header .navbar-nav {
+		margin: 0;
+		padding: 0;
+		float: right;
+	}
+	#header .navbar-nav .gnb-li {
+		float: left;
+		padding: 0 10px;
+		border: 0;
+	}
+	#header .navbar-nav .gnb-li:last-child {
+		padding: 0 0 0 10px;
+	}
+	#header .navbar-nav .gnb-li a {
+		padding: 0;
+		line-height: 80px;
+	}
+	#navbar {
+		border: 0;
+	}
+	.dropdown-menu {
+	left: auto;
+	right: 0;
+	box-shadow: none;
+	border-radius: 0;
+	border: 1px solid #d8d8d8;
+	margin-top: 0;
+	border-top: 1px solid #fff;
+	}
+	#header .navbar-nav .gnb-li ul li a {
+		padding: 10px;
+		line-height: 20px;
+	}
+	#header .navbar-nav .gnb-li ul li a:hover {
+		text-decoration: none;
+	}
+}
+
+/* form */
+
+.auth {
+	padding: 20px;
+}
+.bg-sir {
+	background-color: #587ef6 !important;
+	color: #fff !important;
+}
+.sr-only-input {
+	margin-top: -20px;
+}
+

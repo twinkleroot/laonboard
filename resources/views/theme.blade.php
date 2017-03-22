@@ -1,1 +1,1 @@
-@extends('themes.olive.theme')
+@extends('themes.default.main')
