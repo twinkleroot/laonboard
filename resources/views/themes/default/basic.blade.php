@@ -22,6 +22,8 @@
         ]) !!};
     </script>
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+
+    @yield('include_script')
 </head>
 
 <body>
