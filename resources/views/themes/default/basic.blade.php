@@ -37,7 +37,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-        <!-- logo -->   
+        <!-- logo -->
         <a class="logo" href="{{ url('/') }}">
             <img src="{{ asset('themes/default/images/logo2.png') }}">
         </a>
@@ -45,7 +45,7 @@
     <div id="navbar" class="navbar-collapse collapse">
         <!-- menu -->
         <ul class="gnb navbar-nav">
-            <!-- 일반메뉴 
+            <!-- 일반메뉴
             <li><a href="">메뉴1</a></li>
             <li><a href="">메뉴2</a></li>-->
 
@@ -86,7 +86,7 @@
     @yield('content')
 </div>
 
-<!-- footer 
+<!-- footer
 <footer id="footer">
     Copyright 2017 SIR. All Rights Reserved.
 </footer>-->
