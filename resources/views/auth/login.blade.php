@@ -1,10 +1,17 @@
-@extends('theme')
-@yield('title')
+@extends('layouts.app')
 
+<<<<<<< HEAD
 @section('content')
 {{--@include('themes.default.login')--}}
 
 
+=======
+@section('title')
+    LaBoard | 로그인
+@endsection
+
+@section('content')
+>>>>>>> 46191f1128a432a89b450bb58fbd3ed65f79b145
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -75,5 +82,9 @@
         </div>
     </div>
 </div>
+<<<<<<< HEAD
 
 @endsection
+=======
+@endsection
+>>>>>>> 46191f1128a432a89b450bb58fbd3ed65f79b145
