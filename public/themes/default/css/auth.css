@@ -1,36 +1,75 @@
-@charset "UTF-8";
-@import url(SpoqaHanSans-kr.css);
-<<<<<<< HEAD
-@import url(bootstrap/bootstrap.css);
-
-* { 
-	font-family: Spoqa Han Sans, Sans-serif;
+/* auth */
+#auth {
+	background: #fff;
+	-webkit-box-shadow: 0px 0px 5px #ccc;
+	-moz-box-shadow: 0px 0px 5px #ccc;
+	box-shadow: 0px 0px 5px #ccc;
 }
-body {
-	margin: 0;
-	padding: 0;
-	background: #efefef;
+#auth .header {
+	box-sizing: border-box;
+	height: 70px;
+	padding: 0 30px;
+	background: #587ef6;
+}
+#auth .header h1 {
+	display: inline;
+	font-size: 1em;
+	line-height: 70px;
+	color: #fff;
+	font-weight: 600;
+	vertical-align: middle;
+}
+#auth .form-horizontal {
+	padding: 30px;
+	font-size: 0.9em;
+	color: #595959;
 }
 
-/* header 영역 */
 
-
-/* contents */
-#contents {
-
+/* form-group */
+.form-group  {
+	
 }
-
-/* footer */
-#footer {
-	width: 100%;
-	padding: 30px 0;
-	margin-top: 50px;
-	font-size: 0.8em;
-	color: #aaa;
+#auth .form-heading {
+	color: #587ef6;
+	margin: 10px 0;
+	font-weight: 600;
+}
+#auth .form-control {
+	margin: 5px 0;
+	box-sizing: border-box;
+}
+#auth .form-group .link-right {
+	float: right;
+	line-height: 25px;
+}
+#auth .form-group .link-right:after {
+	content: '';
+	display: block;
+	clear: both;
+}
+#auth .form-group p {
 	text-align: center;
 }
 
-/* label 
+#auth .form-horizontal .form-box:last-child {
+	margin-bottom: -20px;
+}
+#auth .form-box .form-group:last-child {
+	margin-bottom: 20px;
+}
+
+#auth .form-group .form-comment {
+	font-size: 0.9em;
+	text-align: left;
+	margin:10px 0;
+	line-height: 1.5;
+}
+.register {
+	margin: 10px 0 0 0;
+}
+
+/* label */
 .sr-only {
 	position: absolute;
 	width: 1px;
@@ -50,18 +89,24 @@ body {
 	overflow: visible;
 	clip: auto;
 }
-label span {
+#auth label {
+	height: 54px;
+}
+#auth label span {
 	vertical-align: baseline;
 	height: 25px;
 }
-label .check-span {
+#auth label .check-span {
 	position: relative;
 	line-height: 25px;
 	margin-left: 33px;
 }
 
+/* input & button */
+#auth input {
 
-textarea {
+}
+#auth textarea {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
@@ -77,13 +122,13 @@ textarea {
 	-moz-border-radius: 6px;
 	border-radius: 6px;
 }
-input[type="text"],
-input[type="password"] {
+#auth input[type="text"],
+#auth input[type="password"],
+#auth input[type="email"] {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 
-	width: 100%;
 	height: 44px;
 	padding: 0 10px;
 	border: 1px solid #ddd;
@@ -91,11 +136,13 @@ input[type="password"] {
 	font-size: 1em;
 	color: #595959;
 
+	display: block;
+
 	-webkit-border-radius: 6px;
 	-moz-border-radius: 6px;
 	border-radius: 6px;
 }
-input[type="checkbox"] {
+#auth input[type="checkbox"] {
 	-moz-appearance: none;
     -webkit-appearance: none;
     -ms-appearance: none;
@@ -113,7 +160,7 @@ input[type="checkbox"] {
 	-moz-border-radius: 6px;
 	border-radius: 6px;
 }
-input[type="checkbox"]:before {
+#auth input[type="checkbox"]:before {
 	-moz-osx-font-smoothing: grayscale;
 	-webkit-font-smoothing: antialiased;
 	font-family: FontAwesome;
@@ -127,13 +174,13 @@ input[type="checkbox"]:before {
 	height:100%;
 	content: ' ';
 }
-input[type="checkbox"]:checked:before {
+#auth input[type="checkbox"]:checked:before {
 	content: '\f00c';
 	color: #587ef6;
 	line-height: 1.8em;
 	text-align: center;
 }
-button {
+#auth button {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
@@ -148,8 +195,12 @@ button {
 	-moz-border-radius: 6px;
 	border-radius: 6px;
 }
-button > .join {
-	margin-top: 0;
+.join {
+	margin: 10px 0;
+	position: absolute;
+}
+.login {
+	margin: 10px 0;
 }
 
 @media (max-width: 980px) {
@@ -162,39 +213,4 @@ button > .join {
 
 @media (max-width: 440px) {
 
-	#auth {
-	width: 100%;
-	margin: 0 auto;
-	background: #fff;
-	-webkit-box-shadow: 0px 0px 5px #ccc;
-	-moz-box-shadow: 0px 0px 5px #ccc;
-	box-shadow: 0px 0px 5px #ccc;
-	}
-}*/
-=======
-
-/* basic */
-* { font-family: Spoqa Han Sans, Sans-serif; }
-
-/* header */
-
-#header {
-	width: 100%;
-	height: 80px;
-	background: #fff;
-	border-bottom: 1px solid #d8d8d8;
 }
-#header h1 {
-	float: left;
-	margin: 0;
-	line-height: 80px;
-}
-#header nav {
-	float: right;
-}
-#header:after {
-	content: '';
-	display: block;
-	clear: both;
-}
->>>>>>> 46191f1128a432a89b450bb58fbd3ed65f79b145

@@ -1,6 +1,8 @@
-@extends('theme')
-@yield('title')
+@extends('layouts.app')
 
+@section('title')
+    LaBoard | 회원 가입
+@endsection
 
 @section('include_script')
     <script src='https://www.google.com/recaptcha/api.js'></script>
