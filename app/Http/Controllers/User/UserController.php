@@ -164,6 +164,7 @@ class UserController extends Controller
         }
 
         $user->update([
+            'name' => $request->get('name'),
             'nick' => $request->has('nick') ? $request->get('nick') : $user->nick,
             'nick_date' => $request->has('nick') ? $nowDate : $user->nick_date,
             'homepage' => $request->get('homepage'),

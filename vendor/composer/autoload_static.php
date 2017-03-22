@@ -364,6 +364,7 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
     );
 
     public static $classMap = array (
+        'AddColoumnIdHashOnUsers' => __DIR__ . '/../..' . '/database/migrations/2017_03_22_140202_add_coloumn_id_hash_on_users.php',
         'AddColumnUserTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_07_172208_add_column_user_table.php',
         'AddIndexTokenOnPasswordResetsTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_09_180131_add_index_token_on_password_resets_table.php',
         'AddNullableToPasswordColumnOnUsersTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_17_112912_add_nullable_to_password_column_on_users_table.php',

@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Config;
+use Auth;
 
 class RegisterController extends Controller
 {
@@ -47,22 +48,15 @@ class RegisterController extends Controller
         $this->config = Config::getConfig('config.join');
     }
 
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
-    {
-        return Validator::make($data, User::$rulesRegister);
-    }
-
     // 구글 리캡챠 체크
     public function checkRecaptcha(Request $request)
     {
         if(ReCaptcha::reCaptcha($request)) {
-            $this->create($request);
+            $user = $this->create(array($request));
+
+            Auth::login($user);
+
+            return redirect(route('home'));
         } else {
             return view('auth.register')->withErrors(['reCapcha' => '자동등록방지 입력이 틀렸습니다. 다시 입력해 주십시오.']);
         }
@@ -72,16 +66,18 @@ class RegisterController extends Controller
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
-     * @return User
+     * @return redirect(route('home'));
      */
     protected function create(array $data)
     {
+        $this->validate($data[0], User::$rulesRegister);
+
         $nowDate = Carbon::now()->toDateString();
 
-        return User::create([
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-            'nick' => $data['nick'],
+        $user = User::create([
+            'email' => $data[0]['email'],
+            'password' => bcrypt($data[0]['password']),
+            'nick' => $data[0]['nick'],
             'nick_date' => $nowDate,
             'mailing' => 1,
             'sms' => 1,
@@ -93,6 +89,11 @@ class RegisterController extends Controller
             'level' => $this->config->joinLevel,
             'point' => $this->config->joinPoint,
         ]);
+
+        $user->id_hashkey = bcrypt($user->id);
+        $user->save();
+
+        return $user;
     }
 
 }

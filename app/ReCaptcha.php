@@ -20,5 +20,5 @@ class ReCaptcha extends Model
 
         return $flag->success;
     }
-    
+
 }
