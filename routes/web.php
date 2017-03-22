@@ -28,6 +28,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::put('users/selected_update', ['as' => 'users.selectedUpdate', 'uses' => 'Admin\UsersController@selectedUpdate']);
     // 환경 설정
     Route::get('admin/config', ['as' => 'admin.config', 'uses' => 'Admin\ConfigController@index']);
+    Route::put('admin/config/update', ['as' => 'admin.config.update', 'uses' => 'Admin\ConfigController@update']);
 
     // 사용자가 회원 정보 수정할 때 관련한 라우트들
     Route::get('user/edit', ['as' => 'user.edit', 'uses' => 'User\UserController@edit']);

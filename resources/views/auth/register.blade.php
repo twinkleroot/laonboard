@@ -62,7 +62,7 @@
                                 <p>
                                     공백없이 한글, 영문, 숫자만 입력 가능 <br />
                                     (한글2자, 영문4자 이상)<br />
-                                    닉 네임을 바꾸시면 {{ config('gnu.nickDate') }}일 이내에는 변경할 수 없습니다.
+                                    {{-- 닉 네임을 바꾸시면 {{ $config->nickDate }}일 이내에는 변경할 수 없습니다. --}}
                                 </p>
                                 <input id="nick" type="text" class="form-control" name="nick" value="{{ old('nick') }}" required autofocus>
 

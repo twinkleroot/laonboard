@@ -8,6 +8,7 @@ use App\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Password;
 use Carbon\Carbon;
+use App\Config;
 
 class UsersController extends Controller
 {
@@ -31,7 +32,11 @@ class UsersController extends Controller
     public function create()
     {
         $user = \Auth::user();
-        return view('admin.user.create')->with('user', $user);
+        $config = Config::getConfig('config.join');
+        return view('admin.user.create')
+            ->with('user', $user)
+            ->with('config', $config)
+            ;
     }
 
     /**

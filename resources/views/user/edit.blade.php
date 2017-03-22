@@ -49,20 +49,19 @@
                             </div>
                         </div>
 
-                        @if(config('gnu.name') == 1
-                            || config('gnu.homepage') == 1
-                            || config('gnu.tel') == 1
-                            || config('gnu.hp') == 1
-                            || config('gnu.addr') == 1
-                        )
+                        @if($config->name == 1
+                            or $config->homepage == 1
+                            or $config->tel == 1
+                            or $config->hp == 1
+                            or $config->addr == 1)
                         <div class="panel-heading">개인정보 입력</div>
                         @endif
-                        @if(config('gnu.name') == 1)
+                        @if($config->name == 1)
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                             <label for="name" class="col-md-4 control-label">이름</label>
 
                             <div class="col-md-6">
-                                <input id="name" type="text" class="form-control" name="name" value="{{ $user->name }}" readonly>
+                                <input id="name" type="text" class="form-control" name="name" value="{{ $user->name }}">
 
                                 @if ($errors->has('name'))
                                     <span class="help-block">
@@ -81,7 +80,7 @@
                                 <p>
                                     공백없이 한글, 영문, 숫자만 입력 가능 <br />
                                     (한글2자, 영문4자 이상)<br />
-                                    닉네임을 바꾸시면 {{ config('gnu.nickDate') }}일 이내에는 변경할 수 없습니다.
+                                    닉네임을 바꾸시면 {{ $config->nickDate }}일 이내에는 변경할 수 없습니다.
                                 </p>
                                 <input id="nick" type="text" class="form-control" name="nick" value="{{ $user->nick }}" required autofocus>
 
@@ -94,7 +93,7 @@
                         </div>
                         @endif
 
-                        @if(config('gnu.homepage') == 1)
+                        @if($config->homepage == 1)
                         <div class="form-group{{ $errors->has('homepage') ? ' has-error' : '' }}">
                             <label for="homepage" class="col-md-4 control-label">홈페이지</label>
 
@@ -110,7 +109,7 @@
                         </div>
                         @endif
 
-                        @if(config('gnu.tel') == 1)
+                        @if($config->tel == 1)
                         <div class="form-group{{ $errors->has('tel') ? ' has-error' : '' }}">
                             <label for="tel" class="col-md-4 control-label">전화번호</label>
 
@@ -126,7 +125,7 @@
                         </div>
                         @endif
 
-                        @if(config('gnu.hp') == 1)
+                        @if($config->hp == 1)
                         <div class="form-group{{ $errors->has('hp') ? ' has-error' : '' }}">
                             <label for="hp" class="col-md-4 control-label">휴대폰번호</label>
 
@@ -142,7 +141,7 @@
                         </div>
                         @endif
 
-                        @if(config('gnu.addr') == 1)
+                        @if($config->addr == 1)
                         <div class="form-group">
                             <label for="addr1" class="col-md-4 control-label">주소</label>
                             <div class="col-md-6">
@@ -162,8 +161,8 @@
                         @endif
 
                         <div class="panel-heading">기타 개인 설정</div>
-
-                        @if(config('gnu.signature') == 1)
+                        
+                        @if($config->signature == 1)
                         <div class="form-group">
                             <label for="signature" class="col-md-4 control-label">서명</label>
 
@@ -173,7 +172,7 @@
                         </div>
                         @endif
 
-                        @if(config('gnu.profile') == 1)
+                        @if($config->profile == 1)
                         <div class="form-group">
                             <label for="profile" class="col-md-4 control-label">자기소개</label>
 
@@ -219,7 +218,7 @@
                             @if($openChangable)
                                 <div class="col-md-6">
                                     <p>
-                                        정보공개를 바꾸시면 {{ config('gnu.openDate') }}일 이내에는 변경이 안됩니다.
+                                        정보공개를 바꾸시면 {{ $config->openDate }}일 이내에는 변경이 안됩니다.
                                     </p>
                                     <input id="open" type="checkbox" name="open" value="1" @if($user->open == 1) checked @endif>
                                     다른분들이 나의 정보를 볼 수 있도록 합니다.
@@ -233,7 +232,7 @@
                             @else
                                 <div class="col-md-6">
                                     <p>
-                                        정보공개는 수정후 {{ config('gnu.openDate') }}일 이내,
+                                        정보공개는 수정후 {{ $config->openDate }}일 이내,
                                         {{ $dueDate->year }}년
                                         {{ $dueDate->month }}월
                                         {{ $dueDate->day }}일 까지는 변경이 안됩니다.<br />
@@ -243,7 +242,7 @@
                             @endif
                         </div>
 
-                        @if(config('gnu.recommend') == 1)
+                        @if($config->recommend == 1)
                         <div class="form-group{{ $errors->has('recommend') ? ' has-error' : '' }}">
                             <label for="recommend" class="col-md-4 control-label">추천인 닉네임</label>
 

@@ -8,19 +8,29 @@ use Auth;
 use App\ReCaptcha;
 use App\User;
 use Carbon\Carbon;
+use App\Config;
 
 class UserController extends Controller
 {
+
+    public $config;
+
+    public function __construct(Config $config)
+    {
+        $this->config = Config::getConfig('config.join');
+    }
 
     // 회원 정보 수정 폼
     public function edit()
     {
         $user = Auth::user();
+
         // 정보공개 변경여부
         $openChangable = $this->openChangable($user, Carbon::now());
 
         return view('user.edit')
             ->with('user', $user)
+            ->with('config', $this->config)
             ->with('nickChangable', $this->nickChangable($user, Carbon::now())) // 닉네임 변경여부
             ->with('openChangable', $openChangable[0])                          // 정보공개 변경 여부
             ->with('dueDate', $openChangable[1])                                // 정보공개 언제까지 변경 못하는지 날짜
@@ -35,7 +45,7 @@ class UserController extends Controller
         $nickDiff = $current->diffInDays($user->nick_date);
         // 닉네임 변경 여부
         $nickChangable = false;
-        if($nickDiff > config('gnu.nickDate')) {
+        if($nickDiff > $this->config->nickDate) {
             $nickChangable = true;
         }
 
@@ -53,10 +63,10 @@ class UserController extends Controller
             $openChangable[0] = true;
         } else {
             $openDiff = $current->diffInDays($openDate);
-            if($openDiff >= config('gnu.openDate')) {
+            if($openDiff >= $this->config->openDate) {
                 $openChangable[0] = true;
             }
-            $openChangable[1] = $openDate->addDays(config('gnu.openDate'));
+            $openChangable[1] = $openDate->addDays($this->config->openDate);
         }
 
         return $openChangable;
@@ -122,13 +132,13 @@ class UserController extends Controller
         if(!ReCaptcha::reCaptcha($request)) {
             return view('user.edit')->withErrors(['reCapcha' => '자동등록방지 입력이 틀렸습니다. 다시 입력해 주십시오.'])
             ->with('user', $user)
+            ->with('config', $this->config)
             ->with('nickChangable', $this->nickChangable($user, Carbon::now())) // 닉네임 변경여부
             ->with('openChangable', $openChangable[0])                          // 정보공개 변경 여부
             ->with('dueDate', $openChangable[1])                                // 정보공개 언제까지 변경 못하는지 날짜
             ->with('recommend', $this->recommendedPerson($user))                // 추천인 닉네임 id로 가져오기
             ;
         }
-
         $this->validate($request, User::$rulesUpdate);
 
         if($request->get('password') !== '') {
@@ -141,7 +151,7 @@ class UserController extends Controller
 
         // 추천인 닉네임 받은 것을 해당 닉네임의 id로 조회
         $recommendedId = '';
-        if($request->get('recommend') !== '') {
+        if( !is_null($request->get('recommend')) ) {
             $recommendedUser = User::where([
                 'nick' => $request->get('recommend'),
             ])->first();

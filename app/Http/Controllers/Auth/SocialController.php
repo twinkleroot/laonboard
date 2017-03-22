@@ -9,15 +9,18 @@ use App\SocialLogin;
 use App\User;
 use Auth;
 use Carbon\Carbon;
+use App\Config;
 
 class SocialController extends Controller
 {
     public $request;
+    public $config;
 
     public function __construct(Request $request)
     {
         $this->middleware('guest');
         $this->request = $request;
+        $this->config = Config::getConfig('config.join');
     }
 
     public function redirectToProvider()
@@ -26,6 +29,7 @@ class SocialController extends Controller
         return Socialite::with('naver')->redirect();
     }
 
+    // 소셜인증 후 데이터를 받아서 처리하는 메서드
     public function handleProviderCallback()
     {
         $userFromSocial = Socialite::with('naver')->user();
@@ -47,8 +51,8 @@ class SocialController extends Controller
                 'nick' => $userFromSocial->getNickname(),
                 'nick_date' => Carbon::now()->toDateString(),
                 'ip' => $this->request->ip(),
-                'level' => config('gnu.joinLevel'),
-                'point' => config('gnu.joinPoint'),
+                'level' => $this->config->joinLevel,
+                'point' => $this->config->joinPoint,
             ]);
             // 소셜을 통해 처음 로그인한 사용자의 정보를 User 테이블에 저장.
             $userToLogin->save();

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Config;
 
 class RegisterController extends Controller
 {
@@ -26,6 +27,7 @@ class RegisterController extends Controller
     use RegistersUsers;
 
     public $request;
+    public $config;
     /**
      * Where to redirect users after registration.
      *
@@ -42,6 +44,7 @@ class RegisterController extends Controller
     {
         $this->middleware('guest');
         $this->request = $request;
+        $this->config = Config::getConfig('config.join');
     }
 
     /**
@@ -87,8 +90,8 @@ class RegisterController extends Controller
             'today_login' => Carbon::now(),
             'login_ip' => $this->request->ip(),
             'ip' => $this->request->ip(),
-            'level' => config('gnu.joinLevel'),
-            'point' => config('gnu.joinPoint'),
+            'level' => $this->config->joinLevel,
+            'point' => $this->config->joinPoint,
         ]);
     }
 

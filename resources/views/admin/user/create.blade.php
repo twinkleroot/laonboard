@@ -63,14 +63,14 @@
                             <td>
                                 <select class="form-control" name="level">
                                     @for($i=1;$i<=10;$i++)
-                                    <option value={{ $i }} @if(config('gnu.joinLevel') == $i) selected @endif>
+                                    <option value={{ $i }} @if($config->joinLevel == $i) selected @endif>
                                         {{ $i }}
                                     </option>
                                     @endfor
                                 </select>
                             </td>
                             <th>포인트</th>
-                            <td><input type="text" class="form-control" name="point" value="{{ config('gnu.joinPoint') }}" /></td>
+                            <td><input type="text" class="form-control" name="point" value="{{ $config->joinPoint }}" /></td>
                         </tr>
                         <tr>
                             <th>홈페이지</th>
