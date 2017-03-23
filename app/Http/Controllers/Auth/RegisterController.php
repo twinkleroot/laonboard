@@ -29,6 +29,7 @@ class RegisterController extends Controller
 
     public $request;
     public $config;
+    public $rulePassword;
     /**
      * Where to redirect users after registration.
      *
@@ -46,6 +47,7 @@ class RegisterController extends Controller
         $this->middleware('guest');
         $this->request = $request;
         $this->config = Config::getConfig('config.join');
+        $this->rulePassword = Config::getRulePassword('config.join');
     }
 
     // 구글 리캡챠 체크
@@ -70,7 +72,10 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $this->validate($data[0], User::$rulesRegister);
+        $rule = User::$rulesRegister;
+        $rule = array_add($rule, 'password', $this->rulePassword);
+
+        $this->validate($data[0], $rule);
 
         $nowDate = Carbon::now()->toDateString();
 

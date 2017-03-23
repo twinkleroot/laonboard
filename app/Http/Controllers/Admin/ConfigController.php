@@ -33,6 +33,11 @@ class ConfigController extends Controller
               'banId' => config('gnu.banId'),
               'stipulation' => config('gnu.stipulation'),
               'privacy' => config('gnu.privacy'),
+              'password_policy_digits' => config('gnu.password_policy_digits'),
+              'password_policy_special' => config('gnu.password_policy_special'),
+              'password_policy_upper' => config('gnu.password_policy_upper'),
+              'password_policy_number' => config('gnu.password_policy_number'),
+              'password_policy_sequence' => config('gnu.password_policy_sequence'),
             );
 
             DB::table('configs')->insert([
@@ -73,6 +78,11 @@ class ConfigController extends Controller
           ),
           'stipulation' => $request->get('stipulation'),
           'privacy' => $request->get('privacy'),
+          'password_policy_digits' => $request->get('password_policy_digits'),
+          'password_policy_special' => $request->get('password_policy_special'),
+          'password_policy_upper' => $request->get('password_policy_upper'),
+          'password_policy_number' => $request->get('password_policy_number'),
+          'password_policy_sequence' => $request->get('password_policy_sequence'),
         );
 
         $config->vars = json_encode($configArr);

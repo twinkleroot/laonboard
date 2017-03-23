@@ -65,7 +65,7 @@ return [
     'not_in'               => '선택된 :attribute은(는) 유효하지 않습니다.',
     'numeric'              => ':attribute은(는) 반드시 숫자여야 합니다.',
     'present'              => 'The :attribute field must be present.',
-    'regex'                => ':attribute 형식은 유효하지 않습니다.',
+    'regex'                => ':attribute 형식이 유효하지 않습니다.',
     'required'             => ':attribute 필드는 필수입니다.',
     'required_if'          => ':other이(가) :value 일때 :attribute 필드는 필수입니다.',
     'required_unless'      => 'The :attribute field is required unless :other is in :values.',

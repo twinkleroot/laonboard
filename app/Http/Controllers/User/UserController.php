@@ -14,10 +14,12 @@ class UserController extends Controller
 {
 
     public $config;
+    public $rulePassword;
 
     public function __construct(Config $config)
     {
         $this->config = Config::getConfig('config.join');
+        $this->rulePassword = Config::getRulePassword('config.join');
     }
 
     // 회원 정보 수정 폼
@@ -106,14 +108,15 @@ class UserController extends Controller
         if(Auth::attempt(['email' => $email, 'password' => $request->get('password') ], false, false)) {
             return redirect(route('user.edit'));
         } else {
-            return redirect(route('user.getPasswordConfirm'))->with('message', '비밀번호가 틀립니다.');
+            return redirect(route('user.checkPassword'))->with('message', '비밀번호가 틀립니다.');
         }
     }
 
     // 최초 비밀번호 설정
     public function setPassword(Request $request)
     {
-        $this->validate($request, User::$rulesSetPassword);
+        $rule = $this->setPasswordRule();
+        $this->validate($request, $rule);
 
         $user = Auth::user();
         $user->password = bcrypt($request->get('password'));
@@ -139,7 +142,9 @@ class UserController extends Controller
             ->with('recommend', $this->recommendedPerson($user))                // 추천인 닉네임 id로 가져오기
             ;
         }
-        $this->validate($request, User::$rulesUpdate);
+
+        $rule = $this->setRulePassword();
+        $this->validate($request, $rule);
 
         if($request->get('password') !== '') {
             $user->password = bcrypt($request->get('password'));
@@ -179,7 +184,7 @@ class UserController extends Controller
             'memo' => $request->get('memo'),
             'mailing' => $request->has('mailing') ? $request->get('mailing') : 0,
             'sms' => $request->has('sms') ? $request->get('sms') : 0,
-            'recommend' => $recommendedId,
+            'recommend' => $request->has('recommend') ? $recommendedId : $user->recommend,
         ]);
 
         // 정보공개 체크박스에 체크를 했거나 기존에 open값과 open입력값이 다르다면 기존 open 값에 open 입력값을 넣는다.
@@ -190,6 +195,14 @@ class UserController extends Controller
         }
 
         return redirect('/index')->with('message', $user->nick . '님의 회원정보가 변경되었습니다.');
+    }
+
+    public function setRulePassword()
+    {
+        $rule = User::$rulesPassword;
+        $rule = array_add($rule, 'password', $this->rulePassword);
+
+        return $rule;
     }
 
 }

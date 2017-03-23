@@ -192,6 +192,30 @@
                     </div>
                 </div>
                 <div class="panel-body">
+                    <div class="form-group">
+                        <label for="privacy" class="col-md-4 control-label">비밀번호 조합 정책</label>
+
+                        <div class="col-md-6">
+                            최소<input type="text" id="digits" name="password_policy_digits"
+                                value="{{ $config->password_policy_digits }}" placeholder="비밀 번호 최소 자릿수를 입력해 주세요." />
+                                자릿수 이상 <br />
+                            <input type="checkbox" id="special" name="password_policy_special" value="1"
+                                @if($config->password_policy_special == 1) checked @endif/>
+                                <label for="special">특수문자 하나 이상</label> <br />
+                            <input type="checkbox" id="upper" name="password_policy_upper" value="1"
+                                @if($config->password_policy_upper == 1) checked @endif/>
+                                <label for="upper">대문자 하나 이상</label> <br />
+                            <input type="checkbox" id="number" name="password_policy_number" value="1"
+                                @if($config->password_policy_number == 1) checked @endif/>
+                                <label for="number">숫자 하나 이상</label> <br />
+                            {{-- <input type="checkbox" id="sequence" name="password_policy_sequence" value="1"
+                                @if($config->password_policy_sequence == 1) checked @endif/>
+                                <label for="sequence">이어지는 숫자 3개 이상 금지</label> <br /> --}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-body">
                     <div class="col-md-offset-5">
                         <input type="submit" class="btn btn-primary" value="변경하기"/>
                     </div>
