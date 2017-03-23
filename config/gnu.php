@@ -19,4 +19,9 @@
   ),
   'stipulation' => '해당 홈페이지에 맞는 회원약관을 입력합니다.',
   'privacy' => '해당 홈페이지에 맞는 개인정보처리방침을 입력합니다.',
+  'password_policy_digits' => 6,
+  'password_policy_special' => 0,
+  'password_policy_upper' => 0,
+  'password_policy_number' => 0,
+  // 'password_policy_sequence' => 0,
 ) ;
