@@ -2,7 +2,7 @@
 @import url(SpoqaHanSans-kr.css);
 @import url(bootstrap/bootstrap.css);
 
-* {
+* { 
 	font-family: Spoqa Han Sans, Sans-serif;
 }
 body {
@@ -23,13 +23,13 @@ body {
 #footer {
 	width: 100%;
 	padding: 30px 0;
-	margin-top: 50px;
-	font-size: 0.8em;
+	margin-top: 40px;
+	font-size: 1em;
 	color: #aaa;
 	text-align: center;
 }
 
-/* label
+/* label 
 .sr-only {
 	position: absolute;
 	width: 1px;
