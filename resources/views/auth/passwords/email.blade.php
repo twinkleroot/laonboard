@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    LaBoard | 로그인
+    LaBoard | 비밀번호 재설정
 @endsection
 
 @section('content')
