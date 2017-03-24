@@ -72,7 +72,6 @@
 	border-top: 1px solid #d8d8d8;
 	padding: 0;
 }
-
 @media (min-width: 768px) {
 	#header .logo {
 		margin: 0;
@@ -117,9 +116,6 @@
 
 /* form */
 
-.auth {
-	padding: 20px;
-}
 .bg-sir {
 	background-color: #587ef6 !important;
 	color: #fff !important;
@@ -128,3 +124,19 @@
 	margin-top: -20px;
 }
 
+
+
+/* content */
+
+.mg5 {
+	margin-bottom: 5px;
+}
+.mdline-title {
+	margin: 15px 0;
+	background: url('../images/centerline.png') center center repeat-x;
+}
+.mdline-title span {
+	padding: 0 7px;
+	background: #fff;
+	color: #aaa;
+}

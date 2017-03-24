@@ -5,6 +5,8 @@
 @endsection
 
 @section('content')
+@include('themes.default.reset')
+{{--
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -27,7 +29,7 @@
                             <label for="email" class="col-md-4 control-label">이메일</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ $email or old('email') }}" required autofocus>
+                                <input id="email" type="email" class="form-control" name="email" value="{{ $email or old('email') }}">
 
                                 @if ($errors->has('email'))
                                     <span class="help-block">
@@ -77,4 +79,5 @@
         </div>
     </div>
 </div>
+--}}
 @endsection

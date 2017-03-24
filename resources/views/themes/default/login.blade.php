@@ -3,74 +3,106 @@
     로그인
 @endsection
 
+@section('include_css')
+    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/auth.css') }}">
+@endsection
+
 @section('content')
 <div class="container">
 <div class="row">
+<div class="col-md-6 col-md-offset-3 col-xs-10 col-xs-offset-1">
+
 <!-- auth login -->
-<div class="col-md-6 col-md-offset-3">
-    <div id="auth">
-        <div class="header">
-            <h1>로그인</h1>
+    <div class="panel panel-default">
+        <div class="panel-heading bg-sir">
+            <h3 class="panel-title">로그인</h3>
         </div>
-        <form class="form-horizontal" role="form" method="POST" action="{{ route('login') }}">
+        <div class="panel-body row">
+            <form class="contents col-md-8 col-md-offset-2" role="form" method="POST" action="{{ route('login') }}">
             {{ csrf_field() }}
 
-            <div class="form-group {{ $errors->has('email') ? ' has-error' : '' }}">
-                <label>
-                    <span class="sr-only">이메일</span>
-                    <input id="email" class="form-control col-xs-12" type="email" name="email" value="{{ old('email') }}" placeholder="이메일을 입력하세요" required autofocus>
-                </label>
+                <div class="form-group mg5 {{ $errors->has('email') ? ' has-error' : '' }}">
+                    <label for="email"><span class="sr-only">이메일</span></label>
+                    <input type="email" class="form-control sr-only-input" id="email" name="email" value="{{ old('email') }}" placeholder="이메일 주소를 입력하세요" required autofocus>
 
-                @if ($errors->has('email'))
-                    <span class="help-block">
-                        <strong>{{ $errors->first('email') }}</strong>
-                    </span>
-                @endif
-            </div>
+                    @if ($errors->has('email'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('email') }}</strong>
+                        </span>
+                    @endif
+                </div>
 
-            <div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
-                <label class="">
-                    <span class="sr-only">비밀번호</span>
-                    <input id="password" class="form-control col-xs-12" type="password" name="password" placeholder="비밀번호를 입력하세요" required>
-                </label>
+                <div class="form-group mg5 {{ $errors->has('password') ? ' has-error' : '' }}">
+                    <label for="password"><span class="sr-only">비밀번호</span></label>
+                    <input type="password" class="form-control sr-only-input" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
 
-                @if ($errors->has('password'))
-                    <span class="help-block">
-                        <strong>{{ $errors->first('password') }}</strong>
-                    </span>
-                @endif
-            </div>
+                    @if ($errors->has('password'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('password') }}</strong>
+                        </span>
+                    @endif
+                </div>
 
-            <div class="form-group">
-            <div class="form-control col-xs-12">
-            <div class="row">
-                <label>
-                    <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
-                    <span class="check-span">자동 로그인</span>
-                </label>
+                <div class="row">
+                    <div class="col-xs-7">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="remember"  {{ old('remember') ? 'checked' : '' }}>
+                            자동 로그인
+                        </label>
+                    </div>
+                    </div>
 
-                <a href="{{ route('password.request') }}" class="link-right">비밀번호 찾기</a>
-            </div>
-            </div>
-            </div>
+                    <div class="col-xs-5">
+                    <div class="password_search">
+                        <p class="text-right">
+                            <a href="{{ route('password.request') }}">정보찾기</a>
+                        </p>
+                    </div>
+                    </div>
+                </div>
 
-            <div class="form-group">
-                <button type="submit" class="login col-xs-12">로그인</button>
-            </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-lg btn-block btn-sir">로그인</button>
+                </div>
 
-            <div class="form-group">
-                <p class="register">아직 회원이 아니신가요? <a href="{{ route('register') }}">회원가입</a> </p>
-            </div>
+                <!-- 소셜로그인 -->
+                <div class="mdline-title">
+                    <div class="text-center">
+                        <span>Social Login</span>
+                    </div>
+                </div>
 
-            <div class="form-group">
-                <div class="col-md-8 col-md-offset-4">
-                    <a class="btn btn-primary" href="{{ route('social.naver') }}">
-                        네이버로 로그인
+                <div class="social-login">
+                    <!-- 네이버로 로그인 -->
+                    <a href="{{ route('social.naver') }}" class="btn btn-block btn-naver">
+                        <div class="icon icon-naver"></div>
+                        <span class="text-left">네이버로 로그인</span>
+                    </a>
+                    <!-- 페이스북으로 로그인 -->
+                    <a href="" class="btn btn-block btn-facebook">
+                        <div class="icon icon-facebook"></div>
+                        <span class="text-left">페이스북으로 로그인</span>
+                    </a>
+                    <!-- 구글로 로그인 -->
+                    <a href="" class="btn btn-block btn-google">
+                        <div class="icon icon-google"></div>
+                        <span class="text-left">구글로 로그인</span>
                     </a>
                 </div>
-            </div>
-        </form>
+                <!-- 소셜로그인 end -->
+            </form>
+        </div>
     </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="text-center">
+                아직 회원이 아니신가요? <a href="{{ route('register') }}">회원가입</a>
+            </div>
+        </div>
+    </div>
+
 </div>
 </div>
 </div>
