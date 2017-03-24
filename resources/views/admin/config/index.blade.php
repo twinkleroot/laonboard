@@ -166,6 +166,15 @@
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
+                        <label for="loginPoint" class="col-md-4 control-label">로그인시 포인트</label>
+
+                        <div class="col-md-6">
+                            <input type="text" name="loginPoint" value="{{ $config->loginPoint }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
                         <label for="banId" class="col-md-4 control-label">아이디,닉네임 금지단어</label>
 
                         <div class="col-md-6">
@@ -208,9 +217,6 @@
                             <input type="checkbox" id="number" name="password_policy_number" value="1"
                                 @if($config->password_policy_number == 1) checked @endif/>
                                 <label for="number">숫자 하나 이상</label> <br />
-                            {{-- <input type="checkbox" id="sequence" name="password_policy_sequence" value="1"
-                                @if($config->password_policy_sequence == 1) checked @endif/>
-                                <label for="sequence">이어지는 숫자 3개 이상 금지</label> <br /> --}}
                         </div>
                     </div>
                 </div>

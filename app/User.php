@@ -51,4 +51,17 @@ class User extends Authenticatable
     {
         return $this->hasMany(SocialLogin::class);
     }
+
+    // 추천인 닉네임 구하기
+    public static function recommendedPerson($user)
+    {
+        $recommendedNick = '';
+        if(!is_null($user->recommend)) {
+            $recommendedNick = User::where([
+                'id' => $user->recommend,
+            ])->first()->nick;
+        }
+
+        return $recommendedNick;
+    }
 }

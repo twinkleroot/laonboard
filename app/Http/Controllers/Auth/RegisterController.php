@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Config;
+use App\Point;
 use Auth;
 
 class RegisterController extends Controller
@@ -55,7 +56,6 @@ class RegisterController extends Controller
     {
         if(ReCaptcha::reCaptcha($request)) {
             $user = $this->create(array($request));
-
             Auth::login($user);
 
             return redirect(route('home'));
@@ -74,11 +74,9 @@ class RegisterController extends Controller
     {
         $rule = User::$rulesRegister;
         $rule = array_add($rule, 'password', $this->rulePassword);
-
         $this->validate($data[0], $rule);
 
         $nowDate = Carbon::now()->toDateString();
-
         $user = User::create([
             'email' => $data[0]['email'],
             'password' => bcrypt($data[0]['password']),
@@ -92,10 +90,26 @@ class RegisterController extends Controller
             'login_ip' => $this->request->ip(),
             'ip' => $this->request->ip(),
             'level' => $this->config->joinLevel,
-            'point' => $this->config->joinPoint,
         ]);
 
+        // Users 테이블의 주 키인 id의 해시 값을 만들어서 저장한다. (게시글에 사용자 번호 노출 방지)
         $user->id_hashkey = bcrypt($user->id);
+
+        $rel_table = '@users';
+        $rel_email = $data[0]['email'];
+        $rel_action = '회원가입';
+
+        // 기존에 같은 건으로 포인트를 받았는지 조회. 조회되면 포인트 적립 불가
+        $existPoint = Point::checkPoint($rel_table, $rel_email, $rel_action);
+        if(is_null($existPoint)) {
+            $content = '회원가입 축하';
+            $pointToGive = Point::pointType('join');
+            Point::givePoint($pointToGive, $rel_table, $rel_email, $rel_action, $content);
+            $user->point = $pointToGive;
+        } else {
+            $user->point = $existPoint->user_point;
+        }
+
         $user->save();
 
         return $user;

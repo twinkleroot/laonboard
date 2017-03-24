@@ -40,24 +40,66 @@ class SocialController extends Controller
         ])->first();
 
         $userToLogin = null;
-        if(!is_null($socialLogin)) {
+
+        if(is_null($socialLogin)) {
+            // 소셜에서 받아온 데이터를 세션에 저장한다.
+            session()->put('userFromSocial', $userFromSocial);
+            // 소셜 계정을 처음 사용해서 로그인 했을 경우 기존 계정과 연결/ 이 계정으로 사용 선택 화면으로 연결
+            return view('auth.social')->with('userFromSocial', $userFromSocial);
+        } else {
             $userToLogin = $socialLogin->user()->first();
         }
 
-        if(is_null($userToLogin)) {
-            $userToLogin = new User([
-                'name' => is_null($userFromSocial->getName()) ? $userFromSocial->getNickname() : $userFromSocial->getName(),
-                'email' => $userFromSocial->getEmail(),
-                'nick' => $userFromSocial->getNickname(),
-                'nick_date' => Carbon::now()->toDateString(),
-                'ip' => $this->request->ip(),
-                'level' => $this->config->joinLevel,
-                'point' => $this->config->joinPoint,
-            ]);
-            // 소셜을 통해 처음 로그인한 사용자의 정보를 User 테이블에 저장.
-            $userToLogin->save();
+        Auth::login($userToLogin);
 
-            $user = User::find($userToLogin->id);
+        return redirect(route('home'));
+    }
+
+    public function continue(Request $request)
+    {
+        $userFromSocial = session()->get('userFromSocial');
+        $userToLogin = new User([
+            'name' => is_null($userFromSocial->getName()) ? $userFromSocial->getNickname() : $userFromSocial->getName(),
+            'email' => $userFromSocial->getEmail(),
+            'nick' => $userFromSocial->getNickname(),
+            'nick_date' => Carbon::now()->toDateString(),
+            'ip' => $this->request->ip(),
+            'level' => $this->config->joinLevel,
+            'point' => $this->config->joinPoint,
+        ]);
+        // 소셜을 통해 처음 로그인한 사용자의 정보를 User 테이블에 저장.
+        $userToLogin->save();
+
+        $user = User::find($userToLogin->id);
+        $socialLogin = new SocialLogin([
+            'provider' => 'naver',
+            'social_id' => $userFromSocial->getId(),
+            'social_token' => $userFromSocial->token,
+        ]);
+
+        // User 모델과 SocialLogin 모델의 연관관계를 이용해서 social_logins 테이블에 소셜 데이터 저장.
+        $user->socialLogins()->save($socialLogin);
+
+        Auth::login($userToLogin);
+
+        return redirect(route('home'));
+    }
+
+    public function connectExistAccount(Request $request)
+    {
+        $user = User::where([
+            'email' => $request->get('email'),
+        ])->first();
+        $email = $user->email;
+
+        // 입력한 비밀번호와 인증된 사용자의 비밀번호를 비교한다.
+        if(Auth::attempt(['email' => $email, 'password' => $request->get('password') ], false, false)) {
+            $userFromSocial = session()->get('userFromSocial');
+
+            $user = User::where([
+                'email' => $request->get('email'),
+            ])->first();
+
             $socialLogin = new SocialLogin([
                 'provider' => 'naver',
                 'social_id' => $userFromSocial->getId(),
@@ -66,10 +108,12 @@ class SocialController extends Controller
 
             // User 모델과 SocialLogin 모델의 연관관계를 이용해서 social_logins 테이블에 소셜 데이터 저장.
             $user->socialLogins()->save($socialLogin);
+
+            Auth::login($user);
+
+            return redirect(route('home'));
+        } else {
+            return redirect(route('login'))->with('message', '비밀번호가 틀립니다.');
         }
-
-        Auth::login($userToLogin);
-
-        return redirect(route('home'));
     }
 }

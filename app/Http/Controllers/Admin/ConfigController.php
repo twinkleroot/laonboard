@@ -30,6 +30,7 @@ class ConfigController extends Controller
               'joinLevel' => config('gnu.joinLevel'),
               'joinPoint' => config('gnu.joinPoint'),
               'recommendPoint' => config('gnu.recommendPoint'),
+              'loginPoint' => config('gnu.loginPoint'),
               'banId' => config('gnu.banId'),
               'stipulation' => config('gnu.stipulation'),
               'privacy' => config('gnu.privacy'),
@@ -37,7 +38,6 @@ class ConfigController extends Controller
               'password_policy_special' => config('gnu.password_policy_special'),
               'password_policy_upper' => config('gnu.password_policy_upper'),
               'password_policy_number' => config('gnu.password_policy_number'),
-              'password_policy_sequence' => config('gnu.password_policy_sequence'),
             );
 
             DB::table('configs')->insert([
@@ -73,6 +73,7 @@ class ConfigController extends Controller
           'joinLevel' => $request->get('joinLevel'),
           'joinPoint' => $request->get('joinPoint'),
           'recommendPoint' => $request->get('recommendPoint'),
+          'loginPoint' => $request->get('loginPoint'),
           'banId' => array (
             0 => $request->get('banId'),
           ),
@@ -82,7 +83,6 @@ class ConfigController extends Controller
           'password_policy_special' => $request->get('password_policy_special'),
           'password_policy_upper' => $request->get('password_policy_upper'),
           'password_policy_number' => $request->get('password_policy_number'),
-          'password_policy_sequence' => $request->get('password_policy_sequence'),
         );
 
         $config->vars = json_encode($configArr);

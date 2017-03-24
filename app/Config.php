@@ -41,10 +41,6 @@ class Config extends Model
             $rulePieces[$index] = '(?=.*[~!@#$%^&*()\-_=+])';
             $index++;
         }
-        // if($config->password_policy_sequence == 1) {
-        //     $rulePieces[$index] = '^(012|123|234|345|456|567|678|789|890|901)';
-        //     $index++;
-        // }
         $ruleString = '/^(?=.*[a-z])' . implode($rulePieces) . '.{' . $config->password_policy_digits . ',}' .'/';
 
         array_push($ruleArr,  'regex:' . $ruleString);

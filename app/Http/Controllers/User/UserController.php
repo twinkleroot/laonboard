@@ -9,6 +9,7 @@ use App\ReCaptcha;
 use App\User;
 use Carbon\Carbon;
 use App\Config;
+use App\Point;
 
 class UserController extends Controller
 {
@@ -36,7 +37,7 @@ class UserController extends Controller
             ->with('nickChangable', $this->nickChangable($user, Carbon::now())) // 닉네임 변경여부
             ->with('openChangable', $openChangable[0])                          // 정보공개 변경 여부
             ->with('dueDate', $openChangable[1])                                // 정보공개 언제까지 변경 못하는지 날짜
-            ->with('recommend', $this->recommendedPerson($user))                // 추천인 닉네임 id로 가져오기
+            ->with('recommend', User::recommendedPerson($user))                // 추천인 닉네임 id로 가져오기
             ;
     }
 
@@ -72,19 +73,6 @@ class UserController extends Controller
         }
 
         return $openChangable;
-    }
-
-    // 추천인 닉네임 구하기
-    public function recommendedPerson($user)
-    {
-        $recommendedNick = '';
-        if(!is_null($user->recommend)) {
-            $recommendedNick = User::where([
-                'id' => $user->recommend,
-            ])->first()->nick;
-        }
-
-        return $recommendedNick;
     }
 
     // 회원 정보 수정 폼에 앞서 비밀번호 한번 더 확인하는 폼
@@ -139,7 +127,7 @@ class UserController extends Controller
             ->with('nickChangable', $this->nickChangable($user, Carbon::now())) // 닉네임 변경여부
             ->with('openChangable', $openChangable[0])                          // 정보공개 변경 여부
             ->with('dueDate', $openChangable[1])                                // 정보공개 언제까지 변경 못하는지 날짜
-            ->with('recommend', $this->recommendedPerson($user))                // 추천인 닉네임 id로 가져오기
+            ->with('recommend', User::recommendedPerson($user))                // 추천인 닉네임 id로 가져오기
             ;
         }
 
@@ -156,7 +144,7 @@ class UserController extends Controller
 
         // 추천인 닉네임 받은 것을 해당 닉네임의 id로 조회
         $recommendedId = '';
-        if( !is_null($request->get('recommend')) ) {
+        if($request->has('recommend')) {
             $recommendedUser = User::where([
                 'nick' => $request->get('recommend'),
             ])->first();
@@ -166,6 +154,22 @@ class UserController extends Controller
                         ->withErrors(['recommend' => '추천인이 존재하지 않습니다.']);
             }
             $recommendedId = $recommendedUser->id;
+
+            // 추천인에게 포인트 주기.
+            $rel_table = '@users';
+            $rel_email = $recommendedUser->email;
+            $rel_action = $user->email . ' 추천';
+
+            // 기존에 같은 건으로 포인트를 받았는지 조회. 조회되면 포인트 적립 불가
+            $existPoint = Point::checkPoint($rel_table, $rel_email, $rel_action);
+            if(is_null($existPoint)) {
+                $content = $user->email . '의 추천인';
+                $pointToGive = Point::pointType('recommend');
+                Point::givePoint($pointToGive, $rel_table, $rel_email, $rel_action, $content);
+                $recommendedUser->point = $recommendedUser->point + $pointToGive;
+            }
+
+            $recommendedUser->save();
         }
 
         $user->update([

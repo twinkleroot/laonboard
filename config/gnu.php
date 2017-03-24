@@ -13,6 +13,7 @@
   'joinLevel' => '1',
   'joinPoint' => '1000',
   'recommendPoint' => '2000',
+  'loginPoint' => '100',
   'banId' =>
   array (
     0 => 'admin,administrator,관리자,운영자,어드민,주인장,webmaster,웹마스터,sysop,시삽,시샵,manager,매니저,메니저,root,루트,su,guest,방문객',
@@ -23,5 +24,4 @@
   'password_policy_special' => 0,
   'password_policy_upper' => 0,
   'password_policy_number' => 0,
-  // 'password_policy_sequence' => 0,
 ) ;
