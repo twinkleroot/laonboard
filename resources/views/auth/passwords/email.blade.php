@@ -1,10 +1,12 @@
 @extends('theme')
 
 @section('title')
-    LaBoard | 비밀번호 재설정
+    LaBoard | 로그인
 @endsection
 
 @section('content')
+@include('themes.default.email')
+{{--
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -47,4 +49,5 @@
         </div>
     </div>
 </div>
+--}}
 @endsection

@@ -161,7 +161,7 @@
                         @endif
 
                         <div class="panel-heading">기타 개인 설정</div>
-
+                        
                         @if($config->signature == 1)
                         <div class="form-group">
                             <label for="signature" class="col-md-4 control-label">서명</label>
@@ -247,7 +247,7 @@
                             <label for="recommend" class="col-md-4 control-label">추천인 닉네임</label>
 
                             <div class="col-md-6">
-                                <input type="text" class="form-control" name="recommend" value="{{ $recommend!='' ? $recommend : old('recommend') }}">
+                                <input type="text" class="form-control" name="recommend" value="{{  $recommend }}">
 
                                 @if ($errors->has('recommend'))
                                     <span class="help-block">
