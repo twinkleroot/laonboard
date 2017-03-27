@@ -173,6 +173,7 @@ class UserController extends Controller
         }
 
         $user->update([
+            'id_hashkey' => bcrypt($user->id),  // 회원정보수정때마다 id_hashkey를 변경한다.
             'name' => $request->get('name'),
             'nick' => $request->has('nick') ? $request->get('nick') : $user->nick,
             'nick_date' => $request->has('nick') ? $nowDate : $user->nick_date,

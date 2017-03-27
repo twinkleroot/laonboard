@@ -1,5 +1,6 @@
 <?php
  return array (
+  'emailCertify' => '0',
   'nickDate' => 30,
   'openDate' => 30,
   'name' => '0',

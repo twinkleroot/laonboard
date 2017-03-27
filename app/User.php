@@ -47,6 +47,7 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    // 소셜 로그인 모델과의 관계 설정
     public function socialLogins()
     {
         return $this->hasMany(SocialLogin::class);

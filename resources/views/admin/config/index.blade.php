@@ -19,6 +19,16 @@
                 {{ csrf_field() }}
                 <div class="panel-body">
                     <div class="form-group">
+                        <label for="emailCertify" class="col-md-4 control-label">이메일 인증 사용</label>
+
+                        <div class="col-md-6">
+                            <input type="checkbox" name="emailCertify" id="emailCertify" value="1" @if($config->emailCertify == 1) checked @endif>
+                                <label for="emailCertify">사용</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
                         <label for="nickDate" class="col-md-4 control-label">닉네임 수정</label>
 
                         <div class="col-md-6">

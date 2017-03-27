@@ -17,6 +17,7 @@ class ConfigController extends Controller
 
         if(is_null($config)) {
             $configArr = array (
+              'emailCertify' => config('gnu.emailCertify'),
               'nickDate' => config('gnu.nickDate'),
               'openDate' => config('gnu.openDate'),
               'name' => config('gnu.name'),
@@ -60,6 +61,7 @@ class ConfigController extends Controller
         ])->first();
 
         $configArr = array (
+          'emailCertify' => $request->get('emailCertify'),
           'nickDate' => $request->get('nickDate'),
           'openDate' => $request->get('openDate'),
           'name' => $request->get('name'),
