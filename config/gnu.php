@@ -11,7 +11,7 @@
   'signature' => '0',
   'profile' => '0',
   'recommend' => '0',
-  'joinLevel' => '1',
+  'joinLevel' => '2',
   'joinPoint' => '1000',
   'recommendPoint' => '2000',
   'loginPoint' => '100',

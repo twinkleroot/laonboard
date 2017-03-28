@@ -47,4 +47,11 @@ Route::get('social/naver/callback', ['as' => 'social.naver.callback', 'uses' => 
 Route::post('social/continue', ['as' => 'social.continue', 'uses' => 'Auth\SocialController@continue']);
 Route::post('social/connectExistAccount', ['as' => 'social.connectExistAccount', 'uses' => 'Auth\SocialController@connectExistAccount']);
 
+// 구글 리캡챠 서버에서 확인
 Route::post('register/reCaptcha', ['as' => 'register.reCaptcha', 'uses' => 'Auth\RegisterController@checkRecaptcha']);
+// 회원가입 결과 라우트
+Route::get('user/welcome', ['as' => 'user.welcome', 'uses' => 'User\UserController@welcome']);
+// 이메일 인증 라우트
+Route::get('emailCertify/id/{id}/crypt/{crypt}', 'User\MailController@emailCertify')->name('emailCertify');
+// 처리 결과 message를 창으로 알려주는 페이지
+Route::get('message', ['as' => 'message', 'uses' => 'Message\MessageController@message']);
