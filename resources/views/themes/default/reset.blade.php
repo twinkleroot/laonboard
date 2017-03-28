@@ -1,0 +1,77 @@
+@extends('theme')
+
+@section('title')
+    LaBoard | 비밀번호 재설정
+@endsection
+
+@section('include_css')
+    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/auth.css') }}">
+@endsection
+
+@section('content')
+<div class="container">
+<div class="row">
+<div class="col-md-6 col-md-offset-3 col-xs-10 col-xs-offset-1">
+
+<!-- auth password reset -->
+    <div class="panel panel-default">
+        <div class="panel-heading bg-sir">
+            <h3 class="panel-title">비밀번호 재설정</h3>
+        </div>
+
+        <div class="panel-body row">
+            @if (session('status'))
+                <div class="alert alert-success">
+                    {{ session('status') }}
+                </div>
+            @endif
+            <form class="contents col-md-8 col-md-offset-2" role="form" method="POST" action="{{ route('password.request') }}">
+            {{ csrf_field() }}
+
+                <input type="hidden" name="token" value="{{ $token }}">
+
+                <div class="form-group mg5 {{ $errors->has('email') ? ' has-error' : '' }}">
+                    <label for="email"><span class="sr-only">이메일</span></label>
+                    <input id="email" type="email" class="form-control sr-only-input" name="email" placeholder="이메일 주소를 입력하세요" value="{{ $email or old('email') }}">
+
+                    @if ($errors->has('email'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('email') }}</strong>
+                        </span>
+                    @endif
+                </div>
+
+                <div class="form-group mg5 {{ $errors->has('password') ? ' has-error' : '' }}">
+                    <label for="password"><span class="sr-only">비밀번호</span></label>
+                    <input id="password" type="password" class="form-control sr-only-input" name="password" placeholder="새 비밀번호를 입력하세요" required>
+
+                    @if ($errors->has('password'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('password') }}</strong>
+                        </span>
+                    @endif
+                </div>
+
+                <div class="form-group {{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
+                    <label for="password-confirm"><span class="sr-only">비밀번호 확인</span></label>
+                    <input id="password-confirm" type="password" class="form-control sr-only-input" name="password_confirmation" placeholder="비밀번호를 다시 입력하세요"  required>
+
+                    @if ($errors->has('password_confirmation'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('password_confirmation') }}</strong>
+                        </span>
+                    @endif
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-lg btn-block btn-sir">
+                        비밀번호 재설정
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+@endsection

@@ -46,9 +46,9 @@
         <!-- menu -->
         <ul class="gnb navbar-nav">
             
-            <!-- 일반메뉴 -->
+            <!-- 일반메뉴 
             <li class="gnb-li"><a href="">메뉴1</a></li>
-            <li class="gnb-li"><a href="">메뉴2</a></li>
+            <li class="gnb-li"><a href="">메뉴2</a></li>-->
 
             @if (Auth::guest()) <!-- 공개권한: 게스트 -->
             <li class="gnb-li"><a href="{{ route('login') }}">로그인</a></li>
@@ -66,6 +66,11 @@
                     </a>
                     <!-- 2depth -->
                     <ul class="dropdown-menu" role="menu">
+                        @if(Auth::user()->level < 10)
+                            <li>
+                                <a href="{{ route('user.checkPassword') }}">회원 정보 수정</a>
+                            </li>
+                        @endif
                         <li>
                             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 로그아웃
