@@ -4,7 +4,9 @@ namespace App\Http\Controllers\User;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Mail;
 use Auth;
+use App\Mail\EmailCertify;
 use App\ReCaptcha;
 use App\User;
 use Carbon\Carbon;
@@ -37,11 +39,11 @@ class UserController extends Controller
             ->with('nickChangable', $this->nickChangable($user, Carbon::now())) // 닉네임 변경여부
             ->with('openChangable', $openChangable[0])                          // 정보공개 변경 여부
             ->with('dueDate', $openChangable[1])                                // 정보공개 언제까지 변경 못하는지 날짜
-            ->with('recommend', User::recommendedPerson($user))                // 추천인 닉네임 id로 가져오기
+            ->with('recommend', User::recommendedPerson($user))                 // 추천인 닉네임 id로 가져오기
             ;
     }
 
-    // 닉네임 변경여부
+    // 닉네임 변경 가능 여부
     public function nickChangable($user, $current)
     {
         // 현재 시간과 로그인한 유저의 닉네임변경시간과의 차이
@@ -55,7 +57,7 @@ class UserController extends Controller
         return $nickChangable;
     }
 
-    // 정보공개 변경 여부
+    // 정보공개 변경 가능 여부
     public function openChangable($user, $current)
     {
         $openChangable = array(false, $current);
@@ -127,7 +129,7 @@ class UserController extends Controller
             ->with('nickChangable', $this->nickChangable($user, Carbon::now())) // 닉네임 변경여부
             ->with('openChangable', $openChangable[0])                          // 정보공개 변경 여부
             ->with('dueDate', $openChangable[1])                                // 정보공개 언제까지 변경 못하는지 날짜
-            ->with('recommend', User::recommendedPerson($user))                // 추천인 닉네임 id로 가져오기
+            ->with('recommend', User::recommendedPerson($user))                 // 추천인 닉네임 id로 가져오기
             ;
         }
 
@@ -173,7 +175,7 @@ class UserController extends Controller
         }
 
         $user->update([
-            'id_hashkey' => bcrypt($user->id),  // 회원정보수정때마다 id_hashkey를 변경한다.
+            'id_hashkey' => str_replace("/", "", bcrypt($user->id)),  // 회원정보수정때마다 id_hashkey를 변경한다.
             'name' => $request->get('name'),
             'nick' => $request->has('nick') ? $request->get('nick') : $user->nick,
             'nick_date' => $request->has('nick') ? $nowDate : $user->nick_date,
@@ -208,6 +210,21 @@ class UserController extends Controller
         $rule = array_add($rule, 'password', $this->rulePassword);
 
         return $rule;
+    }
+
+    // 회원 가입 결과, 웰컴 페이지
+    public function welcome()
+    {
+        $user = Auth::user();
+
+        // 인증 이메일 발송
+        if($this->config->emailCertify == '1') {
+            Mail::to(Auth::user())->send(new EmailCertify());
+        }
+
+        return view('user.welcome')
+            ->with('emailCertify', $this->config->emailCertify)
+            ->with('user', $user);
     }
 
 }

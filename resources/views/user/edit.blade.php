@@ -15,6 +15,11 @@
 @endsection
 
 @section('content')
+@if(Session::has('message'))
+    <div class="alert alert-info">
+    {{Session::get('message') }}
+    </div>
+@endif
 <div class="container">
 <div class="row">
 <div class="col-md-6 col-md-offset-3 col-xs-12">
