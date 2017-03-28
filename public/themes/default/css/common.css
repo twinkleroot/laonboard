@@ -128,6 +128,9 @@
 
 /* content */
 
+.mg0 {
+	margin-bottom: 0;
+}
 .mg5 {
 	margin-bottom: 5px;
 }
@@ -139,4 +142,25 @@
 	padding: 0 7px;
 	background: #fff;
 	color: #aaa;
+}
+
+.heading-p {
+	display: block;
+	padding: 0 0 5px 0;
+	border-bottom: 1px solid #d8d8d8;
+}
+.heading-span {
+	margin: 0 -15px;
+	padding: 0 0 5px 0;
+	font-weight: bold;
+	color: #587ef6;
+	border-bottom: 1px solid #587ef6;
+}
+
+.helpbox {
+	padding: 15px;
+	margin-top: 5px;
+}
+.helpbox > p {
+	margin: 0;
 }

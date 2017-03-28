@@ -5,6 +5,7 @@
 @endsection
 
 @section('content')
+<div class="container">
     {{ $user->nick }}님의 회원가입을 진심으로 축하합니다.<br />
     @if($emailCertify == 1)
     회원 가입 시 입력하신 이메일 주소로 인증메일이 발송되었습니다.<br />
@@ -19,4 +20,5 @@
     회원 탈퇴는 언제든지 가능하며 일정기간이 지난 후, 회원님의 정보는 삭제하고 있습니다.<br />
     감사합니다.<br />
     <a href="{{ route('home') }}">메인으로</a>
+</div>
 @endsection

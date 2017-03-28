@@ -66,7 +66,7 @@
                     </a>
                     <!-- 2depth -->
                     <ul class="dropdown-menu" role="menu">
-                        @if(Auth::user()->level < 10)
+                        @if(Auth::user()->level <= 10)
                             <li>
                                 <a href="{{ route('user.checkPassword') }}">회원 정보 수정</a>
                             </li>
@@ -80,7 +80,6 @@
                                 {{ csrf_field() }}
                             </form>
                         </li>
-                        <li><a href="">2차메뉴</a></li>
                     </ul>
                 </li>
                 <!-- 공개권한: 회원 end -->

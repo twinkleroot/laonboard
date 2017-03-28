@@ -30,9 +30,9 @@
 
                 <input type="hidden" name="token" value="{{ $token }}">
 
-                <div class="form-group mg5 {{ $errors->has('email') ? ' has-error' : '' }}">
-                    <label for="email"><span class="sr-only">이메일</span></label>
-                    <input id="email" type="email" class="form-control sr-only-input" name="email" placeholder="이메일 주소를 입력하세요" value="{{ $email or old('email') }}">
+                <div class="form-group {{ $errors->has('email') ? ' has-error' : '' }}">
+                    <label for="email">이메일</label>
+                    <input id="email" type="email" class="form-control" name="email" placeholder="이메일 주소를 입력하세요" value="{{ $email or old('email') }}">
 
                     @if ($errors->has('email'))
                         <span class="help-block">
@@ -41,9 +41,9 @@
                     @endif
                 </div>
 
-                <div class="form-group mg5 {{ $errors->has('password') ? ' has-error' : '' }}">
-                    <label for="password"><span class="sr-only">비밀번호</span></label>
-                    <input id="password" type="password" class="form-control sr-only-input" name="password" placeholder="새 비밀번호를 입력하세요" required>
+                <div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
+                    <label for="password">비밀번호</label>
+                    <input id="password" type="password" class="form-control" name="password" placeholder="새 비밀번호를 입력하세요" required>
 
                     @if ($errors->has('password'))
                         <span class="help-block">
@@ -53,8 +53,8 @@
                 </div>
 
                 <div class="form-group {{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
-                    <label for="password-confirm"><span class="sr-only">비밀번호 확인</span></label>
-                    <input id="password-confirm" type="password" class="form-control sr-only-input" name="password_confirmation" placeholder="비밀번호를 다시 입력하세요"  required>
+                    <label for="password-confirm">비밀번호 확인</label>
+                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation" placeholder="비밀번호를 다시 입력하세요"  required>
 
                     @if ($errors->has('password_confirmation'))
                         <span class="help-block">
