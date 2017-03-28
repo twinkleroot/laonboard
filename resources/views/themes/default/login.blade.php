@@ -56,7 +56,7 @@
                     <div class="col-xs-5">
                     <div class="password_search">
                         <p class="text-right">
-                            <a href="{{ route('password.request') }}">정보찾기</a>
+                            <a href="{{ route('password.request') }}">비밀번호 재설정</a>
                         </p>
                     </div>
                     </div>
