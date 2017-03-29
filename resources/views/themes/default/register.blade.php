@@ -16,7 +16,7 @@
         <div class="header">
             <h1>회원가입</h1>
         </div>
-        <form class="form-horizontal" role="form" method="POST" action="{{ route('register.reCaptcha') }}">
+        <form class="form-horizontal" role="form" method="POST" action="{{ route('user.register') }}">
             {{ csrf_field() }}
 
             <div class="form-box">
@@ -74,12 +74,12 @@
 
             </div>
 
-            <div class="form-group{{ $errors->has('reCapcha') ? ' has-error' : '' }}">
+            <div class="form-group{{ $errors->has('reCaptcha') ? ' has-error' : '' }}">
                 <div class="g-recaptcha col-md-6" data-sitekey="6LcKohkUAAAAANcgIst0HFMMT81Wq5HIxpiHhXGZ">
                 </div>
-                    @if ($errors->has('reCapcha'))
+                    @if ($errors->has('reCaptcha'))
                         <span class="help-block">
-                            <strong>{{ $errors->first('reCapcha') }}</strong>
+                            <strong>{{ $errors->first('reCaptcha') }}</strong>
                         </span>
                     @endif
             </div>
