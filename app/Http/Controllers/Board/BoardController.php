@@ -7,6 +7,11 @@ use App\Http\Controllers\Controller;
 
 class BoardController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('level:2');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +19,7 @@ class BoardController extends Controller
      */
     public function index()
     {
-        //
+        return view('board.index');
     }
 
     /**

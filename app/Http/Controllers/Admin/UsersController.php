@@ -13,6 +13,10 @@ use App\Config;
 class UsersController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('level:10');
+    }
     /**
      * Display a listing of the resource.
      *

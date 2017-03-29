@@ -9,6 +9,11 @@ use DB;
 
 class ConfigController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('level:10');
+    }
+
     public function index()
     {
         $config = Config::where([
