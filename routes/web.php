@@ -53,5 +53,5 @@ Route::post('register/reCaptcha', ['as' => 'register.reCaptcha', 'uses' => 'Auth
 Route::get('user/welcome', ['as' => 'user.welcome', 'uses' => 'User\UserController@welcome']);
 // 이메일 인증 라우트
 Route::get('emailCertify/id/{id}/crypt/{crypt}', 'User\MailController@emailCertify')->name('emailCertify');
-// 처리 결과 message를 창으로 알려주는 페이지
+// 처리 결과 메세지를 경고창으로 알려주는 페이지
 Route::get('message', ['as' => 'message', 'uses' => 'Message\MessageController@message']);
