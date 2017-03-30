@@ -22,7 +22,7 @@ Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index'] );
 
 // 인증이 필요한 라우트 그룹
 Route::group(['middleware' => 'auth'], function() {
-    // 관리자\회원관리에 관련된 CRUD 컨트롤러
+    // 관리자의 회원관리에 관련된 CRUD 컨트롤러
     Route::resource('admin/users', 'Admin\UsersController');
     // 리소스 컨트롤러에 더해서 필요한 기능
     Route::put('users/selected_update', ['as' => 'users.selectedUpdate', 'uses' => 'Admin\UsersController@selectedUpdate']);
@@ -47,4 +47,15 @@ Route::get('social/naver/callback', ['as' => 'social.naver.callback', 'uses' => 
 Route::post('social/continue', ['as' => 'social.continue', 'uses' => 'Auth\SocialController@continue']);
 Route::post('social/connectExistAccount', ['as' => 'social.connectExistAccount', 'uses' => 'Auth\SocialController@connectExistAccount']);
 
-Route::post('register/reCaptcha', ['as' => 'register.reCaptcha', 'uses' => 'Auth\RegisterController@checkRecaptcha']);
+// 회원 가입
+Route::get('user/join', ['as' => 'user.join', 'uses' => 'Auth\RegisterController@join']);
+Route::post('user/register', ['as' => 'user.register', 'uses' => 'Auth\RegisterController@register']);
+Route::get('user/welcome', ['as' => 'user.welcome', 'uses' => 'User\UserController@welcome']);
+
+// 이메일 인증 라우트
+Route::get('emailCertify/id/{id}/crypt/{crypt}', 'User\MailController@emailCertify')->name('emailCertify');
+// 처리 결과 메세지를 경고창으로 알려주는 페이지
+Route::get('message', ['as' => 'message', 'uses' => 'Message\MessageController@message']);
+
+// 게시판 
+Route::resource('board', 'Board\BoardController');

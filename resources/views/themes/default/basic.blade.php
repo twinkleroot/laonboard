@@ -66,11 +66,11 @@
                     </a>
                     <!-- 2depth -->
                     <ul class="dropdown-menu" role="menu">
-                        @if(Auth::user()->level <= 10)
-                            <li>
-                                <a href="{{ route('user.checkPassword') }}">회원 정보 수정</a>
-                            </li>
+
+                        @if(Auth::user()->level < 10)
+                            <li><a href="{{ route('user.checkPassword') }}">회원 정보 수정</a></li>
                         @endif
+                        <li><a href="{{ route('board.index') }}">자유게시판</a></li>
                         <li>
                             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 로그아웃
