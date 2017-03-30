@@ -53,4 +53,5 @@ class LoginSuccessful
 
         $event->user->save();
     }
+
 }
