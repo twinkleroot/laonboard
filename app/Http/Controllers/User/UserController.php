@@ -85,7 +85,7 @@ class UserController extends Controller
             }
         } else {
             return view('user.edit', $this->userModel->editFormData($this->config))
-                ->withErrors(['reCapcha' => '자동등록방지 입력이 틀렸습니다. 다시 입력해 주십시오.']);
+                ->withErrors(['reCaptcha' => '자동등록방지 입력이 틀렸습니다. 다시 입력해 주십시오.']);
         }
     }
 

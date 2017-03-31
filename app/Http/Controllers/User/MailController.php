@@ -18,6 +18,7 @@ class MailController extends Controller
     {
         $this->config = Config::getConfig('config.join');
     }
+    
     // 인증 메일 클릭했을 때 처리하기
     public function emailCertify(Request $request, $id, $crypt)
     {

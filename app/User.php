@@ -262,4 +262,71 @@ class User extends Authenticatable
 
         return 'finishUpdate';
     }
+
+    // 관리자에서 사용하는 메서드
+
+    // 회원 추가
+    public function addUser($request)
+    {
+        $password = bcrypt($request->get('password'));
+
+        $userInfo = [
+            'email' => $request->get('email'),
+            'password' => $password,
+            'name' => $request->get('name'),
+            'nick' => $request->get('nick'),
+            'level' => $request->get('level'),
+            'point' => $request->get('point'),
+            'homepage' => $request->get('homepage'),
+            'hp' => $request->get('hp'),
+            'tel' => $request->get('tel'),
+            'certify' => $request->get('certify'),
+            'adult' => $request->get('adult'),
+            'addr1' => $request->get('addr1'),
+            'addr2' => $request->get('addr2'),
+            'zip' => $request->get('zip'),
+            'mailing' => $request->get('mailing'),
+            'sms' => $request->get('sms'),
+            'open' => $request->get('open'),
+            'signature' => $request->get('signature'),
+            'profile' => $request->get('profile'),
+            'memo' => $request->get('memo'),
+            'leave_date' => $request->get('leave_date'),
+            'intercept_date' => $request->get('intercept_date'),
+            // 본인확인방법, 회원아이콘은 다른데로 추가되는 듯.
+        ];
+
+        return User::create($userInfo);
+    }
+
+    // 선택 수정
+    public function selectedUpdate($request)
+    {
+        $idArr = explode(',', $request->get('ids'));
+        $openArr = explode(',', $request->get('opens'));
+        $mailingArr = explode(',', $request->get('mailings'));
+        $smsArr = explode(',', $request->get('smss'));
+        $interceptArr = explode(',', $request->get('intercepts'));
+        $levelArr = explode(',', $request->get('levels'));
+
+        $index = 0;
+        foreach($idArr as $id) {
+            $user = User::find($id);
+
+            if(!is_null($user)) {
+                $user->update([
+                    // 'certify' => $request->get('certify'),
+                    'open' => $openArr[$index] == '1' ? 1 : 0,
+                    'mailing' => $mailingArr[$index] == '1' ? 1 : 0,
+                    'sms' => $smsArr[$index] == '1' ? 1 : 0,
+                    // 'adult' => $request->get('adult') == '1' ? 1 : 0,
+                    'intercept_date' => $interceptArr[$index] == 1 ? Carbon::now()->format('Ymj') : null ,
+                    'level' => $levelArr[$index],
+                ]);
+                $index++;
+            } else {
+                abort('500', '정보를 수정할 회원이 존재하지 않습니다. 회원이 잘 선택 되었는지 확인해 주세요.');
+            }
+        }
+    }
 }

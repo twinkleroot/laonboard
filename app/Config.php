@@ -22,6 +22,7 @@ class Config extends Model
         return json_decode($configJson->vars);
     }
 
+    // 비밀번호 정책 설정에 따라 비밀번호 정규식 조합
     public static function getRulePassword($name) {
         $config = Config::getConfig($name);
         $rulePieces = array();
@@ -42,7 +43,7 @@ class Config extends Model
             $rulePieces[$index] = '(?=.*[~!@#$%^&*()\-_=+])';
             $index++;
         }
-        $ruleString = '/^(?=.*[a-z])' . implode($rulePieces) . '.{' . $config->password_policy_digits . ',}' .'/';
+        $ruleString = '/^(?=.*[a-z])' . implode($rulePieces) . '.{' . $config->password_policy_digits . ',}/';
 
         array_push($ruleArr,  'regex:' . $ruleString);
 

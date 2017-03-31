@@ -49,14 +49,13 @@
             <!-- 일반메뉴
             <li><a href="">메뉴1</a></li>
             <li><a href="">메뉴2</a></li>-->
-
+            <li class="gnb-li"><a href="{{ route('board.index') }}">자유게시판</a></li>
             @if (Auth::guest())
                 <li class="gnb-li"><a href="{{ route('login') }}">로그인</a></li>
                 <li class="gnb-li"><a href="{{ route('user.join') }}">회원가입</a></li>
             @else
                 @if(Auth::user()->level == 10)
-                <li class="gnb-li"><a href="{{ route('admin.config') }}">환경 설정</a></li>
-                <li class="gnb-li"><a href="{{ route('users.index') }}">회원 관리</a></li>
+                    <li class="gnb-li"><a href="{{ route('admin.index') }}">관리자 모드</a></li>
                 @endif
                 <!-- 로그인하면 보임 -->
                 <li class="gnb-li dropdown">
@@ -67,7 +66,6 @@
                         @if(Auth::user()->level < 10)
                             <li><a href="{{ route('user.checkPassword') }}">회원 정보 수정</a></li>
                         @endif
-                        <li><a href="{{ route('board.index') }}">자유게시판</a></li>
                         <li>
                             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 로그아웃

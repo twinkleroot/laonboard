@@ -22,10 +22,43 @@ Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index'] );
 
 // 인증이 필요한 라우트 그룹
 Route::group(['middleware' => 'auth'], function() {
-    // 관리자의 회원관리에 관련된 CRUD 컨트롤러
-    Route::resource('admin/users', 'Admin\UsersController');
-    // 리소스 컨트롤러에 더해서 필요한 기능
-    Route::put('users/selected_update', ['as' => 'users.selectedUpdate', 'uses' => 'Admin\UsersController@selectedUpdate']);
+    // 관리자 공통 기능
+    // Route::get('admin/{admin_page}/search/kind/{kind}/keyword/{keyword}', ['as' => 'admin.search', 'uses' => 'Admin\CommonController@search']);
+    Route::get('admin/search', ['as' => 'admin.search', 'uses' => 'Admin\CommonController@search']);
+    // 관리자 메인
+    Route::get('admin/index', ['as' => 'admin.index', 'uses' => 'Admin\IndexController@index']);
+    // 게시판 그룹 관리 리소스 컨트롤러에 더해서 필요한 기능(리소스 라우트보다 앞에 와야 함)
+    Route::put('admin/groups/selected_update', ['as' => 'admin.groups.selectedUpdate', 'uses' => 'Admin\GroupsController@selectedUpdate']);
+    // 게시판 그룹관리 CRUD 컨트롤러
+    Route::resource('admin/groups', 'Admin\GroupsController', [
+        'except' => [
+            'show',
+        ],
+        'names' =>[
+            'create' => 'admin.groups.create',
+            'index' => 'admin.groups.index',
+            'store' => 'admin.groups.store',
+            'destroy' => 'admin.groups.destroy',
+            'update' => 'admin.groups.update',
+            'edit' => 'admin.groups.edit',
+        ]
+    ]);
+
+    // 회원관리 리소스 컨트롤러에 더해서 필요한 기능(리소스 라우트보다 앞에 와야 함)
+    Route::put('admin/users/selected_update', ['as' => 'admin.users.selectedUpdate', 'uses' => 'Admin\UsersController@selectedUpdate']);
+    // 회원관리 CRUD 컨트롤러
+    Route::resource('admin/users', 'Admin\UsersController', [
+        'except' => [
+            'show',
+        ],
+        'names' =>[
+            'create' => 'admin.users.create',
+            'index' => 'admin.users.index',
+            'store' => 'admin.users.store',
+            'destroy' => 'admin.users.destroy',
+            'update' => 'admin.users.update',
+            'edit' => 'admin.users.edit',
+        ]]);
     // 환경 설정
     Route::get('admin/config', ['as' => 'admin.config', 'uses' => 'Admin\ConfigController@index']);
     Route::put('admin/config/update', ['as' => 'admin.config.update', 'uses' => 'Admin\ConfigController@update']);
@@ -57,5 +90,5 @@ Route::get('emailCertify/id/{id}/crypt/{crypt}', 'User\MailController@emailCerti
 // 처리 결과 메세지를 경고창으로 알려주는 페이지
 Route::get('message', ['as' => 'message', 'uses' => 'Message\MessageController@message']);
 
-// 게시판 
+// 게시판
 Route::resource('board', 'Board\BoardController');

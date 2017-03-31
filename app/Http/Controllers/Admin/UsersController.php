@@ -12,7 +12,18 @@ use App\Config;
 
 class UsersController extends Controller
 {
+    public $config;
+    public $userModel;
+    public $rulePassword;
 
+    public function __construct(Config $config, User $userModel)
+    {
+        $this->middleware('level:10');
+
+        $this->config = Config::getConfig('config.join');
+        $this->rulePassword = Config::getRulePassword('config.join');
+        $this->userModel = $userModel;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -21,7 +32,7 @@ class UsersController extends Controller
     public function index()
     {
         $users = User::orderBy('level', 'desc')->get();
-        return view('admin.user.index')->with('users', $users);
+        return view('admin.users.index')->with('users', $users);
     }
 
     /**
@@ -33,7 +44,7 @@ class UsersController extends Controller
     {
         $user = \Auth::user();
         $config = Config::getConfig('config.join');
-        return view('admin.user.create')
+        return view('admin.users.create')
             ->with('user', $user)
             ->with('config', $config)
             ;
@@ -47,57 +58,19 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        $password = bcrypt($request->get('password'));
+        $rule = [
+            'email' => 'required|email|max:255|unique:users',
+            'nick' => 'required|nick_length:2,4|unique:users|alpha_num',
+            'password' => $this->rulePassword[0] . '|' . $this->rulePassword[2],
+        ];
 
-        $validator = Validator::make($request->all(), User::$rules);
+        $this->validate($request, $rule);
 
-        if ($validator->fails()) {
-            return redirect(route('users.create'))
-                        ->withErrors($validator)
-                        ->withInput();
+        $user = $this->userModel->addUser($request);
+        if(is_null($user)) {
+            abort('500', '회원추가가 실패하였습니다.');
         }
-
-        $user = new User([
-            'email' => $request->get('email'),
-            'password' => $password,
-            'name' => $request->get('name'),
-            'nick' => $request->get('nick'),
-            'level' => $request->get('level'),
-            'point' => $request->get('point'),
-            'homepage' => $request->get('homepage'),
-            'hp' => $request->get('hp'),
-            'tel' => $request->get('tel'),
-            'certify' => $request->get('certify'),
-            'adult' => $request->get('adult'),
-            'addr1' => $request->get('addr1'),
-            'addr2' => $request->get('addr2'),
-            // 'addr3' => $request->get('addr3'),
-            'zip' => $request->get('zip'),
-            'mailing' => $request->get('mailing'),
-            'sms' => $request->get('sms'),
-            'open' => $request->get('open'),
-            'signature' => $request->get('signature'),
-            'profile' => $request->get('profile'),
-            'memo' => $request->get('memo'),
-            'leave_date' => $request->get('leave_date'),
-            'intercept_date' => $request->get('intercept_date'),
-            // 본인확인방법, 회원아이콘은 다른데로 추가되는 듯.
-        ]);
-
-        $user->save();
-
-        return redirect(route('users.index'))->with('message', $user->nick . ' 회원이 추가되었습니다.');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+        return redirect(route('admin.users.index'))->with('message', $user->nick . ' 회원이 추가되었습니다.');
     }
 
     /**
@@ -109,7 +82,7 @@ class UsersController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        return view('admin.user.edit')->with('user', $user)->with('id', $id);
+        return view('admin.users.edit')->with('user', $user)->with('id', $id);
     }
 
     /**
@@ -139,9 +112,9 @@ class UsersController extends Controller
             'tel' => $request->get('tel'),
             'certify' => $request->get('certify'),
             'adult' => $request->get('adult'),
-            // 'addr1' => $request->get('addr1'),
-            // 'addr2' => $request->get('addr2'),
-            // 'zip' => $request->get('zip'),
+            'addr1' => $request->get('addr1'),
+            'addr2' => $request->get('addr2'),
+            'zip' => $request->get('zip'),
             'mailing' => $request->get('mailing'),
             'sms' => $request->get('sms'),
             'open' => $request->get('open'),
@@ -153,7 +126,7 @@ class UsersController extends Controller
             // 본인확인방법, 회원아이콘은 다른데서 변경하는 듯.
         ]);
 
-        return redirect(route('users.index'))->with('message', $user->nick . '의 회원정보가 수정되었습니다.');
+        return redirect(route('admin.users.index'))->with('message', $user->nick . '의 회원정보가 수정되었습니다.');
     }
 
     /**
@@ -161,41 +134,9 @@ class UsersController extends Controller
     */
     public function selectedUpdate(Request $request)
     {
-        $ids = $request->get('ids');
-        $opens = $request->get('opens');
-        $mailings = $request->get('mailings');
-        $smss = $request->get('smss');
-        $intercepts = $request->get('intercepts');
-        $levels = $request->get('levels');
+        $this->userModel->selectedUpdate($request);
 
-        $idArr = explode(',', $ids);
-        $openArr = explode(',', $opens);
-        $mailingArr = explode(',', $mailings);
-        $smsArr = explode(',', $smss);
-        $interceptArr = explode(',', $intercepts);
-        $levelArr = explode(',', $levels);
-
-        $index = 0;
-        foreach($idArr as $id) {
-            $user = User::find($id);
-
-            if(!is_null($user)) {
-                $user->update([
-                    // 'certify' => $request->get('certify'),
-                    'open' => $openArr[$index] == '1' ? 1 : 0,
-                    'mailing' => $mailingArr[$index] == '1' ? 1 : 0,
-                    'sms' => $smsArr[$index] == '1' ? 1 : 0,
-                    // 'adult' => $request->get('adult') == '1' ? 1 : 0,
-                    'intercept_date' => $interceptArr[$index] == 1 ? Carbon::now()->format('Ymj') : null ,
-                    'level' => $levelArr[$index],
-                ]);
-                $index++;
-            } else {
-                abort('500', '정보를 수정할 회원이 존재하지 않습니다. 회원이 잘 선택 되었는지 확인해 주세요.');
-            }
-        }
-
-        return redirect(route('users.index'))->with('message', '선택한 회원정보가 수정되었습니다.');
+        return redirect(route('admin.users.index'))->with('message', '선택한 회원정보가 수정되었습니다.');
     }
 
     /**
@@ -207,8 +148,8 @@ class UsersController extends Controller
     public function destroy(Request $request, $id)
     {
         $ids = $request->get('ids');
-        $deletedUser = User::whereRaw('id in (' . $ids . ') ')->delete();
+        $result = User::whereRaw('id in (' . $ids . ') ')->delete();
 
-        return redirect(route('users.index'))->with('message', '선택한 회원정보가 삭제되었습니다.');
+        return redirect(route('admin.users.index'))->with('message', '선택한 회원정보가 삭제되었습니다.');
     }
 }
