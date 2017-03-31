@@ -13,17 +13,19 @@ class CreateSocialLoginTable extends Migration
      */
     public function up()
     {
-        Schema::create('social_logins', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('provider', 20)->nullable();
-            $table->string('social_id')->nullable();
-            $table->text('social_token')->nullable();
-            $table->timestamps();
+        if(!Schema::hasTable('social_logins')) {
+            Schema::create('social_logins', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('provider', 20)->nullable();
+                $table->string('social_id')->nullable();
+                $table->text('social_token')->nullable();
+                $table->timestamps();
 
-            // users 테이블에 대한 참조키
-            $table->integer('user_id')->unsigned()->nullable();
-            $table->foreign('user_id')->references('id')->on('users');
-        });
+                // users 테이블에 대한 참조키
+                $table->integer('user_id')->unsigned()->nullable();
+                $table->foreign('user_id')->references('id')->on('users');
+            });
+        }
     }
 
     /**
