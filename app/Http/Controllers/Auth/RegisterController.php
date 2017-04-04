@@ -44,7 +44,7 @@ class RegisterController extends Controller
 
         $this->request = $request;
         $this->config = Config::getConfig('config.join');
-        $this->rulePassword = Config::getRulePassword('config.join');
+        $this->rulePassword = Config::getRulePassword('config.join', $this->config);
         $this->userModel = $userModel;
     }
 

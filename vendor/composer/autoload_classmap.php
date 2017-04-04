@@ -16,6 +16,7 @@ return array(
     'ChangeZipDatetimeNickdateOpendateColumnOnUsers' => $baseDir . '/database/migrations/2017_03_14_122901_change_zip_datetime_nickdate_opendate_column_on_users.php',
     'CreateConfigsTable' => $baseDir . '/database/migrations/2017_03_21_154604_create_configs_table.php',
     'CreateGroupTable' => $baseDir . '/database/migrations/2017_03_30_144728_create_group_table.php',
+    'CreateGroupUserTable' => $baseDir . '/database/migrations/2017_04_03_144538_create_group_user_table.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
     'CreatePointsTable' => $baseDir . '/database/migrations/2017_03_24_110650_create_points_table.php',
     'CreateSocialLoginTable' => $baseDir . '/database/migrations/2017_03_17_115255_create_social_login_table.php',

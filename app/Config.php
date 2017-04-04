@@ -23,8 +23,7 @@ class Config extends Model
     }
 
     // 비밀번호 정책 설정에 따라 비밀번호 정규식 조합
-    public static function getRulePassword($name) {
-        $config = Config::getConfig($name);
+    public static function getRulePassword($name, $config) {
         $rulePieces = array();
         $ruleString = array();
         $ruleArr = [
