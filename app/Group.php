@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 
 class Group extends Model
 {
@@ -14,6 +15,12 @@ class Group extends Model
         'group_id' => 'required|regex:/^[a-zA-Z0-9_]+$/',
         'subject' => 'required',
     ];
+
+    // 회원 모델과의 관계 설정
+    public function users()
+    {
+        return $this->belongsToMany(User::class)->withPivot('id', 'created_at');
+    }
 
     // 모든 그룹 가져오기
     public function allGroup()

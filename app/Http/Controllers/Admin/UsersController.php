@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Password;
 use Carbon\Carbon;
 use App\Config;
+use App\GroupUser;
 
 class UsersController extends Controller
 {
@@ -21,7 +22,7 @@ class UsersController extends Controller
         $this->middleware('level:10');
 
         $this->config = Config::getConfig('config.join');
-        $this->rulePassword = Config::getRulePassword('config.join');
+        $this->rulePassword = Config::getRulePassword('config.join', $this->config);
         $this->userModel = $userModel;
     }
     /**
@@ -31,8 +32,9 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = User::orderBy('level', 'desc')->get();
-        return view('admin.users.index')->with('users', $users);
+        $users = $this->userModel->userList();
+
+        return view('admin.users.index', ['users' => $users]);
     }
 
     /**
@@ -43,10 +45,9 @@ class UsersController extends Controller
     public function create()
     {
         $user = \Auth::user();
-        $config = Config::getConfig('config.join');
         return view('admin.users.create')
             ->with('user', $user)
-            ->with('config', $config)
+            ->with('config', $this->config)
             ;
     }
 

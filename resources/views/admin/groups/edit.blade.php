@@ -24,7 +24,7 @@
                             <td @if($errors->get('group_id')) class="has-error" @endif>
                                 <input type="text" class="form-control" name="group_id" value="{{ $group->group_id }}" required/>
                                 영문자, 숫자, _ 만 가능 (공백없이)
-
+                                <a href="">게시판그룹 바로가기</a>
                                 @foreach ($errors->get('group_id') as $message)
                                     <span class="help-block">
                                         <strong>{{ $message }}</strong>
@@ -36,6 +36,7 @@
                             <th>그룹 제목</th>
                             <td @if($errors->get('subject')) class="has-error" @endif>
                                 <input type="text" class="form-control" name="subject" value="{{ $group->subject }}" required/>
+                                <a href="">게시판생성</a>
                                 @foreach ($errors->get('subject') as $message)
                                     <span class="help-block">
                                         <strong>{{ $message }}</strong>
@@ -88,6 +89,8 @@
                         </div>
                     </div>
                 </form>
+                게시판을 생성하시려면 1개 이상의 게시판그룹이 필요합니다.<br />
+                게시판그룹을 이용하시면 더 효과적으로 게시판을 관리할 수 있습니다.
             </div>
         </div>
     </div>

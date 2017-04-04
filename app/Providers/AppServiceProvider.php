@@ -17,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
 	{
 		// Blade Template 의 지시어 'date' 생성
 		Blade::directive('date', function($expression) {
-			return "<?php echo ($expression)->format('Y/m/d'); ?>";
+			return "<?php echo substr($expression, 0, 10); ?>";
 		});
 
 		// Blade Template 의 지시어 'datetime' 생성

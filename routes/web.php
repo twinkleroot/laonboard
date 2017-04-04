@@ -23,10 +23,28 @@ Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index'] );
 // 인증이 필요한 라우트 그룹
 Route::group(['middleware' => 'auth'], function() {
     // 관리자 공통 기능
-    // Route::get('admin/{admin_page}/search/kind/{kind}/keyword/{keyword}', ['as' => 'admin.search', 'uses' => 'Admin\CommonController@search']);
     Route::get('admin/search', ['as' => 'admin.search', 'uses' => 'Admin\CommonController@search']);
     // 관리자 메인
     Route::get('admin/index', ['as' => 'admin.index', 'uses' => 'Admin\IndexController@index']);
+    // 회원관리 리소스 컨트롤러에 더해서 필요한 기능(리소스 라우트보다 앞에 와야 함)
+    Route::put('admin/users/selected_update', ['as' => 'admin.users.selectedUpdate', 'uses' => 'Admin\UsersController@selectedUpdate']);
+    // 환경 설정
+    Route::get('admin/config', ['as' => 'admin.config', 'uses' => 'Admin\ConfigController@index']);
+    Route::put('admin/config/update', ['as' => 'admin.config.update', 'uses' => 'Admin\ConfigController@update']);
+    // 회원관리 CRUD 컨트롤러
+    Route::resource('admin/users', 'Admin\UsersController', [
+        'except' => [
+            'show',
+        ],
+        'names' => [
+            'create' => 'admin.users.create',
+            'index' => 'admin.users.index',
+            'store' => 'admin.users.store',
+            'destroy' => 'admin.users.destroy',
+            'update' => 'admin.users.update',
+            'edit' => 'admin.users.edit',
+        ]
+    ]);
     // 게시판 그룹 관리 리소스 컨트롤러에 더해서 필요한 기능(리소스 라우트보다 앞에 와야 함)
     Route::put('admin/groups/selected_update', ['as' => 'admin.groups.selectedUpdate', 'uses' => 'Admin\GroupsController@selectedUpdate']);
     // 게시판 그룹관리 CRUD 컨트롤러
@@ -34,7 +52,7 @@ Route::group(['middleware' => 'auth'], function() {
         'except' => [
             'show',
         ],
-        'names' =>[
+        'names' => [
             'create' => 'admin.groups.create',
             'index' => 'admin.groups.index',
             'store' => 'admin.groups.store',
@@ -43,25 +61,16 @@ Route::group(['middleware' => 'auth'], function() {
             'edit' => 'admin.groups.edit',
         ]
     ]);
-
-    // 회원관리 리소스 컨트롤러에 더해서 필요한 기능(리소스 라우트보다 앞에 와야 함)
-    Route::put('admin/users/selected_update', ['as' => 'admin.users.selectedUpdate', 'uses' => 'Admin\UsersController@selectedUpdate']);
-    // 회원관리 CRUD 컨트롤러
-    Route::resource('admin/users', 'Admin\UsersController', [
-        'except' => [
-            'show',
+    Route::resource('admin/accessible_groups', 'Admin\AccessibleGroupsController', [
+        'only' => [
+            'show', 'store', 'destroy',
         ],
-        'names' =>[
-            'create' => 'admin.users.create',
-            'index' => 'admin.users.index',
-            'store' => 'admin.users.store',
-            'destroy' => 'admin.users.destroy',
-            'update' => 'admin.users.update',
-            'edit' => 'admin.users.edit',
-        ]]);
-    // 환경 설정
-    Route::get('admin/config', ['as' => 'admin.config', 'uses' => 'Admin\ConfigController@index']);
-    Route::put('admin/config/update', ['as' => 'admin.config.update', 'uses' => 'Admin\ConfigController@update']);
+        'names' => [
+            'show' => 'admin.accessGroups.show',
+            'store' => 'admin.accessGroups.store',
+            'destroy' => 'admin.accessGroups.destroy',
+        ],
+    ]);
 
     // 사용자가 회원 정보 수정할 때 관련한 라우트들
     Route::get('user/edit', ['as' => 'user.edit', 'uses' => 'User\UserController@edit']);

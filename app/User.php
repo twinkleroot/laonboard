@@ -6,7 +6,10 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\SocialLogin;
 use App\Point;
+use App\Group;
 use Auth;
+use DB;
+use App\GroupUser;
 use Carbon\Carbon;
 
 
@@ -55,6 +58,12 @@ class User extends Authenticatable
     public function socialLogins()
     {
         return $this->hasMany(SocialLogin::class);
+    }
+
+    // 게시판 그룹 모델과의 관계 설정
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class)->withPivot('id', 'created_at');
     }
 
     // 추천인 닉네임 구하기
@@ -265,6 +274,54 @@ class User extends Authenticatable
 
     // 관리자에서 사용하는 메서드
 
+    public function userList()
+    {
+        $users = DB::select("SELECT
+                                users.id,
+                                users.name,
+                                users.email,
+                                users.nick,
+                                users.email_certify,
+                                users.open,
+                                users.mailing,
+                                users.sms,
+                                users.leave_date,
+                                users.intercept_date,
+                                users.hp,
+                                users.tel,
+                                users.level,
+                                users.point,
+                                users.today_login,
+                                users.created_at,
+                                count(group_user.id) as count_groups
+                            FROM users
+                            LEFT OUTER JOIN group_user
+                            ON group_user.user_id = users.id
+                            GROUP BY
+                                users.id,
+                                users.name,
+                                users.email,
+                                users.nick,
+                                users.email_certify,
+                                users.open,
+                                users.mailing,
+                                users.sms,
+                                users.leave_date,
+                                users.intercept_date,
+                                users.hp,
+                                users.tel,
+                                users.level,
+                                users.point,
+                                users.today_login,
+                                users.created_at
+                            ORDER BY users.created_at desc
+                ");
+
+        // dd($users);
+
+        return $users;
+    }
+
     // 회원 추가
     public function addUser($request)
     {
@@ -296,7 +353,12 @@ class User extends Authenticatable
             // 본인확인방법, 회원아이콘은 다른데로 추가되는 듯.
         ];
 
-        return User::create($userInfo);
+        $user = User::create($userInfo);
+
+        $user->id_hashkey = str_replace("/", "-", bcrypt($user->id));
+        $user->save();
+
+        return $user;
     }
 
     // 선택 수정

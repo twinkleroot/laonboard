@@ -11,7 +11,7 @@
   </div>
 @endif
 <div class="row">
-    <div class="col-md-10 col-md-offset-1">
+    <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">회원 관리</div>
             <div class="panel-heading"><a class="btn btn-primary" href={{ route('admin.users.create')}}>회원 추가</a></div>
@@ -31,19 +31,20 @@
                             <th class="text-center">이메일</th>
                             <th class="text-center">이름</th>
                             <th class="text-center">닉네임</th>
-                            {{-- <th class="text-center">메일인증</th> --}}
+                            <th class="text-center">메일<br />인증</th>
                             <th class="text-center">정보<br />공개</th>
                             <th class="text-center">메일<br />수신</th>
                             <th class="text-center">SMS<br />수신</th>
+                            {{-- <th class="text-center">본인확인</th> --}}
                             {{-- <th class="text-center">성인인증</th> --}}
-                            <th class="text-center">접근차단</th>
+                            <th class="text-center">접근<br />차단</th>
                             <th class="text-center">휴대폰</th>
                             <th class="text-center">전화<br />번호</th>
                             <th class="text-center">상태<br />/권한</th>
                             <th class="text-center">포인트</th>
-                            <th class="text-center">최종<br />접속</th>
+                            <th class="text-center">최종 접속</th>
                             <th class="text-center">가입일</th>
-                            {{-- <th class="text-center">접근그룹</th> --}}
+                            <th class="text-center">접근<br />그룹</th>
                             <th class="text-center">관리</th>
                         </thead>
 
@@ -55,7 +56,7 @@
                                 <td class="text-center">{{ $user->email }}</td>
                                 <td class="text-center">{{ $user->name }}</td>
                                 <td class="text-center">{{ $user->nick }}</td>
-                                {{-- <td class="text-center">{{ $user->email_certify }}</td> --}}
+                                <td class="text-center">{{ is_null($user->email_certify) ? 'No' : 'Yes' }}</td>
                                 <td class="text-center">
                                     <input type='checkbox' id='open_{{ $user->id }}' value='1'
                                         {{ ($user->open == '1' ? 'checked' : '') }}/></td>
@@ -65,6 +66,9 @@
                                 <td class="text-center">
                                     <input type='checkbox' id='sms_{{ $user->id }}' value='1'
                                         {{ ($user->sms == '1' ? 'checked' : '') }}/></td>
+                                {{-- <td class="text-center">
+                                    <input type='checkbox' name='본인확인' value='1'
+                                        {{ ($user->본인확인 == '1' ? 'checked' : '') }}/></td> --}}
                                 {{-- <td class="text-center">
                                     <input type='checkbox' name='adult' value='1'
                                         {{ ($user->adult == '1' ? 'checked' : '') }}/></td> --}}
@@ -92,11 +96,19 @@
                                     </select>
                                 </td>
                                 <td class="text-center">{{ $user->point }}</td>
-                                <td class="text-center">{{ $user->today_login }}</td>
+                                <td class="text-center">@date($user->today_login)</td>
                                 <td class="text-center">@date($user->created_at)</td>
-                                {{-- <td class="text-center">{{ $user->group }}</td> --}}
                                 <td class="text-center">
-                                    <a class="btn btn-primary" href="{{ route('admin.users.edit', $user->id) }}">수정</a></td>
+                                    @if($user->count_groups > 0)
+                                        <a href="{{ route('admin.accessGroups.show', $user->id) }}">
+                                            {{ $user->count_groups }}
+                                        </a>
+                                    @endif
+                                </td>
+                                <td class="text-center">
+                                    <a href="{{ route('admin.users.edit', $user->id) }}">수정</a>
+                                    <a href="{{ route('admin.accessGroups.show', $user->id) }}">그룹</a>
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>
