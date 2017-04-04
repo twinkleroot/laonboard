@@ -61,6 +61,7 @@ Route::group(['middleware' => 'auth'], function() {
             'edit' => 'admin.groups.edit',
         ]
     ]);
+    // 회원 관리 -> 접근가능그룹 리소스 컨트롤러
     Route::resource('admin/accessible_groups', 'Admin\AccessibleGroupsController', [
         'only' => [
             'show', 'store', 'destroy',
@@ -69,6 +70,16 @@ Route::group(['middleware' => 'auth'], function() {
             'show' => 'admin.accessGroups.show',
             'store' => 'admin.accessGroups.store',
             'destroy' => 'admin.accessGroups.destroy',
+        ],
+    ]);
+    // 게시판 그룹 관리 -> 그룹 접근가능회원 리소스 컨트롤러
+    Route::resource('admin/accessible_users', 'Admin\AccessibleUsersController', [
+        'only' => [
+            'show', 'destroy',
+        ],
+        'names' => [
+            'show' => 'admin.accessUsers.show',
+            'destroy' => 'admin.accessUsers.destroy',
         ],
     ]);
 

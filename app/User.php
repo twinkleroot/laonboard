@@ -276,7 +276,7 @@ class User extends Authenticatable
 
     public function userList()
     {
-        $users = DB::select("SELECT
+        return DB::select("SELECT
                                 users.id,
                                 users.name,
                                 users.email,
@@ -316,10 +316,6 @@ class User extends Authenticatable
                                 users.created_at
                             ORDER BY users.created_at desc
                 ");
-
-        // dd($users);
-
-        return $users;
     }
 
     // 회원 추가

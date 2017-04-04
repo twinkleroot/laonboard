@@ -62,11 +62,12 @@
                                 <td class="text-center">{{ $group->group_id }}</td>
                                 <td class="text-center"><input type="text" id='subject_{{ $group->id }}' value='{{ $group->subject }}' /></td>
                                 <td class="text-center"><input type="text" id='admin_{{ $group->id }}' value='{{ $group->admin }}' /></td>
-                                <td class="text-center"><!-- 게시판 수 --></td>
+                                <td class="text-center">?<!-- 게시판 수 --></td>
                                 <td class="text-center">
                                     <input type='checkbox' id='use_access_{{ $group->id }}' value='1'
                                         {{ ($group->use_access == '1' ? 'checked' : '') }}/></td>
-                                <td class="text-center"><!-- 접근 회원수 --></td>
+                                <td class="text-center">
+                                    <a href="{{ route('admin.accessUsers.show', $group->id)}}">{{ $group->count_users }}</a></td>
                                 <td class="text-center"><input type="text" id='order_{{ $group->id }}' value='{{ $group->order }}' /></td>
                                 <td class="text-center">
                                     <select id='device_{{ $group->id }}'>
