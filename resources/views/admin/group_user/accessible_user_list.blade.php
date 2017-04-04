@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    LaBoard | 접근 가능 그룹
+    LaBoard | {{ $group->subject }}그룹 접근가능회원
 @endsection
 
 @section('content')
@@ -13,20 +13,16 @@
 <div class="row">
     <div class="col-md-12">
         <div class="panel panel-default">
-            <div class="panel-heading">접근 가능 그룹</div>
-            이메일 <b>{{ $user->email }}</b>, 닉네임 <b>{{ $user->nick }}</b>@if(!is_null($user->name)), 이름 <b>{{ $user->name }}</b> @endif
-            <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.accessGroups.store') }}">
-                <input type="hidden" name="user_id" value="{{ $user->id }}" />
-                {{ csrf_field() }}
-                <p>
-                    그룹지정
-                    <select name="group_id">
-                        <option>접근가능 그룹을 선택하세요.</option>
-                        @foreach($accessible_groups as $accessible_group)
-                            <option value="{{ $accessible_group->id }}">{{ $accessible_group->subject }}</option>
-                        @endforeach
+            <div class="panel-heading"><h2>'{{ $group->subject }}' 그룹 접근가능회원 (그룹아이디 : {{ $group->group_id }})</h2></div>
+            <form class="form-horizontal" role="form" method="GET" action="{{ route('admin.search') }}">
+                <input type="hidden" name="admin_page" value="accessibleUsers" />
+                <input type="hidden" name="groupId" value="{{ $group->id }}" />
+                 <p>
+                    <select name="kind">
+                        <option value="nick">회원 닉네임</option>
                     </select>
-                    <input type="submit" class="btn btn-primary" value="선택" />
+                    <input type="text" name="keyword" value="" />
+                    <input type="submit" class="btn btn-primary" value="검색" />
                 </p>
             </form>
             <form class="form-horizontal" role="form" method="POST" id="selectForm" action="">
@@ -37,19 +33,27 @@
                     <table class="table table-hover">
                         <thead>
                             <th class="text-center"><input type="checkbox" name="chkAll" onclick="checkAll(this.form)"/></th>
-                            <th class="text-center">그룹아이디</th>
                             <th class="text-center">그룹</th>
+                            <th class="text-center">회원이메일</th>
+                            <th class="text-center">이름</th>
+                            <th class="text-center">별명</th>
+                            <th class="text-center">최종접속</th>
                             <th class="text-center">처리일시</th>
                         </thead>
 
                         <tbody>
-                        @foreach ($groups as $group)
+                        @foreach ($users as $user)
                             <tr>
                                 <td class="text-center">
-                                    <input type="checkbox" name="chk[]" class="groupId" value='{{ $group->pivot->id }}' /></td>
-                                <td class="text-center">{{ $group->group_id }}</td>
-                                <td class="text-center">{{ $group->subject }}</td>
-                                <td class="text-center">{{ $group->pivot->created_at }}</td>
+                                    <input type="checkbox" name="chk[]" class="userId" value='{{ $user->pivot->id }}' /></td>
+                                <td class="text-center">
+                                    <a href="{{ route('admin.accessGroups.show', $user->id) }}">{{ $user->count_groups }}</a>
+                                </td>
+                                <td class="text-center">{{ $user->email }}</td>
+                                <td class="text-center">{{ $user->name }}</td>
+                                <td class="text-center">{{ $user->nick }}</td>
+                                <td class="text-center">@date($user->today_login)</td>
+                                <td class="text-center">{{ $user->pivot->created_at }}</td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -66,16 +70,16 @@
 $(function(){
     // 선택 삭제 버튼 클릭
     $('#selected_delete').click(function(){
-        var selected_id_array = selectIdsByCheckBox(".groupId");
+        var selected_id_array = selectIdsByCheckBox(".userId");
 
         if(selected_id_array.length == 0) {
-            alert('게시판 그룹을 선택해 주세요.')
+            alert('회원을 선택해 주세요.')
             return;
         }
 
         $('#ids').val(selected_id_array);
         $('#_method').val('DELETE');
-        $('#selectForm').attr('action', '/admin/accessible_groups' + '/' + {{ $user->id}});
+        $('#selectForm').attr('action', '/admin/accessible_users' + '/' + {{ $group->id}});
         $('#selectForm').submit();
     });
 

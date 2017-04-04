@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\User;
+use DB;
 
 class Group extends Model
 {
@@ -25,7 +26,30 @@ class Group extends Model
     // 모든 그룹 가져오기
     public function allGroup()
     {
-        return Group::orderBy('id', 'desc')->get();
+        return DB::select("SELECT
+                                groups.id,
+                                groups.group_id,
+                                groups.subject,
+                                groups.admin,
+                                groups.use_access,
+                                groups.order,
+                                groups.device,
+                                count(group_user.id) as count_users
+                            FROM groups
+                            LEFT OUTER JOIN group_user
+                            ON groups.id = group_user.group_id
+                            GROUP BY
+                                groups.id,
+                                groups.group_id,
+                                groups.subject,
+                                groups.admin,
+                                groups.use_access,
+                                groups.order,
+                                groups.device
+                            ORDER BY groups.created_at desc
+                ");
+
+        // return Group::orderBy('id', 'desc')->get();
     }
 
     public function existGroupId($request)

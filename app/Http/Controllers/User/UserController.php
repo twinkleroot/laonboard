@@ -22,7 +22,7 @@ class UserController extends Controller
     public function __construct(Config $config, User $userModel)
     {
         $this->config = Config::getConfig('config.join');
-        $this->rulePassword = Config::getRulePassword('config.join');
+        $this->rulePassword = Config::getRulePassword('config.join', $this->config);
         $this->userModel = $userModel;
     }
 

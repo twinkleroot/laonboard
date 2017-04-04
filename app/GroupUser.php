@@ -60,15 +60,38 @@ class GroupUser extends Model
         }
     }
 
+    // 접근 가능 그룹, 회원 선택 삭제
     public function delAccessibleGroups($request)
     {
         $ids = $request->get('ids');
         $result = GroupUser::whereRaw('id in (' . $ids . ') ')->delete();
 
         if($result > 0) {
-            return '선택한 접근 가능 그룹을 삭제하였습니다.';
+            return '선택한 접근 가능 그룹(회원)을 삭제하였습니다.';
         } else {
             return '삭제에 실패하였습니다.';
         }
+    }
+
+    // 접근 가능 회원 목록을 표시한다.
+    public function showAccessibleUsers($id)
+    {
+        $group = Group::find($id);
+        $users = $group->users()
+                ->select(\DB::raw('users.*, count.count_groups'))
+                ->leftJoin(
+                    \DB::raw('(select users.id as id, count(group_user.id) as count_groups
+                	from group_user
+                	left join users
+                	on group_user.user_id = users.id
+                	group by users.id) as count'),
+                    'users.id', '=', 'count.id'
+                )
+                ->get();
+
+        return [
+            'group' => $group,
+            'users' => $users,
+        ];
     }
 }

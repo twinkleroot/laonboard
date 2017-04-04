@@ -23,7 +23,7 @@ class GroupsController extends Controller
      */
     public function index()
     {
-        $groups = $this->groupModel->all();
+        $groups = $this->groupModel->allGroup();
 
         return view('admin.groups.index', ['groups' => $groups]);
     }
