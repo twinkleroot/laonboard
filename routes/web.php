@@ -83,6 +83,23 @@ Route::group(['middleware' => 'auth'], function() {
         ],
     ]);
 
+    // 게시판 그룹 관리 리소스 컨트롤러에 더해서 필요한 기능(리소스 라우트보다 앞에 와야 함)
+    Route::put('admin/boards/selected_update', ['as' => 'admin.boards.selectedUpdate', 'uses' => 'Admin\BoardsController@selectedUpdate']);
+    // 게시판 그룹관리 CRUD 컨트롤러
+    Route::resource('admin/boards', 'Admin\BoardsController', [
+        'except' => [
+            'show',
+        ],
+        'names' => [
+            'create' => 'admin.boards.create',
+            'index' => 'admin.boards.index',
+            'store' => 'admin.boards.store',
+            'destroy' => 'admin.boards.destroy',
+            'update' => 'admin.boards.update',
+            'edit' => 'admin.boards.edit',
+        ]
+    ]);
+
     // 사용자가 회원 정보 수정할 때 관련한 라우트들
     Route::get('user/edit', ['as' => 'user.edit', 'uses' => 'User\UserController@edit']);
     Route::put('user/update', ['as' => 'user.update', 'uses' => 'User\UserController@update']);

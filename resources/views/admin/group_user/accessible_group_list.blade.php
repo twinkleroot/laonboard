@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    LaBoard | 접근 가능 그룹
+    접근 가능 그룹 | LaBoard
 @endsection
 
 @section('content')

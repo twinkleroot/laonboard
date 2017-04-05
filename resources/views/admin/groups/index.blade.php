@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    LaBoard | 게시판 그룹 설정
+    게시판 그룹 설정 | LaBoard
 @endsection
 
 @section('content')
@@ -55,6 +55,7 @@
                         </thead>
 
                         <tbody>
+                        @if(count($groups) > 0)
                         @foreach ($groups as $group)
                             <tr>
                                 <td class="text-center">
@@ -81,6 +82,13 @@
                                 </td>
                             </tr>
                         @endforeach
+                        @else
+                        <tr>
+                            <td class="text-center" colspan="15">
+                                자료가 없습니다.
+                            </td>
+                        </tr>
+                        @endif
                         </tbody>
                     </table>
                 </div>

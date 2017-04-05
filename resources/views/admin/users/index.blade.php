@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    LaBoard | 회원 관리
+    회원 관리 | LaBoard
 @endsection
 
 @section('content')

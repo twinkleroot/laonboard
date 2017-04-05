@@ -4,7 +4,7 @@
 {{--@include('themes.default.login')--}}
 
 @section('title')
-    LaBoard | 로그인
+    로그인 | LaBoard
 @endsection
 
 @section('content')

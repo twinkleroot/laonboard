@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    LaBoard | 소셜 로그인 완료
+    소셜 로그인 완료 | LaBoard
 @endsection
 
 @section('include_script')

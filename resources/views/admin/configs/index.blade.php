@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    LaBoard | 환경 설정
+    환경 설정 | LaBoard
 @endsection
 
 @section('content')

@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    LaBoard | 게시판 그룹 생성
+    게시판 그룹 생성 | LaBoard
 @endsection
 
 @section('content')

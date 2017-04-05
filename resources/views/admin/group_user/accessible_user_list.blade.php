@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    LaBoard | {{ $group->subject }}그룹 접근가능회원
+    {{ $group->subject }}그룹 접근가능회원 | LaBoard
 @endsection
 
 @section('content')
