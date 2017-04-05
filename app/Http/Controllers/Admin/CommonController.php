@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\GroupUser;
 use App\Group;
+use App\Board;
 use App\User;
 
 // 공통 기능
@@ -46,6 +47,13 @@ class CommonController extends Controller
                     'users' => $users
                 ];
                 $view = 'admin.group_user.accessible_user_list';
+                break;
+            case 'board':
+                $searchData = [
+                    'boards' => Board::where($param['kind'], 'like', '%'.$param['keyword'].'%')->get(),
+                    'accessible_groups' => Group::where(['use_access' => 1])->get()
+                ];
+                $view = 'admin.boards.index';
                 break;
             case '':
                 // case 추가에 따라 사용하는 모델도 추가해야 한다.
