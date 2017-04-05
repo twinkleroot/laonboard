@@ -23,8 +23,8 @@ class BoardsController extends Controller
      */
     public function index()
     {
-        $params = $this->boardModel->getBoardManageIndexParams();
-        
+        $params = $this->boardModel->getBoardIndexParams();
+
         return view('admin.boards.index', $params);
     }
 
@@ -35,7 +35,9 @@ class BoardsController extends Controller
      */
     public function create()
     {
-        //
+        $params = $this->boardModel->getBoardCreateParams();
+
+        return view('admin.boards.create', $params);
     }
 
     /**
@@ -46,7 +48,20 @@ class BoardsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rule = [
+            // 'email' => 'required|email|max:255|unique:users',
+            // 'nick' => 'required|nick_length:2,4|unique:users|alpha_num',
+            // 'password' => $this->rulePassword[0] . '|' . $this->rulePassword[2],
+        ];
+
+        // $this->validate($request, $rule);
+
+        $board = $this->boardModel->createBoard($request->all());
+        if(is_null($board)) {
+            abort('500', '게시판 생성에 실패하였습니다.');
+        }
+
+        return redirect(route('admin.boards.index'))->with('message', $board->subject . ' 게시판이 생성되었습니다.');
     }
 
     /**

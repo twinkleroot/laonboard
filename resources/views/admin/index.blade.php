@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    LaBoard | 관리자 모드
+    관리자 모드 | LaBoard
 @endsection
 
 @section('content')

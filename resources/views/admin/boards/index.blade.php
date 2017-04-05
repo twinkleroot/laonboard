@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    LaBoard | 게시판 관리
+    게시판 관리 | LaBoard
 @endsection
 
 @section('content')
@@ -68,7 +68,7 @@
                                 <td class="text-center">
                                     <select>
                                     @foreach ($accessible_groups as $group)
-                                        <option @if($board->group_id == $group) selected @endif value="{{ $group->id }}">
+                                        <option @if($board->group_id == $group->id) selected @endif value="{{ $group->id }}">
                                             {{ $group->subject }}
                                         </option>
                                     @endforeach
@@ -101,6 +101,9 @@
                                         {{ ($board->use_search == '1' ? 'checked' : '') }}/>
                                 </td>
                                 <td class="text-center">
+                                    <input type="text" name="order" value="{{ $board->order }}" />
+                                </td>
+                                <td class="text-center">
                                     <select id='device_{{ $board->id }}'>
                                         <option value='both' {{ $board->device == 'both' ? 'selected' : '' }}>모두</option>
                                         <option value='pc' {{ $board->device == 'pc' ? 'selected' : '' }}>PC</option>
@@ -109,7 +112,7 @@
                                 </td>
                                 <td class="text-center">
                                     <a href="{{ route('admin.boards.edit', $board->id) }}">수정</a>
-                                    <a href="{{ }}">복사</a>
+                                    <a href="">복사</a>
                                 </td>
                             </tr>
                         @endforeach

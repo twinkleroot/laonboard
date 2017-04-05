@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    LaBoard | 회원 추가
+    회원 추가 | LaBoard
 @endsection
 
 @section('include_script')
@@ -10,9 +10,9 @@
 @endsection
 
 @section('content')
-<div class="container">
+<div>
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-12 col-md-offset-0">
             <div class="panel panel-default">
                 <div class="panel-heading">회원 추가</div>
                 <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.users.store') }}">
@@ -130,16 +130,16 @@
                         <tr>
                             <th>주소</th>
                             <td>
-                                <input type="text" id="zip" name="zip" class="form-control" value="{{ old('zip') }}" placeholder="@lang('messages.zip')">
-                                <input type="button" onclick="execDaumPostcode()" value="@lang('messages.address_search')"><br>
+                                <input type="text" id="zip" name="zip" class="form-control" value="{{ old('zip') }}" placeholder="우편 번호">
+                                <input type="button" onclick="execDaumPostcode()" value="주소 검색"><br>
 
                                 <div id="wrap" style="display:none;border:1px solid;width:500px;height:300px;margin:5px 0;position:relative">
                                     <img src="//t1.daumcdn.net/localimg/localimages/07/postcode/320/close.png"
                                         style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1"
                                          id="btnFoldWrap" onclick="foldDaumPostcode()" alt="접기 버튼">
                                 </div>
-                                <input type="text" id="addr1" name="addr1" class="form-control" value="{{ old('addr1') }}" placeholder="@lang('messages.address1')">
-                                <input type="text" id="addr2" name="addr2" class="form-control" value="{{ old('addr2') }}" placeholder="@lang('messages.address2')">
+                                <input type="text" id="addr1" name="addr1" class="form-control" value="{{ old('addr1') }}" placeholder="기본 주소">
+                                <input type="text" id="addr2" name="addr2" class="form-control" value="{{ old('addr2') }}" placeholder="상세 주소">
                             </td>
                         </tr>
                         <tr>
@@ -211,7 +211,7 @@
                         </tr>
                     </table>
                     <div class="form-group">
-                        <div class="col-md-6 col-md-offset-4">
+                        <div class="col-md-8 col-md-offset-5">
                             <button type="submit" class="btn btn-primary">
                                 확인
                             </button>

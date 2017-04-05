@@ -30,7 +30,7 @@ class CreateBoardTable extends Migration
                 $table->tinyInteger('write_level')->default(0);
                 $table->tinyInteger('reply_level')->default(0);
                 $table->tinyInteger('comment_level')->default(0);
-                $table->tinyInteger(' upload_level')->default(0);
+                $table->tinyInteger('upload_level')->default(0);
                 $table->tinyInteger('download_level')->default(0);
                 $table->tinyInteger('html_level')->default(0);
                 $table->tinyInteger('link_level')->default(0);
@@ -80,13 +80,13 @@ class CreateBoardTable extends Migration
                 $table->integer('upload_size')->default(0);
                 $table->tinyInteger('reply_order')->default(0);
                 $table->tinyInteger('use_search')->default(0);
-                $table->integer('order')->default(0);
+                $table->integer('order')->default(0)->nullable();
                 $table->integer('count_write')->default(0);
                 $table->integer('count_comment')->default(0);
-                $table->integer('write_min')->default(0);
-                $table->integer('write_max')->default(0);
-                $table->integer('comment_min')->default(0);
-                $table->integer('comment_max')->default(0);
+                $table->integer('write_min')->default(0)->nullable();
+                $table->integer('write_max')->default(0)->nullable();
+                $table->integer('comment_min')->default(0)->nullable();
+                $table->integer('comment_max')->default(0)->nullable();
                 $table->text('notice')->nullable();
                 $table->tinyInteger('upload_count')->default(0);
                 $table->tinyInteger('use_email')->default(0);
