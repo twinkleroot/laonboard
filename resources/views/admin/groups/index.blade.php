@@ -60,10 +60,10 @@
                             <tr>
                                 <td class="text-center">
                                     <input type="checkbox" name="chk[]" class="groupId" value='{{ $group->id }}' /></td>
-                                <td class="text-center">{{ $group->group_id }}</td>
+                                <td class="text-center"><a href="">{{ $group->group_id }}</a></td>
                                 <td class="text-center"><input type="text" id='subject_{{ $group->id }}' value='{{ $group->subject }}' /></td>
                                 <td class="text-center"><input type="text" id='admin_{{ $group->id }}' value='{{ $group->admin }}' /></td>
-                                <td class="text-center">?<!-- 게시판 수 --></td>
+                                <td class="text-center"><a href="/admin/search?admin_page=board&kind=group_id&keyword={{ $group->group_id }}">{{ $group->count_board }}</a></td>
                                 <td class="text-center">
                                     <input type='checkbox' id='use_access_{{ $group->id }}' value='1'
                                         {{ ($group->use_access == '1' ? 'checked' : '') }}/></td>
@@ -125,7 +125,7 @@ $(function(){
         var selected_id_array = selectIdsByCheckBox(".groupId");
 
         if(selected_id_array.length == 0) {
-            alert('게시판 그룹을 선택해 주세요.')
+            alert('게시판 그룹을 선택해 주세요.');
             return;
         }
 

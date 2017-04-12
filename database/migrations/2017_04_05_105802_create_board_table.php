@@ -83,14 +83,14 @@ class CreateBoardTable extends Migration
                 $table->integer('order')->default(0)->nullable();
                 $table->integer('count_write')->default(0);
                 $table->integer('count_comment')->default(0);
-                $table->integer('write_min')->default(0)->nullable();
-                $table->integer('write_max')->default(0)->nullable();
-                $table->integer('comment_min')->default(0)->nullable();
-                $table->integer('comment_max')->default(0)->nullable();
+                $table->integer('write_min')->default(0);
+                $table->integer('write_max')->default(0);
+                $table->integer('comment_min')->default(0);
+                $table->integer('comment_max')->default(0);
                 $table->text('notice')->nullable();
                 $table->tinyInteger('upload_count')->default(0);
                 $table->tinyInteger('use_email')->default(0);
-                $table->enum('use_cert', ['', 'cert', 'adult', 'hp-cert', 'hp-adult'])->nullable();
+                $table->enum('use_cert', ['not-use', 'cert', 'adult', 'hp-cert', 'hp-adult']);
                 $table->tinyInteger('use_sns')->default(0);
                 $table->string('sort_field')->nullable();
 

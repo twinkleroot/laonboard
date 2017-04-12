@@ -11,7 +11,6 @@ class MessageController extends Controller
     public function message(Request $request)
     {
         $message = '';
-        // dump($request);
         if(Session::has('message')) {
             $message = Session::get('message');
         }

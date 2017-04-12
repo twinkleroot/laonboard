@@ -9,11 +9,15 @@ use App\Config;
 class Point extends Model
 {
     public $timestamps = false;
+
     protected $dates = ['expire_date', 'email_certify', 'nick_date', 'open_date', ];
-    protected $fillable = [
-        'user_email', 'datetime', 'content', 'point', 'use_point', 'expired',
-         'expire_date', 'user_point', 'rel_table', 'rel_email', 'rel_action',
-    ];
+
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
 
     // 포인트 테이블에 포인트 부여내역을 기록하는 메서드
     public static function givePoint($pointToGive, $rel_table, $rel_email, $rel_action, $content)

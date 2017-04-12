@@ -8,6 +8,9 @@ $baseDir = dirname($vendorDir);
 return array(
     'AddColoumnIdHashOnUsers' => $baseDir . '/database/migrations/2017_03_22_140202_add_coloumn_id_hash_on_users.php',
     'AddColumnUserTable' => $baseDir . '/database/migrations/2017_03_07_172208_add_column_user_table.php',
+    'AddExtraFieldOnBoards' => $baseDir . '/database/migrations/2017_04_10_110012_add_extra_field_on_boards.php',
+    'AddExtraFieldOnGroups' => $baseDir . '/database/migrations/2017_04_10_111315_add_extra_field_on_groups.php',
+    'AddExtraFieldOnUsers' => $baseDir . '/database/migrations/2017_04_10_111342_add_extra_field_on_users.php',
     'AddIndexTokenOnPasswordResetsTable' => $baseDir . '/database/migrations/2017_03_09_180131_add_index_token_on_password_resets_table.php',
     'AddNullableToPasswordColumnOnUsersTable' => $baseDir . '/database/migrations/2017_03_17_112912_add_nullable_to_password_column_on_users_table.php',
     'AddRecommendIntTypeOnUsers' => $baseDir . '/database/migrations/2017_03_20_123102_add_recommend_int_type_on_users.php',

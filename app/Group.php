@@ -5,12 +5,17 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\User;
 use DB;
+use App\Board;
+use App\Common;
 
 class Group extends Model
 {
-    protected $fillable = [
-        'group_id', 'subject', 'admin', 'use_access', 'order', 'device',
-    ];
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
 
     public $rules = [
         'group_id' => 'required|regex:/^[a-zA-Z0-9_]+$/',
@@ -23,10 +28,16 @@ class Group extends Model
         return $this->belongsToMany(User::class)->withPivot('id', 'created_at');
     }
 
-    // 모든 그룹 가져오기
-    public function allGroup()
+    // 게시판 모델과의 관계 설정
+    public function boards()
     {
-        return DB::select("SELECT
+        return $this->hasMany(Board::class);
+    }
+
+    // index 페이지에서 필요한 파라미터 가져오기
+    public function getGroupIndexParams()
+    {
+        $groups = DB::select("SELECT
                                 groups.id,
                                 groups.group_id,
                                 groups.subject,
@@ -34,10 +45,34 @@ class Group extends Model
                                 groups.use_access,
                                 groups.order,
                                 groups.device,
-                                count(group_user.id) as count_users
-                            FROM groups
-                            LEFT OUTER JOIN group_user
-                            ON groups.id = group_user.group_id
+                                groups.count_users,
+                                count(boards.id) as count_board
+                            FROM (
+                                SELECT
+                                    groups.id,
+                                    groups.group_id,
+                                    groups.subject,
+                                    groups.admin,
+                                    groups.use_access,
+                                    groups.order,
+                                    groups.device,
+                                    groups.created_at,
+                                    count(group_user.id) as count_users
+                                FROM groups
+                                LEFT OUTER JOIN group_user
+                                ON groups.id = group_user.group_id
+                                GROUP BY
+                                    groups.id,
+                                    groups.group_id,
+                                    groups.subject,
+                                    groups.admin,
+                                    groups.use_access,
+                                    groups.order,
+                                    groups.device,
+                                    groups.created_at
+                                ) as groups
+                            LEFT OUTER JOIN boards
+                            ON groups.id = boards.group_id
                             GROUP BY
                                 groups.id,
                                 groups.group_id,
@@ -45,13 +80,17 @@ class Group extends Model
                                 groups.admin,
                                 groups.use_access,
                                 groups.order,
-                                groups.device
+                                groups.device,
+                                groups.count_users
                             ORDER BY groups.created_at desc
                 ");
+        return [
+            'groups' => $groups
+        ];
 
-        // return Group::orderBy('id', 'desc')->get();
     }
 
+    // 그룹 아이디가 존재하는지 확인
     public function existGroupId($request)
     {
         $group = Group::where(['group_id' => $request->get('group_id')])->first();
@@ -62,17 +101,14 @@ class Group extends Model
     }
 
     // 추가한 게시판 그룹 저장
-    public function store($request)
+    public function store($data)
     {
-        $groupInfo = [
-            'group_id' => $request->get('group_id'),
-            'subject' => $request->get('subject'),
-            'device' => $request->get('device'),
-            'admin' => $request->get('admin'),
-            'use_access' => $request->has('use_access') ? $request->get('use_access') : 0,
-        ];
+        $data = array_except($data, ['_token']);
 
-        return Group::create($groupInfo);
+        $data = Common::exceptNullData($data);
+
+        return Group::create($data);
+
     }
 
     // 그룹 선택 삭제
@@ -86,6 +122,7 @@ class Group extends Model
         }
     }
 
+    // 그룹 선택 수정
     public function selectedUpdate($request)
     {
         $idArr = explode(',', $request->get('ids'));
@@ -114,25 +151,41 @@ class Group extends Model
         }
     }
 
-    public function findGroup($id)
+    // create 페이지에서 필요한 파라미터 가져오기
+    public function getGroupCreateParams()
     {
-        return Group::findOrFail($id);
+        return [
+            'title' => '생성',
+            'action' => route('admin.groups.store'),
+            'type' => 'create',
+        ];
     }
 
-    public function groupInfoUpdate($request, $id)
+    // edit 페이지에서 필요한 파라미터 가져오기
+    public function getGroupEditParams($id)
     {
+        return [
+            'group' => Group::findOrFail($id),
+            'title' => '수정',
+            'action' => route('admin.groups.update', $id),
+            'type' => 'edit',
+        ];
+    }
+
+    // 수정
+    public function updateGroup($data, $id)
+    {
+
+        $data = array_except($data, ['_token']);
+        $data = Common::exceptNullData($data);
+
         $group = Group::findOrFail($id);
-        $data = $request->all();
 
-        return $group->update([
-            'group_id' => $data['group_id'],
-            'subject' => $data['subject'],
-            'device' => $data['device'],
-            'admin' => $data['admin'],
-            'use_access' => $data['use_access'],
-        ]);
-
-
+        if($group->update($data)) {
+            return $group->subject;
+        } else {
+            return false;
+        }
     }
 
 }

@@ -21,7 +21,7 @@
                     <select name="kind">
                         <option value="nick">회원 닉네임</option>
                     </select>
-                    <input type="text" name="keyword" value="" />
+                    <input type="text" name="keyword" value="{{ $keyword }}" />
                     <input type="submit" class="btn btn-primary" value="검색" />
                 </p>
             </form>
@@ -73,7 +73,7 @@ $(function(){
         var selected_id_array = selectIdsByCheckBox(".userId");
 
         if(selected_id_array.length == 0) {
-            alert('회원을 선택해 주세요.')
+            alert('회원을 선택해 주세요.');
             return;
         }
 
