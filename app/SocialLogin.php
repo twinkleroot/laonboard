@@ -8,13 +8,11 @@ use App\User;
 class SocialLogin extends Model
 {
     /**
-     * The attributes that are mass assignable.
+     * The attributes that aren't mass assignable.
      *
      * @var array
      */
-    protected $fillable = [
-        'provider', 'social_id', 'social_token', 'user_id',
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for arrays.

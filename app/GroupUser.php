@@ -10,11 +10,11 @@ class GroupUser extends Model
     protected $dates = ['created_at'];
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes that aren't mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['user_id', 'group_id', 'created_at'];
+    protected $guarded = [];
 
     public $table = 'group_user';
 
@@ -32,7 +32,7 @@ class GroupUser extends Model
         return [
             'groups' => $groups,
             'user' => $user,
-            'accessible_groups' => $accessible_groups
+            'accessible_groups' => $accessible_groups,
         ];
     }
 
@@ -92,6 +92,7 @@ class GroupUser extends Model
         return [
             'group' => $group,
             'users' => $users,
+            'keyword' => ''
         ];
     }
 }

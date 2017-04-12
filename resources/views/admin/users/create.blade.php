@@ -209,6 +209,66 @@
                                 <label for="intercept_date_set_today">접근차단일을 오늘로 지정</label>
                             </td>
                         </tr>
+                        <tr>
+                            <th>여분필드1</th>
+                            <td>
+                                <input type="text" name="extra_1" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>여분필드2</th>
+                            <td>
+                                <input type="text" name="extra_2" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>여분필드3</th>
+                            <td>
+                                <input type="text" name="extra_3" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>여분필드4</th>
+                            <td>
+                                <input type="text" name="extra_4" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>여분필드5</th>
+                            <td>
+                                <input type="text" name="extra_5" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>여분필드6</th>
+                            <td>
+                                <input type="text" name="extra_6" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>여분필드7</th>
+                            <td>
+                                <input type="text" name="extra_7" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>여분필드8</th>
+                            <td>
+                                <input type="text" name="extra_8" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>여분필드9</th>
+                            <td>
+                                <input type="text" name="extra_9" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>여분필드10</th>
+                            <td>
+                                <input type="text" name="extra_10" />
+                            </td>
+                        </tr>
                     </table>
                     <div class="form-group">
                         <div class="col-md-8 col-md-offset-5">

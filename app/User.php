@@ -9,6 +9,7 @@ use App\Point;
 use App\Group;
 use Auth;
 use DB;
+use App\Common;
 use App\GroupUser;
 use Carbon\Carbon;
 
@@ -319,39 +320,17 @@ class User extends Authenticatable
     }
 
     // 회원 추가
-    public function addUser($request)
+    public function addUser($data)
     {
-        $password = bcrypt($request->get('password'));
+        $data = array_except($data, ['_token']);
 
-        $userInfo = [
-            'email' => $request->get('email'),
-            'password' => $password,
-            'name' => $request->get('name'),
-            'nick' => $request->get('nick'),
-            'level' => $request->get('level'),
-            'point' => $request->get('point'),
-            'homepage' => $request->get('homepage'),
-            'hp' => $request->get('hp'),
-            'tel' => $request->get('tel'),
-            'certify' => $request->get('certify'),
-            'adult' => $request->get('adult'),
-            'addr1' => $request->get('addr1'),
-            'addr2' => $request->get('addr2'),
-            'zip' => $request->get('zip'),
-            'mailing' => $request->get('mailing'),
-            'sms' => $request->get('sms'),
-            'open' => $request->get('open'),
-            'signature' => $request->get('signature'),
-            'profile' => $request->get('profile'),
-            'memo' => $request->get('memo'),
-            'leave_date' => $request->get('leave_date'),
-            'intercept_date' => $request->get('intercept_date'),
-            // 본인확인방법, 회원아이콘은 다른데로 추가되는 듯.
-        ];
+        $data = Common::exceptNullData($data);
 
-        $user = User::create($userInfo);
+        $data['password'] = bcrypt($data['password']);  // 비밀번호 암호화
 
-        $user->id_hashkey = str_replace("/", "-", bcrypt($user->id));
+        $user = User::create($data);
+
+        $user->id_hashkey = str_replace("/", "-", bcrypt($user->id));   // id 암호화
         $user->save();
 
         return $user;

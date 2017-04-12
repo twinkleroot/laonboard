@@ -76,6 +76,76 @@
                             <th>접근회원수</th>
                             <td><a href="">0</a></td>
                         </tr>
+                        <tr>
+                            <th>여분필드1</th>
+                            <td>
+                                여분필드 1 제목 <input type="text" name="subj_1" />
+                                여분필드 1 값 <input type="text" name="value_1" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>여분필드2</th>
+                            <td>
+                                여분필드 2 제목 <input type="text" name="subj_2" />
+                                여분필드 2 값 <input type="text" name="value_2" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>여분필드3</th>
+                            <td>
+                                여분필드 3 제목 <input type="text" name="subj_3" />
+                                여분필드 3 값 <input type="text" name="value_3" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>여분필드4</th>
+                            <td>
+                                여분필드 4 제목 <input type="text" name="subj_4" />
+                                여분필드 4 값 <input type="text" name="value_4" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>여분필드5</th>
+                            <td>
+                                여분필드 5 제목 <input type="text" name="subj_5" />
+                                여분필드 5 값 <input type="text" name="value_5" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>여분필드6</th>
+                            <td>
+                                여분필드 6 제목 <input type="text" name="subj_6" />
+                                여분필드 6 값 <input type="text" name="value_6" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>여분필드7</th>
+                            <td>
+                                여분필드 7 제목 <input type="text" name="subj_7" />
+                                여분필드 7 값 <input type="text" name="value_7" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>여분필드8</th>
+                            <td>
+                                여분필드 8 제목 <input type="text" name="subj_8" />
+                                여분필드 8 값 <input type="text" name="value_8" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>여분필드9</th>
+                            <td>
+                                여분필드 9 제목 <input type="text" name="subj_9" />
+                                여분필드 9 값 <input type="text" name="value_9" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>여분필드10</th>
+                            <td>
+                                여분필드 10 제목 <input type="text" name="subj_10" />
+                                여분필드 10 값 <input type="text" name="value_10" />
+                            </td>
+                        </tr>
                     </table>
                     <div class="form-group">
                         <div class="col-md-6 col-md-offset-4">

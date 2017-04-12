@@ -23,9 +23,9 @@ class GroupsController extends Controller
      */
     public function index()
     {
-        $groups = $this->groupModel->allGroup();
+        $params = $this->groupModel->getGroupIndexParams();
 
-        return view('admin.groups.index', ['groups' => $groups]);
+        return view('admin.groups.index', $params);
     }
 
     /**
@@ -35,7 +35,9 @@ class GroupsController extends Controller
      */
     public function create()
     {
-        return view('admin.groups.create');
+        $params = $this->groupModel->getGroupCreateParams();
+
+        return view('admin.groups.form', $params);
     }
 
     /**
@@ -52,7 +54,7 @@ class GroupsController extends Controller
             return redirect(route('admin.groups.create'))->with('message', '이미 존재하는 그룹 ID입니다.');
         }
 
-        $group = $this->groupModel->store($request);
+        $group = $this->groupModel->store($request->all());
 
         if(!is_null($group)) {
             return redirect(route('admin.groups.index'))->with('message', $request->get('subject') . '게시판 그룹을 생성하였습니다.');
@@ -70,8 +72,9 @@ class GroupsController extends Controller
      */
     public function edit($id)
     {
-        $group = $this->groupModel->findGroup($id);
-        return view('admin.groups.edit')->with('group', $group);
+        $params = $this->groupModel->getGroupEditParams($id);
+
+        return view('admin.groups.form', $params);
     }
 
     /**
@@ -83,9 +86,13 @@ class GroupsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->groupModel->groupInfoUpdate($request, $id);
+        $subject = $this->groupModel->updateGroup($request->all(), $id);
 
-        return redirect(route('admin.groups.index'))->with('message', $request->get('subject') . '의 게시판 그룹 정보가 수정되었습니다.');
+        if(!$subject) {
+            abort('500', '게시판 그룹 정보의 변경에 실패하였습니다.');
+        }
+
+        return redirect(route('admin.groups.index'))->with('message', $subject . '의 게시판 그룹 정보가 수정되었습니다.');
     }
 
     // 선택 수정 수행
@@ -95,7 +102,8 @@ class GroupsController extends Controller
             return redirect(route('admin.groups.edit'))->with('message', '이미 존재하는 그룹 ID입니다.');
         }
 
-        $result = $this->groupModel->selectedUpdate($request);
+        $this->groupModel->selectedUpdate($request);
+
         return redirect(route('admin.groups.index'))->with('message', '선택한 게시판 그룹 정보가 수정되었습니다.');
     }
 

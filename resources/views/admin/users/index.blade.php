@@ -129,7 +129,7 @@ $(function(){
         var selected_id_array = selectIdsByCheckBox(".userId");
 
         if(selected_id_array.length == 0) {
-            alert('회원을 선택해 주세요.')
+            alert('회원을 선택해 주세요.');
             return;
         }
 
