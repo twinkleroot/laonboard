@@ -150,6 +150,12 @@ body {
 
 
 /* content */
+.empty_table {
+	line-height: 150px;
+	color: #587ef6;
+	font-size: 14px;
+	font-weight: 600;
+}
 .mdline-title {
 	margin: 15px 0;
 	background: url('../images/centerline.png') center center repeat-x;
@@ -302,7 +308,7 @@ body {
 	line-height: 34px; vertical-align: bottom; font-weight: 600;
 }
 #bd_btn {
-	padding: 0; 
+	padding: 0;
 	margin-bottom: 0;
 }
 #bd_btn li {

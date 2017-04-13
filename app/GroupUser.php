@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use DB;
 
 class GroupUser extends Model
 {
@@ -78,9 +79,9 @@ class GroupUser extends Model
     {
         $group = Group::find($id);
         $users = $group->users()
-                ->select(\DB::raw('users.*, count.count_groups'))
+                ->select(DB::raw('users.*, count.count_groups'))
                 ->leftJoin(
-                    \DB::raw('(select users.id as id, count(group_user.id) as count_groups
+                    DB::raw('(select users.id as id, count(group_user.id) as count_groups
                 	from group_user
                 	left join users
                 	on group_user.user_id = users.id

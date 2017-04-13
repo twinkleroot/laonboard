@@ -54,6 +54,7 @@ class AddExtraFieldOnBoards extends Migration
             $table->dropColumn('subj_7');
             $table->dropColumn('subj_8');
             $table->dropColumn('subj_9');
+            $table->dropColumn('subj_10');
             $table->dropColumn('value_1');
             $table->dropColumn('value_2');
             $table->dropColumn('value_3');

@@ -47,7 +47,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
     ]);
     // 게시판 그룹 관리 리소스 컨트롤러에 추가적으로 라우팅을 구성(리소스 라우트보다 앞에 와야 함)
     Route::put('groups/selected_update', ['as' => 'admin.groups.selectedUpdate', 'uses' => 'Admin\GroupsController@selectedUpdate']);
-    // 게시판 그룹관리 CRUD 컨트롤러
+    // 게시판 그룹관리 리소스 컨트롤러
     Route::resource('groups', 'Admin\GroupsController', [
         'except' => [
             'show',
@@ -87,7 +87,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
     Route::put('boards/selected_update', ['as' => 'admin.boards.selectedUpdate', 'uses' => 'Admin\BoardsController@selectedUpdate']);
     Route::get('boards/copy/{boardId}', ['as' => 'admin.boards.copyForm', 'uses' => 'Admin\BoardsController@copyForm']);
     Route::post('boards/copy', ['as' => 'admin.boards.copy', 'uses' => 'Admin\BoardsController@copy']);
-    // 게시판 관리 CRUD 컨트롤러
+    // 게시판 관리 리소스 컨트롤러
     Route::resource('boards', 'Admin\BoardsController', [
         'except' => [
             'show',
@@ -99,6 +99,18 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
             'destroy' => 'admin.boards.destroy',
             'update' => 'admin.boards.update',
             'edit' => 'admin.boards.edit',
+        ]
+    ]);
+
+    // 포인트 관리 리소스 컨트롤러
+    Route::resource('points', 'Admin\PointsController', [
+        'only' => [
+            'index', 'store', 'destroy',
+        ],
+        'names' => [
+            'index' => 'admin.points.index',
+            'store' => 'admin.points.store',
+            'destroy' => 'admin.points.destroy',
         ]
     ]);
 });

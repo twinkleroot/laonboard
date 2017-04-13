@@ -68,6 +68,7 @@
                         @if(Auth::user()->level < 10)
                             <li><a href="{{ route('user.checkPassword') }}">회원 정보 수정</a></li>
                         @endif
+                        <li><a href="">포인트 내역</a></li>
                         <li>
                             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 로그아웃

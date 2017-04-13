@@ -252,7 +252,11 @@
                             <label for="recommend" class="col-md-4 control-label">추천인 닉네임</label>
 
                             <div class="col-md-6">
-                                <input type="text" class="form-control" name="recommend" value="{{ $recommend!='' ? $recommend : old('recommend') }}">
+                                <input type="text" class="form-control"
+                                    @if(empty($recommend)) name="recommend" value="{{ old('recommend') }}"
+                                    @else value="{{ $recommend }}" readonly
+                                    @endif
+                                >
 
                                 @if ($errors->has('recommend'))
                                     <span class="help-block">

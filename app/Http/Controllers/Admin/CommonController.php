@@ -7,15 +7,21 @@ use App\Http\Controllers\Controller;
 use App\GroupUser;
 use App\Group;
 use App\Board;
+use App\Point;
 use App\User;
 use DB;
 
 // 공통 기능
 class CommonController extends Controller
 {
-    public function __construct()
+
+    public $pointModel;
+
+    public function __construct(Point $point)
     {
         $this->middleware('level:10');
+
+        $this->pointModel = $point;
     }
 
     // 관리자 검색 기능
@@ -74,6 +80,33 @@ class CommonController extends Controller
                     'keyword' => $param['keyword'],
                 ];
                 $view = 'admin.boards.index';
+                break;
+            case 'point':
+                $points = null;
+                $sum = 0;
+                $searchEmail = '';
+                if($param['kind'] == 'content') {
+                    $points = Point::where($param['kind'], 'like', '%'.$param['keyword'].'%')->orderBy('id', 'desc')->get();
+                    $sum = $this->pointModel->sumPoint();
+                } else {
+                    $user = User::where( [$param['kind'] => $param['keyword']] )->first();
+                    if(!is_null($user)) {
+                        $points = Point::where(['user_id' => $user->id])->orderBy('id', 'desc')->get();
+                        $sum = $points->max('user_point');
+                        $searchEmail = $user->email;
+                    } else {
+                        $sum = $this->pointModel->sumPoint();
+                    }
+                }
+
+                $searchData = [
+                    'points' => $points,
+                    'kind' => $param['kind'],
+                    'keyword' => $param['keyword'],
+                    'sum' => $sum,
+                    'searchEmail' => $searchEmail,
+                ];
+                $view = 'admin.points.index';
                 break;
             case '':
                 // case 추가에 따라 사용하는 모델도 추가해야 한다.

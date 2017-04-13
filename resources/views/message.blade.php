@@ -4,7 +4,7 @@
     <script>
         $(document).ready(function(){
             alert("{{ $message }}");
-            location.replace("{{ route('index') }}");
+            history.back();
         });
     </script>
 </head>

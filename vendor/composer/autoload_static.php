@@ -373,6 +373,7 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         'AddNullableToPasswordColumnOnUsersTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_17_112912_add_nullable_to_password_column_on_users_table.php',
         'AddRecommendIntTypeOnUsers' => __DIR__ . '/../..' . '/database/migrations/2017_03_20_123102_add_recommend_int_type_on_users.php',
         'AddUniqueKeyEmailOnUsersTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_09_110203_add_unique_key_email_on_users_table.php',
+        'AddUserIdAndDelUserEmailOnPoints' => __DIR__ . '/../..' . '/database/migrations/2017_04_12_174132_add_user_id_and_del_user_email_on_points.php',
         'ChangeNameNullableOnUsers' => __DIR__ . '/../..' . '/database/migrations/2017_03_20_121558_change_name_nullable_on_users.php',
         'ChangeZipDatetimeNickdateOpendateColumnOnUsers' => __DIR__ . '/../..' . '/database/migrations/2017_03_14_122901_change_zip_datetime_nickdate_opendate_column_on_users.php',
         'CreateBoardTable' => __DIR__ . '/../..' . '/database/migrations/2017_04_05_105802_create_board_table.php',

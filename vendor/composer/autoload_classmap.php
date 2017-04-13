@@ -15,6 +15,7 @@ return array(
     'AddNullableToPasswordColumnOnUsersTable' => $baseDir . '/database/migrations/2017_03_17_112912_add_nullable_to_password_column_on_users_table.php',
     'AddRecommendIntTypeOnUsers' => $baseDir . '/database/migrations/2017_03_20_123102_add_recommend_int_type_on_users.php',
     'AddUniqueKeyEmailOnUsersTable' => $baseDir . '/database/migrations/2017_03_09_110203_add_unique_key_email_on_users_table.php',
+    'AddUserIdAndDelUserEmailOnPoints' => $baseDir . '/database/migrations/2017_04_12_174132_add_user_id_and_del_user_email_on_points.php',
     'ChangeNameNullableOnUsers' => $baseDir . '/database/migrations/2017_03_20_121558_change_name_nullable_on_users.php',
     'ChangeZipDatetimeNickdateOpendateColumnOnUsers' => $baseDir . '/database/migrations/2017_03_14_122901_change_zip_datetime_nickdate_opendate_column_on_users.php',
     'CreateBoardTable' => $baseDir . '/database/migrations/2017_04_05_105802_create_board_table.php',

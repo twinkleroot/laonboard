@@ -67,6 +67,13 @@ class User extends Authenticatable
         return $this->belongsToMany(Group::class)->withPivot('id', 'created_at');
     }
 
+    // 포인트 모델과의 관계설정
+    public function points()
+    {
+        return $this->hasMany(Point::class);
+
+    }
+
     // 추천인 닉네임 구하기
     public function recommendedPerson($user)
     {
@@ -147,18 +154,6 @@ class User extends Authenticatable
     {
         $nowDate = Carbon::now()->toDateString();
 
-        // 기존에 같은 건으로 포인트를 받았는지 조회. 조회되면 포인트 적립 불가
-        // (회원 탈퇴 후 재가입하면서 포인트를 늘려가는 행위 차단을 위해)
-        $rel_table = '@users';
-        $rel_email = $request->get('email');
-        $rel_action = '회원가입';
-        $existPoint = Point::checkPoint($rel_table, $rel_email, $rel_action);
-        if(is_null($existPoint)) {
-            $content = '회원가입 축하';
-            $pointToGive = Point::pointType('join');
-            Point::givePoint($pointToGive, $rel_table, $rel_email, $rel_action, $content);
-        }
-
         $userInfo = [
             'email' => $request->get('email'),
             'password' => bcrypt($request->get('password')),
@@ -171,7 +166,6 @@ class User extends Authenticatable
             'today_login' => Carbon::now(),
             'login_ip' => $request->ip(),
             'ip' => $request->ip(),
-            'point' => Point::pointType('join'),
         ];
 
         // 이메일 인증을 사용할 경우
@@ -193,6 +187,19 @@ class User extends Authenticatable
         }
         // 입력받은 정보와 가공한 정보를 바탕으로 회원정보를 DB에 추가한다.
         $user = User::create($userInfo);
+
+        // 기존에 같은 건으로 포인트를 받았는지 조회. 조회되면 포인트 적립 불가
+        // (회원 탈퇴 후 재가입하면서 포인트를 늘려가는 행위 차단을 위해)
+        $rel_table = '@users';
+        $rel_email = $user->email;
+        $rel_action = '회원가입';
+        $existPoint = Point::checkPoint($rel_table, $rel_email, $rel_action);
+        if(is_null($existPoint)) {
+            $content = '회원가입 축하';
+            $pointToGive = Point::pointType('join');
+            $user->point = $pointToGive;        // 포인트 부여
+            Point::loggingPoint($user, $pointToGive, $rel_table, $rel_action, $content);    // 포인트 내역 기록
+        }
 
         // Users 테이블의 주 키인 id의 해시 값을 만들어서 저장한다. (게시글에 사용자 번호 노출 방지)
         $user->id_hashkey = str_replace("/", "-", bcrypt($user->id));
@@ -233,8 +240,8 @@ class User extends Authenticatable
             if(is_null($existPoint)) {
                 $content = $user->email . '의 추천인';
                 $pointToGive = Point::pointType('recommend');
-                Point::givePoint($pointToGive, $rel_table, $rel_email, $rel_action, $content);
-                $recommendedUser->point = $recommendedUser->point + $pointToGive;
+                $recommendedUser->point = $recommendedUser->point + $pointToGive;   // 추천인에게 포인트 부여
+                Point::loggingPoint($recommendedUser, $pointToGive, $rel_table, $rel_action, $content);     // 포인트 내역 기록
             }
 
             $recommendedUser->save();
@@ -274,7 +281,6 @@ class User extends Authenticatable
     }
 
     // 관리자에서 사용하는 메서드
-
     public function userList()
     {
         return DB::select("SELECT

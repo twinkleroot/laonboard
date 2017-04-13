@@ -32,18 +32,20 @@ class Config extends Model
             'required', 'confirmed',
         ];
         $index = 0;
-        if($config->passwordPolicyUpper == 1) {
+        if($config->passwordPolicyUpper == 1) {     // 대문자를 1개 이상 포함할 때
             $rulePieces[$index] = '(?=.*[A-Z])';
             $index++;
         }
-        if($config->passwordPolicyNumber == 1) {
+        if($config->passwordPolicyNumber == 1) {     // 숫자를 1개 이상 포함할 때
             $rulePieces[$index] = '(?=.*\d)';
             $index++;
         }
-        if($config->passwordPolicySpecial == 1) {
+        if($config->passwordPolicySpecial == 1) {     // 특수문자를 1개 이상 포함할 때
             $rulePieces[$index] = '(?=.*[~!@#$%^&*()\-_=+])';
             $index++;
         }
+
+        // 비밀번호 규칙 정규식 조합
         $ruleString = '/^(?=.*[a-z])' . implode($rulePieces) . '.{' . $config->passwordPolicyDigits . ',}/';
 
         array_push($ruleArr,  'regex:' . $ruleString);
@@ -128,7 +130,12 @@ class Config extends Model
         // 회원 가입 설정 일 때
         if($name == 'join') {
             $data['banId'] = [ 0 => $data['banId'] ];
-        } else if($name == 'board') {
+            // checkbox 입력이 unckecked일 때 배열에 값을 0으로 추가.
+            $data = array_add($data, 'emailCertify', isset($data['emailCertify']) ? $data['emailCertify'] : 0);
+            $data = array_add($data, 'passwordPolicySpecial', isset($data['passwordPolicySpecial']) ? $data['passwordPolicySpecial'] : 0);
+            $data = array_add($data, 'passwordPolicyUpper', isset($data['passwordPolicyUpper']) ? $data['passwordPolicyUpper'] : 0);
+            $data = array_add($data, 'passwordPolicyNumber', isset($data['passwordPolicyNumber']) ? $data['passwordPolicyNumber'] : 0);
+        } else if($name == 'board') {   // 게시판 기본 설정일 때
             $data['filter'] = [ 0 => $data['filter'] ];
         }
 
