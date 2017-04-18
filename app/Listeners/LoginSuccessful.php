@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Point;
+use App\Config;
 
 class LoginSuccessful
 {
@@ -37,22 +38,15 @@ class LoginSuccessful
         $event->user->today_login = Carbon::now();
         $event->user->login_ip = $this->request->ip();
 
-        // 당일 첫 로그인 포인트 주기.
-        $rel_table = '@login';
-        $rel_email = $event->user->email;
-        $rel_action = $nowDate;
-
-        // 기존에 같은 건으로 포인트를 받았는지 조회. 조회되면 포인트 적립 불가
-        $existPoint = Point::checkPoint($rel_table, $rel_email, $rel_action);
-        // 회원 가입인 경우 로그인 포인트를 부여하지 않음.
-        $isUserJoin = Point::isUserJoin($event->user);
-        
-        if($isUserJoin == false && is_null($existPoint)) {
-            $content = $nowDate . ' 첫 로그인';
-            $pointToGive = Point::pointType('login');
-            $event->user->point = $event->user->point + $pointToGive;       // 당일 첫 로그인 포인트 부여
-            Point::loggingPoint($event->user, $pointToGive, $rel_table, $rel_action, $content);     // 포인트 내역 기록
-        }
+        // 당일 첫 로그인 포인트 부여
+        Point::addPoint([
+            'user' => $event->user,
+            'relTable' => '@login',
+            'relEmail' => $event->user->email,
+            'relAction' => $nowDate,
+            'content' => $nowDate . ' 첫 로그인',
+            'type' => 'login',
+        ]);
 
         $event->user->save();
     }

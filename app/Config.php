@@ -53,10 +53,55 @@ class Config extends Model
         return $ruleArr;
     }
 
+    // 환경 설정 인덱스 페이지에 들어갈 데이터
+    public function getConfigIndexParams()
+    {
+        $configHomepage = $this->getConfigByName('config.homepage');
+        $configJoin = $this->getConfigByName('config.join');
+        $configBoard = $this->getConfigByName('config.board');
+
+        // 홈페이지 기본환경 설정
+        if(is_null($configHomepage)) {
+            $configHomepage =  $this->createConfigHomepage();
+        }
+        // 회원 가입 설정
+        if(is_null($configJoin)) {
+            $configJoin =  $this->createConfigJoin();
+        }
+        // 게시판 기본 설정
+        if(is_null($configBoard)) {
+            $configBoard =  $this->createConfigBoard();
+        }
+
+        return [
+            'configHomepage' => json_decode($configHomepage->vars),
+            'configJoin' => json_decode($configJoin->vars),
+            'configBoard' => json_decode($configBoard->vars),
+        ];
+    }
+
     // 설정 이름으로 설정 값을 가져온다.
     public function getConfigByName($name)
     {
         return Config::where('name', '=', $name)->first();
+    }
+
+    // 회원 가입 설정을 config 테이블에 추가한다.
+    public function createConfigHomepage()
+    {
+        $configArr = array (
+          'title' => config('gnu.title'),
+          'usePoint' => config('gnu.usePoint'),
+          'loginPoint' => config('gnu.loginPoint'),
+          'openDate' => config('gnu.openDate'),
+          'newRows' => config('gnu.newRows'),
+          'pageRows' => config('gnu.pageRows'),
+          'mobilePageRows' => config('gnu.mobilePageRows'),
+          'writePages' => config('gnu.writePages'),
+          'mobilePages' => config('gnu.mobilePages'),
+        );
+
+        return $this->createConfig('config.homepage', $configArr);
     }
 
     // 회원 가입 설정을 config 테이블에 추가한다.
@@ -65,7 +110,6 @@ class Config extends Model
         $configArr = array (
           'emailCertify' => config('gnu.emailCertify'),
           'nickDate' => config('gnu.nickDate'),
-          'openDate' => config('gnu.openDate'),
           'name' => config('gnu.name'),
           'homepage' => config('gnu.homepage'),
           'tel' => config('gnu.tel'),
@@ -77,7 +121,6 @@ class Config extends Model
           'joinLevel' => config('gnu.joinLevel'),
           'joinPoint' => config('gnu.joinPoint'),
           'recommendPoint' => config('gnu.recommendPoint'),
-          'loginPoint' => config('gnu.loginPoint'),
           'banId' => config('gnu.banId'),
           'stipulation' => config('gnu.stipulation'),
           'privacy' => config('gnu.privacy'),
@@ -87,10 +130,7 @@ class Config extends Model
           'passwordPolicyDigits' => config('gnu.passwordPolicyDigits'),
         );
 
-        return Config::create([
-            'name' => 'config.join',
-            'vars' => json_encode($configArr)
-        ]);
+        return $this->createConfig('config.join', $configArr);
     }
 
     // 게시판 기본 설정을 config 테이블에 추가한다.
@@ -110,8 +150,13 @@ class Config extends Model
           'filter' => config('gnu.filter'),
         );
 
+        return $this->createConfig('config.board', $configArr);
+    }
+
+    public function createConfig($name, $configArr)
+    {
         return Config::create([
-            'name' => 'config.board',
+            'name' => $name,
             'vars' => json_encode($configArr)
         ]);
     }
@@ -127,8 +172,10 @@ class Config extends Model
 
         $config = $this->getConfigByName('config.' . $name);
 
-        // 회원 가입 설정 일 때
-        if($name == 'join') {
+
+        if($name == 'homepage') {       // 홈페이지 기본 환경 설정 일때
+            $data = array_add($data, 'usePoint', isset($data['usePoint']) ? $data['usePoint'] : 0);
+        } else if($name == 'join') {    // 회원 가입 설정 일 때
             $data['banId'] = [ 0 => $data['banId'] ];
             // checkbox 입력이 unckecked일 때 배열에 값을 0으로 추가.
             $data = array_add($data, 'emailCertify', isset($data['emailCertify']) ? $data['emailCertify'] : 0);

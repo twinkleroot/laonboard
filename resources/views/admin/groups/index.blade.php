@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    게시판 그룹 설정 | LaBoard
+    게시판 그룹 설정 | {{ $config->title }}
 @endsection
 
 @section('content')
@@ -15,7 +15,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">게시판 그룹 설정</div>
             <div class="panel-heading">
-                <a href="{{ route('admin.groups.index') }}" >처음</a> | 전체그룹 {{ count($groups) }}개
+                <a href="{{ route('admin.groups.index') }}" >처음</a> | 전체그룹 {{ $groups->total() }}개
             </div>
             <form method="GET" id="searchForm" action="/admin/search">
                 <input type="hidden" id="admin_page" name="admin_page" value="boardGroup" />
@@ -95,9 +95,20 @@
                 <div class="panel-heading">
                     <input type="button" id="selected_update" class="btn btn-primary" value="선택 수정"/>
                     <input type="button" id="selected_delete" class="btn btn-primary" value="선택 삭제"/>
-                    <a class="btn btn-primary" href={{ route('admin.groups.create')}}>게시판 그룹 추가</a>
+                    <a class="btn btn-primary" href={{ route('admin.groups.create') }}>게시판 그룹 추가</a>
                 </div>
             </form>
+
+            {{-- 페이지 처리 --}}
+            {{ str_contains(url()->current(), 'search')
+                ? $groups->appends([
+                    'admin_page' => 'boardGroup',
+                    'kind' => $kind,
+                    'keyword' => $keyword,
+                ])->links()
+                : $groups->links()
+            }}
+
         </div>
     </div>
 </div>

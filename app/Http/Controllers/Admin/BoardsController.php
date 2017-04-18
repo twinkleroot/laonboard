@@ -52,14 +52,14 @@ class BoardsController extends Controller
     public function store(Request $request)
     {
         $rule = [
-            'table' => 'required|max:20|unique:boards|regex:/^[a-zA-Z0-9_]+$/',
+            'table_name' => 'required|max:20|unique:boards|regex:/^[a-zA-Z0-9_]+$/',
             'group_id' => 'required',
             'subject' => 'required',
         ];
 
         $this->validate($request, $rule);
 
-        $post = $this->writeModel->createWriteTable($request->get('table'));
+        $post = $this->writeModel->createWriteTable($request->get('table_name'));
         $board = $this->boardModel->createBoard($request->all());
 
         if(is_null($board) && $post) {

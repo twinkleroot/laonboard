@@ -51,7 +51,7 @@
             <!-- 일반메뉴
             <li><a href="">메뉴1</a></li>
             <li><a href="">메뉴2</a></li>-->
-            <li class="gnb-li"><a href="{{ route('board.index') }}">자유게시판</a></li>
+            {{-- <li class="gnb-li"><a href="{{ route('board.index', $boardNo) }}">자유게시판</a></li> --}}
             @if (Auth::guest())
                 <li class="gnb-li"><a href="{{ route('login') }}">로그인</a></li>
                 <li class="gnb-li"><a href="{{ route('user.join') }}">회원가입</a></li>
@@ -68,7 +68,7 @@
                         @if(Auth::user()->level < 10)
                             <li><a href="{{ route('user.checkPassword') }}">회원 정보 수정</a></li>
                         @endif
-                        <li><a href="">포인트 내역</a></li>
+                        <li><a href="{{ route('user.point', Auth::user()->id) }}" class="point">포인트 내역</a></li>
                         <li>
                             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 로그아웃

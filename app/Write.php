@@ -39,6 +39,7 @@ class Write extends Model
         if(!Schema::hasTable($tableName)) {
             Schema::create($tableName, function (Blueprint $table) {
                 $table->increments('id');
+                $table->integer('num')->default(0);
                 $table->string('reply', 10)->nullable();
                 $table->integer('parent')->unsigned()->default(0);
                 $table->tinyInteger('is_comment')->default(0);
@@ -87,6 +88,7 @@ class Write extends Model
                 $table->string('value_9')->nullable();
                 $table->string('value_10')->nullable();
             });
+
             return true;
         } else {
             return false;

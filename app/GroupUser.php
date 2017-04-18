@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use DB;
+use App\Config;
 
 class GroupUser extends Model
 {
@@ -22,7 +23,7 @@ class GroupUser extends Model
     public $timestamps = false;
 
     // 접근 가능 그룹 목록을 표시한다.
-    public function showAccessibleGroups($id)
+    public function getAccessibleGroups($id)
     {
         $user = User::find($id);
         $groups = $user->groups;
@@ -31,6 +32,7 @@ class GroupUser extends Model
         ])->get();
 
         return [
+            'config' => Config::getConfig('config.homepage'),
             'groups' => $groups,
             'user' => $user,
             'accessible_groups' => $accessible_groups,
@@ -75,8 +77,9 @@ class GroupUser extends Model
     }
 
     // 접근 가능 회원 목록을 표시한다.
-    public function showAccessibleUsers($id)
+    public function getAccessibleUsers($id)
     {
+        $config = Config::getConfig('config.homepage');
         $group = Group::find($id);
         $users = $group->users()
                 ->select(DB::raw('users.*, count.count_groups'))
@@ -88,9 +91,10 @@ class GroupUser extends Model
                 	group by users.id) as count'),
                     'users.id', '=', 'count.id'
                 )
-                ->get();
+                ->paginate($config->pageRows);
 
         return [
+            'config' => $config,
             'group' => $group,
             'users' => $users,
             'keyword' => ''

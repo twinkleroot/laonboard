@@ -37,55 +37,32 @@ class Group extends Model
     // index 페이지에서 필요한 파라미터 가져오기
     public function getGroupIndexParams()
     {
-        $groups = DB::select("SELECT
-                                groups.id,
-                                groups.group_id,
-                                groups.subject,
-                                groups.admin,
-                                groups.use_access,
-                                groups.order,
-                                groups.device,
-                                groups.count_users,
-                                count(boards.id) as count_board
-                            FROM (
-                                SELECT
-                                    groups.id,
-                                    groups.group_id,
-                                    groups.subject,
-                                    groups.admin,
-                                    groups.use_access,
-                                    groups.order,
-                                    groups.device,
-                                    groups.created_at,
-                                    count(group_user.id) as count_users
-                                FROM groups
-                                LEFT OUTER JOIN group_user
-                                ON groups.id = group_user.group_id
-                                GROUP BY
-                                    groups.id,
-                                    groups.group_id,
-                                    groups.subject,
-                                    groups.admin,
-                                    groups.use_access,
-                                    groups.order,
-                                    groups.device,
-                                    groups.created_at
-                                ) as groups
-                            LEFT OUTER JOIN boards
-                            ON groups.id = boards.group_id
-                            GROUP BY
-                                groups.id,
-                                groups.group_id,
-                                groups.subject,
-                                groups.admin,
-                                groups.use_access,
-                                groups.order,
-                                groups.device,
-                                groups.count_users
-                            ORDER BY groups.created_at desc
-                ");
+        $config = Config::getConfig('config.homepage');
+        $groups = DB::table('groups as g')
+                ->select(DB::raw('
+                            g.id,
+                            g.group_id,
+                            g.subject,
+                            g.admin,
+                            g.use_access,
+                            g.order,
+                            g.device,
+                            g.created_at,
+                            (   select count(gu.id)
+                                from group_user as gu
+                                where gu.group_id = g.id
+                            ) as count_users,
+                            (   select count(b.id)
+                                from boards as b
+                                where b.group_id = g.id
+                            ) as count_board'
+                ))
+                ->orderBy('g.created_at', 'desc')
+                ->paginate($config->pageRows);
+
         return [
-            'groups' => $groups
+            'config' => $config,
+            'groups' => $groups,
         ];
 
     }
@@ -155,6 +132,7 @@ class Group extends Model
     public function getGroupCreateParams()
     {
         return [
+            'config' => Config::getConfig('config.homepage'),
             'title' => '생성',
             'action' => route('admin.groups.store'),
             'type' => 'create',
@@ -165,6 +143,7 @@ class Group extends Model
     public function getGroupEditParams($id)
     {
         return [
+            'config' => Config::getConfig('config.homepage'),
             'group' => Group::findOrFail($id),
             'title' => '수정',
             'action' => route('admin.groups.update', $id),

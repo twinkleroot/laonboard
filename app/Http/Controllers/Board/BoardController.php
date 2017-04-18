@@ -4,22 +4,33 @@ namespace App\Http\Controllers\Board;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Board;
+use App\Write;
 
 class BoardController extends Controller
 {
 
-    public function __construct()
+    public $boardModel;
+    public $writeModel;
+
+    public function __construct(Board $board, Write $write)
     {
         $this->middleware('level:2');
+
+        $this->boardModel = $board;
+        $this->writeModel = $write;
     }
     /**
      * Display a listing of the resource.
      *
+     * @param integer $boardId
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($boardId)
     {
-        return view('board.index');
+        $params = $this->boardModel->getBbsIndexParams($boardId);
+
+        return view('board.index', $params);
     }
 
     /**
@@ -40,7 +51,7 @@ class BoardController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
     }
 
     /**

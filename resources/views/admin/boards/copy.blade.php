@@ -1,3 +1,26 @@
+<!DOCTYPE html>
+<html lang="{{ config('app.locale') }}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>게시판 복사 | 라라벨 그누보드</title>
+
+    <!-- Scripts -->
+    <script>
+        window.Laravel = {!! json_encode([
+            'csrfToken' => csrf_token(),
+        ]) !!};
+    </script>
+
+    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+
+</head>
+
 @if(Session::has('message'))
   <div class="alert alert-info">
     {{ Session::get('message') }}
@@ -14,7 +37,7 @@
                     <table class="table table-hover">
                         <tr>
                             <th class="text-center">원본 테이블명</th>
-                            <td>{{ $board->table }}</td>
+                            <td>{{ $board->table_name }}</td>
                         </tr>
                         <tr>
                             <th class="text-center">복사 테이블명</th>

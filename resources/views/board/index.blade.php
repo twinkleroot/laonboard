@@ -10,5 +10,5 @@
     {{Session::get('message') }}
     </div>
 @endif
-게시판
+    {{ $board->table_name }} 게시판 리스트
 @endsection

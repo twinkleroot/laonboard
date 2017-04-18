@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    포인트 관리 | LaBoard
+    포인트 관리 | {{ $config->title }}
 @endsection
 
 @section('content')
@@ -30,8 +30,8 @@
 		</li>
 		<li>
 			<span>
-                전체 {{ count($points) }} 건 (
-                @if($kind == 'user_email')
+                전체 {{ $points->total() }} 건 (
+                @if($kind == 'email' && $points->total() > 0)
                     {{ $keyword }} 님 포인트
                 @else 전체
                 @endif
@@ -107,21 +107,15 @@
     	</table>
     </form>
 
-	<ul class="pagination">
-		<li><a href="#"><<</a></li>
-		<li><a href="#"><</a></li>
-	    <li><a href="#">1</a></li>
-	    <li><a href="#">2</a></li>
-	    <li><a href="#">3</a></li>
-	    <li><a href="#">4</a></li>
-	    <li><a href="#">5</a></li>
-	    <li><a href="#">6</a></li>
-	    <li><a href="#">7</a></li>
-	    <li><a href="#">8</a></li>
-	    <li><a href="#">9</a></li>
-	    <li><a href="#">></a></li>
-	    <li><a href="#">>></a></li>
-	</ul>
+    {{-- 페이지 처리 --}}
+    {{ str_contains(url()->current(), 'search')
+        ? $points->appends([
+            'admin_page' => 'point',
+            'kind' => $kind,
+            'keyword' => $keyword,
+        ])->links()
+        : $points->links()
+    }}
 
 	<div id="pt_change" class="panel panel-default">
 		<div class="panel-heading">

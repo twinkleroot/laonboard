@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-     회원 수정 | LaBoard
+     회원 수정 | {{ $title }}
 @endsection
 
 @section('include_script')

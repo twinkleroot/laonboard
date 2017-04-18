@@ -28,7 +28,7 @@ class AccessibleGroupsController extends Controller
      */
     public function show($id)
     {
-        $params = $this->groupUserModel->showAccessibleGroups($id);
+        $params = $this->groupUserModel->getAccessibleGroups($id);
 
         return view('admin.group_user.accessible_group_list', $params);
     }

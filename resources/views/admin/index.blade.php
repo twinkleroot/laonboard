@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    관리자 모드 | LaBoard
+    관리자 모드 | {{ $config->title }}
 @endsection
 
 @section('content')
@@ -13,6 +13,8 @@
             <li><a href="{{ route('admin.groups.index') }}">게시판 그룹 관리</a></li>
             <li><a href="{{ route('admin.boards.index') }}">게시판 관리</a></li>
             <li><a href="{{ route('admin.points.index') }}">포인트 관리</a></li>
+            <li><a href="{{ route('admin.menus.index') }}">메뉴 설정</a></li>
+            <li><a href="{{ route('menuTest') }}">메뉴 테스트</a></li>
         </ul>
     </div>
     <div>

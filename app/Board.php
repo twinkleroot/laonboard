@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Group;
 use App\Common;
+use App\Write;
 
 class Board extends Model
 {
@@ -16,19 +17,34 @@ class Board extends Model
      */
     protected $guarded = [];
 
-    // 게시판 그룹과의 관계 설정
+    // 게시판 그룹 모델과의 관계 설정
     public function group()
     {
         return $this->belongsTo(Group::class);
     }
 
-    // index 페이지에서 필요한 파라미터 가져오기
+    // (커뮤니티) index 페이지에서 필요한 파라미터 가져오기
+    public function getBbsIndexParams($boardId)
+    {
+        $board = Board::find($boardId);
+        $write = new Write();
+        $write->setTableName($board->table_name);
+
+        return [
+            'board' => $board,
+            'write' => $write->get(),
+        ];
+    }
+
+    // (게시판 관리) index 페이지에서 필요한 파라미터 가져오기
     public function getBoardIndexParams()
     {
-        $boards = Board::all();
+        $config = Config::getConfig('config.homepage');
+        $boards = Board::paginate($config->pageRows);;
         $groups = Group::get();
 
         return [
+            'config' => $config,
             'boards' => $boards,
             'groups' => $groups,
             'kind' => '',
@@ -36,7 +52,7 @@ class Board extends Model
         ];
     }
 
-    // create 페이지에서 필요한 파라미터 가져오기
+    // (게시판 관리) create 페이지에서 필요한 파라미터 가져오기
     public function getBoardCreateParams($request)
     {
         $groups = Group::get();
@@ -81,6 +97,7 @@ class Board extends Model
         ];
 
         return [
+            'config' => Config::getConfig('config.homepage'),
             'board' => $board,      // 배열
             'groups' => $groups,
             'selectedGroup' => $selectedGroup,
@@ -90,7 +107,7 @@ class Board extends Model
         ];
     }
 
-    // edit 페이지에서 필요한 파라미터 가져오기
+    // (게시판 관리) edit 페이지에서 필요한 파라미터 가져오기
     public function getBoardEditParams($id)
     {
         $board = Board::findOrFail($id);
@@ -98,6 +115,7 @@ class Board extends Model
         $keyword = Group::find($board->group_id)->group_id;
 
         return [
+            'config' => Config::getConfig('config.homepage'),
             'board' => $board,      // 객체
             'groups' => $groups,
             'keyword' => $keyword,
@@ -122,7 +140,7 @@ class Board extends Model
         return Board::create($data);
     }
 
-    // 게시판관리 정보 수정
+    // (게시판 관리) 정보 수정
     public function updateBoard($data, $id)
     {
         $data = array_except($data, ['_token']);
@@ -142,7 +160,7 @@ class Board extends Model
         }
     }
 
-    // 그룹 적용, 전체 적용
+    // (게시판 관리) 그룹 적용, 전체 적용
     public function applyBoard($data, $prefix)
     {
         $start = strlen($prefix) + 1;
@@ -189,7 +207,7 @@ class Board extends Model
         return $data;
     }
 
-    // 게시판 구조 복사
+    // (게시판 관리) 게시판 구조 복사
     public function copyBoard($data)
     {
         $data = array_except($data, ['_token']);
@@ -207,7 +225,7 @@ class Board extends Model
         return Board::create($originalData);
     }
 
-    // 게시판관리 선택 삭제
+    // (게시판 관리) 선택 삭제
     public function deleteBoards($ids)
     {
         $result = Board::whereRaw('id in (' . $ids . ') ')->delete();
@@ -218,7 +236,7 @@ class Board extends Model
         }
     }
 
-    // 게시판관리 선택 수정
+    // (게시판 관리) 선택 수정
     public function selectedUpdate($request)
     {
         $idArr = explode(',', $request->get('ids'));

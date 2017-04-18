@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    접근 가능 그룹 | LaBoard
+    접근 가능 그룹 | {{ $config->title }}
 @endsection
 
 @section('content')

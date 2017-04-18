@@ -10,16 +10,16 @@ use DB;
 
 class Point extends Model
 {
-    public $timestamps = false;
-
-    protected $dates = [ 'datetime', ];
-
     /**
      * The attributes that aren't mass assignable.
      *
      * @var array
      */
     protected $guarded = [];
+
+    public $timestamps = false;
+
+    protected $dates = [ 'datetime', ];
 
     // 유저 모델과의 관계 설정
     public function user()
@@ -30,9 +30,11 @@ class Point extends Model
     // index 페이지에서 필요한 파라미터 가져오기
     public function getPointIndexParams()
     {
-        $points = Point::orderBy('id', 'desc')->paginate(10);
+        $config = Config::getConfig('config.homepage');
+        $points = Point::orderBy('id', 'desc')->paginate($config->pageRows);
 
         return [
+            'config' => $config,
             'points' => $points,
             'sum' => $this->sumPoint(),
             'kind' => '',
@@ -56,6 +58,7 @@ class Point extends Model
         return $sum;
     }
 
+    // 포인트 관리 포인트 증감 설정
     public function givePoint($data)
     {
         $user = User::where('email', $data['email'])->first();
@@ -80,6 +83,7 @@ class Point extends Model
         }
     }
 
+    // 포인트 관리 선택 삭제
     public function deletePoint($ids)
     {
         $idArr = explode(',', $ids);
@@ -108,6 +112,22 @@ class Point extends Model
         }
     }
 
+    // 커뮤니티 포인트 내역 데이터
+    public function getPointList($id)
+    {
+        $config = Config::getConfig('config.homepage');
+        $points = Point::where('user_id', $id)->orderBy('id', 'desc')->paginate($config->pageRows);
+        $sum = 0;
+        foreach($points as $point) {
+            $sum += $point->use_point;
+        }
+        return [
+            'config' => $config,
+            'points' => $points,
+            'sum' => $sum,
+        ];
+    }
+
     // 포인트 테이블에 포인트 부여내역을 기록
     public static function loggingPoint($user, $pointToGive, $rel_table, $rel_action, $content)
     {
@@ -128,14 +148,15 @@ class Point extends Model
     public static function pointType($pointType)
     {
         $point = 0;
-        $config = Config::getConfig('config.join');
+        $configJoin = Config::getConfig('config.join');
+        $configHomepage = Config::getConfig('config.homepage');
 
         if($pointType == 'join') {
-            $point = $config->joinPoint;
+            $point = $configJoin->joinPoint;
         } else if($pointType == 'recommend') {
-            $point = $config->recommendPoint;
+            $point = $configJoin->recommendPoint;
         } else if($pointType == 'login') {
-            $point = $config->loginPoint;
+            $point = $configHomepage->loginPoint;
         }
 
         return $point;
@@ -154,14 +175,46 @@ class Point extends Model
     // 회원 가입 후 로그인 시키는 상태인지 검사
     public static function isUserJoin($user)
     {
-        $point = Point::where('user_id', $user->id)
-        ->orderBy('id', 'desc')
-        ->first();
+        $points = Point::where('user_id', $user->id)
+                ->orderBy('id', 'desc')
+                ->get();
 
-        if(str_contains($point->content, '회원가입')) {
-            return true;
+        if(count($points) > 0) {
+            foreach ($points as $point) {
+                if(str_contains($point->content, '회원가입')) {
+                    return true;
+                }
+            }
         }
+
         return false;
+    }
+
+    // 포인트 사용을 검사하고 각종 이벤트 후 포인트를 더해 준다.
+    public static function addPoint($data)
+    {
+        // 환경 설정의 포인트 설정에 체크(userPoint == 1)해야 포인트를 부여한다.
+        $usePoint = Config::getConfig('config.homepage')->usePoint;
+        if($usePoint != 0) {
+            $nowDate = Carbon::now()->toDateString();
+
+            $user = $data['user'];
+            // 기존에 같은 건으로 포인트를 받았는지 조회. 조회되면 포인트 적립 불가
+            $existPoint = static::checkPoint($data['relTable'], $data['relEmail'], $data['relAction']);
+            // 회원 가입인 경우 로그인 포인트를 부여하지 않음.
+            $isUserJoin = false;
+            if($data['type'] == 'join') {
+                $isUserJoin = static::isUserJoin($user);
+            }
+
+            if($isUserJoin == false && is_null($existPoint)) {
+                $pointToGive = static::pointType($data['type']);
+                $user->point += $pointToGive;   // 유저 테이블에 포인트 반영
+                static::loggingPoint($user, $pointToGive, $data['relTable'], $data['relAction'], $data['content']);     // 포인트 내역 기록
+            }
+
+            $user->save();
+        }
     }
 
 }

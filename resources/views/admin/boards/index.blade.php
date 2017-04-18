@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    게시판 관리 | LaBoard
+    게시판 관리 | {{ $config->title }}
 @endsection
 
 @section('content')
@@ -15,13 +15,13 @@
         <div class="panel panel-default">
             <div class="panel-heading">게시판 관리</div>
             <div class="panel-heading">
-                <a href="{{ route('admin.boards.index') }}" >전체목록</a> | 생성된 게시판수 {{ count($boards) }}개
+                <a href="{{ route('admin.boards.index') }}" >전체목록</a> | 생성된 게시판수 {{ $boards->total() }}개
             </div>
             <form class="form-horizontal" role="form" method="GET" action="{{ route('admin.search') }}">
                 <input type="hidden" name="admin_page" value="board" />
                  <p>
                     <select name="kind">
-                        <option value="table" @if($kind == 'table') selected @endif>TABLE</option>
+                        <option value="table_name" @if($kind == 'table_name') selected @endif>TABLE</option>
                         <option value="subject" @if($kind == 'subject') selected @endif>제목</option>
                         <option value="group_id" @if($kind == 'group_id') selected @endif>그룹ID</option>
                     </select>
@@ -79,7 +79,7 @@
                                     @endforeach
                                     </select>
                                 </td>
-                                <td class="text-center"><a href="">{{ $board->table }}</a></td>
+                                <td class="text-center"><a href="{{ route('board.index', $board->id) }}">{{ $board->table_name }}</a></td>
                                 <td class="text-center">{{ $board->skin }}</td>
                                 <td class="text-center">{{ $board->mobile_skin }}</td>
                                 <td class="text-center">
@@ -138,6 +138,17 @@
                     <input type="button" id="selected_delete" class="btn btn-primary" value="선택 삭제"/>
                 </div>
             </form>
+
+            {{-- 페이지 처리 --}}
+            {{ str_contains(url()->current(), 'search')
+                ? $boards->appends([
+                    'admin_page' => 'board',
+                    'kind' => $kind,
+                    'keyword' => $keyword,
+                ])->links()
+                : $boards->links()
+            }}
+
         </div>
     </div>
 </div>

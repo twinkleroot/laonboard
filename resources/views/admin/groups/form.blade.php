@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    게시판 그룹 {{ $title }} | LaBoard
+    게시판 그룹 {{ $title }} | {{ $config->title }}
 @endsection
 
 @section('content')
@@ -85,76 +85,15 @@
                             <th>접근회원수</th>
                             <td><a href="">0</a></td>
                         </tr>
-                        <tr>
-                            <th>여분필드1</th>
-                            <td>
-                                여분필드 1 제목 <input type="text" name="subj_1" @if($type == 'edit') value="{{ $group->subj_1 }}" @endif />
-                                여분필드 1 값 <input type="text" name="value_1" @if($type == 'edit') value="{{ $group->value_1 }}" @endif />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>여분필드2</th>
-                            <td>
-                                여분필드 2 제목 <input type="text" name="subj_2" @if($type == 'edit') value="{{ $group->subj_2 }}" @endif />
-                                여분필드 2 값 <input type="text" name="value_2" @if($type == 'edit') value="{{ $group->value_2 }}" @endif />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>여분필드3</th>
-                            <td>
-                                여분필드 3 제목 <input type="text" name="subj_3" @if($type == 'edit') value="{{ $group->subj_3 }}" @endif />
-                                여분필드 3 값 <input type="text" name="value_3" @if($type == 'edit') value="{{ $group->value_3 }}" @endif />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>여분필드4</th>
-                            <td>
-                                여분필드 4 제목 <input type="text" name="subj_4" @if($type == 'edit') value="{{ $group->subj_4 }}" @endif />
-                                여분필드 4 값 <input type="text" name="value_4" @if($type == 'edit') value="{{ $group->value_4 }}" @endif />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>여분필드5</th>
-                            <td>
-                                여분필드 5 제목 <input type="text" name="subj_5" @if($type == 'edit') value="{{ $group->subj_5 }}" @endif />
-                                여분필드 5 값 <input type="text" name="value_5" @if($type == 'edit') value="{{ $group->value_5 }}" @endif />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>여분필드6</th>
-                            <td>
-                                여분필드 6 제목 <input type="text" name="subj_6" @if($type == 'edit') value="{{ $group->subj_6 }}" @endif />
-                                여분필드 6 값 <input type="text" name="value_6" @if($type == 'edit') value="{{ $group->value_6 }}" @endif />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>여분필드7</th>
-                            <td>
-                                여분필드 7 제목 <input type="text" name="subj_7" @if($type == 'edit') value="{{ $group->subj_7 }}" @endif />
-                                여분필드 7 값 <input type="text" name="value_7" @if($type == 'edit') value="{{ $group->value_7 }}" @endif />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>여분필드8</th>
-                            <td>
-                                여분필드 8 제목 <input type="text" name="subj_8" @if($type == 'edit') value="{{ $group->subj_8 }}" @endif />
-                                여분필드 8 값 <input type="text" name="value_8" @if($type == 'edit') value="{{ $group->value_8 }}" @endif />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>여분필드9</th>
-                            <td>
-                                여분필드 9 제목 <input type="text" name="subj_9" @if($type == 'edit') value="{{ $group->subj_9 }}" @endif />
-                                여분필드 9 값 <input type="text" name="value_9" @if($type == 'edit') value="{{ $group->value_9 }}" @endif />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>여분필드10</th>
-                            <td>
-                                여분필드 10 제목 <input type="text" name="subj_10" @if($type == 'edit') value="{{ $group->subj_10 }}" @endif />
-                                여분필드 10 값 <input type="text" name="value_10" @if($type == 'edit') value="{{ $group->value_10 }}" @endif />
-                            </td>
-                        </tr>
+                        @for($i=1; $i<=10; $i++)
+                            <tr>
+                                <th>여분필드 {{ $i }}</th>
+                                <td>
+                                    여분필드 {{ $i }} 제목 <input type="text" name="subj_{{ $i }}" @if($type == 'edit') value="{{ $group['subj_' .$i] }}" @endif />
+                                    여분필드 {{ $i }} 값 <input type="text" name="value_{{ $i }}" @if($type == 'edit') value="{{ $group['value_' .$i] }}" @endif />
+                                </td>
+                            </tr>
+                        @endfor
                     </table>
                     <div class="form-group">
                         <div class="col-md-6 col-md-offset-4">

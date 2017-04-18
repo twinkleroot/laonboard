@@ -223,7 +223,7 @@
                             @if($openChangable)
                                 <div class="col-md-6">
                                     <p>
-                                        정보공개를 바꾸시면 {{ $config->openDate }}일 이내에는 변경이 안됩니다.
+                                        정보공개를 바꾸시면 {{ $openDate }}일 이내에는 변경이 안됩니다.
                                     </p>
                                     <input id="open" type="checkbox" name="open" value="1" @if($user->open == 1) checked @endif>
                                     다른분들이 나의 정보를 볼 수 있도록 합니다.
@@ -237,7 +237,7 @@
                             @else
                                 <div class="col-md-6">
                                     <p>
-                                        정보공개는 수정후 {{ $config->openDate }}일 이내,
+                                        정보공개는 수정후 {{ $openDate }}일 이내,
                                         {{ $dueDate->year }}년
                                         {{ $dueDate->month }}월
                                         {{ $dueDate->day }}일 까지는 변경이 안됩니다.<br />

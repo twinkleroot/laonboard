@@ -16,6 +16,7 @@
 Route::get('/index', ['as' => 'index', 'uses' => 'WelcomeController@index']);
 
 Route::get('/', 'ThemeController@index');
+Route::get('/menuTest', ['as' => 'menuTest', 'uses' => 'ThemeController@menuTest']);
 
 // 로그인 후 리다이렉트 되는 페이지
 Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index'] );
@@ -113,6 +114,20 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
             'destroy' => 'admin.points.destroy',
         ]
     ]);
+
+    // 메뉴 추가 팝업창에 대상 선택에 따라서 view를 load하는 기능
+    Route::post('menus/result', ['as' => 'admin.menus.result', 'uses' => 'Admin\MenusController@result']);
+    // 메뉴 설정 리소스 컨트롤러
+    Route::resource('menus', 'Admin\MenusController', [
+        'only' => [
+            'index', 'create', 'store',
+        ],
+        'names' => [
+            'index' => 'admin.menus.index',
+            'create' => 'admin.menus.create',
+            'store' => 'admin.menus.store',
+        ]
+    ]);
 });
 
 // 커뮤니티, 인증이 필요한 라우트 그룹
@@ -123,6 +138,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('user/check_password', ['as' => 'user.checkPassword', 'uses' => 'User\UserController@checkPassword']);
     Route::post('user/set_password', ['as' => 'user.setPassword', 'uses' => 'User\UserController@setPassword']);
     Route::post('user/confirm_password', ['as' => 'user.confirmPassword', 'uses' => 'User\UserController@confirmPassword']);
+    Route::get('user/point/{id}', ['as' => 'user.point', 'uses' => 'User\PointController@index']);
 });
 
 // 인증에 관련한 라우트들
@@ -144,5 +160,9 @@ Route::get('emailCertify/id/{id}/crypt/{crypt}', 'User\MailController@emailCerti
 // 처리 결과 메세지를 경고창으로 알려주는 페이지
 Route::get('message', ['as' => 'message', 'uses' => 'Message\MessageController@message']);
 
-// 게시판
-Route::resource('board', 'Board\BoardController');
+// 커뮤니티 게시판
+Route::resource('{boardId}/board', 'Board\BoardController', [
+        'parameters' => [
+            'board' => 'articleId'
+        ],
+]);

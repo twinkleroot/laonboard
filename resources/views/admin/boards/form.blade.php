@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-     게시판 {{ $title }} | LaBoard
+     게시판 {{ $title }} | {{ $config->title }}
 @endsection
 
 @section('content')
@@ -30,16 +30,16 @@
                         </tr>
                         <tr>
                             <th>TABLE</th>
-                            <td @if($errors->get('table')) class="has-error" @endif>
+                            <td @if($errors->get('table_name')) class="has-error" @endif>
                                 @if($type == 'edit')
-                                    <input type="text" name="table" value="{{ $board->table }}" maxlength="20" readonly />
-                                    <a class="btn btn-primary" href="">게시판바로가기</a>
+                                    <input type="text" name="table_name" value="{{ $board->table_name }}" maxlength="20" readonly />
+                                    <a class="btn btn-primary" href="{{ route('board.index', $board->id) }}">게시판 바로가기</a>
                                     <a class="btn btn-primary" href="{{ route('admin.boards.index')}}">목록으로</a>
                                 @else
-                                    <input type="text" name="table" required/>
+                                    <input type="text" name="table_name" required/>
                                     영문자, 숫자, _ 만 가능(공백없이 20자 이내)
                                 @endif
-                                @foreach ($errors->get('table') as $message)
+                                @foreach ($errors->get('table_name') as $message)
                                     <span class="help-block">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -124,7 +124,7 @@
                                 <a href="{{ route('admin.boards.copyForm', $board->id) }}" class="btn btn-primary board_copy" target="win_board_copy">
                                     게시판 복사
                                 </a>
-                                <a class="btn btn-primary" href="">게시판 바로가기</a>
+                                <a class="btn btn-primary" href="{{ route('board.index', $board->id) }}">게시판 바로가기</a>
                                 <a class="btn btn-primary" href="">게시판 썸네일 삭제</a>
                             @endif
                         </div>
@@ -328,7 +328,7 @@
                                 <a href="{{ route('admin.boards.copyForm', $board->id) }}" class="btn btn-primary board_copy" target="win_board_copy">
                                     게시판 복사
                                 </a>
-                                <a class="btn btn-primary" href="">게시판 바로가기</a>
+                                <a class="btn btn-primary" href="{{ route('board.index', $board->id) }}">게시판 바로가기</a>
                                 <a class="btn btn-primary" href="">게시판 썸네일 삭제</a>
                             @endif
                         </div>
@@ -726,7 +726,7 @@
                                 <a href="{{ route('admin.boards.copyForm', $board->id) }}" class="btn btn-primary board_copy" target="win_board_copy">
                                     게시판 복사
                                 </a>
-                                <a class="btn btn-primary" href="">게시판 바로가기</a>
+                                <a class="btn btn-primary" href="{{ route('board.index', $board->id) }}">게시판 바로가기</a>
                                 <a class="btn btn-primary" href="">게시판 썸네일 삭제</a>
                             @endif
                         </div>
@@ -971,7 +971,7 @@
                                 <a href="{{ route('admin.boards.copyForm', $board->id) }}" class="btn btn-primary board_copy" target="win_board_copy">
                                     게시판 복사
                                 </a>
-                                <a class="btn btn-primary" href="">게시판 바로가기</a>
+                                <a class="btn btn-primary" href="{{ route('board.index', $board->id) }}">게시판 바로가기</a>
                                 <a class="btn btn-primary" href="">게시판 썸네일 삭제</a>
                             @endif
                         </div>
@@ -1056,7 +1056,7 @@
                                 <a href="{{ route('admin.boards.copyForm', $board->id) }}" class="btn btn-primary board_copy" target="win_board_copy">
                                     게시판 복사
                                 </a>
-                                <a class="btn btn-primary" href="">게시판 바로가기</a>
+                                <a class="btn btn-primary" href="{{ route('board.index', $board->id) }}">게시판 바로가기</a>
                                 <a class="btn btn-primary" href="">게시판 썸네일 삭제</a>
                             @endif
                         </div>
@@ -1075,136 +1075,21 @@
                                 <a class="btn" href="#anc_extra">여분 필드</a>
                             </p>
                         </tr>
-                        <tr>
-                            <th>여분필드1</th>
-                            <td>
-                                여분필드 1 제목 <input type="text" name="subj_1" @if($type == 'edit') value="{{ $board->subj_1 }}" @endif />
-                                여분필드 1 값 <input type="text" name="value_1" @if($type == 'edit') value="{{ $board->value_1 }}" @endif />
-                            </td>
-                            <td>
-                                <input type="checkbox" id="chk_group_extra_1" name="chk_group_extra_1" value="1" />
-                                <label for="chk_group_1">그룹적용</label>
-                                <input type="checkbox" id="chk_all_extra_1" name="chk_all_extra_1" value="1" />
-                                <label for="chk_all_1">전체적용</label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>여분필드2</th>
-                            <td>
-                                여분필드 2 제목 <input type="text" name="subj_2" @if($type == 'edit') value="{{ $board->subj_2 }}" @endif />
-                                여분필드 2 값 <input type="text" name="value_2" @if($type == 'edit') value="{{ $board->value_2 }}" @endif />
-                            </td>
-                            <td>
-                                <input type="checkbox" id="chk_group_extra_2" name="chk_group_extra_2" value="1" />
-                                <label for="chk_group_2">그룹적용</label>
-                                <input type="checkbox" id="chk_all_extra_2" name="chk_all_extra_2" value="1" />
-                                <label for="chk_all_2">전체적용</label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>여분필드3</th>
-                            <td>
-                                여분필드 3 제목 <input type="text" name="subj_3" @if($type == 'edit') value="{{ $board->subj_3 }}" @endif />
-                                여분필드 3 값 <input type="text" name="value_3" @if($type == 'edit') value="{{ $board->value_3 }}" @endif />
-                            </td>
-                            <td>
-                                <input type="checkbox" id="chk_group_extra_3" name="chk_group_extra_3" value="1" />
-                                <label for="chk_group_3">그룹적용</label>
-                                <input type="checkbox" id="chk_all_extra_3" name="chk_all_extra_3" value="1" />
-                                <label for="chk_all_3">전체적용</label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>여분필드4</th>
-                            <td>
-                                여분필드 4 제목 <input type="text" name="subj_4" @if($type == 'edit') value="{{ $board->subj_4 }}" @endif />
-                                여분필드 4 값 <input type="text" name="value_4" @if($type == 'edit') value="{{ $board->value_4 }}" @endif />
-                            </td>
-                            <td>
-                                <input type="checkbox" id="chk_group_extra_4" name="chk_group_extra_4" value="1" />
-                                <label for="chk_group_4">그룹적용</label>
-                                <input type="checkbox" id="chk_all_extra_4" name="chk_all_extra_4" value="1" />
-                                <label for="chk_all_4">전체적용</label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>여분필드5</th>
-                            <td>
-                                여분필드 5 제목 <input type="text" name="subj_5" @if($type == 'edit') value="{{ $board->subj_5 }}" @endif />
-                                여분필드 5 값 <input type="text" name="value_5" @if($type == 'edit') value="{{ $board->value_5 }}" @endif />
-                            </td>
-                            <td>
-                                <input type="checkbox" id="chk_group_extra_5" name="chk_group_extra_5" value="1" />
-                                <label for="chk_group_5">그룹적용</label>
-                                <input type="checkbox" id="chk_all_extra_5" name="chk_all_extra_5" value="1" />
-                                <label for="chk_all_5">전체적용</label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>여분필드6</th>
-                            <td>
-                                여분필드 6 제목 <input type="text" name="subj_6" @if($type == 'edit') value="{{ $board->subj_6 }}" @endif />
-                                여분필드 6 값 <input type="text" name="value_6" @if($type == 'edit') value="{{ $board->value_6 }}" @endif />
-                            </td>
-                            <td>
-                                <input type="checkbox" id="chk_group_extra_6" name="chk_group_extra_6" value="1" />
-                                <label for="chk_group_6">그룹적용</label>
-                                <input type="checkbox" id="chk_all_extra_6" name="chk_all_extra_6" value="1" />
-                                <label for="chk_all_6">전체적용</label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>여분필드7</th>
-                            <td>
-                                여분필드 7 제목 <input type="text" name="subj_7" @if($type == 'edit') value="{{ $board->subj_7 }}" @endif />
-                                여분필드 7 값 <input type="text" name="value_7" @if($type == 'edit') value="{{ $board->value_7 }}" @endif />
-                            </td>
-                            <td>
-                                <input type="checkbox" id="chk_group_extra_7" name="chk_group_extra_7" value="1" />
-                                <label for="chk_group_7">그룹적용</label>
-                                <input type="checkbox" id="chk_all_extra_7" name="chk_all_extra_7" value="1" />
-                                <label for="chk_all_7">전체적용</label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>여분필드8</th>
-                            <td>
-                                여분필드 8 제목 <input type="text" name="subj_8" @if($type == 'edit') value="{{ $board->subj_8 }}" @endif />
-                                여분필드 8 값 <input type="text" name="value_8" @if($type == 'edit') value="{{ $board->value_8 }}" @endif />
-                            </td>
-                            <td>
-                                <input type="checkbox" id="chk_group_extra_8" name="chk_group_extra_8" value="1" />
-                                <label for="chk_group_8">그룹적용</label>
-                                <input type="checkbox" id="chk_all_extra_8" name="chk_all_extra_8" value="1" />
-                                <label for="chk_all_8">전체적용</label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>여분필드9</th>
-                            <td>
-                                여분필드 9 제목 <input type="text" name="subj_9" @if($type == 'edit') value="{{ $board->subj_9 }}" @endif />
-                                여분필드 9 값 <input type="text" name="value_9" @if($type == 'edit') value="{{ $board->value_9 }}" @endif />
-                            </td>
-                            <td>
-                                <input type="checkbox" id="chk_group_extra_9" name="chk_group_extra_9" value="1" />
-                                <label for="chk_group_9">그룹적용</label>
-                                <input type="checkbox" id="chk_all_extra_9" name="chk_all_extra_9" value="1" />
-                                <label for="chk_all_9">전체적용</label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>여분필드10</th>
-                            <td>
-                                여분필드 10 제목 <input type="text" name="subj_10" @if($type == 'edit') value="{{ $board->subj_10 }}" @endif />
-                                여분필드 10 값 <input type="text" name="value_10" @if($type == 'edit') value="{{ $board->value_10 }}" @endif />
-                            </td>
-                            <td>
-                                <input type="checkbox" id="chk_group_extra_10" name="chk_group_extra_10" value="1" />
-                                <label for="chk_group_10">그룹적용</label>
-                                <input type="checkbox" id="chk_all_extra_10" name="chk_all_extra_10" value="1" />
-                                <label for="chk_all_10">전체적용</label>
-                            </td>
-                        </tr>
+                        @for($i=1; $i<=10; $i++)
+                            <tr>
+                                <th>여분필드 {{ $i }}</th>
+                                <td>
+                                    여분필드 {{ $i }} 제목 <input type="text" name="subj_{{ $i }}" @if($type == 'edit') value="{{ $board['subj_' .$i] }}" @endif />
+                                    여분필드 {{ $i }} 값 <input type="text" name="value_{{ $i }}" @if($type == 'edit') value="{{ $board['value_' .$i] }}" @endif />
+                                </td>
+                                <td>
+                                    <input type="checkbox" id="chk_group_extra_{{ $i }}" name="chk_group_extra_{{ $i }}" value="1" />
+                                    <label for="chk_group_{{ $i }}">그룹적용</label>
+                                    <input type="checkbox" id="chk_all_extra_{{ $i }}" name="chk_all_extra_{{ $i }}" value="1" />
+                                    <label for="chk_all_{{ $i }}">전체적용</label>
+                                </td>
+                            </tr>
+                        @endfor
                     </table>
                     <div class="form-group">
                         <div class="col-md-8 col-md-offset-5">
@@ -1216,7 +1101,7 @@
                                 <a href="{{ route('admin.boards.copyForm', $board->id) }}" class="btn btn-primary board_copy" target="win_board_copy">
                                     게시판 복사
                                 </a>
-                                <a class="btn btn-primary" href="">게시판 바로가기</a>
+                                <a class="btn btn-primary" href="{{ route('board.index', $board->id) }}">게시판 바로가기</a>
                                 <a class="btn btn-primary" href="">게시판 썸네일 삭제</a>
                             @endif
                         </div>

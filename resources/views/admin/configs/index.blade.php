@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    환경 설정 | LaBoard
+    환경 설정 | {{ $configHomepage->title }}
 @endsection
 
 @section('content')
@@ -14,6 +14,103 @@
     <div class="col-md-6 col-md-offset-3">
         <div class="panel panel-default">
             <div class="panel-heading"><h2>환경 설정</h2></div>
+            <div class="panel-heading">홈페이지 기본환경 설정</div>
+            <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.config.update', ['name' => 'homepage']) }}">
+                {{ method_field('PUT') }}
+                {{ csrf_field() }}
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="title" class="col-md-4 control-label">홈페이지 제목</label>
+
+                        <div class="col-md-6">
+                            <input type="text" name="title" value="{{ $configHomepage->title }}" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="usePoint" class="col-md-4 control-label">포인트 사용</label>
+
+                        <div class="col-md-6">
+                            <input type="checkbox" name="usePoint" id="usePoint" value="1" @if($configHomepage->usePoint == 1) checked @endif>
+                                <label for="usePoint">사용</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="loginPoint" class="col-md-4 control-label">로그인시 포인트</label>
+
+                        <div class="col-md-6">
+                            회원이 로그인시 하루에 한번만 적립<br />
+                            <input type="text" name="loginPoint" value="{{ $configHomepage->loginPoint }}">점
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="openDate" class="col-md-4 control-label">정보공개 수정</label>
+
+                        <div class="col-md-6">
+                            수정하면 <input type="text" name="openDate" value="{{ $configHomepage->openDate }}">일 동안 바꿀 수 없음
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="newRows" class="col-md-4 control-label">최근게시물 라인수</label>
+
+                        <div class="col-md-6">
+                            목록 한 페이지당 라인수<br />
+                            <input type="text" name="newRows" value="{{ $configHomepage->newRows }}">라인
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="pageRows" class="col-md-4 control-label">한 페이지당 라인수</label>
+
+                        <div class="col-md-6">
+                            목록(리스트) 한 페이지당 라인수<br />
+                            <input type="text" name="pageRows" value="{{ $configHomepage->pageRows }}">라인
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="mobilePageRows" class="col-md-4 control-label">모바일 한 페이지당 라인수</label>
+
+                        <div class="col-md-6">
+                            목록 한 페이지당 라인수<br />
+                            <input type="text" name="mobilePageRows" value="{{ $configHomepage->mobilePageRows }}">라인
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="writePages" class="col-md-4 control-label">페이지 표시 수</label>
+
+                        <div class="col-md-6">
+                            <input type="text" name="writePages" value="{{ $configHomepage->writePages }}">페이지씩 표시
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="mobilePages" class="col-md-4 control-label">모바일 페이지 표시 수</label>
+
+                        <div class="col-md-6">
+                            <input type="text" name="mobilePages" value="{{ $configHomepage->mobilePages }}">페이지씩 표시
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <div class="col-md-offset-5">
+                        <input type="submit" class="btn btn-primary" value="홈페이지 기본환경 설정 변경하기"/>
+                    </div>
+                </div>
+            </form>
             <div class="panel-heading">회원 가입 설정</div>
             <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.config.update', ['name' => 'join']) }}">
                 {{ method_field('PUT') }}
@@ -34,15 +131,6 @@
 
                         <div class="col-md-6">
                             수정하면 <input type="text" name="nickDate" value="{{ $configJoin->nickDate }}">일 동안 바꿀 수 없음
-                        </div>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="openDate" class="col-md-4 control-label">정보공개 수정</label>
-
-                        <div class="col-md-6">
-                            수정하면 <input type="text" name="openDate" value="{{ $configJoin->openDate }}">일 동안 바꿀 수 없음
                         </div>
                     </div>
                 </div>
@@ -172,15 +260,6 @@
 
                         <div class="col-md-6">
                             <input type="text" name="recommendPoint" value="{{ $configJoin->recommendPoint }}">
-                        </div>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="loginPoint" class="col-md-4 control-label">로그인시 포인트</label>
-
-                        <div class="col-md-6">
-                            <input type="text" name="loginPoint" value="{{ $configJoin->loginPoint }}">
                         </div>
                     </div>
                 </div>

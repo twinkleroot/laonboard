@@ -34,7 +34,10 @@ class UsersController extends Controller
     {
         $users = $this->userModel->userList();
 
-        return view('admin.users.index', ['users' => $users]);
+        return view('admin.users.index', [
+            'title' => Config::getConfig('config.homepage')->title,
+            'users' => $users,
+        ]);
     }
 
     /**
@@ -45,10 +48,11 @@ class UsersController extends Controller
     public function create()
     {
         $user = \Auth::user();
-        return view('admin.users.create')
-            ->with('user', $user)
-            ->with('config', $this->config)
-            ;
+        return view('admin.users.create', [
+                'title' => Config::getConfig('config.homepage')->title,
+                'user' => $user,
+                'config' => $this->config
+            ]);
     }
 
     /**
@@ -83,7 +87,11 @@ class UsersController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        return view('admin.users.edit')->with('user', $user)->with('id', $id);
+        return view('admin.users.edit', [
+                'title' => Config::getConfig('config.homepage')->title,
+                'user' => $user,
+                'id' => $id
+            ]);
     }
 
     /**

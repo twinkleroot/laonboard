@@ -10,6 +10,7 @@ use App\Group;
 use Auth;
 use DB;
 use App\Common;
+use App\Config;
 use App\GroupUser;
 use Carbon\Carbon;
 
@@ -93,11 +94,12 @@ class User extends Authenticatable
         $user = Auth::user();
 
         // 정보공개 변경여부
-        $openChangable = $this->openChangable($user, Carbon::now(), $config);
+        $openChangable = $this->openChangable($user, Carbon::now());
 
         $editFormData = [
             'user' => $user,
             'config' => $config,
+            'openDate' => Config::getConfig('config.homepage')->openDate,               // 정보공개 변경 가능 일
             'nickChangable' => $this->nickChangable($user, Carbon::now(), $config),     // 닉네임 변경여부
             'openChangable' => $openChangable[0],                                       // 정보공개 변경 여부
             'dueDate' => $openChangable[1],                                             // 정보공개 언제까지 변경 못하는지 날짜
@@ -122,8 +124,9 @@ class User extends Authenticatable
     }
 
     // 정보공개 변경 가능 여부
-    public function openChangable($user, $current, $config)
+    public function openChangable($user, $current)
     {
+        $config = Config::getConfig('config.homepage');
         $openChangable = array(false, $current);
 
         $openDate = $user->open_date;
@@ -188,18 +191,15 @@ class User extends Authenticatable
         // 입력받은 정보와 가공한 정보를 바탕으로 회원정보를 DB에 추가한다.
         $user = User::create($userInfo);
 
-        // 기존에 같은 건으로 포인트를 받았는지 조회. 조회되면 포인트 적립 불가
-        // (회원 탈퇴 후 재가입하면서 포인트를 늘려가는 행위 차단을 위해)
-        $rel_table = '@users';
-        $rel_email = $user->email;
-        $rel_action = '회원가입';
-        $existPoint = Point::checkPoint($rel_table, $rel_email, $rel_action);
-        if(is_null($existPoint)) {
-            $content = '회원가입 축하';
-            $pointToGive = Point::pointType('join');
-            $user->point = $pointToGive;        // 포인트 부여
-            Point::loggingPoint($user, $pointToGive, $rel_table, $rel_action, $content);    // 포인트 내역 기록
-        }
+        // 회원 가입 축하 포인트 부여
+        Point::addPoint([
+            'user' => $user,
+            'relTable' => '@users',
+            'relEmail' => $user->email,
+            'relAction' => '회원가입',
+            'content' => '회원가입 축하',
+            'type' => 'join',
+        ]);
 
         // Users 테이블의 주 키인 id의 해시 값을 만들어서 저장한다. (게시글에 사용자 번호 노출 방지)
         $user->id_hashkey = str_replace("/", "-", bcrypt($user->id));
@@ -213,7 +213,7 @@ class User extends Authenticatable
     public function userInfoUpdate($request, $config)
     {
         $user = Auth::user();
-        $openChangable = $this->openChangable($user, Carbon::now(), $config);
+        $openChangable = $this->openChangable($user, Carbon::now());
 
         // 현재 시간 date type으로 받기
         $nowDate = Carbon::now()->toDateString();
@@ -230,19 +230,15 @@ class User extends Authenticatable
             }
             $recommendedId = $recommendedUser->id;
 
-            // 추천인에게 포인트 주기.
-            $rel_table = '@users';
-            $rel_email = $recommendedUser->email;
-            $rel_action = $user->email . ' 추천';
-
-            // 기존에 같은 건으로 포인트를 받았는지 조회. 조회되면 포인트 적립 불가
-            $existPoint = Point::checkPoint($rel_table, $rel_email, $rel_action);
-            if(is_null($existPoint)) {
-                $content = $user->email . '의 추천인';
-                $pointToGive = Point::pointType('recommend');
-                $recommendedUser->point = $recommendedUser->point + $pointToGive;   // 추천인에게 포인트 부여
-                Point::loggingPoint($recommendedUser, $pointToGive, $rel_table, $rel_action, $content);     // 포인트 내역 기록
-            }
+            // 추천인에게 포인트 부여
+            Point::addPoint([
+                'user' => $recommendedUser,
+                'relTable' => '@users',
+                'relEmail' => $recommendedUser->email,
+                'relAction' => $user->email . ' 추천',
+                'content' => $user->email . '의 추천인',
+                'type' => 'recommend',
+            ]);
 
             $recommendedUser->save();
         }
@@ -283,46 +279,20 @@ class User extends Authenticatable
     // 관리자에서 사용하는 메서드
     public function userList()
     {
-        return DB::select("SELECT
-                                users.id,
-                                users.name,
-                                users.email,
-                                users.nick,
-                                users.email_certify,
-                                users.open,
-                                users.mailing,
-                                users.sms,
-                                users.leave_date,
-                                users.intercept_date,
-                                users.hp,
-                                users.tel,
-                                users.level,
-                                users.point,
-                                users.today_login,
-                                users.created_at,
-                                count(group_user.id) as count_groups
-                            FROM users
-                            LEFT OUTER JOIN group_user
-                            ON group_user.user_id = users.id
-                            GROUP BY
-                                users.id,
-                                users.name,
-                                users.email,
-                                users.nick,
-                                users.email_certify,
-                                users.open,
-                                users.mailing,
-                                users.sms,
-                                users.leave_date,
-                                users.intercept_date,
-                                users.hp,
-                                users.tel,
-                                users.level,
-                                users.point,
-                                users.today_login,
-                                users.created_at
-                            ORDER BY users.created_at desc
-                ");
+        $config = Config::getConfig('config.homepage');
+
+        $users = DB::table('users as u')
+                ->select(DB::raw('
+                    u.*,
+                    (   select count(gu.id)
+                        from group_user as gu
+                        where gu.user_id = u.id
+                    ) as count_groups'
+                ))
+                ->orderBy('u.created_at', 'desc')
+                ->paginate($config->pageRows);
+
+        return $users;
     }
 
     // 회원 추가

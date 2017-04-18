@@ -1,14 +1,14 @@
 @extends('theme')
 
 @section('title')
-    회원 관리 | LaBoard
+    회원 관리 | {{ $title }}
 @endsection
 
 @section('content')
 @if(Session::has('message'))
-  <div class="alert alert-info">
+<div class="alert alert-info">
     {{ Session::get('message') }}
-  </div>
+</div>
 @endif
 <div class="row">
     <div class="col-md-12">
@@ -119,6 +119,17 @@
                     <input type="button" id="selected_delete" class="btn btn-primary" value="선택 삭제"/>
                 </div>
             </form>
+
+            {{-- 페이지 처리 --}}
+            {{ str_contains(url()->current(), 'search')
+                ? $users->appends([
+                    'admin_page' => 'user',
+                    'kind' => $kind,
+                    'keyword' => $keyword,
+                ])->links()
+                : $users->links()
+            }}
+
         </div>
     </div>
 </div>

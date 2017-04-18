@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    {{ $group->subject }}그룹 접근가능회원 | LaBoard
+    {{ $group->subject }}그룹 접근가능회원 | {{ $config->title }}
 @endsection
 
 @section('content')
@@ -36,7 +36,7 @@
                             <th class="text-center">그룹</th>
                             <th class="text-center">회원이메일</th>
                             <th class="text-center">이름</th>
-                            <th class="text-center">별명</th>
+                            <th class="text-center">닉네임</th>
                             <th class="text-center">최종접속</th>
                             <th class="text-center">처리일시</th>
                         </thead>
@@ -63,6 +63,18 @@
                     <input type="button" id="selected_delete" class="btn btn-primary" value="선택 삭제"/>
                 </div>
             </form>
+
+            {{-- 페이지 처리 --}}
+            {{ str_contains(url()->current(), 'search')
+                ? $users->appends([
+                    'admin_page' => 'accessibleUsers',
+                    'groupId' => $group->id,
+                    'kind' => $kind,
+                    'keyword' => $keyword,
+                ])->links()
+                : $users->links()
+            }}
+
         </div>
     </div>
 </div>
