@@ -361,6 +361,7 @@ body {
 }
 .bd_subject {
 	text-align: left;
+	margin-right: 3px;
 }
 .bd_cmt {
 	font-weight: 800;
