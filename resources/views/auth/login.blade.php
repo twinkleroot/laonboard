@@ -1,13 +1,12 @@
 @extends('themes.default.login')
 
-@section('content')
-{{--@include('themes.default.login')--}}
-
 @section('title')
     로그인 | LaBoard
 @endsection
 
 @section('content')
+@include('themes.default.login')
+{{--
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -78,4 +77,5 @@
         </div>
     </div>
 </div>
+--}}
 @endsection

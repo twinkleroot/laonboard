@@ -95,7 +95,7 @@ class UserController extends Controller
         $user = Auth::user();
 
         // 인증 이메일 발송
-        if($this->config->emailCertify == 1) {
+        if($this->config->emailCertify == '1') {
             Mail::to(Auth::user())->send(new EmailCertify());
         }
 
