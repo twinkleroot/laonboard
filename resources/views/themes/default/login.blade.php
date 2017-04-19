@@ -64,7 +64,7 @@
 
             <div class="form-group">
                 <div class="col-md-8 col-md-offset-4">
-                    <a class="btn btn-primary" href="{{ route('social.naver') }}">
+                    <a class="btn btn-primary" href="{{ route('social', 'naver') }}">
                         네이버로 로그인
                     </a>
                 </div>

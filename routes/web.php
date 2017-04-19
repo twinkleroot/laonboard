@@ -144,10 +144,11 @@ Route::group(['middleware' => 'auth'], function() {
 // 인증에 관련한 라우트들
 Auth::routes();
 
-// 소셜 로그인 - 네이버
-Route::get('social/naver', ['as' => 'social.naver', 'uses' => 'Auth\SocialController@redirectToProvider']);
-Route::get('social/naver/callback', ['as' => 'social.naver.callback', 'uses' => 'Auth\SocialController@handleProviderCallback']);
-Route::post('social/continue', ['as' => 'social.continue', 'uses' => 'Auth\SocialController@continue']);
+// 소셜 로그인 - 콜백 주소 형식이 소셜마다 같은지 확인 필요함.
+Route::get('social/{provider}', ['as' => 'social', 'uses' => 'Auth\SocialController@redirectToProvider']);
+Route::get('social/{provider}/callback/', ['as' => 'social.callback', 'uses' => 'Auth\SocialController@handleProviderCallback']);
+// 소셜 로그인 후 처리
+Route::post('social/socialUserJoin', ['as' => 'social.socialUserJoin', 'uses' => 'Auth\SocialController@socialUserJoin']);
 Route::post('social/connectExistAccount', ['as' => 'social.connectExistAccount', 'uses' => 'Auth\SocialController@connectExistAccount']);
 
 // 회원 가입

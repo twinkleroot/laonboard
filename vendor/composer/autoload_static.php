@@ -370,6 +370,7 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         'AddExtraFieldOnGroups' => __DIR__ . '/../..' . '/database/migrations/2017_04_10_111315_add_extra_field_on_groups.php',
         'AddExtraFieldOnUsers' => __DIR__ . '/../..' . '/database/migrations/2017_04_10_111342_add_extra_field_on_users.php',
         'AddIndexTokenOnPasswordResetsTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_09_180131_add_index_token_on_password_resets_table.php',
+        'AddIpOnSocialLogins' => __DIR__ . '/../..' . '/database/migrations/2017_04_19_100106_add_ip_on_social_logins.php',
         'AddNullableToPasswordColumnOnUsersTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_17_112912_add_nullable_to_password_column_on_users_table.php',
         'AddRecommendIntTypeOnUsers' => __DIR__ . '/../..' . '/database/migrations/2017_03_20_123102_add_recommend_int_type_on_users.php',
         'AddUniqueKeyEmailOnUsersTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_09_110203_add_unique_key_email_on_users_table.php',

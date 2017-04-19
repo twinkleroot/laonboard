@@ -175,16 +175,13 @@ class Point extends Model
     // 회원 가입 후 로그인 시키는 상태인지 검사
     public static function isUserJoin($user)
     {
-        $points = Point::where('user_id', $user->id)
+        $point = Point::where('user_id', $user->id)
+                ->whereRaw('date(datetime) = date(CURRENT_DATE())')     // 다음날부터 로그인시 로그인 포인트 받음
                 ->orderBy('id', 'desc')
-                ->get();
+                ->first();
 
-        if(count($points) > 0) {
-            foreach ($points as $point) {
-                if(str_contains($point->content, '회원가입')) {
-                    return true;
-                }
-            }
+        if(str_contains($point['content'], '회원가입')) {
+            return true;
         }
 
         return false;
@@ -201,13 +198,8 @@ class Point extends Model
             $user = $data['user'];
             // 기존에 같은 건으로 포인트를 받았는지 조회. 조회되면 포인트 적립 불가
             $existPoint = static::checkPoint($data['relTable'], $data['relEmail'], $data['relAction']);
-            // 회원 가입인 경우 로그인 포인트를 부여하지 않음.
-            $isUserJoin = false;
-            if($data['type'] == 'join') {
-                $isUserJoin = static::isUserJoin($user);
-            }
 
-            if($isUserJoin == false && is_null($existPoint)) {
+            if(is_null($existPoint)) {
                 $pointToGive = static::pointType($data['type']);
                 $user->point += $pointToGive;   // 유저 테이블에 포인트 반영
                 static::loggingPoint($user, $pointToGive, $data['relTable'], $data['relAction'], $data['content']);     // 포인트 내역 기록

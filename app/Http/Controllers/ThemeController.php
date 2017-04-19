@@ -31,13 +31,6 @@ class ThemeController extends Controller
                     ->get();
         }
 
-        // dump($menus);
-        // dump($subMenus);
-        // dump(count($subMenus[0]));
-        // dump(count($subMenus[1]));
-        // dump(count($subMenus[2]));
-        // dd(count($subMenus[3]));
-
         return view('test/menu', [
             'menus' => $menus,
             'subMenus' => $subMenus,

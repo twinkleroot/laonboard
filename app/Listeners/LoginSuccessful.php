@@ -38,17 +38,23 @@ class LoginSuccessful
         $event->user->today_login = Carbon::now();
         $event->user->login_ip = $this->request->ip();
 
-        // 당일 첫 로그인 포인트 부여
-        Point::addPoint([
-            'user' => $event->user,
-            'relTable' => '@login',
-            'relEmail' => $event->user->email,
-            'relAction' => $nowDate,
-            'content' => $nowDate . ' 첫 로그인',
-            'type' => 'login',
-        ]);
-
         $event->user->save();
+
+        // 회원 가입인 경우($isUserJoin == true) 로그인 포인트를 부여하지 않음.
+        $isUserJoin = Point::isUserJoin($event->user);
+
+        if($isUserJoin == false) {
+            // 당일 첫 로그인 포인트 부여
+            Point::addPoint([
+                'user' => $event->user,
+                'relTable' => '@login',
+                'relEmail' => $event->user->email,
+                'relAction' => $nowDate,
+                'content' => $nowDate . ' 첫 로그인',
+                'type' => 'login',
+            ]);
+        }
+
     }
 
 }

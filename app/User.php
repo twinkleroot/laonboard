@@ -159,7 +159,7 @@ class User extends Authenticatable
 
         $userInfo = [
             'email' => $request->get('email'),
-            'password' => bcrypt($request->get('password')),
+            'password' => $request->has('password') ? bcrypt($request->get('password')) : '',
             'nick' => $request->get('nick'),
             'nick_date' => $nowDate,
             'mailing' => 1,
@@ -188,7 +188,7 @@ class User extends Authenticatable
 
             $userInfo = array_collapse([$userInfo, $addUserInfo]);
         }
-        // 입력받은 정보와 가공한 정보를 바탕으로 회원정보를 DB에 추가한다.
+        // 회원정보로 유저를 추가한다.
         $user = User::create($userInfo);
 
         // 회원 가입 축하 포인트 부여

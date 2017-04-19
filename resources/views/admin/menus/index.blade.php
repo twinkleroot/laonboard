@@ -95,7 +95,6 @@
 <script>
 $(function(){
     // 관리의 추가 버튼 클릭(하위 메뉴 추가)
-    // $(document).on() : append 된 html의 클래스에도 event를 이어 준다.
     $(document).on("click", ".add_sub_menu", function() {
         var code = $(this).closest("tr").find("input[name='code[]']").val().substr(0, 2);
         var url = "/admin/menus/create?code=" + code;
