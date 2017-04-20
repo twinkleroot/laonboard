@@ -41,7 +41,7 @@
 			@foreach($points as $point)
 			<tr>
 				<td>{{ $point->datetime }}</td>
-				<td>{{ $point->content }}</td>
+				<td class="pt_con">{{ $point->content }}</td>
 				<td>{{ $point->expire_date == '9999-12-31' ? '' : $point->expire_date }}</td>
 				<td>{{ number_format($point->point) }}</td>
 				<td>{{ number_format($point->use_point) }}</td>
