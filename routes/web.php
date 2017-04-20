@@ -139,16 +139,19 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('user/set_password', ['as' => 'user.setPassword', 'uses' => 'User\UserController@setPassword']);
     Route::post('user/confirm_password', ['as' => 'user.confirmPassword', 'uses' => 'User\UserController@confirmPassword']);
     Route::get('user/point/{id}', ['as' => 'user.point', 'uses' => 'User\PointController@index']);
+    // 회원 정보 수정 - 소셜 로그인 계정 연결 해제
+    Route::post('user/disconnectSocialAccount', ['as' => 'user.disconnectSocialAccount', 'uses' => 'User\UserController@disconnectSocialAccount']);
 });
 
 // 인증에 관련한 라우트들
 Auth::routes();
 
-// 소셜 로그인 - 콜백 주소 형식이 소셜마다 같은지 확인 필요함.
+// 소셜 로그인 - 콜백 함수에서 회원 로그인 여부로 분기 (콜백함수 경로 지정은 config/services.php 에서)
 Route::get('social/{provider}', ['as' => 'social', 'uses' => 'Auth\SocialController@redirectToProvider']);
 Route::get('social/{provider}/callback/', ['as' => 'social.callback', 'uses' => 'Auth\SocialController@handleProviderCallback']);
-// 소셜 로그인 후 처리
+// 소셜 로그인 후 회원가입
 Route::post('social/socialUserJoin', ['as' => 'social.socialUserJoin', 'uses' => 'Auth\SocialController@socialUserJoin']);
+// 소셜 로그인 후 기존 계정에 연결
 Route::post('social/connectExistAccount', ['as' => 'social.connectExistAccount', 'uses' => 'Auth\SocialController@connectExistAccount']);
 
 // 회원 가입

@@ -213,7 +213,8 @@ class Board extends Model
         $data = array_except($data, ['_token']);
 
         $originalData = Board::findOrFail($data['id'])->toArray();
-        $originalData['table'] = $data['table'];
+
+        $originalData['table_name'] = $data['table_name'];
         $originalData['subject'] = $data['subject'];
         // 구조만 복사시에는 공지사항 번호는 복사하지 않는다.
         if($data['copy_case'] == 'schema_only') {

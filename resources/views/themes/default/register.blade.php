@@ -22,7 +22,7 @@
             <h3 class="panel-title">회원가입</h3>
         </div>
         <div class="panel-body row">
-            <form class="contents col-md-8 col-md-offset-2" role="form" method="POST" action="{{ route('register.reCaptcha') }}">
+            <form class="contents col-md-8 col-md-offset-2" role="form" method="POST" action="{{ route('user.register') }}">
             {{ csrf_field() }}
                 <div class="form-group {{ $errors->has('email') ? ' has-error' : '' }}">
                     <label for="email">이메일</label>
@@ -68,11 +68,11 @@
                 </div>
 
                 <!-- 리캡챠 -->
-                <div class="form-group {{ $errors->has('reCapcha') ? ' has-error' : '' }}" style="height:80px;">
+                <div class="form-group {{ $errors->has('reCaptcha') ? ' has-error' : '' }}" style="height:80px;">
                     <div class="g-recaptcha" data-sitekey="6LcKohkUAAAAANcgIst0HFMMT81Wq5HIxpiHhXGZ"></div>
-                        @if ($errors->has('reCapcha'))
+                        @if ($errors->has('reCaptcha'))
                             <span class="help-block">
-                                <strong>{{ $errors->first('reCapcha') }}</strong>
+                                <strong>{{ $errors->first('reCaptcha') }}</strong>
                             </span>
                         @endif
                 </div>

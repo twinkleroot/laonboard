@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\User;
+use Auth;
 
 class SocialLogin extends Model
 {
@@ -70,5 +71,31 @@ class SocialLogin extends Model
             'message' => $message,
             'provider' => $provider,
         ];
+    }
+
+    public function socialLoginCallback($userFromSocial, $provider)
+    {
+        // 연결된 소셜 로그인 정보가 있는지 확인
+        $socialLogin = SocialLogin::where([
+            'provider' => $provider,
+            'social_id' => $userFromSocial->getId(),
+        ])->first();
+
+        if(is_null($socialLogin)) {
+            // 소셜에서 받아온 데이터를 세션에 저장한다.
+            session()->put('userFromSocial', $userFromSocial);
+            return 'view';
+        } else {
+            // 연결된 소셜 정보에 해당하는 유저로 로그인
+            $this->userToSocialLogin($socialLogin);
+            return 'redirect';
+        }
+    }
+
+    // 연결된 소셜 정보에 해당하는 유저로 로그인
+    public function userToSocialLogin($socialLogin)
+    {
+        $userToLogin = $socialLogin->user()->first();
+        Auth::login($userToLogin);
     }
 }

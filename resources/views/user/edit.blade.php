@@ -17,7 +17,7 @@
 @section('content')
 @if(Session::has('message'))
     <div class="alert alert-info">
-    {{Session::get('message') }}
+    {{ Session::get('message') }}
     </div>
 @endif
 <div class="container">
@@ -43,7 +43,12 @@
 
                 <div class="form-group">
                     <label for="email_readonly">이메일</label>
-                    <input type="email" class="form-control" name="email_readonly" value="{{ $user->email }}" readonly>
+                    <input type="email" class="form-control" name="email" value="{{ $user->email }}">
+                    @if ($errors->has('email'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('email') }}</strong>
+                        </span>
+                    @endif
                 </div>
 
                 <div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
@@ -234,7 +239,7 @@
                                 다른분들이 나의 정보를 볼 수 있도록 합니다.
 
                             <div class="helpbox bg-danger">
-                                <p>정보공개를 바꾸시면 {{ $config->openDate }}일 이내에는 변경이 안됩니다.</p>
+                                <p>정보공개를 바꾸시면 {{ $openDate }}일 이내에는 변경이 안됩니다.</p>
                             </div>
 
                             @if ($errors->has('open'))
@@ -246,7 +251,7 @@
                         @else <!-- 정보공개 기간제한으로 인해 수정불가 안내 -->
                             <div class="helpbox bg-danger">
                                 <p>
-                                    정보공개는 수정후 {{ $config->openDate }}일 이내,
+                                    정보공개는 수정후 {{ $openDate }}일 이내,
                                     {{ $dueDate->year }}년
                                     {{ $dueDate->month }}월
                                     {{ $dueDate->day }}일 까지는 변경이 안됩니다.
@@ -259,19 +264,33 @@
 
                 @if($config->recommend == 1) <!-- 추천인 -->
                     <div class="form-group row {{ $errors->has('recommend') ? ' has-error' : '' }}">
-                            <label for="recommend" class="col-xs-12 control-label">추천인 닉네임</label>
+                        <label for="recommend" class="col-xs-12 control-label">추천인 닉네임</label>
 
-                            <div class="col-xs-12">
-                                <input type="text" class="form-control" name="recommend" value="{{ $recommend!='' ? $recommend : old('recommend') }}">
-                            </div>
+                        <div class="col-xs-12">
+                            <input type="text" class="form-control" name="recommend" value="{{ $recommend!='' ? $recommend : old('recommend') }}">
+                        </div>
 
-                            @if ($errors->has('recommend'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('recommend') }}</strong>
-                                </span>
-                            @endif
+                        @if ($errors->has('recommend'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('recommend') }}</strong>
+                            </span>
+                        @endif
                     </div>
                 @endif
+
+                <div class="form-group row">
+                    <label for="recommend" class="col-xs-12 control-label">소셜 계정 연결</label>
+                    <div class="col-xs-12 social-login social_login_container">
+                        @foreach($socials as $key => $value)
+                            <a href="{{ $value == '' ? route('social', $key) : route('user.disconnectSocialAccount') }}"
+                                id="{{ $key }}_social_link" class="btn btn-block btn-{{ $key }} social_link" data-provider="{{ $key }}">
+                                <input type="hidden" data-key="{{ $key }}" name="social_id[]" class="social_id" value="{{ $value }}" />
+                                <div class="icon icon-{{ $key }} @if($value != '') unlink @endif"></div>
+                                <span class="text-left">{{ title_case($key) }} 연결 {{ $value == '' ? '' : '해제' }}</span>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
 
                 <!-- 리캡챠 -->
                 <div class="form-group{{ $errors->has('reCapcha') ? ' has-error' : '' }}">
@@ -293,4 +312,83 @@
 </div>
 </div>
 </div>
+<script>
+$(function(){
+
+    var socials = [];
+
+    $(".social_id").each(function(i, obj) {
+        socials[$(obj).attr('data-key')] = $(obj).val();
+    });
+
+    $(".social_login_container").on("click", ".social_link", function(e) {
+        e.preventDefault();
+
+        var othis = $(this),
+            $div_class = $(this).children("div").attr('class');
+
+        if( $div_class.indexOf('unlink') >  0 ) {     //소셜계정 해제하기
+            if(!confirm('정말 이 계정 연결을 해제하시겠습니까?')) {
+                return false;
+            }
+
+            var ajax_url = $(this).attr('href');
+            var provider = $(this).attr('data-provider');
+
+            if(!provider){
+                alert('잘못된 요청! provider 값이 없습니다.');
+                return false;
+            }
+
+            $.ajax({
+                url: ajax_url,
+                type: 'POST',
+                data: {
+                    'provider' : provider,
+                    'social_id' : (typeof socials[provider] != 'undefined') ? socials[provider] : '',
+                    'user_id' : {{ Auth::user()->id }},
+                    '_token' : $('input[name=_token]').val()
+                },
+                dataType: 'json',
+                cache : false,
+                async: false,
+                success: function(data) {
+                    if (data.error) {
+                            alert(data.error);
+                            return false;
+                    } else {
+                        var link_href = '/social/' + provider;
+                        var str = provider.charAt(0).toUpperCase() + provider.slice(1) + ' 연결';
+
+                        othis.attr({"href":link_href});
+                        othis.children("div").removeClass("unlink").addClass("link");
+                        othis.children("span").text(str);
+                    }
+                },
+                error: function(data) {
+                    try { console.log(data) } catch (e) { alert(data.error) };
+                }
+            });
+        } else {        //소셜계정 연결하기
+            var pop_url = $(this).attr("href");
+            var is_popup = "1";
+
+            if( is_popup ){
+               var newWin = window.open(
+                   pop_url,
+                   "social_sing_on",
+                   "location=0,status=0,scrollbars=0,width=600,height=500"
+               );
+
+               if(!newWin || newWin.closed || typeof newWin.closed=='undefined') {
+                    alert('브라우저에서 팝업이 차단되어 있습니다. 팝업 활성화 후 다시 시도해 주세요.');
+                }
+            } else {
+               location.replace(pop_url);
+            }
+        }
+
+    });
+});
+</script>
 @endsection

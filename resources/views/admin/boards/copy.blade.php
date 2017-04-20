@@ -41,7 +41,7 @@
                         </tr>
                         <tr>
                             <th class="text-center">복사 테이블명</th>
-                            <td><input type="text" name="table" value="" required/>영문자, 숫자, _만 가능(공백없이)</td>
+                            <td><input type="text" name="table_name" value="" required/>영문자, 숫자, _만 가능(공백없이)</td>
                         </tr>
                         <tr>
                             <th class="text-center">게시판 제목</th>
@@ -66,3 +66,10 @@
         </div>
     </div>
 </div>
+<script>
+$(function(){
+    @if($errors->has('table_name'))
+        alert('{{ Session::get('table_name') }}' +'은(는) 이미 존재하는 게시판 테이블명입니다.\n복사할 테이블명으로 사용할 수 없습니다.');
+    @endif
+});
+</script>

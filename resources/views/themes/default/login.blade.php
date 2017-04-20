@@ -98,7 +98,7 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="text-center">
-                아직 회원이 아니신가요? <a href="{{ route('register') }}">회원가입</a>
+                아직 회원이 아니신가요? <a href="{{ route('user.join') }}">회원가입</a>
             </div>
         </div>
     </div>

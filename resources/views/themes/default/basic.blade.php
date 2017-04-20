@@ -47,17 +47,16 @@
     <div id="navbar" class="navbar-collapse collapse">
         <!-- menu -->
         <ul class="gnb navbar-nav">
-            <!-- 일반메뉴 
+            <!-- 일반메뉴
             <li class="gnb-li"><a href="">메뉴1</a></li>
             <li class="gnb-li"><a href="">메뉴2</a></li>-->
 
             @if (Auth::guest()) <!-- 공개권한: 게스트 -->
             <li class="gnb-li"><a href="{{ route('login') }}">로그인</a></li>
-            <li class="gnb-li"><a href="{{ route('register') }}">회원가입</a></li>
+            <li class="gnb-li"><a href="{{ route('user.join') }}">회원가입</a></li>
             @else <!-- else -->
                 @if(Auth::user()->level == 10) <!-- 공개권한: 관리자 -->
-                    <li class="gnb-li"><a href="{{ route('admin.config') }}">환경설정</a></li>
-                    <li class="gnb-li"><a href="{{ route('users.index') }}">회원관리</a></li>
+                    <li class="gnb-li"><a href="{{ route('admin.index') }}">관리자 모드</a></li>
                 @endif <!-- 공개권한: 관리자 end -->
 
                 <!-- 공개권한: 회원 -->

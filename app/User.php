@@ -96,6 +96,25 @@ class User extends Authenticatable
         // 정보공개 변경여부
         $openChangable = $this->openChangable($user, Carbon::now());
 
+        $SocialLogin = SocialLogin::where('user_id', $user->id)->get();
+        $socials = [
+            'naver' => '',
+            'google' => '',
+            'facebook' => '',
+        ];
+
+        foreach($SocialLogin as $sociallogin) {
+            if($sociallogin['provider'] == 'naver') {
+                $socials['naver'] = $sociallogin['social_id'];
+            }
+            if($sociallogin['provider'] == 'google') {
+                $socials['google'] = $sociallogin['social_id'];
+            }
+            if($sociallogin['provider'] == 'facebook') {
+                $socials['facebook'] = $sociallogin['social_id'];
+            }
+        }
+
         $editFormData = [
             'user' => $user,
             'config' => $config,
@@ -104,6 +123,7 @@ class User extends Authenticatable
             'openChangable' => $openChangable[0],                                       // 정보공개 변경 여부
             'dueDate' => $openChangable[1],                                             // 정보공개 언제까지 변경 못하는지 날짜
             'recommend' => $this->recommendedPerson($user),                             // 추천인 닉네임 id로 가져오기
+            'socials' => $socials,                                                      // 소셜에 연결한 정보
         ];
 
         return $editFormData;
@@ -244,6 +264,7 @@ class User extends Authenticatable
         }
 
         $toUpdateUserInfo = [
+            'email' => $request->get('email'),
             'password' => bcrypt($request->get('password')),
             'id_hashkey' => str_replace("/", "-", bcrypt($user->id)),  // 회원정보수정때마다 id_hashkey를 변경한다.
             'name' => $request->get('name'),
@@ -276,7 +297,49 @@ class User extends Authenticatable
         return 'finishUpdate';
     }
 
+    // 회원 정보 수정에서 소셜 연결 해제
+    public function disconnectSocialAccount($request)
+    {
+        return SocialLogin::where([
+            'provider' => $request->get('provider'),
+            'social_id' => $request->get('social_id'),
+            'user_id' => $request->get('user_id'),
+        ])->delete();
+    }
+
+    // 회원 정보 수정에서 소셜 계정 연결
+    public function connectSocialAccount($userFromSocial, $provider, $request)
+    {
+        $user = Auth::user();
+        // 로그인한 유저가 연결된 소셜 로그인 정보가 있는지 확인
+        $socialLogin = SocialLogin::where([
+            'provider' => $provider,
+            'social_id' => $userFromSocial->getId(),
+            'user_id' => $user->id,
+        ])->first();
+
+        if(is_null($socialLogin)) {
+            // 소셜로그인 정보 등록
+            $socialLogin = new SocialLogin([
+                'provider' => $provider,
+                'social_id' => $userFromSocial->getId(),
+                'social_token' => $userFromSocial->token,
+                'ip' => $request->ip(),
+            ]);
+
+            // User 모델과 SocialLogin 모델의 관계를 이용해서 social_logins 테이블에 가입한 user_id와 소셜 데이터 저장.
+            $user->socialLogins()->save($socialLogin);
+
+            return '소셜 계정이 연결되었습니다.';
+        } else {
+            // 이미 연결된 계정이라는 안내 메세지 보내 줌
+            return '이미 연결된 계정입니다.';
+        }
+    }
+
     // 관리자에서 사용하는 메서드
+
+    // 회원 목록
     public function userList()
     {
         $config = Config::getConfig('config.homepage');

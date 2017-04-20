@@ -11,6 +11,7 @@ use App\ReCaptcha;
 use App\User;
 use Carbon\Carbon;
 use App\Config;
+use Socialite;
 
 class UserController extends Controller
 {
@@ -75,6 +76,11 @@ class UserController extends Controller
             $user = Auth::user();
             // 입력값 유효성 검사
             $rule = array_add($this->userModel->rulesPassword, 'password', $this->rulePassword);
+            // 이메일을 변경할 경우 validation에 email 조건을 추가한다.
+            if($request->get('email') != $user->email) {
+                $rule = array_add($rule, 'email', 'required|email|max:255|unique:users');
+            }
+
             $this->validate($request, $rule);
 
             $returnVal = $this->userModel->userInfoUpdate($request, $this->config);
@@ -103,6 +109,12 @@ class UserController extends Controller
             'emailCertify' => $this->config->emailCertify,
             'user' => $user,
         ]);
+    }
+
+    // 회원 정보 수정에서 소셜 연결 해제
+    public function disconnectSocialAccount(Request $request)
+    {
+        return $this->userModel->disconnectSocialAccount($request);
     }
 
 }

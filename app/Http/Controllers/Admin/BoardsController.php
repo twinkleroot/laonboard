@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Board;
 use App\Write;
+use Session;
 
 class BoardsController extends Controller
 {
@@ -136,31 +137,33 @@ class BoardsController extends Controller
     public function copy(Request $request)
     {
         $rule = [
-            'table' => 'required|max:20|unique:boards|regex:/^[a-zA-Z0-9_]+$/',
-            'subject' => 'required|unique:boards',
+            'table_name' => 'required|max:20|unique:boards|regex:/^[a-zA-Z0-9_]+$/',
+            'subject' => 'required',
         ];
+
+        Session::put('table_name', $request->get('table_name'));
 
         $this->validate($request, $rule);
 
         $originalBoard = Board::findOrFail($request->get('id'));
+
         $board = $this->boardModel->copyBoard($request->all());
-        $post = $this->writeModel->createWriteTable($request->get('table'));
+        $post = $this->writeModel->createWriteTable($request->get('table_name'));
 
+        $message = $originalBoard->subject . ' 게시판이 복사되었습니다.';
         // 구조와 데이터를 함께 복사하는 경우
-        if($request->get('copy_case') == 'schema_data_both') {
-            // Write instance를 새로 만들어야 해서 여기에 구현함.
-
+        if($request->get('copy_case') == 'schema_data_both') {  // Write instance를 새로 만들어야 해서 여기에 구현함.
             // 원본 테이블의 모델을 지정한다.
             $originalWrite = new Write();
-            $originalWrite->setTableName($originalBoard->table);
+            $originalWrite->setTableName($originalBoard->table_name);
 
             // 대상 테이블의 모델을 지정하고 데이터를 넣는다.
             $destinationWrite = new Write();
-            $destinationWrite->setTableName($request->get('table'));
+            $destinationWrite->setTableName($request->get('table_name'));
             if($destinationWrite->insert($originalWrite->get()->toArray())) {
-                return redirect(route('admin.boards.copyForm', $originalBoard->id))->with('message', $originalBoard->subject . ' 게시판과 데이터가 복사되었습니다.');
+                $message = $originalBoard->subject . ' 게시판과 데이터가 복사되었습니다.';
             } else {
-                return redirect(route('admin.boards.copyForm', $originalBoard->id))->with('message', $originalBoard->subject . ' 게시판과 데이터 복사에 실패하였습니다.');
+                $message = $originalBoard->subject . ' 게시판과 데이터 복사에 실패하였습니다.';
             }
         }
 
@@ -168,6 +171,11 @@ class BoardsController extends Controller
             abort('500', '게시판 생성에 실패하였습니다.');
         }
 
-        return redirect(route('admin.boards.copyForm', $originalBoard->id))->with('message', $originalBoard->subject . ' 게시판이 복사되었습니다.');
+        return view('message', [
+            'message' => $message,
+            'reload' => 1,
+            'popup' => 0,
+            'redirect' => '/admin/boards/copy/'. $originalBoard->id,
+        ]);
     }
 }

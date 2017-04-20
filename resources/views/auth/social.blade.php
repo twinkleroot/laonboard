@@ -1,25 +1,11 @@
 @extends('theme')
 
 @section('title')
-    소셜 로그인 완료 | LaBoard
+    소셜 로그인 | LaBoard
 @endsection
 
 @section('include_script')
 <script>
-$(function(){
-    // 계속하기 - step 1(회원가입 폼)
-    $('#continue').click(function(){
-        $('#loginForm').hide();
-        $('#joinForm').show();
-    });
-
-    // 기존 계정과 연결 - step 1(계정, 비밀번호 비교 폼)
-    $('#connect').click(function(){
-        $('#joinForm').hide();
-        $('#loginForm').show();
-    });
-});
-
 function joinValidation(form) {
     if(form.password.value.length < 3) {
         alert('비밀번호를 3글자 이상 입력하십시오.');
@@ -88,14 +74,13 @@ function loginValidation(form) {
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">{{ $userFromSocial->getNickname() }}님 환영합니다.</div>
+                <div class="panel-heading"><h3>{{ $userFromSocial->getNickname() }}님 환영합니다.</h3></div>
 
                     <div class="panel-body">
-                        <input type="button" id="continue" value="계속 하기" />
-                        <input type="button" id="connect" value="기존 계정과 연결" />
+                        <h4>새로운 회원 가입</h4>
                     </div>
 
-                    <div class="panel-body" id="joinForm" style="display:none">
+                    <div class="panel-body">
                     <form method="POST" action="{{ route('social.socialUserJoin') }}"
                         onsubmit="return joinValidation(this);" autocomplete="off">
                         {{ csrf_field() }}
@@ -130,7 +115,14 @@ function loginValidation(form) {
                     </form>
                     </div>
 
-                    <div class="panel-body" id="loginForm" style="display:none">
+                    <div class="panel-body">
+                        <hr />
+                    </div>
+
+                    <div class="panel-body">
+                        <h4>기존 계정과 연결</h4>
+                    </div>
+                    <div class="panel-body">
                     <form method="POST" action="{{ route('social.connectExistAccount') }}"
                         onsubmit="return loginValidation(form);" autocomplete="off">
                         {{ csrf_field() }}
