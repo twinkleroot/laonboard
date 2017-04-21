@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Group;
 use App\Common;
 use App\Write;
+use Auth;
+use DB;
 
 class Board extends Model
 {
@@ -24,16 +26,58 @@ class Board extends Model
     }
 
     // (커뮤니티) index 페이지에서 필요한 파라미터 가져오기
-    public function getBbsIndexParams($boardId)
+    public function getBbsIndexParams($boardId, $kind='', $keyword='')
     {
+        $userLevel = is_null(Auth::user()) ? 1 : Auth::user()->level;
         $board = Board::find($boardId);
-        $write = new Write();
-        $write->setTableName($board->table_name);
+        $writes = $this->getWrites($board, $kind, $keyword);
 
         return [
             'board' => $board,
-            'write' => $write->get(),
+            'writes' => $writes,
+            'userLevel' => $userLevel,
+            'kind' => $kind,
+            'keyword' => $keyword,
         ];
+    }
+
+    public function getWrites($board, $kind, $keyword)
+    {
+        $query = $this->indexQuery($board->table_name);
+        if($kind != '' && $keyword != '') {
+            if(str_contains($kind, '||')) { // 제목 + 내용으로 검색
+                $kinds = explode('||', preg_replace("/\s+/", "", $kind));
+                // 검색 쿼리 붙이기
+                foreach($kinds as $kind) {
+                    $query = $query->where($kind, 'like', '%'.$keyword.'%', 'or');
+                }
+            // 코멘트 검색이 select box에 있는 경우
+            } else if(str_contains($kind, ',')) {
+                $kinds = explode(',', preg_replace("/\s+/", "", $kind));
+                // dd($kinds);
+                $user = User::where($kinds[0], $keyword)->first();
+                // 검색 쿼리 붙이기
+                $query = $query->where('user_id_hashkey', $user->id_hashkey)
+                               ->where('is_comment', $kinds[1]);
+            // 단독 키워드 검색(제목, 내용)
+            } else {
+                $query = $query->where($kind, 'like', '%'.$keyword.'%');
+            }
+        }
+        $sortField = is_null($board->sort_field) ? 'num, reply' : $board->sort_field;
+
+        return $query->orderByRaw($sortField)->paginate($board->page_rows);
+    }
+
+    public function indexQuery($tableName)
+    {
+        return DB::table('write_' . $tableName . ' as w')
+                    ->selectRaw('w.*,
+                        (   select u.nick
+                            from users as u
+                            where w.user_id_hashkey = u.id_hashkey
+                        ) as author'
+                    );
     }
 
     // (게시판 관리) index 페이지에서 필요한 파라미터 가져오기

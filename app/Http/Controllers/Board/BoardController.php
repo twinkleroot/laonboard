@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Board;
 use App\Write;
+use App\Config;
 
 class BoardController extends Controller
 {
@@ -15,8 +16,6 @@ class BoardController extends Controller
 
     public function __construct(Board $board, Write $write)
     {
-        $this->middleware('level:2');
-
         $this->boardModel = $board;
         $this->writeModel = $write;
     }
@@ -26,9 +25,12 @@ class BoardController extends Controller
      * @param integer $boardId
      * @return \Illuminate\Http\Response
      */
-    public function index($boardId)
+    public function index($boardId, Request $request)
     {
-        $params = $this->boardModel->getBbsIndexParams($boardId);
+        $kind = $request->has('kind') ? $request->get('kind') : '';
+        $keyword = $request->has('keyword') ? $request->get('keyword') : '';
+
+        $params = $this->boardModel->getBbsIndexParams($boardId, $kind, $keyword);
 
         return view('board.index', $params);
     }
@@ -51,7 +53,7 @@ class BoardController extends Controller
      */
     public function store(Request $request)
     {
-        
+
     }
 
     /**
@@ -97,5 +99,15 @@ class BoardController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    // search
+    public function search(Request $request)
+    {
+        $boardId = $request->segments()[1];
+        $kind = $request->get('kind');
+        $keyword = $request->get('keyword');
+
+        return redirect('/board/' . $boardId . '/' . $kind . '/' . $keyword);
     }
 }

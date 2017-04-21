@@ -932,25 +932,25 @@
                             <td>
                                 리스트에서 기본으로 정렬에 사용할 필드를 선택합니다. "기본"으로 사용하지 않으시는 경우 속도가 느려질 수 있습니다.<br />
                                 <select id="sort_field" name="sort_field">
-                                    <option value="" @if($type == 'create') selected @endif>reply : 기본</option>
+                                    <option value="" @if($type == 'create') selected @endif>num, reply : 기본</option>
                                     <option value="created_at asc" @if($type == 'edit' && $board->sort_field == 'created_at asc') selected @endif >created_at asc : 날짜 이전것 부터</option>
                                     <option value="created_at desc" @if($type == 'edit' && $board->sort_field == 'created_at desc') selected @endif >created_at desc : 날짜 최근것 부터</option>
-                                    <option value="hit asc, reply" @if($type == 'edit' && $board->sort_field == 'hit asc, reply asc') selected @endif >hit asc : 조회수 낮은것 부터</option>
-                                    <option value="hit desc, reply" @if($type == 'edit' && $board->sort_field == 'hit desc, reply') selected @endif >hit desc : 조회수 높은것 부터</option>
+                                    <option value="hit asc, num, reply" @if($type == 'edit' && $board->sort_field == 'hit asc, reply asc') selected @endif >hit asc : 조회수 낮은것 부터</option>
+                                    <option value="hit desc, num, reply" @if($type == 'edit' && $board->sort_field == 'hit desc, reply') selected @endif >hit desc : 조회수 높은것 부터</option>
                                     <option value="last asc" @if($type == 'edit' && $board->sort_field == 'last asc') selected @endif >last asc : 최근글 이전것 부터</option>
                                     <option value="last desc" @if($type == 'edit' && $board->sort_field == 'last desc') selected @endif >last desc : 최근글 최근것 부터</option>
-                                    <option value="comment asc, reply" @if($type == 'edit' && $board->sort_field == 'comment asc') selected @endif >comment asc : 댓글수 낮은것 부터</option>
-                                    <option value="comment desc, reply" @if($type == 'edit' && $board->sort_field == 'comment desc') selected @endif >comment desc : 댓글수 높은것 부터</option>
-                                    <option value="good asc, reply" @if($type == 'edit' && $board->sort_field == 'good asc') selected @endif >good asc : 추천수 낮은것 부터</option>
-                                    <option value="good desc, reply" @if($type == 'edit' && $board->sort_field == 'good desc') selected @endif >good desc : 추천수 높은것 부터</option>
-                                    <option value="nogood asc, reply" @if($type == 'edit' && $board->sort_field == 'nogood asc') selected @endif >nogood asc : 비추천수 낮은것 부터</option>
-                                    <option value="nogood desc, reply" @if($type == 'edit' && $board->sort_field == 'nogood desc') selected @endif >nogood desc : 비추천수 높은것 부터</option>
-                                    <option value="subject asc, reply" @if($type == 'edit' && $board->sort_field == 'subject asc') selected @endif >subject asc : 제목 오름차순</option>
-                                    <option value="subject desc, reply" @if($type == 'edit' && $board->sort_field == 'subject desc') selected @endif >subject desc : 제목 내림차순</option>
-                                    <option value="name asc, reply" @if($type == 'edit' && $board->sort_field == 'name asc') selected @endif >name asc : 글쓴이 오름차순</option>
-                                    <option value="name desc, reply" @if($type == 'edit' && $board->sort_field == 'name desc') selected @endif >name desc : 글쓴이 내림차순</option>
-                                    <option value="ca_name asc, reply" @if($type == 'edit' && $board->sort_field == 'ca_name asc') selected @endif >ca_name asc : 분류명 오름차순</option>
-                                    <option value="ca_name desc, reply" @if($type == 'edit' && $board->sort_field == 'ca_name desc') selected @endif >ca_name desc : 분류명 내림차순</option>
+                                    <option value="comment asc, num, reply" @if($type == 'edit' && $board->sort_field == 'comment asc') selected @endif >comment asc : 댓글수 낮은것 부터</option>
+                                    <option value="comment desc, num, reply" @if($type == 'edit' && $board->sort_field == 'comment desc') selected @endif >comment desc : 댓글수 높은것 부터</option>
+                                    <option value="good asc, num, reply" @if($type == 'edit' && $board->sort_field == 'good asc') selected @endif >good asc : 추천수 낮은것 부터</option>
+                                    <option value="good desc, num, reply" @if($type == 'edit' && $board->sort_field == 'good desc') selected @endif >good desc : 추천수 높은것 부터</option>
+                                    <option value="nogood asc, num, reply" @if($type == 'edit' && $board->sort_field == 'nogood asc') selected @endif >nogood asc : 비추천수 낮은것 부터</option>
+                                    <option value="nogood desc, num, reply" @if($type == 'edit' && $board->sort_field == 'nogood desc') selected @endif >nogood desc : 비추천수 높은것 부터</option>
+                                    <option value="subject asc, num, reply" @if($type == 'edit' && $board->sort_field == 'subject asc') selected @endif >subject asc : 제목 오름차순</option>
+                                    <option value="subject desc, num, reply" @if($type == 'edit' && $board->sort_field == 'subject desc') selected @endif >subject desc : 제목 내림차순</option>
+                                    <option value="name asc, num, reply" @if($type == 'edit' && $board->sort_field == 'name asc') selected @endif >name asc : 글쓴이 오름차순</option>
+                                    <option value="name desc, num, reply" @if($type == 'edit' && $board->sort_field == 'name desc') selected @endif >name desc : 글쓴이 내림차순</option>
+                                    <option value="ca_name asc, num, reply" @if($type == 'edit' && $board->sort_field == 'ca_name asc') selected @endif >ca_name asc : 분류명 오름차순</option>
+                                    <option value="ca_name desc, num, reply" @if($type == 'edit' && $board->sort_field == 'ca_name desc') selected @endif >ca_name desc : 분류명 내림차순</option>
                                 </select>
                             </td>
                             <td>

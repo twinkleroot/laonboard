@@ -13,7 +13,7 @@ use App\Config;
 use DB;
 
 // 공통 기능
-class CommonController extends Controller
+class SearchController extends Controller
 {
 
     public $pointModel;

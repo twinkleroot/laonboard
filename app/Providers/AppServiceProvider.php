@@ -20,6 +20,11 @@ class AppServiceProvider extends ServiceProvider
 			return "<?php echo substr($expression, 0, 10); ?>";
 		});
 
+		// Blade Template 의 지시어 'monthAndDay' 생성
+		Blade::directive('monthAndDay', function($expression) {
+			return "<?php echo date('m/d', strtotime($expression)); ?>";
+		});
+
 		// Blade Template 의 지시어 'datetime' 생성
 		Blade::directive('datetime', function($expression) {
 			return "<?php echo ($expression)->format('Y/m/d H:i'); ?>";
