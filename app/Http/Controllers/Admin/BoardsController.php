@@ -60,10 +60,10 @@ class BoardsController extends Controller
 
         $this->validate($request, $rule);
 
-        $post = $this->writeModel->createWriteTable($request->get('table_name'));
+        $write = $this->writeModel->createWriteTable($request->get('table_name'));
         $board = $this->boardModel->createBoard($request->all());
 
-        if(is_null($board) && $post) {
+        if(is_null($board) && $write) {
             abort('500', '게시판 생성에 실패하였습니다.');
         }
 
@@ -148,7 +148,7 @@ class BoardsController extends Controller
         $originalBoard = Board::findOrFail($request->get('id'));
 
         $board = $this->boardModel->copyBoard($request->all());
-        $post = $this->writeModel->createWriteTable($request->get('table_name'));
+        $write = $this->writeModel->createWriteTable($request->get('table_name'));
 
         $message = $originalBoard->subject . ' 게시판이 복사되었습니다.';
         // 구조와 데이터를 함께 복사하는 경우
@@ -167,7 +167,7 @@ class BoardsController extends Controller
             }
         }
 
-        if(is_null($board) && $post) {
+        if(is_null($board) && $write) {
             abort('500', '게시판 생성에 실패하였습니다.');
         }
 

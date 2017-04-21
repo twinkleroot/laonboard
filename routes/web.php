@@ -14,7 +14,6 @@
 
 // 기본 홈
 Route::get('/index', ['as' => 'index', 'uses' => 'WelcomeController@index']);
-
 Route::get('/', 'ThemeController@index');
 Route::get('/menuTest', ['as' => 'menuTest', 'uses' => 'ThemeController@menuTest']);
 
@@ -23,8 +22,8 @@ Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index'] );
 
 // 관리자 그룹
 Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
-    // 관리자 공통 기능
-    Route::get('search', ['as' => 'admin.search', 'uses' => 'Admin\CommonController@search']);
+    // 관리자 검색 기능
+    Route::get('search', ['as' => 'admin.search', 'uses' => 'Admin\SearchController@search']);
     // 관리자 메인
     Route::get('index', ['as' => 'admin.index', 'uses' => 'Admin\IndexController@index']);
     // 회원관리 리소스 컨트롤러에 추가적으로 라우팅을 구성(리소스 라우트보다 앞에 와야 함)
@@ -165,8 +164,25 @@ Route::get('emailCertify/id/{id}/crypt/{crypt}', 'User\MailController@emailCerti
 Route::get('message', ['as' => 'message', 'uses' => 'Message\MessageController@message']);
 
 // 커뮤니티 게시판
-Route::resource('{boardId}/board', 'Board\BoardController', [
-        'parameters' => [
-            'board' => 'articleId'
-        ],
-]);
+// 글 목록 + 검색
+Route::get('board/{boardId}', ['as' => 'board.index', 'uses' => 'Board\BoardController@index'])
+    ->middleware('level.board:list_level');
+// 글 읽기
+Route::get('board/{boardId}/post/{postId}', ['as' => 'board.show', 'uses' => 'Board\BoardController@show'])
+    ->middleware('level.board:read_level');
+// 글 쓰기
+Route::get('board/{boardId}/create', ['as' => 'board.create', 'uses' => 'Board\BoardController@create'])
+    ->middleware('level.board:write_level');
+Route::post('board/{boardId}/post/{postId}', ['as' => 'board.store', 'uses' => 'Board\BoardController@store'])
+    ->middleware('level.board:write_level');
+// 글 수정
+Route::get('board/{boardId}/edit/{postId}', ['as' => 'board.edit', 'uses' => 'Board\BoardController@edit'])
+    ->middleware('level.board:update_level');
+Route::put('board/{boardId}/post/{postId}', ['as' => 'board.update', 'uses' => 'Board\BoardController@update'])
+    ->middleware('level.board:update_level');
+// 글 삭제
+Route::delete('board/{boardId}/post/{postId}', ['as' => 'board.destroy', 'uses' => 'Board\BoardController@destroy'])
+    ->middleware('level.board:delete_level');
+// 글 검색
+// Route::post('board/{boardId}/search', ['as' => 'board.search', 'uses' => 'Board\BoardController@search'])
+//     ->middleware('level.board:list_level');
