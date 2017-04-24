@@ -676,3 +676,32 @@ body {
 	float: right;
 	color: #bbb;
 }
+
+/* write */
+.bd-save {
+	padding-left: 0;
+}
+@media (max-width: 768px) {
+	.bd-save {
+		display: none;
+	}
+}
+.bd-save .dropdown-menu {
+	left: 0;
+	right: auto;
+	font-size: 12px;
+}
+.bd-save .dropdown-menu a {
+	display: inline-block;
+}
+.sv-date {
+	color: #bbb;
+	font-size: 10px;
+	margin-left: 5px;
+}
+.save-delete {
+	padding: 3px 20px 3px 0 !important;
+}
+.save-delete:hover {
+	background: none !important;
+} 
