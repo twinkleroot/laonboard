@@ -21,19 +21,19 @@
     		<div class="form-group mb10 row">
     			<div class="col-xs-3">
     				<label for="name" class="sr-only">이름</label>
-    				<input type="text" class="form-control" id="name" name="name" placeholder="이름">
+    				<input type="text" class="form-control" id="name" name="name" placeholder="이름" required>
     			</div>
     		</div>
     		<div class="form-group mb10 row">
     			<div class="col-xs-4">
     				<label for="password" class="sr-only">비밀번호</label>
-    				<input type="password" class="form-control" id="password" name="password" placeholder="비밀번호">
+    				<input type="password" class="form-control" id="password" name="password" placeholder="비밀번호" required>
     			</div>
     		</div>
     		<div class="form-group mb10 row">
     			<div class="col-xs-5">
     				<label for="email" class="sr-only">이메일</label>
-    				<input type="email" class="form-control" id="email" name="email" placeholder="이메일">
+    				<input type="email" class="form-control" id="email" name="email" placeholder="이메일" required>
     			</div>
     		</div>
     		<div class="form-group mb10 row">
@@ -55,7 +55,7 @@
     	<div class="row">
     		<div class="form-group mb10 col-xs-8">
     		    <label for="" class="sr-only">게시물 작성</label>
-    		    <input type="text" class="form-control" id="subject" name="subject" placeholder="게시물 제목">
+    		    <input type="text" class="form-control" id="subject" name="subject" placeholder="게시물 제목" required>
     		</div>
 
     		<div class="bd-save col-xs-4 dropdown">
@@ -79,32 +79,34 @@
             @if($board->use_dhtml_editor == 1)
               {{-- 에디터 --}}
             @else
-                <textarea name='content' maxlength='65536' style='width:100%; min-height:400px'></textarea>
+                <textarea name='content' maxlength='65536' style='width:100%; min-height:400px' required></textarea>
             @endif
     	</div>
 
     	<div class="row">
     		<div class="form-group mb10 col-xs-8">
-    		    <label for="" class="sr-only">링크 1</label>
-    		    <input type="email" class="form-control" id="" placeholder="링크 1">
+    		    <label for="link1" class="sr-only">링크 1</label>
+    		    <input type="url" class="form-control" id="link1" name="link1" placeholder="링크 1">
     		</div>
 
     		<div class="form-group mb10 col-xs-8">
-    		    <label for="" class="sr-only">링크 2</label>
-    		    <input type="email" class="form-control" id="" placeholder="링크 2">
+    		    <label for="link2" class="sr-only">링크 2</label>
+    		    <input type="url" class="form-control" id="link2" name="link2" placeholder="링크 2">
     		</div>
 
-    		<div class="form-group mb10 col-xs-5">
-    		    <label for="" class="sr-only">파일첨부</label>
-    		    <input type="file" id="" placeholder="파일첨부">
-    		</div>
+    		{{-- <div class="form-group mb10 col-xs-5">
+    		    <label for="file" class="sr-only">파일첨부</label>
+    		    <input type="file" id="file" name="file[]" placeholder="파일첨부">
+    		</div> --}}
     	</div>
 
     	<div class="clearfix">
     		<div class="pull-left">
-    			<label class="checkbox-inline">
-    				<input type="checkbox" id="" value="option1"> 공지
-    			</label>
+                @if(session()->get('admin'))
+        			<label for="notice" class="checkbox-inline">
+        				<input type="checkbox" id="notice" name="notice" value="1"> 공지
+        			</label>
+                @endif
     			<label class="checkbox-inline">
     				<input type="checkbox" id="" value="option2"> html
     			</label>

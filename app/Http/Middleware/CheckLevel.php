@@ -18,7 +18,9 @@ class CheckLevel
      {
          $user = Auth::user();
          if($user->level < $level) {
-             return redirect(route('message'))->with('message', '권한이 없어서 접근할 수 없습니다.');
+             return redirect(route('message'))
+                ->with('message', '권한이 없어서 접근할 수 없습니다.')
+                ->with('redirect', '/');
          }
          return $next($request);
      }
