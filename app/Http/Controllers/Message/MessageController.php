@@ -10,11 +10,9 @@ class MessageController extends Controller
 {
     public function message(Request $request)
     {
-        $message = '';
-        if(Session::has('message')) {
-            $message = Session::get('message');
-        }
-
-        return view('message')->with('message', $message);
+        return view('message', [
+            'message' => Session::has('message') ? Session::get('message') : '',
+            'redirect' => Session::has('redirect') ? Session::get('redirect') : ''
+        ]);
     }
 }

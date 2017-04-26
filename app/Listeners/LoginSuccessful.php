@@ -40,6 +40,11 @@ class LoginSuccessful
 
         $event->user->save();
 
+        // 관리자 임을 세션에 등록
+        if($event->user->level == 10) {
+            session()->put('admin', true);
+        }
+
         // 회원 가입인 경우($isUserJoin == true) 로그인 포인트를 부여하지 않음.
         $isUserJoin = Point::isUserJoin($event->user);
 

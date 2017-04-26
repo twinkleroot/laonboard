@@ -32,10 +32,7 @@ class BoardController extends Controller
      */
     public function index($boardId, Request $request)
     {
-        $kind = $request->has('kind') ? $request->kind : '';
-        $keyword = $request->has('keyword') ? $request->keyword : '';
-
-        $params = $this->writeModel->getBbsIndexParams($this->writeModel, $kind, $keyword);
+        $params = $this->writeModel->getBbsIndexParams($this->writeModel, $request);
 
         if(isset($params['message'])) {
             return view('message', $params);
@@ -64,6 +61,11 @@ class BoardController extends Controller
      */
     public function store(Request $request, $boardId)
     {
+        if( !$this->writeModel->checkWriteInterval() ) {
+            return view('message', [
+                'message' => '너무 빠른 시간내에 게시물을 연속해서 올릴 수 없습니다.'
+            ]);
+        }
         $this->writeModel->storeWrite($this->writeModel, $request);
 
         return redirect(route('board.index', $boardId));

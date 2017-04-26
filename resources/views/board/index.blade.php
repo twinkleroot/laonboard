@@ -24,7 +24,7 @@
 		</div>
 
 		<ul id="bd_btn" class="pull-right">
-            @if($userLevel == 10)
+            @if(session()->get('admin'))
     			<li class="dropdown">
     				<a href="#" class="dropdown-toggle bd_rd_more" data-toggle="dropdown" role="button" aria-expanded="false">
     					<button type="" class="btn btn-danger">
@@ -53,7 +53,7 @@
 		<thead>
 			<tr>
 				<th>번호</th>
-                @if($userLevel == 10)
+                @if(session()->get('admin'))
     				<th> <!-- 전체선택 -->
     					<input type="checkbox" name="chkAll" onclick="checkAll(this.form)">
     				</th>
@@ -68,10 +68,6 @@
 		</thead>
 		<tbody>
             {{-- <tr id="bd_notice">
-                <td class="bd_num">4</td>
-                @if($userLevel == 10)
-                    <td class="bd_check"><input type="checkbox" name="chk[]"></td>
-                @endif
                 <td>
                     <span class="bd_subject">공지사항테스트</span>
                         <img src="../themes/default/images/icon_new.gif"> <!-- 새글 -->
@@ -80,18 +76,17 @@
                         <img src="../assets/images/icon_link.gif"> <!-- 링크 -->
                     <span class="bd_cmt">8</span>
                 </td>
-                <td class="bd_name">관리자</td>
-                <td class="bd_date">04-07</td>
-                <td class="bd_hits">5</td>
-                <td class="bd_re"><span class="up">2</span></td>
-                <td class="bd_nre">1</td>
             </tr> --}}
-            @foreach($writes as $write)
-			<tr>
+        @foreach($writes as $write)
+            @if(in_array($write->id, $notices))
+                <tr id="bd_notice">
+            @else
+                <tr>
+            @endif
                 <!-- 공지사항 기능 넣으면 공지사항 까지 포함시켜서 넘버링 -->
                 {{-- <td class="bd_num">{{ $writes->total() - ( $write->currentPage() - 1 )*$board->page_rows - $noticeCount - $loop->index }}</td> --}}
 				<td class="bd_num">{{ $writes->total() - ( $writes->currentPage() - 1 ) * $board->page_rows - $loop->index }}</td>
-                @if($userLevel == 10)
+                @if(session()->get('admin'))
     				<td class="bd_check"><input type="checkbox" name="chk_id[]" class="writeId" value='{{ $write->id }}'></td>
                 @endif
 				<td>
@@ -114,7 +109,7 @@
 				<td class="bd_re"><span class="up">{{ $write->good }}</span></td>
 				<td class="bd_nre">{{ $write->nogood }}</td>
 			</tr>
-            @endforeach
+        @endforeach
 		</tbody>
 	</table>
 </form>
@@ -122,7 +117,7 @@
 	<div class="mb10 clearfix">
 		<ul id="bd_btn" class="pull-left">
 			<li id="pt_sch">
-				<form method="get" action="{{ route('board.index', $board->id) }}">
+				<form method="get" action="{{ route('board.index', $board->id) }}" onsubmit="return searchFormSubmit(this);">
 			        <label for="kind" class="sr-only">검색대상</label>
 					<select name="kind" id="kind">
 						<option value="subject" @if($kind == 'subject') selected @endif>제목</option>
@@ -153,12 +148,11 @@
 	</div>
 
     {{-- 페이지 처리 --}}
-    {{ str_contains(url()->current(), 'search')
+    {{ $search == 1
         ? $writes->appends([
-            'admin_page' => 'post',
             'kind' => $kind,
             'keyword' => $keyword,
-        ])->links()
+        ]) ->links()
         : $writes->links()
     }}
 </div>
@@ -170,6 +164,15 @@ function checkAll(form) {
     for (i=0; i<chk.length; i++) {
         chk[i].checked = form.chkAll.checked;
     }
+}
+
+function searchFormSubmit(f) {
+    if(f.keyword.value.trim() == '') {
+        alert('검색어 : 필수 입력입니다.');
+        return false;
+    }
+
+    return true;
 }
 
 // 관리자 메뉴 폼 서브밋 전 실행되는 함수
