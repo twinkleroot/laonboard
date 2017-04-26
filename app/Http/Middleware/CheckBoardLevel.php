@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Auth;
 use App\Board;
+use Exception;
 
 class CheckBoardLevel
 {
@@ -18,6 +19,7 @@ class CheckBoardLevel
     public function handle($request, Closure $next, $type)
     {
         $user = Auth::user();
+        $message = '';
 
         $baseLevel = 0;
         if(is_null($user)) {
@@ -27,10 +29,11 @@ class CheckBoardLevel
         }
 
         $boardId = $request->segments()[1];
-        $board = Board::findOrFail($boardId);
+
+        $board = Board::find($boardId);
 
         if($baseLevel < $board[$type]) {
-            $message = '';
+
             if(str_contains($type, 'list')) {
                 $message = '목록을 볼 권한이 없습니다.';
             } else if(str_contains($type, 'read')) {
@@ -44,7 +47,7 @@ class CheckBoardLevel
             } else if(str_contains($type, 'delete')) {
                 $message = '목록을 볼 권한이 없습니다.';
             }
-            
+
             return redirect(route('message'))->with('message', $message);
         }
         return $next($request);

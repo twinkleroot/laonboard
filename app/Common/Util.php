@@ -1,11 +1,9 @@
 <?php
 
-namespace App;
-
-use Illuminate\Database\Eloquent\Model;
+namespace App\Common;
 
 // 공통으로 사용하는 메서드
-class Common extends Model
+class Util
 {
     // 입력 안된 필드( == null )는 입력값에서 제외.
     public static function exceptNullData($data)

@@ -9,7 +9,7 @@ use App\Point;
 use App\Group;
 use Auth;
 use DB;
-use App\Common;
+use App\Common\Util;
 use App\Config;
 use App\GroupUser;
 use Carbon\Carbon;
@@ -363,7 +363,7 @@ class User extends Authenticatable
     {
         $data = array_except($data, ['_token']);
 
-        $data = Common::exceptNullData($data);
+        $data = Util::exceptNullData($data);
 
         $data['password'] = bcrypt($data['password']);  // 비밀번호 암호화
 

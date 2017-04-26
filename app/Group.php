@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\User;
 use DB;
 use App\Board;
-use App\Common;
+use App\Common\Util;
 
 class Group extends Model
 {
@@ -82,7 +82,7 @@ class Group extends Model
     {
         $data = array_except($data, ['_token']);
 
-        $data = Common::exceptNullData($data);
+        $data = Util::exceptNullData($data);
 
         return Group::create($data);
 
@@ -156,7 +156,7 @@ class Group extends Model
     {
 
         $data = array_except($data, ['_token']);
-        $data = Common::exceptNullData($data);
+        $data = Util::exceptNullData($data);
 
         $group = Group::findOrFail($id);
 

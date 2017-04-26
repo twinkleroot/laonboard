@@ -168,21 +168,23 @@ Route::get('message', ['as' => 'message', 'uses' => 'Message\MessageController@m
 Route::get('board/{boardId}', ['as' => 'board.index', 'uses' => 'Board\BoardController@index'])
     ->middleware('level.board:list_level');
 // 글 읽기
-Route::get('board/{boardId}/post/{postId}', ['as' => 'board.show', 'uses' => 'Board\BoardController@show'])
+Route::get('board/{boardId}/write/{writeId}', ['as' => 'board.show', 'uses' => 'Board\BoardController@show'])
     ->middleware('level.board:read_level');
 // 글 쓰기
 Route::get('board/{boardId}/create', ['as' => 'board.create', 'uses' => 'Board\BoardController@create'])
     ->middleware('level.board:write_level');
-Route::post('board/{boardId}/post/{postId}', ['as' => 'board.store', 'uses' => 'Board\BoardController@store'])
+Route::post('board/{boardId}', ['as' => 'board.store', 'uses' => 'Board\BoardController@store'])
     ->middleware('level.board:write_level');
 // 글 수정
-Route::get('board/{boardId}/edit/{postId}', ['as' => 'board.edit', 'uses' => 'Board\BoardController@edit'])
+Route::get('board/{boardId}/edit/{writeId}', ['as' => 'board.edit', 'uses' => 'Board\BoardController@edit'])
     ->middleware('level.board:update_level');
-Route::put('board/{boardId}/post/{postId}', ['as' => 'board.update', 'uses' => 'Board\BoardController@update'])
+Route::put('board/{boardId}/write/{writeId}', ['as' => 'board.update', 'uses' => 'Board\BoardController@update'])
     ->middleware('level.board:update_level');
 // 글 삭제
-Route::delete('board/{boardId}/post/{postId}', ['as' => 'board.destroy', 'uses' => 'Board\BoardController@destroy'])
+Route::delete('board/{boardId}/write/{writeId}', ['as' => 'board.destroy', 'uses' => 'Board\BoardController@destroy'])
     ->middleware('level.board:delete_level');
-// 글 검색
-// Route::post('board/{boardId}/search', ['as' => 'board.search', 'uses' => 'Board\BoardController@search'])
-//     ->middleware('level.board:list_level');
+// 글 복사 및 이동 폼
+Route::group(['middleware' => ['auth', 'level:10']], function() {
+    Route::post('board/{boardId}/move', ['as' => 'board.move', 'uses' => 'Board\BoardController@move']);
+    Route::post('board/{boardId}/move/update', ['as' => 'board.moveUpdate', 'uses' => 'Board\BoardController@moveUpdate']);
+});
