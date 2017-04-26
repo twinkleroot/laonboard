@@ -15,7 +15,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/style_new.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/common.css') }}">
-    <link rel="stylesheet" type="text/css" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="{{ asset('font-awesome/css/font-awesome.css') }}">
     @yield('include_css')
 
     <!-- Scripts -->
@@ -103,9 +103,8 @@
 
 <!-- Bootstrap core JavaScript -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <script src="http://bootstrapk.com/dist/js/bootstrap.min.js"></script>
+    <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="http://bootstrapk.com/assets/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="{{ asset('bootstrap/js/ie10-viewport-bug-workaround.js') }}"></script>
 </body>
 </html>
