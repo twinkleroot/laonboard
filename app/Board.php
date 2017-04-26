@@ -4,11 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use App\Common\Util;
 use App\Group;
-use App\Common;
 use App\Write;
-use Auth;
-use DB;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
 
 class Board extends Model
 {
@@ -23,61 +23,6 @@ class Board extends Model
     public function group()
     {
         return $this->belongsTo(Group::class);
-    }
-
-    // (커뮤니티) index 페이지에서 필요한 파라미터 가져오기
-    public function getBbsIndexParams($boardId, $kind='', $keyword='')
-    {
-        $userLevel = is_null(Auth::user()) ? 1 : Auth::user()->level;
-        $board = Board::find($boardId);
-        $writes = $this->getWrites($board, $kind, $keyword);
-
-        return [
-            'board' => $board,
-            'writes' => $writes,
-            'userLevel' => $userLevel,
-            'kind' => $kind,
-            'keyword' => $keyword,
-        ];
-    }
-
-    public function getWrites($board, $kind, $keyword)
-    {
-        $query = $this->indexQuery($board->table_name);
-        if($kind != '' && $keyword != '') {
-            if(str_contains($kind, '||')) { // 제목 + 내용으로 검색
-                $kinds = explode('||', preg_replace("/\s+/", "", $kind));
-                // 검색 쿼리 붙이기
-                foreach($kinds as $kind) {
-                    $query = $query->where($kind, 'like', '%'.$keyword.'%', 'or');
-                }
-            // 코멘트 검색이 select box에 있는 경우
-            } else if(str_contains($kind, ',')) {
-                $kinds = explode(',', preg_replace("/\s+/", "", $kind));
-                // dd($kinds);
-                $user = User::where($kinds[0], $keyword)->first();
-                // 검색 쿼리 붙이기
-                $query = $query->where('user_id_hashkey', $user->id_hashkey)
-                               ->where('is_comment', $kinds[1]);
-            // 단독 키워드 검색(제목, 내용)
-            } else {
-                $query = $query->where($kind, 'like', '%'.$keyword.'%');
-            }
-        }
-        $sortField = is_null($board->sort_field) ? 'num, reply' : $board->sort_field;
-
-        return $query->orderByRaw($sortField)->paginate($board->page_rows);
-    }
-
-    public function indexQuery($tableName)
-    {
-        return DB::table('write_' . $tableName . ' as w')
-                    ->selectRaw('w.*,
-                        (   select u.nick
-                            from users as u
-                            where w.user_id_hashkey = u.id_hashkey
-                        ) as author'
-                    );
     }
 
     // (게시판 관리) index 페이지에서 필요한 파라미터 가져오기
@@ -117,8 +62,8 @@ class Board extends Model
             'use_secret' => 0,
             'count_modify' => 1,
             'count_delete' => 1,
-            'page_rows' => config('gnu.page_rows'),             // 환경설정에 설정하는 폼 만들면 Config 모델에서 가져오도록 변경해야 함.
-            'mobile_page_rows' => config('gnu.page_rows'),      // 환경설정에 설정하는 폼 만들면 Config 모델에서 가져오도록 변경해야 함.
+            'page_rows' => config('gnu.pageRows'),             // 환경설정에 설정하는 폼 만들면 Config 모델에서 가져오도록 변경해야 함.
+            'mobile_page_rows' => config('gnu.mobilePageRows'),      // 환경설정에 설정하는 폼 만들면 Config 모델에서 가져오도록 변경해야 함.
             'skin' => 'basic',
             'mobile_skin' => 'basic',
             'include_head' => '_head.php',
@@ -169,12 +114,12 @@ class Board extends Model
         ];
     }
 
-    // board 테이블에 새 게시판 행 추가
+    // (게시판 관리) board 테이블에 새 게시판 행 추가
     public function createBoard($data)
     {
         $data = array_except($data, ['_token']);
 
-        $data = Common::exceptNullData($data);
+        $data = Util::exceptNullData($data);
 
         // 그룹 적용, 전체 적용 수행(그리고 사용한 필드를 배열에서 제외시킴.)
         $data = $this->applyBoard($data, 'chk_group');
@@ -188,7 +133,7 @@ class Board extends Model
     public function updateBoard($data, $id)
     {
         $data = array_except($data, ['_token']);
-        $data = Common::exceptNullData($data);
+        $data = Util::exceptNullData($data);
 
         $board = Board::findOrFail($id);
 
@@ -264,7 +209,7 @@ class Board extends Model
         if($data['copy_case'] == 'schema_only') {
             $originalData['notice'] = '';
         }
-        $originalData = Common::exceptNullData($originalData);
+        $originalData = Util::exceptNullData($originalData);
         $originalData = array_except($originalData, ['id']);
 
         return Board::create($originalData);
@@ -318,5 +263,80 @@ class Board extends Model
                 abort('500', '정보를 수정할 게시판이 존재하지 않습니다. 게시판이 잘 선택 되었는지 확인해 주세요.');
             }
         }
+    }
+
+    // (게시판 관리 -> 게시판 추가) 새 게시판 테이블 생성
+    public function createWriteTable($tableName)
+    {
+        $tableNameAddPrefix = 'write_' . $tableName;
+        if(!Schema::hasTable($tableNameAddPrefix)) {
+            Schema::create($tableNameAddPrefix, function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('num')->default(0);
+                $table->string('reply', 10)->nullable();
+                $table->integer('parent')->unsigned()->default(0);
+                $table->tinyInteger('is_comment')->default(0);
+                $table->integer('comment')->unsigned()->default(0);
+                $table->string('comment_reply', 5)->nullable();
+                $table->string('ca_name')->nullable();
+                $table->enum('option', ['html1', 'html2', 'secret', 'mail'])->nullable();
+                $table->string('subject')->nullable();
+                $table->text('content')->nullable();
+                $table->text('link1')->nullable();
+                $table->text('link2')->nullable();
+                $table->integer('link1_hit')->unsigned()->default(0);
+                $table->integer('link2_hit')->unsigned()->default(0);
+                $table->integer('hit')->unsigned()->default(0);
+                $table->integer('good')->unsigned()->default(0);
+                $table->integer('nogood')->unsigned()->default(0);
+                $table->integer('user_id')->unsigned();
+                $table->string('password')->nullable();
+                $table->string('name')->nullable();
+                $table->string('email')->nullable();
+                $table->string('homepage')->nullable();
+                $table->timestamps();
+                $table->tinyInteger('file')->default(0);
+                $table->string('last', 19)->nullable();
+                $table->string('ip')->nullable();
+                $table->string('facebook_user')->nullable();
+                $table->string('twitter_user')->nullable();
+                $table->string('subj_1')->nullable();
+                $table->string('subj_2')->nullable();
+                $table->string('subj_3')->nullable();
+                $table->string('subj_4')->nullable();
+                $table->string('subj_5')->nullable();
+                $table->string('subj_6')->nullable();
+                $table->string('subj_7')->nullable();
+                $table->string('subj_8')->nullable();
+                $table->string('subj_9')->nullable();
+                $table->string('subj_10')->nullable();
+                $table->string('value_1')->nullable();
+                $table->string('value_2')->nullable();
+                $table->string('value_3')->nullable();
+                $table->string('value_4')->nullable();
+                $table->string('value_5')->nullable();
+                $table->string('value_6')->nullable();
+                $table->string('value_7')->nullable();
+                $table->string('value_8')->nullable();
+                $table->string('value_9')->nullable();
+                $table->string('value_10')->nullable();
+            });
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // (게시판) 관리자의 선택 복사, 이동에 필요한 파라미터
+    public function getMoveParams($boardId, $request)
+    {
+        session()->put('writeIds',$request->chk_id);
+
+        return [
+            'boards' => Board::get(),
+            'currentBoard' => Board::find($boardId),
+            'type' => $request->type,
+        ];
     }
 }

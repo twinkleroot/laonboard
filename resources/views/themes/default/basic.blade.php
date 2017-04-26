@@ -51,7 +51,7 @@
             <li class="gnb-li"><a href="">메뉴1</a></li>
             <li class="gnb-li"><a href="">메뉴2</a></li>-->
 
-            <li class="gnb-li"><a href="{{ route('board.index', 48) }}">게시판 테스트</a></li>
+            <li class="gnb-li"><a href="{{ route('board.index', 67) }}">게시판 테스트</a></li>
             @if (Auth::guest()) <!-- 공개권한: 게스트 -->
             <li class="gnb-li"><a href="{{ route('login') }}">로그인</a></li>
             <li class="gnb-li"><a href="{{ route('user.join') }}">회원가입</a></li>

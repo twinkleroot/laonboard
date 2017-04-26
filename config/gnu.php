@@ -7,8 +7,8 @@
   'loginPoint' => 100,
   'openDate' => 0,
   'newRows' => 15,
-  'pageRows' => 15,
-  'mobilePageRows' => 15,
+  'pageRows' => 10,
+  'mobilePageRows' => 10,
   'writePages' => 10,
   'mobilePages' => 5,
 

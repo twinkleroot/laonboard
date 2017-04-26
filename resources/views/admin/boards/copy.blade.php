@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>게시판 복사 | 라라벨 그누보드</title>
+    <title>게시판 복사 | {{ \App\Config::getConfig('config.homepage')->title }} </title>
 
     <!-- Scripts -->
     <script>
@@ -22,9 +22,9 @@
 </head>
 
 @if(Session::has('message'))
-  <div class="alert alert-info">
+<div class="alert alert-info">
     {{ Session::get('message') }}
-  </div>
+</div>
 @endif
 <div class="row">
     <div class="col-md-12">
