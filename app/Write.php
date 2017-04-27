@@ -56,14 +56,14 @@ class Write extends Model
         $notices = explode(',', $this->board->notice);
 
         $writes;
-        // try {
+        try {
             $writes = $this->getWrites($writeModel, $kind, $keyword, $request);
-        // } catch (Exception $e) {
-        //     return [
-        //         'message' => '존재하지 않는 게시판입니다.',
-        //         'redirect' => '/'
-        //     ];
-        // }
+        } catch (Exception $e) {
+            return [
+                'message' => '존재하지 않는 게시판입니다.',
+                'redirect' => '/'
+            ];
+        }
 
         return [
             'board' => $this->board,

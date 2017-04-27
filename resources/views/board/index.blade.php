@@ -108,7 +108,16 @@
                     @if($userLevel == 1)
                         {{ $write->name }}
                     @else
-                        <a href="/board/{{ $board->id }}?kind=user_id&amp;keyword={{ $write->user_id }}">{{ $write->name }}</a>
+                        @if($board->use_sideview == 1)
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
+                            <ul class="dropdown-menu" role="menu">
+        		                <li><a href="#">자기소개</a></li>
+        		                <li><a href="#">전체게시물</a></li>
+        		                <li><a href="/board/{{ $board->id }}?kind=user_id&amp;keyword={{ $write->user_id }}">닉네임으로 검색</a></li>
+        		            </ul>
+                        @else
+                            {{ $write->name }}
+                        @endif
                     @endif
                 </td>
 				<td class="bd_date">@monthAndDay($write->created_at)</td>
