@@ -14,7 +14,7 @@
 <div id="board" class="container">
 
     <!-- 게시글 작성 -->
-    <form role="form" method="post" action={{ route('board.store', $board->id )}}>
+    <form role="form" method="post" action={{ route('board.store', $board->id )}} enctype="multipart/form-data">
         {{ csrf_field() }}
         @if(is_null(Auth::user()))
         <div class="nologin"> <!-- 추가된 부분 -->
@@ -94,10 +94,17 @@
     		    <input type="url" class="form-control" id="link2" name="link2" placeholder="링크 2">
     		</div>
 
-    		{{-- <div class="form-group mb10 col-xs-5">
-    		    <label for="file" class="sr-only">파일첨부</label>
-    		    <input type="file" id="file" name="file[]" placeholder="파일첨부">
-    		</div> --}}
+    		<div class="form-group mb10 col-xs-5">
+                @for($i=0; $i<$board->upload_count; $i++)
+        		    <label for="attach_file" class="sr-only">파일첨부</label>
+        		    <input type="file" id="attach_file" name="attach_file[]" placeholder="파일첨부"
+                        title="파일첨부 {{ $i + 1 }} : 용량 {{ $board->upload_size }} 바이트 이하만 업로드 가능">
+                    @if($board->use_file_content)
+                        <input type="text" class="form-control" id="file_content" name="file_content[]"
+                        title="파일 설명을 입력해 주세요." size="50" placeholder="파일 설명">
+                    @endif
+                @endfor
+    		</div>
     	</div>
 
     	<div class="clearfix">

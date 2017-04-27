@@ -46,9 +46,7 @@ class LoginSuccessful
         }
 
         // 회원 가입인 경우($isUserJoin == true) 로그인 포인트를 부여하지 않음.
-        $isUserJoin = Point::isUserJoin($event->user);
-
-        if($isUserJoin == false) {
+        if( !Point::isUserJoin($event->user) ) {
             // 당일 첫 로그인 포인트 부여
             Point::addPoint([
                 'user' => $event->user,

@@ -129,7 +129,7 @@ class Point extends Model
     }
 
     // 포인트 테이블에 포인트 부여내역을 기록
-    public static function loggingPoint($user, $pointToGive, $rel_table, $rel_action, $content)
+    public static function loggingPoint($user, $pointToGive, $relTable, $relEmail ,$relAction, $content)
     {
         Point::create([
             'user_id' => $user->id,
@@ -138,9 +138,9 @@ class Point extends Model
             'point' => $pointToGive,
             'user_point' => $user->point,
             'expire_date' => date('9999-12-31'),
-            'rel_table' => $rel_table,
-            'rel_email' => $user->email,
-            'rel_action' => $rel_action,
+            'rel_table' => $relTable,
+            'rel_email' => $relEmail,
+            'rel_action' => $relAction,
         ]);
     }
 
@@ -157,6 +157,8 @@ class Point extends Model
             $point = $configJoin->recommendPoint;
         } else if($pointType == 'login') {
             $point = $configHomepage->loginPoint;
+        } else {
+            $point = $pointType;
         }
 
         return $point;
@@ -202,7 +204,7 @@ class Point extends Model
             if(is_null($existPoint)) {
                 $pointToGive = static::pointType($data['type']);
                 $user->point += $pointToGive;   // 유저 테이블에 포인트 반영
-                static::loggingPoint($user, $pointToGive, $data['relTable'], $data['relAction'], $data['content']);     // 포인트 내역 기록
+                static::loggingPoint($user, $pointToGive, $data['relTable'], $data['relEmail'], $data['relAction'], $data['content']);     // 포인트 내역 기록
             }
 
             $user->save();

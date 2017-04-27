@@ -16,6 +16,7 @@
  <form name="fBoardList" id="fBoardList" action="" onsubmit="return formBoardListSubmit(this);" method="post" target="move">
     <input type="hidden" id='_method' name='_method' value='post' />
     <input type="hidden" id='type' name='type' value='' />
+    <input type="hidden" id='page' name='page' value='{{ $writes->currentPage() }}' />
     {{ csrf_field() }}
 
 	<div class="clearfix">
@@ -32,9 +33,9 @@
     					</button>
     				</a>
     				<ul class="dropdown-menu" role="menu">
-                        <li><input type="submit" name="btn_submit" value="선택삭제" onclick="document.pressed=this.value"/></li>
-    	                <li><input type="submit" name="btn_submit" value="선택복사" onclick="document.pressed=this.value"/></li>
-                        <li><input type="submit" name="btn_submit" value="선택이동" onclick="document.pressed=this.value"/></li>
+                        <li><input type="submit" value="선택삭제" onclick="document.pressed=this.value"/></li>
+    	                <li><input type="submit" value="선택복사" onclick="document.pressed=this.value"/></li>
+                        <li><input type="submit" value="선택이동" onclick="document.pressed=this.value"/></li>
     	                <li><a href="{{ route('admin.boards.edit', $board->id) }}">게시판 설정</a></li>
     	            </ul>
     			</li>
@@ -84,8 +85,14 @@
                 <tr>
             @endif
                 <!-- 공지사항 기능 넣으면 공지사항 까지 포함시켜서 넘버링 -->
-                {{-- <td class="bd_num">{{ $writes->total() - ( $write->currentPage() - 1 )*$board->page_rows - $noticeCount - $loop->index }}</td> --}}
-				<td class="bd_num">{{ $writes->total() - ( $writes->currentPage() - 1 ) * $board->page_rows - $loop->index }}</td>
+                <td class="bd_num">
+                    @if(in_array($write->id, $notices))
+                        공지
+                    @else
+                        {{ $writes->total() - ($writes->currentPage() - 1) * $board->page_rows - $loop->index }}
+                    @endif
+                </td>
+				{{-- <td class="bd_num">{{ $writes->total() - ( $writes->currentPage() - 1 ) * $board->page_rows - $loop->index }}</td> --}}
                 @if(session()->get('admin'))
     				<td class="bd_check"><input type="checkbox" name="chk_id[]" class="writeId" value='{{ $write->id }}'></td>
                 @endif

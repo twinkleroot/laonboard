@@ -334,7 +334,7 @@ class Board extends Model
         session()->put('writeIds',$request->chk_id);
 
         return [
-            'boards' => Board::get(),
+            'boards' => Board::orderBy('group_id', 'desc')->orderBy('subject', 'desc')->get(),
             'currentBoard' => Board::find($boardId),
             'type' => $request->type,
         ];

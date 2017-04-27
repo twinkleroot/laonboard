@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Exception;
 use App\User;
 use App\Board;
+use App\Point;
 use App\Common\Util;
 use App\Common\StrEncrypt;
 use App\Common\CustomPaginator;
@@ -55,14 +56,14 @@ class Write extends Model
         $notices = explode(',', $this->board->notice);
 
         $writes;
-        try {
+        // try {
             $writes = $this->getWrites($writeModel, $kind, $keyword, $request);
-        } catch (Exception $e) {
-            return [
-                'message' => '존재하지 않는 게시판입니다.',
-                'redirect' => '/'
-            ];
-        }
+        // } catch (Exception $e) {
+        //     return [
+        //         'message' => '존재하지 않는 게시판입니다.',
+        //         'redirect' => '/'
+        //     ];
+        // }
 
         return [
             'board' => $this->board,
@@ -83,15 +84,17 @@ class Write extends Model
         // 어떤 필드를 기준으로 정렬할 것인지
         $sortField = is_null($this->board->sort_field) ? 'num, reply' : $this->board->sort_field;
         // 문자열 암복호화 클래스 생성
-        $strEncrypt = new StrEncrypt();
+        // $strEncrypt = new StrEncrypt();
 
         // 검색
         if($kind != '' && $keyword != '') {
             if($kind == 'user_id') {
-                //암호화된 user_id를 복호화해서 검색한다.
-                $userId = $strEncrypt->decrypt($keyword);
-                // 검색 쿼리 붙이기
-                $query = $query->where($kind, $userId);
+                // 암호화된 user_id를 복호화해서 검색한다.
+                $userId = decrypt($keyword);    // 라라벨 기본 지원 decrypt
+                // $userId = $strEncrypt->decrypt($keyword);
+
+                // 검색 쿼리 붙여서 공지를 가장 먼저 보여주는 페이징
+                $writes = $this->customPaging($request, $query->where($kind, $userId), $sortField);
             } else if(str_contains($kind, '||')) { // 제목 + 내용으로 검색
                 $kinds = explode('||', preg_replace("/\s+/", "", $kind));
                 // 검색 쿼리 붙이기
@@ -114,42 +117,55 @@ class Write extends Model
                 $query = $query->where($kind, 'like', '%'.$keyword.'%');
             }
 
-            $writes = $query->orderByRaw($sortField)->paginate($this->board->page_rows);
+            if($kind != 'user_id') {
+                $writes = $query->orderByRaw($sortField)->paginate($this->board->page_rows);
+            }
+
         } else {
-            $currentPage = $request->has('page') ? $request->page : 1 ;
-            // 공지 글은 가장 앞에 나와야 하므로 컬렉션의 위치를 조절해서 수동으로 페이징 한다.
-            $totalWrites = $query->orderByRaw($sortField)->get();
-
-            // 컬렉션 분할 (공지 + 그 외)
-            $notices = explode(',', $this->board->notice);
-            // 공지 게시물들
-            $noticeWrites = collect();
-            $noticeWrites = $totalWrites->filter(function ($value, $key) {
-                $notices = explode(',', $this->board->notice);
-                return in_array($value->id, $notices);
-            });
-            // 그 외 게시물들
-            $filteredWrites = collect();
-            $filteredWrites = $totalWrites->reject(function ($value, $key) {
-                $notices = explode(',', $this->board->notice);
-                return in_array($value->id, $notices);
-            });
-
-            // 컬렉션 합치기
-            $mergeWrites = $noticeWrites->merge($filteredWrites);
-
-            // 수동으로 페이징할 땐 컬렉션을 잘라주어야 한다.
-            $sliceWrites = $mergeWrites->slice($this->board->page_rows * ($currentPage - 1), $this->board->page_rows);
-
-            $writes = new CustomPaginator($sliceWrites, count($mergeWrites), $this->board->page_rows, $currentPage);
-            $writes->setPath($request->url());
+            // 공지를 가장 먼저 보여주는 수동 페이징
+            $writes = $this->customPaging($request, $query, $sortField);
         }
 
 
         // 뷰에 내보내는 아이디 검색의 링크url에는 암호화된 id를 링크로 건다.
         foreach($writes as $write) {
-            $write->user_id = $strEncrypt->encrypt($write->user_id);
+            // $write->user_id = $strEncrypt->encrypt($write->user_id);
+            $write->user_id = encrypt($write->user_id); // 라라벨 기본 지원 encrypt
         }
+
+        return $writes;
+    }
+
+    // 수동 페이징
+    public function customPaging($request, $query, $sortField)
+    {
+        $currentPage = $request->has('page') ? $request->page : 1 ;
+        // 공지 글은 가장 앞에 나와야 하므로 컬렉션의 위치를 조절해서 수동으로 페이징 한다.
+        $totalWrites = $query->orderByRaw($sortField)->get();
+
+        // 컬렉션 분할 (공지 + 그 외)
+        $notices = explode(',', $this->board->notice);
+        // 공지 게시물들
+        $noticeWrites = collect();
+        $noticeWrites = $totalWrites->filter(function ($value, $key) {
+            $notices = explode(',', $this->board->notice);
+            return in_array($value->id, $notices);
+        });
+        // 그 외 게시물들
+        $filteredWrites = collect();
+        $filteredWrites = $totalWrites->reject(function ($value, $key) {
+            $notices = explode(',', $this->board->notice);
+            return in_array($value->id, $notices);
+        });
+
+        // 컬렉션 합치기
+        $mergeWrites = $noticeWrites->merge($filteredWrites);
+
+        // 수동으로 페이징할 땐 컬렉션을 잘라주어야 한다.
+        $sliceWrites = $mergeWrites->slice($this->board->page_rows * ($currentPage - 1), $this->board->page_rows);
+
+        $writes = new CustomPaginator($sliceWrites, count($mergeWrites), $this->board->page_rows, $currentPage);
+        $writes->setPath($request->url());
 
         return $writes;
     }
@@ -186,7 +202,7 @@ class Write extends Model
     public function storeWrite($writeModel, $request)
     {
         $inputData = $request->all();
-        $inputData = array_except($inputData, '_token');    // csrf 토큰 값 제외
+        $inputData = array_except($inputData, ['_token', 'file_content', 'attach_file']);    // csrf 토큰 값 제외
 
         $user = Auth::user();
         $userId = 1;    // $userId가 1이면 비회원
@@ -239,7 +255,23 @@ class Write extends Model
             //     'parent' => 원글의 글번호,
             //     'hit' => 0
             // ];
+            $relAction = '댓글';
+            $content = $writeModel->board->subject . ' ' . '원글-' . $lastInsertId . ' 댓글쓰기';
+            $pointType = $writeModel->board->comment_point;
+        } else {
+            $relAction = '쓰기';
+            $content = $writeModel->board->subject . ' ' . $lastInsertId . ' 글쓰기';
+            $pointType = $writeModel->board->write_point;
         }
+        // 포인트 부여(글쓰기, 댓글)
+        Point::addPoint([
+            'user' => $user,
+            'relTable' => $writeModel->board->table_name,
+            'relEmail' => $lastInsertId,
+            'relAction' => $relAction,
+            'content' => $content,
+            'type' => $pointType,
+        ]);
 
         // 공지사항인 경우 boards에 등록하기
         if($request->has('notice')) {
@@ -266,7 +298,9 @@ class Write extends Model
 
         // 댓글일 경우 원글의 last에 최근 댓글 달린 시간을 업데이트한다.
 
-        return $writeModel->where('id', $lastInsertId)->update($toUpdateColumn);
+        $writeModel->where('id', $lastInsertId)->update($toUpdateColumn);
+
+        return $lastInsertId;
     }
 
     // (게시판) 글 선택 삭제

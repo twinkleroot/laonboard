@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Board;
 use App\Write;
 use App\Config;
+use App\BoardFile;
 use Exception;
 
 class BoardController extends Controller
@@ -14,8 +15,9 @@ class BoardController extends Controller
 
     public $writeModel;
     public $boardModel;
+    public $boardFileModel;
 
-    public function __construct(Request $request, Board $board)
+    public function __construct(Request $request, Board $board, BoardFile $boardFileModel)
     {
         $this->writeModel = new Write($request->boardId);
         if( !is_null($this->writeModel->board) ) {
@@ -23,6 +25,7 @@ class BoardController extends Controller
         }
 
         $this->boardModel = $board;
+        $this->boardFileModel = $boardFileModel;
     }
     /**
      * Display a listing of the resource.
@@ -66,8 +69,11 @@ class BoardController extends Controller
                 'message' => '너무 빠른 시간내에 게시물을 연속해서 올릴 수 없습니다.'
             ]);
         }
-        $this->writeModel->storeWrite($this->writeModel, $request);
+        $lastInsertId = $this->writeModel->storeWrite($this->writeModel, $request);
 
+        if(count($request->attach_file) > 0) {
+            $this->boardFileModel->storeBoardFile($request, $boardId, $lastInsertId);
+        }
         return redirect(route('board.index', $boardId));
     }
 
@@ -100,7 +106,7 @@ class BoardController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request  $request, $boardId)
+    public function update(Request $request, $boardId)
     {
         //
     }
@@ -111,11 +117,15 @@ class BoardController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($boardId, string $writeId)
+    public function destroy($boardId, string $writeId, Request $request)
     {
         $message = $this->writeModel->selectDeleteWrites($this->writeModel, $writeId);
 
-        return redirect(route('board.index', $boardId));
+        $returnUrl = $request->page == 1
+                    ? route('board.index', $boardId)
+                    : '/board/' . $boardId . '?page=' . $request->page ;
+                    
+        return redirect($returnUrl);
     }
 
     // 게시물 복사 및 이동 폼

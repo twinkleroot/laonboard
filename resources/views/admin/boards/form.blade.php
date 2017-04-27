@@ -717,7 +717,7 @@
                         </tr>
                     </table>
                     <div class="form-group">
-                        <div class="col-md-6 col-md-offset-5">`
+                        <div class="col-md-6 col-md-offset-5">
                             <button type="submit" class="btn btn-primary">
                                 확인
                             </button>
