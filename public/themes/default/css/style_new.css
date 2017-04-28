@@ -7,6 +7,12 @@ body {
   background:#efefef;
   font-family:'Nanum Gothic','돋움', sans-serif;
 }
+.empty_table {
+	line-height: 150px;
+	color: #587ef6;
+	font-size: 14px;
+	font-weight: 600;
+}
 
 /* margin reset */
 .mb0  {margin-bottom: 0;}
@@ -706,4 +712,4 @@ body {
 }
 .save-delete:hover {
 	background: none !important;
-} 
+}
