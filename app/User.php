@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\SocialLogin;
 use App\Point;
 use App\Group;
+use App\Write;
 use Auth;
 use DB;
 use App\Common\Util;
@@ -72,6 +73,13 @@ class User extends Authenticatable
     public function points()
     {
         return $this->hasMany(Point::class);
+
+    }
+
+    // 포인트 모델과의 관계설정
+    public function writes()
+    {
+        return $this->hasMany(Write::class);
 
     }
 

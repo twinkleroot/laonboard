@@ -14,20 +14,20 @@ class CreateBoardFiles extends Migration
     public function up()
     {
         Schema::create('board_files', function (Blueprint $table) {
-            $table->integer('id');
             $table->integer('board_id');
             $table->integer('write_id');
+            $table->integer('board_file_no');
             $table->string('source');
             $table->string('file');
-            $table->integer('download');
-            $table->text('content');
+            $table->integer('download')->default(0);
+            $table->text('content')->nullable();
             $table->integer('filesize');
-            $table->integer('width');
-            $table->smallInteger('height');
-            $table->tinyInteger('type');
+            $table->integer('width')->default(0);
+            $table->smallInteger('height')->default(0);
+            $table->tinyInteger('type')->default(0);
             $table->dateTime('created_at');
 
-            $table->primary(['id', 'board_id', 'write_id']);
+            $table->primary(['board_id', 'write_id', 'board_file_no']);
         });
     }
 

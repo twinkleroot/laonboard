@@ -2,8 +2,7 @@
  return array (
 
   // 상수
-  'DIR_PERMISSION' => '0755',
-  'FILE_PERMISSION' => '0644',
+  'IP_DISPLAY' => '\\1.♡.\\3.\\4',
 
   // 홈페이지 기본 환경 설정
   'title' => '라라벨 그누보드',

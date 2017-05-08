@@ -166,7 +166,7 @@ Route::get('message', ['as' => 'message', 'uses' => 'Message\MessageController@m
 // 커뮤니티 게시판
 // 글 목록 + 검색
 Route::get('board/{boardId}', ['as' => 'board.index', 'uses' => 'Board\BoardController@index'])
-    ->middleware('level.board:list_level');
+    ->middleware(['level.board:list_level', 'valid.board']);
 // 글 읽기
 Route::get('board/{boardId}/write/{writeId}', ['as' => 'board.show', 'uses' => 'Board\BoardController@show'])
     ->middleware('level.board:read_level');

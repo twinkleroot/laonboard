@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Common\Util;
 use App\Group;
 use App\Write;
+use DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 
@@ -86,7 +87,8 @@ class Board extends Model
         ];
 
         return [
-            'config' => Config::getConfig('config.homepage'),
+            'homePageConfig' => Config::getConfig('config.homepage'),
+            'boardConfig' => $config,
             'board' => $board,      // 배열
             'groups' => $groups,
             'selectedGroup' => $selectedGroup,
@@ -104,7 +106,8 @@ class Board extends Model
         $keyword = Group::find($board->group_id)->group_id;
 
         return [
-            'config' => Config::getConfig('config.homepage'),
+            'homePageConfig' => Config::getConfig('config.homepage'),
+            'boardConfig' => Config::getConfig('config.board'),
             'board' => $board,      // 객체
             'groups' => $groups,
             'keyword' => $keyword,
@@ -136,6 +139,13 @@ class Board extends Model
         $data = Util::exceptNullData($data);
 
         $board = Board::findOrFail($id);
+
+        // 기존에 1이었던 값들 중에서 입력이 안들어 온 필드는 0으로 업데이트 해야한다.
+        foreach($board->attributes as $key => $value) {
+            if($value == 1 && !isset($data[$key])) {
+                $data = array_add($data, $key, 0);
+            }
+        }
 
         // 그룹 적용, 전체 적용 수행(그리고 사용한 필드를 배열에서 제외시킴.)
         $data = $this->applyBoard($data, 'chk_group');
@@ -218,7 +228,12 @@ class Board extends Model
     // (게시판 관리) 선택 삭제
     public function deleteBoards($ids)
     {
+        $idArr = explode(',', $ids);
+        foreach($idArr as $id) {
+            Schema::dropIfExists('write_'. Board::find($id)->table_name);
+        }
         $result = Board::whereRaw('id in (' . $ids . ') ')->delete();
+
         if($result > 0) {
             return '선택한 게시판이 삭제되었습니다.';
         } else {
@@ -271,11 +286,11 @@ class Board extends Model
         $tableNameAddPrefix = 'write_' . $tableName;
         if(!Schema::hasTable($tableNameAddPrefix)) {
             Schema::create($tableNameAddPrefix, function (Blueprint $table) {
-                $table->increments('id');
-                $table->integer('num')->default(0);
-                $table->string('reply', 10)->nullable();
-                $table->integer('parent')->unsigned()->default(0);
-                $table->tinyInteger('is_comment')->default(0);
+                $table->increments('id')->index();
+                $table->integer('num')->default(0)->index();
+                $table->string('reply', 10)->default('')->index();
+                $table->integer('parent')->unsigned()->default(0)->index();
+                $table->tinyInteger('is_comment')->default(0)->index();
                 $table->integer('comment')->unsigned()->default(0);
                 $table->string('comment_reply', 5)->nullable();
                 $table->string('ca_name')->nullable();
@@ -322,6 +337,10 @@ class Board extends Model
                 $table->string('value_10')->nullable();
             });
 
+            // 라라벨 기본 API에서 mysql의 set type을 지원하지 않으므로 enum으로 생성하고 set으로 변경한다.
+            // $table_prefix = DB::getTablePrefix();
+            DB::statement("ALTER TABLE " . $tableNameAddPrefix . " CHANGE `option` `option` SET('html1', 'html2', 'secret', 'mail');");
+
             return true;
         } else {
             return false;
@@ -331,7 +350,8 @@ class Board extends Model
     // (게시판) 관리자의 선택 복사, 이동에 필요한 파라미터
     public function getMoveParams($boardId, $request)
     {
-        session()->put('writeIds',$request->chk_id);
+        // 세션에 해당 게시물 아이디들을 보관
+        session()->put('writeIds', $request->chk_id);
 
         return [
             'boards' => Board::orderBy('group_id', 'desc')->orderBy('subject', 'desc')->get(),

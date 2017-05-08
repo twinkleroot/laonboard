@@ -42,14 +42,23 @@
     				<input type="text" class="form-control" id="homepage" name="homepage" placeholder="홈페이지">
     			</div>
     		</div>
-    		<div class="form-group mb10 row">
-    			<div class="col-xs-3">
-    				<select class="form-control">
-    					<option>분류</option>
-    				</select>
-    			</div>
-    		</div>
     	</div> <!-- 추가된 부분 END -->
+        @endif
+
+        @if($board->use_category == 1)
+            <div class="form-group mb10 row">
+                <div class="col-xs-3">
+                    <select class="form-control" name="ca_name" required>
+                        <option value>분류</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category }}">{{ $category }}</option>
+                        @endforeach
+                        @if(session()->get('admin'))
+                            <option value="공지">공지</option>
+                        @endif
+                    </select>
+                </div>
+            </div>
         @endif
 
     	<div class="row">
@@ -114,11 +123,16 @@
         				<input type="checkbox" id="notice" name="notice" value="1"> 공지
         			</label>
                 @endif
-    			<label class="checkbox-inline">
-    				<input type="checkbox" id="" value="option2"> html
+    			<label for="html" class="checkbox-inline">
+    				<input type="checkbox" id="html" name="html" onclick="htmlAutoBr(this);" value=""> html
     			</label>
-    			<label class="checkbox-inline">
-    				<input type="checkbox" id="" value="option3"> 답변메일받기
+                @if($board->use_secret == 1)
+                    <label for="secret" class="checkbox-inline">
+        				<input type="checkbox" id="secret" name="secret" value="secret"> 비밀글
+        			</label>
+                @endif
+    			<label for="mail" class="checkbox-inline">
+    				<input type="checkbox" id="mail" name="mail" value="mail"> 답변메일받기
     			</label>
     		</div>
     		<div class="pull-right">
@@ -127,4 +141,17 @@
     		</div>
     	</div>
     </form>
+<script>
+function htmlAutoBr(obj) {
+    if (obj.checked) {
+        var result = confirm("자동 줄바꿈을 하시겠습니까?\n\n자동 줄바꿈은 게시물 내용중 줄바뀐 곳을<br>태그로 변환하는 기능입니다.");
+        if (result)
+            obj.value = "html2";
+        else
+            obj.value = "html1";
+    } else {
+        obj.value = "";
+    }
+}
+</script>
 @endsection
