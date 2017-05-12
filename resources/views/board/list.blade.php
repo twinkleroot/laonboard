@@ -91,14 +91,12 @@
                 @endif
 				<td>
 					<span class="bd_subject">
-                        {{-- <a href="{{ route('board.show', ['boardId' => $board->id, 'writeId' => $write->id]) }}?page={{ $writes->currentPage() }}">{{ $write->subject }}</a> --}}
-                        {{-- <a href="{{ route('board.show', ['boardId' => $board->id, 'writeId' => $write->id]) }}">{{ $write->subject }}</a> --}}
-                        @if($writes->currentPage() > 1 && $viewParams != '')
-                            <a href="/board/{{ $board->id }}/write/{{ $write->id }}?{{ $viewParams }}&amp;page={{ $writes->currentPage() }}">{{ $write->subject }}</a>
-                        @elseif($viewParams == '')
-                            <a href="/board/{{ $board->id }}/write/{{ $write->id }}">{{ $write->subject }}</a>
+                        {{-- <a href="{{ route('board.view', ['boardId' => $board->id, 'writeId' => $write->id]) }}?page={{ $writes->currentPage() }}">{{ $write->subject }}</a> --}}
+                        {{-- <a href="{{ route('board.view', ['boardId' => $board->id, 'writeId' => $write->id]) }}">{{ $write->subject }}</a> --}}
+                        @if($viewParams == '')
+                            <a href="/board/{{ $board->id }}/view/{{ $write->id }}">{{ $write->subject }}</a>
                         @else
-                            <a href="/board/{{ $board->id }}/write/{{ $write->id }}?{{ $viewParams }}">{{ $write->subject }}</a>
+                            <a href="/board/{{ $board->id }}/view/{{ $write->id }}?{{ $viewParams }}">{{ $write->subject }}</a>
                         @endif
                         {{-- 글올린시간 + 설정에 있는 신규 글 시간 > 현재 시간 --}}
                         @if(date($write->created_at->addHours(24)) > date("Y-m-d H:i:s", time()) && $board->new != 0 )
@@ -252,7 +250,7 @@ function formBoardListSubmit(f) {
         }
 
         f.removeAttribute("target");
-        f.action = '/board/{{ $board->id }}/write/' + selected_id_array;
+        f.action = '/board/{{ $board->id }}/delete/' + selected_id_array;
         $('#_method').val('DELETE');
     }
 

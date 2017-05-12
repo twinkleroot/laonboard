@@ -61,5 +61,6 @@ class Kernel extends HttpKernel
         // 유저의 레벨과 게시판 마다의 레벨 기준을 비교해서 접근 가능 여부 판단
         'level.board' => \App\Http\Middleware\CheckBoardLevel::class,
         'valid.board' => \App\Http\Middleware\CheckValidBoard::class,
+        'secret.board' => \App\Http\Middleware\CheckSecretView::class,
     ];
 }

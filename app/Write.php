@@ -55,6 +55,7 @@ class Write extends Model
     // (게시판) index 페이지에서 필요한 파라미터 가져오기
     public function getBbsIndexParams($writeModel, $request)
     {
+        // 글 목록에서 글 보기로 넘어갈 때 가지고 있어야 할 파라미터를 가지는 배열
         $viewParams = [];
 
         // 전체 카테고리 리스트
@@ -71,12 +72,14 @@ class Write extends Model
             $viewParams['category'] = 'category='. $currenctCategory;
         }
 
+        // 검색 기준
         $kind = '';
         if($request->has('kind')) {
             $kind = $request->kind;
             $viewParams['kind'] = 'kind='. $kind;
         }
 
+        // 검색어
         $keyword = '';
         if($request->has('keyword')) {
             $keyword = $request->keyword;
@@ -93,6 +96,10 @@ class Write extends Model
                 return [
                     'message' => $result['message'],
                 ];
+            } else {
+                if($result['writes']->currentPage() > 1) {
+                    $viewParams['page'] = 'page='. $result['writes']->currentPage();
+                }
             }
         } catch (Exception $e) {
             return [
@@ -119,28 +126,50 @@ class Write extends Model
     // (게시판 리스트) 해당 커뮤니티 게시판 모델을 가져온다. (검색 포함)
     public function getWrites($writeModel, $request, $kind, $keyword, $currenctCategory)
     {
+        // select ~ from ~ where까지 얻어온다.
+        $query = $this->getWritesWhere($writeModel, $kind, $keyword, $currenctCategory);
+
+        // 어떤 필드를 기준으로 정렬할 것인지
+        $sortField = $this->getSortField();
+
+        // 최종 리스트 컬렉션을 가져온다.
+        $writes;
+        if($this->board->notice != '') {
+            $writes = $this->customPaging($request, $query, $sortField);
+        } else {
+            $writes = $query->orderByRaw($sortField)->paginate($this->board->page_rows);
+        }
+
+        // 뷰에 내보내는 아이디 검색의 링크url에는 암호화된 id를 링크로 건다.
+        foreach($writes as $write) {
+            $write->user_id = encrypt($write->user_id);     // 라라벨 기본 지원 encrypt
+        }
+
+        return [
+            'writes' => $writes,
+            'message' => '',
+        ];
+    }
+
+    // (게시판 리스트) select ~ from ~ where까지 얻어온다.
+    public function getWritesWhere($writeModel, $kind, $keyword, $currenctCategory)
+    {
+        // 기본 ( 공지는 기본만 가져간다. )
         $query = $writeModel
                 ->selectRaw($writeModel->table.'.*, users.level as user_level')
                 ->leftJoin('users', 'users.id', '=', $writeModel->table.'.user_id');
 
-        // 어떤 필드를 기준으로 정렬할 것인지
-        $sortField = is_null($this->board->sort_field) ? 'num, reply' : $this->board->sort_field;
-        // 문자열 암복호화 클래스 생성
-        // $strEncrypt = new StrEncrypt();
-
+        // + 카테고리
         if($currenctCategory != '') {
             $query = $query->where('ca_name', $currenctCategory);
         }
 
-        // 검색 - 공지를 표시해주지 않는다.
+        // + [카테고리] + 검색
         if($kind != '' && $keyword != '') {
             if($kind == 'user_id') {
                 // 암호화된 user_id를 복호화해서 검색한다.
                 $userId = decrypt($keyword);    // 라라벨 기본 지원 decrypt
-                // $userId = $strEncrypt->decrypt($keyword);
 
-                // 검색 쿼리 붙여서 공지를 가장 먼저 보여주는 페이징
-                // $writes = $this->customPaging($request, $query->where($kind, $userId), $sortField);
                 $query = $query->where('user_id', $userId);
             } else if(str_contains($kind, '||')) { // 제목 + 내용으로 검색
                 $kinds = explode('||', preg_replace("/\s+/", "", $kind));
@@ -166,29 +195,15 @@ class Write extends Model
             } else {
                 $query = $query->where($kind, 'like', '%'.$keyword.'%');
             }
-
-            // if($kind != 'user_id') {
-                $writes = $query->orderByRaw($sortField)->paginate($this->board->page_rows);
-            // }
-        // 분류 선택
-        } else if($currenctCategory != '') {
-            $writes = $query->orderByRaw($sortField)->paginate($this->board->page_rows);
-        } else {
-            // 공지를 가장 먼저 보여주는 수동 페이징
-            $writes = $this->customPaging($request, $query, $sortField);
         }
 
+        return $query;
+    }
 
-        // 뷰에 내보내는 아이디 검색의 링크url에는 암호화된 id를 링크로 건다.
-        foreach($writes as $write) {
-            // $write->user_id = $strEncrypt->encrypt($write->user_id);
-            $write->user_id = encrypt($write->user_id);     // 라라벨 기본 지원 encrypt
-        }
-
-        return [
-            'writes' => $writes,
-            'message' => '',
-        ];
+    // order by 절에 들어갈 내용 가져오기
+    public function getSortField()
+    {
+        return is_null($this->board->sort_field) ? 'num, reply' : $this->board->sort_field;
     }
 
     // 수동 페이징
@@ -238,13 +253,14 @@ class Write extends Model
             $write->hit = $result;
         }
 
+        // 글쓰기 할때 html 체크에 따라 글 내용 보여주는 방식을 다르게 한다.
+        // html = 0 - 체크안함, 1 - 체크 후 취소, 2 - 체크 후 확인
         $html = 0;
         if (strstr($write->option, 'html1')) {
             $html = 1;
         } else if (strstr($write->option, 'html2')) {
             $html = 2;
         }
-
         $write->content = Util::convertContent($write->content, $html);
 
         // 관리자 여부에 따라 ip 다르게 보여주기
@@ -254,11 +270,125 @@ class Write extends Model
             }
         }
 
+        // 서명 사용하면 글쓴이의 서명을 담는다.
+        $signature = '';
+        if($this->board->use_signature && $write->user_id > 0) {
+            $user = User::find($write->user_id);
+            if(!is_null($user)) {
+                $signature = $user->signature;
+            }
+        }
+
+        // 첨부 파일과 이미지 파일 분류
+        $imgExtension = Config::getConfig('config.board')->imageExtension;
+        $boardFiles = [];
+        $imgFiles = [];
+        if($write->file > 0) {
+            $boardFiles = BoardFile::where([
+                'board_id' => $boardId,
+                'write_id' => $writeId,
+            ])->get();
+
+            foreach($boardFiles as $boardFile) {
+                // 첨부파일이 이미지라면 업로드된 파일의 확장자를 가져와서
+                // 게시판 기본설정에 설정한 업로드 가능한 이미지 확장자인지 검사하고
+                // 이미지가 아니라면 통과시킨다.
+                $filePiece = explode('.', $boardFile->file);
+                if( !str_contains($imgExtension, last($filePiece))) {
+                    continue;
+                }
+                // 이미지 경로를 가져와서 썸네일만든 후 서버에 저장
+                $imageFileInfo = Util::getViewThumbnail($this->board, $boardFile);
+
+                array_push($imgFiles, $imageFileInfo);
+                // 이미지 파일은 파일 첨부 컬렉션에서는 제외
+                $boardFiles = $boardFiles->reject(function ($value, $key) use ($boardFile) {
+                    return $value->file == $boardFile->file;
+                });
+            }
+        }
+
         return [
             'board' => $this->board,
             'view' => $write,
             'request' => $request,
+            'signature' => $signature,
+            'boardFiles' => $boardFiles,
+            'imgFiles' => $imgFiles,
         ];
+    }
+
+    // 이전 글, 다음 글 경로 가져오기
+    public function getPrevNextView($writeModel, $boardId, $writeId, $request)
+    {
+        $write = $writeModel->find($writeId);
+        // 파라미터 구하기
+        $params = Util::getParamsFromQueryString($request->server('QUERY_STRING'));
+
+        $kind = isset($params['kind']) ? $params['kind'] : '';
+        $keyword = isset($params['keyword']) ? $params['keyword'] : '';
+        $currenctCategory = isset($params['category']) ? $params['category'] : '';
+
+        // 이전 글 얻음
+        $sortField = 'num desc, reply desc';    // order by
+        $query = $this->getWritesWhere($writeModel, $kind, $keyword, $currenctCategory)
+            ->where('is_comment', 0);
+        $prevWrite = $query->where('num', $write->num)
+            ->where('reply', '<', is_null($write->reply) ? '' : $write->reply)
+            ->orderByRaw($sortField)
+            ->first();
+        if(is_null($prevWrite)) {
+            $query = $this->getWritesWhere($writeModel, $kind, $keyword, $currenctCategory)
+                ->where('is_comment', 0);
+            $prevWrite = $query->where('num', '<', $write->num)
+                ->orderByRaw($sortField)->first();
+        }
+
+        // 다음 글 얻음
+        $sortField = 'num, reply';              // order by
+        $query = $this->getWritesWhere($writeModel, $kind, $keyword, $currenctCategory)
+            ->where('is_comment', 0);
+        $nextWrite = $query->where('num', $write->num)
+            ->where('reply', '>', is_null($write->reply) ? '' : $write->reply)
+            ->orderByRaw($sortField)
+            ->first();
+        if(is_null($nextWrite)) {
+            $query = $this->getWritesWhere($writeModel, $kind, $keyword, $currenctCategory)
+                ->where('is_comment', 0);
+            $nextWrite = $query->where('num', '>', $write->num)
+                ->orderByRaw($sortField)->first();
+        }
+
+        // 구한 이전 글 정보로 이전 글 url을 만든다.
+        if(is_null($prevWrite)) {
+            $prevUrl = '';
+        } else {
+            $prevUrl = $this->getPrevNextUrl($boardId, $request, $prevWrite);
+        }
+
+        // 구한 다음 글 정보로 다음 글 url을 만든다.
+        if(is_null($nextWrite)) {
+            $nextUrl = '';
+        } else {
+            $nextUrl = $this->getPrevNextUrl($boardId, $request, $nextWrite);
+        }
+
+        return [
+            'prevUrl' => $prevUrl,
+            'nextUrl' => $nextUrl,
+        ];
+    }
+
+    // 이전 or 다음 글 url을 만든다.
+    public function getPrevNextUrl($boardId, $request, $write)
+    {
+        $url = route('board.view', ['boardId' => $boardId, 'writeId' => $write->id ]);
+
+        if($request->server('QUERY_STRING') != '') {
+           $url .= '?'. $request->server('QUERY_STRING');
+        }
+
+        return $url;
     }
 
     // 글 읽기 전 프로세스
@@ -266,11 +396,12 @@ class Write extends Model
     {
         $sessionName = 'session_view_'. $this->board->table_name. '_'. $write->id;
         $hit = $write->hit;
-        if(!session()->get($sessionName)) {
+        $user = auth()->user();
+        if(!session()->get($sessionName) && $user->id != $write->user_id) {
             // 조회수 증가
             $hit = $this->increaseHit($write);
             // 포인트 계산(차감)
-            $message = $this->calculatePoint($write, $request);
+            $message = $this->calculatePoint($write, $request, 'read');
 
             if($message != '') {
                 return $message;
@@ -293,36 +424,130 @@ class Write extends Model
         return $hit;
     }
 
-    // 포인트 계산(차감)
-    public function calculatePoint($write, $request)
+    // 소비성 포인트 계산(글 읽기, 파일 다운로드)
+    public function calculatePoint($write, $request, $type)
     {
         $user = auth()->user();
+        $boardlevel = 0;
+        $useBoardPoint = 0;
+        $action = '';
+        $contentPiece = '';
+        switch ($type) {
+            case 'read':
+                $boardlevel = $this->board->read_level;
+                $boardPoint = $this->board->read_point;
+                $action = '읽기';
+                $contentPiece = ' 글읽기';
+                break;
+            case 'download':
+                $boardlevel = $this->board->download_level;
+                $boardPoint = $this->board->download_point;
+                $action = '다운로드';
+                $contentPiece = ' 파일 다운로드';
+                break;
+            default:
+                # code...
+                break;
+        }
         // 작성자가 본인이면 통과
         if($write->user_id > 0 && $write->user_id == $user->id) {
             ;
-        } else if(is_null($user) && $this->board->read_level == 1 && $write->ip == $request->ip()) {
+        } else if(is_null($user) && $boardlevel == 1 && $write->ip == $request->ip()) {
             ;
         } else {
-            // 글읽기 포인트가 설정되어 있다면
+            // 포인트 사용 && 소모되는 포인트가 있는지 && 현재 사용자가 갖고 있는 포인트로 사용 가능한지 검사
             if (Config::getConfig('config.homepage')->usePoint
-                && $this->board->read_point
-                && $user->point + $this->board->read_point < 0) {
-                    return '보유하신 포인트('.number_format($user->point).')가 없거나 모자라서 글읽기('.number_format($this->board->read_point).')가 불가합니다.\\n\\n포인트를 모으신 후 다시 글읽기 해 주십시오.';
+                && $boardPoint
+                && $user->point + $boardPoint < 0) {
+                    return '보유하신 포인트('.number_format($user->point).')가 없거나 모자라서'. $contentPiece. '('.number_format($boardPoint).')가 불가합니다.\\n\\n포인트를 모으신 후 다시'.$contentPiece.' 해 주십시오.';
             }
 
             // 포인트 계산하기
-            // 포인트 부여(글쓰기, 댓글)
+            // 포인트 부여(글 읽기, 파일 다운로드)
             Point::addPoint([
                 'user' => $user,
                 'relTable' => $this->board->table_name,
                 'relEmail' => $write->id,
-                'relAction' => '읽기',
-                'content' => $this->board->subject . ' ' . $write->id . ' 글읽기',
-                'type' => $this->board->read_point,
+                'relAction' => $action,
+                'content' => $this->board->subject . ' ' . $write->id . $contentPiece,
+                'type' => $boardPoint,
             ]);
         }
 
         return '';
+    }
+
+    // 글 읽기 중 링크 연결
+    public function beforeLink($writeModel, $writeId, $linkNo)
+    {
+        $write = $writeModel->find($writeId);
+        $linkUrl = '';
+        if(!$write['link'.$linkNo]) {
+            return [
+                'message' => '링크가 없습니다.',
+            ];
+        }
+
+        // 링크 연결수 증가
+        $sessionName = 'session_link_'. $this->board->table_name. '_'. $write->id. '_'. $linkNo;
+        $user = auth()->user();
+        if(!session()->get($sessionName)) {
+            $this->increaseLinkHit($write, $linkNo);
+            session()->put($sessionName, true);
+        }
+
+        // 글에 있는 링크를 링크 페이지로 넘김
+        $linkUrl = $write['link'.$linkNo];
+
+        return [
+            'linkUrl' => $linkUrl,
+        ];
+    }
+
+    // 링크 연결수 증가
+    public function increaseLinkHit($write, $linkNo)
+    {
+        $linkHit = $write['link'. $linkNo. '_hit'] + 1;
+        DB::table('write_'. $this->board->table_name)
+            ->where('id', $write->id)
+            ->update(['link'. $linkNo. '_hit' => $linkHit]);
+
+        return $linkHit;
+    }
+
+    // 다운로드시 처리할 내용
+    public function beforeDownload($request, $writeModel, $boardId, $writeId, $fileNo)
+    {
+        $file = BoardFile::where([
+            'board_id' => $boardId,
+            'write_id' => $writeId,
+            'board_file_no' => $fileNo,
+            ])->first();
+
+        $user = auth()->user();
+        $write = $writeModel->find($writeId);
+        $sessionName = 'session_download_'. $this->board->table_name. '_'. $write->id. '_'. $fileNo;
+        if(!session()->get($sessionName)) {
+            // 포인트 차감
+            $message = $this->calculatePoint($write, $request, 'download');
+
+            // 포인트 관련 에러 메세지가 있으면 출력함
+            if($message != '') {
+                return [ 'message' => $message ];
+            }
+
+            // 다운로드 횟수 증가
+            $file->where([
+                'board_id' => $boardId,
+                'write_id' => $writeId,
+                'board_file_no' => $fileNo,
+            ])->update(['download' => $file->download + 1]);
+
+
+            session()->put($sessionName, true);
+        }
+
+        return $file;
     }
 
     // (게시판) 글 쓰기 페이지에서 필요한 파라미터 가져오기
@@ -434,7 +659,7 @@ class Write extends Model
         // 회원 글쓰기 일 때
         if( !is_null($user) ) {
             // 실명을 사용할 때
-            if($this->board->use_name) {
+            if($this->board->use_name && !is_null($user->name)) {
                 $name = $user->name;
             } else {
                 $name = $user->nick;

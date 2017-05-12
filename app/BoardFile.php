@@ -48,7 +48,7 @@ class BoardFile extends Model
             }
 
             // 로컬 저장소에 파일 저장, config/filesystems.php에서 설정 가능
-            // 기본 설정 : storage/app/게시판테이블명/파일이름 으로 저장됨
+            // 기본 설정 : storage/app/public/게시판테이블명/파일이름 으로 저장됨
             $file->storeAs(Board::find($boardId)->table_name, $file->hashName());
 
             $uploadFile = [
@@ -70,6 +70,14 @@ class BoardFile extends Model
         }
 
         return $message;
+    }
+
+    public function getFilePath($file, $writeModel)
+    {
+        $boardName = $writeModel->board->table_name;
+        $filePath = storage_path('app/public/'. $boardName. '/'. $file);
+
+        return $filePath;
     }
 
 }

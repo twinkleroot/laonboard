@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Board;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use App\Board;
 use App\Write;
 use App\Config;
 use App\BoardFile;
+use App\BoardGood;
+use App\User;
+use Auth;
 use Exception;
 use Illuminate\Pagination\Paginator;
 
@@ -17,8 +21,9 @@ class BoardController extends Controller
     public $writeModel;
     public $boardModel;
     public $boardFileModel;
+    public $boardGoodModel;
 
-    public function __construct(Request $request, Board $board, BoardFile $boardFileModel)
+    public function __construct(Request $request, Board $board, BoardFile $boardFile, BoardGood $boardGood)
     {
         $this->writeModel = new Write($request->boardId);
         if( !is_null($this->writeModel->board) ) {
@@ -26,7 +31,8 @@ class BoardController extends Controller
         }
 
         $this->boardModel = $board;
-        $this->boardFileModel = $boardFileModel;
+        $this->boardFileModel = $boardFile;
+        $this->boardGoodModel = $boardGood;
     }
     /**
      * Display a listing of the resource.
@@ -45,13 +51,41 @@ class BoardController extends Controller
         return view('board.index', $params);
     }
 
+    // 비밀글 일 때 비밀번호 물어보기
+    public function checkPassword(Request $request, $boardId, $writeId)
+    {
+        return view('board.password', [
+            'subject' => $this->writeModel->find($writeId)->subject,
+            'boardId' => $boardId,
+            'writeId' => $writeId,
+        ]);
+    }
+
+    // 비밀번호 검사
+    public function validatePassword(Request $request, $boardId)
+    {
+        $user = User::find($this->writeModel->find($request->writeId)->user_id);
+        $email = $user->email;
+
+        // 입력한 비밀번호와 작성자의 글 비밀번호를 비교한다.
+        if(Auth::validate(['email' => $email, 'password' => $request->password])) {
+            session()->put('secret_board_'.$boardId.'_write_'.$request->writeId, true);
+
+            return redirect(session()->get('nextUri'));
+         } else {
+            return view('message', [
+                'message' => '비밀번호가 틀립니다.',
+            ]);
+        }
+    }
+
     /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, $boardId, $writeId)
+    public function view(Request $request, $boardId, $writeId)
     {
         $params = $this->writeModel->getViewParams($request, $boardId, $writeId, $this->writeModel);
 
@@ -64,7 +98,7 @@ class BoardController extends Controller
         if($this->writeModel->board->use_list_view) {
             $params = array_collapse([$params, $this->writeModel->getBbsIndexParams($this->writeModel, $request)]);
 
-            // $refer = explode('page=', $_SERVER['HTTP_REFERER']);
+            // $refer = explode('page=', $request->server('REQUEST_URI'));
             // $currentPage = 1;
             // if(count($refer) > 1 && !str_contains($refer[0], 'write')) {
             //     $currentPage = (int) $refer[1];
@@ -73,9 +107,68 @@ class BoardController extends Controller
             // }
             // $lastPage = $params['writes']->lastPage();
             // $params['writes']->setCurrentPage($currentPage, $lastPage);
+        } else {
+            $params = array_collapse([$params, $this->writeModel->getPrevNextView($this->writeModel, $boardId, $writeId, $request)]);
         }
 
-        return view('board.show', $params);
+        return view('board.view', $params);
+    }
+
+    // 글 보기 중 링크 연결
+    public function link($boardId, $writeId, $linkNo)
+    {
+        $result = $this->writeModel->beforeLink($this->writeModel, $writeId, $linkNo);
+
+        if(isset($result['message'])) {
+            return view('message', [
+                'message' => $result['message']
+            ]);
+        }
+
+        return view('board.link', [ 'linkUrl' => $result['linkUrl'] ]);
+    }
+
+    // 글 보기 중 첨부파일 다운로드
+    public function download(Request $request, $boardId, $writeId, $fileNo)
+    {
+        $result = $this->writeModel->beforeDownload($request, $this->writeModel, $boardId, $writeId, $fileNo);
+
+        if(isset($result['message'])) {
+            return view('message', [
+                'message' => $result['message']
+            ]);
+        }
+
+        $file = $result;
+
+        $filePath = $this->boardFileModel->getFilePath($file->file, $this->writeModel);
+
+        return response()->download($filePath, $file->source);
+    }
+
+    // 글 보기 중 원본 이미지 보기
+    public function viewImage($boardId, $writeId, $imageName)
+    {
+        $imagePath = $this->boardFileModel->getFilePath($imageName, $this->writeModel);
+        $imageFileInfo = getimagesize($imagePath);
+
+        return view('board.viewImage', [
+            'imagePath' => $this->writeModel->board->table_name.'/'.$imageName,
+            'width' => $imageFileInfo[0],
+            'height' => $imageFileInfo[1],
+        ]);
+    }
+
+    // 추천/비추천 ajax 메서드
+    public function good($boardId, $writeId, $good)
+    {
+        $result = $this->boardGoodModel->good($this->writeModel, $writeId, $good);
+
+        if(isset($result['error'])) {
+            return [ 'error' => $result['error'] ];
+        }
+
+        return [ 'count' => $result['count'] ];
     }
 
     /**
@@ -131,10 +224,10 @@ class BoardController extends Controller
             ]);
         }
 
-        $lastInsertId = $this->writeModel->storeWrite($this->writeModel, $request);
+        $writeId = $this->writeModel->storeWrite($this->writeModel, $request);
 
         if(count($request->attach_file) > 0) {
-            $message = $this->boardFileModel->storeBoardFile($request, $boardId, $lastInsertId);
+            $message = $this->boardFileModel->storeBoardFile($request, $boardId, $writeId);
             if($message != '') {
                 return view('message', [
                     'message' => $message,
@@ -142,7 +235,8 @@ class BoardController extends Controller
                 ]);
             }
         }
-        return redirect(route('board.index', $boardId));
+
+        return redirect(route('board.view', ['boardId' => $boardId, 'writeId' => $writeId] ));
     }
 
     /**

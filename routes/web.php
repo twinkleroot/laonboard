@@ -168,21 +168,39 @@ Route::get('message', ['as' => 'message', 'uses' => 'Message\MessageController@m
 Route::get('board/{boardId}', ['as' => 'board.index', 'uses' => 'Board\BoardController@index'])
     ->middleware(['level.board:list_level', 'valid.board']);
 // 글 읽기
-Route::get('board/{boardId}/write/{writeId}', ['as' => 'board.show', 'uses' => 'Board\BoardController@show'])
-    ->middleware('level.board:read_level');
+Route::get('board/{boardId}/view/{writeId}', ['as' => 'board.view', 'uses' => 'Board\BoardController@view'])
+    ->middleware('level.board:read_level', 'valid.board', 'secret.board');
+// 비밀 글 읽기 전 비밀번호 검사
+Route::get('board/{boardId}/view/{writeId}/password', ['as' => 'board.password', 'uses' => 'Board\BoardController@checkPassword'])
+    ->middleware('level.board:read_level', 'valid.board');
+Route::post('board/{boardId}/validatePassword', ['as' => 'board.validatePassword', 'uses' => 'Board\BoardController@validatePassword'])
+    ->middleware('level.board:read_level', 'valid.board');
+// 글 읽기 중 링크 연결
+Route::get('board/{boardId}/view/{writeId}/link/{linkNo}', ['as' => 'board.link', 'uses' => 'Board\BoardController@link'])
+    ->middleware('level.board:read_level', 'valid.board');
+// 글 읽기 중 파일 다운로드
+Route::get('board/{boardId}/view/{writeId}/download/{fileNo}', ['as' => 'board.download', 'uses' => 'Board\BoardController@download'])
+    ->middleware('level.board:download_level', 'valid.board');
+// 글 읽기 중 원본 이미지 보기
+Route::get('board/{boardId}/view/{writeId}/viewImage/{imageName}', ['as' => 'board.viewImage', 'uses' => 'Board\BoardController@viewImage'])
+    ->middleware('level.board:read_level', 'valid.board');
+// 글 읽기 중 추천/비추천
+Route::post('board/{boardId}/view/{writeId}/{good}', ['as' => 'board.good', 'uses' => 'Board\BoardController@good'])
+    ->where('good', 'good|nogood')
+    ->middleware('level.board:read_level', 'valid.board');
 // 글 쓰기
 Route::get('board/{boardId}/create', ['as' => 'board.create', 'uses' => 'Board\BoardController@create'])
-    ->middleware('level.board:write_level');
-Route::post('board/{boardId}', ['as' => 'board.store', 'uses' => 'Board\BoardController@store'])
-    ->middleware('level.board:write_level');
+    ->middleware('level.board:write_level', 'valid.board');
+Route::post('board/1{boardId}', ['as' => 'board.store', 'uses' => 'Board\BoardController@store'])
+    ->middleware('level.board:write_level', 'valid.board');
 // 글 수정
 Route::get('board/{boardId}/edit/{writeId}', ['as' => 'board.edit', 'uses' => 'Board\BoardController@edit'])
-    ->middleware('level.board:update_level');
-Route::put('board/{boardId}/write/{writeId}', ['as' => 'board.update', 'uses' => 'Board\BoardController@update'])
-    ->middleware('level.board:update_level');
+    ->middleware('level.board:update_level', 'valid.board');
+Route::put('board/{boardId}/update/{writeId}', ['as' => 'board.update', 'uses' => 'Board\BoardController@update'])
+    ->middleware('level.board:update_level', 'valid.board');
 // 글 삭제
-Route::delete('board/{boardId}/write/{writeId}', ['as' => 'board.destroy', 'uses' => 'Board\BoardController@destroy'])
-    ->middleware('level.board:delete_level');
+Route::delete('board/{boardId}/delete/{writeId}', ['as' => 'board.destroy', 'uses' => 'Board\BoardController@destroy'])
+    ->middleware('level.board:delete_level', 'valid.board');
 // 글 복사 및 이동 폼
 Route::group(['middleware' => ['auth', 'level:10']], function() {
     Route::post('board/{boardId}/move', ['as' => 'board.move', 'uses' => 'Board\BoardController@move']);

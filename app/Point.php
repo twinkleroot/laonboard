@@ -58,7 +58,7 @@ class Point extends Model
         return $sum;
     }
 
-    // 포인트 관리 포인트 증감 설정
+    // (포인트 관리) 포인트 증감 설정
     public function givePoint($data)
     {
         $user = User::where('email', $data['email'])->first();
@@ -83,7 +83,7 @@ class Point extends Model
         }
     }
 
-    // 포인트 관리 선택 삭제
+    // (포인트 관리) 선택 삭제
     public function deletePoint($ids)
     {
         $idArr = explode(',', $ids);

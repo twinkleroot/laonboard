@@ -43,9 +43,11 @@ class CheckBoardLevel
             } else if(str_contains($type, 'update')) {
                 $message = '글을 수정할 권한이 없습니다.';
             } else if(str_contains($type, 'comment')) {
-                $message = '목록을 볼 권한이 없습니다.';
+                $message = '댓글을 쓸 권한이 없습니다.';
             } else if(str_contains($type, 'delete')) {
-                $message = '목록을 볼 권한이 없습니다.';
+                $message = '글을 삭제할 권한이 없습니다.';
+            } else if(str_contains($type, 'download')) {
+                $message = '파일 다운로드 권한이 없습니다.';
             }
 
             return redirect(route('message'))->with('message', $message);
