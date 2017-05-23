@@ -8,6 +8,37 @@ use Image;
 // 공통으로 사용하는 메서드
 class Util
 {
+    // 파일 사이즈 구하기
+    public static function getFileSize($size)
+    {
+        if ($size >= 1048576) {
+            $size = number_format($size/1048576, 1) . "M";
+        } else if ($size >= 1024) {
+            $size = number_format($size/1024, 1) . "K";
+        } else {
+            $size = number_format($size, 0) . "byte";
+        }
+        return $size;
+    }
+        // UTF-8 문자열 자르기
+    // 출처 : https://www.google.co.kr/search?q=utf8_strcut&aq=f&oq=utf8_strcut&aqs=chrome.0.57j0l3.826j0&sourceid=chrome&ie=UTF-8
+    public static function utf8Strcut($str, $size, $suffix='...' )
+    {
+            $substr = substr( $str, 0, $size * 2 );
+            $multiSize = preg_match_all( '/[\x80-\xff]/', $substr, $multiChars );
+
+            if ( $multiSize > 0 )
+                $size = $size + intval( $multiSize / 3 ) - 1;
+
+            if ( strlen( $str ) > $size ) {
+                $str = substr( $str, 0, $size );
+                $str = preg_replace( '/(([\x80-\xff]{3})*?)([\x80-\xff]{0,2})$/', '$1', $str );
+                $str .= $suffix;
+            }
+
+            return $str;
+    }
+
     // 쿼리 스트링에서 파라미터 구하기
     public static function getParamsFromQueryString($str)
     {
@@ -32,6 +63,34 @@ class Util
             }
         }
         return $data;
+    }
+
+    public static function searchKeyword($keyword, $subject)
+    {
+        // 문자앞에 \ 를 붙입니다.
+        $src = array('/', '|');
+        $dst = array('\/', '\|');
+
+        if (!trim($keyword)) return $subject;
+
+        // 검색어 전체를 공란으로 나눈다
+        $s = explode(' ', $keyword);
+
+        // "/(검색1|검색2)/i" 와 같은 패턴을 만듬
+        $pattern = '';
+        $bar = '';
+        for ($m=0; $m<count($s); $m++) {
+            if (trim($s[$m]) == '') continue;
+            $tmp_str = quotemeta($s[$m]);
+            $tmp_str = str_replace($src, $dst, $tmp_str);
+            $pattern .= $bar . $tmp_str . "(?![^<]*>)";
+            $bar = "|";
+        }
+
+        // 지정된 검색 폰트의 색상, 배경색상으로 대체
+        $replace = "<span class=\"sch_key\">\\1</span>";
+
+        return preg_replace("/($pattern)/i", $replace, $subject);
     }
 
     // 글 내용 변환
@@ -124,16 +183,17 @@ class Util
         return $str;
     }
 
-    public static function getViewThumbnail($board, $imageFile)
+    public static function getViewThumbnail($board, $imageName, $folder)
     {
-        $imgPath = storage_path('app/public/'. $board->table_name);
-        $imgPathAndFileName = $imgPath. '/'. $imageFile->file;
+        $imgPath = storage_path('app/public/'. $folder);
+
+        $imgPathAndFileName = $imgPath. '/'. $imageName;
         $img = Image::make(file_get_contents($imgPathAndFileName));
         $thumbWidth = $board->image_width;
 
         // 이미지 정보를 얻어온다.
         $size = getimagesize($imgPathAndFileName);
-        $size = array_add($size, 'name', $imageFile->file);
+        $size = array_add($size, 'name', $imageName);
 
         if(empty($size)) {
             return [];
@@ -148,49 +208,49 @@ class Util
             return $size;
         }
 
+        $thumbFilePath = $imgPath. '/thumb-'. $imageName;
+        if( !file_exists($thumbFilePath) ) {
+            if($size[2] == 2 && function_exists('exif_read_data')) {
+                $degree = 0;
+                $exif = @exif_read_data($imgPathAndFileName);
 
-        if($size[2] == 2 && function_exists('exif_read_data')) {
-            $degree = 0;
-            $exif = @exif_read_data($imgPathAndFileName);
+                if(!empty($exif['Orientation'])) {
+                    switch($exif['Orientation']) {
+                        case 8:
+                            $degree = 90;
+                            break;
+                        case 3:
+                            $degree = 180;
+                            break;
+                        case 6:
+                            $degree = -90;
+                            break;
+                    }
 
-            if(!empty($exif['Orientation'])) {
-                switch($exif['Orientation']) {
-                    case 8:
-                        $degree = 90;
-                        break;
-                    case 3:
-                        $degree = 180;
-                        break;
-                    case 6:
-                        $degree = -90;
-                        break;
+                    // 세로사진의 경우 가로, 세로 값 바꿈
+                    if($degree == 90 || $degree == -90) {
+                        $tmp = $size;
+                        $size[0] = $tmp[1];
+                        $size[1] = $tmp[0];
+                    }
                 }
 
-                // 세로사진의 경우 가로, 세로 값 바꿈
-                if($degree == 90 || $degree == -90) {
-                    $tmp = $size;
-                    $size[0] = $tmp[1];
-                    $size[1] = $tmp[0];
-                }
             }
 
+            // 썸네일 높이
+            $thumbHeight = round(($thumbWidth * $size[1]) / $size[0]);
+            $img = $img->resize($thumbWidth, $thumbHeight, function ($constraint) {
+                        $constraint->aspectRatio();
+                    })->save($thumbFilePath);
         }
 
-        // 썸네일 높이
-        $thumbHeight = round(($thumbWidth * $size[1]) / $size[0]);
-        $thumbFilePath = $imgPath. '/thumb-'. $imageFile->file;
-
-        $img = $img->resize($thumbWidth, $thumbHeight, function ($constraint) {
-            $constraint->aspectRatio();
-        })
-        ->save($thumbFilePath);
-
         $thumbSize = getimagesize($thumbFilePath);
-        $thumbSize = array_add($thumbSize, 'name', 'thumb-'. $imageFile->file);
+        $thumbSize = array_add($thumbSize, 'name', 'thumb-'. $imageName);
         // 썸네일 정보의 바로 사용가능한 width와 height에는 원본 width와 height를 넣는다.
         $thumbSize[0] = $size[0];
         $thumbSize[1] = $size[1];
 
         return $thumbSize;
     }
+
 }

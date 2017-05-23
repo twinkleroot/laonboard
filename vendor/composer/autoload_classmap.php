@@ -18,6 +18,7 @@ return array(
     'AddUniqueKeyEmailOnUsersTable' => $baseDir . '/database/migrations/2017_03_09_110203_add_unique_key_email_on_users_table.php',
     'ChangeNameNullableOnUsers' => $baseDir . '/database/migrations/2017_03_20_121558_change_name_nullable_on_users.php',
     'ChangeZipDatetimeNickdateOpendateColumnOnUsers' => $baseDir . '/database/migrations/2017_03_14_122901_change_zip_datetime_nickdate_opendate_column_on_users.php',
+    'CreateAutosavesTable' => $baseDir . '/database/migrations/2017_05_16_183110_create_autosaves_table.php',
     'CreateBoardFiles' => $baseDir . '/database/migrations/2017_04_26_170256_create_board_files.php',
     'CreateBoardGoodsTable' => $baseDir . '/database/migrations/2017_05_12_110031_create_board_goods_table.php',
     'CreateBoardTable' => $baseDir . '/database/migrations/2017_04_05_105802_create_board_table.php',

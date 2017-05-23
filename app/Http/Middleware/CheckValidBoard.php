@@ -17,7 +17,7 @@ class CheckValidBoard
     public function handle($request, Closure $next)
     {
         $board = Board::find($request->boardId);
-        if($board == null) {
+        if(is_null($board)) {
             return redirect(route('message'))
                ->with('message', '잘못된 경로입니다. 다시 확인해 주세요.')
                ->with('redirect', '/');

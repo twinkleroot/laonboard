@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Auth;
 use DB;
+use File;
 use Carbon\Carbon;
 use Exception;
 use App\User;
@@ -14,6 +15,7 @@ use App\Point;
 use App\Common\Util;
 use App\Common\StrEncrypt;
 use App\Common\CustomPaginator;
+use App\Autosave;
 use App\BoardFile;
 
 
@@ -28,10 +30,12 @@ class Write extends Model
 
     protected $table;
     public $board;
+    public $point;
 
     public function __construct($boardId, $attributes = [])
     {
         $this->board = Board::find($boardId);
+        $this->point = new Point();
 
         parent::__construct($attributes);
     }
@@ -132,18 +136,27 @@ class Write extends Model
         // 어떤 필드를 기준으로 정렬할 것인지
         $sortField = $this->getSortField();
 
+        // 결과물에 공지사항이 있는지 검사한다.
+        $hasNotice = $this->hasNotice($writeModel, $kind, $keyword, $currenctCategory);
+
         // 최종 리스트 컬렉션을 가져온다.
         $writes;
-        if($this->board->notice != '') {
+        if($hasNotice) {
             $writes = $this->customPaging($request, $query, $sortField);
         } else {
             $writes = $query->orderByRaw($sortField)->paginate($this->board->page_rows);
         }
 
-        // 뷰에 내보내는 아이디 검색의 링크url에는 암호화된 id를 링크로 건다.
+        // 가져온게시글 가공
+        // 1. 뷰에 내보내는 아이디 검색의 링크url에는 암호화된 id를 링크로 건다.
+        // 2. 검색일 경우 검색 키워드 색깔 표시를 다르게 한다.
         foreach($writes as $write) {
             $write->user_id = encrypt($write->user_id);     // 라라벨 기본 지원 encrypt
+            $write->subject = Util::searchKeyword($keyword, $write->subject);
         }
+
+        // 페이징 버튼의 경로 지정 (항상 목록으로 이동하도록 하기)
+        $writes->withPath('/board/'.$this->board->id);
 
         return [
             'writes' => $writes,
@@ -188,7 +201,7 @@ class Write extends Model
                 } else {
                     return [
                         'writes' => null,
-                        'message' => $keyword . ' 사용자가 존재하지 않습니다.'
+                        'message' => $keyword. ' 사용자가 존재하지 않습니다.'
                     ];
                 }
             // 단독 키워드 검색(제목, 내용)
@@ -201,7 +214,7 @@ class Write extends Model
     }
 
     // order by 절에 들어갈 내용 가져오기
-    public function getSortField()
+    private function getSortField()
     {
         return is_null($this->board->sort_field) ? 'num, reply' : $this->board->sort_field;
     }
@@ -235,9 +248,23 @@ class Write extends Model
         $sliceWrites = $mergeWrites->slice($this->board->page_rows * ($currentPage - 1), $this->board->page_rows);
 
         $writes = new CustomPaginator($sliceWrites, count($mergeWrites), $this->board->page_rows, $currentPage);
-        $writes->setPath($request->url());
 
         return $writes;
+    }
+
+    // 글 목록 결과물에 공지사항이 있는지 검사한다.
+    private function hasNotice($writeModel, $kind, $keyword, $currenctCategory)
+    {
+        // select ~ from ~ where까지 얻어온다.
+        $query = $this->getWritesWhere($writeModel, $kind, $keyword, $currenctCategory);
+
+        $notices = explode(',', $this->board->notice);
+        for($i=0; $i<count($notices); $i++) {
+            $notices[$i] = (integer)$notices[$i];
+        }
+        $result = $query->whereIn($writeModel->table. '.id', $notices)->get();
+
+        return count($result) > 0 ? true : false;
     }
 
     public function getViewParams($request, $boardId, $writeId, $writeModel)
@@ -256,12 +283,18 @@ class Write extends Model
         // 글쓰기 할때 html 체크에 따라 글 내용 보여주는 방식을 다르게 한다.
         // html = 0 - 체크안함, 1 - 체크 후 취소, 2 - 체크 후 확인
         $html = 0;
-        if (strstr($write->option, 'html1')) {
+        if (strpos($write->option, 'html1') !== false) {
             $html = 1;
-        } else if (strstr($write->option, 'html2')) {
+        } else if (strpos($write->option, 'html2') !== false) {
             $html = 2;
         }
-        $write->content = Util::convertContent($write->content, $html);
+
+         // 에디터를 사용하면서 html에 체크하지 않았을 때
+        if($this->board->use_dhtml_editor && $html == 0) {
+            $write->content = Util::convertContent($write->content, 2);
+        } else {
+            $write->content = Util::convertContent($write->content, $html);
+        }
 
         // 관리자 여부에 따라 ip 다르게 보여주기
         if( !session()->get('admin')) {
@@ -298,7 +331,7 @@ class Write extends Model
                     continue;
                 }
                 // 이미지 경로를 가져와서 썸네일만든 후 서버에 저장
-                $imageFileInfo = Util::getViewThumbnail($this->board, $boardFile);
+                $imageFileInfo = Util::getViewThumbnail($this->board, $boardFile->file, $this->board->table_name);
 
                 array_push($imgFiles, $imageFileInfo);
                 // 이미지 파일은 파일 첨부 컬렉션에서는 제외
@@ -306,7 +339,11 @@ class Write extends Model
                     return $value->file == $boardFile->file;
                 });
             }
+
         }
+
+        // 에디터로 업로드한 이미지 경로를 추출해서 내용의 img 태그 부분을 교체한다.
+        $write->content = $this->includeImagePathByEditor($write->content);
 
         return [
             'board' => $this->board,
@@ -316,6 +353,27 @@ class Write extends Model
             'boardFiles' => $boardFiles,
             'imgFiles' => $imgFiles,
         ];
+    }
+
+    // 에디터로 업로드한 이미지 경로를 추출해서 내용의 img 태그 부분을 교체한다.
+    public function includeImagePathByEditor($content)
+    {
+        // 에디터로 업로드한 이미지 경로를 추출한다.
+        $pattern = "/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i";
+        preg_match_all($pattern, $content, $matches);
+
+        for($i=0; $i<count($matches[1]); $i++) {
+            // 썸네일 만들기
+            $imageFileInfo = Util::getViewThumbnail($this->board, basename($matches[1][$i]), 'editor');
+
+            $html = "a href='". route('image.original'). "?type=editor&amp;imageName=". str_replace("thumb-", "", $imageFileInfo['name']). "'"
+                    . " class='viewOriginalImage' width='". $imageFileInfo[0]. "' height='". $imageFileInfo[1]. "' target='viewImage'>"
+                    . "<img src='/storage/editor/". $imageFileInfo['name']. "' /></a";
+            // 글 내용에 이미지 원본보기 링크와 이미지경로를 넣어준다.
+            $content = preg_replace("<img src=\"".$matches[1][$i]."\" />", $html, $content);
+        }
+
+        return $content;
     }
 
     // 이전 글, 다음 글 경로 가져오기
@@ -464,14 +522,8 @@ class Write extends Model
 
             // 포인트 계산하기
             // 포인트 부여(글 읽기, 파일 다운로드)
-            Point::addPoint([
-                'user' => $user,
-                'relTable' => $this->board->table_name,
-                'relEmail' => $write->id,
-                'relAction' => $action,
-                'content' => $this->board->subject . ' ' . $write->id . $contentPiece,
-                'type' => $boardPoint,
-            ]);
+            $this->point->insertPoint($user->id, $boardPoint,
+                $this->board->subject . ' ' . $write->id . $contentPiece, $this->board->table_name, $write->id, $action);
         }
 
         return '';
@@ -527,7 +579,9 @@ class Write extends Model
         $user = auth()->user();
         $write = $writeModel->find($writeId);
         $sessionName = 'session_download_'. $this->board->table_name. '_'. $write->id. '_'. $fileNo;
-        if(!session()->get($sessionName)) {
+        if(session()->get('admin') || $user->id == $write->user_id) {   // 관리자나 작성자 본인이면 패스
+            ;
+        } else if(!session()->get($sessionName)) { // 사용자의 다운로드 세션이 존재하지 않는다면
             // 포인트 차감
             $message = $this->calculatePoint($write, $request, 'download');
 
@@ -553,91 +607,68 @@ class Write extends Model
     // (게시판) 글 쓰기 페이지에서 필요한 파라미터 가져오기
     public function getBbsCreateParams($writeModel)
     {
-        // $userLevel = is_null(Auth::user()) ? 1 : Auth::user()->level;
         $board = $this->board;
         $categories = [];
         if( !is_null($board->category_list) ) {
             $categories = explode('|', $board->category_list);
         }
 
+        $autosaveCount = 0;
+        if(auth()->user()) {
+            $autosaveCount = Autosave::getAutosaveCount();
+        }
+
         return [
+            'type' => 'create',
             'board' => $board,
             'categories' => $categories,
-            // 'userLevel' => $userLevel,
+            'autosaveCount' => $autosaveCount,
         ];
     }
 
-    // 글쓰기 간격 검사
-    public function checkWriteInterval()
+    // 글 수정할 때 필요한 파라미터 가져오기
+    public function getEditParams($boardId, $writeId, $writeModel)
     {
-        $dt = Carbon::now();
-        $interval = Config::getConfig('config.board')->delaySecond;
+        $write = $writeModel->find($writeId);
 
-        if(!is_null(session()->get('postTime'))) {
-            if(session()->get('postTime') >= $dt->subSecond($interval) && !session()->get('admin')) {
-                return false;
-            }
+        $boardFiles = [];
+        if($write->file > 0) {
+            $boardFiles = BoardFile::where([
+                'board_id' => $boardId,
+                'write_id' => $writeId,
+            ])->get();
+        }
+        foreach($boardFiles as $file) {
+            $file->filesize = Util::getFileSize($file->filesize);
         }
 
-        session()->put('postTime', Carbon::now());
+        // 에디터로 업로드한 이미지 경로를 추출해서 내용의 img 태그 부분을 교체한다.
+        $write->content = $this->includeImagePathByEditor($write->content);
 
-        return true;
-    }
+        // 파일첨부 칸이 최소한 환경설정에서 설정한 대로 나올 수 있도록 file 값을 조정한다.
+        $uploadedFileCount = $write->file;
+        $configUploadFileCount = $this->board->upload_count;
+        $write->file = $uploadedFileCount < $configUploadFileCount ? $configUploadFileCount : $uploadedFileCount;
 
-    // 올바르지 않은 코드가 글 내용에 다수 들어가 있는지 검사
-    public function checkIncorrectContent($request)
-    {
-        if (substr_count($request->content, '&#') > 50) {
-            return false;
-        }
-        return true;
-    }
+        $createParams = $this->getBbsCreateParams($writeModel);
+        $createParams['type'] = 'update';
 
-    // 서버에서 지정한 Post의 최대 크기 검사
-    public function checkPostMaxSize($request)
-    {
-        if (empty($_POST)) {
-            return false;
-        }
-        return true;
-    }
+        $params = [
+            'write' => $write,
+            'boardFiles' => $boardFiles,
+        ];
 
-    // 관리자가 아닌데 공지사항을 남기려 하는 경우가 있는지 검사
-    public function checkAdminAboutNotice($request)
-    {
-        if ( !session()->get('admin') && $request->has('notice') ) {
-    		return false;
-        }
-        return true;
+        $params = array_collapse([$params, $createParams]);
+
+        return $params;
     }
 
     // (게시판) 글 쓰기 -> 저장
     public function storeWrite($writeModel, $request)
     {
         $inputData = $request->all();
-        $inputData = array_except($inputData, ['_token', 'file_content', 'attach_file', 'html', 'secret', 'mail', 'notice']);    // csrf 토큰 값 제외
-
-        // 제목
-        $subject = substr(trim($inputData['subject']),0,255);
-        $inputData['subject'] = preg_replace("#[\\\]+$#", "", $subject);
-
-        // 내용
-        $content = substr(trim($inputData['content']),0,65536);
-        $inputData['content'] = preg_replace("#[\\\]+$#", "", $content);
-
-        // 링크1
-        if (isset($inputData['link1'])) {
-            $link1 = substr($inputData['link1'],0,1000);
-            $link1 = trim(strip_tags($link1));
-            $inputData['link1'] = preg_replace("#[\\\]+$#", "", $link1);
-        }
-
-        // 링크2
-        if (isset($inputData['link2'])) {
-            $link2 = substr($inputData['link2'],0,1000);
-            $link2 = trim(strip_tags($link2));
-            $inputData['link2'] = preg_replace("#[\\\]+$#", "", $link2);
-        }
+        $inputData = array_except($inputData, ['_token', 'file_content', 'attach_file', 'html', 'secret', 'mail', 'notice', 'uid']);
+        $inputData = $this->convertSomeField($inputData);
 
         $options = [];
         $options['html'] = $request->has('html') ? $request->html : '';
@@ -655,6 +686,8 @@ class Write extends Model
         $name = '';
         $password = '';
         $minNum = $writeModel->min('num');
+        $email = '';
+        $homepage = '';
 
         // 회원 글쓰기 일 때
         if( !is_null($user) ) {
@@ -667,6 +700,11 @@ class Write extends Model
 
             $userId = $user->id;
             $password = $user->password;
+            $email = $user->email;
+            $homepage = $user->homepage;
+        } else {
+            $email = $inputData['email'];
+            $homepage = $inputData['homepage'];
         }
 
         $insertData = array_collapse([
@@ -674,6 +712,8 @@ class Write extends Model
             [
                 'user_id' => $userId,
                 'name' => is_null($user) ? $inputData['name'] : $name,
+                'email' => $email,
+                'homepage' => $homepage,
                 'password' => is_null($user) ? bcrypt($inputData['password']) : $password,
                 'ip' => $request->ip(),
                 'option' => count($options) > 0 ? implode(',', $options) : null,
@@ -692,6 +732,7 @@ class Write extends Model
             'parent' => $newWrite->id,
         ];
 
+        $pointType = 0;
         // 댓글인 경우
         if($newWrite->is_comment == 1) {
             // $toUpdateColumn = [
@@ -707,27 +748,10 @@ class Write extends Model
             $pointType = $this->board->write_point;
         }
         // 포인트 부여(글쓰기, 댓글)
-        Point::addPoint([
-            'user' => $user,
-            'relTable' => $this->board->table_name,
-            'relEmail' => $lastInsertId,
-            'relAction' => $relAction,
-            'content' => $content,
-            'type' => $pointType,
-        ]);
+        $this->point->insertPoint($userId, $pointType, $content, $this->board->table_name, $lastInsertId, $relAction);
 
-        // 공지사항인 경우 boards에 등록하기
         if($request->has('notice')) {
-            $insertData = array_except($insertData, 'notice');    // notice 값은 writes가 아닌  boards에 저장
-            $notice = '';
-            if( !is_null($this->board->notice) ) {
-                $notice = $this->board->notice . ',' . $lastInsertId;
-            } else {
-                $notice = $lastInsertId;
-            }
-
-            $this->board->notice = $notice;
-            $this->board->save();
+            $this->registerNotice($lastInsertId);
         }
 
         // 댓글 or 답변글일 경우 원글의 num을 가져와서 넣는다.
@@ -743,30 +767,139 @@ class Write extends Model
 
         $writeModel->where('id', $lastInsertId)->update($toUpdateColumn);
 
+        // 저장한 글이 임시저장을 사용한 것이라면 삭제한다.
+        Autosave::where('unique_id', $request->uid)->delete();
+
         return $lastInsertId;
     }
 
-    // (게시판) 글 선택 삭제
-    public function selectDeleteWrites($writeModel, $ids)
+    // 글 수정
+    public function updateWrites($writeModel, $request, $writeId, $file)
     {
-        // 답변 글이 있는 경우 처리 추가 필요
+        $write = $writeModel->find($writeId);
+        $user = Auth::user();
+        $inputData = $request->all();
+        $inputData = array_except($inputData, ['_method', '_token', 'file_del', 'file_content', 'attach_file',
+                                                'html', 'secret', 'mail', 'notice', 'uid']);
+        $inputData = $this->convertSomeField($inputData);
 
-        // 첨부파일도 함께 삭제한다.
-        $idsArr = explode(',', $ids);
-        foreach($idsArr as $id) {
-            BoardFile::where([
-                'board_id' => $this->board->id,
-                'write_id' => $id
-            ])->delete();
+        $options = [];
+        $options['html'] = $request->has('html') ? $request->html : '';
+        $options['secret'] = $request->has('secret') ? $request->secret : '';
+        $options['mail'] = $request->has('mail') ? $request->mail : '';
+
+        foreach($options as $key => $value) {
+            if($value == '') {
+                $options = array_except($options, [$key]);
+            }
         }
 
-        $result = $writeModel->whereRaw('id in (' . $ids . ') ')->delete();
+        $inputData = array_collapse([
+            $inputData,
+            [
+                'ip' => $request->ip(),
+                'option' => count($options) > 0 ? implode(',', $options) : null,
+                'updated_at' => Carbon::now(),
+                'file' => $file,
+                // 'file' => count($request->attach_file),
+            ]
+        ]);
+        // 비회원이거나 본인 글을 수정하는 것이 아닐 때
+        if( is_null($user) || $write->user_id != $user->id) {
+            $inputData = array_collapse([
+                $inputData,
+                [
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'homepage' => $request->homepage,
+                    'password' => $request->password!='' ? bcrypt($request->password) : $write->password,
+                    'file' => $file,
+                ]
+            ]);
+        }
 
-        if($result > 0) {
-            return '선택한 글이 삭제되었습니다.';
+        // 공지사항인 경우 boards에 등록하기
+        $this->registerAndDeleteNotice($request, $writeId);
+
+        // 저장한 글이 임시저장을 사용한 것이라면 삭제한다.
+        Autosave::where('unique_id', $request->uid)->delete();
+
+        $writeModel->where('id', $writeId)->update($inputData);
+
+        return $writeModel->find($writeId);
+    }
+
+    // 공지사항 등록하기
+    private function registerAndDeleteNotice($request, $writeId)
+    {
+        if($request->has('notice')) {
+            $this->registerNotice($writeId);
         } else {
-            return '선택한 글의 삭제가 실패하였습니다.';
+            $this->deleteNotice($writeId);
         }
+    }
+
+    // 공지사항 등록
+    private function registerNotice($writeId) {
+       $notice = $this->board->notice;
+       $notices = explode(',', $notice);
+       if(count($notices)>0) {
+           if(!array_search($writeId, $notices) ) {
+               array_push($notices, $writeId);
+               // 오름차순으로 정렬
+               $notices = array_sort($notices, function ($key, $value) {
+                   return $key;
+               });
+
+               $notice = implode(',', $notices);
+           }
+       } else {
+           $notice = $writeId;
+       }
+
+       $this->board->update(['notice' => $notice]);
+   }
+
+   // 공지사항 해제
+   private function deleteNotice($writeId)
+   {
+       $notices = $this->board->notice;
+       if($notices != '') {
+           $noticeArr = explode(',', $notices);
+           if (($key = array_search($writeId, $noticeArr)) !== false) {
+               unset($noticeArr[$key]);
+           }
+           $notices = null;
+           if(count($noticeArr) > 0) {
+               $notices = implode(',', $noticeArr);
+           }
+           $this->board->update(['notice' => $notices]);
+       }
+   }
+
+    // 몇 가지 필드 값 교체
+    private function convertSomeField($inputData)
+    {
+        // 제목
+        $subject = substr(trim($inputData['subject']),0,255);
+        $inputData['subject'] = preg_replace("#[\\\]+$#", "", $subject);
+        // 내용
+        $content = substr(trim($inputData['content']),0,65536);
+        $inputData['content'] = preg_replace("#[\\\]+$#", "", $content);
+        // 링크1
+        if (isset($inputData['link1'])) {
+            $link1 = substr($inputData['link1'],0,1000);
+            $link1 = trim(strip_tags($link1));
+            $inputData['link1'] = preg_replace("#[\\\]+$#", "", $link1);
+        }
+        // 링크2
+        if (isset($inputData['link2'])) {
+            $link2 = substr($inputData['link2'],0,1000);
+            $link2 = trim(strip_tags($link2));
+            $inputData['link2'] = preg_replace("#[\\\]+$#", "", $link2);
+        }
+
+        return $inputData;
     }
 
     // (게시판) 게시물 복사, 게시물 이동 = 복사 + 기존 테이블에서 삭제
@@ -779,7 +912,11 @@ class Write extends Model
         $boardIds = $request->chk_id;
 
         // 복사할 대상 게시물들
-        $originalWrites = $writeModel->whereIn('id', $writeIds)->get()->toArray();
+        if(gettype($writeIds) == 'string') {
+            $originalWrites = $writeModel->where('id', $writeIds)->get()->toArray();
+        } else {
+            $originalWrites = $writeModel->whereIn('id', $writeIds)->get()->toArray();
+        }
         // 선택한 대상 게시판들
         $boards = Board::whereIn('id', $boardIds)->get();
 
@@ -824,7 +961,7 @@ class Write extends Model
             }
             // (게시물 이동) 원래 있던 곳의 테이블에서 해당 게시물 삭제
             if($request->type == 'move') {
-                $message = $this->deleteWrites($writeModel);
+                $message = $this->deleteCopyWrites($writeModel);
             }
 
         } else {
@@ -835,7 +972,7 @@ class Write extends Model
      }
 
      // 게시물 복사할 때 첨부파일정보도 함께 복사하는 메서드
-     public function updateAttachedFileInfo($writeModel, $write, $lastInsertId, $board, $request)
+     public function updateAttachedFileInfo($writeModel, $write, $lastInsertId, $toBoard, $request)
      {
          $boardFiles = BoardFile::where([
              'board_id' => $this->board->id,
@@ -845,10 +982,15 @@ class Write extends Model
          foreach($boardFiles as $boardFile) {
              $copyBoardFile = $boardFile->attributes;
              $copyBoardFile['write_id'] = $lastInsertId;
-             $copyBoardFile['board_id'] = $board->id;
+             $copyBoardFile['board_id'] = $toBoard->id;
 
              BoardFile::insert($copyBoardFile);
-             // 모델의 primary key를 지정하기가 어려워서 update 대신 insert하고 delete하는 방식을 택함.
+             // 파일복사(다른 테이블로 복사했을 경우)
+             if($this->board->id != $toBoard->id) {
+                 $this->copyFile($boardFile, $toBoard);
+             }
+
+             // 게시물 이동 시 기존 BoardFile 데이터 삭제.
              if($request->type == 'move') {
                  BoardFile::where([
                      'board_id' => $this->board->id,
@@ -859,18 +1001,94 @@ class Write extends Model
          }
      }
 
-     // 게시물 이동할 때 기존 원본 게시물만 삭제 (첨부파일 정보변경은 updateAttachedFileInfo() 에서 한다.)
-     public function deleteWrites($writeModel)
+     // 파일 시스템에서 파일 복사
+     public function copyFile($boardFile, $toBoard)
+     {
+         $from = storage_path('app/public/'. $this->board->table_name. '/'. $boardFile->file);
+         $toDirectory = storage_path('app/public/'. Board::find($toBoard->id)->table_name);
+         $to = $toDirectory. '/'. $boardFile->file;
+         if( !File::exists($toDirectory) ) {
+             File::makeDirectory($toDirectory);
+         }
+         File::copy($from, $to);
+     }
+
+     // 글 보기 -> 삭제
+     public function deletePoint($writeModel, $writeId)
+     {
+         $write = $writeModel->find($writeId);
+         // 원글에서의 처리
+         $deleteResult = 0;
+         $insertResult = 0;
+         if(!$write->is_comment) {
+             // 포인트 삭제 및 사용 포인트 다시 부여
+             $deleteResult = $this->point->deletePoint($write->user_id, $this->board->table_name, $writeId, '쓰기');
+             if($deleteResult == 0) {
+                 $insertResult = $this->point->insertPoint($write->user_id, $this->board->write_point * (-1), $this->board->subject. ' '. $writeId. ' 글삭제');
+             }
+         } else {   // 댓글에서의 처리
+
+         }
+
+         return $deleteResult != 0 ? $deleteResult : $insertResult;
+     }
+
+    public function deleteWrite($writeModel, $writeId)
+    {
+        // 게시글 삭제
+        $result = $writeModel->where('id', $writeId)->delete();
+
+        // 최근 게시물
+
+        // 스크랩 삭제
+
+        // 공지사항 삭제해서 업데이트
+        $this->deleteNotice($writeId);
+
+        return $result;
+     }
+
+     // (게시판) 글 선택 삭제 - 글 갯수 만큼 deleteWrite() 메서드 돌리기
+     public function selectDeleteWrites($writeModel, $ids)
+     {
+         // 첨부파일도 함께 삭제한다.
+         $idsArr = explode(',', $ids);
+         foreach($idsArr as $id) {
+             // deleteWrite() 메서드 호출
+
+             BoardFile::where([
+                 'board_id' => $this->board->id,
+                 'write_id' => $id
+             ])->delete();
+         }
+
+         $result = $writeModel->whereRaw('id in (' . $ids . ') ')->delete();
+
+         if($result > 0) {
+             return '선택한 글이 삭제되었습니다.';
+         } else {
+             return '선택한 글의 삭제가 실패하였습니다.';
+         }
+     }
+
+     // (게시물 이동) 기존 원본 게시물만 삭제 (첨부파일 정보변경은 updateAttachedFileInfo() 에서 한다.)
+     public function deleteCopyWrites($writeModel)
      {
          $writeIds = session()->get('writeIds'); // 복사할 대상 게시물들의 id
 
-         $result = $writeModel->whereRaw('id in (' . implode(",", $writeIds) . ') ')->delete();
+         if(gettype($writeIds) == 'string') {
+             $result = $writeModel->where('id', $writeIds)->delete();
+         } else {
+             // foreach로 deleteWrite() 메서드 호출
 
-        if($result > 0) {
-            return '게시물 이동에 성공하였습니다.';
-        } else {
-            return '게시물 이동이 실패하였습니다.';
-        }
+             $result = $writeModel->whereRaw('id in (' . implode(",", $writeIds) . ') ')->delete();
+         }
+
+         if($result > 0) {
+             return '게시물 이동에 성공하였습니다.';
+         } else {
+             return '게시물 이동이 실패하였습니다.';
+         }
      }
 
 }

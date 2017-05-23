@@ -40,7 +40,7 @@ class BoardController extends Controller
      * @param integer $boardId
      * @return \Illuminate\Http\Response
      */
-    public function index($boardId, Request $request)
+    public function index(Request $request, $boardId)
     {
         $params = $this->writeModel->getBbsIndexParams($this->writeModel, $request);
 
@@ -140,23 +140,9 @@ class BoardController extends Controller
         }
 
         $file = $result;
-
-        $filePath = $this->boardFileModel->getFilePath($file->file, $this->writeModel);
+        $filePath = storage_path('app/public/'. $this->writeModel->board->table_name. '/'. $file->file);
 
         return response()->download($filePath, $file->source);
-    }
-
-    // 글 보기 중 원본 이미지 보기
-    public function viewImage($boardId, $writeId, $imageName)
-    {
-        $imagePath = $this->boardFileModel->getFilePath($imageName, $this->writeModel);
-        $imageFileInfo = getimagesize($imagePath);
-
-        return view('board.viewImage', [
-            'imagePath' => $this->writeModel->board->table_name.'/'.$imageName,
-            'width' => $imageFileInfo[0],
-            'height' => $imageFileInfo[1],
-        ]);
     }
 
     // 추천/비추천 ajax 메서드
@@ -191,43 +177,10 @@ class BoardController extends Controller
      */
     public function store(Request $request, $boardId)
     {
-        if( !isset($request->subject)) {
-            return view('message', [
-                'message' => '제목을 입력해 주세요.'
-            ]);
-        }
-
-        if( !isset($request->content)) {
-            return view('message', [
-                'message' => '내용을 입력해 주세요.'
-            ]);
-        }
-
-        if( !$this->writeModel->checkWriteInterval() ) {
-            return view('message', [
-                'message' => '너무 빠른 시간내에 게시물을 연속해서 올릴 수 없습니다.'
-            ]);
-        }
-        if( !$this->writeModel->checkIncorrectContent($request) ) {
-            return view('message', [
-                'message' => '내용에 올바르지 않은 코드가 다수 포함되어 있습니다.'
-            ]);
-        }
-        if( !$this->writeModel->checkPostMaxSize($request) ) {
-            return view('message', [
-                'message' => '파일 또는 글내용의 크기가 서버에서 설정한 값을 넘어 오류가 발생하였습니다.\\npost_max_size='.ini_get('post_max_size').' , upload_max_filesize='.ini_get('upload_max_filesize').'\\n게시판관리자 또는 서버관리자에게 문의 바랍니다.',
-            ]);
-        }
-        if( !$this->writeModel->checkAdminAboutNotice($request) ) {
-            return view('message', [
-                'message' => '파일 또는 글내용의 크기가 서버에서 설정한 값을 넘어 오류가 발생하였습니다.\\npost_max_size='.ini_get('post_max_size').' , upload_max_filesize='.ini_get('upload_max_filesize').'\\n게시판관리자 또는 서버관리자에게 문의 바랍니다.',
-            ]);
-        }
-
         $writeId = $this->writeModel->storeWrite($this->writeModel, $request);
 
         if(count($request->attach_file) > 0) {
-            $message = $this->boardFileModel->storeBoardFile($request, $boardId, $writeId);
+            $message = $this->boardFileModel->createBoardFiles($request, $boardId, $writeId);
             if($message != '') {
                 return view('message', [
                     'message' => $message,
@@ -245,9 +198,11 @@ class BoardController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($boardId)
+    public function edit($boardId, $writeId)
     {
-        //
+        $params = $this->writeModel->getEditParams($boardId, $writeId, $this->writeModel);
+
+        return view('board.form', $params);
     }
 
     /**
@@ -257,30 +212,97 @@ class BoardController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $boardId)
+    public function update(Request $request, $boardId, $writeId)
     {
-        //
+        $file = 0;
+        if(count($request->file_del) > 0 || count($request->attach_file) > 0) {
+            // 첨부 파일 변경
+            $result = $this->boardFileModel->updateBoardFiles($request, $boardId, $writeId);
+
+            if(isset($result['message'])) {
+                return view('message', [
+                    'message' => $result['message'],
+                    'redirect' => route('board.index', $boardId),
+                ]);
+            } else {
+                $file = $result['fileCount'];
+            }
+        }
+        // 게시 글 수정
+        $this->writeModel->updateWrites($this->writeModel, $request, $writeId, $file);
+
+        return redirect(route('board.view', ['boardId' => $boardId, 'writeId' => $writeId] ));
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 글보기 - 삭제
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($boardId, string $writeId, Request $request)
+    public function destroy($boardId, $writeId)
     {
-        $message = $this->writeModel->selectDeleteWrites($this->writeModel, $writeId);
+        $message = $this->deleteWriteCascade($boardId, $writeId);
 
-        $returnUrl = $request->page == 1
-                    ? route('board.index', $boardId)
-                    : '/board/' . $boardId . '?page=' . $request->page ;
+        if($message != '') {
+            return view('message', [
+                'message' => $message,
+                'redirect' => route('board.index', $boardId),
+            ]);
+        }
 
+        $returnUrl = route('board.index', $boardId). ($request->page == 1 ? '' : '?page='. $request->page);
         return redirect($returnUrl);
     }
 
+    /**
+     * 리스트 - 선택 삭제
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function selectedDelete(Request $request, $boardId, $writeId)
+    {
+        $ids = explode(',', $writeId);
+        foreach($ids as $id) {
+            $message = $this->deleteWriteCascade($boardId, $id);
+            if($message != '') {
+                return view('message', [
+                    'message' => '('. $id. '번 글)'. $message,
+                    'redirect' => route('board.index', $boardId),
+                ]);
+            }
+        }
+
+        $returnUrl = route('board.index', $boardId). ($request->page == 1 ? '' : '?page='. $request->page);
+        return redirect($returnUrl);
+    }
+
+    // 게시글 삭제하면서 게시글에 종속된 것들도 함께 삭제
+    private function deleteWriteCascade($boardId, $writeId)
+    {
+        $message = '';
+        // 부여되었던 포인트 삭제 및 조정 반영
+        $delPointResult = $this->writeModel->deletePoint($this->writeModel, $writeId);
+        if($delPointResult <= 0) {
+            $message .= '정상적으로 게시글을 삭제하는데 실패하였습니다.(포인트 삭제)';
+        }
+        // 서버에서 파일 삭제, 썸네일 삭제, 에디터 첨부 이미지 파일, 썸네일 삭제, 파일 테이블 삭제
+        $delFileResult = $this->boardFileModel->deleteWriteAndAttachFile($boardId, $writeId);
+        if( array_search(false, $delFileResult) === false ) {
+            $message .= '정상적으로 게시글을 삭제하는데 실패하였습니다.(첨부 파일 삭제)';
+        }
+        // 게시글 삭제
+        $delWriteResult = $this->writeModel->deleteWrite($this->writeModel, $writeId);
+        if($delWriteResult <= 0) {
+            $message .= '정상적으로 게시글을 삭제하는데 실패하였습니다.(글 삭제)';
+        }
+
+        return $message;
+    }
+
     // 게시물 복사 및 이동 폼
-    public function move($boardId, Request $request)
+    public function move(Request $request, $boardId)
     {
         $params = $this->boardModel->getMoveParams($boardId, $request);
 
@@ -288,7 +310,7 @@ class BoardController extends Controller
     }
 
     // 게시물 복사 및 이동 수행
-    public function moveUpdate($boardId, Request $request)
+    public function moveUpdate(Request $request, $boardId)
     {
         // 복사 및 이동
         $message = $this->writeModel->copyWrites($this->writeModel, $request);

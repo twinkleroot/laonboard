@@ -381,6 +381,7 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         'AddUniqueKeyEmailOnUsersTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_09_110203_add_unique_key_email_on_users_table.php',
         'ChangeNameNullableOnUsers' => __DIR__ . '/../..' . '/database/migrations/2017_03_20_121558_change_name_nullable_on_users.php',
         'ChangeZipDatetimeNickdateOpendateColumnOnUsers' => __DIR__ . '/../..' . '/database/migrations/2017_03_14_122901_change_zip_datetime_nickdate_opendate_column_on_users.php',
+        'CreateAutosavesTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_16_183110_create_autosaves_table.php',
         'CreateBoardFiles' => __DIR__ . '/../..' . '/database/migrations/2017_04_26_170256_create_board_files.php',
         'CreateBoardGoodsTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_12_110031_create_board_goods_table.php',
         'CreateBoardTable' => __DIR__ . '/../..' . '/database/migrations/2017_04_05_105802_create_board_table.php',

@@ -60,7 +60,12 @@ class Kernel extends HttpKernel
         'level' => \App\Http\Middleware\CheckLevel::class,
         // 유저의 레벨과 게시판 마다의 레벨 기준을 비교해서 접근 가능 여부 판단
         'level.board' => \App\Http\Middleware\CheckBoardLevel::class,
+        // 해당 항목의 유효 여부 검사
+        'store.write' => \App\Http\Middleware\VerifyBoardWrite::class,
+        'valid.write' => \App\Http\Middleware\CheckValidWrite::class,
         'valid.board' => \App\Http\Middleware\CheckValidBoard::class,
+        'valid.user' => \App\Http\Middleware\CheckValidUser::class,
+        // 비밀글 조회 전 체크할 내용
         'secret.board' => \App\Http\Middleware\CheckSecretView::class,
     ];
 }

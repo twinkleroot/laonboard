@@ -286,11 +286,15 @@ class Board extends Model
         $tableNameAddPrefix = 'write_' . $tableName;
         if(!Schema::hasTable($tableNameAddPrefix)) {
             Schema::create($tableNameAddPrefix, function (Blueprint $table) {
-                $table->increments('id')->index();
-                $table->integer('num')->default(0)->index();
-                $table->string('reply', 10)->default('')->index();
-                $table->integer('parent')->unsigned()->default(0)->index();
-                $table->tinyInteger('is_comment')->default(0)->index();
+                $table->increments('id');
+                $table->integer('num')->default(0);
+                $table->string('reply', 10)->default('');
+                $table->integer('parent')->unsigned()->default(0);
+                $table->tinyInteger('is_comment')->default(0);
+
+                $table->index(['num', 'reply', 'parent'], 'num_reply_parent');
+                $table->index(['is_comment', 'id'], 'is_comment');
+
                 $table->integer('comment')->unsigned()->default(0);
                 $table->string('comment_reply', 5)->nullable();
                 $table->string('ca_name')->nullable();
@@ -351,7 +355,8 @@ class Board extends Model
     public function getMoveParams($boardId, $request)
     {
         // 세션에 해당 게시물 아이디들을 보관
-        session()->put('writeIds', $request->chk_id);
+        $moveId = $request->has('chk_id') ? $request->chk_id : $request->writeId;
+        session()->put('writeIds', $moveId);
 
         return [
             'boards' => Board::orderBy('group_id', 'desc')->orderBy('subject', 'desc')->get(),

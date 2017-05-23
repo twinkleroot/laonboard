@@ -6,11 +6,11 @@
     <input type="hidden" id='page' name='page' value='{{ $writes->currentPage() }}' />
     {{ csrf_field() }}
 
-	<div class="clearfix">
-		<div class="pull-left bd_head">
-			<span><a href="{{ route('board.index', $board->id) }}">{{ $board->subject }}</a> 전체 {{ $writes->total() }}건 {{ $writes->currentPage() }}페이지</span>
-		</div>
+	<div class="pull-left bd_head">
+		<span><a href="{{ route('board.index', $board->id) }}">{{ $board->subject }}</a> 전체 {{ $writes->total() }}건 {{ $writes->currentPage() }}페이지</span>
+	</div>
 
+    <div class="bd_btn">
 		<ul id="bd_btn" class="pull-right">
             @if(session()->get('admin'))
     			<li class="dropdown">
@@ -37,18 +37,15 @@
 	</div>
 
     @if($board->use_category == 1 )
-    <table class="table box">
-		<thead>
-			<tr>
-                <th>
-                    <a href="{{ route('board.index', $board->id) }}">전체</a>
-                </th>
-                @foreach($categories as $category)
-                    <th><a href="{{ route('board.index', $board->id). '?category='. $category }}">{{ $category }}</a></th>
-                @endforeach
-            </tr>
-        </thead>
-    </table>
+    <div class="bd_category">
+    	<ul>
+            <!-- 선택된 카테고리의 class에 on 추가 -->
+    		<li class="btn" id="all"><a href="{{ route('board.index', $board->id) }}">전체</a></li>
+            @foreach($categories as $category)
+                <li class="btn" id="{{ $category }}"><a href="{{ route('board.index', $board->id). '?category='. $category }}">{{ $category }}</a></li>
+            @endforeach
+    	</ul>
+	</div>
     @endif
 
 	<!-- 리스트형 게시판 -->
@@ -81,7 +78,7 @@
                     @if($kind != 'user_id' && in_array($write->id, $notices) && $search == 0 && $currenctCategory == '')
                         공지
                     @elseif(isset($request->writeId) && $request->writeId == $write->id)
-                        열람중
+                        <span class="read">열람중</span>
                     @else
                         {{ $writes->total() - ($writes->currentPage() - 1) * $board->page_rows - $loop->index }}
                     @endif
@@ -96,7 +93,9 @@
                         @if($viewParams == '')
                             <a href="/board/{{ $board->id }}/view/{{ $write->id }}">{{ $write->subject }}</a>
                         @else
-                            <a href="/board/{{ $board->id }}/view/{{ $write->id }}?{{ $viewParams }}">{{ $write->subject }}</a>
+                            <a href="/board/{{ $board->id }}/view/{{ $write->id }}?{{ $viewParams }}">
+                                {!! $write->subject !!}
+                            </a>
                         @endif
                         {{-- 글올린시간 + 설정에 있는 신규 글 시간 > 현재 시간 --}}
                         @if(date($write->created_at->addHours(24)) > date("Y-m-d H:i:s", time()) && $board->new != 0 )
@@ -109,7 +108,13 @@
                             <img src="/themes/default/images/icon_link.gif"> <!-- 링크 -->
                         @endif
                         <!-- 인기글 -->
+                        @if($write->hit >= $board->hot)
+                            <img src="/themes/default/images/icon_hot.gif"> <!-- 인기 -->
+                        @endif
                         <!-- 비밀글 -->
+                        @if(str_contains($write->option, 'secret'))
+                            <img src="/themes/default/images/icon_secret.gif"> <!-- 비밀 -->
+                        @endif
                     </span>
                     @if($write->comment > 0)
                         <span class="bd_cmt">{{ $write->comment }}</span>
@@ -207,6 +212,16 @@
 
 </div>
 <script>
+$(function(){
+    var category = "{{ $currenctCategory }}";
+    if(category != '') {
+        // document.getElementById(category).addClass
+        // $("div[id='" + category + "']'").addClass('on');
+        document.getElementById(category).className += ' on'
+    } else {
+        document.getElementById('all').className += ' on'
+    }
+});
 // 모두 선택
 function checkAll(form) {
     var chk = document.getElementsByName("chk_id[]");
@@ -250,7 +265,7 @@ function formBoardListSubmit(f) {
         }
 
         f.removeAttribute("target");
-        f.action = '/board/{{ $board->id }}/delete/' + selected_id_array;
+        f.action = '/board/{{ $board->id }}/delete/ids/' + selected_id_array;
         $('#_method').val('DELETE');
     }
 
@@ -277,16 +292,17 @@ function selectIdsByCheckBox(className) {
 function selectCopy(type) {
     var f = document.fBoardList;
 
-    if (type == "copy")
+    if (type == "copy") {
         str = "복사";
-    else
+    } else {
         str = "이동";
+    }
 
     var sub_win = window.open("", "move", "left=50, top=50, width=500, height=550, scrollbars=1");
 
     f.type.value = type;
     f.target = "move";
-    f.action = "{{ route('board.move', $board->id)}}";
+    f.action = "{{ route('board.list.move', $board->id)}}";
     f.submit();
 }
 </script>

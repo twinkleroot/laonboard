@@ -56,9 +56,9 @@ class Config extends Model
     // 환경 설정 인덱스 페이지에 들어갈 데이터
     public function getConfigIndexParams()
     {
-        $configHomepage = $this->getConfigByName('config.homepage');
-        $configJoin = $this->getConfigByName('config.join');
-        $configBoard = $this->getConfigByName('config.board');
+        $configHomepage = Config::where('name', 'config.homepage')->first();
+        $configJoin = Config::where('name', 'config.join')->first();
+        $configBoard = Config::where('name', 'config.board')->first();
 
         // 홈페이지 기본환경 설정
         if(is_null($configHomepage)) {
@@ -80,12 +80,6 @@ class Config extends Model
         ];
     }
 
-    // 설정 이름으로 설정 값을 가져온다.
-    public function getConfigByName($name)
-    {
-        return Config::where('name', '=', $name)->first();
-    }
-
     // 회원 가입 설정을 config 테이블에 추가한다.
     public function createConfigHomepage()
     {
@@ -99,6 +93,7 @@ class Config extends Model
           'mobilePageRows' => config('gnu.mobilePageRows'),
           'writePages' => config('gnu.writePages'),
           'mobilePages' => config('gnu.mobilePages'),
+          'pointTerm' => config('gnu.pointTerm'),
         );
 
         return $this->createConfig('config.homepage', $configArr);
@@ -164,14 +159,11 @@ class Config extends Model
     // 설정을 변경한다.
     public function updateConfig($data, $name)
     {
-        $config;
-
         // DB엔 안들어가도 되는 값은 데이터 배열에서 제외한다.
         $data = array_except($data, ['_token']);
         $data = array_except($data, ['_method']);
 
-        $config = $this->getConfigByName('config.' . $name);
-
+        $config = Config::where('name', 'config.'. $name)->first();
 
         if($name == 'homepage') {       // 홈페이지 기본 환경 설정 일때
             $data = array_add($data, 'usePoint', isset($data['usePoint']) ? $data['usePoint'] : 0);

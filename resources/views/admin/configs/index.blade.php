@@ -104,6 +104,16 @@
                         </div>
                     </div>
                 </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="pointTerm" class="col-md-4 control-label">포인트 유효기간</label>
+
+                        <div class="col-md-6">
+                            기간을 0으로 설정시 포인트 유효기간이 적용되지 않습니다.<br />
+                            <input type="text" name="pointTerm" value="{{ $configHomepage->pointTerm }}">일
+                        </div>
+                    </div>
+                </div>
 
                 <div class="panel-body">
                     <div class="col-md-offset-5">

@@ -10,10 +10,6 @@
 @endsection
 
 @section('content')
-{{-- <body style="background: #fff"> --}}
-
-<div id="header">
-</div>
 <!-- Board start -->
 <div id="board" class="container">
 
@@ -31,10 +27,22 @@
 					<i class="fa fa-ellipsis-v"></i>
 				</a>
 				<ul class="dropdown-menu" role="menu">
-	                <li><a href="#">수정</a></li>
-	                <li><a href="#">삭제</a></li>
-	                <li><a href="#">복사</a></li>
-	                <li><a href="#">이동</a></li>
+                    @if(session()->get('admin') || auth()->user()->id == $view->user_id)
+    	                <li><a href="/board/{{ $board->id }}/edit/{{ $view->id }}">수정</a></li>
+    	                <li><a href="/board/{{ $board->id }}/delete/{{ $view->id }}">삭제</a></li>
+                    @endif
+                    @if(session()->get('admin'))
+    	                <li>
+                            <a class="movePopup" href="{{ route('board.view.move', $board->id)}}?type=copy&amp;writeId={{ $view->id }}" target="move">
+                                복사
+                            </a>
+                        </li>
+    	                <li>
+                            <a class="movePopup" href="{{ route('board.view.move', $board->id)}}?type=move&amp;writeId={{ $view->id }}" target="move">
+                                이동
+                            </a>
+                        </li>
+                    @endif
 	                <li><a href="#">답변</a></li>
 	            </ul>
 			</li>
@@ -55,11 +63,7 @@
     @if(count($imgFiles) > 0)
         @foreach($imgFiles as $imgFile)
             <div class="bd_rd">
-              <a href="{{route('board.viewImage',[
-                    'boardId'=>$board->id,
-                    'writeId'=>$view->id,
-                    'imageName'=>str_replace("thumb-","",$imgFile['name'])
-                  ])}}"
+              <a href="{{ route('image.original')}}/{{ $board->table_name }}?type=attach&amp;imageName={{str_replace("thumb-", "", $imgFile['name'])}}"
                  class="viewOriginalImage" width="{{ $imgFile[0] }}" height="{{ $imgFile[1] }}" target="viewImage">
                     <img src="/storage/{{ $board->table_name. '/'. $imgFile['name'] }}" />
               </a>
@@ -71,28 +75,34 @@
         {!! $view->content !!}
 	</div>
 
-    @if($board->use_signature)
-        <div class="bd_rd">
-            {{ $signature }}
-        </div>
-    @endif
-    @for($i=1; $i<=2; $i++)
-        @if($view['link'.$i])
-            <div class="bd_rd">
-                <a href="/board/{{ $board->id }}/view/{{ $view->id }}/link/{{ $i }}" target="_blank">{{ $view['link'. $i] }}</a>
-                <br>
-                <span>{{ $view['link'. $i. '_hit'] }}회 연결</span>
+    @if($view->link1 || $view->link2 || $view->file > 0 || ($board->use_signature && auth()->user()->signature) )
+        <div class="bd_add">
+        @for($i=1; $i<=2; $i++)
+            @if($view['link'.$i])
+                <div class="bd_link">
+                    <i class="fa fa-link"></i>
+                    <a href="/board/{{ $board->id }}/view/{{ $view->id }}/link/{{ $i }}" target="_blank">{{ $view['link'. $i] }}</a>
+                    <br>
+                    <span class="movecount">{{ $view['link'. $i. '_hit'] }}회 연결</span>
+                </div>
+            @endif
+        @endfor
+        @if($view->file > 0)
+            @foreach($boardFiles as $file)
+                <div class="bd_file">
+                    <i class="fa fa-download"></i>
+                    <a href="/board/{{ $board->id }}/view/{{ $view->id }}/download/{{ $file->board_file_no }}">{{ $file->source }}</a>
+                    <br>
+                    <span class="downcount">{{ $file->download }}회 다운로드 DATE : {{ $file->created_at }}</span>
+                </div>
+            @endforeach
+        @endif
+        @if($board->use_signature)
+            <div class="bd_sign">
+                {{ $signature }}
             </div>
         @endif
-    @endfor
-    @if($view->file > 0)
-        @foreach($boardFiles as $file)
-            <div class="bd_rd">
-                <a href="/board/{{ $board->id }}/view/{{ $view->id }}/download/{{ $file->board_file_no }}">{{ $file->source }}</a>
-                <br>
-                <span>{{ $file->download }}회 다운로드 DATE : {{ $file->created_at }}</span>
-            </div>
-        @endforeach
+        </div>
     @endif
 
 	<div class="bd_rd_bt clearfix">
@@ -225,6 +235,11 @@
             var top = (screen.availHeight-this.height) / 2;
 
             window.open(this.href, 'viewImage', 'location=yes,links=no,toolbar=no,left=0, top=' + top + ', width=' + width + ', height=' + height + ',resizable=yes,scrollbars=no,status=no');
+            return false;
+        });
+
+        $(".movePopup").click(function() {
+            window.open(this.href, 'move', 'left=50, top=50, width=500, height=550, scrollbars=1');
             return false;
         });
 
