@@ -29,6 +29,24 @@
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
+                        <label for="superAdmin" class="col-md-4 control-label">최고 관리자</label>
+
+                        <div class="col-md-6">
+                            <select name='superAdmin'>
+                                @foreach($admins as $admin)
+                                    <option value='' @if($configHomepage->superAdmin == '') selected @endif>
+                                        선택안함
+                                    </option>
+                                    <option value='{{ $admin->email }}' @if($configHomepage->superAdmin == $admin->email) selected @endif>
+                                        {{ $admin->email }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
                         <label for="usePoint" class="col-md-4 control-label">포인트 사용</label>
 
                         <div class="col-md-6">

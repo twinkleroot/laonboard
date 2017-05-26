@@ -29,7 +29,7 @@
 				<ul class="dropdown-menu" role="menu">
                     @if(session()->get('admin') || auth()->user()->id == $view->user_id)
     	                <li><a href="/board/{{ $board->id }}/edit/{{ $view->id }}">수정</a></li>
-    	                <li><a href="/board/{{ $board->id }}/delete/{{ $view->id }}">삭제</a></li>
+    	                <li><a href="/board/{{ $board->id }}/delete/{{ $view->id }}" onclick="del(this.href); return false;">삭제</a></li>
                     @endif
                     @if(session()->get('admin'))
     	                <li>
@@ -43,7 +43,7 @@
                             </a>
                         </li>
                     @endif
-	                <li><a href="#">답변</a></li>
+	                <li><a href="{{ route('board.create.reply', ['boardId' => $board->id, 'writeId' => $view->id]) }}">답변</a></li>
 	            </ul>
 			</li>
 			<li>
@@ -260,6 +260,7 @@
         $('#board').viewimageresize();
     });
 
+    // 추천, 비추천 ajax로 실행
     function excuteGood(href, $el, $tx)
     {
         $.ajax({
@@ -288,6 +289,14 @@
                 }
             },
         });
+    }
+
+    // 삭제 검사 확인
+    function del(href)
+    {
+        if(confirm("한번 삭제한 자료는 복구할 방법이 없습니다.\n\n정말 삭제하시겠습니까?")) {
+            document.location.href = href;
+        }
     }
 </script>
 @endsection

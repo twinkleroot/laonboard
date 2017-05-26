@@ -198,16 +198,18 @@ Route::group(['prefix' => 'board/{boardId}'], function () {
     Route::get('create', ['as' => 'board.create', 'uses' => 'Board\BoardController@create'])
         ->middleware('level.board:write_level', 'valid.board');
     Route::post('', ['as' => 'board.store', 'uses' => 'Board\BoardController@store'])
-        ->middleware('level.board:write_level', 'valid.board', 'store.write');
-
+        ->middleware('level.board:write_level', 'valid.board', 'store.write', 'writable.reply');
+    // 글 답변 쓰기
+    Route::get('reply/{writeId}', ['as' => 'board.create.reply', 'uses' => 'Board\BoardController@createReply'])
+        ->middleware('level.board:write_level', 'valid.board', 'valid.write', 'writable.reply');
     // 글 수정
     Route::get('edit/{writeId}', ['as' => 'board.edit', 'uses' => 'Board\BoardController@edit'])
-        ->middleware('level.board:update_level', 'valid.board', 'valid.write');
+        ->middleware('level.board:update_level', 'valid.board', 'valid.write', 'editable');
     Route::put('update/{writeId}', ['as' => 'board.update', 'uses' => 'Board\BoardController@update'])
-        ->middleware('level.board:update_level', 'valid.board', 'valid.write', 'store.write');
+        ->middleware('level.board:update_level', 'valid.board', 'valid.write', 'editable', 'store.write');
     // 글 삭제
     Route::get('delete/{writeId}', ['as' => 'board.destroy', 'uses' => 'Board\BoardController@destroy'])
-        ->middleware('valid.write');
+        ->middleware('valid.board', 'valid.write', 'editable');
     // 커뮤니티에서의 관리자 기능
     // 글 목록 : 선택 삭제, 선택 복사, 선택 이동,
     // 글 보기 : 복사, 이동, 삭제, 수정

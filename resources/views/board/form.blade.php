@@ -13,12 +13,14 @@
 <div id="board" class="container">
 
     <!-- 게시글 작성 -->
-    @if($type=='create')
-        <form role="form" id="fwrite" method="post" action={{ route('board.store', $board->id) }} enctype="multipart/form-data">
-    @else
+    @if($type=='update')
         <form role="form" id="fwrite" method="post" action={{ route('board.update', ['boardId'=>$board->id, 'writeId'=>$write->id])}} enctype="multipart/form-data">
             {{ method_field('put') }}
+    @else
+        <form role="form" id="fwrite" method="post" action={{ route('board.store', $board->id) }} enctype="multipart/form-data">
     @endif
+        <input type="hidden" name="type" id="type" value="{{ $type }}" />
+        <input type="hidden" name="writeId" id="writeId" @if($type != 'create') value="{{ $write->id }}" @endif/>
         <input type="hidden" name="uid" id="uid" value="{{ str_replace("/", "-", substr(bcrypt(date('ymdHis', time())), 10, 60)) }}" />
         {{ csrf_field() }}
         @if( ($type == 'create' && is_null(auth()->user()) )
@@ -57,7 +59,7 @@
                     <select class="form-control" name="ca_name" required>
                         <option value>분류</option>
                         @foreach($categories as $category)
-                            <option value="{{ $category }}" @if($type == 'update' && $category == $write->ca_name) selected @endif>
+                            <option value="{{ $category }}" @if($type != 'create' && $category == $write->ca_name) selected @endif>
                                 {{ $category }}
                             </option>
                         @endforeach
@@ -72,7 +74,7 @@
     	<div class="row">
     		<div class="form-group mb10 col-xs-8">
     		    <label for="" class="sr-only">게시물 작성</label>
-    		    <input type="text" class="form-control" id="subject" name="subject" placeholder="게시물 제목" @if($type == 'update') value="{{ $write->subject}}" @endif required>
+    		    <input type="text" class="form-control" id="subject" name="subject" placeholder="게시물 제목" @if($type != 'create') value="{{ $write->subject}}" @endif required>
     		</div>
             @if( !is_null(auth()->user()) )
                 <script src="{{ asset('js/autosave.js') }}"></script>

@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 
 class Config extends Model
 {
@@ -59,6 +60,7 @@ class Config extends Model
         $configHomepage = Config::where('name', 'config.homepage')->first();
         $configJoin = Config::where('name', 'config.join')->first();
         $configBoard = Config::where('name', 'config.board')->first();
+        $admins = User::where('level', 10)->get();
 
         // 홈페이지 기본환경 설정
         if(is_null($configHomepage)) {
@@ -77,6 +79,7 @@ class Config extends Model
             'configHomepage' => json_decode($configHomepage->vars),
             'configJoin' => json_decode($configJoin->vars),
             'configBoard' => json_decode($configBoard->vars),
+            'admins' => $admins,
         ];
     }
 
@@ -85,6 +88,7 @@ class Config extends Model
     {
         $configArr = array (
           'title' => config('gnu.title'),
+          'superAdmin' => config('gnu.superAdmin'),
           'usePoint' => config('gnu.usePoint'),
           'loginPoint' => config('gnu.loginPoint'),
           'openDate' => config('gnu.openDate'),

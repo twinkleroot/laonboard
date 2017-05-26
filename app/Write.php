@@ -46,18 +46,13 @@ class Write extends Model
         $this->table = 'write_' . $tableName;
     }
 
-    public function getTableName()
-    {
-        return $this->table;
-    }
-
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
     // (게시판) index 페이지에서 필요한 파라미터 가져오기
-    public function getBbsIndexParams($writeModel, $request)
+    public function getIndexParams($writeModel, $request)
     {
         // 글 목록에서 글 보기로 넘어갈 때 가지고 있어야 할 파라미터를 가지는 배열
         $viewParams = [];
@@ -604,8 +599,8 @@ class Write extends Model
         return $file;
     }
 
-    // (게시판) 글 쓰기 페이지에서 필요한 파라미터 가져오기
-    public function getBbsCreateParams($writeModel)
+    // (게시판) 글 쓰기 폼
+    public function getCreateParams($writeModel)
     {
         $board = $this->board;
         $categories = [];
@@ -626,7 +621,7 @@ class Write extends Model
         ];
     }
 
-    // 글 수정할 때 필요한 파라미터 가져오기
+    // 글 수정 폼
     public function getEditParams($boardId, $writeId, $writeModel)
     {
         $write = $writeModel->find($writeId);
@@ -642,15 +637,13 @@ class Write extends Model
             $file->filesize = Util::getFileSize($file->filesize);
         }
 
-        // 에디터로 업로드한 이미지 경로를 추출해서 내용의 img 태그 부분을 교체한다.
-        $write->content = $this->includeImagePathByEditor($write->content);
-
         // 파일첨부 칸이 최소한 환경설정에서 설정한 대로 나올 수 있도록 file 값을 조정한다.
         $uploadedFileCount = $write->file;
         $configUploadFileCount = $this->board->upload_count;
         $write->file = $uploadedFileCount < $configUploadFileCount ? $configUploadFileCount : $uploadedFileCount;
 
-        $createParams = $this->getBbsCreateParams($writeModel);
+        // 글쓰기와 같은 폼을 쓰기때문에 글 쓰기할 때 가져왔던 파라미터를 가져온다.
+        $createParams = $this->getCreateParams($writeModel);
         $createParams['type'] = 'update';
 
         $params = [
@@ -663,11 +656,31 @@ class Write extends Model
         return $params;
     }
 
+    // 답변 글 폼
+    public function getReplyParams($boardId, $writeId, $writeModel)
+    {
+        $write = $writeModel->find($writeId);
+        // 글쓰기와 같은 폼을 쓰기때문에 글 쓰기할 때 가져왔던 파라미터를 가져온다.
+        $createParams = $this->getCreateParams($writeModel);
+        $createParams['type'] = 'reply';
+
+        $write->subject = 'Re: '. $write->subject;
+
+        $params = [
+            'write' => $write,
+        ];
+
+        $params = array_collapse([$params, $createParams]);
+
+        return $params;
+    }
+
     // (게시판) 글 쓰기 -> 저장
     public function storeWrite($writeModel, $request)
     {
         $inputData = $request->all();
-        $inputData = array_except($inputData, ['_token', 'file_content', 'attach_file', 'html', 'secret', 'mail', 'notice', 'uid']);
+        $inputData = array_except($inputData, ['_token', 'file_content', 'attach_file', 'html',
+                                                'secret', 'mail', 'notice', 'uid', 'type', 'writeId']);
         $inputData = $this->convertSomeField($inputData);
 
         $options = [];
@@ -686,8 +699,25 @@ class Write extends Model
         $name = '';
         $password = '';
         $minNum = $writeModel->min('num');
+        $num = $minNum - 1;
         $email = '';
         $homepage = '';
+        $reply = '';
+
+        // 글 답변일 때 num과 reply 값 변경
+        if($request->type == 'reply') {
+
+            $write = $writeModel->find($request->writeId);
+
+            if($request->has('secret')) {
+                $password = $write->password;
+            }
+            $num = $write->num;
+            $reply = $this->getReplyValue($writeModel, $write);
+            if(!preg_match("/^[A-Z]+$/", $reply)) {
+                return ['message' => $reply];
+            }
+        }
 
         // 회원 글쓰기 일 때
         if( !is_null($user) ) {
@@ -720,8 +750,9 @@ class Write extends Model
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'file' => count($request->attach_file),
-                'num' => $minNum - 1,
                 'hit' => 1,
+                'num' => $num,
+                'reply' => $reply,
             ]
         ]);
 
@@ -744,8 +775,14 @@ class Write extends Model
             $pointType = $this->board->comment_point;
         } else {
             $relAction = '쓰기';
-            $content = $this->board->subject . ' ' . $lastInsertId . ' 글쓰기';
-            $pointType = $this->board->write_point;
+            $content = $this->board->subject . ' ' . $lastInsertId;
+            if($request->type == 'reply') {
+                $content .= ' 글답변';
+                $pointType = $this->board->comment_point;
+            } else {
+                $content .= ' 글쓰기';
+                $pointType = $this->board->write_point;
+            }
         }
         // 포인트 부여(글쓰기, 댓글)
         $this->point->insertPoint($userId, $pointType, $content, $this->board->table_name, $lastInsertId, $relAction);
@@ -754,15 +791,11 @@ class Write extends Model
             $this->registerNotice($lastInsertId);
         }
 
-        // 댓글 or 답변글일 경우 원글의 num을 가져와서 넣는다.
+        // 댓글일 경우 원글의 num을 가져와서 넣는다.
         // if( (isset($inputData['is_comment']) && $inputData['is_comment'] == 1)
         //     || (isset($inputData['reply']) && $inputData['reply'] != '') ) {
         //     ;
         // }
-
-        // 답변글일 경우 reply에 댓글 레벨을 표시한다. (inputData에는 원글의 reply 받아오기)
-        // reply 구하는 공식 적용
-
         // 댓글일 경우 원글의 last에 최근 댓글 달린 시간을 업데이트한다.
 
         $writeModel->where('id', $lastInsertId)->update($toUpdateColumn);
@@ -773,14 +806,55 @@ class Write extends Model
         return $lastInsertId;
     }
 
+    // 답변 글 단계 구하는 로직
+    private function getReplyValue($writeModel, $write)
+    {
+        $replyLength = strlen($write->reply) + 1;
+        if ($this->board->reply_order == 1) {
+            $baginReplyChar = 'A';
+            $endReplyChar = 'Z';
+            $replyNumber = 1;
+            $query = $writeModel->selectRaw("MAX(SUBSTRING(reply, ". $replyLength. ", 1)) as reply")
+                    ->where('num', $write->num)
+                    ->whereRaw("SUBSTRING(reply, ". $replyLength. ", 1) <> ''");
+        } else {
+            $baginReplyChar = 'Z';
+            $endReplyChar = 'A';
+            $replyNumber = -1;
+            $query = $writeModel->selectRaw("MIN(SUBSTRING(reply, ". $replyLength. ", 1)) as reply")
+                    ->where('num', $write->num)
+                    ->whereRaw("SUBSTRING(reply, ". $replyLength. ", 1) <> ''");
+
+        }
+        if ($write->reply) {
+            $query->where('reply', 'like', $write->reply.'%');
+        }
+        $result = $query->first(); // 쿼리 실행 결과
+
+        if (is_null($result->reply)) {
+            $replyChar = $baginReplyChar;
+        } else if ($result->reply == $endReplyChar) { // A~Z은 26 입니다.
+            return '더 이상 답변하실 수 없습니다.\\n답변은 26개 까지만 가능합니다.';
+        } else {
+            $replyChar = chr(ord($result->reply) + $replyNumber);
+        }
+
+        if(is_null($write->reply)) {
+            $write->reply = '';
+        }
+        $reply = $write->reply . $replyChar;
+
+        return $reply;
+    }
+
     // 글 수정
-    public function updateWrites($writeModel, $request, $writeId, $file)
+    public function updateWrite($writeModel, $request, $writeId, $file)
     {
         $write = $writeModel->find($writeId);
         $user = Auth::user();
         $inputData = $request->all();
         $inputData = array_except($inputData, ['_method', '_token', 'file_del', 'file_content', 'attach_file',
-                                                'html', 'secret', 'mail', 'notice', 'uid']);
+                                                'html', 'secret', 'mail', 'notice', 'uid', 'type', 'writeId']);
         $inputData = $this->convertSomeField($inputData);
 
         $options = [];
@@ -824,9 +898,43 @@ class Write extends Model
         // 저장한 글이 임시저장을 사용한 것이라면 삭제한다.
         Autosave::where('unique_id', $request->uid)->delete();
 
+        // 기존 content의 img 태그의 파일을 추출하고 수정된 content의 content를 비교해서 없어진 파일은 서버에서 삭제한다.
+        $this->deleteEditorImage($write->content, $inputData['content']);
+
         $writeModel->where('id', $writeId)->update($inputData);
 
         return $writeModel->find($writeId);
+    }
+
+    // 에디터 첨부 이미지를 수정 전과 후를 비교해서 지운 이미지 파일 서버에서 삭제
+    private function deleteEditorImage($originalContent, $editContent)
+    {
+        $originalContentImages = $this->getImageNameByContent($originalContent);
+        $EditContentImages = $this->getImageNameByContent($editContent);
+
+        foreach($originalContentImages as $originalContentImage) {
+            $img = str_replace("thumb-", "", $originalContentImage);
+            if( array_search($img, $EditContentImages) === false) {
+                // 서버에서 파일 삭제
+                $boardFile = new BoardFile();
+                $boardFile->deleteFileOnServer('editor', $img);
+            }
+        }
+    }
+
+    // 에디터로 업로드한 이미지 경로를 추출한다.
+    private function getImageNameByContent($content)
+    {
+        $pattern = "/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i";
+        preg_match_all($pattern, $content, $matches);
+
+        $imageName = array();
+        for($i=0; $i<count($matches[1]); $i++) {
+            // 이미지 파일만 추출해서 배열에 담는다.
+            array_push($imageName, basename($matches[1][$i]));
+        }
+
+        return $imageName;
     }
 
     // 공지사항 등록하기
@@ -858,11 +966,11 @@ class Write extends Model
        }
 
        $this->board->update(['notice' => $notice]);
-   }
+    }
 
-   // 공지사항 해제
-   private function deleteNotice($writeId)
-   {
+    // 공지사항 해제
+    private function deleteNotice($writeId)
+    {
        $notices = $this->board->notice;
        if($notices != '') {
            $noticeArr = explode(',', $notices);
@@ -875,7 +983,70 @@ class Write extends Model
            }
            $this->board->update(['notice' => $notices]);
        }
-   }
+    }
+
+    // 해당 글에 답변글이 달려 있는지 확인한다.
+    public function hasReply($writeModel, $writeId)
+    {
+        $write = $writeModel->find($writeId);
+        $replyCount = $writeModel->where('reply', 'like', $write->reply.'%')
+                        ->where('id', '<>', $writeId)
+                        ->where(['num' => $write->num, 'is_comment' => 0])
+                        ->count('id');
+        if($replyCount > 0 && !session()->get('admin')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function hasComment($writeModel, $writeId)
+    {
+        $user = auth()->user();
+        $userId = is_null($user) ? 0 : $user->id;
+        $commentCount = $writeModel->where('user_id', '<>', $userId)
+                        ->where(['parent' => $writeId, 'is_comment' => 1])
+                        ->count('id');
+        if($commentCount >= $this->board->count_delete && !session()->get('admin')) {
+            return true;
+        }
+        return false;
+    }
+
+    // 글 삭제 - 포인트 삭제
+    public function deletePoint($writeModel, $writeId)
+    {
+       $write = $writeModel->find($writeId);
+       // 원글에서의 처리
+       $deleteResult = 0;
+       $insertResult = 0;
+       if(!$write->is_comment) {
+           // 포인트 삭제 및 사용 포인트 다시 부여
+           $deleteResult = $this->point->deletePoint($write->user_id, $this->board->table_name, $writeId, '쓰기');
+           if($deleteResult == 0) {
+               $insertResult = $this->point->insertPoint($write->user_id, $this->board->write_point * (-1), $this->board->subject. ' '. $writeId. ' 글삭제');
+           }
+       } else {   // 댓글에서의 처리
+
+       }
+
+       return $deleteResult != 0 ? $deleteResult : $insertResult;
+    }
+
+    // 글 삭제 - 게시글 삭제
+    public function deleteWrite($writeModel, $writeId)
+    {
+       // 게시글 삭제
+       $result = $writeModel->where('id', $writeId)->delete();
+
+       // 최근 게시물
+       // 스크랩 삭제
+
+       // 공지사항 삭제해서 업데이트
+       $this->deleteNotice($writeId);
+
+       return $result;
+    }
 
     // 몇 가지 필드 값 교체
     private function convertSomeField($inputData)
@@ -1013,82 +1184,24 @@ class Write extends Model
          File::copy($from, $to);
      }
 
-     // 글 보기 -> 삭제
-     public function deletePoint($writeModel, $writeId)
-     {
-         $write = $writeModel->find($writeId);
-         // 원글에서의 처리
-         $deleteResult = 0;
-         $insertResult = 0;
-         if(!$write->is_comment) {
-             // 포인트 삭제 및 사용 포인트 다시 부여
-             $deleteResult = $this->point->deletePoint($write->user_id, $this->board->table_name, $writeId, '쓰기');
-             if($deleteResult == 0) {
-                 $insertResult = $this->point->insertPoint($write->user_id, $this->board->write_point * (-1), $this->board->subject. ' '. $writeId. ' 글삭제');
-             }
-         } else {   // 댓글에서의 처리
-
-         }
-
-         return $deleteResult != 0 ? $deleteResult : $insertResult;
-     }
-
-    public function deleteWrite($writeModel, $writeId)
+    // (게시물 이동) 기존 원본 게시물만 삭제 (첨부파일 정보변경은 updateAttachedFileInfo() 에서 한다.)
+    public function deleteCopyWrites($writeModel)
     {
-        // 게시글 삭제
-        $result = $writeModel->where('id', $writeId)->delete();
+        $writeIds = session()->get('writeIds'); // 복사할 대상 게시물들의 id
 
-        // 최근 게시물
+        if(gettype($writeIds) == 'string') {
+            $result = $writeModel->where('id', $writeIds)->delete();
+        } else {
+            // foreach로 deleteWrite() 메서드 호출
 
-        // 스크랩 삭제
+            $result = $writeModel->whereRaw('id in (' . implode(",", $writeIds) . ') ')->delete();
+        }
 
-        // 공지사항 삭제해서 업데이트
-        $this->deleteNotice($writeId);
-
-        return $result;
-     }
-
-     // (게시판) 글 선택 삭제 - 글 갯수 만큼 deleteWrite() 메서드 돌리기
-     public function selectDeleteWrites($writeModel, $ids)
-     {
-         // 첨부파일도 함께 삭제한다.
-         $idsArr = explode(',', $ids);
-         foreach($idsArr as $id) {
-             // deleteWrite() 메서드 호출
-
-             BoardFile::where([
-                 'board_id' => $this->board->id,
-                 'write_id' => $id
-             ])->delete();
-         }
-
-         $result = $writeModel->whereRaw('id in (' . $ids . ') ')->delete();
-
-         if($result > 0) {
-             return '선택한 글이 삭제되었습니다.';
-         } else {
-             return '선택한 글의 삭제가 실패하였습니다.';
-         }
-     }
-
-     // (게시물 이동) 기존 원본 게시물만 삭제 (첨부파일 정보변경은 updateAttachedFileInfo() 에서 한다.)
-     public function deleteCopyWrites($writeModel)
-     {
-         $writeIds = session()->get('writeIds'); // 복사할 대상 게시물들의 id
-
-         if(gettype($writeIds) == 'string') {
-             $result = $writeModel->where('id', $writeIds)->delete();
-         } else {
-             // foreach로 deleteWrite() 메서드 호출
-
-             $result = $writeModel->whereRaw('id in (' . implode(",", $writeIds) . ') ')->delete();
-         }
-
-         if($result > 0) {
-             return '게시물 이동에 성공하였습니다.';
-         } else {
-             return '게시물 이동이 실패하였습니다.';
-         }
-     }
+        if($result > 0) {
+            return '게시물 이동에 성공하였습니다.';
+        } else {
+            return '게시물 이동이 실패하였습니다.';
+        }
+    }
 
 }

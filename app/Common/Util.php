@@ -3,6 +3,8 @@
 namespace App\Common;
 
 use App\Config;
+use App\Write;
+use App\Board;
 use Image;
 
 // 공통으로 사용하는 메서드

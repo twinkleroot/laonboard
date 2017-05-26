@@ -42,7 +42,7 @@ class BoardController extends Controller
      */
     public function index(Request $request, $boardId)
     {
-        $params = $this->writeModel->getBbsIndexParams($this->writeModel, $request);
+        $params = $this->writeModel->getIndexParams($this->writeModel, $request);
 
         if(isset($params['message'])) {
             return view('message', $params);
@@ -96,7 +96,7 @@ class BoardController extends Controller
         }
 
         if($this->writeModel->board->use_list_view) {
-            $params = array_collapse([$params, $this->writeModel->getBbsIndexParams($this->writeModel, $request)]);
+            $params = array_collapse([$params, $this->writeModel->getIndexParams($this->writeModel, $request)]);
 
             // $refer = explode('page=', $request->server('REQUEST_URI'));
             // $currentPage = 1;
@@ -164,7 +164,7 @@ class BoardController extends Controller
      */
     public function create($boardId)
     {
-        $params = $this->writeModel->getBbsCreateParams($this->writeModel);
+        $params = $this->writeModel->getCreateParams($this->writeModel);
 
         return view('board.form', $params);
     }
@@ -177,7 +177,17 @@ class BoardController extends Controller
      */
     public function store(Request $request, $boardId)
     {
-        $writeId = $this->writeModel->storeWrite($this->writeModel, $request);
+        $result = $this->writeModel->storeWrite($this->writeModel, $request);
+
+        $writeId = 0;
+        if(isset($result['message']) && !preg_match("/^[A-Z]+$/", $result['message'])) {
+            return view('message', [
+                    'message' => $result['message'],
+                    'redirect' => route('board.view', ['boardId' => $boardId, 'writeId' => $request->writeId]),
+                ]);
+        } else {
+            $writeId = $result;
+        }
 
         if(count($request->attach_file) > 0) {
             $message = $this->boardFileModel->createBoardFiles($request, $boardId, $writeId);
@@ -229,9 +239,22 @@ class BoardController extends Controller
             }
         }
         // 게시 글 수정
-        $this->writeModel->updateWrites($this->writeModel, $request, $writeId, $file);
+        $this->writeModel->updateWrite($this->writeModel, $request, $writeId, $file);
 
         return redirect(route('board.view', ['boardId' => $boardId, 'writeId' => $writeId] ));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function createReply($boardId, $writeId)
+    {
+        $params = $this->writeModel->getReplyParams($boardId, $writeId, $this->writeModel);
+
+        return view('board.form', $params);
     }
 
     /**
@@ -240,14 +263,24 @@ class BoardController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($boardId, $writeId)
+    public function destroy(Request $request, $boardId, $writeId)
     {
-        $message = $this->deleteWriteCascade($boardId, $writeId);
+        $message = $redirect = '';
+
+        if( $this->writeModel->hasReply($this->writeModel, $writeId) ) {
+            $message = '이 글과 관련된 답변글이 존재하므로 삭제 할 수 없습니다.\\n\\n우선 답변글부터 삭제하여 주십시오.';
+        } else if( $this->writeModel->hasComment($this->writeModel, $writeId)) {
+            $message = '이 글과 관련된 코멘트가 존재하므로 삭제 할 수 없습니다.\\n\\n코멘트가 '
+                    . $this->boardModel->count_delete. '건 이상 달린 원글은 삭제할 수 없습니다.';
+        } else {
+            $message = $this->deleteWriteCascade($boardId, $writeId);
+            $redirect = route('board.index', $boardId);
+        }
 
         if($message != '') {
             return view('message', [
                 'message' => $message,
-                'redirect' => route('board.index', $boardId),
+                'redirect' => $redirect,
             ]);
         }
 

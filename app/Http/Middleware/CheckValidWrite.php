@@ -17,9 +17,7 @@ class CheckValidWrite
     public function handle($request, Closure $next)
     {
         $write = new Write($request->boardId);
-        if( !is_null($write->board) ) {
-            $write->setTableName($write->board->table_name);
-        }
+        $write->setTableName($write->board->table_name);
 
         if( is_null($write->find($request->writeId)) ) {
             return redirect(route('message'))

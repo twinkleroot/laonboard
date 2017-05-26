@@ -664,7 +664,7 @@
                             <th>최대 댓글수 제한</th>
                             <td>
                                 댓글 입력시 최대 글자수를 설정. 0을 입력하면 검사하지 않음<br />
-                                <input type="text" name="comment_max" @if($type == 'edit' && $board->comment_max == 1 ) checked @endif />
+                                <input type="text" name="comment_max" @if($type == 'edit') value="{{ $board->comment_max }}" @endif />
                             </td>
                             <td>
                                 <input type="checkbox" id="chk_group_comment_max" name="chk_group_comment_max" value="1" />

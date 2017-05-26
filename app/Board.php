@@ -364,4 +364,5 @@ class Board extends Model
             'type' => $request->type,
         ];
     }
+
 }

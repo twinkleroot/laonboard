@@ -60,6 +60,10 @@ class Kernel extends HttpKernel
         'level' => \App\Http\Middleware\CheckLevel::class,
         // 유저의 레벨과 게시판 마다의 레벨 기준을 비교해서 접근 가능 여부 판단
         'level.board' => \App\Http\Middleware\CheckBoardLevel::class,
+        // 글 수정, 삭제가 가능한지 검사
+        'editable' => \App\Http\Middleware\EditableWrite::class,
+        // 글 답변이 가능한지 검사
+        'writable.reply' => \App\Http\Middleware\WritableReply::class,
         // 해당 항목의 유효 여부 검사
         'store.write' => \App\Http\Middleware\VerifyBoardWrite::class,
         'valid.write' => \App\Http\Middleware\CheckValidWrite::class,
