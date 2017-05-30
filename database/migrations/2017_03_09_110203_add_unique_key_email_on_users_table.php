@@ -14,7 +14,7 @@ class AddUniqueKeyEmailOnUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('email')->unique()->change();
+            $table->unique('email');
         });
     }
 
@@ -26,7 +26,7 @@ class AddUniqueKeyEmailOnUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('email')->change();
+            $table->dropUnique('users_email');
         });
     }
 }
