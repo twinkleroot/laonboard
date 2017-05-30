@@ -30,7 +30,7 @@ class BoardController extends Controller
             $this->writeModel->setTableName($this->writeModel->board->table_name);
         }
 
-        $this->boardModel = $board;
+        $this->boardModel = Board::find($request->boardId);
         $this->boardFileModel = $boardFile;
         $this->boardGoodModel = $boardGood;
     }
@@ -87,6 +87,7 @@ class BoardController extends Controller
      */
     public function view(Request $request, $boardId, $writeId)
     {
+        // 글 보기 데이터
         $params = $this->writeModel->getViewParams($request, $boardId, $writeId, $this->writeModel);
 
         if(isset($params['message'])) {
@@ -95,6 +96,10 @@ class BoardController extends Controller
             ]);
         }
 
+        // 댓글 데이터
+        $params = array_collapse([$params, $this->writeModel->getCommentsParams($this->writeModel, $writeId)]);
+
+        // 전체 목록 보기 선택시 목록 데이터
         if($this->writeModel->board->use_list_view) {
             $params = array_collapse([$params, $this->writeModel->getIndexParams($this->writeModel, $request)]);
 
@@ -112,6 +117,31 @@ class BoardController extends Controller
         }
 
         return view('board.view', $params);
+    }
+
+    // 댓글 저장
+    public function storeComment(Request $request)
+    {
+        $result = $this->writeModel->storeComment($this->writeModel, $request);
+        if(isset($result['message'])) {
+            return view('message', [
+                'message' => $result['message']
+            ]);
+        }
+
+        return redirect()->back();
+    }
+
+    // 댓글 수정
+    public function updateComment(Request $request)
+    {
+        dd($request);
+    }
+
+    // 댓글 삭제
+    public function destroyComment(Request $request, $writeId, $commentId)
+    {
+
     }
 
     // 글 보기 중 링크 연결
@@ -270,8 +300,7 @@ class BoardController extends Controller
         if( $this->writeModel->hasReply($this->writeModel, $writeId) ) {
             $message = '이 글과 관련된 답변글이 존재하므로 삭제 할 수 없습니다.\\n\\n우선 답변글부터 삭제하여 주십시오.';
         } else if( $this->writeModel->hasComment($this->writeModel, $writeId)) {
-            $message = '이 글과 관련된 코멘트가 존재하므로 삭제 할 수 없습니다.\\n\\n코멘트가 '
-                    . $this->boardModel->count_delete. '건 이상 달린 원글은 삭제할 수 없습니다.';
+            $message = '이 글과 관련된 코멘트가 존재하므로 삭제 할 수 없습니다.\\n\\n코멘트가 '. $this->boardModel->count_delete. '건 이상 달린 원글은 삭제할 수 없습니다.';
         } else {
             $message = $this->deleteWriteCascade($boardId, $writeId);
             $redirect = route('board.index', $boardId);

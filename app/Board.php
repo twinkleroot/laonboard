@@ -319,26 +319,16 @@ class Board extends Model
                 $table->string('ip')->nullable();
                 $table->string('facebook_user')->nullable();
                 $table->string('twitter_user')->nullable();
-                $table->string('subj_1')->nullable();
-                $table->string('subj_2')->nullable();
-                $table->string('subj_3')->nullable();
-                $table->string('subj_4')->nullable();
-                $table->string('subj_5')->nullable();
-                $table->string('subj_6')->nullable();
-                $table->string('subj_7')->nullable();
-                $table->string('subj_8')->nullable();
-                $table->string('subj_9')->nullable();
-                $table->string('subj_10')->nullable();
-                $table->string('value_1')->nullable();
-                $table->string('value_2')->nullable();
-                $table->string('value_3')->nullable();
-                $table->string('value_4')->nullable();
-                $table->string('value_5')->nullable();
-                $table->string('value_6')->nullable();
-                $table->string('value_7')->nullable();
-                $table->string('value_8')->nullable();
-                $table->string('value_9')->nullable();
-                $table->string('value_10')->nullable();
+                $table->string('extra_1')->nullable();
+                $table->string('extra_2')->nullable();
+                $table->string('extra_3')->nullable();
+                $table->string('extra_4')->nullable();
+                $table->string('extra_5')->nullable();
+                $table->string('extra_6')->nullable();
+                $table->string('extra_7')->nullable();
+                $table->string('extra_8')->nullable();
+                $table->string('extra_9')->nullable();
+                $table->string('extra_10')->nullable();
             });
 
             // 라라벨 기본 API에서 mysql의 set type을 지원하지 않으므로 enum으로 생성하고 set으로 변경한다.

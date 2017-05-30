@@ -64,6 +64,8 @@ class Kernel extends HttpKernel
         'editable' => \App\Http\Middleware\EditableWrite::class,
         // 글 답변이 가능한지 검사
         'writable.reply' => \App\Http\Middleware\WritableReply::class,
+        // 댓글 쓰기가 가능한지 검사
+        'writable.comment' => \App\Http\Middleware\WritableComment::class,
         // 해당 항목의 유효 여부 검사
         'store.write' => \App\Http\Middleware\VerifyBoardWrite::class,
         'valid.write' => \App\Http\Middleware\CheckValidWrite::class,

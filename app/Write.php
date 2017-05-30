@@ -89,7 +89,7 @@ class Write extends Model
         $notices = explode(',', $this->board->notice);
 
         $result = [];
-        try {
+        // try {
             $result = $this->getWrites($writeModel, $request, $kind, $keyword, $currenctCategory);
             if($result['message'] != '') {
                 return [
@@ -100,12 +100,12 @@ class Write extends Model
                     $viewParams['page'] = 'page='. $result['writes']->currentPage();
                 }
             }
-        } catch (Exception $e) {
-            return [
-                'message' => '글이 존재하지 않습니다.\\n글이 삭제되었거나 이동하였을 수 있습니다.',
-                'redirect' => '/'
-            ];
-        }
+        // } catch (Exception $e) {
+        //     return [
+        //         'message' => '글이 존재하지 않습니다.\\n글이 삭제되었거나 이동하였을 수 있습니다.',
+        //         'redirect' => '/'
+        //     ];
+        // }
 
         return [
             'board' => $this->board,
@@ -165,7 +165,8 @@ class Write extends Model
         // 기본 ( 공지는 기본만 가져간다. )
         $query = $writeModel
                 ->selectRaw($writeModel->table.'.*, users.level as user_level')
-                ->leftJoin('users', 'users.id', '=', $writeModel->table.'.user_id');
+                ->leftJoin('users', 'users.id', '=', $writeModel->table.'.user_id')
+                ->where('is_comment', 0);
 
         // + 카테고리
         if($currenctCategory != '') {
@@ -350,6 +351,27 @@ class Write extends Model
         ];
     }
 
+    // 댓글 데이터
+    public function getCommentsParams($writeModel, $writeId)
+    {
+        // 원글
+        $comments = $writeModel->where([
+            'parent' => $writeId,
+            'is_comment' => 1,
+        ])
+        ->orderBy('comment')
+        ->orderBy('comment_reply')
+        ->get();
+
+        foreach($comments as $comment) {
+            $comment->user_id = encrypt($comment->user_id);     // 라라벨 기본 지원 encrypt
+        }
+
+        return [
+            'comments' => $comments,
+        ];
+    }
+
     // 에디터로 업로드한 이미지 경로를 추출해서 내용의 img 태그 부분을 교체한다.
     public function includeImagePathByEditor($content)
     {
@@ -512,7 +534,7 @@ class Write extends Model
             if (Config::getConfig('config.homepage')->usePoint
                 && $boardPoint
                 && $user->point + $boardPoint < 0) {
-                    return '보유하신 포인트('.number_format($user->point).')가 없거나 모자라서'. $contentPiece. '('.number_format($boardPoint).')가 불가합니다.\\n\\n포인트를 모으신 후 다시'.$contentPiece.' 해 주십시오.';
+                    return '보유하신 포인트('.number_format($user->point).')가 없거나 모자라서'. $contentPiece. '('.number_format($boardPoint).')가 불가합니다.\\n\\n포인트를 적립하신 후 다시'.$contentPiece.' 해 주십시오.';
             }
 
             // 포인트 계산하기
@@ -759,51 +781,144 @@ class Write extends Model
         $writeModel->insert($insertData);
         $lastInsertId = DB::getPdo()->lastInsertId();   // 마지막에 삽입한 행의 id 값 가져오기
         $newWrite = $writeModel->where('id', $lastInsertId)->first();
-        $toUpdateColumn = [
-            'parent' => $newWrite->id,
-        ];
 
+        // 포인트 부여(글쓰기, 댓글)
         $pointType = 0;
-        // 댓글인 경우
-        if($newWrite->is_comment == 1) {
-            // $toUpdateColumn = [
-            //     'parent' => 원글의 글번호,
-            //     'hit' => 0
-            // ];
-            $relAction = '댓글';
-            $content = $this->board->subject . ' ' . '원글-' . $lastInsertId . ' 댓글쓰기';
+        $relAction = '쓰기';
+        $content = $this->board->subject . ' ' . $lastInsertId;
+        if($request->type == 'reply') {
+            $content .= ' 글답변';
             $pointType = $this->board->comment_point;
         } else {
-            $relAction = '쓰기';
-            $content = $this->board->subject . ' ' . $lastInsertId;
-            if($request->type == 'reply') {
-                $content .= ' 글답변';
-                $pointType = $this->board->comment_point;
-            } else {
-                $content .= ' 글쓰기';
-                $pointType = $this->board->write_point;
-            }
+            $content .= ' 글쓰기';
+            $pointType = $this->board->write_point;
         }
-        // 포인트 부여(글쓰기, 댓글)
         $this->point->insertPoint($userId, $pointType, $content, $this->board->table_name, $lastInsertId, $relAction);
 
+        // 공지사항인 경우 등록
         if($request->has('notice')) {
             $this->registerNotice($lastInsertId);
         }
 
-        // 댓글일 경우 원글의 num을 가져와서 넣는다.
-        // if( (isset($inputData['is_comment']) && $inputData['is_comment'] == 1)
-        //     || (isset($inputData['reply']) && $inputData['reply'] != '') ) {
-        //     ;
-        // }
-        // 댓글일 경우 원글의 last에 최근 댓글 달린 시간을 업데이트한다.
+        $writeModel->where('id', $lastInsertId)->update(['parent' => $newWrite->id]);
 
-        $writeModel->where('id', $lastInsertId)->update($toUpdateColumn);
+        // 새글 Insert
+
+        // 댓글 1 증가
+        $this->board->update(['count_write' => $this->board->count_write + 1]);
+
+        // 메일 발송
 
         // 저장한 글이 임시저장을 사용한 것이라면 삭제한다.
         Autosave::where('unique_id', $request->uid)->delete();
 
         return $lastInsertId;
+    }
+
+    // 댓글 생성
+    public function storeComment($writeModel, $request)
+    {
+        $writeId = $request->writeId;
+        $write = $writeModel->find($writeId);       // 원 글
+        $tmpComment = 0;
+        $tmpCommentReply = '';
+        // 댓글의 댓글일 때
+        if($request->has('commentId')) {
+            $comment = $writeModel->find($request->commentId);   // 원 댓글
+            if( is_null($comment) ) {
+                return [ 'message' => '답변할 댓글이 없습니다.\\n\\n답변하는 동안 댓글이 삭제되었을 수 있습니다.'];
+            }
+            if(strlen($comment->comment_reply) == 5) {
+                return [ 'message' => '더 이상 답변하실 수 없습니다.\\n\\n답변은 5단계 까지만 가능합니다.'];
+            }
+
+            $tmpComment = $comment->comment;
+            $tmpCommentReply = $this->getCommentReplyValue($writeModel, $write, $comment);
+
+        } else {    // 첫 번째 단계의 댓글일 때
+            $max = $writeModel->where(['parent' => $writeId, 'is_comment' => 1])->max('comment');
+            $tmpComment = $max + 1;
+        }
+
+        $user = Auth::user();
+        $userId = 1;    // $userId가 1이면 비회원
+        $name = '';
+        $password = '';
+        $email = null;
+        $homepage = null;
+        // 회원 글쓰기 일 때
+        if( !is_null($user) ) {
+            // 실명을 사용할 때
+            if($this->board->use_name && !is_null($user->name)) {
+                $name = $user->name;
+            } else {
+                $name = $user->nick;
+            }
+
+            $userId = $user->id;
+            $password = $user->password;
+            $email = $user->email;
+            $homepage = $user->homepage;
+        } else {
+            $name = $request->commentName;
+            $password = bcrypt($request->commentPassword);
+        }
+
+        $insertData = [
+                'num' => $write->num,
+                'reply' => $write->reply,
+                'parent' => $write->id,
+                'is_comment' => 1,
+                'comment' => $tmpComment,
+                'comment_Reply' => $tmpCommentReply,
+                'ca_name' => $write->ca_name,
+                'content' => $request->content,      // 필터 한번 거쳐야 함
+                'hit' => 0,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+                'ip' => $request->ip(),
+                'user_id' => $userId,
+                'password' => $password,
+                'name' => $name,
+                'email' => $email,
+                'homepage' => $homepage,
+                    'option' => $request->has('secret') ? $request->secret : null,
+                'extra_1' => $request->has('extra1') ? $request->extra1 : null,
+                'extra_2' => $request->has('extra2') ? $request->extra2 : null,
+                'extra_3' => $request->has('extra3') ? $request->extra3 : null,
+                'extra_4' => $request->has('extra4') ? $request->extra4 : null,
+                'extra_5' => $request->has('extra5') ? $request->extra5 : null,
+                'extra_6' => $request->has('extra6') ? $request->extra6 : null,
+                'extra_7' => $request->has('extra7') ? $request->extra7 : null,
+                'extra_8' => $request->has('extra8') ? $request->extra8 : null,
+                'extra_9' => $request->has('extra9') ? $request->extra9 : null,
+                'extra_10' => $request->has('extra10') ? $request->extra10 : null,
+        ];
+
+        $writeModel->insert($insertData);
+
+        // 포인트 부여(댓글)
+        $newCommentId = DB::getPdo()->lastInsertId();   // 마지막에 삽입한 행의 id 값 가져오기
+        $relAction = '댓글';
+        $content = $this->board->subject . ' ' . '원글-' . $newCommentId . ' 댓글쓰기';
+        $this->point->insertPoint($userId, $this->board->comment_point, $content, $this->board->table_name, $newCommentId, $relAction);
+
+        // 원글에 댓글수 증가 & 마지막 시간 반영
+        $writeModel
+        ->where(['id' => $writeId])
+        ->update([
+            'comment' => $write->comment + 1,
+            'updated_at' => Carbon::now(),
+        ]);
+
+        // 새글 Insert
+
+        // 댓글 1 증가
+        $this->board->update(['count_comment' => $this->board->count_comment + 1]);
+
+        // 메일 발송
+
+        return $newCommentId;
     }
 
     // 답변 글 단계 구하는 로직
@@ -845,6 +960,44 @@ class Write extends Model
         $reply = $write->reply . $replyChar;
 
         return $reply;
+    }
+
+    // 댓글 단계 구하는 로직
+    private function getCommentReplyValue($writeModel, $write, $comment)
+    {
+        $commentReplyLength = strlen($comment->comment_reply) + 1;
+        if ($this->board->reply_order == 1) {
+            $baginReplyChar = 'A';
+            $endReplyChar = 'Z';
+            $replyNumber = 1;
+            $query = $writeModel->selectRaw("MAX(SUBSTRING(comment_reply, ". $commentReplyLength. ", 1)) as reply")
+                    ->where('parent', $write->id)
+                    ->where('comment', $comment->comment)
+                    ->whereRaw("SUBSTRING(comment_reply, ". $commentReplyLength. ", 1) <> ''");
+        } else {
+            $baginReplyChar = 'Z';
+            $endReplyChar = 'A';
+            $replyNumber = -1;
+            $query = $writeModel->selectRaw("MIN(SUBSTRING(comment_reply, ". $commentReplyLength. ", 1)) as reply")
+                    ->where('parent', $write->id)
+                    ->where('comment', $comment->comment)
+                    ->whereRaw("SUBSTRING(comment_reply, ". $commentReplyLength. ", 1) <> ''");
+
+        }
+        if ($comment->comment_reply) {
+            $query->where('comment_reply', 'like', $comment->comment_reply.'%');
+        }
+        $result = $query->first(); // 쿼리 실행 결과
+
+        if (is_null($result->reply)) {
+            $replyChar = $baginReplyChar;
+        } else if ($result->reply == $endReplyChar) { // A~Z은 26 입니다.
+            return '더 이상 답변하실 수 없습니다.\\n답변은 26개 까지만 가능합니다.';
+        } else {
+            $replyChar = chr(ord($result->reply) + $replyNumber);
+        }
+
+        return $comment->comment_reply . $replyChar;
     }
 
     // 글 수정
@@ -1037,9 +1190,14 @@ class Write extends Model
     public function deleteWrite($writeModel, $writeId)
     {
        // 게시글 삭제
-       $result = $writeModel->where('id', $writeId)->delete();
+       $num = $writeModel->find($writeId)->num;
+       $result = $writeModel->where('num', $num)->delete();
+
+       // 삭제한 게시물 갯수만큼 총 게시글 갯수에서 차감하기
+       $this->board->update(['count_write' => $this->board->count_write - $result]);
 
        // 최근 게시물
+
        // 스크랩 삭제
 
        // 공지사항 삭제해서 업데이트

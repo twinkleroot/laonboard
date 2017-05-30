@@ -2,6 +2,7 @@
 
 namespace App\Common;
 
+use Carbon\Carbon;
 use App\Config;
 use App\Write;
 use App\Board;
@@ -10,6 +11,50 @@ use Image;
 // 공통으로 사용하는 메서드
 class Util
 {
+
+    // 글쓰기 간격 검사
+    public static function checkWriteInterval()
+    {
+        $dt = Carbon::now();
+        $interval = Config::getConfig('config.board')->delaySecond;
+
+        if(session()->has('postTime')) {
+            if(session()->get('postTime') >= $dt->subSecond($interval) && !session()->get('admin')) {
+                return false;
+            }
+        }
+        session()->put('postTime', Carbon::now());
+
+        return true;
+    }
+
+    // 올바르지 않은 코드가 글 내용에 다수 들어가 있는지 검사
+    public static function checkIncorrectContent($request)
+    {
+        if (substr_count($request->content, '&#') > 50) {
+            return false;
+        }
+        return true;
+    }
+
+    // 서버에서 지정한 Post의 최대 크기 검사
+    public static function checkPostMaxSize($request)
+    {
+        if (empty($_POST)) {
+            return false;
+        }
+        return true;
+    }
+
+    // 관리자가 아닌데 공지사항을 남기려 하는 경우가 있는지 검사
+    public static function checkAdminAboutNotice($request)
+    {
+        if ( !session()->get('admin') && $request->has('notice') ) {
+    		return false;
+        }
+        return true;
+    }
+
     // 파일 사이즈 구하기
     public static function getFileSize($size)
     {
@@ -22,7 +67,8 @@ class Util
         }
         return $size;
     }
-        // UTF-8 문자열 자르기
+
+    // UTF-8 문자열 자르기
     // 출처 : https://www.google.co.kr/search?q=utf8_strcut&aq=f&oq=utf8_strcut&aqs=chrome.0.57j0l3.826j0&sourceid=chrome&ie=UTF-8
     public static function utf8Strcut($str, $size, $suffix='...' )
     {

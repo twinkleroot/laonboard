@@ -166,7 +166,7 @@ Route::get('message', ['as' => 'message', 'uses' => 'Message\MessageController@m
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// 게시판
+// 커뮤니티
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -199,9 +199,6 @@ Route::group(['prefix' => 'board/{boardId}'], function () {
         ->middleware('level.board:write_level', 'valid.board');
     Route::post('', ['as' => 'board.store', 'uses' => 'Board\BoardController@store'])
         ->middleware('level.board:write_level', 'valid.board', 'store.write', 'writable.reply');
-    // 글 답변 쓰기
-    Route::get('reply/{writeId}', ['as' => 'board.create.reply', 'uses' => 'Board\BoardController@createReply'])
-        ->middleware('level.board:write_level', 'valid.board', 'valid.write', 'writable.reply');
     // 글 수정
     Route::get('edit/{writeId}', ['as' => 'board.edit', 'uses' => 'Board\BoardController@edit'])
         ->middleware('level.board:update_level', 'valid.board', 'valid.write', 'editable');
@@ -210,6 +207,20 @@ Route::group(['prefix' => 'board/{boardId}'], function () {
     // 글 삭제
     Route::get('delete/{writeId}', ['as' => 'board.destroy', 'uses' => 'Board\BoardController@destroy'])
         ->middleware('valid.board', 'valid.write', 'editable');
+    // 답변 쓰기
+    Route::get('reply/{writeId}', ['as' => 'board.create.reply', 'uses' => 'Board\BoardController@createReply'])
+        ->middleware('level.board:write_level', 'valid.board', 'valid.write', 'writable.reply');
+    // 댓글 쓰기
+    Route::post('comment/store', ['as' => 'board.comment.store', 'uses' => 'Board\BoardController@storeComment'])
+        ->middleware('level.board:comment_level', 'writable.comment:create');
+    // 댓글 수정
+    Route::put('comment/update', ['as' => 'board.comment.update', 'uses' => 'Board\BoardController@updateComment'])
+        ->middleware('level.board:comment_level', 'writable.comment:update');
+    // 댓글 삭제
+    Route::get('comment/delete', ['as' => 'board.comment.destroy', 'uses' => 'Board\BoardController@destroyComment'])
+        ->middleware('level.board:comment_level', 'editable');
+
+
     // 커뮤니티에서의 관리자 기능
     // 글 목록 : 선택 삭제, 선택 복사, 선택 이동,
     // 글 보기 : 복사, 이동, 삭제, 수정
@@ -250,3 +261,5 @@ Route::group(['middleware' => 'valid.user'], function () {
         ]
     ]);
 });
+
+Route::post('ajax/filter', ['as' => 'ajax.filter', 'uses' => 'Board\FilterController@filter']);
