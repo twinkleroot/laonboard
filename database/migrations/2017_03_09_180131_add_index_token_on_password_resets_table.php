@@ -14,7 +14,7 @@ class AddIndexTokenOnPasswordResetsTable extends Migration
     public function up()
     {
         Schema::table('password_resets', function (Blueprint $table) {
-            $table->string('token')->index()->change();
+            $table->index('token');
         });
     }
 
@@ -26,7 +26,7 @@ class AddIndexTokenOnPasswordResetsTable extends Migration
     public function down()
     {
         Schema::table('password_resets', function (Blueprint $table) {
-            $table->string('token')->change();
+            $table->dropIndex('password_resets_token');
         });
     }
 }
