@@ -43,7 +43,7 @@ class Point extends Model
         ];
     }
 
-    // 모든 유저들의 포인트 총합을 구한다.
+    // (포인트 관리) 모든 유저들의 포인트 총합을 구한다.
     public function sumPoint()
     {
         // 각 유저의 현재 포인트를 가져온다.
@@ -58,13 +58,13 @@ class Point extends Model
         return $sum;
     }
 
-    // 포인트 관리 포인트 증감 설정
+    // (포인트 관리) 포인트 증감 설정
     public function givePoint($data)
     {
         $user = User::where('email', $data['email'])->first();
 
         if(!is_null($user)) {
-            $rel_action = 'admin-' . substr(bcrypt(Carbon::now()), 0, 15);
+            $relAction = 'admin-' . substr(bcrypt(Carbon::now()), 0, 15);
 
             // 포인트 부여
             if($user->point + $data['point'] < 0) {
@@ -74,7 +74,7 @@ class Point extends Model
             $user->save();
 
             // 포인트 내역에 기록
-            static::loggingPoint($user, $data['point'], '@passive', $rel_action, $data['content']);
+            static::loggingPoint($user, $data['point'], '@passive', $user->email, $relAction, $data['content']);
 
             // 포인트 부여 성공
             return 'success';
@@ -83,8 +83,8 @@ class Point extends Model
         }
     }
 
-    // 포인트 관리 선택 삭제
-    public function deletePoint($ids)
+    // (포인트 관리) 선택 삭제
+    public function deletePointOnAdmin($ids)
     {
         $idArr = explode(',', $ids);
 
@@ -100,8 +100,6 @@ class Point extends Model
                                     ->where('user_id', $user->id)
                                     ->get();
 
-            // dd($laterPointList);
-
             foreach($laterPointList as $laterPoint) {
                 $laterPoint->user_point -= $point->point;
                 $laterPoint->save();
@@ -112,7 +110,7 @@ class Point extends Model
         }
     }
 
-    // 커뮤니티 포인트 내역 데이터
+    // 커뮤니티 사용자별 포인트 내역
     public function getPointList($id)
     {
         $config = Config::getConfig('config.homepage');
@@ -126,22 +124,6 @@ class Point extends Model
             'points' => $points,
             'sum' => $sum,
         ];
-    }
-
-    // 포인트 테이블에 포인트 부여내역을 기록
-    public static function loggingPoint($user, $pointToGive, $relTable, $relEmail ,$relAction, $content)
-    {
-        Point::create([
-            'user_id' => $user->id,
-            'datetime' => Carbon::now(),
-            'content' => $content,
-            'point' => $pointToGive,
-            'user_point' => $user->point,
-            'expire_date' => date('9999-12-31'),
-            'rel_table' => $relTable,
-            'rel_email' => $relEmail,
-            'rel_action' => $relAction,
-        ]);
     }
 
     // 부여할 포인트점수를 구하는 메서드
@@ -165,12 +147,12 @@ class Point extends Model
     }
 
     // 같은 건으로 포인트를 수령했는지 검사
-    public static function checkPoint($rel_table, $rel_email, $rel_action)
+    public static function checkPoint($relTable, $relEmail, $relAction)
     {
         return Point::where([
-            'rel_table' => $rel_table,
-            'rel_email' => $rel_email,
-            'rel_action' => $rel_action,
+            'rel_table' => $relTable,
+            'rel_email' => $relEmail,
+            'rel_action' => $relAction,
         ])->first();
     }
 
@@ -195,8 +177,6 @@ class Point extends Model
         // 환경 설정의 포인트 설정에 체크(userPoint == 1)해야 포인트를 부여한다.
         $usePoint = Config::getConfig('config.homepage')->usePoint;
         if($usePoint != 0) {
-            $nowDate = Carbon::now()->toDateString();
-
             $user = $data['user'];
             // 기존에 같은 건으로 포인트를 받았는지 조회. 조회되면 포인트 적립 불가
             $existPoint = static::checkPoint($data['relTable'], $data['relEmail'], $data['relAction']);
@@ -208,6 +188,203 @@ class Point extends Model
             }
 
             $user->save();
+        }
+    }
+
+    // 포인트 테이블에 포인트 부여내역을 기록
+    public static function loggingPoint($user, $pointToGive, $relTable, $relEmail ,$relAction, $content)
+    {
+        Point::create([
+            'user_id' => $user->id,
+            'datetime' => Carbon::now(),
+            'content' => $content,
+            'point' => $pointToGive,
+            'user_point' => $user->point,
+            'expire_date' => date('9999-12-31'),
+            'rel_table' => $relTable,
+            'rel_email' => $relEmail,
+            'rel_action' => $relAction,
+        ]);
+    }
+
+    // 포인트 삭제
+    public function deletePoint($userId, $relTable, $relEmail, $relAction)
+    {
+        $result = 0;
+        if($relTable || $relEmail || $relAction) {
+            // 포인트 내역정보
+            $point = Point::where([
+                'user_id' => $userId,
+                'rel_table' => $relTable,
+                'rel_email' => $relEmail,
+                'rel_action' => $relAction,
+            ])->first();
+
+            if( !is_null($point) ) {
+                if($point->point < 0) {
+                    $userId = $point->user_id;
+                    $usePoint = abs($point->point);
+
+                    $this->deleteUsePoint($userId, $usePoint);
+                } else {
+                    if($point->use_point > 0) {
+                        $this->insertUsePoint($userId, $point->use_point, $point->id);
+                    }
+                }
+
+                $result = Point::where([
+                    'user_id' => $userId,
+                    'rel_table' => $relTable,
+                    'rel_email' => $relEmail,
+                    'rel_action' => $relAction,
+                ])->delete();
+
+                // user_point에 반영
+                Point::where('user_id', $userId)
+                    ->where('id', '>', $point->id)
+                    ->decrement('user_point', $point->point);
+
+                // 포인트 내역의 합을 구하고
+                $sumPoint = $this->sumPointByUser($userId);
+
+                // User의 포인트 업데이트
+                $result = User::where('id', $userId)->update(['point' => $sumPoint]);
+            }
+        }
+
+        return $result;
+    }
+
+    // 내역 변경시 포인트 부여
+    public function insertPoint($userId, $point, $content='', $relTable='', $relEmail='', $relAction='', $expire=0)
+    {
+        $configHomepage = Config::getConfig('config.homepage');
+        if(!$configHomepage->usePoint) {
+            return 0;
+        }
+        if($point == 0) {
+            return 0;
+        }
+        if($userId == '') {
+            return 0;
+        }
+        $user = User::where('id', $userId)->first();
+        if(is_null($user)) {
+            return 0;
+        }
+
+        $userPoint = $this->sumPointByUser($userId);
+
+        // 기존에 같은 건으로 포인트를 받았는지 조회. 조회되면 포인트 적립 불가
+        $existPoint = static::checkPoint($relTable, $relEmail, $relAction);
+        if( !is_null($existPoint) ) {
+            return -1;
+        }
+
+        // 포인트 건별 생성
+        // 만료일 설정
+        $expireDate = date('9999-12-31');
+        if($configHomepage->pointTerm > 0) {
+            if($expire > 0) {
+                // $expireDate = date
+            } else {
+                // $expireDate = date
+            }
+        }
+        $pointExpired = 0;
+        if($point < 0) {
+            $pointExpired = 1;
+            $expireDate = Carbon::now();
+        }
+        $pointUserPoint = $userPoint + $point;
+
+        Point::create([
+                    'user_id' => $userId,
+                    'datetime' => Carbon::now(),
+                    'content' => $content,
+                    'use_point' => 0,
+                    'point' => $point,
+                    'user_point' => $pointUserPoint,
+                    'expired' => $pointExpired,
+                    'expire_date' => $expireDate,
+                    'rel_table' => $relTable,
+                    'rel_email' => $relEmail,
+                    'rel_action' => $relAction,
+        ]);
+        // 포인트를 사용한 경우 포인트 내역에 사용금액 기록
+        if($point < 0) {
+            $this->insertUsePoint($userId, $point);
+        }
+        // User 테이블의 point 업데이트
+        User::where('id', $userId)->update(['point' => $pointUserPoint]);
+
+        return 1;
+    }
+
+    // 유저별 포인트 합 구하기
+    private function sumPointByUser($userId)
+    {
+        // 만료된 포인트 내역 처리
+
+        // 포인트 합
+        return Point::where('user_id', $userId)->sum('point');
+    }
+
+    // 사용포인트 삭제
+    public function deleteUsePoint($userId, $usePoint)
+    {
+        $point1 = abs($usePoint);
+
+        $points = Point::where('user_id', $userId)
+                    ->where('expired', '<>', 1)
+                    ->where('use_point', '>', 0)
+                    ->get();
+
+        foreach($points as $point) {
+            $point2 = $point->use_point;
+
+            $expired = $point->expired;
+            if($point->expired == 100 && ($point->expire_date == '9999-12-31' || $point->expire_date >= Carbon::now()) ) {
+                $expired = 0;
+            }
+            if($point2 > $point1) {
+                Point::where('id', $point->id)
+                    ->decrement('use_point', $point1, ['expired' => $expired]);
+                break;
+            } else {
+                Point::where('id', $point->id)
+                    ->update([
+                        'use_point' => 0,
+                        'expired' => $expired,
+                    ]);
+                $point1 -= $point2;
+            }
+        }
+    }
+
+    // 사용포인트 입력
+    public function insertUsePoint($userId, $usePoint, $id='')
+    {
+        $point1 = abs($usePoint);
+
+        $points = Point::where('user_id', $userId)
+                    ->where('id', '<>', $id)
+                    ->where('expired', '=', 0)
+                    ->where('use_point', '>', 0)
+                    ->get();
+
+        foreach($points as $point) {
+            $point2 = $point->point;
+            $point3 = $point->use_point;
+
+            if(($point2 - $point3) > $point) {
+                Point::where('id', $id)->increment('use_point', $point1);
+                break;
+            } else {
+                $point4 = $point2 - $point3;
+                Point::where('id', $id)->increment('use_point', $point4, ['expired' => 100]);
+                $point1 -= $point4;
+            }
         }
     }
 

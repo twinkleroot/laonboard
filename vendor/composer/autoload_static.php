@@ -10,15 +10,15 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
         '1d1b89d124cc9cb8219922c9d5569199' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest.php',
-        'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
+        'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         'e7223560d890eab89cda23685e711e2c' => __DIR__ . '/..' . '/psy/psysh/src/Psy/functions.php',
+        '4a1f389d6ce373bda9e57857d3b61c84' => __DIR__ . '/..' . '/barryvdh/laravel-debugbar/src/helpers.php',
         'f0906e6318348a765ffb6eb24e0d0938' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/helpers.php',
         '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
-        '4a1f389d6ce373bda9e57857d3b61c84' => __DIR__ . '/..' . '/barryvdh/laravel-debugbar/src/helpers.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -82,6 +82,7 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         ),
         'I' => 
         array (
+            'Intervention\\Image\\' => 19,
             'Illuminate\\' => 11,
         ),
         'G' => 
@@ -246,6 +247,10 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         array (
             0 => __DIR__ . '/..' . '/laravel/socialite/src',
         ),
+        'Intervention\\Image\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/intervention/image/src/Intervention/Image',
+        ),
         'Illuminate\\' => 
         array (
             0 => __DIR__ . '/..' . '/laravel/framework/src/Illuminate',
@@ -376,7 +381,9 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         'AddUniqueKeyEmailOnUsersTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_09_110203_add_unique_key_email_on_users_table.php',
         'ChangeNameNullableOnUsers' => __DIR__ . '/../..' . '/database/migrations/2017_03_20_121558_change_name_nullable_on_users.php',
         'ChangeZipDatetimeNickdateOpendateColumnOnUsers' => __DIR__ . '/../..' . '/database/migrations/2017_03_14_122901_change_zip_datetime_nickdate_opendate_column_on_users.php',
+        'CreateAutosavesTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_16_183110_create_autosaves_table.php',
         'CreateBoardFiles' => __DIR__ . '/../..' . '/database/migrations/2017_04_26_170256_create_board_files.php',
+        'CreateBoardGoodsTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_12_110031_create_board_goods_table.php',
         'CreateBoardTable' => __DIR__ . '/../..' . '/database/migrations/2017_04_05_105802_create_board_table.php',
         'CreateConfigsTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_21_154604_create_configs_table.php',
         'CreateGroupTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_30_144728_create_group_table.php',

@@ -64,7 +64,7 @@ class PointsController extends Controller
      */
     public function destroy($id)
     {
-        $this->pointModel->deletePoint($id);
+        $this->pointModel->deletePointOnAdmin($id);
 
         return redirect()->back();
     }

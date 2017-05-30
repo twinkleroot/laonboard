@@ -29,6 +29,24 @@
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
+                        <label for="superAdmin" class="col-md-4 control-label">최고 관리자</label>
+
+                        <div class="col-md-6">
+                            <select name='superAdmin'>
+                                @foreach($admins as $admin)
+                                    <option value='' @if($configHomepage->superAdmin == '') selected @endif>
+                                        선택안함
+                                    </option>
+                                    <option value='{{ $admin->email }}' @if($configHomepage->superAdmin == $admin->email) selected @endif>
+                                        {{ $admin->email }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
                         <label for="usePoint" class="col-md-4 control-label">포인트 사용</label>
 
                         <div class="col-md-6">
@@ -101,6 +119,16 @@
 
                         <div class="col-md-6">
                             <input type="text" name="mobilePages" value="{{ $configHomepage->mobilePages }}">페이지씩 표시
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="pointTerm" class="col-md-4 control-label">포인트 유효기간</label>
+
+                        <div class="col-md-6">
+                            기간을 0으로 설정시 포인트 유효기간이 적용되지 않습니다.<br />
+                            <input type="text" name="pointTerm" value="{{ $configHomepage->pointTerm }}">일
                         </div>
                     </div>
                 </div>

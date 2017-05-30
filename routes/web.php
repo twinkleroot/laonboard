@@ -163,28 +163,103 @@ Route::get('emailCertify/id/{id}/crypt/{crypt}', 'User\MailController@emailCerti
 // 처리 결과 메세지를 경고창으로 알려주는 페이지
 Route::get('message', ['as' => 'message', 'uses' => 'Message\MessageController@message']);
 
-// 커뮤니티 게시판
-// 글 목록 + 검색
-Route::get('board/{boardId}', ['as' => 'board.index', 'uses' => 'Board\BoardController@index'])
-    ->middleware('level.board:list_level');
-// 글 읽기
-Route::get('board/{boardId}/write/{writeId}', ['as' => 'board.show', 'uses' => 'Board\BoardController@show'])
-    ->middleware('level.board:read_level');
-// 글 쓰기
-Route::get('board/{boardId}/create', ['as' => 'board.create', 'uses' => 'Board\BoardController@create'])
-    ->middleware('level.board:write_level');
-Route::post('board/{boardId}', ['as' => 'board.store', 'uses' => 'Board\BoardController@store'])
-    ->middleware('level.board:write_level');
-// 글 수정
-Route::get('board/{boardId}/edit/{writeId}', ['as' => 'board.edit', 'uses' => 'Board\BoardController@edit'])
-    ->middleware('level.board:update_level');
-Route::put('board/{boardId}/write/{writeId}', ['as' => 'board.update', 'uses' => 'Board\BoardController@update'])
-    ->middleware('level.board:update_level');
-// 글 삭제
-Route::delete('board/{boardId}/write/{writeId}', ['as' => 'board.destroy', 'uses' => 'Board\BoardController@destroy'])
-    ->middleware('level.board:delete_level');
-// 글 복사 및 이동 폼
-Route::group(['middleware' => ['auth', 'level:10']], function() {
-    Route::post('board/{boardId}/move', ['as' => 'board.move', 'uses' => 'Board\BoardController@move']);
-    Route::post('board/{boardId}/move/update', ['as' => 'board.moveUpdate', 'uses' => 'Board\BoardController@moveUpdate']);
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// 커뮤니티
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+Route::group(['prefix' => 'board/{boardId}'], function () {
+    // 글 목록 + 검색
+    Route::get('', ['as' => 'board.index', 'uses' => 'Board\BoardController@index'])
+        ->middleware(['level.board:list_level', 'valid.board'])
+        ->where('boardId', '[0-9]+');
+    // 글 읽기
+    Route::get('view/{writeId}', ['as' => 'board.view', 'uses' => 'Board\BoardController@view'])
+        ->middleware('level.board:read_level', 'valid.board', 'valid.write', 'secret.board');
+    // 비밀 글 읽기 전 비밀번호 검사
+    Route::get('view/{writeId}/password', ['as' => 'board.password', 'uses' => 'Board\BoardController@checkPassword'])
+        ->middleware('level.board:read_level', 'valid.board', 'valid.write');
+    Route::post('validatePassword', ['as' => 'board.validatePassword', 'uses' => 'Board\BoardController@validatePassword'])
+        ->middleware('level.board:read_level', 'valid.board', 'valid.write');
+    // 글 읽기 중 링크 연결
+    Route::get('view/{writeId}/link/{linkNo}', ['as' => 'board.link', 'uses' => 'Board\BoardController@link'])
+        ->middleware('level.board:read_level', 'valid.board', 'valid.write');
+    // 글 읽기 중 파일 다운로드
+    Route::get('view/{writeId}/download/{fileNo}', ['as' => 'board.download', 'uses' => 'Board\BoardController@download'])
+        ->middleware('level.board:download_level', 'valid.board', 'valid.write');
+    // 글 읽기 중 추천/비추천
+    Route::post('view/{writeId}/{good}', ['as' => 'board.good', 'uses' => 'Board\BoardController@good'])
+        ->where('good', 'good|nogood')
+        ->middleware('level.board:read_level', 'valid.board', 'valid.write');
+    // 글 쓰기
+    Route::get('create', ['as' => 'board.create', 'uses' => 'Board\BoardController@create'])
+        ->middleware('level.board:write_level', 'valid.board');
+    Route::post('', ['as' => 'board.store', 'uses' => 'Board\BoardController@store'])
+        ->middleware('level.board:write_level', 'valid.board', 'store.write', 'writable.reply');
+    // 글 수정
+    Route::get('edit/{writeId}', ['as' => 'board.edit', 'uses' => 'Board\BoardController@edit'])
+        ->middleware('level.board:update_level', 'valid.board', 'valid.write', 'editable');
+    Route::put('update/{writeId}', ['as' => 'board.update', 'uses' => 'Board\BoardController@update'])
+        ->middleware('level.board:update_level', 'valid.board', 'valid.write', 'editable', 'store.write');
+    // 글 삭제
+    Route::get('delete/{writeId}', ['as' => 'board.destroy', 'uses' => 'Board\BoardController@destroy'])
+        ->middleware('valid.board', 'valid.write', 'editable');
+    // 답변 쓰기
+    Route::get('reply/{writeId}', ['as' => 'board.create.reply', 'uses' => 'Board\BoardController@createReply'])
+        ->middleware('level.board:write_level', 'valid.board', 'valid.write', 'writable.reply');
+    // 댓글 쓰기
+    Route::post('comment/store', ['as' => 'board.comment.store', 'uses' => 'Board\BoardController@storeComment'])
+        ->middleware('level.board:comment_level', 'writable.comment:create');
+    // 댓글 수정
+    Route::put('comment/update', ['as' => 'board.comment.update', 'uses' => 'Board\BoardController@updateComment'])
+        ->middleware('level.board:comment_level', 'writable.comment:update');
+    // 댓글 삭제
+    Route::get('comment/delete', ['as' => 'board.comment.destroy', 'uses' => 'Board\BoardController@destroyComment'])
+        ->middleware('level.board:comment_level', 'editable');
+
+
+    // 커뮤니티에서의 관리자 기능
+    // 글 목록 : 선택 삭제, 선택 복사, 선택 이동,
+    // 글 보기 : 복사, 이동, 삭제, 수정
+    Route::group(['middleware' => ['auth', 'level:10', 'valid.board']], function() {
+        // 복사, 이동 폼
+        Route::get('move', ['as' => 'board.view.move', 'uses' => 'Board\BoardController@move']);
+        // 선택 복사, 이동 폼
+        Route::post('move', ['as' => 'board.list.move', 'uses' => 'Board\BoardController@move']);
+        // 이동, 복사 수행
+        Route::post('move/update', ['as' => 'board.moveUpdate', 'uses' => 'Board\BoardController@moveUpdate']);
+        // 선택 삭제
+        Route::delete('delete/ids/{writeId}', ['as' => 'board.delete.ids', 'uses' => 'Board\BoardController@selectedDelete'])
+            ->middleware('valid.write');
+    });
 });
+
+// 이미지 관련 라우트
+Route::group(['prefix' => 'image'], function () {
+    // 원본 이미지 보기
+    Route::get('original/{boardId?}', ['as' => 'image.original', 'uses' => 'Board\ImageController@viewImage']);
+    // 에디터에서 이미지 업로드 팝업 페이지
+    Route::get('upload', ['as' => 'image.form', 'uses' => 'Board\ImageController@showImagePop']);
+    // 에디터에서 이미지 업로드 실행
+    Route::post('upload', ['as' => 'image.upload', 'uses' => 'Board\ImageController@uploadImage']);
+});
+
+// 임시 저장
+Route::group(['middleware' => 'valid.user'], function () {
+    Route::resource('autosave', 'Board\AutosaveController', [
+        'only' => [
+            'index', 'show', 'store', 'destroy'
+        ],
+        'names' => [
+            'index' => 'autosave.index',
+            'show' => 'autosave.show',
+            'store' => 'autosave.store',
+            'destroy' => 'autosave.destroy'
+        ]
+    ]);
+});
+
+Route::post('ajax/filter', ['as' => 'ajax.filter', 'uses' => 'Board\FilterController@filter']);

@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-     게시판 {{ $title }} | {{ $config->title }}
+     게시판 {{ $title }} | {{ $homePageConfig->title }}
 @endsection
 
 @section('content')
@@ -664,7 +664,7 @@
                             <th>최대 댓글수 제한</th>
                             <td>
                                 댓글 입력시 최대 글자수를 설정. 0을 입력하면 검사하지 않음<br />
-                                <input type="text" name="comment_max" @if($type == 'edit' && $board->comment_max == 1 ) checked @endif />
+                                <input type="text" name="comment_max" @if($type == 'edit') value="{{ $board->comment_max }}" @endif />
                             </td>
                             <td>
                                 <input type="checkbox" id="chk_group_comment_max" name="chk_group_comment_max" value="1" />
@@ -1123,10 +1123,11 @@ $(function(){
 // 환경설정에 입력된 포인트로 설정 함수
 function set_point(f) {
     if (f.config_env_point.checked) {
-        f.read_point.value = {{ $board['read_point'] }};
-        f.write_point.value = {{ $board['write_point'] }};
-        f.comment_point.value = {{ $board['comment_point'] }};
-        f.download_point.value = {{ $board['download_point'] }};
+        // alert(f.read_point.defaultValue);
+        f.read_point.value = {{ $boardConfig->readPoint }};
+        f.write_point.value = {{ $boardConfig->writePoint }};
+        f.comment_point.value = {{ $boardConfig->commentPoint }};
+        f.download_point.value = {{ $boardConfig->downloadPoint }};
     } else {
         f.read_point.value     = f.read_point.defaultValue;
         f.write_point.value    = f.write_point.defaultValue;

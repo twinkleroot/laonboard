@@ -51,7 +51,7 @@ class UserController extends Controller
         $email = $user->email;
 
         // 입력한 비밀번호와 인증된 사용자의 비밀번호를 비교한다.
-        if(Auth::attempt(['email' => $email, 'password' => $request->get('password') ], false, false)) {
+        if(Auth::validate(['email' => $email, 'password' => $request->get('password') ])) {
             return redirect(route('user.edit'));
         } else {
             return redirect(route('user.checkPassword'))->with('message', '비밀번호가 틀립니다.');

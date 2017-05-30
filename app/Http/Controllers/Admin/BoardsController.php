@@ -103,7 +103,7 @@ class BoardsController extends Controller
             abort('500', '게시판 설정의 변경에 실패하였습니다.');
         }
 
-        return redirect(route('admin.boards.index'))->with('message', $subject . ' 게시판의 설정이 변경되었습니다.');
+        return redirect(route('admin.boards.edit', $id))->with('message', $subject . ' 게시판의 설정이 변경되었습니다.');
     }
 
     // 선택 수정 수행
