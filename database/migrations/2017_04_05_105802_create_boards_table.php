@@ -16,7 +16,7 @@ class CreateBoardsTable extends Migration
         if(!Schema::hasTable('boards')) {
             Schema::create('boards', function (Blueprint $table) {
                 $table->increments('id');
-                $table->string('table', '20');
+                $table->string('table_name', '20');
                 // groups 테이블에 대한 참조키
                 $table->integer('group_id')->unsigned();
                 $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');
