@@ -24,7 +24,7 @@
                         <tr>
                             <th>그룹 ID</th>
                             <td @if($errors->get('group_id')) class="has-error" @endif>
-                                <input type="text" class="form-control" @if($type == 'edit') value="{{ $group->group_id }}" readonly @endif />
+                                <input type="text" class="form-control" name="group_id" maxlength="10" @if($type == 'edit') value="{{ $group->group_id }}" readonly @endif />
                                 @if($type == 'edit')
                                     영문자, 숫자, _ 만 가능 (공백없이)
                                     <a href="">게시판그룹 바로가기</a>

@@ -34,7 +34,7 @@ class AddColumnUserTable extends Migration
             $table->text('signature')->nullable();
             $table->string('recommend')->nullable();
             $table->integer('point')->nullable()->default(0);
-            $table->timestamp('today_login')->nullable();
+            $table->timestamp('today_login');
             $table->string('login_ip')->nullable();
             $table->timestamp('datetime')->nullable();
             $table->string('ip')->nullable();
@@ -50,6 +50,9 @@ class AddColumnUserTable extends Migration
             $table->date('open_date')->nullable();
             $table->text('profile')->nullable();
             $table->string('memo_call')->nullable();
+
+            $table->index('today_login');
+            $table->index('updated_at');
         });
     }
 
@@ -61,8 +64,12 @@ class AddColumnUserTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('nick');
-            $table->dropColumn('nick_date');
+            if(Schema::hasColumn('users', 'nick')) {
+                $table->dropColumn('nick');
+            }
+            if(Schema::hasColumn('users', 'nick_date')) {
+                $table->dropColumn('nick_date');
+            }
             $table->dropColumn('homepage');
             $table->dropColumn('level');
             $table->dropColumn('sex');
@@ -72,18 +79,28 @@ class AddColumnUserTable extends Migration
             $table->dropColumn('certify');
             $table->dropColumn('adult');
             $table->dropColumn('dupinfo');
-            $table->dropColumn('zip1');
-            $table->dropColumn('zip2');
+            if(Schema::hasColumn('users', 'zip1')) {
+                $table->dropColumn('zip1');
+            }
+            if(Schema::hasColumn('users', 'zip2')) {
+                $table->dropColumn('zip2');
+            }
             $table->dropColumn('addr1');
             $table->dropColumn('addr2');
-            $table->dropColumn('addr3');
+            if(Schema::hasColumn('users', 'addr3')) {
+                $table->dropColumn('addr3');
+            }
             $table->dropColumn('addr_jibeon');
             $table->dropColumn('signature');
-            $table->dropColumn('recommend');
+            if(Schema::hasColumn('users', 'recommend')) {
+                $table->dropColumn('recommend');
+            }
             $table->dropColumn('point');
             $table->dropColumn('today_login');
             $table->dropColumn('login_ip');
-            $table->dropColumn('datetime');
+            if(Schema::hasColumn('users', 'datetime')) {
+                $table->dropColumn('datetime');
+            }
             $table->dropColumn('ip');
             $table->dropColumn('leave_date');
             $table->dropColumn('intercept_date');
@@ -94,7 +111,9 @@ class AddColumnUserTable extends Migration
             $table->dropColumn('mailing');
             $table->dropColumn('sms');
             $table->dropColumn('open');
-            $table->dropColumn('open_date');
+            if(Schema::hasColumn('users', 'open_date')) {
+                $table->dropColumn('open_date');
+            }
             $table->dropColumn('profile');
             $table->dropColumn('memo_call');
         });

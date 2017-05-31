@@ -224,8 +224,21 @@
 				</label>
 			</div>
 		</div>
+        @if($board->comment_min || $board->comment_max)
+            <span id="charCount"></span>글자
+        @endif
+		<textarea class="form-control" rows="4" name="content" id="content" @if($board->comment_min || $board->comment_max) onkeyup="check_byte('content', 'charCount');" @endif placeholder="댓글을 입력해 주세요."></textarea>
 
-		<textarea class="form-control" rows="4" name="content" id="content" placeholder="댓글을 입력해 주세요."></textarea>
+        <script>
+            $(document).on( "keyup change", "textarea#content[maxlength]", function(){
+                var str = $(this).val()
+                var mx = parseInt($(this).attr("maxlength"))
+                if (str.length > mx) {
+                    $(this).val(str.substr(0, mx));
+                    return false;
+                }
+            });
+        </script>
 
 	    <div class="row clearfix">
 	    	<!-- 리캡챠 -->
@@ -270,10 +283,51 @@ function commentSubmit(form) {
     });
 
     if(content) {
-        alert("내용에 금지단어'" + content + "')가 포함되어 있습니다.");
+        alert("내용에 금지단어 (" + content + ") 가 포함되어 있습니다.");
         form.content.focus();
         return false;
     }
+
+    // 양쪽 공백 없애기
+    var pattern = /(^\s*)|(\s*$)/g; // \s 공백 문자
+    document.getElementById('content').value = document.getElementById('content').value.replace(pattern, "");
+
+    var minComment = parseInt('{{ $board->comment_min }}');
+    var maxComment = parseInt('{{ $board->commnet_max }}');
+    if (minComment > 0 || maxComment > 0) {
+        check_byte('content', 'charCount');
+        var cnt = parseInt(document.getElementById('charCount').innerHTML);
+        if (minComment > 0 && minComment > cnt) {
+            alert("댓글은 " + minComment + "글자 이상 쓰셔야 합니다.");
+            return false;
+        } else if (maxComment > 0 && maxComment < cnt) {
+            alert("댓글은 " + maxComment + "글자 이하로 쓰셔야 합니다.");
+            return false;
+        }
+    } else if (!document.getElementById('content').value) {
+        alert("댓글을 입력하여 주십시오.");
+        return false;
+    }
+
+    if (typeof(f.name) != 'undefined') {
+        f.name.value = f.name.value.replace(pattern, "");
+        if (f.name.value == '') {
+            alert('이름이 입력되지 않았습니다.');
+            f.name.focus();
+            return false;
+        }
+    }
+
+    if (typeof(f.password) != 'undefined') {
+        f.password.value = f.password.value.replace(pattern, "");
+        if (f.password.value == '') {
+            alert('비밀번호가 입력되지 않았습니다.');
+            f.password.focus();
+            return false;
+        }
+    }
+
+    // if($is_guest) echo chk_captcha_js();
 
     document.getElementById("btnSubmit").disabled = "disabled";
 
@@ -306,8 +360,8 @@ function commentBox(commentId, work) {
         // 댓글 수정
         if (work == 'cu') {
             document.getElementById('content').value = document.getElementById('saveComment_' + commentId).value;
-            if (typeof char_count != 'undefined')
-                check_byte('content', 'char_count');
+            if (typeof charCount != 'undefined')
+                check_byte('content', 'charCount');
             if (document.getElementById('secretComment_'+commentId).value) {
                 document.getElementById('secret').checked = true;
             } else {
