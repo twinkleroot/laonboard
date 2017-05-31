@@ -93,8 +93,27 @@ class CreateBoardTable extends Migration
                 $table->enum('use_cert', ['not-use', 'cert', 'adult', 'hp-cert', 'hp-adult']);
                 $table->tinyInteger('use_sns')->default(0);
                 $table->string('sort_field')->nullable();
-
                 $table->timestamps();
+                $table->string('subj_1')->nullable();
+                $table->string('subj_2')->nullable();
+                $table->string('subj_3')->nullable();
+                $table->string('subj_4')->nullable();
+                $table->string('subj_5')->nullable();
+                $table->string('subj_6')->nullable();
+                $table->string('subj_7')->nullable();
+                $table->string('subj_8')->nullable();
+                $table->string('subj_9')->nullable();
+                $table->string('subj_10')->nullable();
+                $table->string('value_1')->nullable();
+                $table->string('value_2')->nullable();
+                $table->string('value_3')->nullable();
+                $table->string('value_4')->nullable();
+                $table->string('value_5')->nullable();
+                $table->string('value_6')->nullable();
+                $table->string('value_7')->nullable();
+                $table->string('value_8')->nullable();
+                $table->string('value_9')->nullable();
+                $table->string('value_10')->nullable();
             });
         }
     }

@@ -19,6 +19,7 @@ class CreateSocialLoginTable extends Migration
                 $table->string('provider', 20)->nullable();
                 $table->string('social_id')->nullable();
                 $table->text('social_token')->nullable();
+                $table->string('ip')->nullable();
                 $table->timestamps();
 
                 // users 테이블에 대한 참조키
