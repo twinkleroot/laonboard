@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>환경설정</title>
+
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="../assets/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../assets/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="../assets/font-awesome/css/font-awesome.css">
+
+    <!-- js -->
+    <script src="../assets/js/jquery-3.1.1.min.js"></script>
+
+</head>
+<body>
+
+<div id="admin-header">
+	<div class="header-title">
+		<h1><i class="fa fa-cogs"></i>Administrator</h1>
+	</div>
+
+	<div class="box-left pull-left">
+		<div class="hdbt bt-menu">
+			<i class="fa fa-bars"></i>
+			<span>menu</span>
+		</div>
+		<div class="hdbt bt-home">
+			<i class="fa fa-home"></i>
+			<span>home</span>
+		</div>
+	</div>
+
+	<div class="box-right pull-right">
+		<div class="hdtx">
+			<ul>
+				<li>
+					<a href="#">부가서비스</a>
+				</li>
+			</ul>
+		</div>
+		<div class="hdbt bt-user">
+			<i class="fa fa-user"></i>
+			<span class="sign">최고관리자</span>
+		</div>
+	</div>
+</div>
+
+<div class="sidebar">
+	<ul class="category">
+		<li class="dropdown">
+            <a href="#" class="sd-1depth" data-toggle="dropdown" role="button" aria-expanded="false">환경설정</a>
+            <ul class="sd-2depth" role="menu">
+                <li><a href="config_form.html">기본환경설정</a></li>
+                <li><a href="#">관리권한설정</a></li>
+                <li><a href="#">테마설정</a></li>
+                <li><a href="#">메뉴설정</a></li>
+                <li><a href="#">부가서비스</a></li>
+            </ul>
+        </li>
+        <li class="dropdown open">
+            <a href="#" class="sd-1depth" data-toggle="dropdown" role="button" aria-expanded="false">회원관리</a>
+            <ul class="sd-2depth" role="menu">
+                <li class="on"><a href="member_list.html">회원관리</a></li>
+                <li><a href="#">포인트관리</a></li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a href="#" class="sd-1depth" data-toggle="dropdown" role="button" aria-expanded="false">게시판관리</a>
+            <ul class="sd-2depth" role="menu">
+                <li><a href="#">게시판관리</a></li>
+                <li><a href="#">게시판그룹관리</a></li>
+            </ul>
+        </li>
+	</ul>
+</div>
+
+<div id="admin-body" style="height:2000px;">
+	<div class="body-head clearfix">
+		<div class="pull-left">
+			<h3>게시판관리</h3>
+			<ul class="fl">
+				<li class="admin">Admin</li>
+				<li class="depth">게시판관리</li>
+				<li class="depth">게시판그룹목록</li>
+			</ul>
+		</div>
+		<div class="pull-right">
+			<ul class="mb_btn" style="margin-top:8px;">
+				<li>
+					<button type="" class="btn btn-default">선택수정</button>
+				</li>
+				<li>
+					<button type="" class="btn btn-default">선택삭제</button>
+				</li>
+				<li>
+					<a class="btn btn-default" href="boardgroup_form.html" role="button">게시판그룹 추가</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="body-contents">	
+
+		<!-- 관리 페이지 -->
+		<div id="mb" class="">
+			<ul class="mb_btn mb10 pull-left">
+				<li>
+					<button type="" class="btn btn-sir pull-left">처음</button>
+				</li>
+				<li>
+					<span class="total">전체그룹 3개</span>
+				</li>
+			</ul>
+			<div class="mb_sch mb10 pull-right">
+			    <form>
+			        <label for="" class="sr-only">검색대상</label>
+					<select name="" id="">
+						<option value="">제목</option>
+						<option value="">그룹아이디</option>
+						<option value="">그룹관리자</option>
+					</select>
+				    <label for="" class="sr-only">검색어</label>
+				    <input type="text" name="" value="" id="" class="search" required>
+				    <button type="submit" id="" class="search-icon">
+				    	<i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">검색</span>
+					</button>
+				</form>
+			</div>
+
+			<table class="table table-striped box">
+				<thead>
+					<tr>
+						<th>
+							<input type="checkbox" name="">
+						</th>
+						<th>그룹아이디</th>
+						<th>제목</th>
+						<th>그룹관리자</th>
+						<th>게시판</th>
+						<th>접근사용</th>
+						<th>접근회원수</th>
+						<th>출력순서</th>
+						<th>접속기기</th>
+						<th>관리</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<input type="checkbox" name="">
+						</td>
+						<td>
+							group01
+						</td>
+						<td>
+							<input type="text">
+						</td>
+						<td>
+							<input type="text">
+						</td>
+						<td>
+							2
+						</td>
+						<td>
+							<input type="checkbox">
+						</td>
+						<td>
+							2
+						</td>
+						<td>
+							<input type="text">
+						</td>
+						<td>
+							<select>
+								<option>모두</option>
+								<option>PC</option>
+								<option>모바일</option>
+							</select>
+						</td>
+						<td>
+							<a href="#">수정</a>
+						</td>
+					</tr>
+
+					<!-- 내역이 없을 경우
+					<tr>
+						<td colspan="13">
+							<span class="empty_table">
+								<i class="fa fa-exclamation-triangle"></i> 자료가 없습니다.
+							</span>
+						</td>
+					</tr>
+					내역이 없을 경우 END -->
+
+				</tbody>
+			</table>
+
+			<!--
+			<ul class="pagination">
+				<li><a href="#"><</a></li>
+			    <li><a href="#">1</a></li>
+			    <li><a href="#">2</a></li>
+			    <li><a href="#">3</a></li>
+			    <li><a href="#">4</a></li>
+			    <li><a href="#">5</a></li>
+			    <li><a href="#">6</a></li>
+			    <li><a href="#">7</a></li>
+			    <li><a href="#">8</a></li>
+			    <li><a href="#">9</a></li>
+			    <li><a href="#">></a></li>
+			</ul>
+			-->
+		</div>
+
+		<div class="help bg-info">
+			접근사용 옵션을 설정하시면 관리자가 지정한 회원만 해당 그룹에 접근할 수 있습니다.<br>
+			접근사용 옵션은 해당 그룹에 속한 모든 게시판에 적용됩니다.
+		</div>
+
+	</div>
+</div>
+
+
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="../assets/js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="../assets/js/ie10-viewport-bug-workaround.js"></script>
+</body>
+</html>

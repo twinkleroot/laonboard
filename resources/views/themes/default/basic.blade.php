@@ -13,8 +13,6 @@
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/style.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/style_new.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/common.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('font-awesome/css/font-awesome.css') }}">
     @yield('include_css')
 
@@ -47,11 +45,8 @@
     <div id="navbar" class="navbar-collapse collapse">
         <!-- menu -->
         <ul class="gnb navbar-nav">
-            <!-- 일반메뉴
-            <li class="gnb-li"><a href="">메뉴1</a></li>
-            <li class="gnb-li"><a href="">메뉴2</a></li>-->
 
-            <li class="gnb-li"><a href="{{ route('board.index', 67) }}">67번 게시판</a></li>
+            <li class="gnb-li"><a href="{{ route('board.index', 0) }}">게시판</a></li>
             @if (Auth::guest()) <!-- 공개권한: 게스트 -->
             <li class="gnb-li"><a href="{{ route('login') }}">로그인</a></li>
             <li class="gnb-li"><a href="{{ route('user.join') }}">회원가입</a></li>

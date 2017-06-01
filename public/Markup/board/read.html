@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>게시글 조회</title>
+
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="../assets/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
+
+
+    <!-- js -->
+    <script type="text/javascript" src="../assets/js/jquery-3.1.1.min.js"></script>
+
+</head>
+<body style="background: #fff;">
+
+<div id="header">
+</div>
+
+<!-- Board start -->
+<div id="board" class="container">
+
+	<!-- 게시글 조회 -->
+	<div class="bd_rd_head">
+		<h1>게시물 제목</h1>
+		<ul class="bd_rd_info">
+			<li><i class="fa fa-user"></i>최고관리자 (106.245.92.30)</li>
+			<li><i class="fa fa-clock-o"></i>17-03-29 11:33</li>
+			<li><i class="fa fa-eye"></i>5</li>
+		</ul>
+		<ul class="bd_rd_btn">
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle bd_rd_more" data-toggle="dropdown" role="button" aria-expanded="false">
+					<i class="fa fa-ellipsis-v"></i>
+				</a>
+				<ul class="dropdown-menu bdmenu" role="menu">
+	                <li><a href="#">수정</a></li>
+	                <li><a href="#">삭제</a></li>
+	                <li><a href="#">복사</a></li>
+	                <li><a href="#">이동</a></li>
+	                <li><a href="#">답변</a></li>
+	            </ul>
+			</li>
+			<li>
+				<a href="#">
+					<i class="fa fa-list-ul"></i>
+				</a>
+			</li>
+			<li>
+				<a href="#">
+					<i class="fa fa-pencil"></i>
+				</a>
+			</li>
+		</ul>
+	</div>
+	<div class="bd_rd">
+
+		<!-- 링크 -->
+		<div class="bd_link">
+			<i class="fa fa-link"></i>
+			<a href="">링크 주소</a>
+			<span class="movecount">(연결된 횟수: 0회)</span>
+		</div>
+
+		컨텐츠가 여기에 들어갑니다<br>
+		컨텐츠가 여기에 들어갑니다<br>
+		컨텐츠가 여기에 들어갑니다<br>
+		컨텐츠가 여기에 들어갑니다<br>
+		컨텐츠가 여기에 들어갑니다<br>
+		컨텐츠가 여기에 들어갑니다<br>
+		컨텐츠가 여기에 들어갑니다<br>
+		컨텐츠가 여기에 들어갑니다<br>
+		컨텐츠가 여기에 들어갑니다<br>
+		http://ahn.gnutest.com/board/67?kind=user_id&keyword=eyJpdiI6IkNMa0VHNmdjQ1RkVG1zR3JmZStLanc9PSIsInZhbHVlIjoiZ2JRXC8remQ1ZFhHNnlld2RWdTI2Z0E9PSIsIm1hYyI6ImVhNjI3ZGRjMjczNTliNjIzNmU5MjkzZGY4MDQ0ZDNkNjBlZWVkMWY3YzM5ZWU4ZmM5YTJhMDJiMjQ0OWZlMWMifQ==
+
+		<!-- 첨부파일 -->
+		<div class="bd_file dropdown">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+				<i class="fa fa-paperclip" style="margin-right: 8px;"></i>첨부된 파일 3개
+			</a>
+			<ul class="dropdown-menu bd_file_list" role="menu">
+	            <li>
+	            	<i class="fa fa-download"></i><a href="">파일명</a>
+					<span class="downcount">(다운로드 횟수: 0회)</span>
+	            </li>
+	            <li>
+	            	<i class="fa fa-download"></i><a href="">파일명</a>
+					<span class="downcount">(다운로드 횟수: 0회)</span>
+	            </li>
+	            <li>
+	            	<i class="fa fa-download"></i><a href="">파일명</a>
+					<span class="downcount">(다운로드 횟수: 0회)</span>
+	            </li>
+	        </ul>
+		</div>
+
+		<!-- 서명 -->
+		<div class="bd_sign">
+			서명
+		</div>
+
+	</div>
+
+	<!-- 스크랩/추천/비추천 -->
+	<div class="bd_rd_count">
+		<a href="#">
+			<span>
+				<i class="fa fa-star"></i>스크랩
+			</span>
+		</a>
+		<span >
+			<i class="fa fa-thumbs-o-up"></i>추천
+			<strong>0</strong>
+			<span id="actgood" style="display: none;">이 글을 추천하셨습니다.</span> <!-- 메세지출력 -->
+		</span>
+		<span >
+			<i class="fa fa-thumbs-o-down"></i>비추천
+			<strong>0</strong>
+			<span id="actnogood" style="display: none;">이 글을 비추천하셨습니다.</span> <!-- 메세지출력 -->
+		</span>
+	</div>
+	<!-- 이전글/다음글 -->
+	<div class="bd_bna">
+		<ul>
+			<li>
+				<i class="fa fa-caret-up"></i>
+				<span>이전글</span>
+				<a href="#">이전글제목</a>
+			</li>
+			<li>
+				<i class="fa fa-caret-down"></i>
+				<span>다음글</span>
+				<a href="#">다음글제목</a>
+			</li>
+		</ul>
+	</div>
+	<!-- 코멘트 -->
+	<div class="bd_rd_bt">
+		<p class="bd_rd_cmthd">댓글 2개</p>
+	</div>
+
+	<section id="bd_rd_cmt">
+		<article class="cmt">
+			<!-- 답글일 경우 추가 
+			<div class="cmt_reply pull-left">
+				<i class="fa fa-reply fa-rotate-180"></i>
+			</div>
+			 답글일 경우 추가 END -->
+			<div>
+				<div class="clearfix">
+					<ul class="bd_rd_cmt_info pull-left">
+						<li><i class="fa fa-user"></i>최고관리자 (106.245.92.30)</li>
+						<li><i class="fa fa-clock-o"></i>17-03-29 11:33</li>
+					</ul>
+
+					<ul class="bd_rd_cmt_info pull-right">
+						<li>답글</li>
+						<li>수정</li>
+						<li>삭제</li>
+					</ul>
+				</div>
+				<div class="bd_rd_cmt_view">
+					<p>작성한 코멘트<br>작성한 코멘트<br>작성한 코멘트<br>작성한 코멘트<br>작성한 코멘트<br>작성한 코멘트</p>
+				</div>
+			</div>
+		</article>
+		<article class="cmt">
+			<!-- 답글일 경우 추가 -->
+			<div class="cmt_reply pull-left">
+				<i class="fa fa-reply fa-rotate-180"></i>
+			</div>
+			<!-- 답글일 경우 추가 END -->
+			<div>
+				<div class="clearfix">
+					<ul class="bd_rd_cmt_info pull-left">
+						<li><i class="fa fa-user"></i>최고관리자 (106.245.92.30)</li>
+						<li><i class="fa fa-clock-o"></i>17-03-29 11:33</li>
+					</ul>
+
+					<ul class="bd_rd_cmt_info pull-right">
+						<li>답글</li>
+						<li>수정</li>
+						<li>삭제</li>
+					</ul>
+				</div>
+				<div class="bd_rd_cmt_view">
+					<p>작성한 코멘트<br>작성한 코멘트<br>작성한 코멘트<br>작성한 코멘트<br>작성한 코멘트<br>작성한 코멘트</p>
+				</div>
+			</div>
+		</article>
+	</section>
+	
+	<form class="cmt_write">					
+		<div class="form-inline info_user">
+			<div class="form-group"> <!-- 비회원일경우 노출 -->
+			    <label for="" class="sr-only">이름</label>
+			    <input type="text" class="form-control" id="" placeholder="이름">
+			</div>
+
+			<div class="form-group">
+			    <label for="" class="sr-only">비밀번호</label>
+			    <input type="password" class="form-control" id="" placeholder="비밀번호">
+			</div> <!-- 비회원일경우 노출 END -->
+
+			<div class="form-group checkbox">
+			    <label>
+				   	<input type="checkbox"><span>비밀글 사용</span>
+				</label>
+			</div>
+		</div>
+		
+		<textarea class="form-control" rows="4" placeholder="덧글을 입력해 주세요."></textarea>
+	
+
+	    <div class="row clearfix">
+	    	<!-- 리캡챠 -->
+
+			<div class="pull-right col-md-3">
+				<button type="submit" class="btn btn-sir btn-block btn-lg">댓글등록</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="http://bootstrapk.com/dist/js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="http://bootstrapk.com/assets/js/ie10-viewport-bug-workaround.js"></script>
+
+</body>
+</html>

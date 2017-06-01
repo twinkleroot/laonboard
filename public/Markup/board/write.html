@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>게시글 작성</title>
+
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="../assets/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
+
+
+    <!-- js -->
+    <script type="text/javascript" src="../assets/js/jquery-3.1.1.min.js"></script>
+
+</head>
+<body>
+
+<div id="header">
+</div>
+
+<!-- Board start -->
+<div id="board" class="container">
+
+	<!-- 게시글 작성 -->
+	<div class="nologin"> <!-- 추가된 부분 -->
+		<div class="form-group mb10 row">
+			<div class="col-xs-3">
+				<label for="" class="sr-only">이름</label>
+				<input type="text" class="form-control" id="" placeholder="이름">
+			</div>
+		</div>
+		<div class="form-group mb10 row">
+			<div class="col-xs-4">
+				<label for="" class="sr-only">비밀번호</label>
+				<input type="password" class="form-control" id="" placeholder="비밀번호">
+			</div>
+		</div>
+		<div class="form-group mb10 row">
+			<div class="col-xs-5">
+				<label for="" class="sr-only">이메일</label>
+				<input type="email" class="form-control" id="" placeholder="이메일">
+			</div>
+		</div>
+		<div class="form-group mb10 row">
+			<div class="col-xs-5">
+				<label for="" class="sr-only">홈페이지</label>
+				<input type="text" class="form-control" id="" placeholder="홈페이지">
+			</div>
+		</div>
+		<div class="form-group mb10 row">
+			<div class="col-xs-3">
+				<select class="form-control">
+					<option>분류</option>
+				</select>
+			</div>
+		</div>
+	</div> <!-- 추가된 부분 END -->
+
+	<div class="row">
+		<div class="form-group mb10 col-sm-8">
+		    <label for="" class="sr-only">게시물 작성</label>
+		    <input type="email" class="form-control" id="" placeholder="게시물 제목">
+		</div>
+
+		<div class="bd-save col-xs-4 dropdown">
+			<a href="#" class="dropdown-toggle btn btn-sir" data-toggle="dropdown" role="button" aria-expanded="false">
+				<i class="fa fa-archive"></i>
+				<span style="margin-left: 5px">(1)</span>
+			</a>
+			<ul class="dropdown-menu" role="menu">
+	            <li>
+	                <a href="#" class="save-subject">
+	                	<span>제목은 10바이트 표시</span>
+	                	<span class="sv-date">17-04-21</span>
+	                </a>
+	                <a href="#" class="save-delete"><i class="fa fa-times"></i></a> <!-- 임시저장글 삭제 -->
+	            </li>
+	            <li>
+	                <a href="#" class="save-subject">
+	                	<span>제목은 시</span>
+	                	<span class="sv-date">17-04-21</span>
+	                </a>
+	                <a href="#" class="save-delete"><i class="fa fa-times"></i></a> <!-- 임시저장글 삭제 -->
+	            </li>
+	            <li>
+	                <a href="#" class="save-subject">
+	                	<span>제목은 10바이</span>
+	                	<span class="sv-date">17-04-21</span>
+	                </a>
+	                <a href="#" class="save-delete"><i class="fa fa-times"></i></a> <!-- 임시저장글 삭제 -->
+	            </li>
+	        </ul>
+		</div>
+	</div>
+
+	<div class="mb10" style="border: 1px solid #ccc; background: #fff; min-height: 400px; padding: 20px; border-radius: 4px; box-sizing: border-box;">
+		에디터
+	</div>
+
+	<div class="wt_more" style="">
+		<ul class="add">
+			<li class="link">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+					<i class="fa fa-caret-down"></i>
+					<span>링크추가</span>
+				</a>
+				<ul class="dropdown-menu" role="menu">
+		            <li>
+		                <div class="form-group col-xs-8">
+						    <label for="" class="sr-only">링크 1</label>
+						    <input type="email" class="form-control" id="" placeholder="링크 1">
+						</div>
+		            </li>
+		            <li>
+		                <div class="form-group col-xs-8">
+						    <label for="" class="sr-only">링크 2</label>
+						    <input type="email" class="form-control" id="" placeholder="링크 2">
+						</div>
+		            </li>
+		        </ul>
+			</li>
+			<li class="file">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+					<i class="fa fa-caret-down"></i>
+					<span>파일추가</span>
+				</a>
+				<ul class="dropdown-menu" role="menu">
+		            <li>
+		                <div class="form-group col-xs-8">
+						    <label for="" class="sr-only">파일첨부1</label>
+						    <input type="file" name="">
+						    <input type="text" name="" class="form-control" placeholder="파일 설명">
+						</div>
+		            </li>
+		            <li>
+		                <div class="form-group col-xs-8">
+						    <label for="" class="sr-only">파일첨부2</label>
+						    <input type="file" name="">
+						    <input type="text" name="" class="form-control" placeholder="파일 설명">
+						</div>
+		            </li>
+		        </ul>
+			</li>
+		</ul>
+	</div>
+
+	<div class="clearfix">
+		<div class="pull-left">
+			<label class="checkbox-inline">
+				<input type="checkbox" id="" value="option1"> 공지
+			</label>
+			<label class="checkbox-inline">
+				<input type="checkbox" id="" value="option2"> html
+			</label>
+			<label class="checkbox-inline">
+				<input type="checkbox" id="" value="option3"> 답변메일받기
+			</label>
+		</div>
+		<div class="pull-right">
+			<button class="btn btn-sir">작성완료</button>
+			<button class="btn btn-default">취소</button>
+		</div>
+	</div>
+	
+</div>
+
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="http://bootstrapk.com/dist/js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="http://bootstrapk.com/assets/js/ie10-viewport-bug-workaround.js"></script>
+
+</body>
+</html>

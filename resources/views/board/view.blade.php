@@ -54,12 +54,19 @@
 			</li>
 		</ul>
 	</div>
-    @if(!$board->use_list_view)
     <div class="bd_rd">
-        @if($prevUrl != '') <a href="{{ $prevUrl }}">이전글</a> @endif
-        @if($nextUrl != '') <a href="{{ $nextUrl }}">다음글</a> @endif
-    </div>
+    @if($view->link1 || $view->link2)
+        @for($i=1; $i<=2; $i++)
+            @if($view['link'.$i])
+                <div class="bd_link">
+                    <i class="fa fa-link"></i>
+                    <a href="/board/{{ $board->id }}/view/{{ $view->id }}/link/{{ $i }}" target="_blank">{{ $view['link'. $i] }}</a>
+                    <span class="movecount">(연결된 횟수: {{ $view['link'. $i. '_hit'] }}회)</span>
+                </div>
+            @endif
+        @endfor
     @endif
+
     @if(count($imgFiles) > 0)
         @foreach($imgFiles as $imgFile)
             <div class="bd_rd">
@@ -71,91 +78,96 @@
         @endforeach
     @endif
 
-	<div class="bd_rd">
-        {!! $view->content !!}
-	</div>
+	<p>{!! $view->content !!}</p>
 
-    @if($view->link1 || $view->link2 || $view->file > 0 || ($board->use_signature && auth()->user()->signature) )
-        <div class="bd_add">
-        @for($i=1; $i<=2; $i++)
-            @if($view['link'.$i])
-                <div class="bd_link">
-                    <i class="fa fa-link"></i>
-                    <a href="/board/{{ $board->id }}/view/{{ $view->id }}/link/{{ $i }}" target="_blank">{{ $view['link'. $i] }}</a>
-                    <br>
-                    <span class="movecount">{{ $view['link'. $i. '_hit'] }}회 연결</span>
-                </div>
-            @endif
-        @endfor
-        @if($view->file > 0)
-            @foreach($boardFiles as $file)
-                <div class="bd_file">
-                    <i class="fa fa-download"></i>
-                    <a href="/board/{{ $board->id }}/view/{{ $view->id }}/download/{{ $file->board_file_no }}">{{ $file->source }}</a>
-                    <br>
-                    <span class="downcount">{{ $file->download }}회 다운로드 DATE : {{ $file->created_at }}</span>
-                </div>
-            @endforeach
-        @endif
-        @if($board->use_signature)
-            <div class="bd_sign">
-                {{ $signature }}
+    <script>
+    $(document).ready(function(){
+        $(".bd_title").click(function(){
+            $(".bd_file_list").toggle();
+        });
+    });
+    </script>
+
+    @if($view->file > 0)
+        @foreach($boardFiles as $file)
+            <div class="bd_file">
+                <i class="fa fa-paperclip"></i>
+                <span class="bd_title">첨부된 파일 {{ count($file) }}개</span>
+                <ul class="bd_file_list" role="menu">
+                    <li>
+                        <i class="fa fa-download"></i><a href="/board/{{ $board->id }}/view/{{ $view->id }}/download/{{ $file->board_file_no }}">{{ $file->source }}</a>
+                        <span class="downcount">(다운로드 횟수: {{ $file->download }}회 / DATE : {{ $file->created_at }}) </span>
+                    </li>
+                </ul>
             </div>
-        @endif
+        @endforeach
+    @endif
+    @if($board->use_signature)
+        <div class="bd_sign">
+            {{ $signature }}
         </div>
     @endif
-
-	<div class="bd_rd_bt clearfix">
-		<p class="pull-left bd_rd_cmthd">댓글 {{ count($comments) }}개</p>
-		<ul class="pull-right bd_rd_count">
-			<li>
-				<i class="fa fa-heart"></i>
-				<span class="bd_rd_bt_txt">스크랩</span>
-				<span class="bd_rd_bt_count">0</span>
-			</li>
-            @if($board->use_good)
-        		<li>
-                    <a id="goodButton" href="/board/{{ $board->id }}/view/{{ $view->id }}/good">
-            			<i class="fa fa-thumbs-o-up"></i>
-            			<span class="bd_rd_bt_txt">
-                            추천
-                            <strong class="bd_rd_bt_count">{{ $view->good }}</strong>
-                        </span>
-                    </a>
-        		</li>
-            @endif
-            @if($board->use_nogood)
-    			<li>
-                    <a id="noGoodButton" href="/board/{{ $board->id }}/view/{{ $view->id }}/nogood">
-        				<i class="fa fa-thumbs-o-down"></i>
-        				<span class="bd_rd_bt_txt">
-                            비추천
-                            <strong class="bd_rd_bt_count">{{ $view->nogood }}</strong>
-                        </span>
-                    </a>
-    			</li>
-            @endif
-		</ul>
     </div>
-    <span id="actGood"></span>
-    <span id="actNoGood"></span>
+
+    <!-- 스크랩/추천/비추천 -->
+    <div class="bd_rd_count">
+        <a href="#">
+            <span>
+                <i class="fa fa-star"></i>스크랩
+            </span>
+        </a>
+        @if($board->use_good)
+        <a id="goodButton" href="/board/{{ $board->id }}/view/{{ $view->id }}/good">
+            <span>
+                <i class="fa fa-thumbs-o-up"></i>추천
+                <strong>{{ $view->good }}</strong>
+                <span id="actGood" style="display: none;">이 글을 추천하셨습니다.</span> <!-- 메세지출력 -->
+            </span>
+        </a>
+        @endif
+        @if($board->use_nogood)
+        <a id="noGoodButton" href="/board/{{ $board->id }}/view/{{ $view->id }}/nogood">
+            <span>
+                <i class="fa fa-thumbs-o-down"></i>비추천
+                <strong>{{ $view->nogood }}</strong>
+                <span id="actNoGood" style="display: none;">이 글을 비추천하셨습니다.</span> <!-- 메세지출력 -->
+            </span>
+        </a>
+        @endif
+    </div>
+
+    <!-- 이전글/다음글 -->
+    <div class="bd_bna">
+        <ul>
+            @if($prevUrl != '')
+            <li>
+                <i class="fa fa-caret-up"></i>
+                <span>이전글</span>
+                <a href="{{ $prevUrl }}">이전글제목</a>
+            </li>
+            @endif
+            @if($nextUrl != '')
+            <li>
+                <i class="fa fa-caret-down"></i>
+                <span>다음글</span>
+                <a href="{{ $nextUrl }}">다음글제목</a>
+            </li>
+            @endif
+        </ul>
+    </div>
+
+    <!-- 코멘트 -->
+	<div class="bd_rd_bt">
+		<p class="bd_rd_cmthd">댓글 {{ count($comments) }}개</p>
+    </div>
 
     @if(count($comments) > 0)
 	<section id="bd_rd_cmt">
-    @foreach($comments as $comment)
-		<article class="cmt" id="comment{{ $comment->id }}">
-            @if(strlen($comment->comment_reply) > 0) <!-- 답글일 경우 추가 -->
-                <div class="cmt_reply pull-left">
-                    @for($i=0; $i<strlen($comment->comment_reply); $i++)
-                        &nbsp;&nbsp;
-                    @endfor
-                    <i class="fa fa-reply fa-rotate-180"></i>
-                </div>
-            @endif
-			<div>
-				<div class="clearfix">
-					<ul class="bd_rd_cmt_info pull-left">
-						<li><i class="fa fa-user"></i>
+        @foreach($comments as $comment)
+		<article class="cmt">
+			<div class="cmt_box @if(strlen($comment->comment_reply)>0) cmt_reply" style="padding-left: calc(25px * {{ strlen($comment->comment_reply) }}); @endif">
+				<ul class="bd_rd_cmt_info">
+					<li><i class="fa fa-user"></i>
                         @if($board->use_sideview == 1)
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $comment->name }}</a>
                             <ul class="dropdown-menu" role="menu">
@@ -171,15 +183,13 @@
                             {{ $comment->name }}
                         @endif
                         @if($board->use_ip) ({{ $comment->ip }}) @endif</li>
-						<li><i class="fa fa-clock-o"></i>@datetime($comment->created_at)</li>
-					</ul>
-
-					<ul class="bd_rd_cmt_info pull-right">
-						@if($comment->isReply) <li><a href="#" onclick="commentBox({{ $comment->id }}, 'c'); return false;">답변</a></li> @endif
-						@if($comment->isEdit) <li><a href="#" onclick="commentBox({{ $comment->id }}, 'cu'); return false;">수정</a></li> @endif
-						@if($comment->isDelete) <li><a href="/board/{{ $board->id }}/comment/delete/{{ $comment->id }}" onclick="return commentDelete();">삭제</a></li> @endif
-					</ul>
-				</div>
+					<li><i class="fa fa-clock-o"></i>@datetime($comment->created_at)</li>
+				</ul>
+				<ul class="bd_rd_cmt_ctr">
+					@if($comment->isReply) <li><a href="#" onclick="commentBox({{ $comment->id }}, 'c'); return false;">답변</a></li> @endif
+					@if($comment->isEdit) <li><a href="#" onclick="commentBox({{ $comment->id }}, 'cu'); return false;">수정</a></li> @endif
+					@if($comment->isDelete)	<li><a href="/board/{{ $board->id }}/comment/delete/{{ $comment->id }}" onclick="return commentDelete();">삭제</a></li> @endif
+				</ul>
 				<div class="bd_rd_cmt_view">
 					{!! $comment->content !!}
                     <input type="hidden" id="secretComment_{{ $comment->id }}" value="{{ $comment->option }}">
@@ -189,9 +199,10 @@
                 <span id="edit_{{ $comment->id }}"></span><!-- 수정 -->
 			</div>
 		</article>
-    @endforeach
+        @endforeach
 	</section>
     @else
+    
     <section id="bd_rd_cmt">
 		<article class="cmt">
             <p>등록된 댓글이 없습니다.</p>
@@ -390,8 +401,6 @@ function commentBox(commentId, work) {
 commentBox('', 'c');
 
 $(function() {
-    $('body').css('background', '#fff');
-
     $(".viewOriginalImage").click(function() {
         var width = $(this).attr('width');
         var height = $(this).attr('height');

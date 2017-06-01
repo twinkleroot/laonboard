@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>환경설정</title>
+
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="../assets/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../assets/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="../assets/font-awesome/css/font-awesome.css">
+
+    <!-- js -->
+    <script type="text/javascript" src="../assets/js/jquery-3.1.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <script type="text/javascript">
+    jQuery("document").ready(function($){
+    	var nav = $('.body-tab');
+		 
+		$(window).scroll(function () {
+		    if ($(this).scrollTop() > 205) {
+		        nav.addClass("f-tab");
+		    } else {
+		        nav.removeClass("f-tab");
+		    }
+		});
+	});
+    </script>
+
+</head>
+<body style="height:1500px;">
+<div id="admin-header">
+	<div class="header-title">
+		<h1><i class="fa fa-cogs"></i>Administrator</h1>
+	</div>
+
+	<div class="box-left pull-left">
+		<div class="hdbt bt-menu">
+			<i class="fa fa-bars"></i>
+			<span>menu</span>
+		</div>
+		<div class="hdbt bt-home">
+			<i class="fa fa-home"></i>
+			<span>home</span>
+		</div>
+	</div>
+
+	<div class="box-right pull-right">
+		<div class="hdtx">
+			<ul>
+				<li>
+					<a href="#">부가서비스</a>
+				</li>
+			</ul>
+		</div>
+		<div class="hdbt bt-user">
+			<i class="fa fa-user"></i>
+			<span class="sign">최고관리자</span>
+		</div>
+	</div>
+</div>
+
+<div class="sidebar">
+	<ul class="category">
+		<li class="dropdown">
+            <a href="#" class="sd-1depth" data-toggle="dropdown" role="button" aria-expanded="false">환경설정</a>
+            <ul class="sd-2depth" role="menu">
+                <li><a href="config_form.html">기본환경설정</a></li>
+                <li><a href="#">관리권한설정</a></li>
+                <li><a href="#">테마설정</a></li>
+                <li><a href="#">메뉴설정</a></li>
+                <li><a href="#">부가서비스</a></li>
+            </ul>
+        </li>
+        <li class="dropdown open">
+            <a href="#" class="sd-1depth" data-toggle="dropdown" role="button" aria-expanded="false">회원관리</a>
+            <ul class="sd-2depth" role="menu">
+                <li class="on"><a href="member_list.html">회원관리</a></li>
+                <li><a href="#">포인트관리</a></li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a href="#" class="sd-1depth" data-toggle="dropdown" role="button" aria-expanded="false">게시판관리</a>
+            <ul class="sd-2depth" role="menu">
+                <li><a href="#">게시판관리</a></li>
+                <li><a href="#">게시판그룹관리</a></li>
+            </ul>
+        </li>
+	</ul>
+</div>
+
+<div id="admin-body">
+	<div class="body-head">
+		<div class="pull-left">
+			<h3>게시판그룹 생성</h3>
+			<ul class="fl">
+				<li class="admin">Admin</li>
+				<li class="depth">게시판관리</li>
+				<li class="depth">게시판그룹관리</li>
+				<li class="depth">게시판그룹생성</li>
+			</ul>
+		</div>
+	</div>
+
+	
+
+	<div class="body-contents">
+		<div class="body-tab">
+			<ul class="mb_menu">
+				<li class="tab">
+					<a href="#mb_basic">기본정보</a>
+				</li>
+				<li class="tab">
+					<a href="#more">여분필드</a>
+				</li>
+		    </ul>
+			<div class="pull-right">
+				<ul class="mb_btn">
+					<li>
+						<button type="" class="btn btn-default">확인</button>
+					</li>
+					<li>
+						<button type="" class="btn btn-default">목록</button>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="help bg-info">
+			게시판을 생성하시려면 1개 이상의 게시판그룹이 필요합니다.<br>
+			게시판그룹을 이용하시면 더 효과적으로 게시판을 관리할 수 있습니다.
+		</div>
+
+		<!-- 관리 페이지 -->
+		<div class="panel panel-default">
+	        <div class="panel-body">
+		        <form class="form-horizontal">
+		        	<section id="mb_basic" class="first">
+		        		<div class="st_title">게시판그룹 기본정보</div>
+		        		<div class="st_contents">
+							<div class="form-group">
+							    <label for="" class="col-md-2 control-label">그룹 ID</label>
+							    <div class="col-md-3">
+								    <input type="text" class="form-control" id="">
+							    </div>
+
+							    <div class="col-md-5" style="padding-left: 0;">
+									<span class="btn btn-default" style="font-size: 12px; line-height: 20px;">게시판그룹 바로가기</span>
+							    </div>
+							</div>
+							<div class="form-group">
+							    <label for="" class="col-md-2 control-label">그룹 제목</label>
+							    <div class="col-md-5">
+								    <input type="text" class="form-control" id="">
+							    </div>
+
+							    <div class="col-md-5" style="padding-left: 0;">
+									<span class="btn btn-default" style="font-size: 12px; line-height: 20px;">게시판생성</span>
+							    </div>
+							</div>
+							<div class="form-group">
+							    <label for="" class="col-md-2 control-label">접속기기</label>
+							    <div class="col-md-3">
+							    	<span id="helpBlock" class="help-block" style="font-size: 12px; margin: 5px 0;">
+							    	PC 와 모바일 사용을 구분합니다.
+							    	</span>
+								    <select class="form-control">
+										<option>PC와 모바일에서 모두 사용</option>
+										<option>PC 전용</option>
+										<option>모바일 전용</option>
+									</select>
+							    </div>
+							</div>
+							<div class="form-group">
+							    <label for="" class="col-md-2 control-label">그룹 관리자</label>
+							    <div class="col-md-3">
+								    <input type="text" class="form-control" id="">
+							    </div>
+							</div>
+							<div class="form-group">
+							    <label for="" class="col-md-2 control-label">접근회원사용</label>
+							    <div class="col-md-7">
+							    	<span id="helpBlock" class="help-block" style="font-size: 12px; margin: 5px 0 0;">
+							    		사용에 체크하시면 이 그룹에 속한 게시판은 접근가능한 회원만 접근이 가능합니다.
+							    	</span>
+							    	<label class="checkbox-inline">
+							    		<input type="checkbox" id=""> 사용
+							    	</label>
+							    </div>
+							</div>
+							<div class="form-group">
+							    <label for="" class="col-md-2 control-label">접근회원수</label>
+							    <div class="col-md-3">
+							    	<span style="display: inline-block; line-height: 30px; font-size: 12px;">1</span>
+								    
+							    </div>
+							</div>
+		        		</div>
+		        	</section>
+		        	<section id="more">
+		        		<div class="st_title">여분필드</div>
+		        		<div class="st_contents">
+							<div class="form-group">
+							    <label for="" class="col-md-2 control-label">여분 필드 1</label>
+							    <div class="col-md-10 row">
+							    	<label>
+							    		여분필드 1 제목 <input type="text">
+							    	</label>
+							    	<label>
+							    		여분필드 1 내용 <input type="text">
+							    	</label>
+							    </div>
+							</div>
+		        		</div>
+		        	</section>
+				</form>
+	        </div>
+        </div>
+
+    </div>
+
+	</div>
+</div>
+
+
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="http://bootstrapk.com/dist/js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="http://bootstrapk.com/assets/js/ie10-viewport-bug-workaround.js"></script>
+</body>
+</html>
