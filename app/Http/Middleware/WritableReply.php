@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Cache;
 use App\Board;
 use App\Write;
 
@@ -21,12 +22,10 @@ class WritableReply
         $writeId = $request->segment(4);    // uri의 4번째 항목
         if(strpos($request->getRequestUri(), 'reply')) {
             $user = auth()->user();
-            $board = Board::find($boardId);
+            $board = Cache::get("board.{$boardId}");
             $notices = explode(',', $board->notice);
 
-            $writeModel = new Write($boardId);
-            $writeModel->setTableName($board->table_name);
-            $write = $writeModel->find($writeId);
+            $write = Cache::get("board.{$boardId}.write.{$writeId}");
 
             $message = '';
             if (in_array((int)$writeId, $notices)) {

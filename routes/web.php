@@ -215,11 +215,10 @@ Route::group(['prefix' => 'board/{boardId}'], function () {
         ->middleware('level.board:comment_level', 'writable.comment:create');
     // 댓글 수정
     Route::put('comment/update', ['as' => 'board.comment.update', 'uses' => 'Board\BoardController@updateComment'])
-        ->middleware('level.board:comment_level', 'writable.comment:update');
+        ->middleware('level.board:comment_level', 'writable.comment:update', 'editable');
     // 댓글 삭제
-    Route::get('comment/delete', ['as' => 'board.comment.destroy', 'uses' => 'Board\BoardController@destroyComment'])
+    Route::get('comment/delete/{commentId}', ['as' => 'board.comment.destroy', 'uses' => 'Board\BoardController@destroyComment'])
         ->middleware('level.board:comment_level', 'editable');
-
 
     // 커뮤니티에서의 관리자 기능
     // 글 목록 : 선택 삭제, 선택 복사, 선택 이동,

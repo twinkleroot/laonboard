@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Cache;
 use App\Common\Util;
 use App\Board;
 
@@ -19,7 +20,7 @@ class WritableComment
     {
         $user = auth()->user();
         $userPoint = is_null($user) ? 0 : $user->point;
-        $board = Board::find($request->boardId);
+        $board = Cache::get("board.{$request->boardId}");
         // 댓글 쓰기 포인트 설정시 포인트 검사
         if($type == 'create') {
             $tmpPoint = $userPoint > 0 ? $userPoint : 0;

@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use DB;
-use App\Config;
+use Cache;
 
 class GroupUser extends Model
 {
@@ -32,7 +32,7 @@ class GroupUser extends Model
         ])->get();
 
         return [
-            'config' => Config::getConfig('config.homepage'),
+            'config' => Cache::get("config.homepage"),
             'groups' => $groups,
             'user' => $user,
             'accessible_groups' => $accessible_groups,
@@ -79,7 +79,7 @@ class GroupUser extends Model
     // 접근 가능 회원 목록을 표시한다.
     public function getAccessibleUsers($id)
     {
-        $config = Config::getConfig('config.homepage');
+        $config = Cache::get("config.homepage");
         $group = Group::find($id);
         $users = $group->users()
                 ->select(DB::raw('users.*, count.count_groups'))

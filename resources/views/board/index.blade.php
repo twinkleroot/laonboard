@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    {{ $board->subject }} 리스트 | {{ App\Config::getConfig('config.homepage')->title }}
+    {{ $board->subject }} 리스트 | {{ Cache::get("config.homepage")->title }}
 @endsection
 
 @section('content')

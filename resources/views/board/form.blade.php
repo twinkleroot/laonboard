@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    {{ $board->subject }} 게시글 작성 | {{ App\Config::getConfig('config.homepage')->title }}
+    {{ $board->subject }} 게시글 작성 | {{ Cache::get("config.homepage")->title }}
 @endsection
 
 @section('include_script')

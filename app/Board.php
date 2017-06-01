@@ -8,6 +8,7 @@ use App\Common\Util;
 use App\Group;
 use App\Write;
 use DB;
+use Cache;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 
@@ -29,7 +30,7 @@ class Board extends Model
     // (게시판 관리) index 페이지에서 필요한 파라미터 가져오기
     public function getBoardIndexParams()
     {
-        $config = Config::getConfig('config.homepage');
+        $config = Cache::get("config.homepage");
         $boards = Board::paginate($config->pageRows);;
         $groups = Group::get();
 
@@ -53,7 +54,7 @@ class Board extends Model
             $selectedGroup = Group::findOrFail($inputGroupId)->id;
         }
 
-        $config = Config::getConfig('config.board');
+        $config = Cache::get("config.board");
 
         $board = [
             'read_point' => $config->readPoint,
@@ -87,7 +88,7 @@ class Board extends Model
         ];
 
         return [
-            'homePageConfig' => Config::getConfig('config.homepage'),
+            'homePageConfig' => Cache::get("config.homepage"),
             'boardConfig' => $config,
             'board' => $board,      // 배열
             'groups' => $groups,
@@ -106,8 +107,8 @@ class Board extends Model
         $keyword = Group::find($board->group_id)->group_id;
 
         return [
-            'homePageConfig' => Config::getConfig('config.homepage'),
-            'boardConfig' => Config::getConfig('config.board'),
+            'homePageConfig' => Cache::get("config.homepage"),
+            'boardConfig' => Cache::get("config.board"),
             'board' => $board,      // 객체
             'groups' => $groups,
             'keyword' => $keyword,

@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    LaBoard | 환영합니다.
+    환영합니다. | {{ Cache::get("config.homepage")->title }} 
 @endsection
 
 @section('content')

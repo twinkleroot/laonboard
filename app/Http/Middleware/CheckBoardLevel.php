@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Cache;
 use App\Board;
 use Exception;
 
@@ -26,7 +27,9 @@ class CheckBoardLevel
         }
 
         $boardId = $request->segments()[1];
-        $board = Board::find($boardId);
+        $board = Cache::rememberForever("board.{$boardId}", function() use($boardId) {
+            return Board::find($boardId);
+        });
 
         if($baseLevel < $board[$type]) {
             if(str_contains($type, 'list')) {
@@ -45,7 +48,11 @@ class CheckBoardLevel
                 $message = '파일 다운로드 권한이 없습니다.';
             }
 
-            return redirect(route('message'))->with('message', $message);
+            if(!is_null($user)) {
+                return redirect(route('message'))->with('message', $message);
+            } else {
+                return redirect(route('message'))->with('message', $message)->with('redirect', '/login');
+            }
         }
         return $next($request);
     }

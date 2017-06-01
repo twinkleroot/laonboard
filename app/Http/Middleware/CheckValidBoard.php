@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Cache;
 use App\Board;
 
 class CheckValidBoard
@@ -16,7 +17,9 @@ class CheckValidBoard
      */
     public function handle($request, Closure $next)
     {
-        $board = Board::find($request->boardId);
+        $board = Cache::rememberForever("board.{$request->boardId}", function() use($request) {
+            return Board::find($request->boardId);
+        });
         if(is_null($board)) {
             return redirect(route('message'))
                ->with('message', '잘못된 경로입니다. 다시 확인해 주세요.')

@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Common;
+
 use Illuminate\Http\Request;
-use App\Config;
+use Cache;
 
 // 제목과 내용에 금지단어가 있는지 검사
 class Filter
@@ -12,7 +13,7 @@ class Filter
         $subject = $request->subject;
         $content = $request->content;
 
-        $filterStrs = explode(',', trim(implode(',', Config::getConfig('config.board')->filter)));
+        $filterStrs = explode(',', trim(implode(',', Cache::get("config.board")->filter)));
         $returnArr['subject'] = '';
         $returnArr['content'] = '';
         foreach($filterStrs as $str) {

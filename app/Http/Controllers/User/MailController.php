@@ -5,20 +5,13 @@ namespace App\Http\Controllers\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
-use App\Config;
+use Cache;
 use Carbon\Carbon;
 use App\Mail\EmailCertify;
 
 
 class MailController extends Controller
 {
-    public $config;
-
-    public function __construct(Config $config)
-    {
-        $this->config = Config::getConfig('config.join');
-    }
-    
     // 인증 메일 클릭했을 때 처리하기
     public function emailCertify(Request $request, $id, $crypt)
     {
@@ -31,7 +24,7 @@ class MailController extends Controller
             $user->update([
                 'email_certify' => Carbon::now(),
                 'email_certify2' => null,
-                'level' => $this->config->joinLevel,
+                'level' => Cache::get("config.join")->joinLevel,
             ]);
             $message = '메일인증 처리를 완료하였습니다. \\n\\n지금부터 회원님은 사이트를 원활하게 이용하실 수 있습니다.';
         } else {

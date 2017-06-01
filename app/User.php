@@ -10,8 +10,8 @@ use App\Group;
 use App\Write;
 use Auth;
 use DB;
+use Cache;
 use App\Common\Util;
-use App\Config;
 use App\GroupUser;
 use Carbon\Carbon;
 
@@ -126,7 +126,7 @@ class User extends Authenticatable
         $editFormData = [
             'user' => $user,
             'config' => $config,
-            'openDate' => Config::getConfig('config.homepage')->openDate,               // 정보공개 변경 가능 일
+            'openDate' => Cache::get("config.homepage")->openDate,                      // 정보공개 변경 가능 일
             'nickChangable' => $this->nickChangable($user, Carbon::now(), $config),     // 닉네임 변경여부
             'openChangable' => $openChangable[0],                                       // 정보공개 변경 여부
             'dueDate' => $openChangable[1],                                             // 정보공개 언제까지 변경 못하는지 날짜
@@ -154,7 +154,7 @@ class User extends Authenticatable
     // 정보공개 변경 가능 여부
     public function openChangable($user, $current)
     {
-        $config = Config::getConfig('config.homepage');
+        $config = Cache::get("config.homepage");
         $openChangable = array(false, $current);
 
         $openDate = $user->open_date;
@@ -350,7 +350,7 @@ class User extends Authenticatable
     // 회원 목록
     public function userList()
     {
-        $config = Config::getConfig('config.homepage');
+        $config = Cache::get("config.homepage");
 
         $users = DB::table('users as u')
                 ->select(DB::raw('

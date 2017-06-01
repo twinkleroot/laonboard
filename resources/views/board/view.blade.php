@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    {{ $view->subject }} > {{ $board->subject }} | {{ App\Config::getConfig('config.homepage')->title }}
+    {{ $view->subject }} > {{ $board->subject }} | {{ Cache::get('config.homepage')->title }}
 @endsection
 
 @section('include_script')
@@ -141,9 +141,9 @@
     <span id="actNoGood"></span>
 
     @if(count($comments) > 0)
-    @foreach($comments as $comment)
 	<section id="bd_rd_cmt">
-		<article class="cmt">
+    @foreach($comments as $comment)
+		<article class="cmt" id="comment{{ $comment->id }}">
             @if(strlen($comment->comment_reply) > 0) <!-- 답글일 경우 추가 -->
                 <div class="cmt_reply pull-left">
                     @for($i=0; $i<strlen($comment->comment_reply); $i++)
@@ -175,9 +175,9 @@
 					</ul>
 
 					<ul class="bd_rd_cmt_info pull-right">
-						<li><a href="#" onclick="commentBox({{ $comment->id }}, 'c'); return false;">답변</a></li>
-						<li><a href="#" onclick="commentBox({{ $comment->id }}, 'cu'); return false;">수정</a></li>
-						<li><a href="#">삭제</a></li>
+						@if($comment->isReply) <li><a href="#" onclick="commentBox({{ $comment->id }}, 'c'); return false;">답변</a></li> @endif
+						@if($comment->isEdit) <li><a href="#" onclick="commentBox({{ $comment->id }}, 'cu'); return false;">수정</a></li> @endif
+						@if($comment->isDelete) <li><a href="/board/{{ $board->id }}/comment/delete/{{ $comment->id }}" onclick="return commentDelete();">삭제</a></li> @endif
 					</ul>
 				</div>
 				<div class="bd_rd_cmt_view">
@@ -189,8 +189,8 @@
                 <span id="edit_{{ $comment->id }}"></span><!-- 수정 -->
 			</div>
 		</article>
-	</section>
     @endforeach
+	</section>
     @else
     <section id="bd_rd_cmt">
 		<article class="cmt">
@@ -204,7 +204,9 @@
         {{ csrf_field() }}
         <input type="hidden" name="writeId" value="{{ $view->id }}" />
         <input type="hidden" name="commentId" id="commentId" />
+        <input type="hidden" name="requestUri" id="requestUri" value="{{ $requestUri }}"/>
         <input type="hidden" name="_method" id="_method" />
+
 		<div class="form-inline info_user">
             @if( is_null(auth()->user()) )  <!-- 비회원일경우 노출 -->
     			<div class="form-group">
@@ -451,11 +453,18 @@ function excuteGood(href, $el, $tx) {
     });
 }
 
-// 삭제 검사 확인
+// 삭제 확인
 function del(href) {
     if(confirm("한번 삭제한 자료는 복구할 방법이 없습니다.\n\n정말 삭제하시겠습니까?")) {
         document.location.href = href;
     }
 }
+
+// 댓글 삭제 확인
+function commentDelete()
+{
+    return confirm("이 댓글을 삭제하시겠습니까?");
+}
+
 </script>
 @endsection

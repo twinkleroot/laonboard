@@ -7,13 +7,13 @@ use Illuminate\Http\Request;
 use Auth;
 use DB;
 use File;
+use Cache;
 use Carbon\Carbon;
 use Exception;
 use App\User;
 use App\Board;
 use App\Point;
 use App\Common\Util;
-use App\Common\StrEncrypt;
 use App\Common\CustomPaginator;
 use App\Autosave;
 use App\BoardFile;
@@ -27,6 +27,8 @@ class Write extends Model
      * @var array
      */
     protected $guarded = [];
+
+    protected $appends = ['isReply', 'isEdit', 'isDelete'];
 
     protected $table;
     public $board;
@@ -89,7 +91,7 @@ class Write extends Model
         $notices = explode(',', $this->board->notice);
 
         $result = [];
-        // try {
+        try {
             $result = $this->getWrites($writeModel, $request, $kind, $keyword, $currenctCategory);
             if($result['message'] != '') {
                 return [
@@ -100,12 +102,12 @@ class Write extends Model
                     $viewParams['page'] = 'page='. $result['writes']->currentPage();
                 }
             }
-        // } catch (Exception $e) {
-        //     return [
-        //         'message' => '글이 존재하지 않습니다.\\n글이 삭제되었거나 이동하였을 수 있습니다.',
-        //         'redirect' => '/'
-        //     ];
-        // }
+        } catch (Exception $e) {
+            return [
+                'message' => '글이 존재하지 않습니다.\\n글이 삭제되었거나 이동하였을 수 있습니다.',
+                'redirect' => '/'
+            ];
+        }
 
         return [
             'board' => $this->board,
@@ -135,12 +137,15 @@ class Write extends Model
         $hasNotice = $this->hasNotice($writeModel, $kind, $keyword, $currenctCategory);
 
         // 최종 리스트 컬렉션을 가져온다.
-        $writes;
-        if($hasNotice) {
-            $writes = $this->customPaging($request, $query, $sortField);
-        } else {
-            $writes = $query->orderByRaw($sortField)->paginate($this->board->page_rows);
-        }
+        $writes = Cache::remember("board.list.{$request->getRequestUri()}", config('gnu.CACHE_EXPIRE_MINUTE'), function() use ($hasNotice, $request, $query, $sortField) {
+            if($hasNotice) {
+                $writes = $this->customPaging($request, $query, $sortField);
+            } else {
+                $writes = $query->orderByRaw($sortField)->paginate($this->board->page_rows);
+            }
+
+            return $writes;
+        });
 
         // 가져온게시글 가공
         // 1. 뷰에 내보내는 아이디 검색의 링크url에는 암호화된 id를 링크로 건다.
@@ -265,7 +270,9 @@ class Write extends Model
 
     public function getViewParams($request, $boardId, $writeId, $writeModel)
     {
-        $write = $writeModel->find($writeId);
+        $write = Cache::remember("write.{$writeId}", config('gnu.CACHE_EXPIRE_MINUTE'), function() use($writeModel, $writeId){
+            return $writeModel->find($writeId);
+        });
 
         // 조회수 증가, 포인트 부여
         $result = $this->beforeRead($write, $request);
@@ -302,21 +309,23 @@ class Write extends Model
         // 서명 사용하면 글쓴이의 서명을 담는다.
         $signature = '';
         if($this->board->use_signature && $write->user_id > 0) {
-            $user = User::find($write->user_id);
+            $user = Cache::remember("user.{$write->user_id}", config('gnu.CACHE_EXPIRE_MINUTE'), function() use($write){
+                return User::find($write->user_id);
+            });
             if(!is_null($user)) {
                 $signature = $user->signature;
             }
         }
 
         // 첨부 파일과 이미지 파일 분류
-        $imgExtension = Config::getConfig('config.board')->imageExtension;
+        $boardConfig = Cache::get("config.board");
+        $imgExtension = $boardConfig->imageExtension;
         $boardFiles = [];
         $imgFiles = [];
         if($write->file > 0) {
-            $boardFiles = BoardFile::where([
-                'board_id' => $boardId,
-                'write_id' => $writeId,
-            ])->get();
+            $boardFiles = Cache::remember("boardfile.{$boardId}.{$writeId}", config('gnu.CACHE_EXPIRE_MINUTE'), function() use($boardId, $writeId){
+                return BoardFile::where(['board_id' => $boardId, 'write_id' => $writeId])->get();
+            });
 
             foreach($boardFiles as $boardFile) {
                 // 첨부파일이 이미지라면 업로드된 파일의 확장자를 가져와서
@@ -335,10 +344,9 @@ class Write extends Model
                     return $value->file == $boardFile->file;
                 });
             }
-
         }
 
-        // 에디터로 업로드한 이미지 경로를 추출해서 내용의 img 태그 부분을 교체한다.
+        // 에디터로 업로드한 이미지 경로를 추출해서 내용의 img 태그 부 분을 교체한다.
         $write->content = $this->includeImagePathByEditor($write->content);
 
         return [
@@ -352,23 +360,97 @@ class Write extends Model
     }
 
     // 댓글 데이터
-    public function getCommentsParams($writeModel, $writeId)
+    public function getCommentsParams($writeModel, $boardId, $writeId)
     {
+        // dd(Cache::get("board.{$boardId}.comments.{$writeId}"));
+        // dd($writeModel->where(['parent' => $writeId, 'is_comment' => 1])
+        //         ->orderBy('comment')->orderBy('comment_reply')->get());
         // 원글
-        $comments = $writeModel->where([
-            'parent' => $writeId,
-            'is_comment' => 1,
-        ])
-        ->orderBy('comment')
-        ->orderBy('comment_reply')
-        ->get();
+        $comments = Cache::remember("board.{$boardId}.comments.{$writeId}", config('gnu.CACHE_EXPIRE_MINUTE'), function() use($writeModel, $writeId){
+            return $writeModel->where(['parent' => $writeId, 'is_comment' => 1])
+                ->orderBy('comment')->orderBy('comment_reply')->get();
+        });
 
         foreach($comments as $comment) {
+            // 답변, 수정, 삭제 가능여부 기록
+            $editable = $this->getCommentAuth($comment, $writeModel, $writeId);
+            $comment->isReply = $editable['isReply'];
+            $comment->isEdit = $editable['isEdit'];
+            $comment->isDelete = $editable['isDelete'];
             $comment->user_id = encrypt($comment->user_id);     // 라라벨 기본 지원 encrypt
         }
 
         return [
             'comments' => $comments,
+        ];
+    }
+
+    // 댓글의 답변, 수정, 삭제 권한 검사
+    public function getCommentAuth($comment, $writeModel, $writeId)
+    {
+        $isEdit = 1;
+        $isDelete = 1;
+
+        $board = $this->board;
+        $user = auth()->user();
+        $currentUser = $user->email;
+        $homepageConfig = Cache::get("config.homepage");
+        $superAdmin = $homepageConfig->superAdmin;
+        $boardAdmin = $board->admin;
+        $groupAdmin = Cache::remember("group.{$board->group_id}.admin", config('gnu.CACHE_EXPIRE_MINUTE'), function() use($board) {
+            return Group::find($board->group_id)->admin;
+        });
+        $commentUser = $comment->user_id == 0 ? ''
+                    : Cache::remember("user.{$comment->user_id}", config('gnu.CACHE_EXPIRE_MINUTE'), function() use($comment) {
+                        return User::find($comment->user_id);
+                    });
+        if ($currentUser == $superAdmin) {// 최고관리자 통과
+            ;
+        } else if ($currentUser == $groupAdmin) { // 그룹관리자
+            if ($user->level < $commentUser->level)  { // 자신의 레벨이 글쓴이의 레벨보다 작다면
+                $isEdit = 0;
+                $isDelete = 0;
+            }
+        } else if ($currentUser == $boardAdmin) { // 게시판관리자이면
+            if ($user->level < $commentUser->level) { // 자신의 레벨이 글쓴이의 레벨보다 작다면
+                $isEdit = 0;
+                $isDelete = 0;
+            }
+        } else if (!session()->get('admin')) { // 관리자가 아닌 회원인 경우
+            if ($currentUser != $commentUser->email) {
+                $isEdit = 0;
+                $isDelete = 0;
+            }
+        } else { // 비회원인 경우
+            if ($commentUser == '') {
+                $isEdit = 0;
+                $isDelete = 0;
+            }
+        }
+
+        $cnt = Cache::remember("comment.count.comment_reply.{$comment->id}",
+            config('gnu.CACHE_EXPIRE_MINUTE'),
+            function() use($writeModel, $comment, $writeId) {
+            return $writeModel->where('comment_reply', 'like', $comment->comment_reply)
+                ->where('id', '<>', $comment->id)
+                ->where([
+                    'parent' => $writeId,
+                    'comment' => $comment->comment,
+                    'is_comment' => 1,
+                ])->count('id');
+        });
+
+        if($cnt && !session()->get('admin')) {
+            $isEdit = 0;
+            $isDelete = 0;
+        }
+
+        $isReply = strlen($comment->comment_reply) != 5 ? 1 : 0;
+
+        return [
+            'isReply' => $isReply,
+            'isEdit' => $isEdit,
+            'isDelete' => $isDelete,
         ];
     }
 
@@ -531,7 +613,7 @@ class Write extends Model
             ;
         } else {
             // 포인트 사용 && 소모되는 포인트가 있는지 && 현재 사용자가 갖고 있는 포인트로 사용 가능한지 검사
-            if (Config::getConfig('config.homepage')->usePoint
+            if (Cache::get("config.homepage")->usePoint
                 && $boardPoint
                 && $user->point + $boardPoint < 0) {
                     return '보유하신 포인트('.number_format($user->point).')가 없거나 모자라서'. $contentPiece. '('.number_format($boardPoint).')가 불가합니다.\\n\\n포인트를 적립하신 후 다시'.$contentPiece.' 해 주십시오.';
@@ -904,8 +986,7 @@ class Write extends Model
         $this->point->insertPoint($userId, $this->board->comment_point, $content, $this->board->table_name, $newCommentId, $relAction);
 
         // 원글에 댓글수 증가 & 마지막 시간 반영
-        $writeModel
-        ->where(['id' => $writeId])
+        $writeModel->where('id', $writeId)
         ->update([
             'comment' => $write->comment + 1,
             'updated_at' => Carbon::now(),
@@ -918,7 +999,32 @@ class Write extends Model
 
         // 메일 발송
 
+        // 캐시 삭제 및 등록
+        Cache::forget("board.{$this->board->id}");  // 게시판
+        Cache::forget("board.{$this->board->id}.write.{$writeId}"); // 원 게시물
+        Cache::forget("board.{$boardId}.comments.{$writeId}");
+        Cache::remember("board.{$boardId}.comments.{$writeId}", config('gnu.CACHE_EXPIRE_MINUTE'), function() use($writeModel, $writeId){
+            return $writeModel->where(['parent' => $writeId, 'is_comment' => 1])
+                ->orderBy('comment')->orderBy('comment_reply')->get();
+        });
+
         return $newCommentId;
+    }
+
+    // 댓글 수정
+    public function updateComment($writeModel, $request)
+    {
+        $commentId = $request->commentId;
+        $comment = $writeModel->find($commentId);
+        $option = $request->has('secret') ? $request->secret : null;
+        $ip = !session()->get('admin') ? $request->ip() : $comment->ip;
+
+        return $writeModel->where('id', $commentId)
+                ->update([
+                    'content' => $request->content,
+                    'option' => $option,
+                    'ip' => $ip,
+                ]);
     }
 
     // 답변 글 단계 구하는 로직
@@ -1028,7 +1134,6 @@ class Write extends Model
                 'option' => count($options) > 0 ? implode(',', $options) : null,
                 'updated_at' => Carbon::now(),
                 'file' => $file,
-                // 'file' => count($request->attach_file),
             ]
         ]);
         // 비회원이거나 본인 글을 수정하는 것이 아닐 때

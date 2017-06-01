@@ -8,9 +8,9 @@ use Socialite;
 use App\SocialLogin;
 use App\User;
 use Auth;
+use Cache;
 use Laravel\Socialite\Two\InvalidStateException;
 use Carbon\Carbon;
-use App\Config;
 
 class SocialController extends Controller
 {
@@ -25,7 +25,7 @@ class SocialController extends Controller
         // $this->middleware('guest');
 
         $this->request = $request;
-        $this->config = Config::getConfig('config.join');
+        $this->config = Cache::get("config.join");
         $this->userModel = $user;
         $this->socialModel = $social;
     }

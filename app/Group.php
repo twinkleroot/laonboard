@@ -3,8 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\User;
 use DB;
+use Cache;
+use App\User;
 use App\Board;
 use App\Common\Util;
 
@@ -37,7 +38,7 @@ class Group extends Model
     // index 페이지에서 필요한 파라미터 가져오기
     public function getGroupIndexParams()
     {
-        $config = Config::getConfig('config.homepage');
+        $config = Cache::get("config.homepage");
         $groups = DB::table('groups as g')
                 ->select(DB::raw('
                             g.id,
@@ -132,7 +133,7 @@ class Group extends Model
     public function getGroupCreateParams()
     {
         return [
-            'config' => Config::getConfig('config.homepage'),
+            'config' => Cache::get("config.homepage"),
             'title' => '생성',
             'action' => route('admin.groups.store'),
             'type' => 'create',
@@ -143,7 +144,7 @@ class Group extends Model
     public function getGroupEditParams($id)
     {
         return [
-            'config' => Config::getConfig('config.homepage'),
+            'config' => Cache::get("config.homepage"),
             'group' => Group::findOrFail($id),
             'title' => '수정',
             'action' => route('admin.groups.update', $id),

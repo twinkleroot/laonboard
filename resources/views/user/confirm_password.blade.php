@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    LaBoard | 회원 비밀번호 확인
+    회원 비밀번호 확인 | {{ Cache::get("config.homepage")->title }} 
 @endsection
 
 @section('include_css')
@@ -23,7 +23,7 @@
         <div class="panel-heading bg-sir">
             <h3 class="panel-title">회원 비밀번호 확인</h3>
         </div>
-        
+
         <div class="panel-body row">
             <form class="contents col-md-8 col-md-offset-2" role="form" method="POST" action="{{ route('user.confirmPassword') }}">
             {{ csrf_field() }}

@@ -3,10 +3,10 @@
 namespace App\Common;
 
 use Carbon\Carbon;
-use App\Config;
+use Cache;
+use Image;
 use App\Write;
 use App\Board;
-use Image;
 
 // 공통으로 사용하는 메서드
 class Util
@@ -16,7 +16,7 @@ class Util
     public static function checkWriteInterval()
     {
         $dt = Carbon::now();
-        $interval = Config::getConfig('config.board')->delaySecond;
+        $interval = Cache::get("config.board")->delaySecond;
 
         if(session()->has('postTime')) {
             if(session()->get('postTime') >= $dt->subSecond($interval) && !session()->get('admin')) {
@@ -220,7 +220,7 @@ class Util
 
     public static function urlAutoLink($str)
     {
-        $config = Config::getConfig('config.board');
+        $config = Cache::get("config.board");
 
         $str = str_replace(array("&lt;", "&gt;", "&amp;", "&quot;", "&nbsp;", "&#039;"), array("\t_lt_\t", "\t_gt_\t", "&", "\"", "\t_nbsp_\t", "'"), $str);
         $str = preg_replace("/([^(href=\"?'?)|(src=\"?'?)]|\(|^)((http|https|ftp|telnet|news|mms):\/\/[a-zA-Z0-9\.-]+\.[가-힣\xA1-\xFEa-zA-Z0-9\.:&#=_\?\/~\+%@;\-\|\,\(\)]+)/i", "\\1<A HREF=\"\\2\" TARGET=\"{$config->linkTarget}\">\\2</A>", $str);

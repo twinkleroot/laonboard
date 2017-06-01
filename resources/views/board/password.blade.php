@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    LaBoard | {{ App\Config::getConfig('config.homepage')->title }}
+    LaBoard | {{ Cache::get("config.homepage")->title }}
 @endsection
 
 @section('content')

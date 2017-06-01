@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>이미지 업로드 | {{ \App\Config::getConfig('config.homepage')->title }}</title>
+    <title>이미지 업로드 | {{ Cache::get("config.homepage")->title }}</title>
 
     <!-- Scripts -->
     <script>

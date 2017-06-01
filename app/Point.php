@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
-use App\Config;
 use App\User;
 use DB;
+use Cache;
 
 class Point extends Model
 {
@@ -30,7 +30,7 @@ class Point extends Model
     // index 페이지에서 필요한 파라미터 가져오기
     public function getPointIndexParams()
     {
-        $config = Config::getConfig('config.homepage');
+        $config = Cache::get("config.homepage");
         $points = Point::orderBy('id', 'desc')->paginate($config->pageRows);
 
         return [
@@ -113,7 +113,7 @@ class Point extends Model
     // 커뮤니티 사용자별 포인트 내역
     public function getPointList($id)
     {
-        $config = Config::getConfig('config.homepage');
+        $config = Cache::get("config.homepage");
         $points = Point::where('user_id', $id)->orderBy('id', 'desc')->paginate($config->pageRows);
         $sum = 0;
         foreach($points as $point) {
@@ -130,8 +130,8 @@ class Point extends Model
     public static function pointType($pointType)
     {
         $point = 0;
-        $configJoin = Config::getConfig('config.join');
-        $configHomepage = Config::getConfig('config.homepage');
+        $configJoin = Cache::get("config.join");
+        $configHomepage = Cache::get("config.homepage");
 
         if($pointType == 'join') {
             $point = $configJoin->joinPoint;
@@ -175,7 +175,7 @@ class Point extends Model
     public static function addPoint($data)
     {
         // 환경 설정의 포인트 설정에 체크(userPoint == 1)해야 포인트를 부여한다.
-        $usePoint = Config::getConfig('config.homepage')->usePoint;
+        $usePoint = Cache::get("config.homepage")->usePoint;
         if($usePoint != 0) {
             $user = $data['user'];
             // 기존에 같은 건으로 포인트를 받았는지 조회. 조회되면 포인트 적립 불가
@@ -258,7 +258,7 @@ class Point extends Model
     // 내역 변경시 포인트 부여
     public function insertPoint($userId, $point, $content='', $relTable='', $relEmail='', $relAction='', $expire=0)
     {
-        $configHomepage = Config::getConfig('config.homepage');
+        $configHomepage = Cache::get("config.homepage");
         if(!$configHomepage->usePoint) {
             return 0;
         }

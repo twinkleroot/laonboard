@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>게시판 복사 | {{ \App\Config::getConfig('config.homepage')->title }} </title>
+    <title>게시판 복사 | {{ Cache::get("config.homepage")->title }} </title>
 
     <!-- Scripts -->
     <script>

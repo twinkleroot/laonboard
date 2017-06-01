@@ -3,9 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Config;
 use App\Group;
 use App\Board;
+use Cache;
 use DB;
 
 class Menu extends Model
@@ -25,7 +25,7 @@ class Menu extends Model
         return [
             'menus' => Menu::all(),
             'maxCode' => Menu::max('code'),
-            'config' => Config::getConfig('config.homepage'),
+            'config' => Cache::get("config.homepage"),
         ];
     }
 
@@ -42,7 +42,7 @@ class Menu extends Model
         }
 
         return [
-            'config' => Config::getConfig('config.homepage'),
+            'config' => Cache::get("config.homepage"),
             'code' => $code,
             'new' => $new,
         ];

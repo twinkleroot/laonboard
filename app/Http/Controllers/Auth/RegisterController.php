@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Auth;
+use Cache;
 use App\Config;
 use App\User;
 use App\ReCaptcha;
@@ -43,7 +44,7 @@ class RegisterController extends Controller
         $this->middleware('guest');
 
         $this->request = $request;
-        $this->config = Config::getConfig('config.join');
+        $this->config = Cache::get("config.join");
         $this->rulePassword = Config::getRulePassword('config.join', $this->config);
         $this->userModel = $userModel;
     }

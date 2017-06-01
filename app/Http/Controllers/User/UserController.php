@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Mail;
 use Auth;
+use Cache;
 use App\Mail\EmailCertify;
 use App\ReCaptcha;
 use App\User;
@@ -22,7 +23,7 @@ class UserController extends Controller
 
     public function __construct(Config $config, User $userModel)
     {
-        $this->config = Config::getConfig('config.join');
+        $this->config = Cache::get("config.join");
         $this->rulePassword = Config::getRulePassword('config.join', $this->config);
         $this->userModel = $userModel;
     }

@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\User;
+use Cache;
 
 class Config extends Model
 {
@@ -16,13 +17,9 @@ class Config extends Model
 
     public $timestamps = false;
 
-    // name 컬럼값으로 배열로 된 설정 가져오는 메서드
-    public static function getConfig($name) {
-        $configJson = Config::where([
-            'name' => $name
-        ])->first();
-
-        return json_decode($configJson->vars);
+    // json형태로 저장된 설정을 배열형태로 변환하는 메소드
+    public function pullConfig($config) {
+        return json_decode($config->vars);
     }
 
     // 비밀번호 정책 설정에 따라 비밀번호 정규식 조합
@@ -57,28 +54,12 @@ class Config extends Model
     // 환경 설정 인덱스 페이지에 들어갈 데이터
     public function getConfigIndexParams()
     {
-        $configHomepage = Config::where('name', 'config.homepage')->first();
-        $configJoin = Config::where('name', 'config.join')->first();
-        $configBoard = Config::where('name', 'config.board')->first();
         $admins = User::where('level', 10)->get();
 
-        // 홈페이지 기본환경 설정
-        if(is_null($configHomepage)) {
-            $configHomepage =  $this->createConfigHomepage();
-        }
-        // 회원 가입 설정
-        if(is_null($configJoin)) {
-            $configJoin =  $this->createConfigJoin();
-        }
-        // 게시판 기본 설정
-        if(is_null($configBoard)) {
-            $configBoard =  $this->createConfigBoard();
-        }
-
         return [
-            'configHomepage' => json_decode($configHomepage->vars),
-            'configJoin' => json_decode($configJoin->vars),
-            'configBoard' => json_decode($configBoard->vars),
+            'configHomepage' => Cache::get("config.homepage"),
+            'configJoin' => Cache::get("config.join"),
+            'configBoard' => Cache::get("config.board"),
             'admins' => $admins,
         ];
     }
@@ -170,8 +151,10 @@ class Config extends Model
         $config = Config::where('name', 'config.'. $name)->first();
 
         if($name == 'homepage') {       // 홈페이지 기본 환경 설정 일때
+            Cache::forget("config.homepage");   // 설정이 변경될 때 캐시를 지운다.
             $data = array_add($data, 'usePoint', isset($data['usePoint']) ? $data['usePoint'] : 0);
         } else if($name == 'join') {    // 회원 가입 설정 일 때
+            Cache::forget("config.join");   // 설정이 변경될 때 캐시를 지운다.
             $data['banId'] = [ 0 => $data['banId'] ];
             // checkbox 입력이 unckecked일 때 배열에 값을 0으로 추가.
             $data = array_add($data, 'emailCertify', isset($data['emailCertify']) ? $data['emailCertify'] : 0);
@@ -179,6 +162,7 @@ class Config extends Model
             $data = array_add($data, 'passwordPolicyUpper', isset($data['passwordPolicyUpper']) ? $data['passwordPolicyUpper'] : 0);
             $data = array_add($data, 'passwordPolicyNumber', isset($data['passwordPolicyNumber']) ? $data['passwordPolicyNumber'] : 0);
         } else if($name == 'board') {   // 게시판 기본 설정일 때
+            Cache::forget("config.board");  // 설정이 변경될 때 캐시를 지운다.
             $data['filter'] = [ 0 => $data['filter'] ];
         }
 

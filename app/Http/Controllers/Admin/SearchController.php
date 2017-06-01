@@ -9,7 +9,7 @@ use App\Group;
 use App\Board;
 use App\Point;
 use App\User;
-use App\Config;
+use Cache;
 use DB;
 
 // 공통 기능
@@ -31,7 +31,7 @@ class SearchController extends Controller
         $param = $request->all();
         $searchData = [];
         $view = '';
-        $config = Config::getConfig('config.homepage');
+        $config = Cache::get("config.homepage");
 
         switch ($param['admin_page']) {
             // 게시판 그룹 관리에서 검색할 때

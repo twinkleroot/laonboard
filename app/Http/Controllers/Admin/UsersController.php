@@ -8,6 +8,7 @@ use App\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Password;
 use Carbon\Carbon;
+use Cache;
 use App\Config;
 use App\GroupUser;
 
@@ -21,7 +22,7 @@ class UsersController extends Controller
     {
         $this->middleware('level:10');
 
-        $this->config = Config::getConfig('config.join');
+        $this->config = Cache::get("config.join");
         $this->rulePassword = Config::getRulePassword('config.join', $this->config);
         $this->userModel = $userModel;
     }
@@ -35,7 +36,7 @@ class UsersController extends Controller
         $users = $this->userModel->userList();
 
         return view('admin.users.index', [
-            'title' => Config::getConfig('config.homepage')->title,
+            'title' => Cache::get("config.homepage")->title,
             'users' => $users,
         ]);
     }
@@ -49,7 +50,7 @@ class UsersController extends Controller
     {
         $user = \Auth::user();
         return view('admin.users.create', [
-                'title' => Config::getConfig('config.homepage')->title,
+                'title' => Cache::get("config.homepage")->title,
                 'user' => $user,
                 'config' => $this->config
             ]);
@@ -88,7 +89,7 @@ class UsersController extends Controller
     {
         $user = User::find($id);
         return view('admin.users.edit', [
-                'title' => Config::getConfig('config.homepage')->title,
+                'title' => Cache::get("config.homepage")->title,
                 'user' => $user,
                 'id' => $id
             ]);

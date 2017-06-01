@@ -53,6 +53,33 @@ $response = $kernel->handle(
     $request = Illuminate\Http\Request::capture()
 );
 
+// 설정 캐시에 저장
+// 홈페이지 기본환경 설정
+$homepageConfig = Cache::rememberForever("config.homepage", function() {
+                        $config = new App\Config(); // 캐시에 저장할 때만 객체 생성
+                        $hConfig = App\Config::where('name', 'config.homepage')->first();
+                        if(is_null($hConfig)) {
+                            $hConfig = $config->createConfigHomepage();
+                        }
+                        return $config->pullConfig($hConfig);
+                    });
+$boardConfig = Cache::rememberForever("config.board", function() {
+                        $config = new App\Config(); // 캐시에 저장할 때만 객체 생성
+                        $bConfig = App\Config::where('name', 'config.board')->first();
+                        if(is_null($bConfig)) {
+                            $bConfig = $config->createConfigBoard();
+                        }
+                        return $config->pullConfig($bConfig);
+                    });
+$joinConfig = Cache::rememberForever("config.join", function() {
+                        $config = new App\Config(); // 캐시에 저장할 때만 객체 생성
+                        $jConfig = App\Config::where('name', 'config.join')->first();
+                        if(is_null($jConfig)) {
+                            $jConfig = $config->createConfigJoin();
+                        }
+                        return $config->pullConfig($jConfig);
+                    });
+
 $response->send();
 
 $kernel->terminate($request, $response);

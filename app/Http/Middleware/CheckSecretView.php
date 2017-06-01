@@ -3,8 +3,9 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\Board;
 use DB;
+use Cache;
+use App\Board;
 
 class CheckSecretView
 {
@@ -20,8 +21,13 @@ class CheckSecretView
         $boardId = $request->boardId;
         $writeId = $request->writeId;
 
-        $board = Board::find($boardId);
-        $write = DB::table('write_'. $board->table_name)->find($writeId);
+        $board = Cache::rememberForever("board.{$boardId}", function() use($boardId) {
+            return Board::find($boardId);
+        });
+        $write = Cache::rememberForever("board.{$boardId}.write.{$writeId}", function() use($board, $writeId) {
+            return DB::table('write_'. $board->table_name)->find($writeId);
+        });
+
         $user = auth()->user();
 
         if(str_contains($write->option, 'secret')) {
