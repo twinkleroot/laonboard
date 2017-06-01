@@ -11,13 +11,13 @@
   </div>
 @endif
 
-<div id="header">
+<!--<div id="header">
 <div class="container">
 	<p class="mb0">
 		<span class="title">포인트 내역</span>
 	</p>
 </div>
-</div>
+</div>-->
 
 <div id="pt" class="container">
 	<div class="box">

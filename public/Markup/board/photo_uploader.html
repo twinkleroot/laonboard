@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>이미지 업로드</title>
+
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="../assets/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
+
+<style type="text/css">
+.file_input_textbox {
+	float: left;
+	width: 148px;
+	height: 34px;
+	padding: 6px 12px;
+	font-size: 14px;
+	font-weight: 400;
+	border: 1px solid #ccc;
+	color: #333;
+	background: #fff;
+	margin-right: 5px;
+	border-radius: 4px;
+}
+.file_input_div {
+	position: relative;
+	width: 96px;
+	height: 34px;
+	overflow: hidden;
+	margin: 0 5px 5px 0;
+}
+.file_input_button {
+	padding: 6px 12px;
+	font-size: 14px;
+	font-weight: 400;
+	text-align: center;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	height: 34px;
+	position: absolute;
+	top: 0;
+
+	color: #333;
+	background: #fff;
+}
+.file_input_hidden {
+	font-size: 45px;
+	position: absolute;
+	right: 0;
+	top: 0;
+	opacity: 0;
+
+	filter: alpha(opacity=0);
+	-ms-filter: "alpha(opacity=0)";
+	-khtml-opacity: 0;
+	-moz-opacity: 0;
+}
+.file_upload div {
+	float: left;
+}
+.file_upload:after {
+	content: "";
+	display: block;
+	clear: both;
+}
+.file_submit {
+	margin-top: 10px;
+}
+.file_upload_btn button {
+	width: 35px;
+}
+</style>
+
+    <!-- js -->
+</head>
+<body>
+
+<div id="header">
+<div class="container">
+	<div class="title">
+		<span>이미지 업로드</span>
+	</div>
+
+	<div class="cbtn">
+		<button class="btn btn-sir">업로드</button>
+		<button class="btn btn-default">창닫기</button>
+	</div>
+</div>
+</div>
+
+<div id="photo_uploader" class="container">
+
+	<div class="file_upload">
+		<div>
+			<input type="text" id="fileName" class="file_input_textbox" readonly>
+			<div class="file_input_div">
+				<input type="button" value="이미지 선택" class="file_input_button">
+				<input type="file" class="file_input_hidden" onchange="javascript:document.getElementById('fileName').value = this.value">
+			</div>
+		</div>
+
+		<div class="file_upload_btn">
+			<button class="btn btn-default">-</button>
+		</div>
+	</div>
+	<div class="file_upload">
+		<div>
+			<input type="text" id="fileName" class="file_input_textbox" readonly>
+			<div class="file_input_div">
+				<input type="button" value="이미지 선택" class="file_input_button">
+				<input type="file" class="file_input_hidden" onchange="javascript:document.getElementById('fileName').value = this.value">
+			</div>
+		</div>
+
+		<div class="file_upload_btn">
+			<button class="btn btn-default">-</button>
+		</div>
+	</div>
+	<div class="file_upload">
+		<div>
+			<input type="text" id="fileName" class="file_input_textbox" readonly>
+			<div class="file_input_div">
+				<input type="button" value="이미지 선택" class="file_input_button">
+				<input type="file" class="file_input_hidden" onchange="javascript:document.getElementById('fileName').value = this.value">
+			</div>
+		</div>
+
+		<div class="file_upload_btn">
+			<button class="btn btn-sir">+</button>
+		</div>
+	</div>
+
+</div>
+
+</body>
+</html>

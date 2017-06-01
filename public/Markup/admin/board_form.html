@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>환경설정</title>
+
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="../assets/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../assets/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="../assets/font-awesome/css/font-awesome.css">
+
+    <!-- js -->
+    <script type="text/javascript" src="../assets/js/jquery-3.1.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <script type="text/javascript">
+    jQuery("document").ready(function($){
+    	var nav = $('.body-tab');
+		 
+		$(window).scroll(function () {
+		    if ($(this).scrollTop() > 205) {
+		        nav.addClass("f-tab");
+		    } else {
+		        nav.removeClass("f-tab");
+		    }
+		});
+	});
+    </script>
+
+</head>
+<body>
+<div id="admin-header">
+	<div class="header-title">
+		<h1><i class="fa fa-cogs"></i>Administrator</h1>
+	</div>
+
+	<div class="box-left pull-left">
+		<div class="hdbt bt-menu">
+			<i class="fa fa-bars"></i>
+			<span>menu</span>
+		</div>
+		<div class="hdbt bt-home">
+			<i class="fa fa-home"></i>
+			<span>home</span>
+		</div>
+	</div>
+
+	<div class="box-right pull-right">
+		<div class="hdtx">
+			<ul>
+				<li>
+					<a href="#">부가서비스</a>
+				</li>
+			</ul>
+		</div>
+		<div class="hdbt bt-user">
+			<i class="fa fa-user"></i>
+			<span class="sign">최고관리자</span>
+		</div>
+	</div>
+</div>
+
+<div class="sidebar">
+	<ul class="category">
+		<li class="dropdown">
+            <a href="#" class="sd-1depth" data-toggle="dropdown" role="button" aria-expanded="false">환경설정</a>
+            <ul class="sd-2depth" role="menu">
+                <li><a href="config_form.html">기본환경설정</a></li>
+                <li><a href="#">관리권한설정</a></li>
+                <li><a href="#">테마설정</a></li>
+                <li><a href="#">메뉴설정</a></li>
+                <li><a href="#">부가서비스</a></li>
+            </ul>
+        </li>
+        <li class="dropdown open">
+            <a href="#" class="sd-1depth" data-toggle="dropdown" role="button" aria-expanded="false">회원관리</a>
+            <ul class="sd-2depth" role="menu">
+                <li class="on"><a href="member_list.html">회원관리</a></li>
+                <li><a href="#">포인트관리</a></li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a href="#" class="sd-1depth" data-toggle="dropdown" role="button" aria-expanded="false">게시판관리</a>
+            <ul class="sd-2depth" role="menu">
+                <li><a href="#">게시판관리</a></li>
+                <li><a href="#">게시판그룹관리</a></li>
+            </ul>
+        </li>
+	</ul>
+</div>
+
+<div id="admin-body">
+	<div class="body-head">
+		<div class="pull-left">
+			<h3>게시판 생성</h3>
+			<ul class="fl">
+				<li class="admin">Admin</li>
+				<li class="depth">게시판관리</li>
+				<li class="depth">게시판생성</li>
+			</ul>
+		</div>
+	</div>
+
+	
+
+	<div class="body-contents">
+		<div class="body-tab">
+			<ul class="mb_menu">
+				<li class="tab">
+					<a href="#mb_basic">기본설정</a>
+				</li>
+				<li class="tab">
+					<a href="#adm">권한설정</a>
+				</li>
+		       	<li class="tab">
+					<a href="#B">기능설정</a>
+				</li>
+				<li class="tab">
+					<a href="#C">디자인/양식</a>
+				</li>
+				<li class="tab">
+					<a href="#more">포인트설정</a>
+				</li>
+				<li class="tab">
+					<a href="#more">여분필드</a>
+				</li>
+		    </ul>
+			<div class="pull-right">
+				<ul class="mb_btn">
+					<li>
+						<button type="" class="btn btn-default">확인</button>
+					</li>
+					<li>
+						<button type="" class="btn btn-default">목록</button>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<!-- 관리 페이지 -->
+		<div class="panel panel-default">
+	        <div class="panel-body">
+		        <form class="form-horizontal">
+		        	<section id="mb_basic" class="first">
+		        		<div class="st_title">게시판 기본설정</div>
+		        		<div class="st_contents">
+		        			<div class="form-group">
+							    <label for="" class="col-md-2 control-label">TABLE</label>
+							    <div class="col-md-3">
+								    <input type="text" class="form-control" id="">
+							    </div>
+							    <div class="col-md-5" style="padding-left: 0;">
+									<span class="btn btn-default" style="font-size: 12px; line-height: 20px;">게시판 바로가기</span>
+							    </div>
+							</div>
+							<div class="form-group">
+							    <label for="" class="col-md-2 control-label">그룹</label>
+							    <div class="col-md-2">
+								    <select class="form-control">
+								    	<option>선택</option>
+								    	<option>그룹1</option>
+								    </select>
+							    </div>
+							    <div class="col-md-5" style="padding-left: 0;">
+									<span class="btn btn-default" style="font-size: 12px; line-height: 20px;">동일그룹 게시판목록</span>
+							    </div>
+							</div>
+							<div class="form-group">
+							    <label for="" class="col-md-2 control-label">게시판 제목</label>
+							    <div class="col-md-8">
+								    <input type="text" class="form-control" id="">
+							    </div>
+							</div>
+							<div class="form-group">
+							    <label for="" class="col-md-2 control-label">모바일 게시판 제목</label>
+							    <div class="col-md-8">
+								    <input type="text" class="form-control" id="">
+							    	<span id="helpBlock" class="help-block" style="font-size: 12px; margin: 5px 0;">
+							    	모바일에서 보여지는 게시판 제목이 다른 경우에 입력합니다. 입력이 없으면 기본 게시판 제목이 출력됩니다.
+							    	</span>
+							    </div>
+							</div>
+							<div class="form-group">
+							    <label for="" class="col-md-2 control-label">접속기기</label>
+							    <div class="col-md-3">
+								    <select class="form-control">
+										<option>PC와 모바일에서 모두 사용</option>
+										<option>PC 전용</option>
+										<option>모바일 전용</option>
+									</select>
+							    	<span id="helpBlock" class="help-block" style="font-size: 12px; margin: 5px 0;">
+							    	PC 와 모바일 사용을 구분합니다.
+							    	</span>
+							    </div>
+							</div>
+							<div class="form-group">
+							    <label for="" class="col-md-2 control-label">분류</label>
+							    <div class="col-md-7">
+								    <input type="text" class="form-control" id="">
+							    	<span id="helpBlock" class="help-block" style="font-size: 12px; margin: 5px 0;">
+							    	분류와 분류 사이는 | 로 구분하세요. (예: 질문|답변) 첫자로 #은 입력하지 마세요. (예: #질문|#답변 [X])
+							    	</span>
+							    </div>
+							    <div class="col-md-3" style="padding-left: 0;">
+							    	<label>
+							    		<input type="checkbox" name="">
+							    		사용
+							    	</label>
+							    </div>
+							</div>
+							<div class="form-group">
+							    <label for="" class="col-md-2 control-label">카운트 조정</label>
+							    <div class="col-md-7">
+								    <input type="checkbox" name="">
+							    	<span id="helpBlock" class="help-block" style="font-size: 12px; margin: 5px 0;">
+							    	현재 원글수 : 1, 현재 댓글수 : 0<br>
+							    	게시판 목록에서 글의 번호가 맞지 않을 경우에 체크하십시오.
+							    	</span>
+							    </div>
+							</div>
+		        	</section>
+
+		        	<section id="adm">
+		        		<div class="st_title">게시판 권한 설정</div>
+		        		<div class="st_contents">
+		        			<div class="form-group">
+							    <label for="" class="col-md-2 control-label">게시판 관리자</label>
+							    <div class="col-md-3">
+								    <input type="text" class="form-control" id="">
+							    </div>
+							</div>
+							<div class="form-group">
+								<div class="col-md-offset-2 col-md-10">
+							    	<span id="helpBlock" class="help-block" style="font-size: 12px; margin: 5px 0;">
+							    	권한 1은 비회원, 2 이상 회원입니다. 권한은 10 이 가장 높습니다.
+							    	</span>
+							    </div>
+							</div>
+							<div class="form-group">
+							    <label for="" class="col-md-2 control-label">목록보기 권한</label>
+							    <div class="col-md-2">
+								    <select class="form-control">
+								    	<option>1</option>
+								    	<option>2</option>
+								    	<option>3</option>
+								    	<option>4</option>
+								    	<option>5</option>
+								    	<option>6</option>
+								    	<option>7</option>
+								    	<option>8</option>
+								    	<option>9</option>
+								    	<option>10</option>
+								    </select>
+							    </div>
+							</div>
+							<div class="form-group">
+							    <label for="" class="col-md-2 control-label">글읽기 권한</label>
+							    <div class="col-md-2">
+								    <select class="form-control">
+								    	<option>1</option>
+								    	<option>2</option>
+								    	<option>3</option>
+								    	<option>4</option>
+								    	<option>5</option>
+								    	<option>6</option>
+								    	<option>7</option>
+								    	<option>8</option>
+								    	<option>9</option>
+								    	<option>10</option>
+								    </select>
+							    </div>
+							</div>
+							<div class="form-group">
+							    <label for="" class="col-md-2 control-label">글쓰기 권한</label>
+							    <div class="col-md-2">
+								    <select class="form-control">
+								    	<option>1</option>
+								    	<option>2</option>
+								    	<option>3</option>
+								    	<option>4</option>
+								    	<option>5</option>
+								    	<option>6</option>
+								    	<option>7</option>
+								    	<option>8</option>
+								    	<option>9</option>
+								    	<option>10</option>
+								    </select>
+							    </div>
+							</div>
+							<div class="form-group">
+							    <label for="" class="col-md-2 control-label">글답변 권한</label>
+							    <div class="col-md-2">
+								    <select class="form-control">
+								    	<option>1</option>
+								    	<option>2</option>
+								    	<option>3</option>
+								    	<option>4</option>
+								    	<option>5</option>
+								    	<option>6</option>
+								    	<option>7</option>
+								    	<option>8</option>
+								    	<option>9</option>
+								    	<option>10</option>
+								    </select>
+							    </div>
+							</div>
+							<div class="form-group">
+							    <label for="" class="col-md-2 control-label">댓글쓰기 권한</label>
+							    <div class="col-md-2">
+								    <select class="form-control">
+								    	<option>1</option>
+								    	<option>2</option>
+								    	<option>3</option>
+								    	<option>4</option>
+								    	<option>5</option>
+								    	<option>6</option>
+								    	<option>7</option>
+								    	<option>8</option>
+								    	<option>9</option>
+								    	<option>10</option>
+								    </select>
+							    </div>
+							</div>
+							<div class="form-group">
+							    <label for="" class="col-md-2 control-label">링크 권한</label>
+							    <div class="col-md-2">
+								    <select class="form-control">
+								    	<option>1</option>
+								    	<option>2</option>
+								    	<option>3</option>
+								    	<option>4</option>
+								    	<option>5</option>
+								    	<option>6</option>
+								    	<option>7</option>
+								    	<option>8</option>
+								    	<option>9</option>
+								    	<option>10</option>
+								    </select>
+							    </div>
+							</div>
+							<div class="form-group">
+							    <label for="" class="col-md-2 control-label">업로드 권한</label>
+							    <div class="col-md-2">
+								    <select class="form-control">
+								    	<option>1</option>
+								    	<option>2</option>
+								    	<option>3</option>
+								    	<option>4</option>
+								    	<option>5</option>
+								    	<option>6</option>
+								    	<option>7</option>
+								    	<option>8</option>
+								    	<option>9</option>
+								    	<option>10</option>
+								    </select>
+							    </div>
+							</div>
+							<div class="form-group">
+							    <label for="" class="col-md-2 control-label">다운로드 권한</label>
+							    <div class="col-md-2">
+								    <select class="form-control">
+								    	<option>1</option>
+								    	<option>2</option>
+								    	<option>3</option>
+								    	<option>4</option>
+								    	<option>5</option>
+								    	<option>6</option>
+								    	<option>7</option>
+								    	<option>8</option>
+								    	<option>9</option>
+								    	<option>10</option>
+								    </select>
+							    </div>
+							</div>
+							<div class="form-group">
+							    <label for="" class="col-md-2 control-label">HTML 쓰기 권한</label>
+							    <div class="col-md-2">
+								    <select class="form-control">
+								    	<option>1</option>
+								    	<option>2</option>
+								    	<option>3</option>
+								    	<option>4</option>
+								    	<option>5</option>
+								    	<option>6</option>
+								    	<option>7</option>
+								    	<option>8</option>
+								    	<option>9</option>
+								    	<option>10</option>
+								    </select>
+							    </div>
+							</div>
+						</div>
+		        	</section>
+
+		        	<section id="more">
+		        		<div class="st_title">게시판 기능 설정</div>
+		        		<div class="st_contents">
+							<div class="form-group">
+								<div class="col-md-offset-2 col-md-10">
+							    	<span id="helpBlock" class="help-block" style="font-size: 12px; margin: 5px 0;">
+							    	댓글의 수가 설정 수 이상이면 원글을 수정할 수 없습니다. 0으로 설정하시면 댓글 수에 관계없이 수정할 수있습니다.
+							    	</span>
+							    </div>
+							</div>
+							<div class="row bd_function">
+								<div class="form-inline">
+								    <label for="" class="col-md-2 control-label">원글 수정 불가</label>
+								    <div class="col-md-10">
+									    댓글 <input type="text" class="form-control td_numsmall" id=""> 개 이상 달리면 수정불가
+								    </div>
+								</div>
+
+								<div class="form-inline">
+								    <label for="" class="col-md-2 control-label">원글 삭제 불가</label>
+								    <div class="col-md-10">
+									    댓글 <input type="text" class="form-control td_numsmall" id=""> 개 이상 달리면 삭제불가
+								    </div>
+								</div>
+
+								<div class="form-inline">
+									<label for="" class="col-md-2 control-label">글쓴이 사이드뷰</label>
+									<div class="col-md-10">
+										<input type="checkbox"> 
+										사용 (글쓴이 글릭시 나오는 레이어 메뉴)
+									</div>
+								</div>
+								<div class="form-inline">
+								    <label for="" class="col-md-2 control-label">비밀글 사용</label>
+								    <div class="col-md-10">
+									    <select class="form-control">
+											<option>사용하지 않음</option>
+											<option>체크박스</option>
+											<option>무조건</option>
+										</select>
+								    	<span id="helpBlock" class="help-block" style="font-size: 12px; margin: 5px 0;">
+								    	"체크박스"는 글작성시 비밀글 체크가 가능합니다. "무조건"은 작성되는 모든글을 비밀글로 작성합니다. (관리자는 체크박스로 출력합니다.) 스킨에 따라 적용되지 않을 수 있습니다.
+								    	</span>
+								    </div>
+								</div>
+								<div class="form-inline">
+								    <label for="" class="col-md-2 control-label">DHTML 에디터 사용</label>
+								    <div class="col-md-10">
+										<input type="checkbox"> 
+										사용
+								    	<span id="helpBlock" class="help-block" style="font-size: 12px; margin: 5px 0;">
+								    	글작성시 내용을 DHTML 에디터 기능으로 사용할 것인지 설정합니다. 스킨에 따라 적용되지 않을 수 있습니다.
+								    	</span>
+								    </div>
+								</div>
+								<div class="form-inline">
+								    <label for="" class="col-md-2 control-label">RSS 보이기 사용</label>
+								    <div class="col-md-10">
+										<input type="checkbox"> 
+										사용
+								    	<span id="helpBlock" class="help-block" style="font-size: 12px; margin: 5px 0;">
+								    	비회원 글읽기가 가능하고 RSS 보이기 사용에 체크가 되어야만 RSS 지원을 합니다.
+								    	</span>
+								    </div>
+								</div>
+								<div class="form-inline">
+								    <label for="" class="col-md-2 control-label">추천 사용</label>
+								    <div class="col-md-10">
+										<input type="checkbox"> 
+										사용
+								    </div>
+								</div>
+							</div>
+		        	</section>
+		        	
+		        	<section id="more">
+		        		<div class="st_title">여분필드</div>
+		        		<div class="st_contents">
+
+		        			<div class="form-group">
+						    	<span id="helpBlock" class="help-block" style="font-size: 12px; margin: 5px 0;">
+							    	댓글의 수가 설정 수 이상이면 원글을 수정할 수 없습니다. 0으로 설정하시면 댓글 수에 관계없이 수정할 수있습니다.
+						    	</span>
+		        			</div>
+		        		</div>
+		        	</section>
+				</form>
+	        </div>
+        </div>
+    </div>
+
+	</div>
+</div>
+
+
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="http://bootstrapk.com/dist/js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="http://bootstrapk.com/assets/js/ie10-viewport-bug-workaround.js"></script>
+</body>
+</html>

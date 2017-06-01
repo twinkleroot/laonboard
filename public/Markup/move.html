@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>게시물 이동</title>
+
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
+
+
+    <!-- js -->
+</head>
+<body>
+
+<div id="header">
+<div class="container">
+	<div class="title">
+		<span>게시물 이동</span>
+	</div>
+
+	<div class="cbtn">
+		<button class="btn btn-sir">이동</button>
+		<button class="btn btn-default">창닫기</button>
+	</div>
+</div>
+</div>
+
+<div id="bd_move" class="container">
+	<form>
+	<table class="table box">
+		<thead>
+			<tr>
+				<th class="td_chk">
+					<input type="checkbox">
+				</th>
+				<th>게시판</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- 하단 tr이 출력될 목록갯수에 따라 반복 -->
+			<tr>
+				<td class="td_chk">
+					<input type="checkbox" id="chk1">
+				</td>
+				<td>
+					<label for="chk1">
+						<span class="gr1">그룹1</span> <!-- 그룹의 첫번째는 gr1 -->
+						<i class="fa fa-angle-right"></i>
+						<span>b2 (board)</span>
+					</label>
+				</td>
+			</tr>
+			<tr>
+				<td class="td_chk">
+					<input type="checkbox" id="chk2">
+				</td>
+				<td>
+					<label for="chk2">
+						<span class="gr1">그룹2</span>
+						<i class="fa fa-angle-right"></i>
+						<span>b2 (board)</span>
+					</label>
+				</td>
+			</tr>
+			<tr class="on"> <!-- 게시물의 기존 위치를 표시 -->
+				<td class="td_chk">
+					<input type="checkbox" id="chk3">
+				</td>
+				<td>
+					<label for="chk3">
+						<span class="gr0">그룹2</span> <!-- 첫번째를 제외하고는 gr0 -->
+						<i class="fa fa-angle-right"></i>
+						<span>b2 (board)</span>
+					</label>
+					<span class="here">현재</span> <!-- 게시물의 기존 위치를 표시 -->
+				</td>
+			</tr>
+			<tr>
+				<td class="td_chk">
+					<input type="checkbox" id="chk4">
+				</td>
+				<td>
+					<label for="chk4">
+						<span class="gr0">그룹2</span>
+						<i class="fa fa-angle-right"></i>
+						<span>b2 (board)</span>
+					</label>
+				</td>
+			</tr>
+			<tr>
+				<td class="td_chk">
+					<input type="checkbox" id="chk4">
+				</td>
+				<td>
+					<label for="chk4">
+						<span class="gr1">그룹3</span>
+						<i class="fa fa-angle-right"></i>
+						<span>b2 (board)</span>
+					</label>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	</form>
+
+</div>
+
+</body>
+</html>
