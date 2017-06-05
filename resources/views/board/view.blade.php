@@ -389,6 +389,7 @@ function commentBox(commentId, work) {
         }
 
         document.getElementById('commentId').value = commentId;
+
         // if(saveBefore) {
         //     $("#captcha_reload").trigger("click");
         // }

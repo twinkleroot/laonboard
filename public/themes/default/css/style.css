@@ -839,21 +839,30 @@ div {
 	border-bottom: 1px solid #d8d8d8;
 }
 .cmt {
-	padding: 15px 0;
 	width: 100%;
 	display: inline-block;
 }
-.cmt:first-child {
-	border-top: 0;
-}
 .cmt_reply {
-
+	border-top: 1px  !important;
 }
 .cmt_reply:before {
 	content: "\f112";
 	font-family: FontAwesome;
+	font-size: 12px;
 	margin-left: -25px;
-	margin-top: -5px;
+	margin-top: -3px;
+	float: left;
+	color: #aaa;
+
+	-ms-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+.bd_reply:before {
+	content: "\f112";
+	font-family: FontAwesome;
+	font-size: 12px;
+	margin-right: 7px;
 	float: left;
 	color: #aaa;
 
@@ -865,6 +874,11 @@ div {
 	float: left;
 	display: block;
 	width: 100%;
+	border-top: 1px solid #ddd;
+	padding: 15px 0;
+}
+.cmt:first-child .cmt_box {
+	border-top: 0;
 }
 .cmt_box:after {
 	content: "";
@@ -884,7 +898,7 @@ div {
 .bd_rd_cmt_ctr {
 	padding: 0;
 	display: inline-block;
-	margin: 0 0 10px 0;
+	margin: 0 0 5px 0;
 	color: #aaa;
 	font-size: 12px;
 }
