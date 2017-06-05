@@ -165,7 +165,7 @@
 	<section id="bd_rd_cmt">
         @foreach($comments as $comment)
 		<article class="cmt">
-			<div class="cmt_box @if(strlen($comment->comment_reply)>0) cmt_reply" style="padding-left: calc(25px * {{ strlen($comment->comment_reply) }}); @endif">
+			<div class="cmt_box @if(strlen($comment->comment_reply)>0) cmt_reply" style="padding-left: calc(25px * {{ strlen($comment->comment_reply) }}) @endif">
 				<ul class="bd_rd_cmt_info">
 					<li><i class="fa fa-user"></i>
                         @if($board->use_sideview == 1)
