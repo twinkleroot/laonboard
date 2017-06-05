@@ -86,16 +86,8 @@
                 @if(session()->get('admin'))
     				<td class="bd_check"><input type="checkbox" name="chk_id[]" class="writeId" value='{{ $write->id }}'></td>
                 @endif
-				<td>
-                    @if($write->reply != '')
-                        <span class="cmt_reply pull-left">
-                            @for($i=0; $i<strlen($write->reply); $i++)
-                                &nbsp;
-                            @endfor
-            				<i class="fa fa-reply fa-rotate-180"></i>
-                            &nbsp;
-            			</span>
-                    @endif
+				<td @if($write->reply != '') class="bd_reply" style="padding-left: calc(20px * {{ strlen($write->reply) }} @endif">
+
 					<span class="bd_subject">
                         {{-- <a href="{{ route('board.view', ['boardId' => $board->id, 'writeId' => $write->id]) }}?page={{ $writes->currentPage() }}">{{ $write->subject }}</a> --}}
                         {{-- <a href="{{ route('board.view', ['boardId' => $board->id, 'writeId' => $write->id]) }}">{{ $write->subject }}</a> --}}

@@ -166,7 +166,7 @@
     @if(count($comments) > 0)
         @foreach($comments as $comment)
 		<article class="cmt">
-			<div class="cmt_box @if(strlen($comment->comment_reply)>0) @for($i=0; $i<6; $i++) cmt_reply" style="padding-left: calc(25px * <?php echo ++$i ?>); @endfor @endif">
+			<div class="cmt_box @if(strlen($comment->comment_reply)>0) cmt_reply" style="padding-left: calc(25px * {{ strlen($comment->comment_reply) }} @endif">
 				<ul class="bd_rd_cmt_info">
 					<li><i class="fa fa-user"></i>
                         @if($board->use_sideview == 1)
