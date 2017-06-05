@@ -215,7 +215,7 @@ class BoardFile extends Model
         $pathAndFile = $path. '/'. $delFileName;
         // 기존 썸네일을 삭제한다.
         $pathAndThumbnail =  $path. '/thumb-'. $delFileName;
-        // dd($pathAndThumbnail);
+
         $returnVal = File::delete($pathAndFile);
         if(File::exists($pathAndThumbnail)) {
             $returnVal = File::delete($pathAndThumbnail);
@@ -225,7 +225,7 @@ class BoardFile extends Model
     }
 
     // 게시물 삭제 할 때 첨부 파일, 에디터 첨부파일도 함께 삭제
-    public function deleteWriteAndAttachFile($boardId, $writeId)
+    public function deleteWriteAndAttachFile($boardId, $writeId, $type='')
     {
         $board = Board::find($boardId);
         $writeModel = new Write($boardId);
@@ -239,11 +239,14 @@ class BoardFile extends Model
 
         $result = array();
         // 첨부 파일 삭제
-        $result[0] = $this->deleteAttachFile($board->table_name, $delFiles);
+        $index = 0;
+        $result[$index++] = $this->deleteAttachFile($board->table_name, $delFiles);
         // 에디터에 첨부된 이미지와 썸네일 삭제
-        $result[1] = $this->deleteEditorImage($content);
+        if($type != 'move') {
+            $result[$index++] = $this->deleteEditorImage($content);
+        }
         // 파일 테이블 삭제
-        $result[2] = BoardFile::where([
+        $result[$index] = BoardFile::where([
                         'board_id' => $boardId,
                         'write_id' => $writeId,
                     ])

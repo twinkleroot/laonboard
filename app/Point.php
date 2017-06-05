@@ -388,4 +388,33 @@ class Point extends Model
         }
     }
 
+    // 글 삭제 - 포인트 삭제
+    public function deleteWritePoint($writeModel, $boardId, $writeId)
+    {
+       $write = Cache::remember("board.{$boardId}.write.{$writeId}", config('gnu.CACHE_EXPIRE_MINUTE'), function() use($writeModel, $writeId) {
+           return $writeModel->find($writeId);
+       });
+       $board = Cache::remember("board.{$boardId}", config('gnu.CACHE_EXPIRE_MINUTE'), function() use($boardId) {
+           return Board::find($boardId);
+       });
+       // 원글에서의 처리
+       $deleteResult = 0;
+       $insertResult = 0;
+       if(!$write->is_comment) {
+           // 포인트 삭제 및 사용 포인트 다시 부여
+           $deleteResult = $this->deletePoint($write->user_id, $board->table_name, $writeId, '쓰기');
+           if($deleteResult == 0) {
+               $insertResult = $this->insertPoint($write->user_id, $board->write_point * (-1), $board->subject. ' '. $writeId. ' 글삭제');
+           }
+       } else {   // 댓글에서의 처리
+           // 포인트 삭제 및 사용 포인트 다시 부여
+           $deleteResult = $this->deletePoint($write->user_id, $board->table_name, $writeId, '댓글');
+           if($deleteResult == 0) {
+               $insertResult = $this->insertPoint($write->user_id, $board->write_point * (-1), $board->subject. ' '. $write->parent. '-'. $writeId. ' 댓글삭제');
+           }
+       }
+
+       return $deleteResult != 0 ? $deleteResult : $insertResult;
+    }
+
 }

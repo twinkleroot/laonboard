@@ -7,23 +7,25 @@ use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use App\Board;
 use App\Write;
+use App\Point;
 use App\Config;
 use App\BoardFile;
 use App\BoardGood;
 use App\User;
+use App\Comment;
 use Auth;
-use Cache;
 use Exception;
 use Illuminate\Pagination\Paginator;
 
-class BoardController extends Controller
+class WriteController extends Controller
 {
 
     public $writeModel;
     public $boardFileModel;
     public $boardGoodModel;
+    public $comment;
 
-    public function __construct(Request $request, Board $board, BoardFile $boardFile, BoardGood $boardGood)
+    public function __construct(Request $request, Board $board, BoardFile $boardFile, BoardGood $boardGood, Comment $comment)
     {
         $this->writeModel = new Write($request->boardId);
         if( !is_null($this->writeModel->board) ) {
@@ -32,6 +34,7 @@ class BoardController extends Controller
 
         $this->boardFileModel = $boardFile;
         $this->boardGoodModel = $boardGood;
+        $this->comment = $comment;
     }
     /**
      * Display a listing of the resource.
@@ -97,7 +100,7 @@ class BoardController extends Controller
         }
 
         // 댓글 데이터
-        $params = array_collapse([$params, $this->writeModel->getCommentsParams($this->writeModel, $boardId, $writeId)]);
+        $params = array_collapse([$params, $this->comment->getCommentsParams($this->writeModel, $boardId, $writeId)]);
 
         // 전체 목록 보기 선택시 목록 데이터
         if($this->writeModel->board->use_list_view) {
@@ -112,46 +115,14 @@ class BoardController extends Controller
             // }
             // $lastPage = $params['writes']->lastPage();
             // $params['writes']->setCurrentPage($currentPage, $lastPage);
-        } else {
-            $params = array_collapse([$params, $this->writeModel->getPrevNextView($this->writeModel, $boardId, $writeId, $request)]);
         }
+        // 이전글, 다음글 데이터 추가
+        $params = array_collapse([$params, $this->writeModel->getPrevNextView($this->writeModel, $boardId, $writeId, $request)]);
+
+        // 요청 URI 추가
         $params = array_add($params, 'requestUri', $request->getRequestUri());
 
         return view('board.view', $params);
-    }
-
-    // 댓글 저장
-    public function storeComment(Request $request)
-    {
-        $result = $this->writeModel->storeComment($this->writeModel, $request);
-        if(isset($result['message'])) {
-            return view('message', [
-                'message' => $result['message']
-            ]);
-        }
-
-
-        return redirect($request->requestUri. '#comment'. $result);
-    }
-
-    // 댓글 수정
-    public function updateComment(Request $request)
-    {
-        $result = $this->writeModel->updateComment($this->writeModel, $request);
-
-        if(!$result) {
-            return view('message', [
-                'message' => '댓글 수정에 실패하였습니다.'
-            ]);
-        }
-
-        return redirect($request->requestUri. '#comment'. $request->commentId);
-    }
-
-    // 댓글 삭제
-    public function destroyComment(Request $request, $commentId)
-    {
-        dd($commentId);
     }
 
     // 글 보기 중 링크 연결
@@ -306,7 +277,7 @@ class BoardController extends Controller
     public function destroy(Request $request, $boardId, $writeId)
     {
         $message = $redirect = '';
-        $board = Cache::get("board.{$boardId}");
+        $board = Board::find($boardId);
 
         if( $this->writeModel->hasReply($this->writeModel, $writeId) ) {
             $message = '이 글과 관련된 답변글이 존재하므로 삭제 할 수 없습니다.\\n\\n우선 답변글부터 삭제하여 주십시오.';
@@ -326,6 +297,30 @@ class BoardController extends Controller
 
         $returnUrl = route('board.index', $boardId). ($request->page == 1 ? '' : '?page='. $request->page);
         return redirect($returnUrl);
+    }
+
+    // 게시글 삭제하면서 게시글에 종속된 것들도 함께 삭제
+    private function deleteWriteCascade($boardId, $writeId)
+    {
+        $message = '';
+        // 부여되었던 포인트 삭제 및 조정 반영
+        $point = new Point();
+        $delPointResult = $point->deleteWritePoint($this->writeModel, $boardId, $writeId);
+        if($delPointResult <= 0) {
+            $message .= '정상적으로 게시글을 삭제하는데 실패하였습니다.(포인트 삭제)';
+        }
+        // 서버에서 파일 삭제, 썸네일 삭제, 에디터 첨부 이미지 파일, 썸네일 삭제, 파일 테이블 삭제
+        $delFileResult = $this->boardFileModel->deleteWriteAndAttachFile($boardId, $writeId);
+        if( array_search(false, $delFileResult) === false ) {
+            $message .= '정상적으로 게시글을 삭제하는데 실패하였습니다.(첨부 파일 삭제)';
+        }
+        // 게시글 삭제
+        $delWriteResult = $this->writeModel->deleteWrite($this->writeModel, $writeId);
+        if($delWriteResult <= 0) {
+            $message .= '정상적으로 게시글을 삭제하는데 실패하였습니다.(글 삭제)';
+        }
+
+        return $message;
     }
 
     /**
@@ -349,51 +344,6 @@ class BoardController extends Controller
 
         $returnUrl = route('board.index', $boardId). ($request->page == 1 ? '' : '?page='. $request->page);
         return redirect($returnUrl);
-    }
-
-    // 게시글 삭제하면서 게시글에 종속된 것들도 함께 삭제
-    private function deleteWriteCascade($boardId, $writeId)
-    {
-        $message = '';
-        // 부여되었던 포인트 삭제 및 조정 반영
-        $delPointResult = $this->writeModel->deletePoint($this->writeModel, $writeId);
-        if($delPointResult <= 0) {
-            $message .= '정상적으로 게시글을 삭제하는데 실패하였습니다.(포인트 삭제)';
-        }
-        // 서버에서 파일 삭제, 썸네일 삭제, 에디터 첨부 이미지 파일, 썸네일 삭제, 파일 테이블 삭제
-        $delFileResult = $this->boardFileModel->deleteWriteAndAttachFile($boardId, $writeId);
-        if( array_search(false, $delFileResult) === false ) {
-            $message .= '정상적으로 게시글을 삭제하는데 실패하였습니다.(첨부 파일 삭제)';
-        }
-        // 게시글 삭제
-        $delWriteResult = $this->writeModel->deleteWrite($this->writeModel, $writeId);
-        if($delWriteResult <= 0) {
-            $message .= '정상적으로 게시글을 삭제하는데 실패하였습니다.(글 삭제)';
-        }
-
-        return $message;
-    }
-
-    // 게시물 복사 및 이동 폼
-    public function move(Request $request, $boardId)
-    {
-        $board = Cache::get("board.{$boardId}");
-        $params = $board->getMoveParams($boardId, $request);
-
-        return view('board.move', $params);
-    }
-
-    // 게시물 복사 및 이동 수행
-    public function moveUpdate(Request $request, $boardId)
-    {
-        // 복사 및 이동
-        $message = $this->writeModel->copyWrites($this->writeModel, $request);
-
-        return view('message', [
-            'message' => $message,
-            'popup' => 1,
-            'reload' => 1,
-        ]);
     }
 
 }

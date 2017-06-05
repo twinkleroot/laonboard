@@ -339,7 +339,7 @@ div {
 	line-height: 34px; vertical-align: bottom; font-weight: 600;
 }
 .bd_btn {
-	padding: 0; 
+	padding: 0;
 	margin-bottom: 0;
 }
 .bd_btn:after {
@@ -348,7 +348,7 @@ div {
 	clear: both;
 }
 .bd_btn ul {
-	padding: 0; 
+	padding: 0;
 	margin-bottom: 0;
 	float: right;
 }
@@ -564,7 +564,7 @@ div {
 }
 .bd_rd_head .bd_rd_info li:first-child {
 	margin-left: 0;
-	
+
 }
 .bd_rd_head .bd_rd_info li i {
 	margin-right: 7px;
@@ -847,7 +847,7 @@ div {
 	border-top: 0;
 }
 .cmt_reply {
-	
+
 }
 .cmt_reply:before {
 	content: "\f112";
@@ -1032,7 +1032,7 @@ div {
 }
 .save-delete:hover {
 	background: none !important;
-} 
+}
 
 .td_chk {
 	text-align: center;

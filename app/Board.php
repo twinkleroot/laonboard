@@ -342,18 +342,4 @@ class Board extends Model
         }
     }
 
-    // (게시판) 관리자의 선택 복사, 이동에 필요한 파라미터
-    public function getMoveParams($boardId, $request)
-    {
-        // 세션에 해당 게시물 아이디들을 보관
-        $moveId = $request->has('chk_id') ? $request->chk_id : $request->writeId;
-        session()->put('writeIds', $moveId);
-
-        return [
-            'boards' => Board::orderBy('group_id', 'desc')->orderBy('subject', 'desc')->get(),
-            'currentBoard' => Board::find($boardId),
-            'type' => $request->type,
-        ];
-    }
-
 }

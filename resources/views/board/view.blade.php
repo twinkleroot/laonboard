@@ -102,7 +102,7 @@
             </div>
         @endforeach
     @endif
-    @if($board->use_signature)
+    @if($board->use_signature && $signature)
         <div class="bd_sign">
             {{ $signature }}
         </div>
@@ -143,14 +143,14 @@
             <li>
                 <i class="fa fa-caret-up"></i>
                 <span>이전글</span>
-                <a href="{{ $prevUrl }}">이전글제목</a>
+                <a href="{{ $prevUrl }}">{{ $prevSubject }}</a>
             </li>
             @endif
             @if($nextUrl != '')
             <li>
                 <i class="fa fa-caret-down"></i>
                 <span>다음글</span>
-                <a href="{{ $nextUrl }}">다음글제목</a>
+                <a href="{{ $nextUrl }}">{{ $nextSubject }}</a>
             </li>
             @endif
         </ul>
@@ -164,7 +164,7 @@
     @if(count($comments) > 0)
 	<section id="bd_rd_cmt">
         @foreach($comments as $comment)
-		<article class="cmt">
+		<article class="cmt" id="comment{{ $comment->id }}">
 			<div class="cmt_box @if(strlen($comment->comment_reply)>0) cmt_reply" style="padding-left: calc(25px * {{ strlen($comment->comment_reply) }}); @endif">
 				<ul class="bd_rd_cmt_info">
 					<li><i class="fa fa-user"></i>
@@ -186,9 +186,9 @@
 					<li><i class="fa fa-clock-o"></i>@datetime($comment->created_at)</li>
 				</ul>
 				<ul class="bd_rd_cmt_ctr">
-					@if($comment->isReply) <li><a href="#" onclick="commentBox({{ $comment->id }}, 'c'); return false;">답변</a></li> @endif
-					@if($comment->isEdit) <li><a href="#" onclick="commentBox({{ $comment->id }}, 'cu'); return false;">수정</a></li> @endif
-					@if($comment->isDelete)	<li><a href="/board/{{ $board->id }}/comment/delete/{{ $comment->id }}" onclick="return commentDelete();">삭제</a></li> @endif
+					@if($comment->isReply == 1) <li><a href="#" onclick="commentBox({{ $comment->id }}, 'c'); return false;">답변</a></li> @endif
+					@if($comment->isEdit == 1) <li><a href="#" onclick="commentBox({{ $comment->id }}, 'cu'); return false;">수정</a></li> @endif
+					@if($comment->isDelete == 1) <li><a href="/board/{{ $board->id }}/comment/{{ $comment->id }}/delete?writeId={{ $view->id}}" onclick="return commentDelete();">삭제</a></li> @endif
 				</ul>
 				<div class="bd_rd_cmt_view">
 					{!! $comment->content !!}
@@ -202,7 +202,7 @@
         @endforeach
 	</section>
     @else
-    
+
     <section id="bd_rd_cmt">
 		<article class="cmt">
             <p>등록된 댓글이 없습니다.</p>
