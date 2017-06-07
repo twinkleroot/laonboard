@@ -7,7 +7,7 @@
 
             var popup = {{ isset($popup) ? $popup : 0 }};
             var reload = {{ isset($reload) ? $reload : 0 }};
-            var redirect = '{{ isset($redirect) ? $redirect : '' }}';
+            var redirect = "{{ isset($redirect) ? $redirect : '' }}";
             var openerRedirect = "{{ isset($openerRedirect) ? $openerRedirect : '' }}";
 
             // 팝업창에서 처리하는 경우

@@ -1,6 +1,6 @@
 @extends('theme')
 @section('title')
-    로그인
+    로그인 | {{ Cache::get("config.homepage")->title }} 
 @endsection
 
 @section('include_css')

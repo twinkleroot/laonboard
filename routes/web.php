@@ -188,7 +188,7 @@ Route::group(['prefix' => 'board/{boardId}'], function () {
     Route::get('view/{writeId}/link/{linkNo}', ['as' => 'board.link', 'uses' => 'Board\WriteController@link'])
         ->middleware('level.board:read_level', 'valid.board', 'valid.write');
     // 글 읽기 중 파일 다운로드
-    Route::get('view/{writeId}/download/{fileNo}', ['as' => 'board.download', 'uses' => 'Board\WriteController@download'])
+    Route::get('view/{writeId}/download/{fileNo}', ['as' => 'board.download', 'uses' => 'Board\DownloadController@download'])
         ->middleware('level.board:download_level', 'valid.board', 'valid.write');
     // 글 읽기 중 추천/비추천
     Route::post('view/{writeId}/{good}', ['as' => 'board.good', 'uses' => 'Board\WriteController@good'])
@@ -239,9 +239,9 @@ Route::group(['prefix' => 'board/{boardId}'], function () {
 // 이미지 관련 라우트
 Route::group(['prefix' => 'image'], function () {
     // 원본 이미지 보기
-    Route::get('original/{boardId?}', ['as' => 'image.original', 'uses' => 'Board\ImageController@viewImage']);
+    Route::get('original/{boardId?}', ['as' => 'image.original', 'uses' => 'Board\ImageController@viewOriginal']);
     // 에디터에서 이미지 업로드 팝업 페이지
-    Route::get('upload', ['as' => 'image.form', 'uses' => 'Board\ImageController@showImagePop']);
+    Route::get('upload', ['as' => 'image.form', 'uses' => 'Board\ImageController@popup']);
     // 에디터에서 이미지 업로드 실행
     Route::post('upload', ['as' => 'image.upload', 'uses' => 'Board\ImageController@uploadImage']);
 });

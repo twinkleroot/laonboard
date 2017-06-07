@@ -37,7 +37,7 @@ class UserController extends Controller
     // 회원 정보 수정 폼에 앞서 비밀번호 한번 더 확인하는 폼
     public function checkPassword()
     {
-        $user = Auth::user();
+        $user = auth()->user();
         if(is_null($user->password)) {
             return view('user.set_password');   // 최초 비밀번호 설정
         } else {
@@ -48,7 +48,7 @@ class UserController extends Controller
     // 비밀번호 비교
     public function confirmPassword(Request $request)
     {
-        $user = Auth::user();
+        $user = auth()->user();
         $email = $user->email;
 
         // 입력한 비밀번호와 인증된 사용자의 비밀번호를 비교한다.
@@ -74,7 +74,7 @@ class UserController extends Controller
     public function update(Request $request)
     {
         if(ReCaptcha::reCaptcha($request)) {    // 구글 리캡챠 체크
-            $user = Auth::user();
+            $user = auth()->user();
             // 입력값 유효성 검사
             $rule = array_add($this->userModel->rulesPassword, 'password', $this->rulePassword);
             // 이메일을 변경할 경우 validation에 email 조건을 추가한다.

@@ -6,7 +6,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Auth;
 
 class EmailCertify extends Mailable
 {
@@ -21,7 +20,7 @@ class EmailCertify extends Mailable
      */
     public function __construct()
     {
-        $this->user = Auth::user();
+        $this->user = auth()->user();
     }
 
     /**

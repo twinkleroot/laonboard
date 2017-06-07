@@ -16,7 +16,7 @@ class ImageController extends Controller
     }
 
     // 글 보기 중 원본 이미지 보기
-    public function viewImage(Request $request)
+    public function viewOriginal(Request $request)
     {
         $imageName = $request->imageName;
         $type = $request->type;
@@ -39,7 +39,7 @@ class ImageController extends Controller
     }
 
     // 이미지 업로드 페이지 열기(팝업)
-    public function showImagePop()
+    public function popup()
     {
         return view('board.uploadImage');
     }

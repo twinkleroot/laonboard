@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => 'LaBoard',
+    'name' => '라라벨 그누보드',
 
     /*
     |--------------------------------------------------------------------------
@@ -123,6 +123,8 @@ return [
     'log' => env('APP_LOG', 'daily'),
 
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
+
+    'log_max_files' => 30,
 
     /*
     |--------------------------------------------------------------------------

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ResetPasswordController extends Controller
 {
@@ -36,4 +37,5 @@ class ResetPasswordController extends Controller
     {
         $this->middleware('guest');
     }
+
 }

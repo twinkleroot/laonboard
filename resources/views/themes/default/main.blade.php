@@ -1,7 +1,7 @@
 @extends('themes.default.basic')
 
 @section('title')
-    메인
+    메인 | {{ Cache::get("config.homepage")->title }} 
 @endsection
 
 @section('content')

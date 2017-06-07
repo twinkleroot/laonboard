@@ -139,23 +139,6 @@ class WriteController extends Controller
         return view('board.link', [ 'linkUrl' => $result['linkUrl'] ]);
     }
 
-    // 글 보기 중 첨부파일 다운로드
-    public function download(Request $request, $boardId, $writeId, $fileNo)
-    {
-        $result = $this->writeModel->beforeDownload($request, $this->writeModel, $boardId, $writeId, $fileNo);
-
-        if(isset($result['message'])) {
-            return view('message', [
-                'message' => $result['message']
-            ]);
-        }
-
-        $file = $result;
-        $filePath = storage_path('app/public/'. $this->writeModel->board->table_name. '/'. $file->file);
-
-        return response()->download($filePath, $file->source);
-    }
-
     // 추천/비추천 ajax 메서드
     public function good($boardId, $writeId, $good)
     {

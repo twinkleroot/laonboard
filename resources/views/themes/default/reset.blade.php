@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    LaBoard | 비밀번호 재설정
+    비밀번호 재설정 | {{ Cache::get("config.homepage")->title }}
 @endsection
 
 @section('include_css')
@@ -25,7 +25,7 @@
                     {{ session('status') }}
                 </div>
             @endif
-            <form class="contents col-md-8 col-md-offset-2" role="form" method="POST" action="{{ route('password.request') }}">
+            <form class="contents col-md-8 col-md-offset-2" role="form" method="POST" action="/password/reset">
             {{ csrf_field() }}
 
                 <input type="hidden" name="token" value="{{ $token }}">

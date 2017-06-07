@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'driver' => env('MAIL_DRIVER', 'mail'),
+    'driver' => env('MAIL_DRIVER', 'log'),
 
     /*
     |--------------------------------------------------------------------------
@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'host' => env('MAIL_HOST', 'mail.gnutest.com'),
+    'host' => env('MAIL_HOST', 'admin@gnutest.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -57,7 +57,7 @@ return [
 
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'admin@gnutest.com'),
-        'name' => env('MAIL_FROM_NAME', '관리자'),
+        'name' => env('MAIL_FROM_NAME', 'Admin'),
     ],
 
     /*
