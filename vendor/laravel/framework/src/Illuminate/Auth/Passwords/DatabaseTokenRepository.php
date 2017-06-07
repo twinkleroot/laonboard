@@ -168,7 +168,13 @@ class DatabaseTokenRepository implements TokenRepositoryInterface
      */
     public function createNewToken()
     {
-        return hash_hmac('sha256', Str::random(40), $this->hashKey);
+        // password_resets의 token의 type을 varchar(50)로 해야 해서 최대 50자리로 제한한다.
+        $hash = hash_hmac('sha256', Str::random(40), $this->hashKey);
+        if(strlen($hash) > 50) {
+            $hash = substr($hash, 0, 50);
+        }
+        return $hash;
+        // return hash_hmac('sha256', Str::random(40), $this->hashKey);
     }
 
     /**
