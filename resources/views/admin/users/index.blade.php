@@ -1,123 +1,145 @@
-@extends('theme')
+@extends('admin.admin')
 
 @section('title')
     회원 관리 | {{ $title }}
 @endsection
 
 @section('content')
-@if(Session::has('message'))
-<div class="alert alert-info">
-    {{ Session::get('message') }}
+<div class="body-head">
+    <div class="pull-left">
+        <h3>회원관리</h3>
+        <ul class="fl">
+            <li class="admin">Admin</li>
+            <li class="depth">회원관리</li>
+            <li class="depth">회원목록</li>
+        </ul>
+    </div>
+    <div class="pull-right">
+        <ul class="mb_btn" style="margin-top:8px;">
+            <li>
+                <a class="btn btn-default" href="{{ route('admin.users.create')}}" role="button">회원추가</a>
+            </li>
+            <li>
+                <input type="button" id="selected_update" class="btn btn-default" value="선택수정">
+            </li>
+            <li>
+                <input type="button" id="selected_delete" class="btn btn-default" value="선택삭제">
+            </li> 
+        </ul>
+    </div>
 </div>
-@endif
-<div class="row">
-    <div class="col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">회원 관리</div>
-            <div class="panel-heading"><a class="btn btn-primary" href={{ route('admin.users.create')}}>회원 추가</a></div>
-            <form class="form-horizontal" role="form" method="POST" id="selectForm" action="">
-                <input type="hidden" id='ids' name='ids' value='' />
-                <input type="hidden" id='opens' name='opens' value='' />
-                <input type="hidden" id='mailings' name='mailings' value='' />
-                <input type="hidden" id='smss' name='smss' value='' />
-                <input type="hidden" id='intercepts' name='intercepts' value='' />
-                <input type="hidden" id='levels' name='levels' value='' />
-                <input type="hidden" id='_method' name='_method' value='' />
-                <div class="panel-body">
-                    {{ csrf_field() }}
-                    <table class="table table-hover">
-                        <thead>
-                            <th class="text-center"><input type="checkbox" name="chkAll" onclick="checkAll(this.form)"/></th>
-                            <th class="text-center">이메일</th>
-                            <th class="text-center">이름</th>
-                            <th class="text-center">닉네임</th>
-                            <th class="text-center">메일<br />인증</th>
-                            <th class="text-center">정보<br />공개</th>
-                            <th class="text-center">메일<br />수신</th>
-                            <th class="text-center">SMS<br />수신</th>
-                            {{-- <th class="text-center">본인확인</th> --}}
-                            {{-- <th class="text-center">성인인증</th> --}}
-                            <th class="text-center">접근<br />차단</th>
-                            <th class="text-center">휴대폰</th>
-                            <th class="text-center">전화<br />번호</th>
-                            <th class="text-center">상태<br />/권한</th>
-                            <th class="text-center">포인트</th>
-                            <th class="text-center">최종 접속</th>
-                            <th class="text-center">가입일</th>
-                            <th class="text-center">접근<br />그룹</th>
-                            <th class="text-center">관리</th>
-                        </thead>
 
-                        <tbody>
-                        @foreach ($users as $user)
-                            <tr>
-                                <td class="text-center">
-                                    <input type="checkbox" name="chk[]" class="userId" value='{{ $user->id }}' /></td>
-                                <td class="text-center">{{ $user->email }}</td>
-                                <td class="text-center">{{ $user->name }}</td>
-                                <td class="text-center">{{ $user->nick }}</td>
-                                <td class="text-center">{{ is_null($user->email_certify) ? 'No' : 'Yes' }}</td>
-                                <td class="text-center">
-                                    <input type='checkbox' id='open_{{ $user->id }}' value='1'
-                                        {{ ($user->open == '1' ? 'checked' : '') }}/></td>
-                                <td class="text-center">
-                                    <input type='checkbox' id='mailing_{{ $user->id }}' value='1'
-                                        {{ ($user->mailing == '1' ? 'checked' : '') }}/></td>
-                                <td class="text-center">
-                                    <input type='checkbox' id='sms_{{ $user->id }}' value='1'
-                                        {{ ($user->sms == '1' ? 'checked' : '') }}/></td>
-                                {{-- <td class="text-center">
-                                    <input type='checkbox' name='본인확인' value='1'
-                                        {{ ($user->본인확인 == '1' ? 'checked' : '') }}/></td> --}}
-                                {{-- <td class="text-center">
-                                    <input type='checkbox' name='adult' value='1'
-                                        {{ ($user->adult == '1' ? 'checked' : '') }}/></td> --}}
-                                <td class="text-center">
-                                    @if(is_null($user->leave_date))
-                                        <input type='checkbox' id='intercept_date_{{ $user->id }}' value='1'
-                                            {{ !is_null($user->intercept_date) ? 'checked' : '' }}/></td>
-                                    @endif
-                                <td class="text-center">{{ $user->hp }}</td>
-                                <td class="text-center">{{ $user->tel }}</td>
-                                <td class="text-center">
-                                    @if(!is_null($user->leave_date))
-                                        탈퇴함
-                                    @elseif (!is_null($user->intercept_date))
-                                        차단됨
-                                    @else
-                                        정상
-                                    @endif
-                                    <select id='level_{{ $user->id }}'>
-                                        @for ($i=1; $i<=10; $i++)
-                                            <option value='{{ $i }}' {{ $user->level == $i ? 'selected' : '' }}>
-                                                {{ $i }}
-                                            </option>
-                                        @endfor
-                                    </select>
-                                </td>
-                                <td class="text-center">{{ $user->point }}</td>
-                                <td class="text-center">@date($user->today_login)</td>
-                                <td class="text-center">@date($user->created_at)</td>
-                                <td class="text-center">
-                                    @if($user->count_groups > 0)
-                                        <a href="{{ route('admin.accessGroups.show', $user->id) }}">
-                                            {{ $user->count_groups }}
-                                        </a>
-                                    @endif
-                                </td>
-                                <td class="text-center">
-                                    <a href="{{ route('admin.users.edit', $user->id) }}">수정</a>
-                                    <a href="{{ route('admin.accessGroups.show', $user->id) }}">그룹</a>
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                <div class="panel-heading">
-                    <input type="button" id="selected_update" class="btn btn-primary" value="선택 수정"/>
-                    <input type="button" id="selected_delete" class="btn btn-primary" value="선택 삭제"/>
-                </div>
+<div class="body-contents">
+    @if(Session::has('message'))
+        <div class="alert alert-info">
+            {{ Session::get('message') }}
+        </div>
+    @endif
+    
+    <div id="mb" class="">
+        <ul class="mb_btn mb10 pull-left">
+            <li>
+                <button type="" class="btn btn-sir pull-left">전체보기</button>
+            </li>
+            <li>
+                <span class="total">총회원수 0명 중, 차단 0명, 탈퇴 0명</span>
+            </li>
+        </ul>
+        <div class="mb_sch mb10 pull-right">
+            <form>
+                <label for="" class="sr-only">검색대상</label>
+                <select name="" id="">
+                    <option value="">회원이메일</option>
+                    <option value="">닉네임</option>
+                    <option value="">권한</option>
+                    <option value="">가입일</option>
+                    <option value="">최종접속일</option>
+                    <option value="">IP</option>
+                    <option value="">추천인</option>
+                </select>
+                <label for="" class="sr-only">검색어</label>
+                <input type="text" name="" value="" id="" class="search" required>
+                <button type="submit" id="" class="search-icon">
+                    <i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">검색</span>
+                </button>
+            </form>
+        </div>
+
+        <form class="form-horizontal" role="form" method="POST" id="selectForm" action="">
+            <input type="hidden" id='ids' name='ids' value='' />
+            <input type="hidden" id='opens' name='opens' value='' />
+            <input type="hidden" id='mailings' name='mailings' value='' />
+            <input type="hidden" id='smss' name='smss' value='' />
+            <input type="hidden" id='intercepts' name='intercepts' value='' />
+            <input type="hidden" id='levels' name='levels' value='' />
+            <input type="hidden" id='_method' name='_method' value='' />
+            {{ csrf_field() }}
+            <table class="table table-striped box">
+                <thead>
+                    <th><input type="checkbox" name="chkAll" onclick="checkAll(this.form)"/></th>
+                    <th>회원이메일</th>
+                    <th>닉네임</th>
+                    <th>상태/권한</th>
+                    <th>포인트</th>
+                    <th>가입일</th>
+                    <th>최종접속</th>
+                    <th>접근그룹</th>
+                    <th>관리</th>
+                </thead>
+                <tbody>
+                @foreach ($users as $user)
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="chk[]" class="userId" value='{{ $user->id }}' /></td>
+                        <td class="text-left">
+                            <div class="mb_tooltip">
+                                {{ $user->email }}
+                                <span class="tooltiptext">ip주소</span>
+                            </div>
+                        </td>
+                        <td class="text-left">{{ $user->nick }}</td>
+                        <td>
+                        @if(!is_null($user->leave_date))
+                            <span class="mb_msg withdraw">탈퇴</span>
+                        @elseif (!is_null($user->intercept_date))
+                            <span class="mb_msg intercept">차단</span>
+                        @else
+                            <span class="mb_msg">정상</span>
+                        @endif
+                            <select id='level_{{ $user->id }}'>
+                                @for ($i=1; $i<=10; $i++)
+                                    <option value='{{ $i }}' {{ $user->level == $i ? 'selected' : '' }}>{{ $i }}</option>
+                                @endfor
+                            </select>
+                        </td>
+                        <td>{{ $user->point }}</td>
+                        <td>
+                            <div class="mb_tooltip">
+                                @date($user->created_at)
+                                <span class="tooltiptext">자세한날짜</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="mb_tooltip">
+                                @date($user->today_login)
+                                <span class="tooltiptext">자세한날짜</span>
+                            </div>
+                        </td>
+                        <td>
+                            @if($user->count_groups > 0)
+                                <a href="{{ route('admin.accessGroups.show', $user->id) }}">
+                                    {{ $user->count_groups }}
+                                </a>
+                            @endif
+                        </td>
+                        <td>
+                            <a href="{{ route('admin.users.edit', $user->id) }}">수정</a>
+                            <a href="{{ route('admin.accessGroups.show', $user->id) }}">그룹</a>
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
             </form>
 
             {{-- 페이지 처리 --}}
@@ -129,10 +151,9 @@
                 ])->links()
                 : $users->links()
             }}
-
-        </div>
     </div>
 </div>
+
 <script>
 $(function(){
     // 선택 삭제 버튼 클릭
