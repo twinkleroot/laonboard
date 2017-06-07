@@ -88,21 +88,23 @@ body {
 	font-weight: 600;
 	margin-left: 15px;
 }
-#admin-header .bt-menu {
-	cursor: pointer;
-}
 #admin-header .bt-menu,
 #admin-header .bt-home {
 	font-family: 'Lato', sans-serif;
 	background: #fff;
 	-webkit-transition: all 0.2s ease-in-out;
     transition: all 0.2s ease-in-out;
+	cursor: pointer;
 }
 #admin-header .bt-menu:hover,
 #admin-header .bt-home:hover {
 	background: #efefef;
 	-webkit-transition: all 0.2s ease-in-out;
     transition: all 0.2s ease-in-out;
+}
+#admin-header .bt-home a:hover {
+	color: #333;
+	text-decoration: none;
 }
 #admin-header .bt-user {
 	border-right: 0 !important;
@@ -272,7 +274,7 @@ body {
 .body-tab li:first-child {
 	margin-left: 0;
 }
-.body-tab li a {
+.body-tab .mb_menu li a {
 	padding: 8px 16px;
 	display: block;
 	width: 100%;

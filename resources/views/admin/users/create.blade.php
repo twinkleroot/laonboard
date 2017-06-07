@@ -1,4 +1,4 @@
-@extends('theme')
+@extends('admin.admin')
 
 @section('title')
     회원 추가 | {{ $title }}
@@ -7,10 +7,64 @@
 @section('include_script')
     <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
     <script src="{{ url('js/postcode.js') }}"></script>
+    <script type="text/javascript">
+        jQuery("document").ready(function($){
+            var nav = $('.body-tab');
+             
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 205) {
+                    nav.addClass("f-tab");
+                } else {
+                    nav.removeClass("f-tab");
+                }
+            });
+        });
+    </script>
 @endsection
 
 @section('content')
-<div>
+<div class="body-head">
+    <div class="pull-left">
+        <h3>회원추가</h3>
+        <ul class="fl">
+            <li class="admin">Admin</li>
+            <li class="depth">회원관리</li>
+            <li class="depth">회원추가</li>
+        </ul>
+    </div>
+</div>
+
+<div class="body-contents">
+    <div class="body-tab">
+        <ul class="mb_menu">
+            <li class="tab">
+                <a href="#mb_basic">기본정보</a>
+            </li>
+            <li class="tab">
+                <a href="#mb_add">추가정보</a>
+            </li>
+            <li class="tab">
+                <a href="#B">부가설정</a>
+            </li>
+            <li class="tab">
+                <a href="#C">본인인증</a>
+            </li>
+            <li class="tab">
+                <a href="#more">여분필드</a>
+            </li>
+        </ul>
+        <div class="pull-right">
+            <ul class="mb_btn">
+                <li>
+                    <button type="submit" class="btn btn-default">확인</button>
+                </li>
+                <li>
+                    <a href="{{ route('admin.users.index') }}" class="btn btn-default" role="button">목록</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-12 col-md-offset-0">
             <div class="panel panel-default">
@@ -270,14 +324,6 @@
                             </td>
                         </tr>
                     </table>
-                    <div class="form-group">
-                        <div class="col-md-8 col-md-offset-5">
-                            <button type="submit" class="btn btn-primary">
-                                확인
-                            </button>
-                            <a class="btn btn-primary" href="{{ route('admin.users.index') }}">목록</a>
-                        </div>
-                    </div>
                 </form>
             </div>
         </div>

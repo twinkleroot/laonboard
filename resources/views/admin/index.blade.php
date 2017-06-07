@@ -1,7 +1,7 @@
 @extends('admin.admin')
 
 @section('title')
-    {{ $config->title }}
+    관리자 모드 | {{ $config->title }}
 @endsection
 
 @section('content')

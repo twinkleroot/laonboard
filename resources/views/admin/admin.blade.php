@@ -5,7 +5,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>관리자 모드 | @yield('title', 'SIR LaBoard')</title>
+    <title>@yield('title', 'SIR LaBoard')</title>
 
     <!-- css -->
     <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
@@ -19,6 +19,7 @@
             'csrfToken' => csrf_token(),
         ]) !!};
     </script>
+    
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     @yield('include_script')
 </head>
@@ -35,8 +36,10 @@
 			<span>menu</span>
 		</div>
 		<div class="hdbt bt-home">
-			<i class="fa fa-home"></i>
-			<span>home</span>
+			<a href="{{ url('/') }}">
+				<i class="fa fa-home"></i>
+				<span>home</span>
+			</a>
 		</div>
 	</div>
 
