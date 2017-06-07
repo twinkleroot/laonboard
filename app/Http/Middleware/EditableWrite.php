@@ -24,9 +24,13 @@ class EditableWrite
         $currentUser = is_null($user) ? '' : $user->email;
         $homepageConfig = Cache::get("config.homepage");
         $superAdmin = $homepageConfig->superAdmin;
-        $board = Board::find($request->boardId);
+        $board = Cache::remember("board.{$request->boardId}", config("gnu.CACHE_EXPIRE_MINUTE"), function() use($request) {
+            return Board::find($request->boardId);
+        });
         $boardAdmin = $board->admin;
-        $groupAdmin = Group::find($board->group_id)->admin;
+        $groupAdmin = Cache::remember("group.{$board->group_id}.admin", config('gnu.CACHE_EXPIRE_MINUTE'), function() use($board) {
+            return Group::find($board->group_id)->admin;
+        });
         $writeModel = new Write($request->boardId);
         $writeModel->setTableName($board->table_name);
 
@@ -48,7 +52,7 @@ class EditableWrite
             $id = $request->writeId;
         }
         $write = $writeModel->find($id);
-        $writeUser = $write->user_id == 0 ? '' : User::find($write->user_id);
+        $writeUser = ( !is_null($write) && $write->user_id == 0) ? '' : User::find($write->user_id);
         if ($currentUser == $superAdmin) {// 최고관리자 통과
             ;
         } else if ($currentUser == $groupAdmin) { // 그룹관리자

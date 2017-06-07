@@ -173,51 +173,51 @@ Route::get('message', ['as' => 'message', 'uses' => 'Message\MessageController@m
 
 Route::group(['prefix' => 'board/{boardId}'], function () {
     // 글 목록 + 검색
-    Route::get('', ['as' => 'board.index', 'uses' => 'Board\BoardController@index'])
+    Route::get('', ['as' => 'board.index', 'uses' => 'Board\WriteController@index'])
         ->middleware(['level.board:list_level', 'valid.board'])
         ->where('boardId', '[0-9]+');
     // 글 읽기
-    Route::get('view/{writeId}', ['as' => 'board.view', 'uses' => 'Board\BoardController@view'])
+    Route::get('view/{writeId}', ['as' => 'board.view', 'uses' => 'Board\WriteController@view'])
         ->middleware('level.board:read_level', 'valid.board', 'valid.write', 'secret.board');
     // 비밀 글 읽기 전 비밀번호 검사
-    Route::get('view/{writeId}/password', ['as' => 'board.password', 'uses' => 'Board\BoardController@checkPassword'])
+    Route::get('view/{writeId}/password', ['as' => 'board.password', 'uses' => 'Board\WriteController@checkPassword'])
         ->middleware('level.board:read_level', 'valid.board', 'valid.write');
-    Route::post('validatePassword', ['as' => 'board.validatePassword', 'uses' => 'Board\BoardController@validatePassword'])
+    Route::post('validatePassword', ['as' => 'board.validatePassword', 'uses' => 'Board\WriteController@validatePassword'])
         ->middleware('level.board:read_level', 'valid.board', 'valid.write');
     // 글 읽기 중 링크 연결
-    Route::get('view/{writeId}/link/{linkNo}', ['as' => 'board.link', 'uses' => 'Board\BoardController@link'])
+    Route::get('view/{writeId}/link/{linkNo}', ['as' => 'board.link', 'uses' => 'Board\WriteController@link'])
         ->middleware('level.board:read_level', 'valid.board', 'valid.write');
     // 글 읽기 중 파일 다운로드
-    Route::get('view/{writeId}/download/{fileNo}', ['as' => 'board.download', 'uses' => 'Board\BoardController@download'])
+    Route::get('view/{writeId}/download/{fileNo}', ['as' => 'board.download', 'uses' => 'Board\WriteController@download'])
         ->middleware('level.board:download_level', 'valid.board', 'valid.write');
     // 글 읽기 중 추천/비추천
-    Route::post('view/{writeId}/{good}', ['as' => 'board.good', 'uses' => 'Board\BoardController@good'])
+    Route::post('view/{writeId}/{good}', ['as' => 'board.good', 'uses' => 'Board\WriteController@good'])
         ->where('good', 'good|nogood')
         ->middleware('level.board:read_level', 'valid.board', 'valid.write');
     // 글 쓰기
-    Route::get('create', ['as' => 'board.create', 'uses' => 'Board\BoardController@create'])
+    Route::get('create', ['as' => 'board.create', 'uses' => 'Board\WriteController@create'])
         ->middleware('level.board:write_level', 'valid.board');
-    Route::post('', ['as' => 'board.store', 'uses' => 'Board\BoardController@store'])
+    Route::post('', ['as' => 'board.store', 'uses' => 'Board\WriteController@store'])
         ->middleware('level.board:write_level', 'valid.board', 'store.write', 'writable.reply');
     // 글 수정
-    Route::get('edit/{writeId}', ['as' => 'board.edit', 'uses' => 'Board\BoardController@edit'])
+    Route::get('edit/{writeId}', ['as' => 'board.edit', 'uses' => 'Board\WriteController@edit'])
         ->middleware('level.board:update_level', 'valid.board', 'valid.write', 'editable');
-    Route::put('update/{writeId}', ['as' => 'board.update', 'uses' => 'Board\BoardController@update'])
+    Route::put('update/{writeId}', ['as' => 'board.update', 'uses' => 'Board\WriteController@update'])
         ->middleware('level.board:update_level', 'valid.board', 'valid.write', 'editable', 'store.write');
     // 글 삭제
-    Route::get('delete/{writeId}', ['as' => 'board.destroy', 'uses' => 'Board\BoardController@destroy'])
+    Route::get('delete/{writeId}', ['as' => 'board.destroy', 'uses' => 'Board\WriteController@destroy'])
         ->middleware('valid.board', 'valid.write', 'editable');
     // 답변 쓰기
-    Route::get('reply/{writeId}', ['as' => 'board.create.reply', 'uses' => 'Board\BoardController@createReply'])
+    Route::get('reply/{writeId}', ['as' => 'board.create.reply', 'uses' => 'Board\WriteController@createReply'])
         ->middleware('level.board:write_level', 'valid.board', 'valid.write', 'writable.reply');
     // 댓글 쓰기
-    Route::post('comment/store', ['as' => 'board.comment.store', 'uses' => 'Board\BoardController@storeComment'])
+    Route::post('comment/store', ['as' => 'board.comment.store', 'uses' => 'Board\CommentController@store'])
         ->middleware('level.board:comment_level', 'writable.comment:create');
     // 댓글 수정
-    Route::put('comment/update', ['as' => 'board.comment.update', 'uses' => 'Board\BoardController@updateComment'])
+    Route::put('comment/update', ['as' => 'board.comment.update', 'uses' => 'Board\CommentController@update'])
         ->middleware('level.board:comment_level', 'writable.comment:update', 'editable');
     // 댓글 삭제
-    Route::get('comment/delete/{commentId}', ['as' => 'board.comment.destroy', 'uses' => 'Board\BoardController@destroyComment'])
+    Route::get('comment/{commentId}/delete', ['as' => 'board.comment.destroy', 'uses' => 'Board\CommentController@destroy'])
         ->middleware('level.board:comment_level', 'editable');
 
     // 커뮤니티에서의 관리자 기능
@@ -225,13 +225,13 @@ Route::group(['prefix' => 'board/{boardId}'], function () {
     // 글 보기 : 복사, 이동, 삭제, 수정
     Route::group(['middleware' => ['auth', 'level:10', 'valid.board']], function() {
         // 복사, 이동 폼
-        Route::get('move', ['as' => 'board.view.move', 'uses' => 'Board\BoardController@move']);
+        Route::get('move', ['as' => 'board.view.move', 'uses' => 'Board\MoveController@move']);
         // 선택 복사, 이동 폼
-        Route::post('move', ['as' => 'board.list.move', 'uses' => 'Board\BoardController@move']);
+        Route::post('move', ['as' => 'board.list.move', 'uses' => 'Board\MoveController@move']);
         // 이동, 복사 수행
-        Route::post('move/update', ['as' => 'board.moveUpdate', 'uses' => 'Board\BoardController@moveUpdate']);
+        Route::post('move/update', ['as' => 'board.moveUpdate', 'uses' => 'Board\MoveController@moveUpdate']);
         // 선택 삭제
-        Route::delete('delete/ids/{writeId}', ['as' => 'board.delete.ids', 'uses' => 'Board\BoardController@selectedDelete'])
+        Route::delete('delete/ids/{writeId}', ['as' => 'board.delete.ids', 'uses' => 'Board\WriteController@selectedDelete'])
             ->middleware('valid.write');
     });
 });

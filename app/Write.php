@@ -34,6 +34,22 @@ class Write extends Model
     public $board;
     public $point;
 
+    public $isReply;
+    public $isEdit;
+    public $isDelete;
+
+    public function getIsReplyAttribute() {
+        return $this->isReply;
+    }
+
+    public function getIsEditAttribute() {
+        return $this->isEdit;
+    }
+
+    public function getIsDeleteAttribute() {
+        return $this->isDelete;
+    }
+
     public function __construct($boardId, $attributes = [])
     {
         $this->board = Board::find($boardId);
@@ -137,15 +153,13 @@ class Write extends Model
         $hasNotice = $this->hasNotice($writeModel, $kind, $keyword, $currenctCategory);
 
         // 최종 리스트 컬렉션을 가져온다.
-        $writes = Cache::remember("board.list.{$request->getRequestUri()}", config('gnu.CACHE_EXPIRE_MINUTE'), function() use ($hasNotice, $request, $query, $sortField) {
-            if($hasNotice) {
-                $writes = $this->customPaging($request, $query, $sortField);
-            } else {
-                $writes = $query->orderByRaw($sortField)->paginate($this->board->page_rows);
-            }
+        $writes;
+        if($hasNotice) {
+            $writes = $this->customPaging($request, $query, $sortField);
+        } else {
+            $writes = $query->orderByRaw($sortField)->paginate($this->board->page_rows);
+        }
 
-            return $writes;
-        });
 
         // 가져온게시글 가공
         // 1. 뷰에 내보내는 아이디 검색의 링크url에는 암호화된 id를 링크로 건다.
@@ -270,9 +284,7 @@ class Write extends Model
 
     public function getViewParams($request, $boardId, $writeId, $writeModel)
     {
-        $write = Cache::remember("write.{$writeId}", config('gnu.CACHE_EXPIRE_MINUTE'), function() use($writeModel, $writeId){
-            return $writeModel->find($writeId);
-        });
+        $write = $writeModel->find($writeId);
 
         // 조회수 증가, 포인트 부여
         $result = $this->beforeRead($write, $request);
@@ -309,9 +321,7 @@ class Write extends Model
         // 서명 사용하면 글쓴이의 서명을 담는다.
         $signature = '';
         if($this->board->use_signature && $write->user_id > 0) {
-            $user = Cache::remember("user.{$write->user_id}", config('gnu.CACHE_EXPIRE_MINUTE'), function() use($write){
-                return User::find($write->user_id);
-            });
+            $user = User::find($write->user_id);
             if(!is_null($user)) {
                 $signature = $user->signature;
             }
@@ -323,9 +333,7 @@ class Write extends Model
         $boardFiles = [];
         $imgFiles = [];
         if($write->file > 0) {
-            $boardFiles = Cache::remember("boardfile.{$boardId}.{$writeId}", config('gnu.CACHE_EXPIRE_MINUTE'), function() use($boardId, $writeId){
-                return BoardFile::where(['board_id' => $boardId, 'write_id' => $writeId])->get();
-            });
+            $boardFiles = BoardFile::where(['board_id' => $boardId, 'write_id' => $writeId])->get();
 
             foreach($boardFiles as $boardFile) {
                 // 첨부파일이 이미지라면 업로드된 파일의 확장자를 가져와서
@@ -359,101 +367,6 @@ class Write extends Model
         ];
     }
 
-    // 댓글 데이터
-    public function getCommentsParams($writeModel, $boardId, $writeId)
-    {
-        // dd(Cache::get("board.{$boardId}.comments.{$writeId}"));
-        // dd($writeModel->where(['parent' => $writeId, 'is_comment' => 1])
-        //         ->orderBy('comment')->orderBy('comment_reply')->get());
-        // 원글
-        $comments = Cache::remember("board.{$boardId}.comments.{$writeId}", config('gnu.CACHE_EXPIRE_MINUTE'), function() use($writeModel, $writeId){
-            return $writeModel->where(['parent' => $writeId, 'is_comment' => 1])
-                ->orderBy('comment')->orderBy('comment_reply')->get();
-        });
-
-        foreach($comments as $comment) {
-            // 답변, 수정, 삭제 가능여부 기록
-            $editable = $this->getCommentAuth($comment, $writeModel, $writeId);
-            $comment->isReply = $editable['isReply'];
-            $comment->isEdit = $editable['isEdit'];
-            $comment->isDelete = $editable['isDelete'];
-            $comment->user_id = encrypt($comment->user_id);     // 라라벨 기본 지원 encrypt
-        }
-
-        return [
-            'comments' => $comments,
-        ];
-    }
-
-    // 댓글의 답변, 수정, 삭제 권한 검사
-    public function getCommentAuth($comment, $writeModel, $writeId)
-    {
-        $isEdit = 1;
-        $isDelete = 1;
-
-        $board = $this->board;
-        $user = auth()->user();
-        $currentUser = $user->email;
-        $homepageConfig = Cache::get("config.homepage");
-        $superAdmin = $homepageConfig->superAdmin;
-        $boardAdmin = $board->admin;
-        $groupAdmin = Cache::remember("group.{$board->group_id}.admin", config('gnu.CACHE_EXPIRE_MINUTE'), function() use($board) {
-            return Group::find($board->group_id)->admin;
-        });
-        $commentUser = $comment->user_id == 0 ? ''
-                    : Cache::remember("user.{$comment->user_id}", config('gnu.CACHE_EXPIRE_MINUTE'), function() use($comment) {
-                        return User::find($comment->user_id);
-                    });
-        if ($currentUser == $superAdmin) {// 최고관리자 통과
-            ;
-        } else if ($currentUser == $groupAdmin) { // 그룹관리자
-            if ($user->level < $commentUser->level)  { // 자신의 레벨이 글쓴이의 레벨보다 작다면
-                $isEdit = 0;
-                $isDelete = 0;
-            }
-        } else if ($currentUser == $boardAdmin) { // 게시판관리자이면
-            if ($user->level < $commentUser->level) { // 자신의 레벨이 글쓴이의 레벨보다 작다면
-                $isEdit = 0;
-                $isDelete = 0;
-            }
-        } else if (!session()->get('admin')) { // 관리자가 아닌 회원인 경우
-            if ($currentUser != $commentUser->email) {
-                $isEdit = 0;
-                $isDelete = 0;
-            }
-        } else { // 비회원인 경우
-            if ($commentUser == '') {
-                $isEdit = 0;
-                $isDelete = 0;
-            }
-        }
-
-        $cnt = Cache::remember("comment.count.comment_reply.{$comment->id}",
-            config('gnu.CACHE_EXPIRE_MINUTE'),
-            function() use($writeModel, $comment, $writeId) {
-            return $writeModel->where('comment_reply', 'like', $comment->comment_reply)
-                ->where('id', '<>', $comment->id)
-                ->where([
-                    'parent' => $writeId,
-                    'comment' => $comment->comment,
-                    'is_comment' => 1,
-                ])->count('id');
-        });
-
-        if($cnt && !session()->get('admin')) {
-            $isEdit = 0;
-            $isDelete = 0;
-        }
-
-        $isReply = strlen($comment->comment_reply) != 5 ? 1 : 0;
-
-        return [
-            'isReply' => $isReply,
-            'isEdit' => $isEdit,
-            'isDelete' => $isDelete,
-        ];
-    }
-
     // 에디터로 업로드한 이미지 경로를 추출해서 내용의 img 태그 부분을 교체한다.
     public function includeImagePathByEditor($content)
     {
@@ -475,7 +388,7 @@ class Write extends Model
         return $content;
     }
 
-    // 이전 글, 다음 글 경로 가져오기
+    // 이전 글, 다음 글 경로, 제목 가져오기
     public function getPrevNextView($writeModel, $boardId, $writeId, $request)
     {
         $write = $writeModel->find($writeId);
@@ -488,8 +401,7 @@ class Write extends Model
 
         // 이전 글 얻음
         $sortField = 'num desc, reply desc';    // order by
-        $query = $this->getWritesWhere($writeModel, $kind, $keyword, $currenctCategory)
-            ->where('is_comment', 0);
+        $query = $this->getWritesWhere($writeModel, $kind, $keyword, $currenctCategory);
         $prevWrite = $query->where('num', $write->num)
             ->where('reply', '<', is_null($write->reply) ? '' : $write->reply)
             ->orderByRaw($sortField)
@@ -501,10 +413,10 @@ class Write extends Model
                 ->orderByRaw($sortField)->first();
         }
 
+
         // 다음 글 얻음
         $sortField = 'num, reply';              // order by
-        $query = $this->getWritesWhere($writeModel, $kind, $keyword, $currenctCategory)
-            ->where('is_comment', 0);
+        $query = $this->getWritesWhere($writeModel, $kind, $keyword, $currenctCategory);
         $nextWrite = $query->where('num', $write->num)
             ->where('reply', '>', is_null($write->reply) ? '' : $write->reply)
             ->orderByRaw($sortField)
@@ -516,23 +428,29 @@ class Write extends Model
                 ->orderByRaw($sortField)->first();
         }
 
-        // 구한 이전 글 정보로 이전 글 url을 만든다.
-        if(is_null($prevWrite)) {
+        // 구한 이전 글 정보로 이전 글 url, 제목을 얻는다.
+        if(!$prevWrite) {
             $prevUrl = '';
+            $prevSubject = '';
         } else {
             $prevUrl = $this->getPrevNextUrl($boardId, $request, $prevWrite);
+            $prevSubject = $prevWrite['subject'];
         }
 
-        // 구한 다음 글 정보로 다음 글 url을 만든다.
-        if(is_null($nextWrite)) {
+        // 구한 다음 글 정보로 다음 글 url, 제목을 얻는다.
+        if(!$nextWrite) {
             $nextUrl = '';
+            $nextSubject = '';
         } else {
             $nextUrl = $this->getPrevNextUrl($boardId, $request, $nextWrite);
+            $nextSubject = $nextWrite['subject'];
         }
 
         return [
             'prevUrl' => $prevUrl,
             'nextUrl' => $nextUrl,
+            'prevSubject' => $prevSubject,
+            'nextSubject' => $nextSubject
         ];
     }
 
@@ -897,136 +815,6 @@ class Write extends Model
         return $lastInsertId;
     }
 
-    // 댓글 생성
-    public function storeComment($writeModel, $request)
-    {
-        $writeId = $request->writeId;
-        $write = $writeModel->find($writeId);       // 원 글
-        $tmpComment = 0;
-        $tmpCommentReply = '';
-        // 댓글의 댓글일 때
-        if($request->has('commentId')) {
-            $comment = $writeModel->find($request->commentId);   // 원 댓글
-            if( is_null($comment) ) {
-                return [ 'message' => '답변할 댓글이 없습니다.\\n\\n답변하는 동안 댓글이 삭제되었을 수 있습니다.'];
-            }
-            if(strlen($comment->comment_reply) == 5) {
-                return [ 'message' => '더 이상 답변하실 수 없습니다.\\n\\n답변은 5단계 까지만 가능합니다.'];
-            }
-
-            $tmpComment = $comment->comment;
-            $tmpCommentReply = $this->getCommentReplyValue($writeModel, $write, $comment);
-
-        } else {    // 첫 번째 단계의 댓글일 때
-            $max = $writeModel->where(['parent' => $writeId, 'is_comment' => 1])->max('comment');
-            $tmpComment = $max + 1;
-        }
-
-        $user = Auth::user();
-        $userId = 1;    // $userId가 1이면 비회원
-        $name = '';
-        $password = '';
-        $email = null;
-        $homepage = null;
-        // 회원 글쓰기 일 때
-        if( !is_null($user) ) {
-            // 실명을 사용할 때
-            if($this->board->use_name && !is_null($user->name)) {
-                $name = $user->name;
-            } else {
-                $name = $user->nick;
-            }
-
-            $userId = $user->id;
-            $password = $user->password;
-            $email = $user->email;
-            $homepage = $user->homepage;
-        } else {
-            $name = $request->commentName;
-            $password = bcrypt($request->commentPassword);
-        }
-
-        $insertData = [
-                'num' => $write->num,
-                'reply' => $write->reply,
-                'parent' => $write->id,
-                'is_comment' => 1,
-                'comment' => $tmpComment,
-                'comment_Reply' => $tmpCommentReply,
-                'ca_name' => $write->ca_name,
-                'content' => $request->content,      // 필터 한번 거쳐야 함
-                'hit' => 0,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-                'ip' => $request->ip(),
-                'user_id' => $userId,
-                'password' => $password,
-                'name' => $name,
-                'email' => $email,
-                'homepage' => $homepage,
-                    'option' => $request->has('secret') ? $request->secret : null,
-                'extra_1' => $request->has('extra1') ? $request->extra1 : null,
-                'extra_2' => $request->has('extra2') ? $request->extra2 : null,
-                'extra_3' => $request->has('extra3') ? $request->extra3 : null,
-                'extra_4' => $request->has('extra4') ? $request->extra4 : null,
-                'extra_5' => $request->has('extra5') ? $request->extra5 : null,
-                'extra_6' => $request->has('extra6') ? $request->extra6 : null,
-                'extra_7' => $request->has('extra7') ? $request->extra7 : null,
-                'extra_8' => $request->has('extra8') ? $request->extra8 : null,
-                'extra_9' => $request->has('extra9') ? $request->extra9 : null,
-                'extra_10' => $request->has('extra10') ? $request->extra10 : null,
-        ];
-
-        $writeModel->insert($insertData);
-
-        // 포인트 부여(댓글)
-        $newCommentId = DB::getPdo()->lastInsertId();   // 마지막에 삽입한 행의 id 값 가져오기
-        $relAction = '댓글';
-        $content = $this->board->subject . ' ' . '원글-' . $newCommentId . ' 댓글쓰기';
-        $this->point->insertPoint($userId, $this->board->comment_point, $content, $this->board->table_name, $newCommentId, $relAction);
-
-        // 원글에 댓글수 증가 & 마지막 시간 반영
-        $writeModel->where('id', $writeId)
-        ->update([
-            'comment' => $write->comment + 1,
-            'updated_at' => Carbon::now(),
-        ]);
-
-        // 새글 Insert
-
-        // 댓글 1 증가
-        $this->board->update(['count_comment' => $this->board->count_comment + 1]);
-
-        // 메일 발송
-
-        // 캐시 삭제 및 등록
-        Cache::forget("board.{$this->board->id}");  // 게시판
-        Cache::forget("board.{$this->board->id}.write.{$writeId}"); // 원 게시물
-        Cache::forget("board.{$boardId}.comments.{$writeId}");
-        Cache::remember("board.{$boardId}.comments.{$writeId}", config('gnu.CACHE_EXPIRE_MINUTE'), function() use($writeModel, $writeId){
-            return $writeModel->where(['parent' => $writeId, 'is_comment' => 1])
-                ->orderBy('comment')->orderBy('comment_reply')->get();
-        });
-
-        return $newCommentId;
-    }
-
-    // 댓글 수정
-    public function updateComment($writeModel, $request)
-    {
-        $commentId = $request->commentId;
-        $comment = $writeModel->find($commentId);
-        $option = $request->has('secret') ? $request->secret : null;
-        $ip = !session()->get('admin') ? $request->ip() : $comment->ip;
-
-        return $writeModel->where('id', $commentId)
-                ->update([
-                    'content' => $request->content,
-                    'option' => $option,
-                    'ip' => $ip,
-                ]);
-    }
-
     // 답변 글 단계 구하는 로직
     private function getReplyValue($writeModel, $write)
     {
@@ -1066,44 +854,6 @@ class Write extends Model
         $reply = $write->reply . $replyChar;
 
         return $reply;
-    }
-
-    // 댓글 단계 구하는 로직
-    private function getCommentReplyValue($writeModel, $write, $comment)
-    {
-        $commentReplyLength = strlen($comment->comment_reply) + 1;
-        if ($this->board->reply_order == 1) {
-            $baginReplyChar = 'A';
-            $endReplyChar = 'Z';
-            $replyNumber = 1;
-            $query = $writeModel->selectRaw("MAX(SUBSTRING(comment_reply, ". $commentReplyLength. ", 1)) as reply")
-                    ->where('parent', $write->id)
-                    ->where('comment', $comment->comment)
-                    ->whereRaw("SUBSTRING(comment_reply, ". $commentReplyLength. ", 1) <> ''");
-        } else {
-            $baginReplyChar = 'Z';
-            $endReplyChar = 'A';
-            $replyNumber = -1;
-            $query = $writeModel->selectRaw("MIN(SUBSTRING(comment_reply, ". $commentReplyLength. ", 1)) as reply")
-                    ->where('parent', $write->id)
-                    ->where('comment', $comment->comment)
-                    ->whereRaw("SUBSTRING(comment_reply, ". $commentReplyLength. ", 1) <> ''");
-
-        }
-        if ($comment->comment_reply) {
-            $query->where('comment_reply', 'like', $comment->comment_reply.'%');
-        }
-        $result = $query->first(); // 쿼리 실행 결과
-
-        if (is_null($result->reply)) {
-            $replyChar = $baginReplyChar;
-        } else if ($result->reply == $endReplyChar) { // A~Z은 26 입니다.
-            return '더 이상 답변하실 수 없습니다.\\n답변은 26개 까지만 가능합니다.';
-        } else {
-            $replyChar = chr(ord($result->reply) + $replyNumber);
-        }
-
-        return $comment->comment_reply . $replyChar;
     }
 
     // 글 수정
@@ -1258,6 +1008,7 @@ class Write extends Model
         return false;
     }
 
+    // 해당 글에 댓글이 달려 있는지 확인한다.
     public function hasComment($writeModel, $writeId)
     {
         $user = auth()->user();
@@ -1269,26 +1020,6 @@ class Write extends Model
             return true;
         }
         return false;
-    }
-
-    // 글 삭제 - 포인트 삭제
-    public function deletePoint($writeModel, $writeId)
-    {
-       $write = $writeModel->find($writeId);
-       // 원글에서의 처리
-       $deleteResult = 0;
-       $insertResult = 0;
-       if(!$write->is_comment) {
-           // 포인트 삭제 및 사용 포인트 다시 부여
-           $deleteResult = $this->point->deletePoint($write->user_id, $this->board->table_name, $writeId, '쓰기');
-           if($deleteResult == 0) {
-               $insertResult = $this->point->insertPoint($write->user_id, $this->board->write_point * (-1), $this->board->subject. ' '. $writeId. ' 글삭제');
-           }
-       } else {   // 댓글에서의 처리
-
-       }
-
-       return $deleteResult != 0 ? $deleteResult : $insertResult;
     }
 
     // 글 삭제 - 게시글 삭제
@@ -1334,137 +1065,6 @@ class Write extends Model
         }
 
         return $inputData;
-    }
-
-    // (게시판) 게시물 복사, 게시물 이동 = 복사 + 기존 테이블에서 삭제
-    // $writeModel : 원본 게시물 데이터 모델
-    // $writeIds : 복사할 대상 게시물들의 id
-    // $boardIds : 선택한 대상 게시판들의 id
-    public function copyWrites($writeModel, $request)
-    {
-        $writeIds = session()->get('writeIds');
-        $boardIds = $request->chk_id;
-
-        // 복사할 대상 게시물들
-        if(gettype($writeIds) == 'string') {
-            $originalWrites = $writeModel->where('id', $writeIds)->get()->toArray();
-        } else {
-            $originalWrites = $writeModel->whereIn('id', $writeIds)->get()->toArray();
-        }
-        // 선택한 대상 게시판들
-        $boards = Board::whereIn('id', $boardIds)->get();
-
-        $message = '';
-        if( !is_null($boards) ) {
-            foreach($boards as $board) {
-                // 게시판 테이블 셋팅
-                // $destinationWrite : 복사되서 게시물이 추가되는 게시판
-                $destinationWrite = new Write($board->table_name);
-                $destinationWrite->setTableName($board->table_name);
-                // num의 최소값
-                $minNum = is_null($destinationWrite->min('num')) ? 0 : $destinationWrite->min('num');
-
-                // $originalWrites : 복사할 원본 글들
-                // 댓글도 함께 복사 처리가 추가 되야 함
-                foreach($originalWrites as $write) {
-                    // 복사할 글을 복사한 테이블에 맞춰서 num 재설정
-                    $destinationWrite->insert(array_except($write, 'id'));  // 새로 insert하기 때문에 auto increment 되는 id값은 제거
-
-                    // 복사할 글을 복사한 테이블에 맞춰서 parent 재설정
-                    $lastInsertId = DB::getPdo()->lastInsertId();   // 마지막에 삽입한 행의 id 값 가져오기
-                    $newWrite = $destinationWrite->where('id', $lastInsertId)->first();
-                    $toUpdateColumn = [
-                        'num' => $minNum,
-                        'parent' => $newWrite->id,
-                    ];
-                    if($newWrite->reply != '') {
-                        $toUpdateColumn['num'] = $destinationWrite->find($newWrite->id-1)->num;
-                    } else {
-                        $toUpdateColumn['num'] = --$minNum;
-                    }
-
-                    $destinationWrite->where('id', $lastInsertId)->update($toUpdateColumn);
-                    // 복사할 때 원본 게시물에 첨부 파일이 있다면 board_files 테이블에 동일한 파일을 링크하는 정보를 추가해준다.
-                    // 게시물 이동할 때는 board_files 테이블의 board_id와 write_id를 update(실제로는 row의 insert -> delete)한다.
-                    if($write['file'] > 0 ) {
-                        $this->updateAttachedFileInfo($writeModel, $write, $lastInsertId, $board, $request);
-                    }
-
-                    $message = '게시물 복사가 완료되었습니다.';
-                }
-            }
-            // (게시물 이동) 원래 있던 곳의 테이블에서 해당 게시물 삭제
-            if($request->type == 'move') {
-                $message = $this->deleteCopyWrites($writeModel);
-            }
-
-        } else {
-            $message = '게시물 복사에 실패하였습니다.';
-        }
-
-        return $message;
-     }
-
-     // 게시물 복사할 때 첨부파일정보도 함께 복사하는 메서드
-     public function updateAttachedFileInfo($writeModel, $write, $lastInsertId, $toBoard, $request)
-     {
-         $boardFiles = BoardFile::where([
-             'board_id' => $this->board->id,
-             'write_id' => $write['id']
-         ])->get();
-
-         foreach($boardFiles as $boardFile) {
-             $copyBoardFile = $boardFile->attributes;
-             $copyBoardFile['write_id'] = $lastInsertId;
-             $copyBoardFile['board_id'] = $toBoard->id;
-
-             BoardFile::insert($copyBoardFile);
-             // 파일복사(다른 테이블로 복사했을 경우)
-             if($this->board->id != $toBoard->id) {
-                 $this->copyFile($boardFile, $toBoard);
-             }
-
-             // 게시물 이동 시 기존 BoardFile 데이터 삭제.
-             if($request->type == 'move') {
-                 BoardFile::where([
-                     'board_id' => $this->board->id,
-                     'write_id' => $write['id'],
-                     'board_file_no' => $boardFile->board_file_no
-                 ])->delete();
-             }
-         }
-     }
-
-     // 파일 시스템에서 파일 복사
-     public function copyFile($boardFile, $toBoard)
-     {
-         $from = storage_path('app/public/'. $this->board->table_name. '/'. $boardFile->file);
-         $toDirectory = storage_path('app/public/'. Board::find($toBoard->id)->table_name);
-         $to = $toDirectory. '/'. $boardFile->file;
-         if( !File::exists($toDirectory) ) {
-             File::makeDirectory($toDirectory);
-         }
-         File::copy($from, $to);
-     }
-
-    // (게시물 이동) 기존 원본 게시물만 삭제 (첨부파일 정보변경은 updateAttachedFileInfo() 에서 한다.)
-    public function deleteCopyWrites($writeModel)
-    {
-        $writeIds = session()->get('writeIds'); // 복사할 대상 게시물들의 id
-
-        if(gettype($writeIds) == 'string') {
-            $result = $writeModel->where('id', $writeIds)->delete();
-        } else {
-            // foreach로 deleteWrite() 메서드 호출
-
-            $result = $writeModel->whereRaw('id in (' . implode(",", $writeIds) . ') ')->delete();
-        }
-
-        if($result > 0) {
-            return '게시물 이동에 성공하였습니다.';
-        } else {
-            return '게시물 이동이 실패하였습니다.';
-        }
     }
 
 }
