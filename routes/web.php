@@ -127,6 +127,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
             'store' => 'admin.menus.store',
         ]
     ]);
+
+    // 메일 발송 테스트
+    Route::get('mail', ['as' => 'admin.mail', 'uses' => 'Admin\MailController@index']);
+    Route::post('mail/send', ['as' => 'admin.mail.send', 'uses' => 'Admin\MailController@postMail']);
 });
 
 // 커뮤니티, 인증이 필요한 라우트 그룹
