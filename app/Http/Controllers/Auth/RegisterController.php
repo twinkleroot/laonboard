@@ -63,9 +63,14 @@ class RegisterController extends Controller
             $this->validate($request, $rule);
 
             $user = $this->userModel->userJoin($request, $this->config);
-            Auth::login($user);
+            if(!Cache::get('config.email.default')->emailCertify) {
+                Auth::login($user);
+            }
 
-            return redirect(route('user.welcome'));
+            return redirect(route('user.welcome', [
+                    'nick' => $user->nick,
+                    'email' => $user->email,
+                ]));
         } else {
             return redirect(route('user.join'))->withErrors(['reCaptcha' => '자동등록방지 입력이 틀렸습니다. 다시 입력해 주십시오.']);
         }

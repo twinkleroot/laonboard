@@ -29,6 +29,9 @@ class MailController extends Controller
                 $message = '메일인증 처리를 완료하였습니다. \\n\\n지금부터 회원님은 사이트를 원활하게 이용하실 수 있습니다.';
             }
         }
-        return redirect(route('message'))->with('message', $message);
+        return redirect(route('message'))->with([
+            'message' => $message,
+            'popup' => 1,
+        ]);
     }
 }

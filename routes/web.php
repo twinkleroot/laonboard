@@ -129,8 +129,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
     ]);
 
     // 메일 발송 테스트
-    Route::get('mail', ['as' => 'admin.mail', 'uses' => 'Admin\MailController@index']);
-    Route::post('mail/send', ['as' => 'admin.mail.send', 'uses' => 'Admin\MailController@postMail']);
+    Route::get('mail', ['as' => 'admin.email', 'uses' => 'Admin\MailController@index']);
+    Route::post('mail/send', ['as' => 'admin.email.send', 'uses' => 'Admin\MailController@postMail']);
 });
 
 // 커뮤니티, 인증이 필요한 라우트 그룹
@@ -161,9 +161,12 @@ Route::post('social/connectExistAccount', ['as' => 'social.connectExistAccount',
 Route::get('user/join', ['as' => 'user.join', 'uses' => 'Auth\RegisterController@join']);
 Route::post('user/register', ['as' => 'user.register', 'uses' => 'Auth\RegisterController@register']);
 Route::get('user/welcome', ['as' => 'user.welcome', 'uses' => 'User\UserController@welcome']);
+// 메일 인증 메일 주소 변경
+Route::get('user/email/edit/{email}', ['as' => 'user.email.edit', 'uses' => 'User\UserController@editEmail']);
+Route::put('user/email/update', ['as' => 'user.email.update', 'uses' => 'User\UserController@updateEmail']);
 
 // 이메일 인증 라우트
-Route::get('emailCertify/id/{id}/crypt/{crypt}', 'User\MailController@emailCertify')->name('emailCertify');
+Route::get('emailCertify/id/{id}/crypt/{crypt}', ['as' => 'emailCertify', 'uses' => 'User\MailController@emailCertify']);
 // 처리 결과 메세지를 경고창으로 알려주는 페이지
 Route::get('message', ['as' => 'message', 'uses' => 'Message\MessageController@message']);
 

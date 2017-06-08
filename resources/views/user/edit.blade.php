@@ -1,7 +1,7 @@
 @extends('theme')
 
 @section('title')
-    회원 정보 수정 | {{ Cache::get("config.homepage")->title }} 
+    회원 정보 수정 | {{ Cache::get("config.homepage")->title }}
 @endsection
 
 @section('include_css')
@@ -293,11 +293,11 @@
                 </div>
 
                 <!-- 리캡챠 -->
-                <div class="form-group{{ $errors->has('reCapcha') ? ' has-error' : '' }}">
+                <div class="form-group{{ $errors->has('reCaptcha') ? ' has-error' : '' }}">
                     <div class="g-recaptcha" data-sitekey="6LcKohkUAAAAANcgIst0HFMMT81Wq5HIxpiHhXGZ"></div>
-                    @if ($errors->has('reCapcha'))
+                    @if ($errors->has('reCaptcha'))
                         <span class="help-block">
-                            <strong>{{ $errors->first('reCapcha') }}</strong>
+                            <strong>{{ $errors->first('reCaptcha') }}</strong>
                         </span>
                     @endif
                 </div>

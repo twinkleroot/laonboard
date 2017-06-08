@@ -24,9 +24,7 @@ class EditableWrite
         $currentUser = is_null($user) ? '' : $user->email;
         $homepageConfig = Cache::get("config.homepage");
         $superAdmin = $homepageConfig->superAdmin;
-        $board = Cache::remember("board.{$request->boardId}", config("gnu.CACHE_EXPIRE_MINUTE"), function() use($request) {
-            return Board::find($request->boardId);
-        });
+        $board = Board::find($request->boardId);
         $boardAdmin = $board->admin;
         $groupAdmin = Cache::remember("group.{$board->group_id}.admin", config('gnu.CACHE_EXPIRE_MINUTE'), function() use($board) {
             return Group::find($board->group_id)->admin;

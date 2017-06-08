@@ -1,17 +1,17 @@
 @extends('theme')
 
 @section('title')
-    회원가입 완료 | {{ Cache::get("config.homepage")->title }} 
+    회원가입 완료 | {{ Cache::get("config.homepage")->title }}
 @endsection
 
 @section('content')
 <div class="container">
-    {{ $user->nick }}님의 회원가입을 진심으로 축하합니다.<br />
-    @if($emailCertify == 1)
+    {{ $nick }}님의 회원가입을 진심으로 축하합니다.<br />
+    @if(Cache::get('config.email.default')->emailCertify)
     회원 가입 시 입력하신 이메일 주소로 인증메일이 발송되었습니다.<br />
     발송된 인증메일을 확인하신 후 인증처리를 하시면 사이트를 원활하게 이용하실 수 있습니다.<br />
     <p>
-        이메일 주소 {{ $user->email }}
+        이메일 주소 {{ $email }}
     </p>
     이메일 주소를 잘못 입력하셨다면, 사이트 관리자에게 문의해주시기 바랍니다.<br />
     @endif

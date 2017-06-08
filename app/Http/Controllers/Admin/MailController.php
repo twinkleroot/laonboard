@@ -5,14 +5,14 @@ namespace App\Http\Controllers\Admin;
 use Mail;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Mail\MailSendTest;
+use App\Mail\EmailSendTest;
 use App\User;
 
 class MailController extends Controller
 {
     public function index()
     {
-        return view('admin.mail.index');
+        return view('admin.email.index');
     }
 
     public function postMail(Request $request)
@@ -23,11 +23,11 @@ class MailController extends Controller
             $to = trim($to);
             $user = User::where('email', $to)->first();
             if( !is_null($user)) {
-                Mail::to($user)->send(new MailSendTest());
+                Mail::to($user)->send(new EmailSendTest());
                 array_push($successAddress, $to);
             }
         }
 
-        return redirect(route('admin.mail'))->with('successAddress', $successAddress);
+        return redirect(route('admin.email'))->with('successAddress', $successAddress);
     }
 }

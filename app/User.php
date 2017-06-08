@@ -12,6 +12,7 @@ use Auth;
 use DB;
 use Cache;
 use App\Common\Util;
+use App\Notification;
 use App\GroupUser;
 use Carbon\Carbon;
 
@@ -190,9 +191,9 @@ class User extends Authenticatable
             'password' => $request->has('password') ? bcrypt($request->get('password')) : '',
             'nick' => $request->get('nick'),
             'nick_date' => $nowDate,
-            'mailing' => 1,
-            'sms' => 1,
-            'open' => 1,
+            'mailing' => 0,
+            'sms' => 0,
+            'open' => 0,
             'open_date' => $nowDate,
             'today_login' => Carbon::now(),
             'login_ip' => $request->ip(),
@@ -200,7 +201,7 @@ class User extends Authenticatable
         ];
 
         // 이메일 인증을 사용할 경우
-        if($config->emailCertify == '1') {
+        if(Cache::get('config.email.default')->emailCertify) {
             $addUserInfo = [
                 'email_certify' => null,
                 // 라우트 경로 구분을 위해 /는 제거해 줌.
@@ -233,6 +234,16 @@ class User extends Authenticatable
         $user->id_hashkey = str_replace("/", "-", bcrypt($user->id));
 
         $user->save();
+
+        $notification = new Notification();
+        // 회원 가입 축하 메일 발송 (인증도 포함되어 있음)
+        if(Cache::get('config.email.join')->emailJoinUser) {
+            $notification->sendCongratulateJoin($user);
+        }
+        // 최고관리자에게 회원 가입 알림 메일 발송
+        if(Cache::get('config.email.join')->emailJoinSuperAdmin) {
+            $notification->sendJoinNotification($user);
+        }
 
         return $user;
     }
@@ -300,7 +311,23 @@ class User extends Authenticatable
             ] ]);
         }
 
-        $user->update($toUpdateUserInfo);
+        $isEmailChange = $request->get('email') != $user->email;
+        // 이메일 인증을 사용하고 이메일이 변경될 경우 이메일 인증을 다시 해야한다.
+        if(Cache::get('config.email.default')->emailCertify && $isEmailChange) {
+            $toUpdateUserInfo = array_collapse([ $toUpdateUserInfo, [
+                'email_certify' => null,
+                // 라우트 경로 구분을 위해 /는 제거해 줌.
+                'email_certify2' => str_replace("/", "-", bcrypt($request->ip() . Carbon::now()) ),
+                'level' => 1,   // 인증하기 전 회원 레벨은 1
+            ] ]);
+
+            $user->update($toUpdateUserInfo);
+            // 이메일 인증 메일 발송
+            $notification = new Notification();
+            $notification->sendEmailCertify($request->get('email'), $user, $toUpdateUserInfo['nick'], $isEmailChange);
+        } else {
+            $user->update($toUpdateUserInfo);
+        }
 
         return 'finishUpdate';
     }
@@ -343,6 +370,21 @@ class User extends Authenticatable
             // 이미 연결된 계정이라는 안내 메세지 보내 줌
             return '이미 연결된 계정입니다.';
         }
+    }
+
+    // 메일 인증 메일주소 변경
+    public function changeCertifyEmail($request)
+    {
+        $beforeEmail = $request->beforeEmail;
+        $user = User::where('email', $beforeEmail)->first();
+        $user->email = $request->email;
+        $user->save();
+
+        // 이메일 인증 메일 발송
+        $notification = new Notification();
+        $notification->sendEmailCertify($user->email, $user, $user->nick, true);
+
+        return $user->email;
     }
 
     // 관리자에서 사용하는 메서드

@@ -33,10 +33,10 @@
 
                         <div class="col-md-6">
                             <select name='superAdmin'>
+                                <option value='' @if($configHomepage->superAdmin == '') selected @endif>
+                                    선택안함
+                                </option>
                                 @foreach($admins as $admin)
-                                    <option value='' @if($configHomepage->superAdmin == '') selected @endif>
-                                        선택안함
-                                    </option>
                                     <option value='{{ $admin->email }}' @if($configHomepage->superAdmin == $admin->email) selected @endif>
                                         {{ $admin->email }}
                                     </option>
@@ -143,16 +143,6 @@
             <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.config.update', ['name' => 'join']) }}">
                 {{ method_field('PUT') }}
                 {{ csrf_field() }}
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="emailCertify" class="col-md-4 control-label">이메일 인증 사용</label>
-
-                        <div class="col-md-6">
-                            <input type="checkbox" name="emailCertify" id="emailCertify" value="1" @if($configJoin->emailCertify == 1) checked @endif>
-                                <label for="emailCertify">사용</label>
-                        </div>
-                    </div>
-                </div>
                 <div class="panel-body">
                     <div class="form-group">
                         <label for="nickDate" class="col-md-4 control-label">닉네임 수정</label>
@@ -462,6 +452,167 @@
                 <div class="panel-body">
                     <div class="col-md-offset-5">
                         <input type="submit" class="btn btn-primary" value="게시판 기본 설정 변경하기"/>
+                    </div>
+                </div>
+            </form>
+            <div class="panel-heading">기본 메일 환경 설정</div>
+            <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.config.update', ['name' => 'email.default']) }}">
+                {{ method_field('PUT') }}
+                {{ csrf_field() }}
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="emailUse" class="col-md-4 control-label">메일발송 사용</label>
+
+                        <div class="col-md-6">
+                            체크하지 않으면 메일발송을 아예 사용하지 않습니다. 메일 테스트도 불가합니다.<br />
+                            <input type="checkbox" name="emailUse" id="emailUse" value="1" @if($configEmailDefault->emailUse == 1) checked @endif>
+                                <label for="emailUse">사용</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="emailCertify" class="col-md-4 control-label">이메일 인증 사용</label>
+
+                        <div class="col-md-6">
+                            메일에 배달된 인증 주소를 클릭하여야 회원으로 인정합니다.<br />
+                            <input type="checkbox" name="emailCertify" id="emailCertify" value="1" @if($configEmailDefault->emailCertify == 1) checked @endif>
+                                <label for="emailCertify">사용</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="formmailIsMember" class="col-md-4 control-label">폼메일 사용 여부</label>
+
+                        <div class="col-md-6">
+                            체크하지 않으면 비회원도 사용 할 수 있습니다.<br />
+                            <input type="checkbox" name="formmailIsMember" id="formmailIsMember" value="1" @if($configEmailDefault->formmailIsMember == 1) checked @endif>
+                                <label for="formmailIsMember">회원만 사용</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-offset-5">
+                        <input type="submit" class="btn btn-primary" value="기본 메일 환경 설정 변경하기"/>
+                    </div>
+                </div>
+            </form>
+            <div class="panel-heading">게시판 글 작성시 메일 설정</div>
+            <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.config.update', ['name' => 'email.board']) }}">
+                {{ method_field('PUT') }}
+                {{ csrf_field() }}
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="emailWriteSuperAdmin" class="col-md-4 control-label">최고관리자</label>
+
+                        <div class="col-md-6">
+                            최고관리자에게 메일을 발송합니다.<br />
+                            <input type="checkbox" name="emailWriteSuperAdmin" id="emailWriteSuperAdmin" value="1" @if($configEmailBoard->emailWriteSuperAdmin == 1) checked @endif>
+                                <label for="emailWriteSuperAdmin">사용</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="emailWriteGroupAdmin" class="col-md-4 control-label">그룹관리자</label>
+
+                        <div class="col-md-6">
+                            그룹관리자에게 메일을 발송합니다.<br />
+                            <input type="checkbox" name="emailWriteGroupAdmin" id="emailWriteGroupAdmin" value="1" @if($configEmailBoard->emailWriteGroupAdmin == 1) checked @endif>
+                                <label for="emailWriteGroupAdmin">사용</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="emailWriteBoardAdmin" class="col-md-4 control-label">게시판관리자</label>
+
+                        <div class="col-md-6">
+                            게시판관리자에게 메일을 발송합니다.<br />
+                            <input type="checkbox" name="emailWriteBoardAdmin" id="emailWriteBoardAdmin" value="1" @if($configEmailBoard->emailWriteBoardAdmin == 1) checked @endif>
+                                <label for="emailWriteBoardAdmin">사용</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="emailWriter" class="col-md-4 control-label">원글작성자</label>
+
+                        <div class="col-md-6">
+                            게시자님께 메일을 발송합니다.<br />
+                            <input type="checkbox" name="emailWriter" id="emailWriter" value="1" @if($configEmailBoard->emailWriter == 1) checked @endif>
+                                <label for="emailWriter">사용</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="emailAllCommenter" class="col-md-4 control-label">댓글작성자</label>
+
+                        <div class="col-md-6">
+                            원글에 댓글이 올라오는 경우 댓글 쓴 모든 분들께 메일을 발송합니다.<br />
+                            <input type="checkbox" name="emailAllCommenter" id="emailAllCommenter" value="1" @if($configEmailBoard->emailAllCommenter == 1) checked @endif>
+                                <label for="emailAllCommenter">사용</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-offset-5">
+                        <input type="submit" class="btn btn-primary" value="게시판 글 작성시 메일 설정 변경하기"/>
+                    </div>
+                </div>
+            </form>
+            <div class="panel-heading">회원가입 시 메일 설정</div>
+            <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.config.update', ['name' => 'email.join']) }}">
+                {{ method_field('PUT') }}
+                {{ csrf_field() }}
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="emailJoinSuperAdmin" class="col-md-4 control-label">최고관리자</label>
+
+                        <div class="col-md-6">
+                            최고관리자에게 메일을 발송합니다.<br />
+                            <input type="checkbox" name="emailJoinSuperAdmin" id="emailJoinSuperAdmin" value="1" @if($configEmailJoin->emailJoinSuperAdmin == 1) checked @endif>
+                                <label for="emailJoinSuperAdmin">사용</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="emailJoinUser" class="col-md-4 control-label">가입한 회원</label>
+
+                        <div class="col-md-6">
+                            회원가입한 회원님께 메일을 발송합니다.<br />
+                            <input type="checkbox" name="emailJoinUser" id="emailJoinUser" value="1" @if($configEmailJoin->emailJoinUser == 1) checked @endif>
+                                <label for="emailJoinUser">사용</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-offset-5">
+                        <input type="submit" class="btn btn-primary" value="회원가입 시 메일 설정 변경하기"/>
+                    </div>
+                </div>
+            </form>
+            <div class="panel-heading">투표 기타의견 작성 시 메일 설정</div>
+            <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.config.update', ['name' => 'email.vote']) }}">
+                {{ method_field('PUT') }}
+                {{ csrf_field() }}
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="emailVoteSuperAdmin" class="col-md-4 control-label">최고관리자</label>
+
+                        <div class="col-md-6">
+                            최고관리자에게 메일을 발송합니다.<br />
+                            <input type="checkbox" name="emailVoteSuperAdmin" id="emailVoteSuperAdmin" value="1" @if($configEmailVote->emailVoteSuperAdmin == 1) checked @endif>
+                                <label for="emailVoteSuperAdmin">사용</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-offset-5">
+                        <input type="submit" class="btn btn-primary" value="투표 기타의견 작성 시 메일 설정 변경하기"/>
                     </div>
                 </div>
             </form>

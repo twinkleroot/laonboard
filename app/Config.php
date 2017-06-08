@@ -60,6 +60,10 @@ class Config extends Model
             'configHomepage' => Cache::get("config.homepage"),
             'configJoin' => Cache::get("config.join"),
             'configBoard' => Cache::get("config.board"),
+            'configEmailDefault' => Cache::get("config.email.default"),
+            'configEmailBoard' => Cache::get("config.email.board"),
+            'configEmailJoin' => Cache::get("config.email.join"),
+            'configEmailVote' => Cache::get("config.email.vote"),
             'admins' => $admins,
         ];
     }
@@ -88,7 +92,6 @@ class Config extends Model
     public function createConfigJoin()
     {
         $configArr = array (
-          'emailCertify' => config('gnu.emailCertify'),
           'nickDate' => config('gnu.nickDate'),
           'name' => config('gnu.name'),
           'homepage' => config('gnu.homepage'),
@@ -133,6 +136,51 @@ class Config extends Model
         return $this->createConfig('config.board', $configArr);
     }
 
+    // 기본 메일 환경 설정을 config 테이블에 추가한다.
+    public function createConfigEmailDefault()
+    {
+        $configArr = array (
+          'emailUse' => config('gnu.emailUse'),
+          'emailCertify' => config('gnu.emailCertify'),
+          'formmailIsMember' => config('gnu.formmailIsMember'),
+        );
+
+        return $this->createConfig('config.email.default', $configArr);
+    }
+    // 게시판 글 작성 시 메일 설정을 config 테이블에 추가한다.
+    public function createConfigEmailBoard()
+    {
+        $configArr = array (
+          'emailWriteSuperAdmin' => config('gnu.emailWriteSuperAdmin'),
+          'emailWriteGroupAdmin' => config('gnu.emailWriteGroupAdmin'),
+          'emailWriteBoardAdmin' => config('gnu.emailWriteBoardAdmin'),
+          'emailWriter' => config('gnu.emailWriter'),
+          'emailAllCommenter' => config('gnu.emailAllCommenter'),
+        );
+
+        return $this->createConfig('config.email.board', $configArr);
+    }
+    // 회원가입 시 메일 설정을 config 테이블에 추가한다.
+    public function createConfigEmailJoin()
+    {
+        $configArr = array (
+          'emailJoinSuperAdmin' => config('gnu.emailJoinSuperAdmin'),
+          'emailJoinUser' => config('gnu.emailJoinUser'),
+        );
+
+        return $this->createConfig('config.email.join', $configArr);
+    }
+    // 투표 기타의견 작성 시 메일 설정을 config 테이블에 추가한다.
+    public function createConfigEmailVote()
+    {
+        $configArr = array (
+          'emailVoteSuperAdmin' => config('gnu.emailVoteSuperAdmin'),
+        );
+
+        return $this->createConfig('config.email.vote', $configArr);
+    }
+
+    // configs 테이블에 해당 row를 추가한다.
     public function createConfig($name, $configArr)
     {
         return Config::create([
@@ -144,7 +192,7 @@ class Config extends Model
     // 설정을 변경한다.
     public function updateConfig($data, $name)
     {
-        // DB엔 안들어가도 되는 값은 데이터 배열에서 제외한다.
+        // DB엔 안들어가는 값은 데이터 배열에서 제외한다.
         $data = array_except($data, ['_token']);
         $data = array_except($data, ['_method']);
 
@@ -157,13 +205,31 @@ class Config extends Model
             Cache::forget("config.join");   // 설정이 변경될 때 캐시를 지운다.
             $data['banId'] = [ 0 => $data['banId'] ];
             // checkbox 입력이 unckecked일 때 배열에 값을 0으로 추가.
-            $data = array_add($data, 'emailCertify', isset($data['emailCertify']) ? $data['emailCertify'] : 0);
             $data = array_add($data, 'passwordPolicySpecial', isset($data['passwordPolicySpecial']) ? $data['passwordPolicySpecial'] : 0);
             $data = array_add($data, 'passwordPolicyUpper', isset($data['passwordPolicyUpper']) ? $data['passwordPolicyUpper'] : 0);
             $data = array_add($data, 'passwordPolicyNumber', isset($data['passwordPolicyNumber']) ? $data['passwordPolicyNumber'] : 0);
         } else if($name == 'board') {   // 게시판 기본 설정일 때
             Cache::forget("config.board");  // 설정이 변경될 때 캐시를 지운다.
             $data['filter'] = [ 0 => $data['filter'] ];
+        } else if($name == 'email.default') {   // 기본 메일 환경 설정 일때
+            Cache::forget("config.email.default");  // 설정이 변경될 때 캐시를 지운다.
+            $data = array_add($data, 'emailUse', isset($data['emailUse']) ? $data['emailUse'] : 0);
+            $data = array_add($data, 'emailCertify', isset($data['emailCertify']) ? $data['emailCertify'] : 0);
+            $data = array_add($data, 'formmailIsMember', isset($data['formmailIsMember']) ? $data['formmailIsMember'] : 0);
+        } else if($name == 'email.board') { // 게시판 글 작성 시 메일 설정일 때
+            Cache::forget("config.email.board");  // 설정이 변경될 때 캐시를 지운다.
+            $data = array_add($data, 'emailWriteSuperAdmin', isset($data['emailWriteSuperAdmin']) ? $data['emailWriteSuperAdmin'] : 0);
+            $data = array_add($data, 'emailWriteGroupAdmin', isset($data['emailWriteGroupAdmin']) ? $data['emailWriteGroupAdmin'] : 0);
+            $data = array_add($data, 'emailWriteBoardAdmin', isset($data['emailWriteBoardAdmin']) ? $data['emailWriteBoardAdmin'] : 0);
+            $data = array_add($data, 'emailWriter', isset($data['emailWriter']) ? $data['emailWriter'] : 0);
+            $data = array_add($data, 'emailAllCommenter', isset($data['emailAllCommenter']) ? $data['emailAllCommenter'] : 0);
+        } else if($name == 'email.join') {  // 회원가입 시 메일 설정일 때
+            Cache::forget("config.email.join");  // 설정이 변경될 때 캐시를 지운다.
+            $data = array_add($data, 'emailJoinSuperAdmin', isset($data['emailJoinSuperAdmin']) ? $data['emailJoinSuperAdmin'] : 0);
+            $data = array_add($data, 'emailJoinUser', isset($data['emailJoinUser']) ? $data['emailJoinUser'] : 0);
+        } else if($name == 'email.vote') {  // 투표 기타의견 작성 시 메일 설정일 때
+            Cache::forget("config.email.vote");  // 설정이 변경될 때 캐시를 지운다.
+            $data = array_add($data, 'emailVoteSuperAdmin', isset($data['emailVoteSuperAdmin']) ? $data['emailVoteSuperAdmin'] : 0);
         }
 
         // json 형식으로 되어 있는 설정값을 배열로 바꾼다.

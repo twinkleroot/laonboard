@@ -7,12 +7,12 @@ use App\Http\Controllers\Controller;
 use Mail;
 use Auth;
 use Cache;
-use App\Mail\EmailCertify;
 use App\ReCaptcha;
 use App\User;
 use Carbon\Carbon;
 use App\Config;
 use Socialite;
+use App\Notification;
 
 class UserController extends Controller
 {
@@ -85,9 +85,11 @@ class UserController extends Controller
             $this->validate($request, $rule);
 
             $returnVal = $this->userModel->userInfoUpdate($request, $this->config);
+
             if($returnVal == 'notExistRecommend') {
                 return redirect(route('user.edit'))->withErrors(['recommend' => '추천인이 존재하지 않습니다.']);
             } else {
+                Auth::logout();
                 return redirect('/index')->with('message', $user->nick . '님의 회원정보가 변경되었습니다.');
             }
         } else {
@@ -97,18 +99,11 @@ class UserController extends Controller
     }
 
     // 회원 가입 결과, 웰컴 페이지
-    public function welcome()
+    public function welcome(Request $request)
     {
-        $user = Auth::user();
-
-        // 인증 이메일 발송
-        if($this->config->emailCertify == '1') {
-            Mail::to(Auth::user())->send(new EmailCertify());
-        }
-
         return view('user.welcome', [
-            'emailCertify' => $this->config->emailCertify,
-            'user' => $user,
+            'nick' => $request->nick,
+            'email' => $request->email,
         ]);
     }
 
@@ -116,6 +111,31 @@ class UserController extends Controller
     public function disconnectSocialAccount(Request $request)
     {
         return $this->userModel->disconnectSocialAccount($request);
+    }
+
+    // 메일인증 메일주소 변경 폼
+    public function editEmail($email)
+    {
+        return view('user.change_email', [
+            'email' => $email
+        ]);
+    }
+
+    // 메일인증 메일주소 변경 실행
+    public function updateEmail(Request $request)
+    {
+        if(ReCaptcha::reCaptcha($request)) {    // 구글 리캡챠 체크
+            // 메일인증 메일주소 변경
+            $result = $this->userModel->changeCertifyEmail($request);
+
+            $message = '인증메일을 '. $result. ' 메일로 다시 보내드렸습니다.\\n\\잠시후 '. $result. ' 메일을 확인하여 주십시오.';
+            return view('message', [
+                'message' => $message,
+                'redirect' => '/',
+            ]);
+        } else {
+            return back()->withErrors(['reCaptcha' => '자동등록방지 입력이 틀렸습니다. 다시 입력해 주십시오.']);
+        }
     }
 
 }

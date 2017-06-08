@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Board;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Cache;
+use App\Notification;
 use App\Write;
 use App\Comment;
 
@@ -12,8 +13,9 @@ class CommentController extends Controller
 {
     public $writeModel;
     public $comment;
+    public $notification;
 
-    public function __construct(Request $request, Comment $comment)
+    public function __construct(Request $request, Comment $comment, Notification $notification)
     {
         $this->writeModel = new Write($request->boardId);
         if( !is_null($this->writeModel->board) ) {
@@ -21,6 +23,7 @@ class CommentController extends Controller
         }
 
         $this->comment = $comment;
+        $this->notification = $notification;
     }
 
     // 댓글 저장
@@ -33,6 +36,9 @@ class CommentController extends Controller
             ]);
         }
 
+        if(Cache::get('config.email.default')->emailUse && $this->writeModel->board->use_email) {
+            $this->notification->sendWriteNotification($this->writeModel, $result);
+        }
 
         return redirect($request->requestUri. '#comment'. $result);
     }

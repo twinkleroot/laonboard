@@ -29,7 +29,7 @@
 
 메일서버가 정상적으로 동작 중인지 확인할 수 있습니다.<br />
 아래 입력칸에 테스트 메일을 발송하실 메일 주소를 입력하시면, [메일검사] 라는 제목으로 테스트 메일을 발송합니다.<br /><br />
-<form method="post" action="{{ route('admin.mail.send') }}">
+<form method="post" action="{{ route('admin.email.send') }}">
     {{ csrf_field() }}
     받는 메일주소
     <input type="text" name="email" id="email" value="{{ Cache::get("config.homepage")->superAdmin }}" />

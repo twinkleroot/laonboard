@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Point;
 use App\Config;
+use Cache;
+use Auth;
 
 class LoginSuccessful
 {

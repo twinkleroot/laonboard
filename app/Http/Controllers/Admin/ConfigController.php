@@ -51,6 +51,34 @@ class ConfigController extends Controller
                     $message = '게시판 기본 설정 변경에 실패하였습니다.';
                 }
                 break;
+            case 'email.default':
+                if($this->configModel->updateConfig($data, $name)) {
+                    $message = '기본 메일 환경 설정 변경이 완료되었습니다.';
+                } else {
+                    $message = '기본 메일 환경 설정 변경에 실패하였습니다.';
+                }
+                break;
+            case 'email.board':
+                if($this->configModel->updateConfig($data, $name)) {
+                    $message = '게시판 글 작성시 메일 설정 변경이 완료되었습니다.';
+                } else {
+                    $message = '게시판 글 작성시 메일 설정 변경에 실패하였습니다.';
+                }
+                break;
+            case 'email.join':
+                if($this->configModel->updateConfig($data, $name)) {
+                    $message = '회원가입 시 메일 설정 변경이 완료되었습니다.';
+                } else {
+                    $message = '회원가입 시 메일 설정 변경에 실패하였습니다.';
+                }
+                break;
+            case 'email.vote':
+                if($this->configModel->updateConfig($data, $name)) {
+                    $message = '투표 기타의견 작성 시 메일 설정 변경이 완료되었습니다.';
+                } else {
+                    $message = '투표 기타의견 작성 시 메일 설정 변경에 실패하였습니다.';
+                }
+                break;
             default:
                 # code...
                 break;

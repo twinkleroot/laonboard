@@ -7,26 +7,23 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\User;
-use Cache;
 
-class EmailCertify extends Mailable
+class CongratulateJoin extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $user;
-    public $nick;
-    public $isEmailChange;
+    public $subject;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(User $user, $nick, $isEmailChange)
+    public function __construct(User $user, $subject)
     {
         $this->user = $user;
-        $this->nick = $nick;
-        $this->isEmailChange = $isEmailChange;
+        $this->subject = $subject;
     }
 
     /**
@@ -40,12 +37,11 @@ class EmailCertify extends Mailable
                 'id' => $this->user->id_hashkey,
                 'crypt' => $this->user->email_certify2
             ]);
-        return $this->subject('['. Cache::get('config.homepage')->title. '] 인증확인 메일입니다.')
-                    ->view('mail.email_certify')
+        return $this->subject($this->subject)
+                    ->view('mail.congratulate_join')
                     ->with([
-                        'nick' => $this->nick,
-                        'url' => $url,
-                        'isEmailChange' => $this->isEmailChange
+                        'user' => $this->user,
+                        'url' => $url
                     ]);
     }
 }

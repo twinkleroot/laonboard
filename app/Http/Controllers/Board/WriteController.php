@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Board;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
-use App\Board;
 use App\Write;
 use App\Point;
 use App\Config;
@@ -13,7 +12,9 @@ use App\BoardFile;
 use App\BoardGood;
 use App\User;
 use App\Comment;
+use App\Notification;
 use Auth;
+use Cache;
 use Exception;
 use Illuminate\Pagination\Paginator;
 
@@ -24,8 +25,9 @@ class WriteController extends Controller
     public $boardFileModel;
     public $boardGoodModel;
     public $comment;
+    public $notification;
 
-    public function __construct(Request $request, Board $board, BoardFile $boardFile, BoardGood $boardGood, Comment $comment)
+    public function __construct(Request $request, BoardFile $boardFile, BoardGood $boardGood, Comment $comment, Notification $notification)
     {
         $this->writeModel = new Write($request->boardId);
         if( !is_null($this->writeModel->board) ) {
@@ -35,6 +37,7 @@ class WriteController extends Controller
         $this->boardFileModel = $boardFile;
         $this->boardGoodModel = $boardGood;
         $this->comment = $comment;
+        $this->notification = $notification;
     }
     /**
      * Display a listing of the resource.
@@ -191,6 +194,10 @@ class WriteController extends Controller
                     'redirect' => route('board.index', $boardId),
                 ]);
             }
+        }
+
+        if(Cache::get('config.email.default')->emailUse && $this->writeModel->board->use_email) {
+            $this->notification->sendWriteNotification($this->writeModel, $writeId);
         }
 
         return redirect(route('board.view', ['boardId' => $boardId, 'writeId' => $writeId] ));
