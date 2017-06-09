@@ -144,7 +144,25 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('user/point/{id}', ['as' => 'user.point', 'uses' => 'User\PointController@index']);
     // 회원 정보 수정 - 소셜 로그인 계정 연결 해제
     Route::post('user/disconnectSocialAccount', ['as' => 'user.disconnectSocialAccount', 'uses' => 'User\UserController@disconnectSocialAccount']);
+
+    // 내용 관리 리소스 컨트롤러
+    Route::resource('contents', 'Content\ContentController', [
+        'names' => [
+            'index' => 'contents.index',
+            'show' => 'contents.show',
+            'create' => 'contents.create',
+            'store' => 'contents.store',
+            'edit' => 'contents.edit',
+            'update' => 'contents.update',
+            'destroy' => 'contents.destroy',
+        ],
+        'middleware' => [
+            'level:10',
+        ]
+    ]);
 });
+// 내용관리 보기는 인증이 없어도 가능
+Route::get('contents/{content}', ['as' => 'contents.show', 'uses' => 'Content\ContentController@show']);
 
 // 인증에 관련한 라우트들
 Auth::routes();

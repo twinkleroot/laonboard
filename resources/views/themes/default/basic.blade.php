@@ -11,6 +11,7 @@
     <title>@yield('title', 'SIR LaBoard')</title>
 
     <!-- CSS -->
+    @yield('fisrt_include_css')
     <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('font-awesome/css/font-awesome.css') }}">
