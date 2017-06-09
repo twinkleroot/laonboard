@@ -21,7 +21,7 @@ class ContentController extends Controller
      */
     public function index()
     {
-        $contents = $this->content->contentList();
+        $contents = $this->content->getContentList();
 
         return view('content.index', [
             'contents' => $contents
@@ -35,7 +35,8 @@ class ContentController extends Controller
      */
     public function show($id)
     {
-        $params = $this->content->viewContent($id);
+        $params = $this->content->getContentView($id);
+
 
         return view('content.show', $params);
     }
@@ -47,7 +48,9 @@ class ContentController extends Controller
      */
     public function create()
     {
-        //
+        $params = $this->content->getContentCreate();
+
+        return view('content.form', $params);
     }
 
     /**
@@ -58,7 +61,17 @@ class ContentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rule = [
+            'content_id' => 'required|max:20|unique:contents|regex:/^[a-zA-Z0-9_]+$/',
+            'subject' => 'required',
+            'content' => 'required',
+        ];
+
+        $this->validate($request, $rule);
+
+        $result = $this->content->storeContent($request);
+
+        return redirect(route('contents.edit', $result));
     }
 
     /**
@@ -69,7 +82,9 @@ class ContentController extends Controller
      */
     public function edit($id)
     {
-        //
+        $params = $this->content->getContentEdit($id);
+
+        return view('content.form', $params);
     }
 
     /**
@@ -81,7 +96,9 @@ class ContentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $result = $this->content->updateContent($request, $id);
+
+        return redirect(route('contents.edit', $result));
     }
 
     /**
@@ -92,6 +109,8 @@ class ContentController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->content->deleteContent($id);
+
+        return redirect()->back();
     }
 }

@@ -77,7 +77,7 @@ class Write extends Model
 
         // 전체 카테고리 리스트
         $categories = [];
-        if($this->board->use_category == 1 && !is_null($this->board->category_list) ) {
+        if($this->board->use_category && !is_null($this->board->category_list) ) {
             $categories = explode('|', $this->board->category_list);
         }
 

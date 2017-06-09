@@ -3,8 +3,9 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use App\Content;
 
-class CreateTableContents extends Migration
+class CreateContentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -21,13 +22,30 @@ class CreateTableContents extends Migration
                 $table->string('subject')->nullable();
                 $table->longText('content')->nullable();
                 $table->longText('mobile_content')->nullable();
-                $table->string('skin')->nullable();
-                $table->string('mobile_skin')->nullable();
+                $table->string('skin')->nullable()->default('');
+                $table->string('mobile_skin')->nullable()->default('');
                 $table->tinyInteger('tag_filter_use')->nullable()->default(0);
                 $table->integer('hit')->nullable();
                 $table->string('include_head')->nullable();
                 $table->string('include_tail')->nullable();
             });
+
+            // 초기 데이터 생성
+            $ids = ['company', 'privacy', 'provision'];
+            $subjects = ['회사소개', '개인정보 처리방침', '서비스 이용약관'];
+            $contents = [
+                '<p align=center><b>회사소개에 대한 내용을 입력하십시오.</b></p>',
+                '<p align=center><b>개인정보 처리방침에 대한 내용을 입력하십시오.</b></p>',
+                '<p align=center><b>서비스 이용약관에 대한 내용을 입력하십시오.</b></p>'
+            ];
+            for($i=0; $i<3; $i++) {
+                Content::create([
+                    'content_id' => $ids[$i],
+                    'html' => 1,
+                    'subject' => $subjects[$i],
+                    'content' => $contents[$i]
+                ]);
+            }
         }
     }
 

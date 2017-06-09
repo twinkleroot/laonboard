@@ -5,12 +5,26 @@ namespace App\Common;
 use Carbon\Carbon;
 use Cache;
 use Image;
+use File;
 use App\Write;
 use App\Board;
 
 // 공통으로 사용하는 메서드
 class Util
 {
+
+    // 스킨 목록을 가져온다.
+    public static function getSkins()
+    {
+        $path = resource_path('views/themes');
+        $dirs = File::directories($path);
+        $result = ['' => '선택안함'];
+        foreach($dirs as $dir) {
+            $result[basename($dir)] = basename($dir);
+        }
+
+        return $result;
+    }
 
     // 글쓰기 간격 검사
     public static function checkWriteInterval()

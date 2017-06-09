@@ -1,3 +1,32 @@
+// 전역 변수
+var errmsg = "";
+var errfld = null;
+
+// 필드 검사
+function check_field(fld, msg)
+{
+    if ((fld.value = trim(fld.value)) == "")
+        error_field(fld, msg);
+    else
+        clear_field(fld);
+    return;
+}
+
+// 필드 오류 표시
+function error_field(fld, msg)
+{
+    if (msg != "")
+        errmsg += msg + "\n";
+    if (!errfld) errfld = fld;
+    fld.style.background = "#BDDEF7";
+}
+
+// 필드를 깨끗하게
+function clear_field(fld)
+{
+    fld.style.background = "#FFFFFF";
+}
+
 // 글숫자 검사
 function check_byte(content, target)
 {

@@ -22,7 +22,7 @@
                             </div>
                         @endif
 
-                        @if(is_null($content->skin))
+                        @if($content->skin == '')
                             <h1>{{ $content->subject }}</h1>
                             {!! App\Common\Util::convertContent($content->content, $content->html, $content->tag_filter_use) !!}
                         @else

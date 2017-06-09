@@ -43,6 +43,7 @@
                 <th>관리</th>
             </thead>
             <tbody>
+            @if(count($contents) > 0)
             @foreach ($contents as $content)
                 <tr>
                     <td class="text-left">
@@ -56,6 +57,13 @@
                     </td>
                 </tr>
             @endforeach
+            @else
+                <tr>
+                    <td colspan="3" class="empty_table">
+                        자료가 한건도 없습니다.
+                    </td>
+                </tr>
+            @endif
             </tbody>
         </table>
     </div>
