@@ -1,5 +1,5 @@
 @section('fisrt_include_css')
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/'. $skinName. '/css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('themes/'. $content->skin. '/css/style.css') }}">
 @endsection
 
 <article id="ctt" class="ctt_{{ $content->id }}">

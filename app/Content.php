@@ -43,20 +43,13 @@ class Content extends Model
     {
         $content = Content::where('content_id', $id)->first();
         $path = storage_path('app/public/content/'. $content->content_id);
-        $headPath = $path. '_h';
-        $tailPath = $path. '_t';
-        $existHeadImage = File::exists($headPath);
-        $existTailImage = File::exists($tailPath);
-
-        if( is_null($content->skin) ) {
-            $content->skin = 'default';
-        }
+        $existHeadImage = File::exists($path. '_h');
+        $existTailImage = File::exists($path. '_t');
 
         return [
             'content' => $content,
             'existHeadImage' => $existHeadImage,
             'existTailImage' => $existTailImage,
-            'skinName' => $content->skin
         ];
     }
 

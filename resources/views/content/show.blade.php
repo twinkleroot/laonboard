@@ -22,7 +22,12 @@
                             </div>
                         @endif
 
-                        @include('themes.'. $skinName. '.content.content_skin')
+                        @if(is_null($content->skin))
+                            <h1>{{ $content->subject }}</h1>
+                            {!! App\Common\Util::convertContent($content->content, $content->html, $content->tag_filter_use) !!}
+                        @else
+                            @include('themes.'. $content->skin. '.content.content_skin')
+                        @endif
 
                         <!-- 하단 이미지 -->
                         @if($existTailImage)
