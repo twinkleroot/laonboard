@@ -24,7 +24,8 @@ trait AuthenticatesUsers
      */
     public function login(Request $request)
     {
-        if(Cache::get('config.email.default')->emailCertify && User::where('email', $request->email)->first()->level == 1) {
+        $user = User::where('email', $request->email)->first();
+        if(!is_null($user) && Cache::get('config.email.default')->emailCertify && $user->level == 1) {
             return view('auth.login_confirm', [
                 'confirm' => '메일로 메일인증을 받으셔야 로그인 가능합니다. 다른 메일주소로 변경하여 인증하시려면 취소를 클릭하시기 바랍니다.',
                 'redirect' => route('user.email.edit', $request->email),
