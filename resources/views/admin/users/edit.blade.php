@@ -1,4 +1,4 @@
-@extends('theme')
+@extends('admin.admin')
 
 @section('title')
      회원 수정 | {{ $title }}

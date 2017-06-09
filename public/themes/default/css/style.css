@@ -7,6 +7,9 @@ body {
   background:#efefef;
   font-family:'Nanum Gothic','돋움', sans-serif;
 }
+body.white {
+	background: #fff;
+}
 .empty_table {
     line-height: 150px;
     color: #587ef6;
@@ -21,6 +24,7 @@ div {
 .mb0  {margin-bottom: 0;}
 .mb5  {margin-bottom: 5px;}
 .mb10 {margin-bottom: 10px;}
+.mb15 {margin-bottom: 15px;}
 
 .mr0  {margin-right: 0px;}
 .mr5  {margin-right: 5px;}
@@ -325,7 +329,8 @@ div {
 
 /* 리스트형 게시판 */
 #board .table>thead,
-#bd_move .table>thead {
+#bd_move .table>thead,
+#bd_scrap .table>thead {
 	background: #f0f0f0;
 }
 #board a,
@@ -1059,6 +1064,25 @@ div {
 .td_chk {
 	width: 55px !important;
 }
+.td_mngsmall {
+	width: 100px !important;
+}
+.td_num {
+	width:60px;
+	text-align: center;
+}
+.td_board {
+	width:120px;
+	text-align: center;
+}
+.td_datetime {
+	width:170px;
+	text-align: center;
+}
+.td_mng {
+	width:80px;
+	text-align: center;
+}
 #bd_move label {
 	font-weight: normal;
 	margin: 0;
@@ -1089,4 +1113,46 @@ div {
 	content: "";
 	display: block;
 	clear: both;
+}
+#bd_scrap label {
+	font-weight: normal;
+	margin: 0;
+	font-size: 0;
+}
+#bd_scrap i {
+	margin: 0 8px;
+	font-size: 12px;
+}
+#bd_scrap span {
+	font-size: 12px;
+}
+#bd_scrap .gr0 {
+	color: #aaa;
+}
+#bd_scrap .gr1 {
+	color: #ff6699;
+}
+#bd_scrap .on {
+	background: #f4f4f4;
+}
+#bd_scrap .on .here {
+	color:#ff6699;
+	float: right;
+	font-weight: bold;
+}
+#bd_scrap .on .here:after {
+	content: "";
+	display: block;
+	clear: both;
+}
+#bd_scrap .table>tbody>tr>td.popin {
+	background: #f0f0f0;
+	font-weight: bold;
+	text-align: left;
+	border-right: 1px solid #d8d8d8;
+	width: 25%;
+}
+#bd_scrap a {
+	color: #333 !important;
+	cursor: pointer;
 }
