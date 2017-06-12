@@ -31,7 +31,7 @@
         <th scope="row"><label for="co_id">ID</label></th>
         <td>
             <span class="frm_info">20자 이내의 영문자, 숫자, _ 만 가능합니다.</span><br />
-            <input type="text" name="content_id" id ="content_id" required @if($type == "update") value="{{ $content->content_id }}" readonly @endif size="20" maxlength="20">
+            <input type="text" name="content_id" id ="content_id" required @if($type == "update") value="{{ $content->content_id }}" readonly @else value="{{ old('content_id') }}" @endif size="20" maxlength="20">
             @foreach ($errors->get('content_id') as $message)
                 <span class="help-block">
                     <strong>{{ $message }}</strong>
@@ -45,7 +45,7 @@
     <tr>
         <th scope="row"><label for="subject">제목</label></th>
         <td>
-            <input type="text" name="subject" id="subject" value="@if($type == "update") {{ $content->subject }} @endif" required size="90">
+            <input type="text" name="subject" id="subject" @if($type == "update") value="{{ $content->subject }}" @else value="{{ old('subject') }}" @endif required size="90">
             @foreach ($errors->get('subject') as $message)
                 <span class="help-block">
                     <strong>{{ $message }}</strong>
@@ -57,7 +57,7 @@
         <th scope="row">내용</th>
         <td>
             <div style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box;">
-                <textarea name="content" id="content" class="editorArea">@if($type == 'update'){{ $content->content }}@endif</textarea>
+                <textarea name="content" id="content" class="editorArea">@if($type == "update"){{ $content->content }} @else {{ old('content') }} @endif</textarea>
             </div>
             @foreach ($errors->get('content') as $message)
                 <span class="help-block">

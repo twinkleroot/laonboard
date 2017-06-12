@@ -32,7 +32,7 @@
     <div id="mb" class="">
         <ul class="mb_btn mb10 pull-left">
             <li>
-                <span class="total">전체 내용 {{ count($contents) }}건</span>
+                <span class="total">전체 내용 {{ $contents->total() }}건</span>
             </li>
         </ul>
 
@@ -43,7 +43,7 @@
                 <th>관리</th>
             </thead>
             <tbody>
-            @if(count($contents) > 0)
+            @if($contents->total() > 0)
             @foreach ($contents as $content)
                 <tr>
                     <td class="text-left">
@@ -53,7 +53,7 @@
                     <td>
                         <a href="{{ route('contents.edit', $content->content_id) }}">수정</a>
                         <a href="{{ route('contents.show', $content->content_id) }}">보기</a>
-                        <a href="{{ route('contents.destroy', $content->content_id) }}">삭제</a>
+                        <a href="{{ route('contents.destroy', $content->id) }}" onclick="deleteConfirm()">삭제</a>
                     </td>
                 </tr>
             @endforeach
@@ -67,5 +67,15 @@
             </tbody>
         </table>
     </div>
+    {{ $contents->links() }}
 </div>
+<script>
+function deleteConfirm() {
+    if(confirm("한번 삭제한 자료는 복구할 방법이 없습니다.\n\n정말 삭제하시겠습니까?")) {
+        return true;
+    } else {
+        return false;
+    }
+}
+</script>
 @endsection

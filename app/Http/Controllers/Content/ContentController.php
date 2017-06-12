@@ -61,17 +61,35 @@ class ContentController extends Controller
      */
     public function store(Request $request)
     {
-        $rule = [
-            'content_id' => 'required|max:20|unique:contents|regex:/^[a-zA-Z0-9_]+$/',
-            'subject' => 'required',
-            'content' => 'required',
-        ];
+        $rules = $this->rules();
+        $rules = array_add($rules, 'content_id', 'bail|required|max:20|unique:contents|regex:/^[a-zA-Z0-9_]+$/');
 
-        $this->validate($request, $rule);
+        $this->validate($request, $this->rules(), $this->messages());
 
         $result = $this->content->storeContent($request);
 
         return redirect(route('contents.edit', $result));
+    }
+
+    public function rules()
+    {
+        return [
+            'subject' => 'bail|required',
+            'content' => 'bail|required',
+        ];
+    }
+
+    // 에러 메세지
+    public function messages()
+    {
+        return [
+            'content_id.required' => 'ID를 입력해 주세요.',
+            'content_id.max' => 'ID는 20자리를 넘길 수 없습니다.',
+            'content_id.unique' => '이미 등록된 ID입니다. 다른 ID를 입력해 주세요.',
+            'content_id.regex' => 'ID는 20자 이내의 영문자, 숫자, _ 만 가능합니다.',
+            'subject.required'  => '제목을 입력해 주세요.',
+            'content.required'  => '내용을 입력해 주세요.',
+        ];
     }
 
     /**
@@ -96,7 +114,15 @@ class ContentController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->validate($request, $this->rules(), $this->messages());
+
         $result = $this->content->updateContent($request, $id);
+
+        if(!$result) {
+            return view('message', [
+                'message' => '내용변경에 실패하였습니다.'
+            ]);
+        }
 
         return redirect(route('contents.edit', $result));
     }
