@@ -1,232 +1,428 @@
 @extends('admin.admin')
 
 @section('title')
-     회원 수정 | {{ $title }}
+    회원 수정 | {{ $title }}
 @endsection
 
 @section('include_script')
     <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
     <script src="{{ url('js/postcode.js') }}"></script>
+    <script type="text/javascript">
+        jQuery("document").ready(function($){
+            var nav = $('.body-tab');
+             
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 205) {
+                    nav.addClass("f-tab");
+                } else {
+                    nav.removeClass("f-tab");
+                }
+            });
+        });
+    </script>
 @endsection
 
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">회원 수정</div>
-                <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.users.update', $id) }}">
-                    {{ csrf_field() }}
-                    <table class="table table-hover">
-                        <tr>
-                            <th>이메일</th>
-                            <td><input type="text" class="form-control" value="{{ $user->email }}" readonly/></td>
-                            <th>비밀번호</th>
-                            <td @if($errors->get('password')) class="has-error" @endif>
-                                <input type="password" name="change_password" class="form-control" value="" />
-                                @foreach ($errors->get('password') as $message)
-                                    <span class="help-block">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @endforeach
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>이름</th>
-                            <td @if($errors->get('name')) class="has-error" @endif>
-                                <input type="text" class="form-control" name="name" value="{{ $user->name }}" />
-                                @foreach ($errors->get('name') as $message)
-                                    <span class="help-block">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @endforeach
-                            </td>
-                            <th>닉네임</th>
-                            <td @if($errors->get('nick')) class="has-error" @endif>
-                                <input type="text" class="form-control" name="nick" value="{{ $user->nick }}" />
-                                @foreach ($errors->get('nick') as $message)
-                                    <span class="help-block">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @endforeach
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>회원 권한</th>
-                            <td>
-                                <select name='level' class='level'>
+<div class="body-head">
+    <div class="pull-left">
+        <h3>회원수정</h3>
+        <ul class="fl">
+            <li class="admin">Admin</li>
+            <li class="depth">회원관리</li>
+            <li class="depth">회원수정</li>
+        </ul>
+    </div>
+</div>
+
+<div class="body-contents">
+    <div class="body-tab">
+        <ul class="mb_menu">
+            <li class="tab">
+                <a href="#mb_basic">기본정보</a>
+            </li>
+            <li class="tab">
+                <a href="#mb_add">추가정보</a>
+            </li>
+            <li class="tab">
+                <a href="#B">부가설정</a>
+            </li>
+            <li class="tab">
+                <a href="#C">본인인증</a>
+            </li>
+            <li class="tab">
+                <a href="#more">여분필드</a>
+            </li>
+        </ul>
+        <div class="pull-right">
+            <ul class="mb_btn">
+                <li>
+                    <button type="submit" class="btn btn-default">확인</button>
+                </li>
+                <li>
+                    <a href="{{ route('admin.users.index') }}" class="btn btn-default" role="button">목록</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.users.update', $id) }}">
+                {{ csrf_field() }}
+                    <section id="mb_basic" class="first">
+                        <div class="st_title">기본 회원정보</div>
+                        <div class="st_contents">
+                            <div class="form-group">
+                                <label for="email" class="col-md-2 control-label">이메일</label>
+                                <div class="col-md-5">
+                                    <input type="email" class="form-control" name="email" value="{{ $user->email }}" readonly>
+                                </div>
+                                <div class="col-md-5" style="padding-left: 0;">
+                                    <a href="#" class="btn btn-default form_btn" role="button">접근가능그룹보기</a>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="change_password" class="col-md-2 control-label">비밀번호</label>
+                                <div class="col-md-5 @if($errors->get('password')) has-error @endif">
+                                    <input type="password" class="form-control" name="change_password" value="">
+                                    @foreach ($errors->get('password') as $message)
+                                        <span class="help-block">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @endforeach
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="name" class="col-md-2 control-label">이름</label>
+                                <div class="col-md-3  @if($errors->get('name')) has-error @endif">
+                                    <input type="text" class="form-control"  name="name" value="{{ $user->name }}">
+                                    @foreach ($errors->get('name') as $message)
+                                        <span class="help-block">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @endforeach
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="nick" class="col-md-2 control-label">닉네임</label>
+                                <div class="col-md-3 @if($errors->get('nick')) has-error @endif">
+                                    <input type="text" class="form-control" name="nick" value="{{ $user->nick }}">
+                                    @foreach ($errors->get('nick') as $message)
+                                        <span class="help-block">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @endforeach
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="level" class="col-md-2 control-label">회원권한</label>
+                                <div class="col-md-3">
+                                    <select name="level" class="form-control level">
                                     @for ($i=1; $i<=10; $i++)
                                         <option value='{{ $i }}' @if($user->level == $i) selected @endif>
                                             {{ $i }}
                                         </option>
                                     @endfor
                                 </select>
-                            </td>
-                            <th>포인트</th>
-                            <td><input type="text" class="form-control" name="point" value="{{ $user->point }}" /></td>
-                        </tr>
-                        <tr>
-                            <th>홈페이지</th>
-                            <td><input type="text" class="form-control" name="homepage" value="{{ $user->homepage }}" /></td>
-                        </tr>
-                        <tr>
-                            <th>휴대폰번호</th>
-                            <td @if($errors->get('hp')) class="has-error" @endif>
-                                <input type="text" class="form-control" name="hp" value="{{ $user->hp }}" />
-                                @foreach ($errors->get('hp') as $message)
-                                    <span class="help-block">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @endforeach
-                            </td>
-                            <th>전화번호</th>
-                            <td @if($errors->get('tel')) class="has-error" @endif>
-                                <input type="text" class="form-control" name="tel" value="{{ $user->tel }}" />
-                                @foreach ($errors->get('tel') as $message)
-                                    <span class="help-block">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @endforeach
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>본인확인방법</th>
-                            <td><input type="radio" name="certify_case" id="certify_case_ipin" value="0" />
-                                    <label for="certify_case_ipin">아이핀</label>
-                                <input type="radio" name="certify_case" id="certify_case_hp" value="1" />
-                                    <label for="certify_case_hp">휴대폰</label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>본인확인</th>
-                            <td>
-                                <input type="radio" name="certify" id="certify_yes" @if($user->certify == 1) checked @endif value="1" />
-                                    <label for="certify_yes">예</label>
-                                <input type="radio" name="certify" id="certify_no" @if($user->certify == 0 || empty($user->certify)) checked @endif value="0" />
-                                    <label for="certify_no">아니오</label>
-                            </td>
-                            <th>성인인증</th>
-                            <td>
-                                <input type="radio" name="adult" id="adult_yes" @if($user->adult === 1) checked @endif value="1" />
-                                    <label for="adult_yes">예</label>
-                                <input type="radio" name="adult" id="adult_no" @if($user->adult === 0) checked @endif value="0" />
-                                    <label for="adult_no">아니오</label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>주소</th>
-                            <td>
-                                <input type="text" id="zip" name="zip" class="form-control" value="{{ $user->zip }}" placeholder="@lang('messages.zip')">
-                                <input type="button" onclick="execDaumPostcode()" value="@lang('messages.address_search')"><br>
-
-                                <div id="wrap" style="display:none;border:1px solid;width:500px;height:300px;margin:5px 0;position:relative">
-                                    <img src="//t1.daumcdn.net/localimg/localimages/07/postcode/320/close.png"
-                                        style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1"
-                                         id="btnFoldWrap" onclick="foldDaumPostcode()" alt="접기 버튼">
                                 </div>
-                                <input type="text" id="addr1" name="addr1" class="form-control" value="{{ $user->addr1 }}" placeholder="@lang('messages.address1')">
-                                <input type="text" id="addr2" name="addr2" class="form-control" value="{{ $user->addr2 }}" placeholder="@lang('messages.address2')">
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>회원아이콘</th>
-                            <td>이미지 크기는 넓이 22픽셀 높이 22픽셀로 해주세요.<br />
-                                <input type="file" name="icon" value="" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>메일 수신</th>
-                            <td>
-                                <input type="radio" name="mailing" id="mailing_yes" @if($user->mailing === 1) checked @endif value="1" />
-                                    <label for="mailing_yes">예</label>
-                                <input type="radio" name="mailing" id="mailing_no" @if($user->mailing === 0) checked @endif value="0" />
-                                    <label for="mailing_no">아니오</label>
-                            </td>
-                            <th>SMS 수신</th>
-                            <td>
-                                <input type="radio" name="sms" id="sms_yes" @if($user->sms === 1) checked @endif value="1" />
-                                    <label for="sms_yes">예</label>
-                                <input type="radio" name="sms" id="sms_no" @if($user->sms === 0) checked @endif value="0" />
-                                    <label for="sms_no">아니오</label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>정보 공개</th>
-                            <td>
-                                <input type="radio" name="open" id="open_yes" @if($user->open === 1) checked @endif value="1" />
-                                    <label for="open_yes">예</label>
-                                <input type="radio" name="open" id="open_no" @if($user->open === 0) checked @endif value="0" />
-                                    <label for="open_no">아니오</label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>서명</th>
-                            <td>
-                                <textarea name="signature" class="form-control">{{ $user->signature }}</textarea>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>자기 소개</th>
-                            <td>
-                                <textarea name="profile" class="form-control">{{ $user->profile }}</textarea>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>메모</th>
-                            <td>
-                                <textarea name="memo" class="form-control">{{ $user->memo }}</textarea>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>회원가입일</th>
-                            <td>@datetime($user->created_at)</td>
-                            <th>최근접속일</th>
-                            <td>{{ $user->today_login }}</td>
-                        </tr>
-                        <tr>
-                            <th>IP</th>
-                            <td>{{ $user->ip }}</td>
-                        </tr>
-                        <tr>
-                            <th>탈퇴일자</th>
-                            <td>
-                                <input type="text" class="form-control" name="leave_date" id="leave_date"
-                                    value="{{ $user->leave_date }}" />
-                                <input type="checkbox" name="leave_date_set_today" value="1" id="leave_date_set_today"
+                            </div>
+                            <div class="form-group">
+                                <label for="" class="col-md-2 control-label">포인트</label>
+                                <div class="col-md-3">
+                                    <span class="form_txt">{{ $user->point }} 점</span> <!-- 회원추가의 경우 기본 0점 -->
+                                </div>
+                            </div>
+                            <!-- 회원추가의 경우 보이지 않음 -->
+                            <div class="form-group">
+                                <label for="" class="col-md-2 control-label">회원가입일</label>
+                                <div class="col-md-3">
+                                    <span class="form_txt">@datetime($user->created_at)</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="" class="col-md-2 control-label">최근접속일</label>
+                                <div class="col-md-3">
+                                    <span class="form_txt">{{ $user->today_login }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="" class="col-md-2 control-label">IP</label>
+                                <div class="col-md-3">
+                                    <span class="form_txt">{{ $user->ip }}</span>
+                                </div>
+                            </div>
+                            <!-- 회원추가의 경우 보이지 않음 END -->
+
+                            
+                            <div class="form-group">
+                                <label for="" class="col-md-2 control-label">회원상태</label>
+                                <div class="col-md-3">
+                                    @if(!is_null($user->leave_date))
+                                        <span class="mb_msg withdraw">탈퇴</span>
+                                    @elseif (!is_null($user->intercept_date))
+                                        <span class="mb_msg intercept">차단</span>
+                                    @else
+                                        <span class="mb_msg">정상</span>
+                                    @endif
+                                    <!--
+                                    <select class="form-control">
+
+                                        <option>정상</option>
+                                        <option>차단</option>
+                                        <option>탈퇴</option>
+                                    </select>-->
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="" class="col-md-2 control-label">탈퇴일자</label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" name="leave_date" id="leave_date"
+                                    value="{{ $user->leave_date }}">
+                                </div>
+                                <div class="col-md-3"> 
+                                    <input type="checkbox" name="leave_date_set_today" value="1" id="leave_date_set_today"
                                     onclick="setToday(this.form.leave_date_set_today, this.form.leave_date)"/>
-                                <label for="leave_date_set_today">탈퇴일을 오늘로 지정</label>
-                            </td>
-                            <th>접근차단일자</th>
-                            <td>
-                                <input type="text" class="form-control" name="intercept_date" id="intercept_date"
-                                    value="{{ $user->intercept_date }}" />
-                                <input type="checkbox" name="intercept_date_set_today" id="intercept_date_set_today" value="1"
+                                    <label for="leave_date_set_today">탈퇴일을 오늘로 지정</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="" class="col-md-2 control-label">접근차단일자</label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" name="intercept_date" id="intercept_date"
+                                    value="{{ $user->intercept_date }}">
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="checkbox" name="intercept_date_set_today" id="intercept_date_set_today" value="1"
                                     onclick="setToday(this.form.intercept_date_set_today, this.form.intercept_date)"/>
                                 <label for="intercept_date_set_today">접근차단일을 오늘로 지정</label>
-                            </td>
-                        </tr>
-                        @for($i=0; $i<10; $i++)
-                            <tr>
-                                <th>여분필드{{ $i }}</th>
-                                <td>
-                                    <input type="text" name="extra_{{ $i }}" value="{{ $user['extra_'. $i] }}"/>
-                                </td>
-                            </tr>
-                        @endfor
-                    </table>
-                    <div class="form-group">
-                        <div class="col-md-6 col-md-offset-4">
-                            <button type="submit" class="btn btn-primary">
-                                {{ method_field('PUT') }}
-                                변경
-                            </button>
-                            <a class="btn btn-primary" href="{{ route('admin.users.index') }}">목록</a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </section>
+                    <section id="mb_add">
+                        <div class="st_title">추가 회원정보</div>
+                        <div class="st_contents">
+                            <div class="form-group">
+                                <label for="" class="col-md-2 control-label">홈페이지</label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" name="homepage" value="{{ $user->homepage }}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="tel" class="col-md-2 control-label">전화번호</label>
+                                <div class="col-md-4 @if($errors->get('tel')) has-error @endif">
+                                    <input type="text" class="form-control" name="tel" value="{{ $user->tel }}">
+                                    @foreach ($errors->get('tel') as $message)
+                                        <span class="help-block">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @endforeach
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="hp" class="col-md-2 control-label">휴대폰번호</label>
+                                <div class="col-md-4 @if($errors->get('hp')) has-error @endif">
+                                    <input type="text" class="form-control" name="hp" value="{{ $user->hp }}">
+                                    @foreach ($errors->get('hp') as $message)
+                                        <span class="help-block">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @endforeach
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="" class="col-md-2 control-label">주소</label>
+                                <div class="col-md-5 row mb10">
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" id="zip" name="zip" value="{{ $user->zip }}" placeholder="@lang('messages.zip')">
+                                    </div>
+                                    <div class="col-sm-7" style="padding-left: 0;">
+                                        <input type="button" class="btn btn-default form_btn" onclick="execDaumPostcode()" value="@lang('messages.address_search')">
+                                    </div>
+
+                                    <!-- 우편번호검색 -->
+                                    <div id="wrap" style="display:none;border:1px solid;width:500px;height:300px;margin:5px 0;position:relative">
+                                        <img src="//t1.daumcdn.net/localimg/localimages/07/postcode/320/close.png"
+                                        style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1"
+                                         id="btnFoldWrap" onclick="foldDaumPostcode()" alt="접기 버튼">
+                                    </div>
+
+                                </div>
+                                <div class="col-md-5 col-md-offset-2 mb10">
+                                    <label for="" class="sr-only">기본주소</label>
+                                    <input type="text" class="form-control" id="addr1" name="addr1" value="{{ $user->addr1 }}" placeholder="@lang('messages.address1')">
+                                </div>
+                                <div class="col-md-5 col-md-offset-2">
+                                    <label for="" class="sr-only">상세주소</label>
+                                    <input type="text" class="form-control" id="addr2" name="addr2" value="{{ $user->addr2 }}" placeholder="@lang('messages.address2')">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="signature" class="col-md-2 control-label">서명</label>
+                                <div class="col-md-5">
+                                    <textarea class="form-control" rows="5" name="signature">{{ $user->signature }}</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="profile" class="col-md-2 control-label">자기소개</label>
+                                <div class="col-md-5">
+                                    <textarea class="form-control" rows="5" name="profile">{{ $user->profile }}</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="memo" class="col-md-2 control-label">메모</label>
+                                <div class="col-md-5">
+                                    <textarea class="form-control" rows="5" name="memo">{{ $user->memo }}</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="" class="col-md-2 control-label">추천인</label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="?">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section id="B">
+                        <div class="st_title">부가설정</div>
+                        <div class="st_contents">
+                            <div class="form-group">
+                                <label for="mailing" class="col-md-2 control-label">메일 수신</label>
+                                <div class="col-md-5">
+                                    <input type="radio" name="mailing" id="mailing_yes" @if($user->mailing === 1) checked @endif value="1" />
+                                        <label for="mailing_yes">예</label>
+                                    <input type="radio" name="mailing" id="mailing_no" @if($user->mailing === 0) checked @endif value="0" />
+                                        <label for="mailing_no">아니오</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="sms" class="col-md-2 control-label">SMS 수신</label>
+                                <div class="col-md-5">
+                                    <input type="radio" name="sms" id="sms_yes" @if($user->sms === 1) checked @endif value="1" />
+                                        <label for="sms_yes">예</label>
+                                    <input type="radio" name="sms" id="sms_no" @if($user->sms === 0) checked @endif value="0" />
+                                        <label for="sms_no">아니오</label>
+                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="open" class="col-md-2 control-label">정보공개</label>
+                                <div class="col-md-5">
+                                    <input type="radio" name="open" id="open_yes" @if($user->open === 1) checked @endif value="1" />
+                                        <label for="open_yes">예</label>
+                                    <input type="radio" name="open" id="open_no" @if($user->open === 0) checked @endif value="0" />
+                                        <label for="open_no">아니오</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="" class="col-md-2 control-label">회원아이콘</label>
+                                <div class="col-md-5">
+                                    <input type="file" name="icon" value="">
+                                    <p class="help-block">이미지 크기는 넓이 22픽셀 높이 22픽셀로 해주세요.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section id="C">
+                        <div class="st_title">본인인증</div>
+                        <div class="st_contents">
+                            <div class="form-group">
+                                <label for="certify_case" class="col-md-2 control-label">본인확인방법</label>
+                                <div class="col-md-5">
+                                    <input type="radio" name="certify_case" id="certify_case_ipin" value="0" />
+                                        <label for="certify_case_ipin">아이핀</label>
+                                    <input type="radio" name="certify_case" id="certify_case_hp" value="1" />
+                                        <label for="certify_case_hp">휴대폰</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="certify" class="col-md-2 control-label">본인확인</label>
+                                <div class="col-md-5">
+                                    <input type="radio" name="certify" id="certify_yes" @if($user->certify == 1) checked @endif value="1" />
+                                        <label for="certify_yes">예</label>
+                                    <input type="radio" name="certify" id="certify_no" @if($user->certify == 0 || empty($user->certify)) checked @endif value="0" />
+                                        <label for="certify_no">아니오</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for=adult" class="col-md-2 control-label">성인인증</label>
+                                <div class="col-md-5">
+                                    <input type="radio" name="adult" id="adult_yes" @if($user->adult === 1) checked @endif value="1" />
+                                        <label for="adult_yes">예</label>
+                                    <input type="radio" name="adult" id="adult_no" @if($user->adult === 0) checked @endif value="0" />
+                                        <label for="adult_no">아니오</label>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section id="more">
+                        <div class="st_title">여분필드</div>
+                        <div class="st_contents">
+                            <div class="form-group">
+                                <label for="" class="col-md-2 control-label">여분 필드 1</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" name="extra_1" value="{{ $user->extra_1 }}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="" class="col-md-2 control-label">여분 필드 2</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" name="extra_2" value="{{ $user->extra_2 }}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="" class="col-md-2 control-label">여분 필드 3</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" name="extra_3" value="{{ $user->extra_3 }}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="" class="col-md-2 control-label">여분 필드 4</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" name="extra_4" value="{{ $user->extra_4 }}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="" class="col-md-2 control-label">여분 필드 5</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" name="extra_5" value="{{ $user->extra_5 }}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="" class="col-md-2 control-label">여분 필드 6</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" name="extra_6" value="{{ $user->extra_6 }}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="" class="col-md-2 control-label">여분 필드 7</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" name="extra_7" value="{{ $user->extra_7 }}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="" class="col-md-2 control-label">여분 필드 8</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" name="extra_8" value="{{ $user->extra_8 }}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="" class="col-md-2 control-label">여분 필드 9</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" name="extra_9" value="{{ $user->extra_9 }}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="" class="col-md-2 control-label">여분 필드 10</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" name="extra_10" value="{{ $user->extra_10 }}">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                 </form>
             </div>
         </div>
-    </div>
 </div>
 <script>
 function setToday(chkbox, place) {

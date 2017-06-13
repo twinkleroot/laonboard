@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>내 쪽지함</title>
+
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="../../themes/default/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../../themes/default/css/style.css">
+    <link rel="stylesheet" type="text/css" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
+
+    <!-- js -->
+    <script type="text/javascript" src="../../themes/default/js/jquery-3.1.1.min.js"></script>
+</head>
+<body class="white">
+
+<div id="header">
+	<div class="container">
+		<div class="title" style="border-bottom: 0;">
+			<span>내 쪽지함</span>
+		</div>
+
+		<div class="cbtn">
+			<button class="btn btn-default">창닫기</button>
+		</div>
+	</div>
+	<div class="header_ctg">
+		<ul class="container">
+			<li><a href="memo.html">받은쪽지</a></li>
+			<li><a href="memo_send.html">보낸쪽지</a></li>
+			<li><a href="memo_form.html">쪽지쓰기</a></li>
+		</ul>
+	</div>
+</div>
+
+<div id="memo" class="container">
+	<form>
+	<table class="table box">
+		<thead>
+			<tr>
+				<th>받는사람</th>
+				<th>보낸시간</th>
+				<th>읽은시간</th>
+				<th>관리</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- 하단 tr이 출력될 목록갯수에 따라 반복 -->
+			<tr>
+				<td class="bd_name">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">최고관리자</a>
+					<ul class="dropdown-menu" role="menu">
+		                <li><a href="#">자기소개</a></li>
+		                <li><a href="#">전체게시물</a></li>
+		                <li><a href="#">닉네임으로 검색</a></li>
+		            </ul>
+				</td>
+				<td class="bd_time"><a href="memo_view.html">17-06-13 09:08</a></td>
+				<td class="bd_time"><a href="memo_view.html">17-06-13 09:08</a></td>
+				<td class="td_mngsmall"><a href="">삭제</a></td>
+			</tr>
+			<tr>
+				<td class="bd_name">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">최고관리자</a>
+					<ul class="dropdown-menu" role="menu">
+		                <li><a href="#">자기소개</a></li>
+		                <li><a href="#">전체게시물</a></li>
+		                <li><a href="#">닉네임으로 검색</a></li>
+		            </ul>
+				</td>
+				<td class="bd_time"><a href="memo_view.html">17-06-13 09:08</a></td>
+				<td class="bd_time"><a href="memo_view.html">아직 읽지 않음</a></td>
+				<td class="td_mngsmall"><a href="">삭제</a></td>
+			</tr>
+		</tbody>
+	</table>
+	</form>
+
+	<div class="help bg-info">
+		쪽지 보관일수는 최장 <strong>180일</strong> 입니다.
+	</div>
+</div>
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="../../themes/default/js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="../../themes/default/js/ie10-viewport-bug-workaround.js"></script>
+</body>
+</html>

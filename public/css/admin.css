@@ -368,6 +368,12 @@ body {
 .st_contents {
 	padding: 30px 15px;
 }
+.st_contents .form_btn {
+	font-size: 12px; line-height: 20px;
+}
+.st_contents .form_txt {
+	display: inline-block; line-height: 30px; font-size: 12px;
+}
 .body-head .fl {
 	padding: 0;
 	margin: 0;
@@ -696,6 +702,10 @@ body {
 }
 .withdraw {
 	background: #999;
+}
+.form-group .mb_msg {
+	width: auto; /*회원정보 수정*/
+	margin-top: 7px;
 }
 .mb_maliconfirm_y {
 	color: red;
