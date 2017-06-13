@@ -358,66 +358,14 @@
                     <section id="more">
                         <div class="st_title">여분필드</div>
                         <div class="st_contents">
-                            <div class="form-group">
-                                <label for="" class="col-md-2 control-label">여분 필드 1</label>
-                                <div class="col-md-5">
-                                    <input type="text" class="form-control" name="extra_1" value="{{ $user->extra_1 }}">
+                            @for($i=0; $i<10; $i++)
+                                <div class="form-group">
+                                    <label for="" class="col-md-2 control-label">여분필드{{ $i }}</label>
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control"  name="extra_{{ $i }}" value="{{ $user['extra_'. $i] }}">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="" class="col-md-2 control-label">여분 필드 2</label>
-                                <div class="col-md-5">
-                                    <input type="text" class="form-control" name="extra_2" value="{{ $user->extra_2 }}">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="" class="col-md-2 control-label">여분 필드 3</label>
-                                <div class="col-md-5">
-                                    <input type="text" class="form-control" name="extra_3" value="{{ $user->extra_3 }}">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="" class="col-md-2 control-label">여분 필드 4</label>
-                                <div class="col-md-5">
-                                    <input type="text" class="form-control" name="extra_4" value="{{ $user->extra_4 }}">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="" class="col-md-2 control-label">여분 필드 5</label>
-                                <div class="col-md-5">
-                                    <input type="text" class="form-control" name="extra_5" value="{{ $user->extra_5 }}">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="" class="col-md-2 control-label">여분 필드 6</label>
-                                <div class="col-md-5">
-                                    <input type="text" class="form-control" name="extra_6" value="{{ $user->extra_6 }}">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="" class="col-md-2 control-label">여분 필드 7</label>
-                                <div class="col-md-5">
-                                    <input type="text" class="form-control" name="extra_7" value="{{ $user->extra_7 }}">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="" class="col-md-2 control-label">여분 필드 8</label>
-                                <div class="col-md-5">
-                                    <input type="text" class="form-control" name="extra_8" value="{{ $user->extra_8 }}">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="" class="col-md-2 control-label">여분 필드 9</label>
-                                <div class="col-md-5">
-                                    <input type="text" class="form-control" name="extra_9" value="{{ $user->extra_9 }}">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="" class="col-md-2 control-label">여분 필드 10</label>
-                                <div class="col-md-5">
-                                    <input type="text" class="form-control" name="extra_10" value="{{ $user->extra_10 }}">
-                                </div>
-                            </div>
+                            @endfor
                         </div>
                     </section>
                 </form>
