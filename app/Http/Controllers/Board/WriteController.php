@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Write;
 use App\Point;
 use App\Config;
+use App\Board;
 use App\BoardFile;
 use App\BoardGood;
 use App\User;
@@ -24,7 +25,6 @@ class WriteController extends Controller
     public $writeModel;
     public $boardFileModel;
     public $boardGoodModel;
-    public $comment;
     public $notification;
 
     public function __construct(Request $request, BoardFile $boardFile, BoardGood $boardGood, Comment $comment, Notification $notification)
@@ -36,7 +36,6 @@ class WriteController extends Controller
 
         $this->boardFileModel = $boardFile;
         $this->boardGoodModel = $boardGood;
-        $this->comment = $comment;
         $this->notification = $notification;
     }
     /**
@@ -103,7 +102,8 @@ class WriteController extends Controller
         }
 
         // 댓글 데이터
-        $params = array_collapse([$params, $this->comment->getCommentsParams($this->writeModel, $boardId, $writeId)]);
+        $comment = new Comment();
+        $params = array_collapse([$params, $comment->getCommentsParams($this->writeModel, $boardId, $writeId)]);
 
         // 전체 목록 보기 선택시 목록 데이터
         if($this->writeModel->board->use_list_view) {

@@ -24,20 +24,11 @@ class User extends Authenticatable
     protected $dates = ['today_login', 'email_certify', 'nick_date', 'open_date', ];
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes that aren't mass assignable.
      *
      * @var array
      */
-    protected $fillable = [
-        'name', 'email', 'password', 'nick', 'homepage',
-        'level', 'sex', 'birth', 'tel', 'hp', 'certify',
-        'adult', 'dupinfo', 'addr1', 'addr2',
-        'addr_jibeon', 'signature', 'recommend', 'point',
-        'login_ip', 'ip', 'email_certify', 'email_certify2',
-        'memo', 'lost_certify', 'mailing', 'sms', 'open',
-        'profile', 'memo_call', 'leave_date', 'intercept_date',
-        'today_login', 'nick_date', 'open_date', 'zip',
-    ];
+    protected $guarded = [];
 
     public $rulesRegister = [
         'email' => 'required|email|max:255|unique:users',

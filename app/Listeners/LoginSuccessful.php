@@ -16,6 +16,7 @@ class LoginSuccessful
 {
 
     public $request;
+
     /**
      * Create the event listener.
      *

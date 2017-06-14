@@ -13,9 +13,11 @@ use Exception;
 use App\User;
 use App\Board;
 use App\Point;
+use App\Scrap;
 use App\Common\Util;
 use App\Common\CustomPaginator;
 use App\Autosave;
+use App\BoardNew;
 use App\BoardFile;
 
 
@@ -472,14 +474,17 @@ class Write extends Model
         $sessionName = 'session_view_'. $this->board->table_name. '_'. $write->id;
         $hit = $write->hit;
         $user = auth()->user();
-        if(!session()->get($sessionName) && $user->id != $write->user_id) {
+        $userId = is_null($user) ? 0 : $user->id;
+        if(!session()->get($sessionName) && $userId != $write->user_id) {
             // 조회수 증가
             $hit = $this->increaseHit($write);
-            // 포인트 계산(차감)
-            $message = $this->calculatePoint($write, $request, 'read');
+            if(!$userId) {
+                // 포인트 계산(차감)
+                $message = $this->calculatePoint($write, $request, 'read');
 
-            if($message != '') {
-                return $message;
+                if($message != '') {
+                    return $message;
+                }
             }
 
             session()->put($sessionName, true);
@@ -525,7 +530,9 @@ class Write extends Model
                 break;
         }
         // 작성자가 본인이면 통과
-        if($write->user_id > 0 && $write->user_id == $user->id) {
+        $userId = is_null($user) ? 0 : $user->id;
+        $userPoint = is_null($user) ? 0 : $user->point;
+        if($write->user_id > 0 && $write->user_id == $userId) {
             ;
         } else if(is_null($user) && $boardlevel == 1 && $write->ip == $request->ip()) {
             ;
@@ -533,13 +540,13 @@ class Write extends Model
             // 포인트 사용 && 소모되는 포인트가 있는지 && 현재 사용자가 갖고 있는 포인트로 사용 가능한지 검사
             if (Cache::get("config.homepage")->usePoint
                 && $boardPoint
-                && $user->point + $boardPoint < 0) {
-                    return '보유하신 포인트('.number_format($user->point).')가 없거나 모자라서'. $contentPiece. '('.number_format($boardPoint).')가 불가합니다.\\n\\n포인트를 적립하신 후 다시'.$contentPiece.' 해 주십시오.';
+                && $userPoint + $boardPoint < 0) {
+                    return '보유하신 포인트('.number_format($userPoint).')가 없거나 모자라서'. $contentPiece. '('.number_format($boardPoint).')가 불가합니다.\\n\\n포인트를 적립하신 후 다시'.$contentPiece.' 해 주십시오.';
             }
 
             // 포인트 계산하기
             // 포인트 부여(글 읽기, 파일 다운로드)
-            $this->point->insertPoint($user->id, $boardPoint,
+            $this->point->insertPoint($userId, $boardPoint,
                 $this->board->subject . ' ' . $write->id . $contentPiece, $this->board->table_name, $write->id, $action);
         }
 
@@ -559,7 +566,6 @@ class Write extends Model
 
         // 링크 연결수 증가
         $sessionName = 'session_link_'. $this->board->table_name. '_'. $write->id. '_'. $linkNo;
-        $user = auth()->user();
         if(!session()->get($sessionName)) {
             $this->increaseLinkHit($write, $linkNo);
             session()->put($sessionName, true);
@@ -593,10 +599,11 @@ class Write extends Model
             'board_file_no' => $fileNo,
             ])->first();
 
-        $user = auth()->user();
         $write = $writeModel->find($writeId);
+        $user = auth()->user();
+        $userId = is_null($user) ? 0 : $user->id;
         $sessionName = 'session_download_'. $this->board->table_name. '_'. $write->id. '_'. $fileNo;
-        if(session()->get('admin') || $user->id == $write->user_id) {   // 관리자나 작성자 본인이면 패스
+        if(session()->get('admin') || $userId == $write->user_id) {   // 관리자나 작성자 본인이면 패스
             ;
         } else if(!session()->get($sessionName)) { // 사용자의 다운로드 세션이 존재하지 않는다면
             // 포인트 차감
@@ -717,7 +724,7 @@ class Write extends Model
         }
 
         $user = Auth::user();
-        $userId = 1;    // $userId가 1이면 비회원
+        $userId = 0;    // $userId가 1이면 비회원
         $name = '';
         $password = '';
         $minNum = $writeModel->min('num');
@@ -803,11 +810,16 @@ class Write extends Model
         $writeModel->where('id', $lastInsertId)->update(['parent' => $newWrite->id]);
 
         // 새글 Insert
+        BoardNew::Create([
+            'board_id' => $this->board->id,
+            'write_id' => $lastInsertId,
+            'write_parent' => $lastInsertId,
+            'created_at' => Carbon::now(),
+            'user_id' => $userId
+        ]);
 
         // 댓글 1 증가
         $this->board->update(['count_write' => $this->board->count_write + 1]);
-
-        // 메일 발송
 
         // 저장한 글이 임시저장을 사용한 것이라면 삭제한다.
         Autosave::where('unique_id', $request->uid)->delete();
@@ -1025,16 +1037,40 @@ class Write extends Model
     // 글 삭제 - 게시글 삭제
     public function deleteWrite($writeModel, $writeId)
     {
-       // 게시글 삭제
-       $num = $writeModel->find($writeId)->num;
-       $result = $writeModel->where('num', $num)->delete();
+
+       $write = $writeModel->find($writeId);
+       // 원글에 달린 댓글
+       $comments = $writeModel->select('id')->where([
+           'is_comment' => 1,
+           'num' => $write->num
+       ])->get()->toArray();
+       // 댓글쓰기에 부여된 포인트 삭제
+       foreach($comments as $comment) {
+           // 포인트 삭제 및 사용 포인트 다시 부여
+           $comment = $writeModel->find($comment['id']);
+           $deleteResult = $this->point->deletePoint($comment->user_id, $this->board->table_name, $comment->id, '댓글');
+           if($deleteResult == 0) {
+               $insertResult = $this->point->insertPoint($comment->user_id, $this->board->write_point * (-1), $this->board->subject. ' '. $comment->parent. '-'. $comment->id. ' 댓글삭제');
+           }
+       }
+
+       // 게시글 삭제(댓글)
+       $result = $writeModel->where(['num' => $write->num, 'reply' => $write->reply])->delete();
 
        // 삭제한 게시물 갯수만큼 총 게시글 갯수에서 차감하기
        $this->board->update(['count_write' => $this->board->count_write - $result]);
 
-       // 최근 게시물
+       // 새글 삭제
+       BoardNew::where([
+           'board_id' => $this->board->id,
+           'write_parent' => $writeId
+       ])->delete();
 
        // 스크랩 삭제
+       Scrap::where([
+          'board_id' => $this->board->id,
+          'write_id' => $writeId
+       ])->delete();
 
        // 공지사항 삭제해서 업데이트
        $this->deleteNotice($writeId);

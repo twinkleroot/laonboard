@@ -11,6 +11,7 @@ use App\User;
 use App\Board;
 use App\Point;
 use App\Group;
+use App\BoardNew;
 
 
 class Comment
@@ -129,7 +130,7 @@ class Comment
         }
 
         $user = auth()->user();
-        $userId = 1;    // $userId가 1이면 비회원
+        $userId = 0;    // $userId가 0이면 비회원
         $name = '';
         $password = '';
         $email = null;
@@ -153,34 +154,34 @@ class Comment
         }
 
         $insertData = [
-                'num' => $write->num,
-                'reply' => $write->reply,
-                'parent' => $write->id,
-                'is_comment' => 1,
-                'comment' => $tmpComment,
-                'comment_Reply' => $tmpCommentReply,
-                'ca_name' => $write->ca_name,
-                'content' => $request->content,      // 필터 한번 거쳐야 함
-                'hit' => 0,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-                'ip' => $request->ip(),
-                'user_id' => $userId,
-                'password' => $password,
-                'name' => $name,
-                'email' => $email,
-                'homepage' => $homepage,
-                'option' => $request->has('secret') ? $request->secret : null,
-                'extra_1' => $request->has('extra1') ? $request->extra1 : null,
-                'extra_2' => $request->has('extra2') ? $request->extra2 : null,
-                'extra_3' => $request->has('extra3') ? $request->extra3 : null,
-                'extra_4' => $request->has('extra4') ? $request->extra4 : null,
-                'extra_5' => $request->has('extra5') ? $request->extra5 : null,
-                'extra_6' => $request->has('extra6') ? $request->extra6 : null,
-                'extra_7' => $request->has('extra7') ? $request->extra7 : null,
-                'extra_8' => $request->has('extra8') ? $request->extra8 : null,
-                'extra_9' => $request->has('extra9') ? $request->extra9 : null,
-                'extra_10' => $request->has('extra10') ? $request->extra10 : null,
+            'num' => $write->num,
+            'reply' => $write->reply,
+            'parent' => $write->id,
+            'is_comment' => 1,
+            'comment' => $tmpComment,
+            'comment_Reply' => $tmpCommentReply,
+            'ca_name' => $write->ca_name,
+            'content' => trim($request->content),      // 필터 한번 거쳐야 함
+            'hit' => 0,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+            'ip' => $request->ip(),
+            'user_id' => $userId,
+            'password' => $password,
+            'name' => $name,
+            'email' => $email,
+            'homepage' => $homepage,
+            'option' => $request->has('secret') ? $request->secret : null,
+            'extra_1' => $request->has('extra1') ? $request->extra1 : null,
+            'extra_2' => $request->has('extra2') ? $request->extra2 : null,
+            'extra_3' => $request->has('extra3') ? $request->extra3 : null,
+            'extra_4' => $request->has('extra4') ? $request->extra4 : null,
+            'extra_5' => $request->has('extra5') ? $request->extra5 : null,
+            'extra_6' => $request->has('extra6') ? $request->extra6 : null,
+            'extra_7' => $request->has('extra7') ? $request->extra7 : null,
+            'extra_8' => $request->has('extra8') ? $request->extra8 : null,
+            'extra_9' => $request->has('extra9') ? $request->extra9 : null,
+            'extra_10' => $request->has('extra10') ? $request->extra10 : null,
         ];
 
         $writeModel->insert($insertData);
@@ -199,11 +200,16 @@ class Comment
         ]);
 
         // 새글 Insert
+        BoardNew::Create([
+            'board_id' => $board->id,
+            'write_id' => $newCommentId,
+            'write_parent' => $writeId,
+            'created_at' => Carbon::now(),
+            'user_id' => $userId
+        ]);
 
         // 댓글 1 증가
         $board->update(['count_comment' => $board->count_comment + 1]);
-
-        // 메일 발송
 
         return $newCommentId;
     }
@@ -266,38 +272,41 @@ class Comment
     }
 
     // 댓글 삭제
-    public function deleteComment($writeModel, $request, $commentId)
+    public function deleteComment($writeModel, $boardId, $commentId)
     {
-        $board = Board::find($request->boardId);
+        $board = Board::find($boardId);
+        $point = new Point();
         $writeModel->setTableName($board->table_name);
         $comment = $writeModel->find($commentId);
         $write = $writeModel->find($comment->parent);
 
         // 댓글 포인트 삭제, 부여되었던 포인트 삭제 및 조정 반영
-        $delPointResult = $writeModel->deleteWritePoint($writeModel, $commentId);
+        $delPointResult = $point->deleteWritePoint($writeModel, $board->id, $commentId);
         if($delPointResult <= 0) {
-            return ['message' => '정상적으로 댓글을 삭제하는데 실패하였습니다.(포인트 삭제)'];
+            return '정상적으로 댓글을 삭제하는데 실패하였습니다.(포인트 삭제)';
         }
         // 댓글 삭제
         if(!$writeModel->where('id', $commentId)->delete()) {
-            return ['message' => '정상적으로 댓글을 삭제하는데 실패하였습니다.(댓글 삭제)'];
+            return '정상적으로 댓글을 삭제하는데 실패하였습니다.(댓글 삭제)';
         }
 
         $updateWriteAboutComment = $writeModel->where('id', $write->id)->update([
-            'updated_at' => Carbon::now(),      // 원글의 최근 시간 업데이트
+            'updated_at' => Carbon::now(),      // 원글의 최근 변경 시간 업데이트
             'comment' => $write->comment - 1    // 원글의 댓글 숫자 감소
         ]);
         if(!$updateWriteAboutComment) {
-            return ['message' => '정상적으로 원글의 정보를 변경하는데 실패하였습니다.'];
+            return '정상적으로 원글의 정보를 변경하는데 실패하였습니다.';
         }
 
         // 게시판의 댓글 개수 감소
         if(!$board->update(['count_comment' => $board->count_comment - 1])) {
-            return ['message' => '정상적으로 게시판의 정보를 변경하는데 실패하였습니다.'];
+            return '정상적으로 게시판의 정보를 변경하는데 실패하였습니다.';
         }
 
         // 새글 삭제
-
+        if(!BoardNew::where(['board_id' => $board->id, 'write_id' => $commentId])->delete()) {
+            return '정상적으로 새글을 삭제하는데 실패하였습니다.';
+        }
     }
 
 }

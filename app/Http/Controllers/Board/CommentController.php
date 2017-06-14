@@ -60,11 +60,11 @@ class CommentController extends Controller
     // 댓글 삭제
     public function destroy(Request $request, $boardId, $commentId)
     {
-        $result = $this->comment->deleteComment($this->writeModel, $request, $commentId);
+        $message = $this->comment->deleteComment($this->writeModel, $boardId, $commentId);
 
-        if(isset($result['message'])) {
+        if($message) {
             return view('message', [
-                'message' => $result['message']
+                'message' => $message
             ]);
         }
 

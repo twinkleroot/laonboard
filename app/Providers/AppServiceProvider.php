@@ -25,6 +25,11 @@ class AppServiceProvider extends ServiceProvider
 			return "<?php echo date('m/d', strtotime($expression)); ?>";
 		});
 
+		// Blade Template 의 지시어 'hourAndMin' 생성
+		Blade::directive('hourAndMin', function($expression) {
+			return "<?php echo date('H:i', strtotime($expression)); ?>";
+		});
+
 		// Blade Template 의 지시어 'datetime' 생성
 		Blade::directive('datetime', function($expression) {
 			return "<?php echo ($expression)->format('Y/m/d H:i'); ?>";

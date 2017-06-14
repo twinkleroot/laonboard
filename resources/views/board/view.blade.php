@@ -27,7 +27,7 @@
 					<i class="fa fa-ellipsis-v"></i>
 				</a>
 				<ul class="dropdown-menu" role="menu">
-                    @if(session()->get('admin') || auth()->user()->id == $view->user_id)
+                    @if(session()->get('admin') || (!is_null(auth()->user()) && auth()->user()->id == $view->user_id) )
     	                <li><a href="/board/{{ $board->id }}/edit/{{ $view->id }}">수정</a></li>
     	                <li><a href="/board/{{ $board->id }}/delete/{{ $view->id }}" onclick="del(this.href); return false;">삭제</a></li>
                     @endif
@@ -111,28 +111,43 @@
 
     <!-- 스크랩/추천/비추천 -->
     <div class="bd_rd_count">
-        <a href="#">
-            <span>
-                <i class="fa fa-star"></i>스크랩
-            </span>
-        </a>
-        @if($board->use_good)
-        <a id="goodButton" href="/board/{{ $board->id }}/view/{{ $view->id }}/good">
+        @if( !is_null(auth()->user()) )
+            <a href="{{ route('scrap.create') }}?boardId={{ $board->id }}&amp;writeId={{ $view->id }}" target="_blank" onclick="winScrap(this.href); return false;">
+                <span>
+                    <i class="fa fa-star"></i>스크랩
+                </span>
+            </a>
+            @if($board->use_good)
+            <a id="goodButton" href="/board/{{ $board->id }}/view/{{ $view->id }}/good">
+                <span>
+                    <i class="fa fa-thumbs-o-up"></i>추천
+                    <strong>{{ $view->good }}</strong>
+                    <span id="actGood" style="display: none;">이 글을 추천하셨습니다.</span> <!-- 메세지출력 -->
+                </span>
+            </a>
+            @endif
+            @if($board->use_nogood)
+            <a id="noGoodButton" href="/board/{{ $board->id }}/view/{{ $view->id }}/nogood">
+                <span>
+                    <i class="fa fa-thumbs-o-down"></i>비추천
+                    <strong>{{ $view->nogood }}</strong>
+                    <span id="actNoGood" style="display: none;">이 글을 비추천하셨습니다.</span> <!-- 메세지출력 -->
+                </span>
+            </a>
+            @endif
+        @else
+            @if($board->use_good)
             <span>
                 <i class="fa fa-thumbs-o-up"></i>추천
                 <strong>{{ $view->good }}</strong>
-                <span id="actGood" style="display: none;">이 글을 추천하셨습니다.</span> <!-- 메세지출력 -->
             </span>
-        </a>
-        @endif
-        @if($board->use_nogood)
-        <a id="noGoodButton" href="/board/{{ $board->id }}/view/{{ $view->id }}/nogood">
+            @endif
+            @if($board->use_nogood)
             <span>
                 <i class="fa fa-thumbs-o-down"></i>비추천
                 <strong>{{ $view->nogood }}</strong>
-                <span id="actNoGood" style="display: none;">이 글을 비추천하셨습니다.</span> <!-- 메세지출력 -->
             </span>
-        </a>
+            @endif
         @endif
     </div>
 

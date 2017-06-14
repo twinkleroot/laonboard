@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Cache;
 use App\Board;
 use Exception;
 
@@ -27,9 +26,7 @@ class CheckBoardLevel
         }
 
         $boardId = $request->segments()[1];
-        $board = Cache::rememberForever("board.{$boardId}", function() use($boardId) {
-            return Board::find($boardId);
-        });
+        $board = Board::find($boardId);
 
         if($baseLevel < $board[$type]) {
             if(str_contains($type, 'list')) {

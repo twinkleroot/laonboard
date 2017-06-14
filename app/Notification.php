@@ -32,6 +32,7 @@ class Notification
         if($write->is_comment) {
             $type = '코멘트';
             $tag = '#comment'. $write->id;
+            $writeSubject = '';
         } else if($write->reply) {
             $type = '답변';
         };
@@ -43,15 +44,15 @@ class Notification
         $arrayEmail = [];
         $mailConfig = Cache::get('config.email.board');
         // 최고관리자에게 보내는 메일
-        if($mailConfig->emailWriteSuperAdmin) {
+        if($mailConfig->emailWriteSuperAdmin && $superAdmin) {
             $arrayEmail[] = $superAdmin;
         }
         // 게시판그룹관리자에게 보내는 메일
-        if($mailConfig->emailWriteGroupAdmin) {
+        if($mailConfig->emailWriteGroupAdmin && $groupAdmin) {
             $arrayEmail[] = $groupAdmin;
         }
         // 게시판관리자에게 보내는 메일
-        if($mailConfig->emailWriteBoardAdmin) {
+        if($mailConfig->emailWriteBoardAdmin && $boardAdmin) {
             $arrayEmail[] = $boardAdmin;
         }
         // 원글게시자에게 보내는 메일
@@ -67,7 +68,8 @@ class Notification
         $uniqueEmail = array_values($uniqueEmail);
 
         foreach($uniqueEmail as $to) {
-            Mail::to($to)->send(new WriteNotification($mailSubject, $writeSubject, $name, $content, $linkUrl));
+            $toUser = User::where('email', $to)->first();
+            Mail::to($toUser)->queue(new WriteNotification($mailSubject, $writeSubject, $name, $content, $linkUrl));
         }
     }
 

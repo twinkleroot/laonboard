@@ -232,6 +232,21 @@ class Util
         return str_replace($source, $target, $str);
     }
 
+    // 문자열 자리수로 자르기(charset = 'utf-8')
+    public static function cutString($str, $len, $suffix="…")
+    {
+        $arr_str = preg_split("//u", $str, -1, PREG_SPLIT_NO_EMPTY);
+        $strLength = mb_strlen($str, 'UTF-8');
+
+        if ($strLength >= $len) {
+            $str = mb_substr($str, 0, $len, 'UTF-8');
+
+            return $str . ($strLength > $len ? $suffix : '');
+        } else {
+            return $str;
+        }
+    }
+
     public static function urlAutoLink($str)
     {
         $config = Cache::get("config.board");

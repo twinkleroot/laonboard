@@ -2,22 +2,48 @@
 var errmsg = "";
 var errfld = null;
 
+function winScrap(href) {
+    var newWin = window.open(href, 'winScrap', 'left=100, top=100, width=600, height=600, scrollbars=1');
+    newWin.focus();
+}
+
+// 삭제 검사 확인
+function del(href)
+{
+    if(confirm("한번 삭제한 자료는 복구할 방법이 없습니다.\n\n정말 삭제하시겠습니까?")) {
+        document.location.href = href;
+    }
+}
+
+function deleteConfirm()
+{
+    if(confirm("한번 삭제한 자료는 복구할 방법이 없습니다.\n\n정말 삭제하시겠습니까?")) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 // 필드 검사
 function check_field(fld, msg)
 {
-    if ((fld.value = trim(fld.value)) == "")
+    if ((fld.value = trim(fld.value)) == "") {
         error_field(fld, msg);
-    else
+    } else {
         clear_field(fld);
+    }
     return;
 }
 
 // 필드 오류 표시
 function error_field(fld, msg)
 {
-    if (msg != "")
+    if (msg != "") {
         errmsg += msg + "\n";
-    if (!errfld) errfld = fld;
+    }
+    if (!errfld) {
+        errfld = fld;
+    }
     fld.style.background = "#BDDEF7";
 }
 

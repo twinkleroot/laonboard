@@ -165,7 +165,6 @@ Route::group(['middleware' => 'auth'], function() {
     ]);
 });
 // 내용관리 보기는 인증이 없어도 가능
-
 Route::get('contents/{content}', ['as' => 'contents.show', 'uses' => 'Content\ContentController@show']);
 
 // 인증에 관련한 라우트들
@@ -239,7 +238,7 @@ Route::group(['prefix' => 'board/{boardId}'], function () {
     // 답변 쓰기
     Route::get('reply/{writeId}', ['as' => 'board.create.reply', 'uses' => 'Board\WriteController@createReply'])
         ->middleware('level.board:write_level', 'valid.board', 'valid.write', 'writable.reply');
-    // 댓글 쓰기
+    // 댓글 삽입
     Route::post('comment/store', ['as' => 'board.comment.store', 'uses' => 'Board\CommentController@store'])
         ->middleware('level.board:comment_level', 'writable.comment:create');
     // 댓글 수정
@@ -265,7 +264,31 @@ Route::group(['prefix' => 'board/{boardId}'], function () {
     });
 });
 
-// 이미지 관련 라우트
+// 스크랩
+Route::get('scrap/{scrap}/delete', ['as' => 'scrap.destroy', 'uses' => 'Board\ScrapController@destroy'])
+    ->middleware('auth');
+Route::post('scrap', ['as' => 'scrap.store', 'uses' => 'Board\ScrapController@store'])
+    ->middleware('level.board:comment_level', 'writable.comment:create');
+Route::resource('scrap', 'Board\ScrapController', [
+        'only' => [
+            'index', 'create', 'store'
+        ],
+        'names' => [
+            'index' => 'scrap.index',
+            'create' => 'scrap.create',
+            'store' => 'scrap.store',
+        ],
+        'middleware' => [
+            'auth',
+        ]
+]);
+
+// 새글
+Route::get('new', ['as' => 'new.index', 'uses' => 'Board\NewController@index']);
+Route::post('new', ['as' => 'new.destroy', 'uses' => 'Board\NewController@destroy'])
+    ->middleware('auth');
+
+// 이미지 관련
 Route::group(['prefix' => 'image'], function () {
     // 원본 이미지 보기
     Route::get('original/{boardId?}', ['as' => 'image.original', 'uses' => 'Board\ImageController@viewOriginal']);

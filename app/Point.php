@@ -391,12 +391,8 @@ class Point extends Model
     // 글 삭제 - 포인트 삭제
     public function deleteWritePoint($writeModel, $boardId, $writeId)
     {
-       $write = Cache::remember("board.{$boardId}.write.{$writeId}", config('gnu.CACHE_EXPIRE_MINUTE'), function() use($writeModel, $writeId) {
-           return $writeModel->find($writeId);
-       });
-       $board = Cache::remember("board.{$boardId}", config('gnu.CACHE_EXPIRE_MINUTE'), function() use($boardId) {
-           return Board::find($boardId);
-       });
+       $write = $writeModel->find($writeId);
+       $board = Board::find($boardId);
        // 원글에서의 처리
        $deleteResult = 0;
        $insertResult = 0;

@@ -24,6 +24,7 @@
         ]) !!};
     </script>
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ asset('js/common.js') }}"></script>
     @yield('include_script')
 </head>
 
@@ -47,6 +48,7 @@
         <!-- menu -->
         <ul class="gnb navbar-nav">
 
+            <li class="gnb-li"><a href="{{ route('new.index') }}">새글</a></li>
             <li class="gnb-li"><a href="{{ route('board.index', 67) }}">게시판</a></li>
             @if (Auth::guest()) <!-- 공개권한: 게스트 -->
             <li class="gnb-li"><a href="{{ route('login') }}">로그인</a></li>
@@ -67,6 +69,9 @@
                         @if(Auth::user()->level < 10)
                             <li><a href="{{ route('user.checkPassword') }}">회원 정보 수정</a></li>
                         @endif
+                        <li>
+                            <a href="{{ route('scrap.index') }}" class="winScrap" target="_blank" onclick="winScrap(this.href); return false;">스크랩</a>
+                        </li>
                         <li><a href="{{ route('user.point', Auth::user()->id) }}" class="point">포인트 내역</a></li>
                         <li>
                             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
