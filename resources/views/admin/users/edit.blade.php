@@ -23,6 +23,8 @@
 @endsection
 
 @section('content')
+<form role="form" method="POST" action="{{ route('admin.users.update', $id) }}">
+{{ csrf_field() }}
 <div class="body-head">
     <div class="pull-left">
         <h3>회원수정</h3>
@@ -56,7 +58,7 @@
         <div class="pull-right">
             <ul class="mb_btn">
                 <li>
-                    <button type="submit" class="btn btn-default">확인</button>
+                    <button type="submit" class="btn btn-default">{{ method_field('PUT') }}변경</button>
                 </li>
                 <li>
                     <a href="{{ route('admin.users.index') }}" class="btn btn-default" role="button">목록</a>
@@ -67,8 +69,7 @@
 
     <div class="panel panel-default">
         <div class="panel-body">
-            <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.users.update', $id) }}">
-                {{ csrf_field() }}
+            <div class="form-horizontal">
                     <section id="mb_basic" class="first">
                         <div class="st_title">기본 회원정보</div>
                         <div class="st_contents">
@@ -368,10 +369,11 @@
                             @endfor
                         </div>
                     </section>
-                </form>
+                </div>
             </div>
         </div>
 </div>
+</form>
 <script>
 function setToday(chkbox, place) {
     var now = new Date();

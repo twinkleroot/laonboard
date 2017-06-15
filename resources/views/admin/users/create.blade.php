@@ -7,33 +7,11 @@
 @section('include_script')
     <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
     <script src="{{ url('js/postcode.js') }}"></script>
-    <script type="text/javascript">
-        jQuery("document").ready(function($){
-            var nav = $('.body-tab');
-             
-            $(window).scroll(function () {
-                if ($(this).scrollTop() > 205) {
-                    nav.addClass("f-tab");
-                } else {
-                    nav.removeClass("f-tab");
-                }
-            });
-        });
-    </script>
 @endsection
 
 @section('content')
-<div class="body-head">
-    <div class="pull-left">
-        <h3>회원추가</h3>
-        <ul class="fl">
-            <li class="admin">Admin</li>
-            <li class="depth">회원관리</li>
-            <li class="depth">회원추가</li>
-        </ul>
-    </div>
-</div>
-
+<form role="form" method="POST" action="{{ route('admin.users.store') }}">
+{{ csrf_field() }}
 <div class="body-contents">
     <div class="body-tab">
         <ul class="mb_menu">
@@ -64,13 +42,13 @@
             </ul>
         </div>
     </div>
-
+</div>
+<div>
     <div class="row">
         <div class="col-md-12 col-md-offset-0">
             <div class="panel panel-default">
                 <div class="panel-heading">회원 추가</div>
-                <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.users.store') }}">
-                    {{ csrf_field() }}
+                <div class="form-horizontal">
                     <table class="table table-hover">
                         <tr>
                             <th>이메일</th>
@@ -324,15 +302,15 @@
                             </td>
                         </tr>
                     </table>
-                </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
+</form>
 <script>
 function setToday(chkbox, place) {
     var now = new Date();
-
     if(chkbox.checked) {
         $(place).val(getFormattedDate(now));
     } else {
@@ -343,10 +321,8 @@ function getFormattedDate(date) {
     var year = date.getFullYear();
     var month = (1 + date.getMonth()).toString();
     var day = date.getDate().toString();
-
     month = month.length > 1 ? month : '0' + month;
     day = day.length > 1 ? day : '0' + day;
-
     return year + month + day;
 }
 </script>

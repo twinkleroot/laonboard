@@ -5,6 +5,9 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>@yield('title', 'SIR LaBoard')</title>
 
     <!-- css -->
@@ -19,7 +22,7 @@
             'csrfToken' => csrf_token(),
         ]) !!};
     </script>
-
+    
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     @yield('include_script')
 </head>
@@ -61,14 +64,14 @@
 <div class="sidebar sidebarmenu">
 	<ul class="category">
         <div class="side_1depth">
-		    <a href="#" class="sd_1depth">환경설정</a>
+		    <a href="#" class="sd_1depth">환경설정</a>	
 		</div>
 		<ul class="sd_2depth">
 			<li><a href="{{ route('admin.config') }}">기본환경설정</a></li>
 		    <li><a href="#">관리권한설정</a></li>
 	        <li><a href="#">테마설정</a></li>
 	        <li><a href="{{ route('admin.menus.index') }}">메뉴설정</a></li>
-	        <li><a href="{{ route('admin.email') }}">메일테스트</a></li>
+	        <li><a href="#">메일테스트</a></li>
 	        <li><a href="#">팝업레이어관리</a></li>
 	        <li><a href="#">세션파일 일괄삭제</a></li>
 	        <li><a href="#">캐시파일 일괄삭제</a></li>
@@ -81,7 +84,7 @@
 	</ul>
 	<ul class="category">
         <div class="side_1depth">
-		    <a href="#" class="sd_1depth">회원관리</a>
+		    <a href="#" class="sd_1depth">회원관리</a>	
 		</div>
 		<ul class="sd_2depth">
 			<li><a href="{{ route('admin.users.index') }}">회원관리</a></li>
@@ -91,14 +94,14 @@
 	</ul>
 	<ul class="category">
         <div class="side_1depth">
-		    <a href="#" class="sd_1depth">게시판관리</a>
+		    <a href="#" class="sd_1depth">게시판관리</a>	
 		</div>
 		<ul class="sd_2depth">
 			<li><a href="{{ route('admin.boards.index') }}">게시판관리</a></li>
 		    <li><a href="{{ route('admin.groups.index') }}">게시판그룹관리</a></li>
 	        <li><a href="#">인기검색어관리</a></li>
 	        <li><a href="#">인기검색어순위</a></li>
-	        <li><a href="{{ route('contents.index') }}">내용관리</a></li>
+	        <li><a href="#">내용관리</a></li>
 	        <li><a href="#">글/댓글현황</a></li>
 		</ul>
 	</ul>
