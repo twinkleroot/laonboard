@@ -88,7 +88,7 @@ class UsersController extends Controller
     public function edit($id)
     {
         $user;
-        if('string' == gettype($id)) {  // 커뮤니티 쪽에서 들어올 때 user의 id가 아닌 id_hashKey가 넘어온다.
+        if(mb_strlen($id, 'utf-8') > 10) {  // 커뮤니티 쪽에서 들어올 때 user의 id가 아닌 id_hashKey가 넘어온다.
             $user = User::where('id_hashkey', $id)->first();
         } else {
             $user = User::find($id);
