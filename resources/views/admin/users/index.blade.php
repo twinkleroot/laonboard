@@ -4,6 +4,10 @@
     회원 관리 | {{ $title }}
 @endsection
 
+@section('include_script')
+    <script src="{{ asset('js/common.js') }}"></script>
+@endsection
+
 @section('content')
 <div class="body-head">
     <div class="pull-left">
@@ -24,7 +28,7 @@
             </li>
             <li>
                 <input type="button" id="selected_delete" class="btn btn-default" value="선택삭제">
-            </li> 
+            </li>
         </ul>
     </div>
 </div>
@@ -35,7 +39,7 @@
             {{ Session::get('message') }}
         </div>
     @endif
-    
+
     <div id="mb" class="">
         <ul class="mb_btn mb10 pull-left">
             <li>
@@ -90,7 +94,7 @@
                 @foreach ($users as $user)
                     <tr>
                         <td>
-                            <input type="checkbox" name="chk[]" class="userId" value='{{ $user->id }}' /></td>
+                            <input type="checkbox" name="chkId[]" class="userId" value='{{ $user->id }}' /></td>
                         <td class="text-left">
                             <div class="mb_tooltip">
                                 {{ $user->email }}
@@ -201,21 +205,6 @@ $(function(){
 
 });
 
-function selectIdsByCheckBox(className) {
-    var send_array = Array();
-    var send_cnt = 0;
-    var chkbox = $(className);
-
-    for(i=0; i<chkbox.length; i++) {
-        if(chkbox[i].checked == true) {
-            send_array[send_cnt] = chkbox[i].value;
-            send_cnt++;
-        }
-    }
-
-    return send_array;
-}
-
 function toUpdateByCheckBox(id, selected_id_array) {
     var send_array = Array();
     for(i=0; i<selected_id_array.length; i++) {
@@ -237,14 +226,6 @@ function toUpdateBySelectOption(id, selected_id_array) {
     }
 
     return send_array;
-}
-
-function checkAll(form) {
-    var chk = document.getElementsByName("chk[]");
-
-    for (i=0; i<chk.length; i++) {
-        chk[i].checked = form.chkAll.checked;
-    }
 }
 </script>
 @endsection

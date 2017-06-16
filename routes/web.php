@@ -133,7 +133,16 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
     Route::post('mail/send', ['as' => 'admin.email.send', 'uses' => 'Admin\MailController@postMail']);
 });
 
-// 커뮤니티, 인증이 필요한 라우트 그룹
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// 커뮤니티
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// 인증에 관련한 라우트들
+Auth::routes();
+// 인증이 필요한 라우트 그룹
 Route::group(['middleware' => 'auth'], function() {
     // 사용자가 회원 정보 수정할 때 관련한 라우트들
     Route::get('user/edit', ['as' => 'user.edit', 'uses' => 'User\UserController@edit']);
@@ -145,8 +154,9 @@ Route::group(['middleware' => 'auth'], function() {
     // 회원 정보 수정 - 소셜 로그인 계정 연결 해제
     Route::post('user/disconnectSocialAccount', ['as' => 'user.disconnectSocialAccount', 'uses' => 'User\UserController@disconnectSocialAccount']);
 
-    // 내용 관리 컨트롤러
-    Route::get('contents/{content}/delete', ['as' => 'contents.destroy', 'uses' => 'Content\ContentController@destroy']);
+    // 내용 관리
+    Route::get('contents/{content}/delete', ['as' => 'contents.destroy', 'uses' => 'Content\ContentController@destroy'])
+        ->middleware(['level:10']);
     Route::resource('contents', 'Content\ContentController', [
         'except' => [
             'destroy'
@@ -163,12 +173,25 @@ Route::group(['middleware' => 'auth'], function() {
             'level:10',
         ]
     ]);
+
+    // 쪽지
+    Route::get('memo/{memo}/delete', ['as' => 'memo.destroy', 'uses' => 'Memo\MemoController@destroy']);
+    Route::resource('memo', 'Memo\MemoController', [
+        'except' => [
+            'edit', 'update', 'destroy'
+        ],
+        'names' => [
+            'index' => 'memo.index',
+            'show' => 'memo.show',
+            'create' => 'memo.create',
+            'store' => 'memo.store',
+        ],
+        'middleware' => [
+        ],
+    ]);
 });
 // 내용관리 보기는 인증이 없어도 가능
 Route::get('contents/{content}', ['as' => 'contents.show', 'uses' => 'Content\ContentController@show']);
-
-// 인증에 관련한 라우트들
-Auth::routes();
 
 // 소셜 로그인 - 콜백 함수에서 회원 로그인 여부로 분기 (콜백함수 경로 지정은 config/services.php 에서)
 Route::get('social/{provider}', ['as' => 'social', 'uses' => 'Auth\SocialController@redirectToProvider']);
@@ -190,14 +213,6 @@ Route::put('user/email/update', ['as' => 'user.email.update', 'uses' => 'User\Us
 Route::get('emailCertify/id/{id}/crypt/{crypt}', ['as' => 'emailCertify', 'uses' => 'User\MailController@emailCertify']);
 // 처리 결과 메세지를 경고창으로 알려주는 페이지
 Route::get('message', ['as' => 'message', 'uses' => 'Message\MessageController@message']);
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// 커뮤니티
-//
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 Route::group(['prefix' => 'board/{boardId}'], function () {
     // 글 목록 + 검색
@@ -313,4 +328,5 @@ Route::group(['middleware' => 'valid.user'], function () {
     ]);
 });
 
+// ajax api
 Route::post('ajax/filter', ['as' => 'ajax.filter', 'uses' => 'Board\FilterController@filter']);

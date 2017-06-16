@@ -20,7 +20,7 @@ class CreatePointsTable extends Migration
                 $table->integer('user_id')->unsigned();
                 $table->foreign('user_id')->references('id')->on('users');
 
-                $table->dateTime('datetime')->nullable();
+                $table->timestamp('datetime')->nullable();
                 $table->string('content')->nullable();
                 $table->integer('point')->nullable()->default(0);
                 $table->integer('use_point')->nullable()->default(0);

@@ -15,14 +15,11 @@ class CreateAutosavesTable extends Migration
     {
         Schema::create('autosaves', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id');
-            $table->string('unique_id', 50);
+            $table->integer('user_id')->index();
+            $table->string('unique_id', 50)->unique();
             $table->string('subject')->nullable();
             $table->text('content')->nullable();
-            $table->datetime('created_at');
-
-            $table->index('user_id');
-            $table->unique('unique_id');
+            $table->timestamp('created_at')->nullable();
         });
     }
 

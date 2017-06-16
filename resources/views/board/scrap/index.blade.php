@@ -8,9 +8,9 @@
     <title>{{ $user->nick }}님의 스크랩 | {{ Cache::get("config.homepage")->title }}</title>
 
     <!-- css -->
-    <link rel="stylesheet" type="text/css" href="../themes/default/css/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../themes/default/css/style.css">
-    <link rel="stylesheet" type="text/css" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
+	<link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('font-awesome/css/font-awesome.css') }}">
 
     <!-- js -->
     <script src="{{ asset('js/common.js') }}"></script>

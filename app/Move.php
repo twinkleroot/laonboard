@@ -17,7 +17,7 @@ class Move
     public function getMoveParams($boardId, $request)
     {
         // 세션에 해당 게시물 아이디들을 보관
-        $moveId = $request->has('chk_id') ? $request->chk_id : $request->writeId;
+        $moveId = $request->has('chkId') ? $request->chkId : $request->writeId;
         session()->put('writeIds', $moveId);
 
         return [
@@ -32,7 +32,7 @@ class Move
     // $boardIds : 선택한 대상 게시판들의 id
     public function copyWrites($writeModel, $writeIds, $request)
     {
-        $boardIds = $request->chk_id;
+        $boardIds = $request->chkId;
 
         $writeNums = $this->getWriteNums($writeModel, $writeIds);
         // 복사할 대상 게시물들

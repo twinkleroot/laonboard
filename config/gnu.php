@@ -10,6 +10,7 @@
   'superAdmin' => 'admin@admin.com',
   'usePoint' => 1,
   'loginPoint' => 100,
+  'memoSendPoint' => 0,
   'openDate' => 0,
   'newRows' => 15,
   'pageRows' => 10,

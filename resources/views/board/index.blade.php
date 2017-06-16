@@ -4,6 +4,10 @@
     {{ $board->subject }} 리스트 | {{ Cache::get("config.homepage")->title }}
 @endsection
 
+@section('include_script')
+    <script src="{{ asset('js/common.js') }}"></script>
+@endsection
+
 @section('content')
 
     {{-- 뷰 페이지에서도 전체 목록 보이기 설정에 따라 목록을 보여줄 수 있기 때문에 content부분만 따로 페이지로 만들어서 포함시켰다 --}}

@@ -76,6 +76,7 @@ class Config extends Model
           'superAdmin' => config('gnu.superAdmin'),
           'usePoint' => config('gnu.usePoint'),
           'loginPoint' => config('gnu.loginPoint'),
+          'memoSendPoint' => config('gnu.memoSendPoint'),
           'openDate' => config('gnu.openDate'),
           'newRows' => config('gnu.newRows'),
           'pageRows' => config('gnu.pageRows'),

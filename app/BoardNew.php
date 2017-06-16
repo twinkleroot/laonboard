@@ -80,9 +80,11 @@ class BoardNew extends Model
         foreach($boardNewList as $boardNew) {
             $writeTable = 'write_'.$boardNew->table_name;
             $write = DB::table($writeTable)->where('id', $boardNew->write_parent)->first(); // 원글
+            $user = $boardNew->user_id != 0 ? User::find($boardNew->user_id) : new User();
             // 원글, 댓글 공통 추가 데이터
             $boardNew->write = $write;
-            $boardNew->user_email = $boardNew->user_id != 0 ? User::find($boardNew->user_id)->email : '';
+            $boardNew->user_email = $user->email;
+            $boardNew->user_id_hashkey = $user->id_hashkey;
             $boardNew->commentTag = '';
             // 댓글은 데이터 따로 추가
             if($boardNew->write_id != $boardNew->write_parent) {

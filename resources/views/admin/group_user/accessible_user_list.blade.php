@@ -4,6 +4,10 @@
     {{ $group->subject }}그룹 접근가능회원 | {{ $config->title }}
 @endsection
 
+@section('include_script')
+    <script src="{{ asset('js/common.js') }}"></script>
+@endsection
+
 @section('content')
 @if(Session::has('message'))
   <div class="alert alert-info">
@@ -45,7 +49,7 @@
                         @foreach ($users as $user)
                             <tr>
                                 <td class="text-center">
-                                    <input type="checkbox" name="chk[]" class="userId" value='{{ $user->pivot->id }}' /></td>
+                                    <input type="checkbox" name="chkId[]" class="userId" value='{{ $user->pivot->id }}' /></td>
                                 <td class="text-center">
                                     <a href="{{ route('admin.accessGroups.show', $user->id) }}">{{ $user->count_groups }}</a>
                                 </td>
@@ -96,28 +100,5 @@ $(function(){
     });
 
 });
-
-function selectIdsByCheckBox(className) {
-    var send_array = Array();
-    var send_cnt = 0;
-    var chkbox = $(className);
-
-    for(i=0; i<chkbox.length; i++) {
-        if(chkbox[i].checked == true) {
-            send_array[send_cnt] = chkbox[i].value;
-            send_cnt++;
-        }
-    }
-
-    return send_array;
-}
-
-function checkAll(form) {
-    var chk = document.getElementsByName("chk[]");
-
-    for (i=0; i<chk.length; i++) {
-        chk[i].checked = form.chkAll.checked;
-    }
-}
 </script>
 @endsection

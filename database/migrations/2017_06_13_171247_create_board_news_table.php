@@ -18,7 +18,7 @@ class CreateBoardNewsTable extends Migration
             $table->integer('board_id')->unsigned();
             $table->integer('write_id')->unsigned();
             $table->integer('write_parent')->unsigned();
-            $table->timestamp('created_at');
+            $table->timestamp('created_at')->nullable();
             $table->integer('user_id')->unsigned()->index();
         });
     }

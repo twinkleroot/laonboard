@@ -38,6 +38,13 @@ class Authenticate
      */
     public function handle($request, Closure $next, ...$guards)
     {
+        if ($this->auth->guest())
+        {
+            return redirect(route('message'))
+               ->with('message', '회원만 이용하실 수 있습니다.')
+               ->with('redirect', '/login');
+        }
+
         $this->authenticate($guards);
 
         return $next($request);

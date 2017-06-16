@@ -57,7 +57,7 @@
                     <td>
                         <a href="{{ route('contents.edit', $content->content_id) }}">수정</a>
                         <a href="{{ route('contents.show', $content->content_id) }}">보기</a>
-                        <a href="{{ route('contents.destroy', $content->id) }}" onclick="deleteConfirm()">삭제</a>
+                        <a href="{{ route('contents.destroy', $content->id) }}" onclick="del(this.href); return false;">삭제</a>
                     </td>
                 </tr>
             @endforeach

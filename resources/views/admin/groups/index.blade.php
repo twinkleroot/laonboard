@@ -4,6 +4,10 @@
     게시판 그룹 설정 | {{ $config->title }}
 @endsection
 
+@section('include_script')
+    <script src="{{ asset('js/common.js') }}"></script>
+@endsection
+
 @section('content')
 @if(Session::has('message'))
   <div class="alert alert-info">
@@ -59,11 +63,11 @@
                         @foreach ($groups as $group)
                             <tr>
                                 <td class="text-center">
-                                    <input type="checkbox" name="chk[]" class="groupId" value='{{ $group->id }}' /></td>
+                                    <input type="checkbox" name="chkId[]" class="groupId" value='{{ $group->id }}' /></td>
                                 <td class="text-center"><a href="">{{ $group->group_id }}</a></td>
                                 <td class="text-center"><input type="text" id='subject_{{ $group->id }}' value='{{ $group->subject }}' /></td>
                                 <td class="text-center"><input type="text" id='admin_{{ $group->id }}' value='{{ $group->admin }}' /></td>
-                                <td class="text-center"><a href="/admin/search?admin_page=board&kind=group_id&keyword={{ $group->group_id }}">{{ $group->count_board }}</a></td>
+                                <td class="text-center"><a href="/admin/search?admin_page=board&amp;kind=group_id&amp;keyword={{ $group->group_id }}">{{ $group->count_board }}</a></td>
                                 <td class="text-center">
                                     <input type='checkbox' id='use_access_{{ $group->id }}' value='1'
                                         {{ ($group->use_access == '1' ? 'checked' : '') }}/></td>
@@ -160,22 +164,6 @@ $(function(){
 
 });
 
-// 체크박스로 id 선택
-function selectIdsByCheckBox(className) {
-    var send_array = Array();
-    var send_cnt = 0;
-    var chkbox = $(className);
-
-    for(i=0; i<chkbox.length; i++) {
-        if(chkbox[i].checked == true) {
-            send_array[send_cnt] = chkbox[i].value;
-            send_cnt++;
-        }
-    }
-
-    return send_array;
-}
-
 function toUpdateByCheckBox(id, selected_id_array) {
     var send_array = Array();
     for(i=0; i<selected_id_array.length; i++) {
@@ -206,14 +194,6 @@ function toUpdateBySelectOption(id, selected_id_array) {
     }
 
     return send_array;
-}
-
-function checkAll(form) {
-    var chk = document.getElementsByName("chk[]");
-
-    for (i=0; i<chk.length; i++) {
-        chk[i].checked = form.chkAll.checked;
-    }
 }
 </script>
 @endsection

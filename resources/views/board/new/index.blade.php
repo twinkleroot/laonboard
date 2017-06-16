@@ -5,7 +5,7 @@
 @endsection
 
 @section('include_script')
-    <script src="{{ asset('js/tinymce/tinymce.min.js') }}"></script>
+    <script src="{{ asset('js/common.js') }}"></script>
 @endsection
 
 @section('content')
@@ -81,12 +81,12 @@
 				<td class="bd_name">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $boardNew->write->name }}</a>
 					<ul class="dropdown-menu" role="menu">
-		                <li><a href="#">쪽지보내기</a></li>
+		                <li><a href="{{ route('memo.create') }}?to={{ $boardNew->user_id_hashkey }}" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지보내기</a></li>
 		                <li><a href="#">메일보내기</a></li>
 		                <li><a href="#">자기소개</a></li>
-		                <li><a href="{{ route('new.index')}}?nick={{ $boardNew->write->name }}">전체게시물</a></li>
+		                <li><a href="{{ route('new.index') }}?nick={{ $boardNew->write->name }}">전체게시물</a></li>
                         @if(session()->get('admin'))
-    		                <li><a href="{{ route('admin.users.edit', $boardNew->user_id) }}" target="_blank">회원정보변경</a></li>
+    		                <li><a href="{{ route('admin.users.edit', $boardNew->user_id_hashkey) }}" target="_blank">회원정보변경</a></li>
     		                <li><a href="{{ route('admin.search') }}?admin_page=point&amp;kind=email&amp;keyword={{ $boardNew->user_email }}" target="_blank">포인트내역</a></li>
                         @endif
 		            </ul>
@@ -117,15 +117,6 @@
 {{ $boardNewList->links() }}
 
 <script>
-// 모두 선택
-function checkAll(form) {
-    var chk = document.getElementsByName("chkId[]");
-
-    for (i=0; i<chk.length; i++) {
-        chk[i].checked = form.chkAll.checked;
-    }
-}
-
 function confirmDel() {
     var selectedIdArray = selectIdsByCheckBox(".newId");
 
@@ -140,20 +131,5 @@ function confirmDel() {
     $("#listForm").submit();
 }
 
-// 선택한 항목들 id값 배열에 담기
-function selectIdsByCheckBox(className) {
-    var send_array = Array();
-    var send_cnt = 0;
-    var chkbox = $(className);
-
-    for(i=0; i<chkbox.length; i++) {
-        if(chkbox[i].checked == true) {
-            send_array[send_cnt] = chkbox[i].value;
-            send_cnt++;
-        }
-    }
-
-    return send_array;
-}
 </script>
 @endsection

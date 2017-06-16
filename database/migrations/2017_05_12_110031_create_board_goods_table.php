@@ -19,7 +19,7 @@ class CreateBoardGoodsTable extends Migration
             $table->integer('write_id');
             $table->integer('user_id');
             $table->string('flag');
-            $table->datetime('created_at');
+            $table->timestamp('created_at')->nullable();
 
             $table->unique(['board_id', 'write_id', 'user_id'], 'fkey1');
         });

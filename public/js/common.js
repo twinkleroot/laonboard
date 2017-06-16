@@ -2,8 +2,40 @@
 var errmsg = "";
 var errfld = null;
 
+// 모두 선택
+function checkAll(form) {
+    var chk = document.getElementsByName("chkId[]");
+
+    for (i=0; i<chk.length; i++) {
+        chk[i].checked = form.chkAll.checked;
+    }
+}
+
+// 선택한 항목들 id값 배열에 담기
+function selectIdsByCheckBox(className) {
+    var send_array = Array();
+    var send_cnt = 0;
+    var chkbox = $(className);
+
+    for(i=0; i<chkbox.length; i++) {
+        if(chkbox[i].checked == true) {
+            send_array[send_cnt] = chkbox[i].value;
+            send_cnt++;
+        }
+    }
+
+    return send_array;
+}
+
+// 스크랩 팝업 띄우기
 function winScrap(href) {
     var newWin = window.open(href, 'winScrap', 'left=100, top=100, width=600, height=600, scrollbars=1');
+    newWin.focus();
+}
+
+// 스크랩 팝업 띄우기
+function winMemo(href) {
+    var newWin = window.open(href, 'winMemo', 'left=100, top=100, width=600, height=600, scrollbars=1');
     newWin.focus();
 }
 
@@ -12,15 +44,6 @@ function del(href)
 {
     if(confirm("한번 삭제한 자료는 복구할 방법이 없습니다.\n\n정말 삭제하시겠습니까?")) {
         document.location.href = href;
-    }
-}
-
-function deleteConfirm()
-{
-    if(confirm("한번 삭제한 자료는 복구할 방법이 없습니다.\n\n정말 삭제하시겠습니까?")) {
-        return true;
-    } else {
-        return false;
     }
 }
 

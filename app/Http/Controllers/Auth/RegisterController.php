@@ -72,7 +72,7 @@ class RegisterController extends Controller
                     'email' => $user->email,
                 ]));
         } else {
-            return redirect(route('user.join'))->withErrors(['reCaptcha' => '자동등록방지 입력이 틀렸습니다. 다시 입력해 주십시오.']);
+            return redirect(route('user.join'))->withInput()->withErrors(['reCaptcha' => '자동등록방지 입력이 틀렸습니다. 다시 입력해 주십시오.']);
         }
     }
 

@@ -25,7 +25,7 @@ class CreateBoardFiles extends Migration
             $table->integer('width')->default(0);
             $table->smallInteger('height')->default(0);
             $table->tinyInteger('type')->default(0);
-            $table->dateTime('created_at');
+            $table->timestamp('created_at')->nullable();
 
             $table->primary(['board_id', 'write_id', 'board_file_no']);
         });

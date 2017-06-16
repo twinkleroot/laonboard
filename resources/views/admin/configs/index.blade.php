@@ -67,6 +67,16 @@
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
+                        <label for="memoSendPoint" class="col-md-4 control-label">쪽지보낼시 차감 포인트</label>
+
+                        <div class="col-md-6">
+                            양수로 입력하십시오. 0점은 쪽지 보낼시 포인트를 차감하지 않습니다.<br />
+                            <input type="text" name="memoSendPoint" value="{{ $configHomepage->memoSendPoint }}">점
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
                         <label for="openDate" class="col-md-4 control-label">정보공개 수정</label>
 
                         <div class="col-md-6">

@@ -4,6 +4,10 @@
     게시판 관리 | {{ $config->title }}
 @endsection
 
+@section('include_script')
+    <script src="{{ asset('js/common.js') }}"></script>
+@endsection
+
 @section('content')
 @if(Session::has('message'))
   <div class="alert alert-info">
@@ -69,7 +73,7 @@
                         @foreach ($boards as $board)
                             <tr>
                                 <td class="text-center">
-                                    <input type="checkbox" name="chk[]" class="boardId" value='{{ $board->id }}' /></td>
+                                    <input type="checkbox" name="chkId[]" class="boardId" value='{{ $board->id }}' /></td>
                                 <td class="text-center">
                                     <select id="group_id_{{ $board->id }}">
                                     @foreach ($groups as $group)
@@ -213,22 +217,6 @@ $(function(){
     });
 });
 
-// 선택한 항목들 id값 배열에 담기
-function selectIdsByCheckBox(className) {
-    var send_array = Array();
-    var send_cnt = 0;
-    var chkbox = $(className);
-
-    for(i=0; i<chkbox.length; i++) {
-        if(chkbox[i].checked == true) {
-            send_array[send_cnt] = chkbox[i].value;
-            send_cnt++;
-        }
-    }
-
-    return send_array;
-}
-
 // 체크박스로 업데이트할 값 배열에 담기
 function toUpdateByCheckBox(id, selected_id_array) {
     var send_array = Array();
@@ -262,15 +250,6 @@ function toUpdateByText(id, selected_id_array) {
     }
 
     return send_array;
-}
-
-// 모두 선택
-function checkAll(form) {
-    var chk = document.getElementsByName("chk[]");
-
-    for (i=0; i<chk.length; i++) {
-        chk[i].checked = form.chkAll.checked;
-    }
 }
 </script>
 @endsection

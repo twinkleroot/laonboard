@@ -184,7 +184,7 @@ class User extends Authenticatable
             'nick_date' => $nowDate,
             'mailing' => 0,
             'sms' => 0,
-            'open' => 0,
+            'open' => 1,
             'open_date' => $nowDate,
             'today_login' => Carbon::now(),
             'login_ip' => $request->ip(),

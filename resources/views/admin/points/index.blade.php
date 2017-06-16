@@ -4,6 +4,10 @@
     포인트 관리 | {{ $config->title }}
 @endsection
 
+@section('include_script')
+    <script src="{{ asset('js/common.js') }}"></script>
+@endsection
+
 @section('content')
 @if(Session::has('message'))
   <div class="alert alert-info">
@@ -83,7 +87,7 @@
     			<!-- 하단 tr이 출력될 목록갯수에 따라 반복 -->
     			<tr>
     				<td>
-    					<input type="checkbox" name="chk[]" class="pointId" value='{{ $point->id }}' />
+    					<input type="checkbox" name="chkId[]" class="pointId" value='{{ $point->id }}' />
     				</td>
     				<td><a href="/admin/search?admin_page=point&kind=email&keyword={{ $point->user->email }}">{{ $point->user->email }}</a></td>
     				<td>{{ $point->user->nick }}</td>
@@ -171,30 +175,5 @@ $(function(){
         $('#selectForm').submit();
     });
 });
-
-// 선택한 항목들 id값 배열에 담기
-function selectIdsByCheckBox(className) {
-    var send_array = Array();
-    var send_cnt = 0;
-    var chkbox = $(className);
-
-    for(i=0; i<chkbox.length; i++) {
-        if(chkbox[i].checked == true) {
-            send_array[send_cnt] = chkbox[i].value;
-            send_cnt++;
-        }
-    }
-
-    return send_array;
-}
-
-// 모두 선택
-function checkAll(form) {
-    var chk = document.getElementsByName("chk[]");
-
-    for (i=0; i<chk.length; i++) {
-        chk[i].checked = form.chkAll.checked;
-    }
-}
 </script>
 @endsection

@@ -49,7 +49,7 @@
         <ul class="gnb navbar-nav">
 
             <li class="gnb-li"><a href="{{ route('new.index') }}">새글</a></li>
-            <li class="gnb-li"><a href="{{ route('board.index', 67) }}">게시판</a></li>
+            <li class="gnb-li"><a href="{{ route('board.index', 67) }}">게시판(테스트)</a></li>
             @if (Auth::guest()) <!-- 공개권한: 게스트 -->
             <li class="gnb-li"><a href="{{ route('login') }}">로그인</a></li>
             <li class="gnb-li"><a href="{{ route('user.join') }}">회원가입</a></li>
@@ -73,6 +73,7 @@
                             <a href="{{ route('scrap.index') }}" class="winScrap" target="_blank" onclick="winScrap(this.href); return false;">스크랩</a>
                         </li>
                         <li><a href="{{ route('user.point', Auth::user()->id) }}" class="point">포인트 내역</a></li>
+                        <li><a href="{{ route('memo.index') }}?kind=recv" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지</a></li>
                         <li>
                             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 로그아웃

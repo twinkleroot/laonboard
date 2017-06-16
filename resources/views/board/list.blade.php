@@ -84,7 +84,7 @@
                     @endif
                 </td>
                 @if(session()->get('admin'))
-    				<td class="bd_check"><input type="checkbox" name="chk_id[]" class="writeId" value='{{ $write->id }}'></td>
+    				<td class="bd_check"><input type="checkbox" name="chkId[]" class="writeId" value='{{ $write->id }}'></td>
                 @endif
 				<td @if($write->reply != '') class="bd_reply" style="padding-left: calc(20px * {{ strlen($write->reply) }} @endif">
 
@@ -224,14 +224,6 @@ $(function(){
         document.getElementById('all').className += ' on'
     }
 });
-// 모두 선택
-function checkAll(form) {
-    var chk = document.getElementsByName("chk_id[]");
-
-    for (i=0; i<chk.length; i++) {
-        chk[i].checked = form.chkAll.checked;
-    }
-}
 
 function searchFormSubmit(f) {
     if(f.keyword.value.trim() == '') {
@@ -272,22 +264,6 @@ function formBoardListSubmit(f) {
     }
 
     return true;
-}
-
-// 선택한 항목들 id값 배열에 담기
-function selectIdsByCheckBox(className) {
-    var send_array = Array();
-    var send_cnt = 0;
-    var chkbox = $(className);
-
-    for(i=0; i<chkbox.length; i++) {
-        if(chkbox[i].checked == true) {
-            send_array[send_cnt] = chkbox[i].value;
-            send_cnt++;
-        }
-    }
-
-    return send_array;
 }
 
 // 선택한 게시물 복사 및 이동

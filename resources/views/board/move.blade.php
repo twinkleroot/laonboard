@@ -18,6 +18,7 @@
     </script>
 
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ asset('js/common.js') }}"></script>
 
 </head>
 <div class="row">
@@ -40,7 +41,7 @@
                         <tbody>
                             @foreach($boards as $board)
                             <tr>
-                                <td class="bd_check"><input type="checkbox" name="chk_id[]" class="boardId" value='{{ $board->id }}'></td>
+                                <td class="bd_check"><input type="checkbox" name="chkId[]" class="boardId" value='{{ $board->id }}'></td>
                                 <td>
                                     {{ $board->group->subject . ' > ' . $board->subject . ' (' . $board->table_name . ')' }}
                                     @if($board->id == $currentBoard->id) 현재 @endif
@@ -59,19 +60,6 @@
     </div>
 </div>
 <script>
-$(function(){
-
-});
-
-// 모두 선택
-function checkAll(form) {
-    var chk = document.getElementsByName("chk_id[]");
-
-    for (i=0; i<chk.length; i++) {
-        chk[i].checked = form.chkAll.checked;
-    }
-}
-
 // 복사 및 이동 폼 서브밋 전 실행되는 함수
 function formMoveListSubmit(f) {
     var selected_id_array = selectIdsByCheckBox(".boardId");
@@ -84,21 +72,5 @@ function formMoveListSubmit(f) {
     f.action = '{{ route('board.moveUpdate', $currentBoard->id) }}';
 
     return true;
-}
-
-// 선택한 항목들 id값 배열에 담기
-function selectIdsByCheckBox(className) {
-    var send_array = Array();
-    var send_cnt = 0;
-    var chkbox = $(className);
-
-    for(i=0; i<chkbox.length; i++) {
-        if(chkbox[i].checked == true) {
-            send_array[send_cnt] = chkbox[i].value;
-            send_cnt++;
-        }
-    }
-
-    return send_array;
 }
 </script>
