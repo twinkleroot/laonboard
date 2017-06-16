@@ -22,7 +22,7 @@
             'csrfToken' => csrf_token(),
         ]) !!};
     </script>
-    
+
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     @yield('include_script')
 </head>
@@ -64,7 +64,7 @@
 <div class="sidebar sidebarmenu">
 	<ul class="category">
         <div class="side_1depth">
-		    <a href="#" class="sd_1depth">환경설정</a>	
+		    <a href="#" class="sd_1depth">환경설정</a>
 		</div>
 		<ul class="sd_2depth">
 			<li><a href="{{ route('admin.config') }}">기본환경설정</a></li>
@@ -84,7 +84,7 @@
 	</ul>
 	<ul class="category">
         <div class="side_1depth">
-		    <a href="#" class="sd_1depth">회원관리</a>	
+		    <a href="#" class="sd_1depth">회원관리</a>
 		</div>
 		<ul class="sd_2depth">
 			<li><a href="{{ route('admin.users.index') }}">회원관리</a></li>
@@ -94,7 +94,7 @@
 	</ul>
 	<ul class="category">
         <div class="side_1depth">
-		    <a href="#" class="sd_1depth">게시판관리</a>	
+		    <a href="#" class="sd_1depth">게시판관리</a>
 		</div>
 		<ul class="sd_2depth">
 			<li><a href="{{ route('admin.boards.index') }}">게시판관리</a></li>
