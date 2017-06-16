@@ -228,10 +228,10 @@
                                 <label for="" class="col-md-2 control-label">주소</label>
                                 <div class="col-md-5 row mb10">
                                     <div class="col-sm-5">
-                                        <input type="text" class="form-control" id="zip" name="zip" value="{{ $user->zip }}" placeholder="@lang('messages.zip')">
+                                        <input type="text" class="form-control" id="zip" name="zip" value="{{ $user->zip }}" placeholder="우편 번호">
                                     </div>
                                     <div class="col-sm-7" style="padding-left: 0;">
-                                        <input type="button" class="btn btn-default form_btn" onclick="execDaumPostcode()" value="@lang('messages.address_search')">
+                                        <input type="button" class="btn btn-default form_btn" onclick="execDaumPostcode()" value="주소 검색">
                                     </div>
 
                                     <!-- 우편번호검색 -->
@@ -244,11 +244,11 @@
                                 </div>
                                 <div class="col-md-5 col-md-offset-2 mb10">
                                     <label for="" class="sr-only">기본주소</label>
-                                    <input type="text" class="form-control" id="addr1" name="addr1" value="{{ $user->addr1 }}" placeholder="@lang('messages.address1')">
+                                    <input type="text" class="form-control" id="addr1" name="addr1" value="{{ $user->addr1 }}" placeholder="기본 주소">
                                 </div>
                                 <div class="col-md-5 col-md-offset-2">
                                     <label for="" class="sr-only">상세주소</label>
-                                    <input type="text" class="form-control" id="addr2" name="addr2" value="{{ $user->addr2 }}" placeholder="@lang('messages.address2')">
+                                    <input type="text" class="form-control" id="addr2" name="addr2" value="{{ $user->addr2 }}" placeholder="상세 주소">
                                 </div>
                             </div>
                             <div class="form-group">
