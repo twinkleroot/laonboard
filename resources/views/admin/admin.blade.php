@@ -71,7 +71,7 @@
 		    <li><a href="#">관리권한설정</a></li>
 	        <li><a href="#">테마설정</a></li>
 	        <li><a href="{{ route('admin.menus.index') }}">메뉴설정</a></li>
-	        <li><a href="#">메일테스트</a></li>
+	        <li><a href="{{ route('admin.email') }}">메일테스트</a></li>
 	        <li><a href="#">팝업레이어관리</a></li>
 	        <li><a href="#">세션파일 일괄삭제</a></li>
 	        <li><a href="#">캐시파일 일괄삭제</a></li>
@@ -101,7 +101,7 @@
 		    <li><a href="{{ route('admin.groups.index') }}">게시판그룹관리</a></li>
 	        <li><a href="#">인기검색어관리</a></li>
 	        <li><a href="#">인기검색어순위</a></li>
-	        <li><a href="#">내용관리</a></li>
+	        <li><a href="{{ route('contents.index') }}">내용관리</a></li>
 	        <li><a href="#">글/댓글현황</a></li>
 		</ul>
 	</ul>
