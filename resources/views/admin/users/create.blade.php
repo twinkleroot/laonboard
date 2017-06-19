@@ -7,6 +7,19 @@
 @section('include_script')
     <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
     <script src="{{ url('js/postcode.js') }}"></script>
+    <script type="text/javascript">
+        jQuery("document").ready(function($){
+            var nav = $('.body-tab');
+             
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 205) {
+                    nav.addClass("f-tab");
+                } else {
+                    nav.removeClass("f-tab");
+                }
+            });
+        });
+    </script>
 @endsection
 
 @section('content')
