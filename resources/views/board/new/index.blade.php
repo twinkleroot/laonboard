@@ -1,4 +1,4 @@
-@extends('theme')
+@extends('themes.default.basic')
 
 @section('title')
     새글 | {{ Cache::get("config.homepage")->title }}

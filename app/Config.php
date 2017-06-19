@@ -68,6 +68,34 @@ class Config extends Model
         ];
     }
 
+    // 환경 설정 항목별 생성 함수 연결
+    public function createConfigController($configName)
+    {
+        switch ($configName) {
+            case 'homepage':
+                $this->createConfigHomepage();
+                break;
+            case 'board':
+                $this->createConfigBoard();
+                break;
+            case 'join':
+                $this->createConfigJoin();
+                break;
+            case 'email.default':
+                $this->createConfigEmailDefault();
+                break;
+            case 'email.join':
+                $this->createConfigEmailJoin();
+                break;
+            case 'email.board':
+                $this->createConfigEmailBoard();
+                break;
+            default:
+                # code...
+                break;
+        }
+    }
+
     // 회원 가입 설정을 config 테이블에 추가한다.
     public function createConfigHomepage()
     {
@@ -170,15 +198,6 @@ class Config extends Model
         );
 
         return $this->createConfig('config.email.join', $configArr);
-    }
-    // 투표 기타의견 작성 시 메일 설정을 config 테이블에 추가한다.
-    public function createConfigEmailVote()
-    {
-        $configArr = array (
-          'emailVoteSuperAdmin' => config('gnu.emailVoteSuperAdmin'),
-        );
-
-        return $this->createConfig('config.email.vote', $configArr);
     }
 
     // configs 테이블에 해당 row를 추가한다.

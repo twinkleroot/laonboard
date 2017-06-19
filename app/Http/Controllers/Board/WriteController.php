@@ -52,6 +52,7 @@ class WriteController extends Controller
             return view('message', $params);
         }
 
+        $params = array_add($params, 'mainTheme', 'dafault');
 
         return view('board.index', $params);
     }

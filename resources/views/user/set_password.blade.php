@@ -1,7 +1,7 @@
-@extends('theme')
+@extends('themes.default.basic')
 
 @section('title')
-    최초 비밀번호 설정 | {{ Cache::get("config.homepage")->title }} 
+    최초 비밀번호 설정 | {{ Cache::get("config.homepage")->title }}
 @endsection
 
 @section('include_css')

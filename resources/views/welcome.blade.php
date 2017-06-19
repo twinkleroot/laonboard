@@ -1,7 +1,7 @@
-@extends('theme')
+@extends('themes.default.basic')
 
 @section('title')
-    환영합니다. | {{ Cache::get("config.homepage")->title }} 
+    환영합니다. | {{ Cache::get("config.homepage")->title }}
 @endsection
 
 @section('content')

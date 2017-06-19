@@ -17,7 +17,7 @@
                     <input type="hidden" name="link[]" value=
                         @if($type == 'group') "http://example.com"
                         @elseif($type == 'board') {{ route('board.index', $result['id']) }}
-                        @elseif($type == 'content') "http://content"
+                        @elseif($type == 'content') {{ route('contents.show', $result['content_id']) }}
                         @endif
                     >
                     <button type="button" class="btn btn-primary add_select">선택</button>
@@ -44,7 +44,7 @@
                 <th><label for="link">링크</label></th>
                 <td>
                     링크는 http://를 포함해서 입력해 주세요.<br />
-                    <input type="text" name="link" id="link" required>
+                    <input type="text" name="link" id="link" value="http://" required>
                 </td>
             </tr>
             </tbody>

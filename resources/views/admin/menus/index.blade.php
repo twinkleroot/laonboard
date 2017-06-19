@@ -1,4 +1,4 @@
-@extends('theme')
+@extends('themes.default.basic')
 
 @section('title')
     메뉴설정 | {{ $config->title }}
@@ -37,7 +37,7 @@
                         @if(count($menus) > 0)
                         @foreach ($menus as $menu)
                             <tr class="menu_list menu_group_{{ substr($menu['code'], 0, 2) }}">
-                                <td class="text-center @if(strlen($menu['code']) == 4) sub_menu_class @endif">
+                                <td class="text-center @if(strlen($menu['code']) == 4)sub_menu_class @endif">
                                     <input type="hidden" name="code[]" value="{{ substr($menu['code'], 0, 2) }}">
                                     @if(strlen($menu['code']) == 4) ㄴ @endif
                                     <input type="text" name="name[]" value="{{ $menu['name']}}" />
@@ -105,18 +105,20 @@ $(function(){
 
     // 관리의 삭제 버튼 클릭(한 건 삭제)
     $(document).on("click", ".del_menu", function() {
-        if(!confirm("메뉴를 삭제하시겠습니까?"))
+        if(!confirm("메뉴를 삭제하시겠습니까?")) {
             return false;
+        }
 
         var $tr = $(this).closest("tr");
-        if($tr.find("td.sub_menu_class").size() > 0) {
+        console.log($tr.find("td.sub_menu_class").length);
+        if($tr.find("td.sub_menu_class").length > 0) {
             $tr.remove();
         } else {
             var code = $tr.find("input[name='code[]']").val().substr(0, 2);
             $("tr.menu_group_"+code).remove();
         }
 
-        if($("#menulist tr.menu_list").size() < 1) {
+        if($("#menulist tr.menu_list").length < 1) {
             var list = "<tr id=\"empty_menu_list\"><tdclass=\"text-center\" colspan=\"7\">자료가 없습니다.</td></tr>\n";
             $("#menulist table tbody").append(list);
         } else {
@@ -146,14 +148,13 @@ function add_menu() {
 
 // code 생성 함수
 function base_convert(number, frombase, tobase) {
-  //  discuss at: http://phpjs.org/functions/base_convert/
-  // original by: Philippe Baumann
-  // improved by: Rafał Kukawski (http://blog.kukawski.pl)
-  //   example 1: base_convert('A37334', 16, 2);
-  //   returns 1: '101000110111001100110100'
+    //  discuss at: http://phpjs.org/functions/base_convert/
+    // original by: Philippe Baumann
+    // improved by: Rafał Kukawski (http://blog.kukawski.pl)
+    //   example 1: base_convert('A37334', 16, 2);
+    //   returns 1: '101000110111001100110100'
 
-  return parseInt(number + '', frombase | 0)
-    .toString(tobase | 0);
+    return parseInt(number + '', frombase | 0).toString(tobase | 0);
 }
 
 </script>

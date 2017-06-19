@@ -24,7 +24,7 @@ class NewController extends Controller
 
     public function destroy(Request $request)
     {
-        $message = $this->boardNew->selectWrites($request->chkId);
+        $message = $this->boardNew->deleteWrites($request->chkId);
 
         if($message != '') {
             return view('message', [

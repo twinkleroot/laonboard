@@ -1,4 +1,4 @@
-@extends('theme')
+@extends('themes.default.basic')
 
 @section('title')
     환경 설정 | {{ $configHomepage->title }}
@@ -602,27 +602,6 @@
                 <div class="panel-body">
                     <div class="col-md-offset-5">
                         <input type="submit" class="btn btn-primary" value="회원가입 시 메일 설정 변경하기"/>
-                    </div>
-                </div>
-            </form>
-            <div class="panel-heading">투표 기타의견 작성 시 메일 설정</div>
-            <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.config.update', ['name' => 'email.vote']) }}">
-                {{ method_field('PUT') }}
-                {{ csrf_field() }}
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="emailVoteSuperAdmin" class="col-md-4 control-label">최고관리자</label>
-
-                        <div class="col-md-6">
-                            최고관리자에게 메일을 발송합니다.<br />
-                            <input type="checkbox" name="emailVoteSuperAdmin" id="emailVoteSuperAdmin" value="1" @if($configEmailVote->emailVoteSuperAdmin == 1) checked @endif>
-                                <label for="emailVoteSuperAdmin">사용</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <div class="col-md-offset-5">
-                        <input type="submit" class="btn btn-primary" value="투표 기타의견 작성 시 메일 설정 변경하기"/>
                     </div>
                 </div>
             </form>

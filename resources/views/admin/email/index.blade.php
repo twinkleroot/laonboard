@@ -1,4 +1,4 @@
-@extends('theme')
+@extends('themes.default.basic')
 
 @section('title')
     메일 테스트 | {{ Cache::get("config.homepage")->title }}

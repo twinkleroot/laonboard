@@ -13,11 +13,8 @@
 */
 
 // 기본 홈
-Route::get('/index', ['as' => 'index', 'uses' => 'WelcomeController@index']);
-Route::get('/', 'ThemeController@index');
-Route::get('/menuTest', ['as' => 'menuTest', 'uses' => 'ThemeController@menuTest']);
-
-// 로그인 후 리다이렉트 되는 페이지
+Route::get('/', ['as' => 'home', 'uses' => 'HomeController@index'] );
+// 로그인 후 리다이렉트
 Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index'] );
 
 // 관리자 그룹

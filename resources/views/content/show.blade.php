@@ -1,4 +1,4 @@
-@extends('theme')
+@extends('themes.default.basic')
 
 @section('title')
     {{ $content->subject }} | {{ Cache::get("config.homepage")->title }}

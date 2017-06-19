@@ -9,9 +9,14 @@ use File;
 use App\Write;
 use App\Board;
 
-// 공통으로 사용하는 메서드
 class Util
 {
+    // 캐시 삭제
+    public static function deleteCache($base, $boardTableName)
+    {
+        $cacheName = $base. '-'. $boardTableName;
+        Cache::forget($cacheName);
+    }
 
     // 스킨 목록을 가져온다.
     public static function getSkins()
@@ -170,18 +175,8 @@ class Util
                 $target[] = "<br>";
             }
 
-            // 테이블 태그의 개수를 세어 테이블이 깨지지 않도록 한다.
-            // $table_begin_count = substr_count(strtolower($content), "<table");
-            // $table_end_count = substr_count(strtolower($content), "</table");
-            // for ($i=$table_end_count; $i<$table_begin_count; $i++)
-            // {
-            //     $content .= "</table>";
-            // }
-
             $content = preg_replace($source, $target, $content);
 
-            // if($filter)
-            //     $content = html_purifier($content);
         } else { // text 이면
             // & 처리 : &amp; &nbsp; 등의 코드를 정상 출력함
             $content = static::htmlSymbol($content);
@@ -218,7 +213,6 @@ class Util
             $str = str_replace($target, $source, $str);
         }
 
-        // 3.31
         // TEXT 출력일 경우 &amp; &nbsp; 등의 코드를 정상으로 출력해 주기 위함
         if ($html == 0) {
             $str = static::htmlSymbol($str);
@@ -311,9 +305,7 @@ class Util
                         $size[1] = $tmp[0];
                     }
                 }
-
             }
-
             // 썸네일 높이
             $thumbHeight = round(($thumbWidth * $size[1]) / $size[0]);
             $img = $img->resize($thumbWidth, $thumbHeight, function ($constraint) {
