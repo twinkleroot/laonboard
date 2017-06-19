@@ -33,9 +33,15 @@ function winScrap(href) {
     newWin.focus();
 }
 
-// 스크랩 팝업 띄우기
+// 쪽지 팝업 띄우기
 function winMemo(href) {
     var newWin = window.open(href, 'winMemo', 'left=100, top=100, width=600, height=600, scrollbars=1');
+    newWin.focus();
+}
+
+// 자기소개 팝업 띄우기
+function winProfile(href) {
+    var newWin = window.open(href, 'winProfile', 'left=100, top=100, width=600, height=600, scrollbars=1');
     newWin.focus();
 }
 

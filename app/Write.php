@@ -81,6 +81,7 @@ class Write extends Model
         $categories = [];
         if($this->board->use_category && !is_null($this->board->category_list) ) {
             $categories = explode('|', $this->board->category_list);
+            $categories = array_map('trim', $categories);
         }
 
         // 현재 선택한 카테고리 구하기
@@ -185,7 +186,7 @@ class Write extends Model
     {
         // 기본 ( 공지는 기본만 가져간다. )
         $query = $writeModel
-                ->selectRaw($writeModel->table.'.*, users.level as user_level')
+                ->selectRaw($writeModel->table.'.*, users.level as user_level, users.email as user_email, users.id_hashKey as user_id_hashKey')
                 ->leftJoin('users', 'users.id', '=', $writeModel->table.'.user_id')
                 ->where('is_comment', 0);
 

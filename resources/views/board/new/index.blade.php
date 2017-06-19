@@ -83,7 +83,7 @@
 					<ul class="dropdown-menu" role="menu">
 		                <li><a href="{{ route('memo.create') }}?to={{ $boardNew->user_id_hashkey }}" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지보내기</a></li>
 		                <li><a href="#">메일보내기</a></li>
-		                <li><a href="#">자기소개</a></li>
+		                <li><a href="{{ route('user.profile', $boardNew->user_id_hashkey) }}" class="winProfile" target="_blank" onclick="winProfile(this.href); return false;">자기소개</a></li>
 		                <li><a href="{{ route('new.index') }}?nick={{ $boardNew->write->name }}">전체게시물</a></li>
                         @if(session()->get('admin'))
     		                <li><a href="{{ route('admin.users.edit', $boardNew->user_id_hashkey) }}" target="_blank">회원정보변경</a></li>

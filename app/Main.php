@@ -35,7 +35,7 @@ class Main
                 'use_cert' => 'not-use',
             ])
             ->where('device', '<>', 'mobile')
-            ->where('list_level', '<=' ,auth()->user()->level)
+            ->where('list_level', '<=' , auth()->guest() ? 1 : auth()->user()->level)   // guest는 회원 레벨 1
             ->orderBy('order')
             ->get();
 

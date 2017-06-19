@@ -149,10 +149,11 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('user/check_password', ['as' => 'user.checkPassword', 'uses' => 'User\UserController@checkPassword']);
     Route::post('user/set_password', ['as' => 'user.setPassword', 'uses' => 'User\UserController@setPassword']);
     Route::post('user/confirm_password', ['as' => 'user.confirmPassword', 'uses' => 'User\UserController@confirmPassword']);
-    Route::get('user/point/{id}', ['as' => 'user.point', 'uses' => 'User\PointController@index']);
+    Route::get('user/point/{id}', ['as' => 'user.point', 'uses' => 'User\UserController@pointList']);
     // 회원 정보 수정 - 소셜 로그인 계정 연결 해제
     Route::post('user/disconnectSocialAccount', ['as' => 'user.disconnectSocialAccount', 'uses' => 'User\UserController@disconnectSocialAccount']);
-
+    // 자기소개
+    Route::get('user/profile/{id}', ['as' => 'user.profile', 'uses' => 'User\UserController@profile']);
     // 내용 관리
     Route::get('contents/{content}/delete', ['as' => 'contents.destroy', 'uses' => 'Content\ContentController@destroy'])
         ->middleware(['level:10']);

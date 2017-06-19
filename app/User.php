@@ -378,6 +378,34 @@ class User extends Authenticatable
         return $user->email;
     }
 
+    // 자기소개에 필요한 파라미터 가져오기
+    public function getProfileParams($idHashkey)
+    {
+        $user = User::where('id_hashkey', $idHashkey)->first();
+        if(is_null($user)) {
+            return '회원정보가 존재하지 않습니다.\\n\\n탈퇴하였을 수 있습니다.';
+        }
+        $superAdmin = Cache::get('config.homepage')->superAdmin;
+        $loginedUser = auth()->user();
+        if(!$loginedUser->open && $loginedUser->email != $superAdmin && $loginedUser->id != $user->id) {
+            return '자신의 정보를 공개하지 않으면 다른분의 정보를 조회할 수 없습니다.\\n\\n정보공개 설정은 회원정보수정에서 하실 수 있습니다.';
+        }
+
+        if(!$user->open && $loginedUser->email != $superAdmin && $loginedUser->id != $user->id) {
+            return '정보공개를 하지 않았습니다.';
+        }
+
+        // 가입일과 오늘 날짜와의 차이
+        $current = Carbon::now();
+        $joinDay = $user->created_at;
+        $diffDay = $current->diffInDays($joinDay);
+
+        return [
+            'user' => $user,
+            'diffDay' => $diffDay
+        ];
+    }
+
     // 관리자에서 사용하는 메서드
 
     // 회원 목록

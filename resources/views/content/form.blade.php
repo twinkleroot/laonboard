@@ -75,7 +75,7 @@
         </td>
     </tr>
     <tr>
-        <th scope="row"><label for="skin">스킨 디렉토리<strong class="sound_only">필수</strong></label></th>
+        <th scope="row"><label for="skin">스킨 디렉토리</label></th>
         <td>
             <select name="skin" id="skin">
             @foreach($skinList as $key => $value)
@@ -87,7 +87,7 @@
         </td>
     </tr>
     <tr>
-        <th scope="row"><label for="mobile_skin">모바일스킨 디렉토리<strong class="sound_only">필수</strong></label></th>
+        <th scope="row"><label for="mobile_skin">모바일스킨 디렉토리</label></th>
         <td>
             <select name="mobile_skin" id="mobile_skin">
             @foreach($mobileSkinList as $key => $value)

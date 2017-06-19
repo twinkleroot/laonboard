@@ -89,8 +89,9 @@
 				<td @if($write->reply != '') class="bd_reply" style="padding-left: calc(20px * {{ strlen($write->reply) }} @endif">
 
 					<span class="bd_subject">
-                        {{-- <a href="{{ route('board.view', ['boardId' => $board->id, 'writeId' => $write->id]) }}?page={{ $writes->currentPage() }}">{{ $write->subject }}</a> --}}
-                        {{-- <a href="{{ route('board.view', ['boardId' => $board->id, 'writeId' => $write->id]) }}">{{ $write->subject }}</a> --}}
+                        @if($board->use_category == 1 )
+                            <a href="{{ route('board.index', $board->id). '?category='. $write->ca_name }}">{{ $write->ca_name }}</a>
+                        @endif
                         @if($viewParams == '')
                             <a href="/board/{{ $board->id }}/view/{{ $write->id }}">{{ $write->subject }}</a>
                         @else
@@ -126,8 +127,10 @@
                         @if(!is_null($write->user_level))
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">자기소개</a></li>
-                                <li><a href="#">전체게시물</a></li>
+                                <li><a href="{{ route('memo.create') }}?to={{ $write->user_id_hashkey }}" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지보내기</a></li>
+                                <li><a href="#">메일보내기</a></li>
+                                <li><a href="{{ route('user.profile', $write->user_id_hashKey) }}" class="winProfile" target="_blank" onclick="winProfile(this.href); return false;">자기소개</a></li>
+                                <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>
                                 <li>
                                     @if($currenctCategory!='')
                                         <a href="/board/{{ $board->id }}?category={{ $currenctCategory }}&amp;kind=user_id&amp;keyword={{ $write->user_id }}">
@@ -137,6 +140,10 @@
                                             닉네임으로 검색
                                         </a>
                                 </li>
+                                @if(session()->get('admin'))
+            		                <li><a href="{{ route('admin.users.edit', $write->user_id_hashKey) }}" target="_blank">회원정보변경</a></li>
+            		                <li><a href="{{ route('admin.search') }}?admin_page=point&amp;kind=email&amp;keyword={{ $write->user_email }}" target="_blank">포인트내역</a></li>
+                                @endif
                             </ul>
                         @else
                             {{ $write->name }}

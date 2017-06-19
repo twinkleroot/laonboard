@@ -7,11 +7,12 @@ use App\Http\Controllers\Controller;
 use Mail;
 use Auth;
 use Cache;
+use Socialite;
+use Carbon\Carbon;
 use App\ReCaptcha;
 use App\User;
-use Carbon\Carbon;
+use App\Point;
 use App\Config;
-use Socialite;
 use App\Notification;
 
 class UserController extends Controller
@@ -136,6 +137,23 @@ class UserController extends Controller
         } else {
             return back()->withErrors(['reCaptcha' => '자동등록방지 입력이 틀렸습니다. 다시 입력해 주십시오.']);
         }
+    }
+
+    public function pointList($id)
+    {
+        $point = new Point();
+        $params = $point->getPointList($id);
+
+        return view('user.point', $params);
+    }
+
+    public function profile($idHashkey)
+    {
+        $params = $this->userModel->getProfileParams($idHashkey);
+
+        $params = array_add($params, 'skin', 'default');
+
+        return view('user.profile', $params);
     }
 
 }
