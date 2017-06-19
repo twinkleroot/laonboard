@@ -134,6 +134,42 @@
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
+                        <label for="newSkin" class="col-md-4 control-label">최근게시물 스킨</label>
+
+                        <div class="col-md-6">
+                            <select name='newSkin'>
+                                <option value='' @if($configHomepage->newSkin == '') selected @endif>
+                                    선택안함
+                                </option>
+                                @foreach($skins as $key => $value)
+                                    <option value='{{ $key }}' @if($configHomepage->newSkin == $key) selected @endif>
+                                        {{ $value }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="searchSkin" class="col-md-4 control-label">검색 스킨</label>
+
+                        <div class="col-md-6">
+                            <select name='searchSkin'>
+                                <option value='' @if($configHomepage->searchSkin == '') selected @endif>
+                                    선택안함
+                                </option>
+                                @foreach($skins as $key => $value)
+                                    <option value='{{ $key }}' @if($configHomepage->searchSkin == $key) selected @endif>
+                                        {{ $value }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
                         <label for="pointTerm" class="col-md-4 control-label">포인트 유효기간</label>
 
                         <div class="col-md-6">

@@ -13,9 +13,11 @@
 */
 
 // 기본 홈
-Route::get('/', ['as' => 'home', 'uses' => 'HomeController@index'] );
+Route::get('/', ['as' => 'home', 'uses' => 'MainController@index'] );
 // 로그인 후 리다이렉트
-Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index'] );
+Route::get('/home', ['as' => 'home', 'uses' => 'MainController@index'] );
+// 게시판 그룹별 메인
+Route::get('/group/{group}', ['as' => 'group', 'uses' => 'MainController@groupIndex'] );
 
 // 관리자 그룹
 Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {

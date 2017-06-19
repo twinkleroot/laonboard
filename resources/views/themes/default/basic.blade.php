@@ -25,6 +25,15 @@
     </script>
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/common.js') }}"></script>
+    <script>
+        $(function(){
+            $('.dropdown').hover(function() {
+                $(this).addClass('open');
+            }, function() {
+                $(this).removeClass('open');
+            });
+        });
+    </script>
     @yield('include_script')
 </head>
 
@@ -50,7 +59,7 @@
             @for($i=0; $i<count(Cache::get('menuList')); $i++)
                 @if(count(Cache::get('subMenuList')[$i]) > 0)
                     <li class="gnb-li dropdown">
-                        <a href="{{ Cache::get('menuList')[$i]['link'] }}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        <a href="{{ Cache::get('menuList')[$i]['link'] }}" role="button" aria-expanded="false">
                             {{ Cache::get('menuList')[$i]['name'] }}<span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">

@@ -17,6 +17,8 @@
   'mobilePageRows' => 10,
   'writePages' => 10,
   'mobilePages' => 5,
+  'newSkin' => '',
+  'searchSkin' => '',
   'pointTerm' => 0,
 
   // 회원 가입

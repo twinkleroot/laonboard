@@ -23,10 +23,17 @@
                         @endif
 
                         @if($content->skin == '')
-                            <h1>{{ $content->subject }}</h1>
-                            {!! App\Common\Util::convertContent($content->content, $content->html, $content->tag_filter_use) !!}
+                            <article>
+                                <header>
+                                    <h1>{{ $content->subject }}</h1>
+                                </header>
+
+                                <div>
+                                    {!! App\Common\Util::convertContent($content->content, $content->html, $content->tag_filter_use) !!}
+                                </div>
+                            </article>
                         @else
-                            @include('themes.'. $content->skin. '.content.content_skin')
+                            @include('themes.'. $content->skin. '.content')
                         @endif
 
                         <!-- 하단 이미지 -->

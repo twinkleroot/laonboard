@@ -15,7 +15,7 @@
                 <td>
                     <input type="hidden" name="subject[]" value="{{ preg_replace('/[\'\"]/', '', $result['subject']) }}">
                     <input type="hidden" name="link[]" value=
-                        @if($type == 'group') "http://example.com"
+                        @if($type == 'group') {{ route('group', $result['id']) }}
                         @elseif($type == 'board') {{ route('board.index', $result['id']) }}
                         @elseif($type == 'content') {{ route('contents.show', $result['content_id']) }}
                         @endif

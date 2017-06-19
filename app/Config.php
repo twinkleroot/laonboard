@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\User;
+use App\Common\Util;
 use Cache;
 
 class Config extends Model
@@ -65,6 +66,7 @@ class Config extends Model
             'configEmailJoin' => Cache::get("config.email.join"),
             'configEmailVote' => Cache::get("config.email.vote"),
             'admins' => $admins,
+            'skins' => Util::getSkins()
         ];
     }
 
@@ -73,23 +75,17 @@ class Config extends Model
     {
         switch ($configName) {
             case 'homepage':
-                $this->createConfigHomepage();
-                break;
+                return $this->createConfigHomepage();
             case 'board':
-                $this->createConfigBoard();
-                break;
+                return $this->createConfigBoard();
             case 'join':
-                $this->createConfigJoin();
-                break;
+                return $this->createConfigJoin();
             case 'email.default':
-                $this->createConfigEmailDefault();
-                break;
+                return $this->createConfigEmailDefault();
             case 'email.join':
-                $this->createConfigEmailJoin();
-                break;
+                return $this->createConfigEmailJoin();
             case 'email.board':
-                $this->createConfigEmailBoard();
-                break;
+                return $this->createConfigEmailBoard();
             default:
                 # code...
                 break;
@@ -111,6 +107,8 @@ class Config extends Model
           'mobilePageRows' => config('gnu.mobilePageRows'),
           'writePages' => config('gnu.writePages'),
           'mobilePages' => config('gnu.mobilePages'),
+          'newSkin' => config('gnu.newSkin'),
+          'searchSkin' => config('gnu.searchSkin'),
           'pointTerm' => config('gnu.pointTerm'),
         );
 
@@ -247,9 +245,6 @@ class Config extends Model
             Cache::forget("config.email.join");  // 설정이 변경될 때 캐시를 지운다.
             $data = array_add($data, 'emailJoinSuperAdmin', isset($data['emailJoinSuperAdmin']) ? $data['emailJoinSuperAdmin'] : 0);
             $data = array_add($data, 'emailJoinUser', isset($data['emailJoinUser']) ? $data['emailJoinUser'] : 0);
-        } else if($name == 'email.vote') {  // 투표 기타의견 작성 시 메일 설정일 때
-            Cache::forget("config.email.vote");  // 설정이 변경될 때 캐시를 지운다.
-            $data = array_add($data, 'emailVoteSuperAdmin', isset($data['emailVoteSuperAdmin']) ? $data['emailVoteSuperAdmin'] : 0);
         }
 
         // json 형식으로 되어 있는 설정값을 배열로 바꾼다.
