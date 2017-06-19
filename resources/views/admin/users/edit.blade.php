@@ -129,8 +129,9 @@
                             </div>
                             <div class="form-group">
                                 <label for="" class="col-md-2 control-label">포인트</label>
-                                <div class="col-md-3">
-                                    <span class="form_txt">{{ $user->point }} 점</span> <!-- 회원추가의 경우 기본 0점 -->
+                                <div class="col-md-6">
+                                    <span class="form_txt">@if($user->point == 0) 0 @else {{ $user->point }} @endif 점</span> <!-- 회원추가의 경우 기본 0점 -->
+                                    <p class="help-block">포인트 부여 및 차감은 <a href="{{ route('admin.points.index') }}" style="font-weight: 600;">[회원관리 - 포인트관리]</a>에서 하실 수 있습니다.</p>
                                 </div>
                             </div>
                             <!-- 회원추가의 경우 보이지 않음 -->
@@ -153,11 +154,9 @@
                                 </div>
                             </div>
                             <!-- 회원추가의 경우 보이지 않음 END -->
-
-                            
                             <div class="form-group">
                                 <label for="" class="col-md-2 control-label">회원상태</label>
-                                <div class="col-md-3">
+                                <div class="col-md-6">
                                     @if(!is_null($user->leave_date))
                                         <span class="mb_msg withdraw">탈퇴</span>
                                     @elseif (!is_null($user->intercept_date))
@@ -165,16 +164,9 @@
                                     @else
                                         <span class="mb_msg">정상</span>
                                     @endif
-                                    <!--
-                                    <select class="form-control">
-
-                                        <option>정상</option>
-                                        <option>차단</option>
-                                        <option>탈퇴</option>
-                                    </select>-->
+                                    <p class="help-block">하단의 탈퇴일자 혹은 접근차단일자를 지정하면 회원상태가 변경됩니다.</p>
                                 </div>
                             </div>
-                            
                             <div class="form-group">
                                 <label for="" class="col-md-2 control-label">탈퇴일자</label>
                                 <div class="col-md-3">
@@ -236,10 +228,10 @@
                                 <label for="" class="col-md-2 control-label">주소</label>
                                 <div class="col-md-5 row mb10">
                                     <div class="col-sm-5">
-                                        <input type="text" class="form-control" id="zip" name="zip" value="{{ $user->zip }}" placeholder="@lang('messages.zip')">
+                                        <input type="text" class="form-control" id="zip" name="zip" value="{{ $user->zip }}" placeholder="우편 번호">
                                     </div>
                                     <div class="col-sm-7" style="padding-left: 0;">
-                                        <input type="button" class="btn btn-default form_btn" onclick="execDaumPostcode()" value="@lang('messages.address_search')">
+                                        <input type="button" class="btn btn-default form_btn" onclick="execDaumPostcode()" value="주소 검색">
                                     </div>
 
                                     <!-- 우편번호검색 -->
@@ -252,11 +244,11 @@
                                 </div>
                                 <div class="col-md-5 col-md-offset-2 mb10">
                                     <label for="" class="sr-only">기본주소</label>
-                                    <input type="text" class="form-control" id="addr1" name="addr1" value="{{ $user->addr1 }}" placeholder="@lang('messages.address1')">
+                                    <input type="text" class="form-control" id="addr1" name="addr1" value="{{ $user->addr1 }}" placeholder="기본 주소">
                                 </div>
                                 <div class="col-md-5 col-md-offset-2">
                                     <label for="" class="sr-only">상세주소</label>
-                                    <input type="text" class="form-control" id="addr2" name="addr2" value="{{ $user->addr2 }}" placeholder="@lang('messages.address2')">
+                                    <input type="text" class="form-control" id="addr2" name="addr2" value="{{ $user->addr2 }}" placeholder="상세 주소">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -359,7 +351,7 @@
                     <section id="more">
                         <div class="st_title">여분필드</div>
                         <div class="st_contents">
-                            @for($i=0; $i<10; $i++)
+                            @for($i=1; $i<11; $i++)
                                 <div class="form-group">
                                     <label for="" class="col-md-2 control-label">여분필드{{ $i }}</label>
                                     <div class="col-md-5">
