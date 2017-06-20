@@ -17,6 +17,8 @@
   'mobilePageRows' => 10,
   'writePages' => 10,
   'mobilePages' => 5,
+  'newSkin' => '',
+  'searchSkin' => '',
   'pointTerm' => 0,
 
   // 회원 가입
@@ -75,6 +77,4 @@
   'emailJoinSuperAdmin' => 0,
   'emailJoinUser' => 0,
 
-  // 투표 기타의견 작성 시 메일 설정
-  'emailVoteSuperAdmin' => 0,
 ) ;

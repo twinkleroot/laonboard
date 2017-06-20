@@ -1,7 +1,7 @@
-@extends('theme')
+@extends('themes.default.basic')
 
 @section('title')
-    소셜 로그인 | {{ Cache::get("config.homepage")->title }} 
+    소셜 로그인 | {{ Cache::get("config.homepage")->title }}
 @endsection
 
 @section('include_script')

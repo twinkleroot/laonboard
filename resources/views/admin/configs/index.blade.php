@@ -1,4 +1,4 @@
-@extends('theme')
+@extends('themes.default.basic')
 
 @section('title')
     환경 설정 | {{ $configHomepage->title }}
@@ -129,6 +129,42 @@
 
                         <div class="col-md-6">
                             <input type="text" name="mobilePages" value="{{ $configHomepage->mobilePages }}">페이지씩 표시
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="newSkin" class="col-md-4 control-label">최근게시물 스킨</label>
+
+                        <div class="col-md-6">
+                            <select name='newSkin'>
+                                <option value='' @if($configHomepage->newSkin == '') selected @endif>
+                                    선택안함
+                                </option>
+                                @foreach($skins as $key => $value)
+                                    <option value='{{ $key }}' @if($configHomepage->newSkin == $key) selected @endif>
+                                        {{ $value }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="searchSkin" class="col-md-4 control-label">검색 스킨</label>
+
+                        <div class="col-md-6">
+                            <select name='searchSkin'>
+                                <option value='' @if($configHomepage->searchSkin == '') selected @endif>
+                                    선택안함
+                                </option>
+                                @foreach($skins as $key => $value)
+                                    <option value='{{ $key }}' @if($configHomepage->searchSkin == $key) selected @endif>
+                                        {{ $value }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -602,27 +638,6 @@
                 <div class="panel-body">
                     <div class="col-md-offset-5">
                         <input type="submit" class="btn btn-primary" value="회원가입 시 메일 설정 변경하기"/>
-                    </div>
-                </div>
-            </form>
-            <div class="panel-heading">투표 기타의견 작성 시 메일 설정</div>
-            <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.config.update', ['name' => 'email.vote']) }}">
-                {{ method_field('PUT') }}
-                {{ csrf_field() }}
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="emailVoteSuperAdmin" class="col-md-4 control-label">최고관리자</label>
-
-                        <div class="col-md-6">
-                            최고관리자에게 메일을 발송합니다.<br />
-                            <input type="checkbox" name="emailVoteSuperAdmin" id="emailVoteSuperAdmin" value="1" @if($configEmailVote->emailVoteSuperAdmin == 1) checked @endif>
-                                <label for="emailVoteSuperAdmin">사용</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <div class="col-md-offset-5">
-                        <input type="submit" class="btn btn-primary" value="투표 기타의견 작성 시 메일 설정 변경하기"/>
                     </div>
                 </div>
             </form>

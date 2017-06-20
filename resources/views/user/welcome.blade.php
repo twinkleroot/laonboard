@@ -1,4 +1,4 @@
-@extends('theme')
+@extends('themes.default.basic')
 
 @section('title')
     회원가입 완료 | {{ Cache::get("config.homepage")->title }}

@@ -1,4 +1,4 @@
-@extends('theme')
+@extends('themes.default.basic')
 
 @section('title')
     LaBoard | {{ Cache::get("config.homepage")->title }}

@@ -1,4 +1,4 @@
-@extends('theme')
+@extends('themes.default.basic')
 
 @section('title')
     포인트 내역 | {{ $config->title }}

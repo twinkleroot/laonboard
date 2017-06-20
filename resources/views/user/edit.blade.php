@@ -1,4 +1,4 @@
-@extends('theme')
+@extends('themes.default.basic')
 
 @section('title')
     회원 정보 수정 | {{ Cache::get("config.homepage")->title }}

@@ -9,7 +9,7 @@ use File;
 use App\BoardFile;
 use Carbon\Carbon;
 use App\Board;
-
+use App\Common\Util;
 
 class Move
 {
@@ -85,11 +85,13 @@ class Move
                     // 복사할 때 원본 게시물에 첨부 파일이 있다면 board_files 테이블에 동일한 파일을 링크하는 정보를 추가해준다.
                     // 게시물 이동할 때는 board_files 테이블의 board_id와 write_id를 update(실제로는 row의 insert -> delete)한다.
                     if($originalWrite->file > 0) {
-                        $this->updateAttachedFileInfo($writeModel, $originalWrite, $lastInsertId, $board, $request);
+                        $this->updateAttachedFileInfo($originalWrite, $lastInsertId, $board, $request);
                     }
                     $beforeWriteNum = $newWrite->num;
                 }
 
+                // 메인 최신글 캐시 삭제
+                Util::deleteCache('main', $board->table_name);
             }
             $message = '게시물 복사가 완료되었습니다.';
         } else {
@@ -121,7 +123,7 @@ class Move
     }
 
     // 게시물 복사할 때 첨부파일정보도 함께 복사하는 메서드
-    private function updateAttachedFileInfo($writeModel, $write, $lastInsertId, $toBoard, $request)
+    private function updateAttachedFileInfo($write, $lastInsertId, $toBoard, $request)
     {
         $boardId = $request->boardId;
         $writeId = $write->id;

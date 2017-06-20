@@ -36,26 +36,11 @@ class Point extends Model
         return [
             'config' => $config,
             'points' => $points,
-            'sum' => $this->sumPoint(),
+            'sum' => Point::sum('point'),   // 모든 유저의 포인트합을 구한다.
             'kind' => '',
             'keyword' => '',
             'searchEmail' => '',
         ];
-    }
-
-    // (포인트 관리) 모든 유저들의 포인트 총합을 구한다.
-    public function sumPoint()
-    {
-        // 각 유저의 현재 포인트를 가져온다.
-        $users = Point::select(DB::raw('max(user_point) as max_point'))->groupBy('user_id')->get();
-
-        // 유저들의 포인트 총합
-        $sum = 0;
-        foreach($users as $user) {
-            $sum += $user->max_point;
-        }
-
-        return $sum;
     }
 
     // (포인트 관리) 포인트 증감 설정

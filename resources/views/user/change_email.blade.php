@@ -1,4 +1,4 @@
-@extends('theme')
+@extends('themes.default.basic')
 
 @section('title')
     메일인증 메일주소 변경 | {{ Cache::get("config.homepage")->title }}

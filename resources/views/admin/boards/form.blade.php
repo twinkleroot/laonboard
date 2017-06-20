@@ -1,4 +1,4 @@
-@extends('theme')
+@extends('themes.default.basic')
 
 @section('title')
      게시판 {{ $title }} | {{ $homePageConfig->title }}

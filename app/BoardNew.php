@@ -98,7 +98,8 @@ class BoardNew extends Model
         return $boardNewList;
     }
 
-    public function selectWrites($ids)
+    // 새글 선택 삭제
+    public function deleteWrites($ids)
     {
         $boardNews = BoardNew::selectRaw('board_news.*, boards.table_name')
                     ->leftJoin('boards', 'boards.id', '=', 'board_news.board_id')

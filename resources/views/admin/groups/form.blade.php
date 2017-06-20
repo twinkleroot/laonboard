@@ -1,4 +1,4 @@
-@extends('theme')
+@extends('themes.default.basic')
 
 @section('title')
     게시판 그룹 {{ $title }} | {{ $config->title }}

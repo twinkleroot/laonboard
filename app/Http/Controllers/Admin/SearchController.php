@@ -119,7 +119,7 @@ class SearchController extends Controller
                         // 검색한 유저의 id로 포인트 테이블 조회
                         $points = Point::where(['user_id' => $user->id])->orderBy('id', 'desc')
                                 ->paginate($config->pageRows);
-                        $sum = $points->max('user_point');
+                        $sum = $user->point;
                         $searchEmail = $user->email;
                     } else {
                         // 유저가 없으므로 user_id를 0으로 해서 조회한다. (null error 방지용)

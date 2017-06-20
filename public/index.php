@@ -53,64 +53,6 @@ $response = $kernel->handle(
     $request = Illuminate\Http\Request::capture()
 );
 
-// 설정 캐시에 저장
-$homepageConfig = Cache::rememberForever("config.homepage", function() {
-                        $config = new App\Config(); // 캐시에 저장할 때만 객체 생성
-                        $hConfig = App\Config::where('name', 'config.homepage')->first();
-                        if(is_null($hConfig)) {
-                            $hConfig = $config->createConfigHomepage();
-                        }
-                        return $config->pullConfig($hConfig);
-                    });
-$boardConfig = Cache::rememberForever("config.board", function() {
-                        $config = new App\Config(); // 캐시에 저장할 때만 객체 생성
-                        $bConfig = App\Config::where('name', 'config.board')->first();
-                        if(is_null($bConfig)) {
-                            $bConfig = $config->createConfigBoard();
-                        }
-                        return $config->pullConfig($bConfig);
-                    });
-$joinConfig = Cache::rememberForever("config.join", function() {
-                        $config = new App\Config(); // 캐시에 저장할 때만 객체 생성
-                        $jConfig = App\Config::where('name', 'config.join')->first();
-                        if(is_null($jConfig)) {
-                            $jConfig = $config->createConfigJoin();
-                        }
-                        return $config->pullConfig($jConfig);
-                    });
-$emailDefaultConfig = Cache::rememberForever("config.email.default", function() {
-                        $config = new App\Config(); // 캐시에 저장할 때만 객체 생성
-                        $edConfig = App\Config::where('name', 'config.email.default')->first();
-                        if(is_null($edConfig)) {
-                            $edConfig = $config->createConfigEmailDefault();
-                        }
-                        return $config->pullConfig($edConfig);
-                    });
-$emailBoardConfig = Cache::rememberForever("config.email.board", function() {
-                        $config = new App\Config(); // 캐시에 저장할 때만 객체 생성
-                        $ebConfig = App\Config::where('name', 'config.email.board')->first();
-                        if(is_null($ebConfig)) {
-                            $ebConfig = $config->createConfigEmailBoard();
-                        }
-                        return $config->pullConfig($ebConfig);
-                    });
-$emailJoinConfig = Cache::rememberForever("config.email.join", function() {
-                        $config = new App\Config(); // 캐시에 저장할 때만 객체 생성
-                        $ejConfig = App\Config::where('name', 'config.email.join')->first();
-                        if(is_null($ejConfig)) {
-                            $ejConfig = $config->createConfigEmailJoin();
-                        }
-                        return $config->pullConfig($ejConfig);
-                    });
-$emailVoteConfig = Cache::rememberForever("config.email.vote", function() {
-                        $config = new App\Config(); // 캐시에 저장할 때만 객체 생성
-                        $evConfig = App\Config::where('name', 'config.email.vote')->first();
-                        if(is_null($evConfig)) {
-                            $evConfig = $config->createConfigEmailVote();
-                        }
-                        return $config->pullConfig($evConfig);
-                    });
-
 $response->send();
 
 $kernel->terminate($request, $response);

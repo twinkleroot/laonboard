@@ -36,7 +36,7 @@ class Menu extends Model
         $new = $request->get('new');
 
         if($new == 'new' || !$code) {
-            $code = base_convert(substr($code,0,2), 36, 10);
+            $code = base_convert(mb_substr($code, 0, 2, 'utf-8'), 36, 10);
             $code += 36;
             $code = base_convert($code, 10, 36);
         }
@@ -60,11 +60,8 @@ class Menu extends Model
                 $results = Board::select('id', 'subject')->orderBy('order', 'desc')->orderBy('id', 'desc')->get();
                 break;
             case 'content':
-                // 내용관리 추가되면 주석 해제
-                // $results = Content::select('id', 'subject')->orderBy('id', 'desc')->get();
-                # code...
+                $results = Content::orderBy('id', 'desc')->get();
                 break;
-
             default:
                 # code...
                 break;
@@ -80,6 +77,9 @@ class Menu extends Model
     public function initMenu()
     {
         Menu::truncate();
+
+        Cache::forget('menuList');
+        Cache::forget('subMenuList');
     }
 
     // 입력된 폼을 분석해서 code를 생성하고 메뉴 정보를 저장
@@ -129,6 +129,44 @@ class Menu extends Model
             ]);
         }
 
+        $this->registerCache();
+    }
+
+    // 메뉴 저장 후 캐시에 등록
+    private function registerCache()
+    {
+        $menuList = Cache::rememberForever("menuList", function() {
+            return $this->getMainMenu();
+        });
+        Cache::rememberForever("subMenuList", function() use($menuList){
+            return $this->getSubMenuList($menuList);
+        });
+    }
+
+    // 메뉴 테이블에 저장한 대메뉴 리스트 가져오기
+    public function getMainMenu()
+    {
+        return Menu::where('use', 1)
+                    ->whereRaw('length(code) = 2')
+                    ->orderBy('order', 'asc')
+                    ->orderBy('id', 'asc')
+                    ->get();
+    }
+
+    // 메뉴 테이블에 저장한 소메뉴 리스트 가져오기
+    public function getSubMenuList($menuList)
+    {
+        $subMenuList = [];
+        for($i=0; $i<count($menuList); $i++) {
+            $subMenuList[$i] = Menu::where('use', 1)
+                    ->whereRaw('length(code) = 4')
+                    ->whereRaw('substring(code, 1, 2)=' . $menuList[$i]['code'])
+                    ->orderBy('order', 'asc')
+                    ->orderBy('id', 'asc')
+                    ->get();
+        }
+
+        return $subMenuList;
     }
 
 }

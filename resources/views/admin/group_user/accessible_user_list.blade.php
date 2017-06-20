@@ -1,4 +1,4 @@
-@extends('theme')
+@extends('themes.default.basic')
 
 @section('title')
     {{ $group->subject }}그룹 접근가능회원 | {{ $config->title }}

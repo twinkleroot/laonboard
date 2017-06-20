@@ -15,9 +15,9 @@
                 <td class="td_mngsmall text-center">
                     <input type="hidden" name="subject[]" value="{{ preg_replace('/[\'\"]/', '', $result['subject']) }}">
                     <input type="hidden" name="link[]" value=
-                        @if($type == 'group') "http://example.com"
+                        @if($type == 'group') {{ route('group', $result['id']) }}
                         @elseif($type == 'board') {{ route('board.index', $result['id']) }}
-                        @elseif($type == 'content') "http://content"
+                        @elseif($type == 'content') {{ route('contents.show', $result['content_id']) }}
                         @endif
                     >
                     <button type="button" class="btn btn-default add_select">선택</button>
@@ -28,6 +28,7 @@
         </tbody>
     </table>
 @else
+<<<<<<< HEAD
     <div class="form-group">
         <label for="name" class="col-sm-2 col-xs-3 control-label" style="text-align: left;">메뉴</label>
         <div class="col-sm-3 col-xs-9">

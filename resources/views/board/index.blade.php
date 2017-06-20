@@ -1,4 +1,4 @@
-@extends('theme')
+@extends('themes.default.basic')
 
 @section('title')
     {{ $board->subject }} 리스트 | {{ Cache::get("config.homepage")->title }}

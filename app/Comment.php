@@ -12,7 +12,7 @@ use App\Board;
 use App\Point;
 use App\Group;
 use App\BoardNew;
-
+use App\Common\Util;
 
 class Comment
 {
@@ -44,7 +44,7 @@ class Comment
 
         $board = Board::find($boardId);
         $user = auth()->user();
-        $currentUser = $user->email;
+        $currentUser = is_null($user) ? '' : $user->email;
         $homepageConfig = Cache::get("config.homepage");
         $superAdmin = $homepageConfig->superAdmin;
         $boardAdmin = $board->admin;
@@ -54,12 +54,12 @@ class Comment
         $commentUser = $comment->user_id == 0 ? '' : User::find($comment->user_id);
         if ($currentUser == $superAdmin) {// 최고관리자 통과
             ;
-        } else if ($currentUser == $groupAdmin) { // 그룹관리자
+        } else if ($currentUser == $groupAdmin && $groupAdmin) { // 그룹관리자
             if ($user->level < $commentUser->level)  { // 자신의 레벨이 글쓴이의 레벨보다 작다면
                 $isEdit = 0;
                 $isDelete = 0;
             }
-        } else if ($currentUser == $boardAdmin) { // 게시판관리자이면
+        } else if ($currentUser == $boardAdmin && $boardAdmin) { // 게시판관리자이면
             if ($user->level < $commentUser->level) { // 자신의 레벨이 글쓴이의 레벨보다 작다면
                 $isEdit = 0;
                 $isDelete = 0;
@@ -69,11 +69,9 @@ class Comment
                 $isEdit = 0;
                 $isDelete = 0;
             }
-        } else { // 비회원인 경우
-            if ($commentUser == '') {
-                $isEdit = 0;
-                $isDelete = 0;
-            }
+        } else if( !$commentUser ){ // 비회원인 경우
+            $isEdit = 0;
+            $isDelete = 0;
         }
 
         $cnt = $writeModel->where('comment_reply', 'like', $comment->comment_reply)
@@ -211,6 +209,9 @@ class Comment
         // 댓글 1 증가
         $board->update(['count_comment' => $board->count_comment + 1]);
 
+        // 메인 최신글 캐시 삭제
+        Util::deleteCache('main', $board->table_name);
+
         return $newCommentId;
     }
 
@@ -268,6 +269,9 @@ class Comment
             'ip' => $ip,
         ]);
 
+        // 메인 최신글 캐시 삭제
+        Util::deleteCache('main', $board->table_name);
+
         return $result;
     }
 
@@ -307,6 +311,9 @@ class Comment
         if(!BoardNew::where(['board_id' => $board->id, 'write_id' => $commentId])->delete()) {
             return '정상적으로 새글을 삭제하는데 실패하였습니다.';
         }
+
+        // 메인 최신글 캐시 삭제
+        Util::deleteCache('main', $board->table_name);
     }
 
 }

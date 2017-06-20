@@ -25,6 +25,15 @@
     </script>
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/common.js') }}"></script>
+    <script>
+        $(function(){
+            $('.dropdown').hover(function() {
+                $(this).addClass('open');
+            }, function() {
+                $(this).removeClass('open');
+            });
+        });
+    </script>
     @yield('include_script')
 </head>
 
@@ -47,9 +56,25 @@
     <div id="navbar" class="navbar-collapse collapse">
         <!-- menu -->
         <ul class="gnb navbar-nav">
+            @for($i=0; $i<count(Cache::get('menuList')); $i++)
+                @if(count(Cache::get('subMenuList')[$i]) > 0)
+                    <li class="gnb-li dropdown">
+                        <a href="{{ Cache::get('menuList')[$i]['link'] }}" role="button" aria-expanded="false">
+                            {{ Cache::get('menuList')[$i]['name'] }}<span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                        @for($j=0; $j<count(Cache::get('subMenuList')[$i]); $j++)
+                            <li><a href="{{ Cache::get('subMenuList')[$i][$j]['link'] }}">{{ Cache::get('subMenuList')[$i][$j]['name'] }}</a></li>
+                        @endfor
+                        </ul>
+                @else
+                    <li class="gnb-li">
+                        <a href="{{ Cache::get('menuList')[$i]['link'] }}">{{ Cache::get('menuList')[$i]['name'] }}</a>
+                @endif
+                    </li>
+            @endfor
 
             <li class="gnb-li"><a href="{{ route('new.index') }}">새글</a></li>
-            <li class="gnb-li"><a href="{{ route('board.index', 67) }}">게시판(테스트)</a></li>
             @if (Auth::guest()) <!-- 공개권한: 게스트 -->
             <li class="gnb-li"><a href="{{ route('login') }}">로그인</a></li>
             <li class="gnb-li"><a href="{{ route('user.join') }}">회원가입</a></li>
@@ -57,7 +82,6 @@
                 @if(Auth::user()->level == 10) <!-- 공개권한: 관리자 -->
                     <li class="gnb-li"><a href="{{ route('admin.index') }}">관리자 모드</a></li>
                 @endif <!-- 공개권한: 관리자 end -->
-
                 <!-- 공개권한: 회원 -->
                 <li class="gnb-li dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">

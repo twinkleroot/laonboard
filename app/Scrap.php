@@ -115,10 +115,6 @@ class Scrap extends Model
             return ['message' => $result['message']];
         }
 
-        // if(Cache::get('config.email.default')->emailUse && $writeModel->board->use_email) {
-        //     $notification->sendWriteNotification($writeModel, $result);
-        // }
-
         return Scrap::Create([
             'user_id' => auth()->user()->id,
             'board_id' => $request->boardId,

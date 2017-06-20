@@ -1,6 +1,6 @@
-@extends('theme')
+@extends('themes.default.basic')
 @section('title')
-    회원가입 | {{ Cache::get("config.homepage")->title }} 
+    회원가입 | {{ Cache::get("config.homepage")->title }}
 @endsection
 
 @section('include_css')

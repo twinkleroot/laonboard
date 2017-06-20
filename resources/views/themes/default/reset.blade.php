@@ -1,4 +1,4 @@
-@extends('theme')
+@extends('themes.default.basic')
 
 @section('title')
     비밀번호 재설정 | {{ Cache::get("config.homepage")->title }}

@@ -81,6 +81,7 @@ class Write extends Model
         $categories = [];
         if($this->board->use_category && !is_null($this->board->category_list) ) {
             $categories = explode('|', $this->board->category_list);
+            $categories = array_map('trim', $categories);
         }
 
         // 현재 선택한 카테고리 구하기
@@ -185,7 +186,7 @@ class Write extends Model
     {
         // 기본 ( 공지는 기본만 가져간다. )
         $query = $writeModel
-                ->selectRaw($writeModel->table.'.*, users.level as user_level')
+                ->selectRaw($writeModel->table.'.*, users.level as user_level, users.email as user_email, users.id_hashKey as user_id_hashKey')
                 ->leftJoin('users', 'users.id', '=', $writeModel->table.'.user_id')
                 ->where('is_comment', 0);
 
@@ -543,8 +544,6 @@ class Write extends Model
                 && $userPoint + $boardPoint < 0) {
                     return '보유하신 포인트('.number_format($userPoint).')가 없거나 모자라서'. $contentPiece. '('.number_format($boardPoint).')가 불가합니다.\\n\\n포인트를 적립하신 후 다시'.$contentPiece.' 해 주십시오.';
             }
-
-            // 포인트 계산하기
             // 포인트 부여(글 읽기, 파일 다운로드)
             $this->point->insertPoint($userId, $boardPoint,
                 $this->board->subject . ' ' . $write->id . $contentPiece, $this->board->table_name, $write->id, $action);
@@ -824,6 +823,9 @@ class Write extends Model
         // 저장한 글이 임시저장을 사용한 것이라면 삭제한다.
         Autosave::where('unique_id', $request->uid)->delete();
 
+        // 메인 최신글 캐시 삭제
+        Util::deleteCache('main', $this->board->table_name);
+
         return $lastInsertId;
     }
 
@@ -921,7 +923,11 @@ class Write extends Model
         // 기존 content의 img 태그의 파일을 추출하고 수정된 content의 content를 비교해서 없어진 파일은 서버에서 삭제한다.
         $this->deleteEditorImage($write->content, $inputData['content']);
 
+        // 글 수정 실행
         $writeModel->where('id', $writeId)->update($inputData);
+
+        // 메인 최신글 캐시 삭제
+        Util::deleteCache('main', $this->board->table_name);
 
         return $writeModel->find($writeId);
     }
@@ -1074,6 +1080,9 @@ class Write extends Model
 
        // 공지사항 삭제해서 업데이트
        $this->deleteNotice($writeId);
+
+       // 메인 최신글 캐시 삭제
+       Util::deleteCache('main', $this->board->table_name);
 
        return $result;
     }
