@@ -6,6 +6,6 @@
 
 @section('content')
 
-@include('themes.'. ($content->skin ? : 'default'). '.content.show')
+    @include('themes.'. ($content->skin ? : 'default'). '.content.show')
 
 @endsection

@@ -14,7 +14,8 @@ trait AuthenticatesUsers
      */
     public function showLoginForm()
     {
-        return view('auth.login');
+        $skin = Cache::get('config.theme')->name ? : 'default';
+        return view('auth.login', ['skin' => $skin]);
     }
     /**
      * Handle a login request to the application.

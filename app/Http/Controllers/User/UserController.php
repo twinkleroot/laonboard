@@ -140,6 +140,7 @@ class UserController extends Controller
         }
     }
 
+    // 개인 별 포인트 목록
     public function pointList($id)
     {
         $point = new Point();
@@ -148,6 +149,7 @@ class UserController extends Controller
         return view('user.point', $params);
     }
 
+    // 자기소개
     public function profile($idHashkey)
     {
         $params = $this->userModel->getProfileParams($idHashkey);
@@ -157,6 +159,7 @@ class UserController extends Controller
         return view('user.profile', $params);
     }
 
+    // 회원 탈퇴
     public function leave()
     {
         $message = $this->userModel->leaveUser();

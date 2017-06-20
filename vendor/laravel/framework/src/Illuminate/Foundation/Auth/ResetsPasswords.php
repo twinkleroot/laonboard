@@ -7,6 +7,7 @@ use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Cache;
 
 trait ResetsPasswords
 {
@@ -66,7 +67,9 @@ trait ResetsPasswords
              throw new NotFoundHttpException;
          }
 
-         return view('themes.default.reset')->with('token', $token);
+         $skin = Cache::get('config.theme')->name ? : 'default';
+
+         return view('auth.passwords.reset', ['skin' => $skin])->with('token', $token);
      }
 
     /**

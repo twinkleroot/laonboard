@@ -4,6 +4,7 @@ namespace Illuminate\Foundation\Auth;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
+use Cache;
 
 trait SendsPasswordResetEmails
 {
@@ -14,7 +15,9 @@ trait SendsPasswordResetEmails
      */
     public function showLinkRequestForm()
     {
-        return view('auth.passwords.email');
+        $skin = Cache::get('config.theme')->name ? : 'default';
+
+        return view('auth.passwords.email', ['skin' => $skin]);
     }
 
     /**

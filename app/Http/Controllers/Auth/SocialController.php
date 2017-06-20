@@ -21,9 +21,6 @@ class SocialController extends Controller
 
     public function __construct(Request $request, User $user, SocialLogin $social)
     {
-        // guest에서와 auth 에서 모두 사용함.
-        // $this->middleware('guest');
-
         $this->request = $request;
         $this->config = Cache::get("config.join");
         $this->userModel = $user;
@@ -53,6 +50,8 @@ class SocialController extends Controller
             if($result == 'view') {
                 // 소셜 계정을 처음 사용해서 로그인 했을 경우 기존 계정과 연결/ 회원가입 화면으로 연결
                 $params = $this->socialModel->getSocialParams($provider);
+                $params = array_add($params, 'skin', Cache::get('config.theme')->name ? : 'default');
+
                 return view('auth.social', $params);
             } else { // 소셜 계정으로 로그인
                 return redirect(route('home'));

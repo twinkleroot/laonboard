@@ -1,4 +1,4 @@
-@extends('themes.default.basic')
+@extends('themes.'. $skin. '.basic')
 
 @section('title')
     {{ $groupName }} | {{ Cache::get("config.homepage")->title }}
@@ -6,7 +6,7 @@
 
 @section('content')
 
-{{-- 최근 게시물 리스트--}}
-@include('themes.'. $skin. '.latest')
+    {{-- 최근 게시물 리스트--}}
+    @include('themes.'. $skin. '.latest.list')
 
 @endsection

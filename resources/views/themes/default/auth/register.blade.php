@@ -1,17 +1,3 @@
-@extends('themes.default.basic')
-@section('title')
-    회원가입 | {{ Cache::get("config.homepage")->title }}
-@endsection
-
-@section('include_css')
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/auth.css') }}">
-@endsection
-
-@section('include_script')
-    <script src='https://www.google.com/recaptcha/api.js'></script>
-@endsection
-
-@section('content')
 <div class="container">
 <div class="row">
 <div class="col-md-6 col-md-offset-3 col-xs-12">
@@ -83,8 +69,6 @@
             </form>
         </div>
     </div>
-
 </div>
 </div>
 </div>
-@endsection
