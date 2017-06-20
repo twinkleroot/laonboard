@@ -12,8 +12,8 @@
 
     <!-- css -->
     <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/admin.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('font-awesome/css/font-awesome.css') }}">
 
     <!-- Scripts -->
@@ -26,7 +26,7 @@
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 </head>
 
-<body style="background: #f4f4f4;">
+<body>
 <div id="header">
 <div class="container">
     <div class="title">
@@ -108,37 +108,37 @@ function addMenuList(name, link, code)
     var list = "<tr class=\"menu_list menu_group_"+ code + "\">";
     list += "<td" + sub_menu_class + ">";
     list += "<input type=\"hidden\" name=\"code[]\" value=\""+ code +"\">";
-    list += childIcon + "<input type=\"text\" name=\"name[]\" value=\""+name+"\" id=\"name_"+ms+"\" required class=\"required frm_input full_input\">";
+    list += childIcon + "<input type=\"text\" class=\"form-control\" name=\"name[]\" value=\""+name+"\" id=\"name_"+ms+"\" required class=\"required frm_input full_input\">";
     list += "</td>";
     list += "<td class='text-center'>";
-    list += "<input type=\"text\" name=\"link[]\" value=\""+link+"\" id=\"link_"+ms+"\" required class=\"required frm_input full_input\">";
+    list += "<input type=\"text\" class=\"form-control\" name=\"link[]\" value=\""+link+"\" id=\"link_"+ms+"\" required class=\"required frm_input full_input\">";
     list += "</td>";
     list += "<td class='text-center'>";
-    list += "<select name=\"target[]\" id=\"target_"+ms+"\">";
+    list += "<select class=\"form-control\" name=\"target[]\" id=\"target_"+ms+"\">";
     list += "<option value=\"self\">사용안함</option>";
     list += "<option value=\"blank\">사용함</option>";
     list += "</select>";
     list += "</td>";
     list += "<td class='text-center'>";
-    list += "<input type=\"text\" name=\"order[]\" value=\"0\" id=\"order_"+ms+"\" required class=\"required frm_input\" size=\"5\">";
+    list += "<input type=\"text\" class=\"form-control\" name=\"order[]\" value=\"0\" id=\"order_"+ms+"\" required class=\"required frm_input\" size=\"5\">";
     list += "</td>";
     list += "<td class='text-center'>";
-    list += "<select name=\"use[]\" id=\"use_"+ms+"\">";
+    list += "<select class=\"form-control\" name=\"use[]\" id=\"use_"+ms+"\">";
     list += "<option value=\"1\">사용함</option>";
     list += "<option value=\"0\">사용안함</option>";
     list += "</select>";
     list += "</td>";
     list += "<td class='text-center'>";
-    list += "<select name=\"mobile_use[]\" id=\"mobile_use_"+ms+"\">";
+    list += "<select class=\"form-control\" name=\"mobile_use[]\" id=\"mobile_use_"+ms+"\">";
     list += "<option value=\"1\">사용함</option>";
     list += "<option value=\"0\">사용안함</option>";
     list += "</select>";
     list += "</td>";
     list += "<td class='text-center'>";
     @if($new == 'new')
-        list += "<button type=\"button\" class=\"add_sub_menu\">추가</button>";
+        list += "<button type=\"button\" class=\"btn btn-default add_sub_menu\">추가</button>";
     @endif
-    list += "<button type=\"button\" class=\"del_menu\">삭제</button>";
+    list += "<button type=\"button\" class=\"btn btn-danger del_menu\">삭제</button>";
     list += "</td>";
     list += "</tr>";
 
