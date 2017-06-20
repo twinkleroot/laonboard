@@ -1,5 +1,5 @@
 @if(!is_null($type))
-    
+
     <table class="table box">
         <thead>
             <tr>
@@ -38,7 +38,7 @@
     <div class="form-group">
         <label for="link" class="col-sm-2 col-xs-3 control-label" style="text-align: left;">링크</label>
         <div class="col-sm-5 col-xs-9">
-            <input type="text" class="form-control" name="link" id="link" required>
+            <input type="text" class="form-control" name="link" id="link" value="http://" required>
             <p class="help-block">링크는 http://를 포함해서 입력해 주세요.</p>
         </div>
     </div>

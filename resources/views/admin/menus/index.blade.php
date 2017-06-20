@@ -84,7 +84,7 @@
                         </td>
                         <td class="text-center">
                             @if(strlen($menu['code']) == 2)
-                                <button type="button" class="btn btn-default dd_sub_menu">추가</button>
+                                <button type="button" class="btn btn-default add_sub_menu">추가</button>
                             @endif
                             <button type="button" class="btn btn-danger del_menu">삭제</button>
                         </td>
