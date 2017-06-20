@@ -28,7 +28,6 @@
         </tbody>
     </table>
 @else
-<<<<<<< HEAD
     <div class="form-group">
         <label for="name" class="col-sm-2 col-xs-3 control-label" style="text-align: left;">메뉴</label>
         <div class="col-sm-3 col-xs-9">
