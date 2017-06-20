@@ -29,9 +29,9 @@
     <div class="pull-left">
         <h3>회원추가</h3>
         <ul class="fl">
-            <li class="admin"><a href="{{ route('admin.index') }}">Admin</a></li>
-            <li class="depth"><a href="{{ route('admin.users.index') }}">회원관리</a></li>
-            <li class="depth"><a href="{{ route('admin.users.create') }}">회원추가</a></li>
+            <li class="admin">Admin</li>
+            <li class="depth">회원관리</li>
+            <li class="depth">회원추가</li>
         </ul>
     </div>
 </div>

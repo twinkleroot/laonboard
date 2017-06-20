@@ -1,22 +1,114 @@
-@extends('theme')
+@extends('admin.admin')
 
 @section('title')
     메뉴설정 | {{ $config->title }}
 @endsection
 
 @section('content')
-@if(Session::has('message'))
-  <div class="alert alert-info">
-    {{ Session::get('message') }}
-  </div>
-@endif
+<form role="form" method="POST" action="{{ route('admin.menus.store') }}">
+{{ csrf_field() }}
+    <div class="body-head">
+        <div class="pull-left">
+            <h3>메뉴설정</h3>
+            <ul class="fl">
+                <li class="admin">Admin</li>
+                <li class="depth">환경설정</li>
+                <li class="depth">메뉴설정</li>
+            </ul>
+        </div>
+        <div class="pull-right">
+            <ul class="mb_btn" style="margin-top:8px;">
+                <li><button type="button" class="btn btn-sir" onclick="add_menu();">메뉴 추가</button></li>
+                <li><input type="submit" class="btn btn-default" value="확인"></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="body-contents">
+        @if(Session::has('message'))
+          <div class="alert alert-info">
+            {{ Session::get('message') }}
+          </div>
+        @endif
+
+        <div class="alert alert-danger">
+            주의! 메뉴설정 작업 후 반드시 확인을 누르셔야 저장됩니다.
+        </div>
+
+        <div id="menulist">
+            <table class="table table-striped box">
+                <thead>
+                    <tr>
+                        <th>메뉴</th>
+                        <th>링크</th>
+                        <th>새창</th>
+                        <th>순서</th>
+                        <th>PC사용</th>
+                        <th>모바일사용</th>
+                        <th>관리</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @if(count($menus) > 0)
+                @foreach ($menus as $menu)
+                    <tr class="menu_list menu_group_{{ substr($menu['code'], 0, 2) }}">
+                        <td class="text-center @if(strlen($menu['code']) == 4) sub_menu_class @endif">
+                            <input type="hidden" name="code[]" value="{{ substr($menu['code'], 0, 2) }}">
+                            @if(strlen($menu['code']) == 4) <div class="row"> <div class="col-md-2">ㄴ</div> <div class="col-md-10"> @endif
+                            <input type="text" class="form-control" name="name[]" value="{{ $menu['name']}}" />
+                            @if(strlen($menu['code']) == 4) </div></div> @endif
+                        </td>
+                        <td class="text-center">
+                            <input type="text" class="form-control" name="link[]" value="{{ $menu['link']}}" />
+                        </td>
+                        <td class="text-center">
+                            <select name="target[]" class="form-control">
+                                <option value='self' {{ $menu['target'] == 'self' ? 'selected' : '' }}>사용안함</option>
+                                <option value='blank' {{ $menu['target'] == 'blank' ? 'selected' : '' }}>사용함</option>
+                            </select>
+                        </td>
+                        <td class="text-center">
+                            <input type="text" class="form-control" name="order[]" value="{{ $menu['order']}}" size="5"/>
+                        </td>
+                        <td class="text-center">
+                            <select name="use[]" class="form-control">
+                                <option value='1' {{ $menu['use'] == 1 ? 'selected' : '' }}>사용함</option>
+                                <option value='0' {{ $menu['use'] == 0 ? 'selected' : '' }}>사용안함</option>
+                            </select>
+                        </td>
+                        <td class="text-center">
+                            <select name="mobile_use[]" class="form-control">
+                                <option value='1' {{ $menu['mobile_use'] == 1 ? 'selected' : '' }}>사용함</option>
+                                <option value='0' {{ $menu['mobile_use'] == 0 ? 'selected' : '' }}>사용안함</option>
+                            </select>
+                        </td>
+                        <td class="text-center">
+                            @if(strlen($menu['code']) == 2)
+                                <button type="button" class="btn btn-default dd_sub_menu">추가</button>
+                            @endif
+                            <button type="button" class="btn btn-danger del_menu">삭제</button>
+                        </td>
+                    </tr>
+                @endforeach
+                @else
+                    <tr id="empty_menu_list">
+                        <td colspan="7">
+                            <span class="empty_table">
+                                <i class="fa fa-exclamation-triangle"></i> 자료가 없습니다.
+                            </span>
+                        </td>
+                    </tr>
+                @endif
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+<!--
 <div class="row">
     <div class="col-md-12">
         <div class="panel panel-default">
-            <div class="panel-heading"><h2>메뉴설정</h2></div>
-            <div class="panel-heading">
-                주의! 메뉴설정 작업 후 반드시 확인을 누르셔야 저장됩니다.
-            </div>
+
             <div class="panel-heading">
                 <button type="button" class="btn btn-primary" onclick="add_menu();">메뉴 추가</button>
             </div>
@@ -84,14 +176,13 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="panel-heading">
-                    <input type="submit" class="btn btn-primary" value="확인"/>
-                </div>
             </form>
 
         </div>
     </div>
 </div>
+</div>
+-->
 <script>
 $(function(){
     // 관리의 추가 버튼 클릭(하위 메뉴 추가)
