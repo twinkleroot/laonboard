@@ -91,7 +91,7 @@
                     <ul class="dropdown-menu" role="menu">
 
                         @if(Auth::user()->level < 10)
-                            <li><a href="{{ route('user.checkPassword') }}">회원 정보 수정</a></li>
+                            <li><a href="{{ route('user.checkPassword') }}?work=edit">회원 정보 수정</a></li>
                         @endif
                         <li>
                             <a href="{{ route('scrap.index') }}" class="winScrap" target="_blank" onclick="winScrap(this.href); return false;">스크랩</a>
@@ -100,13 +100,16 @@
                         <li><a href="{{ route('memo.index') }}?kind=recv" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지</a></li>
                         <li>
                             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                로그아웃
+                                로그 아웃
                             </a>
                             <!-- 로그아웃 토큰 -->
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                 {{ csrf_field() }}
                             </form>
                         </li>
+                        @if(Auth::user()->level < 10)
+                            <li><a href="{{ route('user.checkPassword') }}?work=leave">회원 탈퇴</a></li>
+                        @endif
                     </ul>
                 </li>
                 <!-- 공개권한: 회원 end -->

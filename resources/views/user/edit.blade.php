@@ -304,7 +304,7 @@
 
                 <div class="form-group">
                         <button type="submit" class="btn btn-sir">변경하기</button>
-                        <a class="btn btn-sir" href="{{ route('index') }}">취소</a>
+                        <a class="btn btn-sir" href="{{ route('home') }}">취소</a>
                     </div>
             </form>
         </div>

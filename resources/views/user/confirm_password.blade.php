@@ -27,6 +27,7 @@
         <div class="panel-body row">
             <form class="contents col-md-8 col-md-offset-2" role="form" method="POST" action="{{ route('user.confirmPassword') }}">
             {{ csrf_field() }}
+            <input type="hidden" name="work" value="{{ $work }}" />
                 <div class="form-group mg5">
                     <label for="email" class="control-label">회원 이메일</label>
                     <span style="margin-left: 7px;">{{ $email }}</span>
@@ -40,7 +41,7 @@
                 <div class="form-group">
                     <div>
                         <button type="submit" class="btn btn-sir">확인</button>
-                        <a class="btn btn-sir" href="{{ route('index') }}">메인으로 돌아가기</a>
+                        <a class="btn btn-sir" href="{{ route('home') }}">메인으로 돌아가기</a>
                     </div>
                 </div>
             </form>

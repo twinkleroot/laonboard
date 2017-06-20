@@ -29,7 +29,6 @@ class RegisterController extends Controller
     // 라라벨에서 기본으로 제공해 주는 회원가입 트레이트 사용 안함.
     // use RegistersUsers;
 
-    public $request;
     public $config;
     public $rulePassword;
     public $userModel;
@@ -39,11 +38,10 @@ class RegisterController extends Controller
      *
      * @return void
      */
-    public function __construct(Request $request, User $userModel)
+    public function __construct(User $userModel)
     {
         $this->middleware('guest');
 
-        $this->request = $request;
         $this->config = Cache::get("config.join");
         $this->rulePassword = Config::getRulePassword('config.join', $this->config);
         $this->userModel = $userModel;
@@ -62,7 +60,7 @@ class RegisterController extends Controller
             $rule = array_add($this->userModel->rulesRegister, 'password', $this->rulePassword);
             $this->validate($request, $rule);
 
-            $user = $this->userModel->userJoin($request, $this->config);
+            $user = $this->userModel->joinUser($request, $this->config);
             if(!Cache::get('config.email.default')->emailCertify) {
                 Auth::login($user);
             }

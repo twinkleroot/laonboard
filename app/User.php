@@ -173,7 +173,7 @@ class User extends Authenticatable
     }
 
     // 회원 가입
-    public function userJoin($request, $config)
+    public function joinUser($request, $config)
     {
         $nowDate = Carbon::now()->toDateString();
 
@@ -240,7 +240,7 @@ class User extends Authenticatable
     }
 
     // 회원 정보 수정
-    public function userInfoUpdate($request, $config)
+    public function updateUserInfo($request, $config)
     {
         $user = Auth::user();
         $openChangable = $this->openChangable($user, Carbon::now());
@@ -406,7 +406,25 @@ class User extends Authenticatable
         ];
     }
 
+    // 회원 탈퇴
+    public function leaveUser()
+    {
+        $user = auth()->user();
+        if($user->email == Cache::get('config.homepage')->superAdmin) {
+            return '최고 관리자는 탈퇴할 수 없습니다';
+        }
+        $user->update([
+            'leave_date' => Carbon::now()->format('Ymd')
+        ]);
+
+        Auth::logout();
+
+        return $user->nick. '님께서는 '. Carbon::now()->format('Y년 m월 d일'). '에 회원에서 탈퇴하셨습니다.';
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
     // 관리자에서 사용하는 메서드
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // 회원 목록
     public function userList()
