@@ -138,9 +138,6 @@
 
                         <div class="col-md-6">
                             <select name='newSkin'>
-                                <option value='' @if($configHomepage->newSkin == '') selected @endif>
-                                    선택안함
-                                </option>
                                 @foreach($skins as $key => $value)
                                     <option value='{{ $key }}' @if($configHomepage->newSkin == $key) selected @endif>
                                         {{ $value }}
@@ -156,9 +153,6 @@
 
                         <div class="col-md-6">
                             <select name='searchSkin'>
-                                <option value='' @if($configHomepage->searchSkin == '') selected @endif>
-                                    선택안함
-                                </option>
                                 @foreach($skins as $key => $value)
                                     <option value='{{ $key }}' @if($configHomepage->searchSkin == $key) selected @endif>
                                         {{ $value }}

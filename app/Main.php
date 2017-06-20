@@ -10,8 +10,11 @@ use Cache;
 
 class Main
 {
-    public function getMainContents($skin)
+    public function getMainContents($skin, $default)
     {
+        if(!$skin) {
+            $skin = $default;
+        }
         $boards = Board::selectRaw('boards.*, groups.id as group_id, groups.subject as group_subject, groups.order as group_order')
             ->leftJoin('groups', 'groups.id', '=', 'boards.group_id')
             ->where('boards.device', '<>', 'mobile')
@@ -20,7 +23,7 @@ class Main
             ->orderBy('boards.order')
             ->get();
 
-        $latestList = $this->getLatestWrites($skin, $boards, 5, 25);
+        $latestList = $this->getLatestWrites($boards, 5, 25);
 
         return [
             'boardList' => $latestList,
@@ -28,8 +31,11 @@ class Main
         ];
     }
 
-    public function getGroupContents($skin, $groupId)
+    public function getGroupContents($groupId, $skin, $default)
     {
+        if(!$skin) {
+            $skin = $default;
+        }
         $boards = Board::where([
                 'group_id' => $groupId,
                 'use_cert' => 'not-use',
@@ -39,7 +45,7 @@ class Main
             ->orderBy('order')
             ->get();
 
-        $groupList = $this->getLatestWrites($skin, $boards, 5, 70);
+        $groupList = $this->getLatestWrites($boards, 5, 70);
         $group = Group::find($groupId);
 
         return [
@@ -49,7 +55,7 @@ class Main
         ];
     }
 
-    private function getLatestWrites($skin, $boards, $pageRows, $titleLength)
+    private function getLatestWrites($boards, $pageRows, $titleLength)
     {
         $latestList = array();
         $cacheMinutes = 60;
