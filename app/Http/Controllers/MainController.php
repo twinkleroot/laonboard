@@ -18,7 +18,7 @@ class MainController extends Controller
     // 홈페이지 메인
     public function index()
     {
-        $mainContents = $this->main->getMainContents(Cache::get('config.homepage')->newSkin);    // 환경설정에 있는 값으로 가져오도록 고쳐야 함.
+        $mainContents = $this->main->getMainContents(Cache::get('config.homepage')->newSkin, 'default');
 
         return view('main', $mainContents);
     }
@@ -26,7 +26,7 @@ class MainController extends Controller
     // 게시판 그룹별 메인
     public function groupIndex($groupId)
     {
-        $groupContents = $this->main->getGroupContents(Cache::get('config.homepage')->newSkin, $groupId);    // 환경설정에 있는 값으로 가져오도록 고쳐야 함.
+        $groupContents = $this->main->getGroupContents($groupId, Cache::get('config.homepage')->newSkin, 'default');
 
         return view('group', $groupContents);
     }
