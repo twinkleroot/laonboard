@@ -22,7 +22,7 @@
             'csrfToken' => csrf_token(),
         ]) !!};
     </script>
-
+    
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     @yield('include_script')
 </head>
@@ -64,10 +64,10 @@
 <div class="sidebar sidebarmenu">
 	<ul class="category">
         <div class="side_1depth">
-		    <a href="#" class="sd_1depth">환경설정</a>
+		    <a href="#" class="sd_1depth">환경설정</a>	
 		</div>
 		<ul class="sd_2depth">
-			<li><a href="{{ route('admin.config') }}">기본환경설정</a></li>
+			<li><a href="config">기본환경설정</a></li>
 		    <li><a href="#">관리권한설정</a></li>
 	        <li><a href="#">테마설정</a></li>
 	        <li><a href="{{ route('admin.menus.index') }}">메뉴설정</a></li>
@@ -84,17 +84,16 @@
 	</ul>
 	<ul class="category">
         <div class="side_1depth">
-		    <a href="#" class="sd_1depth">회원관리</a>
+		    <a href="#" class="sd_1depth">회원관리</a>	
 		</div>
 		<ul class="sd_2depth">
 			<li><a href="{{ route('admin.users.index') }}">회원관리</a></li>
 		    <li><a href="{{ route('admin.points.index') }}">포인트관리</a></li>
-	        <li><a href="#">투표관리</a></li>
 		</ul>
 	</ul>
 	<ul class="category">
         <div class="side_1depth">
-		    <a href="#" class="sd_1depth">게시판관리</a>
+		    <a href="#" class="sd_1depth">게시판관리</a>	
 		</div>
 		<ul class="sd_2depth">
 			<li><a href="{{ route('admin.boards.index') }}">게시판관리</a></li>

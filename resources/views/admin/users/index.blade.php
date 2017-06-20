@@ -80,7 +80,7 @@
             {{ csrf_field() }}
             <table class="table table-striped box">
                 <thead>
-                    <th><input type="checkbox" name="chkAll" onclick="checkAll(this.form)"/></th>
+                    <th class="td_chk"><input type="checkbox" name="chkAll" onclick="checkAll(this.form)"/></th>
                     <th>회원이메일</th>
                     <th>닉네임</th>
                     <th>상태/권한</th>
@@ -93,8 +93,7 @@
                 <tbody>
                 @foreach ($users as $user)
                     <tr>
-                        <td>
-                            <input type="checkbox" name="chkId[]" class="userId" value='{{ $user->id }}' /></td>
+                        <td><input type="checkbox" name="chkId[]" class="userId" value='{{ $user->id }}' /></td>
                         <td class="text-left">
                             <div class="mb_tooltip">
                                 {{ $user->email }}

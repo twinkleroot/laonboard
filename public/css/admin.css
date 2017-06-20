@@ -24,13 +24,23 @@ body {
 	background-color: #3e63d6;
 	border-color: #3e63d6;
 }
-
 .mb0  {margin-bottom: 0;}
 .mb5  {margin-bottom: 5px;}
 .mb10 {margin-bottom: 10px;}
 .mb15 {margin-bottom: 15px;}
 
 .mr5  {margin-right: 5px;}
+
+.pagination>.active>a,
+.pagination>.active>a:focus,
+.pagination>.active>a:hover,
+.pagination>.active>span,
+.pagination>.active>span:focus,
+.pagination>.active>span:hover {
+	background-color: #587ef6;
+	border-color: #587ef6;
+}
+
 
 /* header */
 #admin-header {
