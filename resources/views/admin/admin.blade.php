@@ -99,7 +99,7 @@
 	        <li><a href="#">인기검색어관리</a></li>
 	        <li><a href="#">인기검색어순위</a></li>
 	        <li><a href="{{ route('contents.index') }}">내용관리</a></li>
-	        <li><a href="#">글/댓글현황</a></li>
+	        <li><a href="{{ route('admin.status.write') }}">글/댓글현황</a></li>
 		</ul>
 	</ul>
 </div>

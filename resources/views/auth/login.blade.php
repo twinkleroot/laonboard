@@ -10,6 +10,6 @@
 
 @section('content')
 
-@include('themes.'. $skin. '.auth.login')
+    @include('themes.'. $skin. '.auth.login')
 
 @endsection

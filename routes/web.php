@@ -135,6 +135,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
     Route::get('phpinfo', ['as' => 'admin.phpinfo', 'uses' => 'Admin\SimpleController@phpinfo']);
     // 부가서비스
     Route::get('extra_service', ['as' => 'admin.extra_service', 'uses' => 'Admin\SimpleController@extraService']);
+    // 글,댓글 현황
+    Route::get('status/write', ['as' => 'admin.status.write', 'uses' => 'Admin\StatusController@writeStatus']);
 });
 
 
