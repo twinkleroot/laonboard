@@ -5,11 +5,6 @@
 @endsection
 
 @section('content')
-@if(Session::has('message'))
-  <div class="alert alert-info">
-    {{ Session::get('message') }}
-  </div>
-@endif
 <div class="body-head">
     <div class="pull-left">
         <h3>포인트관리</h3>
@@ -20,7 +15,11 @@
         </ul>
     </div>
 </div>
-
+@if(Session::has('message'))
+  <div class="alert alert-info">
+    {{ Session::get('message') }}
+  </div>
+@endif
 <div class="body-contents">
     <div id="pt">
     	<ul id="pt_btn" class="mb10 pull-left">

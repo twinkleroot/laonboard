@@ -1,189 +1,243 @@
-@extends('themes.default.basic')
+@extends('admin.admin')
 
 @section('title')
     환경 설정 | {{ $configHomepage->title }}
 @endsection
 
+@section('include_script')
+    <script type="text/javascript">
+        jQuery("document").ready(function($){
+            var nav = $('#body_tab_type2');
+             
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 180) {
+                    nav.addClass("f-tab");
+                } else {
+                    nav.removeClass("f-tab");
+                }
+            });
+        });
+
+        $(document).ready(function(){
+            $("#body_tab_type2 li").click(function () {
+                $('.admin_box').hide().eq($(this).index()).show();
+            });
+        });
+
+        function alertclose() {
+            document.getElementById("admin_save").style.display = "none";
+        }
+    </script>
+@endsection
+
 @section('content')
-@if(Session::has('message'))
-  <div class="alert alert-info">
-    {{ Session::get('message') }}
-  </div>
-@endif
-<div class="row">
-    <div class="col-md-6 col-md-offset-3">
-        <div class="panel panel-default">
-            <div class="panel-heading"><h2>환경 설정</h2></div>
-            <div class="panel-heading">홈페이지 기본환경 설정</div>
+<div class="body-head">
+    <div class="pull-left">
+        <h3>기본환경설정</h3>
+        <ul class="fl">
+            <li class="admin">Admin</li>
+            <li class="depth">환경설정</li>
+            <li class="depth">기본환경설정</li>
+        </ul>
+    </div>
+</div>
+
+<div id="body_tab_type2">
+    <ul>
+        <li class="tab"><a href="#admin-header">기본환경설정</a></li>
+        <li class="tab"><a href="#admin-header">회원가입</a></li>
+        <li class="tab"><a href="#admin-header">게시판</a></li>
+        <li class="tab"><a href="#admin-header">메일환경</a></li>
+        <li class="tab"><a href="#admin-header">글작성시 메일</a></li>
+        <li class="tab"><a href="#admin-header">회원가입시 메일</a></li>
+    </ul>
+</div>
+
+
+
+<div class="body-contents">
+    @if(Session::has('message'))
+        <div id="admin_save">
+            <span class="admin_save_txt">{{ Session::get('message') }}</span>
+            <button onclick="alertclose()" class="admin_alert_close">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+    @endif
+
+    <div id="admin_box1" class="admin_box panel panel-default">
+        <div class="panel-body">
             <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.config.update', ['name' => 'homepage']) }}">
-                {{ method_field('PUT') }}
-                {{ csrf_field() }}
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="title" class="col-md-4 control-label">홈페이지 제목</label>
-
-                        <div class="col-md-6">
-                            <input type="text" name="title" value="{{ $configHomepage->title }}" required>
+            {{ method_field('PUT') }}
+            {{ csrf_field() }}
+            <div class="savebtn" style="top: 450px;right:30px;display:block;border:1px solid #d8d8d8;border-radius: 4px;background: #fff;width: auto;">
+                <input type="submit" class="btn btn-primary" value="설정변경"/>
+            </div>
+                <section>
+                    <div class="st_title">기본 환경설정</div>
+                    <div class="st_contents">
+                        <div class="form-group">
+                            <label for="title" class="col-md-2 control-label">홈페이지 제목</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" name="title" value="{{ $configHomepage->title }}" required>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="superAdmin" class="col-md-4 control-label">최고 관리자</label>
-
-                        <div class="col-md-6">
-                            <select name='superAdmin'>
-                                <option value='' @if($configHomepage->superAdmin == '') selected @endif>
-                                    선택안함
-                                </option>
-                                @foreach($admins as $admin)
-                                    <option value='{{ $admin->email }}' @if($configHomepage->superAdmin == $admin->email) selected @endif>
-                                        {{ $admin->email }}
+                        <div class="form-group">
+                            <label for="superAdmin" class="col-md-2 control-label">최고관리자</label>
+                            <div class="col-md-5">
+                                <select class="form-control" name="superAdmin">
+                                    <option value='' @if($configHomepage->superAdmin == '') selected @endif>
+                                        선택안함
                                     </option>
-                                @endforeach
-                            </select>
+                                    @foreach($admins as $admin)
+                                        <option value='{{ $admin->email }}' @if($configHomepage->superAdmin == $admin->email) selected @endif>
+                                            {{ $admin->email }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="usePoint" class="col-md-4 control-label">포인트 사용</label>
-
-                        <div class="col-md-6">
-                            <input type="checkbox" name="usePoint" id="usePoint" value="1" @if($configHomepage->usePoint == 1) checked @endif>
+                        <div class="form-group">
+                            <label for="usePoint" class="col-md-2 control-label">포인트 사용</label>
+                            <div class="col-md-3">
+                                <input type="checkbox" name="usePoint" id="usePoint" value="1" @if($configHomepage->usePoint == 1) checked @endif>
                                 <label for="usePoint">사용</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPoint" class="col-md-2 control-label">로그인시 포인트</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" name="loginPoint" value="{{ $configHomepage->loginPoint }}">
+                                <p class="help-block">회원이 로그인시 하루에 한번만 적립</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="memoSendPoint" class="col-md-2 control-label">쪽지보낼시 차감 포인트</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" name="memoSendPoint" value="{{ $configHomepage->memoSendPoint }}">
+                                <p class="help-block">양수로 입력하십시오. 0점은 쪽지 보낼시 포인트를 차감하지 않습니다.</p>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="openDate" class="col-md-4 control-label">정보공개 수정</label>
+
+                                <div class="col-md-6">
+                                    수정하면 <input type="text" name="openDate" value="{{ $configHomepage->openDate }}">일 동안 바꿀 수 없음
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="newRows" class="col-md-4 control-label">최근게시물 라인수</label>
+
+                                <div class="col-md-6">
+                                    목록 한 페이지당 라인수<br />
+                                    <input type="text" name="newRows" value="{{ $configHomepage->newRows }}">라인
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="pageRows" class="col-md-4 control-label">한 페이지당 라인수</label>
+
+                                <div class="col-md-6">
+                                    목록(리스트) 한 페이지당 라인수<br />
+                                    <input type="text" name="pageRows" value="{{ $configHomepage->pageRows }}">라인
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="mobilePageRows" class="col-md-4 control-label">모바일 한 페이지당 라인수</label>
+
+                                <div class="col-md-6">
+                                    목록 한 페이지당 라인수<br />
+                                    <input type="text" name="mobilePageRows" value="{{ $configHomepage->mobilePageRows }}">라인
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="writePages" class="col-md-4 control-label">페이지 표시 수</label>
+
+                                <div class="col-md-6">
+                                    <input type="text" name="writePages" value="{{ $configHomepage->writePages }}">페이지씩 표시
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="mobilePages" class="col-md-4 control-label">모바일 페이지 표시 수</label>
+
+                                <div class="col-md-6">
+                                    <input type="text" name="mobilePages" value="{{ $configHomepage->mobilePages }}">페이지씩 표시
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="newSkin" class="col-md-4 control-label">최근게시물 스킨</label>
+
+                                <div class="col-md-6">
+                                    <select name='newSkin'>
+                                        @foreach($skins as $key => $value)
+                                            <option value='{{ $key }}' @if($configHomepage->newSkin == $key) selected @endif>
+                                                {{ $value }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="searchSkin" class="col-md-4 control-label">검색 스킨</label>
+
+                                <div class="col-md-6">
+                                    <select name='searchSkin'>
+                                        @foreach($skins as $key => $value)
+                                            <option value='{{ $key }}' @if($configHomepage->searchSkin == $key) selected @endif>
+                                                {{ $value }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="pointTerm" class="col-md-4 control-label">포인트 유효기간</label>
+
+                                <div class="col-md-6">
+                                    기간을 0으로 설정시 포인트 유효기간이 적용되지 않습니다.<br />
+                                    <input type="text" name="pointTerm" value="{{ $configHomepage->pointTerm }}">일
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body">
+                            <div class="col-md-offset-5">
+                                
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="loginPoint" class="col-md-4 control-label">로그인시 포인트</label>
-
-                        <div class="col-md-6">
-                            회원이 로그인시 하루에 한번만 적립<br />
-                            <input type="text" name="loginPoint" value="{{ $configHomepage->loginPoint }}">점
-                        </div>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="memoSendPoint" class="col-md-4 control-label">쪽지보낼시 차감 포인트</label>
-
-                        <div class="col-md-6">
-                            양수로 입력하십시오. 0점은 쪽지 보낼시 포인트를 차감하지 않습니다.<br />
-                            <input type="text" name="memoSendPoint" value="{{ $configHomepage->memoSendPoint }}">점
-                        </div>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="openDate" class="col-md-4 control-label">정보공개 수정</label>
-
-                        <div class="col-md-6">
-                            수정하면 <input type="text" name="openDate" value="{{ $configHomepage->openDate }}">일 동안 바꿀 수 없음
-                        </div>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="newRows" class="col-md-4 control-label">최근게시물 라인수</label>
-
-                        <div class="col-md-6">
-                            목록 한 페이지당 라인수<br />
-                            <input type="text" name="newRows" value="{{ $configHomepage->newRows }}">라인
-                        </div>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="pageRows" class="col-md-4 control-label">한 페이지당 라인수</label>
-
-                        <div class="col-md-6">
-                            목록(리스트) 한 페이지당 라인수<br />
-                            <input type="text" name="pageRows" value="{{ $configHomepage->pageRows }}">라인
-                        </div>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="mobilePageRows" class="col-md-4 control-label">모바일 한 페이지당 라인수</label>
-
-                        <div class="col-md-6">
-                            목록 한 페이지당 라인수<br />
-                            <input type="text" name="mobilePageRows" value="{{ $configHomepage->mobilePageRows }}">라인
-                        </div>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="writePages" class="col-md-4 control-label">페이지 표시 수</label>
-
-                        <div class="col-md-6">
-                            <input type="text" name="writePages" value="{{ $configHomepage->writePages }}">페이지씩 표시
-                        </div>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="mobilePages" class="col-md-4 control-label">모바일 페이지 표시 수</label>
-
-                        <div class="col-md-6">
-                            <input type="text" name="mobilePages" value="{{ $configHomepage->mobilePages }}">페이지씩 표시
-                        </div>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="newSkin" class="col-md-4 control-label">최근게시물 스킨</label>
-
-                        <div class="col-md-6">
-                            <select name='newSkin'>
-                                @foreach($skins as $key => $value)
-                                    <option value='{{ $key }}' @if($configHomepage->newSkin == $key) selected @endif>
-                                        {{ $value }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="searchSkin" class="col-md-4 control-label">검색 스킨</label>
-
-                        <div class="col-md-6">
-                            <select name='searchSkin'>
-                                @foreach($skins as $key => $value)
-                                    <option value='{{ $key }}' @if($configHomepage->searchSkin == $key) selected @endif>
-                                        {{ $value }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="pointTerm" class="col-md-4 control-label">포인트 유효기간</label>
-
-                        <div class="col-md-6">
-                            기간을 0으로 설정시 포인트 유효기간이 적용되지 않습니다.<br />
-                            <input type="text" name="pointTerm" value="{{ $configHomepage->pointTerm }}">일
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel-body">
-                    <div class="col-md-offset-5">
-                        <input type="submit" class="btn btn-primary" value="홈페이지 기본환경 설정 변경하기"/>
-                    </div>
-                </div>
+                </section>
             </form>
-            <div class="panel-heading">회원 가입 설정</div>
+        </div>
+    </div>
+
+    <div id="admin_box2" class="admin_box panel panel-default">
+        <div class="panel-body">
+            <div class="savebtn" style="top: 450px;right:30px;display:block;border:1px solid #d8d8d8;border-radius: 4px;background: #fff;">
+                ㅁㄴㅇㄻㄴㄹㅇ
+            </div>
             <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.config.update', ['name' => 'join']) }}">
                 {{ method_field('PUT') }}
                 {{ csrf_field() }}
-                <div class="panel-body">
+                    <div class="st_title">회원가입</div>
+                    <div class="st_contents">
+
                     <div class="form-group">
                         <label for="nickDate" class="col-md-4 control-label">닉네임 수정</label>
 
@@ -191,7 +245,7 @@
                             수정하면 <input type="text" name="nickDate" value="{{ $configJoin->nickDate }}">일 동안 바꿀 수 없음
                         </div>
                     </div>
-                </div>
+                
                 <div class="panel-body">
                     <div class="form-group">
                         <label for="email" class="col-md-4 control-label">이름</label>
@@ -374,8 +428,14 @@
                         <input type="submit" class="btn btn-primary" value="회원 가입 설정 변경하기"/>
                     </div>
                 </div>
+                </div>
             </form>
-            <div class="panel-heading">게시판 기본 설정</div>
+        </div>
+    </div>
+    <div id="admin_box3" class="admin_box">
+        <div class="panel panel-default">
+        <div class="panel-body">
+                <div class="panel-heading">게시판 기본 설정</div>
             <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.config.update', ['name' => 'board']) }}">
                 {{ method_field('PUT') }}
                 {{ csrf_field() }}
@@ -495,7 +555,13 @@
                     </div>
                 </div>
             </form>
-            <div class="panel-heading">기본 메일 환경 설정</div>
+            </div>
+        </div>
+    </div>
+    <div id="admin_box4" class="admin_box">
+        <div class="panel panel-default">
+        <div class="panel-body">
+                <div class="panel-heading">기본 메일 환경 설정</div>
             <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.config.update', ['name' => 'email.default']) }}">
                 {{ method_field('PUT') }}
                 {{ csrf_field() }}
@@ -538,7 +604,13 @@
                     </div>
                 </div>
             </form>
-            <div class="panel-heading">게시판 글 작성시 메일 설정</div>
+            </div>
+        </div>
+    </div>
+    <div id="admin_box5" class="admin_box">
+        <div class="panel panel-default">
+        <div class="panel-body">
+                <div class="panel-heading">게시판 글 작성시 메일 설정</div>
             <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.config.update', ['name' => 'email.board']) }}">
                 {{ method_field('PUT') }}
                 {{ csrf_field() }}
@@ -603,6 +675,13 @@
                     </div>
                 </div>
             </form>
+            </div>
+        </div>
+    </div>
+    <div id="admin_box6" class="admin_box">
+        <div class="panel panel-default">
+        <div class="panel-body">
+            
             <div class="panel-heading">회원가입 시 메일 설정</div>
             <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.config.update', ['name' => 'email.join']) }}">
                 {{ method_field('PUT') }}
@@ -636,6 +715,7 @@
                 </div>
             </form>
         </div>
+    </div>
     </div>
 </div>
 @endsection
