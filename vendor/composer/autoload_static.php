@@ -13,12 +13,12 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
-        '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
+        '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
         'e7223560d890eab89cda23685e711e2c' => __DIR__ . '/..' . '/psy/psysh/src/Psy/functions.php',
-        '4a1f389d6ce373bda9e57857d3b61c84' => __DIR__ . '/..' . '/barryvdh/laravel-debugbar/src/helpers.php',
         'f0906e6318348a765ffb6eb24e0d0938' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/helpers.php',
         '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
+        '4a1f389d6ce373bda9e57857d3b61c84' => __DIR__ . '/..' . '/barryvdh/laravel-debugbar/src/helpers.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -80,6 +80,10 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
             'League\\Flysystem\\' => 17,
             'Laravel\\Tinker\\' => 15,
             'Laravel\\Socialite\\' => 18,
+        ),
+        'K' => 
+        array (
+            'Khill\\Lavacharts\\' => 17,
         ),
         'I' => 
         array (
@@ -252,6 +256,10 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         array (
             0 => __DIR__ . '/..' . '/laravel/socialite/src',
         ),
+        'Khill\\Lavacharts\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/khill/lavacharts/src',
+        ),
         'Intervention\\Image\\' => 
         array (
             0 => __DIR__ . '/..' . '/intervention/image/src/Intervention/Image',
@@ -380,7 +388,6 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         'CreateBoardGoodsTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_12_110031_create_board_goods_table.php',
         'CreateBoardNewsTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_13_171247_create_board_news_table.php',
         'CreateBoardsTable' => __DIR__ . '/../..' . '/database/migrations/2017_04_05_105802_create_boards_table.php',
-        'CreateCacheTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_16_153210_create_cache_table.php',
         'CreateConfigsTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_21_154604_create_configs_table.php',
         'CreateContentsTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_09_093555_create_contents_table.php',
         'CreateGroupUserTable' => __DIR__ . '/../..' . '/database/migrations/2017_04_03_144538_create_group_user_table.php',

@@ -37,7 +37,6 @@ class ContentController extends Controller
     {
         $params = $this->content->getContentView($id);
 
-
         return view('content.show', $params);
     }
 

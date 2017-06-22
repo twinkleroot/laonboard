@@ -97,7 +97,7 @@ return [
             'table' => 'password_resets',
             'expire' => 60,
         ],
-        'url' => 'themes.default.reset_email_form',
+        'url' => 'mail.reset_email_form',
     ],
 
 ];

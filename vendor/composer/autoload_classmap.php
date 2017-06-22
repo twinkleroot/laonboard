@@ -12,7 +12,6 @@ return array(
     'CreateBoardGoodsTable' => $baseDir . '/database/migrations/2017_05_12_110031_create_board_goods_table.php',
     'CreateBoardNewsTable' => $baseDir . '/database/migrations/2017_06_13_171247_create_board_news_table.php',
     'CreateBoardsTable' => $baseDir . '/database/migrations/2017_04_05_105802_create_boards_table.php',
-    'CreateCacheTable' => $baseDir . '/database/migrations/2017_06_16_153210_create_cache_table.php',
     'CreateConfigsTable' => $baseDir . '/database/migrations/2017_03_21_154604_create_configs_table.php',
     'CreateContentsTable' => $baseDir . '/database/migrations/2017_06_09_093555_create_contents_table.php',
     'CreateGroupUserTable' => $baseDir . '/database/migrations/2017_04_03_144538_create_group_user_table.php',

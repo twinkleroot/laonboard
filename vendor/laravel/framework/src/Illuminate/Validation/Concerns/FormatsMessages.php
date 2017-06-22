@@ -12,20 +12,6 @@ trait FormatsMessages
     use ReplacesAttributes;
 
     /**
-     * The size related validation rules.
-     *
-     * @var array
-     */
-    protected $sizeRules = ['Size', 'Between', 'Min', 'Max'];
-
-    /**
-     * The numeric related validation rules.
-     *
-     * @var array
-     */
-    protected $numericRules = ['Numeric', 'Integer'];
-
-    /**
      * Get the validation message for an attribute and rule.
      *
      * @param  string  $attribute
@@ -328,7 +314,7 @@ trait FormatsMessages
      * @param  string  $attribute
      * @param  string  $rule
      * @param  array   $parameters
-     * @param  Illuminate\Validation\Validator  $validator
+     * @param  \Illuminate\Validation\Validator  $validator
      * @return string|null
      */
     protected function callReplacer($message, $attribute, $rule, $parameters, $validator)
@@ -350,7 +336,7 @@ trait FormatsMessages
      * @param  string  $attribute
      * @param  string  $rule
      * @param  array   $parameters
-     * @param  Illuminate\Validation\Validator  $validator
+     * @param  \Illuminate\Validation\Validator  $validator
      * @return string
      */
     protected function callClassBasedReplacer($callback, $message, $attribute, $rule, $parameters, $validator)

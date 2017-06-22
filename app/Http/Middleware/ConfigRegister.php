@@ -42,6 +42,10 @@ class ConfigRegister
         if(!Cache::has('config.email.join')) {
             Cache::forever('config.email.join', $this->registerConfigCache('email.join'));
         }
+        // 회원가입 시 메일 설정
+        if(!Cache::has('config.theme')) {
+            Cache::forever('config.theme', $this->registerConfigCache('theme'));
+        }
 
         // 메뉴바 설정 가져오기
         $menuList = Cache::rememberForever("menuList", function() {

@@ -130,6 +130,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
     // 메일 발송 테스트
     Route::get('mail', ['as' => 'admin.email', 'uses' => 'Admin\MailController@index']);
     Route::post('mail/send', ['as' => 'admin.email.send', 'uses' => 'Admin\MailController@postMail']);
+
+    // phpinfo()
+    Route::get('phpinfo', ['as' => 'admin.phpinfo', 'uses' => 'Admin\SimpleController@phpinfo']);
+    // 부가서비스
+    Route::get('extra_service', ['as' => 'admin.extra_service', 'uses' => 'Admin\SimpleController@extraService']);
+    // 글,댓글 현황
+    Route::get('status/write', ['as' => 'admin.status.write', 'uses' => 'Admin\StatusController@writeStatus']);
 });
 
 

@@ -181,7 +181,8 @@ return [
 
         Barryvdh\Debugbar\ServiceProvider::class,
         SocialiteProviders\Manager\ServiceProvider::class,
-        'Intervention\Image\ImageServiceProvider',
+        Intervention\Image\ImageServiceProvider::class,
+        Khill\Lavacharts\Laravel\LavachartsServiceProvider::class,
     ],
 
     /*
@@ -233,7 +234,8 @@ return [
 
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
-        'Image' => 'Intervention\Image\Facades\Image',
+        'Image' => Intervention\Image\Facades\Image::class,
+        'Lava' => Khill\Lavacharts\Laravel\LavachartsFacade::class,
     ],
 
 ];

@@ -133,13 +133,7 @@ $(function(){
         if($("#menulist tr.menu_list").length < 1) {
             var list = "<tr id=\"empty_menu_list\"><tdclass=\"text-center\" colspan=\"7\">자료가 없습니다.</td></tr>\n";
             $("#menulist table tbody").append(list);
-        } else {
-            // 리스트 줄 색깔 교차로 나오게 하기
-            // $("#menulist tr.menu_list").each(function(index) {
-            //     $(this).removeClass("bg0 bg1")
-            //         .addClass("bg"+(index % 2));
-            // });
-        }
+        } 
     });
 
 });
