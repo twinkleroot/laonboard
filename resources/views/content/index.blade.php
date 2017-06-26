@@ -6,6 +6,9 @@
 
 @section('include_script')
     <script src="{{ asset('js/common.js') }}"></script>
+    <script>
+        var menuVal = 300500
+    </script>
 @endsection
 
 @section('content')

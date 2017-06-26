@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'SIR LaBoard')</title>
+    <title>@yield('title', '라온보드')</title>
 
     <!-- CSS -->
     @yield('fisrt_include_css')
@@ -27,7 +27,7 @@
     <script src="{{ asset('js/common.js') }}"></script>
     <script>
         $(function(){
-            $('.dropdown').hover(function() {
+            $('.gnb-li.dropdown').hover(function() {
                 $(this).addClass('open');
             }, function() {
                 $(this).removeClass('open');

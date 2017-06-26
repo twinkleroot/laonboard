@@ -25,15 +25,21 @@ class StatusController extends Controller
         ];
 
         $period = isset($request->period) ? $request->period : '오늘';
+        // 기간 구분
         $unit = $periods[$period][0];
+        // 기간에 따른 데이터 가져오기(쿼리 조각, 날짜 형식 패턴)
         $dataByPeriod = $this->getDataByPeriod($unit);
+        // 차트를 구성할 데이터를 가져온다.
         $datas = $this->getChartSource($request, $dataByPeriod['query'], $unit);
         if(count($datas) == 0) {
-            $params = array_add($params, 'message', '그래프를 만들 데이터가 없습니다.');
+            $params = array_add($params, 'message', '차트를 만들 데이터가 없습니다.');
             return view('admin.status', $params);
         }
+        // 차트 행,열, 데이터 추가
         $chartDataTable = $this->getChartDataTable($datas, $dataByPeriod['pattern'], $period);
+        // 차트 옵션
         $chartOptions = $this->getChartOptions($unit);
+        // 화면에 그려질 차트 결정
         $renderChart = (!isset($request->type) || $request->type == 'line') ?
                 Lava::LineChart('Chart', $chartDataTable, $chartOptions) :
                 Lava::ColumnChart('Chart', $chartDataTable, $chartOptions);
@@ -41,10 +47,10 @@ class StatusController extends Controller
         return view('admin.status', $params)->with('chart', $renderChart);
     }
 
+    // 기간 구성 배열
     private function getPeriodList()
     {
-        $current = Carbon::now();
-        $periods = [
+        return [
             '오늘' => ['시간'],
             '어제' => ['시간'],
             '7일전' => ['일', Carbon::now()->subDays(7)],
@@ -58,8 +64,6 @@ class StatusController extends Controller
             '5년전' => ['년', Carbon::now()->subYears(5)],
             '10년전' => ['년', Carbon::now()->subYears(10)],
         ];
-
-        return $periods;
     }
 
     // 기간별로 달라지는 쿼리 조각과 날짜 형식의 패턴을 가져온다.
@@ -94,6 +98,7 @@ class StatusController extends Controller
         ];
     }
 
+    // 차트를 구성할 데이터를 가져온다.
     private function getChartSource($request, $query, $unit)
     {
         $period = isset($request->period) ? $request->period : '오늘';
@@ -107,7 +112,7 @@ class StatusController extends Controller
             $baseDatas = $baseDatas->where('board_id', $boardId);
         }
         $baseDatas = $baseDatas->groupBy('at')->orderBy('at')->get();
-        // 날짜 표시 양식을 통일 - datetime 형식으로 변환
+        // datetime으로 날짜 형식 변환
         $baseDatas = $this->convertDateTime($baseDatas, $unit);
 
         return $baseDatas;
@@ -133,6 +138,7 @@ class StatusController extends Controller
         ];
     }
 
+    // datetime으로 날짜 형식 변환
     private function convertDateTime($baseDatas, $unit)
     {
         foreach($baseDatas as $data) {
@@ -162,7 +168,7 @@ class StatusController extends Controller
         return $baseDatas;
     }
 
-    // 시점에 따라 날짜 포맷을 다르게 설정한다.
+    // 차트 행,열, 데이터 추가
     private function getChartDataTable($datas, $pattern)
     {
         $dateFormat = Lava::DateFormat(['pattern' => $pattern]);
@@ -178,6 +184,7 @@ class StatusController extends Controller
         return $chartData;
     }
 
+    // 차트 옵션
     private function getChartOptions($unit)
     {
         return [

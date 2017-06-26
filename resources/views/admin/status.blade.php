@@ -42,9 +42,14 @@
     <div id="chart"></div>
     @if($selectType == 'line' || !$selectType)
         @linechart('Chart', 'chart')
+        {{-- {{ Lava::render('LineChart','Chart', 'chart') }} --}}
     @else
         @columnchart('Chart', 'chart')
     @endif
 @endif
 
 @endsection
+
+<script>
+    var menuVal = 300600
+</script>

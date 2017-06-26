@@ -44,7 +44,7 @@
     <form method="post" action="{{ route('admin.email.send') }}">
     {{ csrf_field() }}
         <div id="mail" class="panel panel-default">
-            
+
             <div class="panel-heading bg-sir">
                 받는 메일주소
             </div>
@@ -65,3 +65,6 @@
 따라서 보다 정확한 테스트를 원하신다면 여러 곳으로 테스트 메일을 발송하시기 바랍니다.
 </div>
 @endsection
+<script>
+    var menuVal = 100500;
+</script>

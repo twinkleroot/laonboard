@@ -44,34 +44,34 @@ class Comment
 
         $board = Board::find($boardId);
         $user = auth()->user();
-        $currentUser = is_null($user) ? '' : $user->email;
-        $homepageConfig = Cache::get("config.homepage");
-        $superAdmin = $homepageConfig->superAdmin;
-        $boardAdmin = $board->admin;
-        $groupAdmin = Cache::rememberForever("group.{$board->group_id}.admin", function() use($board) {
-            return Group::find($board->group_id)->admin;
-        });
         $commentUser = $comment->user_id == 0 ? '' : User::find($comment->user_id);
-        if ($currentUser == $superAdmin) {// 최고관리자 통과
-            ;
-        } else if ($currentUser == $groupAdmin && $groupAdmin) { // 그룹관리자
-            if ($user->level < $commentUser->level)  { // 자신의 레벨이 글쓴이의 레벨보다 작다면
-                $isEdit = 0;
-                $isDelete = 0;
+        if( !is_null($user) ) {
+            if ($user->isSuperAdmin()) {// 최고관리자 통과
+                ;
+            } else if ($user->isGroupAdmin(Group::find($board->group_id))) { // 그룹관리자
+                if ($user->level < $commentUser->level)  { // 자신의 레벨이 글쓴이의 레벨보다 작다면
+                    $isEdit = 0;
+                    $isDelete = 0;
+                }
+            } else if ($user->isBoardAdmin($board)) { // 게시판관리자이면
+                if ($user->level < $commentUser->level) { // 자신의 레벨이 글쓴이의 레벨보다 작다면
+                    $isEdit = 0;
+                    $isDelete = 0;
+                }
+            } else if (!session()->get('admin')) { // 관리자가 아닌 회원인 경우
+                if ($user->id != $comment->user_id) {
+                    $isEdit = 0;
+                    $isDelete = 0;
+                }
             }
-        } else if ($currentUser == $boardAdmin && $boardAdmin) { // 게시판관리자이면
-            if ($user->level < $commentUser->level) { // 자신의 레벨이 글쓴이의 레벨보다 작다면
-                $isEdit = 0;
-                $isDelete = 0;
-            }
-        } else if (!session()->get('admin')) { // 관리자가 아닌 회원인 경우
-            if ($currentUser != $commentUser->email) {
-                $isEdit = 0;
-                $isDelete = 0;
-            }
-        } else if( !$commentUser ){ // 비회원인 경우
+        } else {    // 비회원일 경우
             $isEdit = 0;
-            $isDelete = 0;
+            // 댓글을 비회원이 작성했을 경우
+            if(!$commentUser) {
+                $isDelete = 1;
+            } else {
+                $isDelete = 0;
+            }
         }
 
         $cnt = $writeModel->where('comment_reply', 'like', $comment->comment_reply)
@@ -134,9 +134,9 @@ class Comment
         $email = null;
         $homepage = null;
         // 회원 글쓰기 일 때
-        if( !is_null($user) ) {
+        if($user) {
             // 실명을 사용할 때
-            if($board->use_name && !is_null($user->name)) {
+            if($board->use_name && $user->name) {
                 $name = $user->name;
             } else {
                 $name = $user->nick;
@@ -147,8 +147,8 @@ class Comment
             $email = $user->email;
             $homepage = $user->homepage;
         } else {
-            $name = $request->commentName;
-            $password = bcrypt($request->commentPassword);
+            $name = $request->name;
+            $password = bcrypt($request->password);
         }
 
         $insertData = [
@@ -285,9 +285,11 @@ class Comment
         $write = $writeModel->find($comment->parent);
 
         // 댓글 포인트 삭제, 부여되었던 포인트 삭제 및 조정 반영
-        $delPointResult = $point->deleteWritePoint($writeModel, $board->id, $commentId);
-        if($delPointResult <= 0) {
-            return '정상적으로 댓글을 삭제하는데 실패하였습니다.(포인트 삭제)';
+        if($comment->user_id) {
+            $delPointResult = $point->deleteWritePoint($writeModel, $board->id, $commentId);
+            if($delPointResult <= 0) {
+                return '정상적으로 댓글을 삭제하는데 실패하였습니다.(포인트 삭제)';
+            }
         }
         // 댓글 삭제
         if(!$writeModel->where('id', $commentId)->delete()) {

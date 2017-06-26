@@ -62,11 +62,13 @@ class Kernel extends HttpKernel
         // 유저의 레벨과 게시판 마다의 레벨 기준을 비교해서 접근 가능 여부 판단
         'level.board' => \App\Http\Middleware\CheckBoardLevel::class,
         // 댓글/글 수정, 삭제가 가능한지 검사
-        'editable' => \App\Http\Middleware\EditableWrite::class,
+        'updatable.deletable.write' => \App\Http\Middleware\UpdatableAndDeletableWrite::class,
         // 글 답변이 가능한지 검사
         'writable.reply' => \App\Http\Middleware\WritableReply::class,
         // 댓글 쓰기가 가능한지 검사
         'writable.comment' => \App\Http\Middleware\WritableComment::class,
+        // 댓글 삭제가 가능한지 검사
+        'deletable.comment' => \App\Http\Middleware\DeletableComment::class,
         // 해당 항목의 유효 여부 검사
         'store.write' => \App\Http\Middleware\VerifyBoardWrite::class,
         'valid.write' => \App\Http\Middleware\CheckValidWrite::class,
@@ -74,5 +76,10 @@ class Kernel extends HttpKernel
         'valid.user' => \App\Http\Middleware\CheckValidUser::class,
         // 비밀글 조회 전 체크할 내용
         'secret.board' => \App\Http\Middleware\CheckSecretView::class,
+        'can.action.write.immediately' => \App\Http\Middleware\CanActionWriteImmediately::class,
+        'can.delete.comment.immediately' => \App\Http\Middleware\CanDeleteCommentImmediately::class,
+        // RSS 조회 가능한지 검사
+        'rss' => \App\Http\Middleware\CheckRss::class,
+
     ];
 }

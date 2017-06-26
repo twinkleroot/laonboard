@@ -18,7 +18,7 @@ class WritableComment
     public function handle($request, Closure $next, $type)
     {
         $user = auth()->user();
-        $userPoint = is_null($user) ? 0 : $user->point;
+        $userPoint = !$user ? 0 : $user->point;
         $board = Board::find($request->boardId);
         // 댓글 쓰기 포인트 설정시 포인트 검사
         if($type == 'create') {
@@ -28,24 +28,19 @@ class WritableComment
                 return redirect(route('message'))->with('message', $message);
             }
         }
-
         // 글 내용 검사
         if( !Util::checkIncorrectContent($request) ) {
             $message = '내용에 올바르지 않은 코드가 다수 포함되어 있습니다.';
             return redirect(route('message'))->with('message', $message);
         }
 
-
-        if( is_null($user) ) {
+        if(!$user) {
             // 이름이 누락되어 있는지 확인
             if($request->name == '') {
                 $message = '이름은 필히 입력하셔야 합니다.';
                 return redirect(route('message'))->with('message', $message);
             }
-            // 캡챠 체크
-
         }
-
         // 댓글 쓰기 간격 검사
         if( !Util::checkWriteInterval() ) {
             $message = '너무 빠른 시간내에 게시물을 연속해서 올릴 수 없습니다.';

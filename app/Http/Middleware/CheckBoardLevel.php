@@ -21,7 +21,7 @@ class CheckBoardLevel
         $message = '';
 
         $baseLevel = 1; // 비회원
-        if( !is_null($user) ) {
+        if($user) {
             $baseLevel = $user->level;  // 유저의 등급을 넣음
         }
 
@@ -45,7 +45,7 @@ class CheckBoardLevel
                 $message = '파일 다운로드 권한이 없습니다.';
             }
 
-            if(!is_null($user)) {
+            if($user) {
                 return redirect(route('message'))->with('message', $message);
             } else {
                 return redirect(route('message'))->with('message', $message)->with('redirect', '/login');

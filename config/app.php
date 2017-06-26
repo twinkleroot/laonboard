@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => '라라벨 그누보드',
+    'name' => '라온보드',
 
     /*
     |--------------------------------------------------------------------------

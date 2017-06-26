@@ -1,7 +1,7 @@
 @extends('themes.default.basic')
 
 @section('title')
-    LaBoard | {{ Cache::get("config.homepage")->title }}
+    비밀번호 확인 | {{ Cache::get("config.homepage")->title }}
 @endsection
 
 @section('content')
@@ -11,19 +11,31 @@
 
 <!-- user confirm password -->
     <div class="panel panel-default">
+        @if($subject)
         <div class="panel-heading">
             <h3 class="panel-title">{{ $subject }}</h3>
         </div>
+        @endif
         <div class="panel-heading bg-sir">
-            <b>비밀글 기능으로 보호된 글입니다.</b><br />
-            작성자와 관리자만 열람하실 수 있습니다. 본인이라면 비밀번호를 입력하세요.
+            @if($type == 'secret')
+                <b>비밀글 기능으로 보호된 글입니다.</b><br />
+                작성자와 관리자만 열람하실 수 있습니다. 본인이라면 비밀번호를 입력하세요.
+            @else
+                <b>작성자만 글을 {{ strpos(strtolower($type), 'delete') ? '삭제' : '수정' }}할 수 있습니다.</b><br />
+                작성자 본인이라면, 글 작성시 입력한 비밀번호를 입력하여 글을 {{ strpos(strtolower($type), 'delete') ? '삭제' : '수정' }}할 수 있습니다.
+            @endif
         </div>
 
         <div class="panel-body row">
-            <form class="contents col-md-8 col-md-offset-2" role="form" method="POST" action="{{ route('board.validatePassword', $boardId) }}">
+            <form class="contents col-md-8 col-md-offset-2" role="form" method="POST" action="{{ route('board.password.compare') }}">
                 {{ csrf_field() }}
-                <input type="hidden" class="form-control" name="writeId" value="{{ $writeId }}" required>
-                <input type="hidden" class="form-control" name="nextUrl" value="{{ Session::get('nextUrl') }}" required>
+                <input type="hidden" name="type" value="{{ $type }}">
+                <input type="hidden" name="boardId" value="{{ $boardId }}">
+                <input type="hidden" name="writeId" value="{{ $writeId }}">
+                @if($commentId)
+                    <input type="hidden" name="commentId" value="{{ $commentId }}">
+                @endif
+                <input type="hidden" name="nextUrl" value="{{ $nextUrl }}">
                 <div class="form-group">
                     <label for="password" class="control-label">비밀번호</label>
                     <input id="password" type="password" class="form-control" name="password" required>

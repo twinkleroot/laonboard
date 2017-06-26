@@ -10,12 +10,13 @@
         "doctrine/dbal": "~2.0",
         "guzzlehttp/guzzle": "^6.2",
         "intervention/image": "^2.3",
+        "khill/lavacharts": "3.0.*",
         "laravel/framework": "5.4.*",
         "laravel/socialite": "^3.0",
         "laravel/tinker": "~1.0",
         "predis/predis": "^1.1",
         "socialiteproviders/naver": "^3.0",
-        "khill/lavacharts" : "3.0.*"
+        "suin/php-rss-writer": "^1.5"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

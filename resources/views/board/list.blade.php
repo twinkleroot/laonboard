@@ -1,3 +1,8 @@
+@section('fisrt_include_css')
+    <link rel="alternate" type="application/rss+xml" href="{{ url('rss') }}"
+        title="RSS Feed {{ config('rss.title') }}">
+@endsection
+
 <!-- Board list start -->
 <div id="board" class="container">
  <form name="fBoardList" id="fBoardList" action="" onsubmit="return formBoardListSubmit(this);" method="post" target="move">
@@ -29,6 +34,11 @@
             @endif
 
 			<li class="mr0">
+                @if($board->use_rss_view && $board->list_level == 1 && $board->read_level == 1)
+                    <button type="button" class="btn btn-sir" onclick="location.href='{{ route('rss', $board->id) }}'">
+    					RSS
+    				</button>
+                @endif
 				<button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->id) }}'">
 					<i class="fa fa-pencil"></i> 글쓰기
 				</button>

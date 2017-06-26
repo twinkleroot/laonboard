@@ -6,6 +6,7 @@
 
 @section('include_script')
     <script src="{{ asset('js/tinymce/tinymce.min.js') }}"></script>
+    <script src="https://www.google.com/recaptcha/api.js"></script>
 @endsection
 
 @section('content')
@@ -25,7 +26,7 @@
         {{ csrf_field() }}
         @if( ($type == 'create' && is_null(auth()->user()) )
             || ($type == 'update' && session()->get('admin') && $write->user_id != auth()->user()->id) )
-        <div class="nologin"> <!-- 추가된 부분 -->
+        <div class="nologin">
     		<div class="form-group mb10 row">
     			<div class="col-xs-3">
     				<label for="name" class="sr-only">이름</label>
@@ -41,7 +42,7 @@
     		<div class="form-group mb10 row">
     			<div class="col-xs-5">
     				<label for="email" class="sr-only">이메일</label>
-    				<input type="email" class="form-control" id="email" name="email" placeholder="이메일" @if($type=='update') value="{{ $write->email }}" @else required @endif>
+    				<input type="email" class="form-control" id="email" name="email" placeholder="이메일" @if($type=='update') value="{{ $write->email }}" @endif>
     			</div>
     		</div>
     		<div class="form-group mb10 row">
@@ -50,7 +51,7 @@
     				<input type="text" class="form-control" id="homepage" name="homepage" placeholder="홈페이지" @if($type=='update') value="{{ $write->homepage }}" @endif>
     			</div>
     		</div>
-    	</div> <!-- 추가된 부분 END -->
+    	</div>
         @endif
 
         @if($board->use_category == 1)
@@ -169,16 +170,37 @@
         			</label>
                 @endif
     		</div>
-    		<div class="pull-right">
-    			<button type="submit" class="btn btn-sir">작성완료</button>
-    			<button type="button" class="btn btn-default" onclick="history.back();">취소</button>
-    		</div>
+            @if( !($type == 'create' && is_null(auth()->user()) )
+                && !($type == 'update' && session()->get('admin') && $write->user_id != auth()->user()->id) )
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-sir">작성완료</button>
+                    <button type="button" class="btn btn-default" onclick="history.back();">취소</button>
+                </div>
+            @endif
     	</div>
+        @if( ($type == 'create' && is_null(auth()->user()) )
+            || ($type == 'update' && session()->get('admin') && $write->user_id != auth()->user()->id) )
+        <div class="clearfix">
+            <!-- 리캡챠 -->
+            <div class="pull-left g-recaptcha" data-sitekey="6LcKohkUAAAAANcgIst0HFMMT81Wq5HIxpiHhXGZ"></div>
+            @if ($errors->has('reCaptcha'))
+                <div class="form-group">
+                    <strong>{{ $errors->first('reCaptcha') }}</strong>
+                </span>
+            @endif
+        </div>
+        <div class="clearfix">
+            <div class="pull-right">
+                <button type="submit" class="btn btn-sir">작성완료</button>
+                <button type="button" class="btn btn-default" onclick="history.back();">취소</button>
+            </div>
+        </div>
+        @endif
     </form>
     <iframe id="formTarget" name="formTarget" style="display:none"></iframe>
     <form id="imageForm" action="{{ route('image.upload') }}" target="formTarget" method="post" enctype="multipart/form-data" style="width:0px;height:0;overflow:hidden">
         {{ csrf_field() }}
-        <input type="file" name="image_file" id="image_file" onchange="$('#imageForm').submit();this.value='';" style="display:none">
+        <input type="file" name="image_file" id="image_file" onchange="$('#imageForm').submit(); this.value='';" style="display:none">
     </form>
 </div>
 <script>

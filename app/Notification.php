@@ -63,7 +63,8 @@ class Notification
         if(strstr($parentWrite['option'], 'mail')) {
             $arrayEmail[] = $parentWrite->email;
         }
-        // 중복된 메일 주소는 제거
+        // null값과 중복된 메일 주소 제거
+        $arrayEmail = array_filter($arrayEmail);
         $uniqueEmail = array_unique($arrayEmail);
         $uniqueEmail = array_values($uniqueEmail);
 

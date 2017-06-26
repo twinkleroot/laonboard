@@ -7,6 +7,7 @@
 @section('include_script')
     <script src="{{ asset('js/viewimageresize.js') }}"></script>
     <script src="{{ asset('js/common.js') }}"></script>
+    <script src="https://www.google.com/recaptcha/api.js"></script>
 @endsection
 
 @section('content')
@@ -27,7 +28,7 @@
 					<i class="fa fa-ellipsis-v"></i>
 				</a>
 				<ul class="dropdown-menu" role="menu">
-                    @if(session()->get('admin') || (!is_null(auth()->user()) && auth()->user()->id == $view->user_id) )
+                    @if(!$view->user_id || session()->get('admin') || ( auth()->user() && auth()->user()->id == $view->user_id ) )
     	                <li><a href="/board/{{ $board->id }}/edit/{{ $view->id }}">수정</a></li>
     	                <li><a href="/board/{{ $board->id }}/delete/{{ $view->id }}" onclick="del(this.href); return false;">삭제</a></li>
                     @endif
@@ -203,7 +204,7 @@
 				<ul class="bd_rd_cmt_ctr">
 					@if($comment->isReply == 1) <li><a href="#" onclick="commentBox({{ $comment->id }}, 'c'); return false;">답변</a></li> @endif
 					@if($comment->isEdit == 1) <li><a href="#" onclick="commentBox({{ $comment->id }}, 'cu'); return false;">수정</a></li> @endif
-					@if($comment->isDelete == 1) <li><a href="/board/{{ $board->id }}/comment/{{ $comment->id }}/delete?writeId={{ $view->id}}" onclick="return commentDelete();">삭제</a></li> @endif
+					@if($comment->isDelete == 1) <li><a href="{{ route('board.comment.destroy', ['boardId' => $board->id, 'writeId' => $view->id, 'commentId' => $comment->id])}}" onclick="return commentDelete();">삭제</a></li> @endif
 				</ul>
 				<div class="bd_rd_cmt_view">
 					{!! $comment->content !!}
@@ -233,10 +234,11 @@
         <input type="hidden" name="requestUri" id="requestUri" value="{{ $requestUri }}"/>
         <input type="hidden" name="_method" id="_method" />
 
-		<div class="form-inline info_user">
-            @if( is_null(auth()->user()) )  <!-- 비회원일경우 노출 -->
+        @if( !auth()->user() )  <!-- 비회원일경우 노출 -->
+        <article id="comment_box">
+    		<div class="form-inline info_user">
     			<div class="form-group">
-    			    <label for="name"  class="sr-only">이름</label>
+    			    <label for="name" class="sr-only">이름</label>
     			    <input type="text" class="form-control" id="name" name="name" placeholder="이름">
     			</div>
 
@@ -244,8 +246,19 @@
     			    <label for="password" class="sr-only">비밀번호</label>
     			    <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호">
     			</div>
+            </div>
+            <div class="form-inline info_user">
+                <!-- 리캡챠 -->
+                <div class="form-group g-recaptcha" id="recaptcha_zone" data-sitekey="6LcKohkUAAAAANcgIst0HFMMT81Wq5HIxpiHhXGZ"></div>
+            </div>
+            @if ($errors->has('reCaptcha'))
+                <div class="form-group">
+                    <strong>{{ $errors->first('reCaptcha') }}</strong>
+                </span>
             @endif
-
+        </article>
+        @endif
+        <div class="form-inline info_user">
 			<div class="form-group checkbox">
 			    <label>
 				   	<input type="checkbox" name="secret" id="secret" value="secret"><span>비밀글 사용</span>
@@ -269,8 +282,6 @@
         </script>
 
 	    <div class="row clearfix">
-	    	<!-- 리캡챠 -->
-
 			<div class="pull-right col-md-3">
 				<input type="submit" id="btnSubmit" class="btn btn-sir btn-block btn-lg" value="댓글등록" />
 			</div>
@@ -405,9 +416,11 @@ function commentBox(commentId, work) {
 
         document.getElementById('commentId').value = commentId;
 
-        // if(saveBefore) {
-        //     $("#captcha_reload").trigger("click");
-        // }
+        if(saveBefore) {
+            grecaptcha.reset(grecaptcha.render(document.getElementById('recaptcha_zone'), {
+              'sitekey' : '6LcKohkUAAAAANcgIst0HFMMT81Wq5HIxpiHhXGZ'
+            }));
+        }
 
         saveBefore = el;
     }
@@ -476,13 +489,6 @@ function excuteGood(href, $el, $tx) {
             }
         },
     });
-}
-
-// 삭제 확인
-function del(href) {
-    if(confirm("한번 삭제한 자료는 복구할 방법이 없습니다.\n\n정말 삭제하시겠습니까?")) {
-        document.location.href = href;
-    }
 }
 
 // 댓글 삭제 확인

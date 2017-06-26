@@ -11,12 +11,13 @@ use App\Config;
 use App\Board;
 use App\BoardFile;
 use App\BoardGood;
-use App\User;
 use App\Comment;
 use App\Notification;
+use App\ReCaptcha;
 use Auth;
 use Cache;
 use Exception;
+use App\Services\RssFeed;
 use Illuminate\Pagination\Paginator;
 
 class WriteController extends Controller
@@ -57,34 +58,6 @@ class WriteController extends Controller
         return view('board.index', $params);
     }
 
-    // 비밀글 일 때 비밀번호 물어보기
-    public function checkPassword(Request $request, $boardId, $writeId)
-    {
-        return view('board.password', [
-            'subject' => $this->writeModel->find($writeId)->subject,
-            'boardId' => $boardId,
-            'writeId' => $writeId,
-        ]);
-    }
-
-    // 비밀번호 검사
-    public function validatePassword(Request $request, $boardId)
-    {
-        $user = User::find($this->writeModel->find($request->writeId)->user_id);
-        $email = $user->email;
-
-        // 입력한 비밀번호와 작성자의 글 비밀번호를 비교한다.
-        if(Auth::validate(['email' => $email, 'password' => $request->password])) {
-            session()->put('secret_board_'.$boardId.'_write_'.$request->writeId, true);
-
-            return redirect(session()->get('nextUri'));
-         } else {
-            return view('message', [
-                'message' => '비밀번호가 틀립니다.',
-            ]);
-        }
-    }
-
     /**
      * Display the specified resource.
      *
@@ -109,16 +82,6 @@ class WriteController extends Controller
         // 전체 목록 보기 선택시 목록 데이터
         if($this->writeModel->board->use_list_view) {
             $params = array_collapse([$params, $this->writeModel->getIndexParams($this->writeModel, $request)]);
-
-            // $refer = explode('page=', $request->server('REQUEST_URI'));
-            // $currentPage = 1;
-            // if(count($refer) > 1 && !str_contains($refer[0], 'write')) {
-            //     $currentPage = (int) $refer[1];
-            // } else {
-            //     $currentPage = $params['writes']->currentPage();
-            // }
-            // $lastPage = $params['writes']->lastPage();
-            // $params['writes']->setCurrentPage($currentPage, $lastPage);
         }
         // 이전글, 다음글 데이터 추가
         $params = array_collapse([$params, $this->writeModel->getPrevNextView($this->writeModel, $boardId, $writeId, $request)]);
@@ -175,33 +138,37 @@ class WriteController extends Controller
      */
     public function store(Request $request, $boardId)
     {
-        $result = $this->writeModel->storeWrite($this->writeModel, $request);
+        if(auth()->user() || ReCaptcha::reCaptcha($request)) {    // 구글 리캡챠 체크
+            $result = $this->writeModel->storeWrite($this->writeModel, $request);
 
-        $writeId = 0;
-        if(isset($result['message']) && !preg_match("/^[A-Z]+$/", $result['message'])) {
-            return view('message', [
-                    'message' => $result['message'],
-                    'redirect' => route('board.view', ['boardId' => $boardId, 'writeId' => $request->writeId]),
-                ]);
-        } else {
-            $writeId = $result;
-        }
-
-        if(count($request->attach_file) > 0) {
-            $message = $this->boardFileModel->createBoardFiles($request, $boardId, $writeId);
-            if($message != '') {
+            $writeId = 0;
+            if(isset($result['message']) && !preg_match("/^[A-Z]+$/", $result['message'])) {
                 return view('message', [
-                    'message' => $message,
-                    'redirect' => route('board.index', $boardId),
-                ]);
+                        'message' => $result['message'],
+                        'redirect' => route('board.view', ['boardId' => $boardId, 'writeId' => $request->writeId]),
+                    ]);
+            } else {
+                $writeId = $result;
             }
-        }
 
-        if(Cache::get('config.email.default')->emailUse && $this->writeModel->board->use_email) {
-            $this->notification->sendWriteNotification($this->writeModel, $writeId);
-        }
+            if(count($request->attach_file) > 0) {
+                $message = $this->boardFileModel->createBoardFiles($request, $boardId, $writeId);
+                if($message != '') {
+                    return view('message', [
+                        'message' => $message,
+                        'redirect' => route('board.index', $boardId),
+                    ]);
+                }
+            }
 
-        return redirect(route('board.view', ['boardId' => $boardId, 'writeId' => $writeId] ));
+            if(Cache::get('config.email.default')->emailUse && $this->writeModel->board->use_email) {
+                $this->notification->sendWriteNotification($this->writeModel, $writeId);
+            }
+
+            return redirect(route('board.view', ['boardId' => $boardId, 'writeId' => $writeId] ));
+        } else {
+            return redirect()->back()->withInput()->withErrors(['reCaptcha' => '자동등록방지 입력이 틀렸습니다. 다시 입력해 주십시오.']);
+        }
     }
 
     /**
@@ -248,6 +215,7 @@ class WriteController extends Controller
 
     /**
      * Show the form for editing the specified resource.
+     * 글 답변 폼 연결
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -295,10 +263,10 @@ class WriteController extends Controller
     {
         $message = '';
         // 부여되었던 포인트 삭제 및 조정 반영
-        $point = new Point();
-        $delPointResult = $point->deleteWritePoint($this->writeModel, $boardId, $writeId);
-        if($delPointResult <= 0) {
-            $message .= '정상적으로 게시글을 삭제하는데 실패하였습니다.(포인트 삭제)';
+        $write = $this->writeModel->find($writeId);
+        if($write->user_id)  {
+            $point = new Point();
+            $point->deleteWritePoint($this->writeModel, $boardId, $writeId);
         }
         // 서버에서 파일 삭제, 썸네일 삭제, 에디터 첨부 이미지 파일, 썸네일 삭제, 파일 테이블 삭제
         $delFileResult = $this->boardFileModel->deleteWriteAndAttachFile($boardId, $writeId);
@@ -315,7 +283,7 @@ class WriteController extends Controller
     }
 
     /**
-     * 리스트 - 선택 삭제
+     * 게시판 글 목록 - 선택 삭제
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -335,6 +303,17 @@ class WriteController extends Controller
 
         $returnUrl = route('board.index', $boardId). ($request->page == 1 ? '' : '?page='. $request->page);
         return redirect($returnUrl);
+    }
+
+    public function rss(Request $request, $boardId, RssFeed $feed)
+    {
+        $rss = $feed->getRSS($boardId);
+
+        return response($rss)
+            ->header('Content-type', 'application/rss+xml')
+            ->header('Cache-Control', 'no-cache, must-revalidate')
+            ->header('Pragma', 'no-cache')
+            ->header('charset', 'utf-8');
     }
 
 }

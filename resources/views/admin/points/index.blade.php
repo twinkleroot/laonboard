@@ -161,6 +161,7 @@
     </div>
 </div>
 <script>
+var menuVal = 200200;
 $(function(){
     // 선택 삭제 버튼 클릭
     $('#selected_delete').click(function(){

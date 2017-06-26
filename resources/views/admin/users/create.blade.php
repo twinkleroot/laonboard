@@ -8,9 +8,10 @@
     <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
     <script src="{{ url('js/postcode.js') }}"></script>
     <script type="text/javascript">
+        var menuVal = 200100;
         jQuery("document").ready(function($){
             var nav = $('.body-tab');
-             
+
             $(window).scroll(function () {
                 if ($(this).scrollTop() > 205) {
                     nav.addClass("f-tab");
@@ -134,13 +135,13 @@
                             <div class="col-md-3">
                                 <input type="text" class="form-control" name="point" value="{{ $config->joinPoint }}">
                             </div>
-                        </div>                        
+                        </div>
                         <div class="form-group">
                             <label for="leave_date" class="col-md-2 control-label">탈퇴일자</label>
                             <div class="col-md-3">
                                 <input type="text" class="form-control" name="leave_date" id="leave_date" value="">
                             </div>
-                            <div class="col-md-3"> 
+                            <div class="col-md-3">
                                 <input type="checkbox" name="leave_date_set_today" value="1" id="leave_date_set_today"
                                 onclick="setToday(this.form.leave_date_set_today, this.form.leave_date)"/>
                                 <label for="leave_date_set_today">탈퇴일을 오늘로 지정</label>

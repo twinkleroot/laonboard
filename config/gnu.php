@@ -3,10 +3,9 @@
 
   // 상수
   'IP_DISPLAY' => '\\1.♡.\\3.\\4',
-  'CACHE_EXPIRE_MINUTE' => 120,
 
   // 홈페이지 기본 환경 설정
-  'title' => '라라벨 그누보드',
+  'title' => '라온보드',
   'superAdmin' => 'admin@admin.com',
   'usePoint' => 1,
   'loginPoint' => 100,

@@ -105,6 +105,7 @@
     </div>
 </form>
 <script>
+var menuVal = 100400;
 $(function(){
     // 관리의 추가 버튼 클릭(하위 메뉴 추가)
     $(document).on("click", ".add_sub_menu", function() {
@@ -133,7 +134,7 @@ $(function(){
         if($("#menulist tr.menu_list").length < 1) {
             var list = "<tr id=\"empty_menu_list\"><tdclass=\"text-center\" colspan=\"7\">자료가 없습니다.</td></tr>\n";
             $("#menulist table tbody").append(list);
-        } 
+        }
     });
 
 });

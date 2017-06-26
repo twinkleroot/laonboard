@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'SIR LaBoard')</title>
+    <title>@yield('title', '라온보드')</title>
 
     <!-- css -->
     <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
@@ -50,7 +50,7 @@
 		<div class="hdtx">
 			<ul>
 				<li>
-					<a href="#">부가서비스</a>
+					<a href="{{ route('admin.extra_service') }}">부가서비스</a>
 				</li>
 			</ul>
 		</div>
@@ -67,17 +67,17 @@
 		    <a href="#" class="sd_1depth">환경설정</a>
 		</div>
 		<ul class="sd_2depth">
-			<li><a href="{{ route('admin.config')}}">기본환경설정</a></li>
-		    <li><a href="#">관리권한설정</a></li>
-	        <li><a href="#">테마설정</a></li>
-	        <li><a href="{{ route('admin.menus.index') }}">메뉴설정</a></li>
-	        <li><a href="{{ route('admin.email') }}">메일테스트</a></li>
-	        <li><a href="#">팝업레이어관리</a></li>
-	        <li><a href="#">세션파일 일괄삭제</a></li>
-	        <li><a href="#">캐시파일 일괄삭제</a></li>
-	        <li><a href="#">썸네일파일 일괄삭제</a></li>
-	        <li><a href="{{ route('admin.phpinfo') }}">phpinfo()</a></li>
-	        <li><a href="{{ route('admin.extra_service') }}">부가서비스</a></li>
+			<li><a href="{{ route('admin.config')}}" id="100100">기본환경설정</a></li>
+		    <li><a href="#" id="100200">관리권한설정</a></li>
+	        <li><a href="#" id="100300">테마설정</a></li>
+	        <li><a href="{{ route('admin.menus.index') }}" id="100400">메뉴설정</a></li>
+	        <li><a href="{{ route('admin.email') }}" id="100500">메일테스트</a></li>
+	        <li><a href="#" id="100600">팝업레이어관리</a></li>
+	        <li><a href="#" id="100700">세션파일 일괄삭제</a></li>
+	        <li><a href="#" id="100800">캐시파일 일괄삭제</a></li>
+	        <li><a href="#" id="100900">썸네일파일 일괄삭제</a></li>
+	        <li><a href="{{ route('admin.phpinfo') }}" id="101000">phpinfo()</a></li>
+	        <li><a href="{{ route('admin.extra_service') }}" id="101100">부가서비스</a></li>
 		</ul>
 	</ul>
 	<ul class="category">
@@ -85,8 +85,8 @@
 		    <a href="#" class="sd_1depth">회원관리</a>
 		</div>
 		<ul class="sd_2depth">
-			<li><a href="{{ route('admin.users.index') }}">회원관리</a></li>
-		    <li><a href="{{ route('admin.points.index') }}">포인트관리</a></li>
+			<li><a href="{{ route('admin.users.index') }}" id="200100">회원관리</a></li>
+		    <li><a href="{{ route('admin.points.index') }}" id="200200">포인트관리</a></li>
 		</ul>
 	</ul>
 	<ul class="category">
@@ -94,12 +94,12 @@
 		    <a href="#" class="sd_1depth">게시판관리</a>
 		</div>
 		<ul class="sd_2depth">
-			<li><a href="{{ route('admin.boards.index') }}">게시판관리</a></li>
-		    <li><a href="{{ route('admin.groups.index') }}">게시판그룹관리</a></li>
-	        <li><a href="#">인기검색어관리</a></li>
-	        <li><a href="#">인기검색어순위</a></li>
-	        <li><a href="{{ route('contents.index') }}">내용관리</a></li>
-	        <li><a href="{{ route('admin.status.write') }}">글/댓글현황</a></li>
+			<li><a href="{{ route('admin.boards.index') }}" id="300100">게시판관리</a></li>
+		    <li><a href="{{ route('admin.groups.index') }}" id="300200">게시판그룹관리</a></li>
+	        <li><a href="#" id="300300">인기검색어관리</a></li>
+	        <li><a href="#" id="300400">인기검색어순위</a></li>
+	        <li><a href="{{ route('contents.index') }}" id="300500">내용관리</a></li>
+	        <li><a href="{{ route('admin.status.write') }}" id="300600">글/댓글현황</a></li>
 		</ul>
 	</ul>
 </div>
@@ -112,33 +112,33 @@
 
 <script>
 $(document).ready(function() {
-    $('#showmenu').click(function() {
-    var hidden = $('.sidebarmenu').data('hidden');
-    if(hidden){
-        $('.sidebarmenu').animate({
-            left: '0px'
-        },300),
-        $('.sidebarmenu2').animate({
-            left: '230px'
-        },300)
-    } else {
-        $('.sidebarmenu').animate({
-            left: '-230px'
-        },300),
-        $('.sidebarmenu2').animate({
-            left: '0px'
-        },300)
-    }
-    $('.sidebarmenu,.image').data("hidden", !hidden);
-    });
-});
+	$("a[id='" + menuVal+ "']").parent().parent().show();
+	$("a[id='" + menuVal+ "']").css('background', '#616161');
 
-$(document).ready(function() {
-    $('.sd_2depth').hide();
-        $('a.sd_1depth').click(function() {
-            $(this).parent().next('.sd_2depth').toggle(200);
-            return false;
-        });
+    $('#showmenu').click(function() {
+	    var hidden = $('.sidebarmenu').data('hidden');
+	    if(hidden){
+	        $('.sidebarmenu').animate({
+	            left: '0px'
+	        },300),
+	        $('.sidebarmenu2').animate({
+	            left: '230px'
+	        },300)
+	    } else {
+	        $('.sidebarmenu').animate({
+	            left: '-230px'
+	        },300),
+	        $('.sidebarmenu2').animate({
+	            left: '0px'
+	        },300)
+	    }
+	    $('.sidebarmenu,.image').data("hidden", !hidden);
+    });
+
+	$('a.sd_1depth').click(function() {
+        $(this).parent().next('.sd_2depth').toggle(200);
+        return false;
+    });
 });
 </script>
 

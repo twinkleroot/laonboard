@@ -14,3 +14,6 @@
     SMS 문자 서비스<br />
     <a href="http://www.icodekorea.com/?s=res&ctl=user_sign_on&act=agree&sellid=sir2&s=res&type=A">iCODE</a>
 @endsection
+<script>
+    var menuVal = 101100
+</script>

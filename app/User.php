@@ -75,6 +75,30 @@ class User extends Authenticatable
 
     }
 
+    public function isSuperAdmin()
+    {
+        if(auth()->user()->email === Cache::get('config.homepage')->superAdmin) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isGroupAdmin($group)
+    {
+        if(auth()->user()->email === $group->admin) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isBoardAdmin($board)
+    {
+        if(auth()->user()->email === $board->admin) {
+            return true;
+        }
+        return false;
+    }
+
     // 추천인 닉네임 구하기
     public function recommendedPerson($user)
     {
@@ -385,13 +409,12 @@ class User extends Authenticatable
         if(is_null($user)) {
             return '회원정보가 존재하지 않습니다.\\n\\n탈퇴하였을 수 있습니다.';
         }
-        $superAdmin = Cache::get('config.homepage')->superAdmin;
         $loginedUser = auth()->user();
-        if(!$loginedUser->open && $loginedUser->email != $superAdmin && $loginedUser->id != $user->id) {
+        if(!$loginedUser->open && !$loginedUser->isSuperAdmin() && $loginedUser->id != $user->id) {
             return '자신의 정보를 공개하지 않으면 다른분의 정보를 조회할 수 없습니다.\\n\\n정보공개 설정은 회원정보수정에서 하실 수 있습니다.';
         }
 
-        if(!$user->open && $loginedUser->email != $superAdmin && $loginedUser->id != $user->id) {
+        if(!$user->open && !$loginedUser->isSuperAdmin() && $loginedUser->id != $user->id) {
             return '정보공개를 하지 않았습니다.';
         }
 
@@ -410,7 +433,7 @@ class User extends Authenticatable
     public function leaveUser()
     {
         $user = auth()->user();
-        if($user->email == Cache::get('config.homepage')->superAdmin) {
+        if($user->isSuperAdmin()) {
             return '최고 관리자는 탈퇴할 수 없습니다';
         }
         $user->update([

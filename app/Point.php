@@ -394,8 +394,6 @@ class Point extends Model
                $insertResult = $this->insertPoint($write->user_id, $board->write_point * (-1), $board->subject. ' '. $write->parent. '-'. $writeId. ' 댓글삭제');
            }
        }
-
-       return $deleteResult != 0 ? $deleteResult : $insertResult;
     }
 
 }
