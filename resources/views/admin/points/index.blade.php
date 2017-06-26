@@ -1,7 +1,7 @@
 @extends('admin.admin')
 
 @section('title')
-    포인트 관리 | {{ $config->title }}
+    포인트 관리 | {{ Cache::get("config.homepage")->title }}
 @endsection
 
 @section('content')
@@ -44,8 +44,7 @@
     	</ul>
 
     	<div id="pt_sch" class="mb10 pull-right">
-    	    <form class="form-horizontal" role="form" method="GET" action="{{ route('admin.search') }}">
-                <input type="hidden" name="admin_page" value="point" />
+    	    <form class="form-horizontal" role="form" method="GET" action="{{ route('admin.points.index') }}">
 
     	        <label for="" class="sr-only">검색대상</label>
     			<select name="kind">
@@ -71,11 +70,19 @@
         				<th class="td_chk">
         					<input type="checkbox" name="chkAll" onclick="checkAll(this.form)" />
         				</th>
-        				<th>회원이메일</th>
+        				<th>
+                            <a class="mb_tooltip" href="{{ route('admin.points.index') }}?order=email&amp;direction={{$order=='email' ? $direction : 'asc'}}">회원이메일</a>
+                        </th>
         				<th>닉네임</th>
-        				<th>포인트 내용</th>
-        				<th>포인트</th>
-        				<th>일시</th>
+        				<th>
+                            <a class="mb_tooltip" href="{{ route('admin.points.index') }}?order=content&amp;direction={{$order=='content' ? $direction : 'asc'}}">포인트 내용</a>
+                        </th>
+        				<th>
+                            <a class="mb_tooltip" href="{{ route('admin.points.index') }}?order=point&amp;direction={{$order=='point' ? $direction : 'asc'}}">포인트</a>
+                        </th>
+        				<th>
+                            <a class="mb_tooltip" href="{{ route('admin.points.index') }}?order=datetime&amp;direction={{$order=='datetime' ? $direction : 'asc'}}">일시</a>
+                        </th>
         				<th>만료일</th>
         				<th>포인트합</th>
         			</tr>
@@ -88,7 +95,7 @@
         				<td>
         					<input type="checkbox" name="chk[]" class="pointId" value='{{ $point->id }}' />
         				</td>
-        				<td><a href="/admin/search?admin_page=point&kind=email&keyword={{ $point->user->email }}">{{ $point->user->email }}</a></td>
+        				<td><a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $point->user->email }}">{{ $point->user->email }}</a></td>
         				<td>{{ $point->user->nick }}</td>
         				<td>{{ $point->content }}</td>
         				<td>{{ number_format($point->point) }}</td>

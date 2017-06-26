@@ -36,34 +36,59 @@ class Group extends Model
     }
 
     // index 페이지에서 필요한 파라미터 가져오기
-    public function getGroupIndexParams()
+    public function getGroupIndexParams($request)
     {
-        $config = Cache::get("config.homepage");
-        $groups = DB::table('groups as g')
-                ->select(DB::raw('
-                            g.id,
-                            g.group_id,
-                            g.subject,
-                            g.admin,
-                            g.use_access,
-                            g.order,
-                            g.device,
-                            g.created_at,
-                            (   select count(gu.id)
-                                from group_user as gu
-                                where gu.group_id = g.id
-                            ) as count_users,
-                            (   select count(b.id)
-                                from boards as b
-                                where b.group_id = g.id
-                            ) as count_board'
-                ))
-                ->orderBy('g.created_at', 'desc')
-                ->paginate($config->pageRows);
+        $kind = isset($request->kind) ? $request->kind : '';
+        $keyword = isset($request->keyword) ? $request->keyword : '';
+        $order = isset($request->order) ? $request->order : '';
+        $direction = isset($request->direction) ? $request->direction : '';
+
+        $query =
+            DB::table('groups as g')
+            ->selectRaw('
+                        g.id,
+                        g.group_id,
+                        g.subject,
+                        g.admin,
+                        g.use_access,
+                        g.order,
+                        g.device,
+                        g.created_at,
+                        (   select count(gu.id)
+                            from group_user as gu
+                            where gu.group_id = g.id
+                        ) as count_users,
+                        (   select count(b.id)
+                            from boards as b
+                            where b.group_id = g.id
+                        ) as count_board'
+            );
+
+        // 최고 관리자가 아닐때
+        if( !auth()->user()->isSuperAdmin() ) {
+            $query = $query->where('admin', auth()->user()->email);
+        }
+
+        // 검색 추가
+        if($kind) {
+            $query = $query->where($kind, 'like', '%'. $keyword. '%');
+        }
+
+        // 정렬 추가
+        if($order) {
+            $query = $query->orderBy($order, $direction);
+        } else {
+            $query = $query->orderBy('g.group_id');
+        }
+        
+        $groups = $query->paginate(Cache::get('config.homepage')->pageRows);
 
         return [
-            'config' => $config,
             'groups' => $groups,
+            'kind' => $kind,
+            'keyword' => $keyword,
+            'order' => $order,
+            'direction' => $direction == 'desc' ? 'asc' : 'desc',
         ];
 
     }

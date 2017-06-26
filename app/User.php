@@ -49,26 +49,26 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    // 소셜 로그인 모델과의 관계 설정
+    // SocialLogin 모델과의 관계 설정
     public function socialLogins()
     {
         return $this->hasMany(SocialLogin::class);
     }
 
-    // 게시판 그룹 모델과의 관계 설정
+    // BoardGroup 모델과의 관계 설정
     public function groups()
     {
         return $this->belongsToMany(Group::class)->withPivot('id', 'created_at');
     }
 
-    // 포인트 모델과의 관계설정
+    // Point 모델과의 관계설정
     public function points()
     {
         return $this->hasMany(Point::class);
 
     }
 
-    // 포인트 모델과의 관계설정
+    // Write 모델과의 관계설정
     public function writes()
     {
         return $this->hasMany(Write::class);
@@ -450,22 +450,57 @@ class User extends Authenticatable
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // 회원 목록
-    public function userList()
+    public function userList($request)
     {
-        $config = Cache::get("config.homepage");
+        $kind = isset($request->kind) ? $request->kind : '';
+        $keyword = isset($request->keyword) ? $request->keyword : '';
+        $order = isset($request->order) ? $request->order : '';
+        $direction = isset($request->direction) ? $request->direction : '';
+        $interceptUsers = 0;
+        $leaveUsers = 0;
 
-        $users = DB::table('users as u')
-                ->select(DB::raw('
-                    u.*,
-                    (   select count(gu.id)
-                        from group_user as gu
-                        where gu.user_id = u.id
-                    ) as count_groups'
-                ))
-                ->orderBy('u.created_at', 'desc')
-                ->paginate($config->pageRows);
+        $query =
+            DB::table('users as u')
+            ->select(DB::raw('
+                u.*,
+                (   select count(gu.id)
+                    from group_user as gu
+                    where gu.user_id = u.id
+                ) as count_groups'
+            ));
 
-        return $users;
+        // 정렬
+        if($order) {
+            $query = $query->orderBy($order, $direction);
+        } else {
+            $query = $query->orderBy('u.created_at', 'desc');
+        }
+        // 최고 관리자가 아니면 관리자보다 등급이 같거나 낮은 사람만 조회가능.
+        if( !auth()->user()->isSuperAdmin() ) {
+            $query = $query->where('level', '<=', auth()->user()->level);
+        }
+
+        if($kind) {
+            if($kind == 'level') {   // 권한으로 검색
+                $query = $query->where($kind, $keyword);
+            } else {    // 이메일, 닉네임, IP, 추천인, 가입일, 최근접속일으로 검색
+                $query = $query->where($kind, 'like', '%'. $keyword. '%');
+            }
+        }
+
+        $users = $query->paginate(Cache::get("config.homepage")->pageRows);
+        $interceptUsers = $query->whereNotNull('intercept_date')->count();
+        $leaveUsers = $query->whereNotNull('leave_date')->count();
+
+        return [
+            'users' => $users,
+            'interceptUsers' => $interceptUsers,
+            'leaveUsers' => $leaveUsers,
+            'kind' => $kind,
+            'keyword' => $keyword,
+            'order' => $order,
+            'direction' => $direction == 'desc' ? 'asc' : 'desc',
+        ];
     }
 
     // 회원 추가

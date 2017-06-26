@@ -28,18 +28,57 @@ class Board extends Model
     }
 
     // (게시판 관리) index 페이지에서 필요한 파라미터 가져오기
-    public function getBoardIndexParams()
+    public function getBoardIndexParams($request)
     {
-        $config = Cache::get("config.homepage");
-        $boards = Board::paginate($config->pageRows);;
+        $kind = isset($request->kind) ? $request->kind : '';
+        $keyword = isset($request->keyword) ? $request->keyword : '';
+        $order = isset($request->order) ? $request->order : '';
+        $direction = isset($request->direction) ? $request->direction : '';
+        $query = '';
+        // 최고 관리자가 아닌 관리자의 경우
+        if( !auth()->user()->isSuperAdmin() ) {
+            $query =
+                Board::selectRaw('boards.*, groups.subject')
+                ->leftJoin('groups', 'boards.group_id', '=', 'groups.id')
+                ->where('groups.admin', auth()->user()->email);
+            if($kind) {
+                if($kind == 'group_id') {
+                    $query = $query->where('groups.group_id', $keyword);
+                } else {
+                    $query = $query->where($kind, 'like', '%'. $keyword. '%');
+                }
+            }
+        } else {
+            if($kind) {
+                if($kind == 'group_id') {
+                    $query =
+                        Board::selectRaw('boards.*, groups.subject')
+                        ->leftJoin('groups', 'boards.group_id', '=', 'groups.id')
+                        ->where('groups.group_id', 'like', '%'. $keyword. '%');
+                } else {
+                    $query = Board::where($kind, 'like', '%'. $keyword. '%');
+                }
+            } else {
+                $query = Board::select('*');
+            }
+        }
+        // 정렬
+        if($order) {
+            $query = $query->orderBy('boards.'. $order, $direction);
+        } else {
+            $query = $query->orderByRaw('boards.group_id, boards.table_name asc');
+        }
+
+        $boards = $query->paginate(Cache::get("config.homepage")->pageRows);
         $groups = Group::get();
 
         return [
-            'config' => $config,
             'boards' => $boards,
             'groups' => $groups,
-            'kind' => '',
-            'keyword' => '',
+            'kind' => $kind,
+            'keyword' => $keyword,
+            'order' => $order,
+            'direction' => $direction == 'desc' ? 'asc' : 'desc',
         ];
     }
 

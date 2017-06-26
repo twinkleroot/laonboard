@@ -1,7 +1,7 @@
 @extends('admin.admin')
 
 @section('title')
-    회원 관리 | {{ $title }}
+    회원 관리 | {{ Cache::get("config.homepage")->title }}
 @endsection
 
 @section('include_script')
@@ -43,26 +43,26 @@
     <div id="mb" class="">
         <ul class="mb_btn mb10 pull-left">
             <li>
-                <button type="" class="btn btn-sir pull-left">전체보기</button>
+                <a href="{{ route('admin.users.index') }}" class="btn btn-sir pull-left">전체보기</a>
             </li>
             <li>
-                <span class="total">총회원수 0명 중, 차단 0명, 탈퇴 0명</span>
+                <span class="total">총회원수 {{ $users->total() }}명 중, <a href="{{ route('admin.users.index') }}?kind=intercept">차단 {{ $interceptUsers }}명</a>, <a href="{{ route('admin.users.index') }}?kind=leave">탈퇴 {{ $leaveUsers }}명</a></span>
             </li>
         </ul>
         <div class="mb_sch mb10 pull-right">
-            <form>
+            <form class="form-horizontal" role="form" method="GET" action="{{ route('admin.users.index') }}">
                 <label for="" class="sr-only">검색대상</label>
-                <select name="" id="">
-                    <option value="">회원이메일</option>
-                    <option value="">닉네임</option>
-                    <option value="">권한</option>
-                    <option value="">가입일</option>
-                    <option value="">최종접속일</option>
-                    <option value="">IP</option>
-                    <option value="">추천인</option>
+                <select name="kind" id="">
+                    <option value="email" @if($kind == 'email') selected @endif>회원이메일</option>
+                    <option value="nick" @if($kind == 'nick') selected @endif>회원닉네임</option>
+                    <option value="level" @if($kind == 'level') selected @endif>권한(회원 레벨)</option>
+                    <option value="created_at" @if($kind == 'created_at') selected @endif>가입일</option>
+                    <option value="today_login" @if($kind == 'today_login') selected @endif>최근접속일</option>
+                    <option value="ip" @if($kind == 'ip') selected @endif>IP</option>
+                    <option value="recommend" @if($kind == 'recommend') selected @endif>추천인</option>
                 </select>
                 <label for="" class="sr-only">검색어</label>
-                <input type="text" name="" value="" id="" class="search" required>
+                <input type="text" name="keyword" @if($keyword != '') value="{{ $keyword }}" @endif class="search" required>
                 <button type="submit" id="" class="search-icon">
                     <i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">검색</span>
                 </button>
@@ -81,12 +81,24 @@
             <table class="table table-striped box">
                 <thead>
                     <th class="td_chk"><input type="checkbox" name="chkAll" onclick="checkAll(this.form)"/></th>
-                    <th>회원이메일</th>
-                    <th>닉네임</th>
-                    <th>상태/권한</th>
-                    <th>포인트</th>
-                    <th>가입일</th>
-                    <th>최종접속</th>
+                    <th>
+                        <a class="mb_tooltip" href="{{ route('admin.users.index') }}?order=email&amp;direction={{$order=='email' ? $direction : 'asc'}}">회원이메일</a>
+                    </th>
+                    <th>
+                        <a class="mb_tooltip" href="{{ route('admin.users.index') }}?order=nick&amp;direction={{$order=='nick' ? $direction : 'asc'}}">닉네임</a>
+                    </th>
+                    <th>
+                        상태/<a class="mb_tooltip" href="{{ route('admin.users.index') }}?order=level&amp;direction={{$order=='level' ? $direction : 'desc'}}">권한</a>
+                    </th>
+                    <th>
+                        <a class="mb_tooltip" href="{{ route('admin.users.index') }}?order=point&amp;direction={{$order=='point' ? $direction : 'desc'}}">포인트</a>
+                    </th>
+                    <th>
+                        <a class="mb_tooltip" href="{{ route('admin.users.index') }}?order=created_at&amp;direction={{$order=='created_at' ? $direction : 'desc'}}">가입일</a>
+                    </th>
+                    <th>
+                        <a class="mb_tooltip" href="{{ route('admin.users.index') }}?order=today_login&amp;direction={{$order=='today_login' ? $direction : 'desc'}}">최근접속</a>
+                    </th>
                     <th>접근그룹</th>
                     <th>관리</th>
                 </thead>
@@ -97,7 +109,7 @@
                         <td class="text-left">
                             <div class="mb_tooltip">
                                 {{ $user->email }}
-                                <span class="tooltiptext">ip주소</span>
+                                <span class="tooltiptext">{{ $user->ip }}</span>
                             </div>
                         </td>
                         <td class="text-left">{{ $user->nick }}</td>
@@ -119,13 +131,13 @@
                         <td>
                             <div class="mb_tooltip">
                                 @date($user->created_at)
-                                <span class="tooltiptext">자세한날짜</span>
+                                <span class="tooltiptext">{{ $user->created_at }}</span>
                             </div>
                         </td>
                         <td>
                             <div class="mb_tooltip">
                                 @date($user->today_login)
-                                <span class="tooltiptext">자세한날짜</span>
+                                <span class="tooltiptext">{{ $user->today_login }}</span>
                             </div>
                         </td>
                         <td>

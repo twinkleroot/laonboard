@@ -305,6 +305,7 @@ class WriteController extends Controller
         return redirect($returnUrl);
     }
 
+    // RSS 보기
     public function rss(Request $request, $boardId, RssFeed $feed)
     {
         $rss = $feed->getRSS($boardId);

@@ -60,8 +60,6 @@ class RssFeed
           ->orderByRaw('num, reply')
           ->take($board->page_rows)
           ->get();
-
-        // dd($writes);
         foreach ($writes as $write) {
           $item = new Item();
           $writeUrl = route('board.view', ['boardId' => $boardId, 'writeId' => $write->id]);

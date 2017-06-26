@@ -1,7 +1,7 @@
 @extends('themes.default.basic')
 
 @section('title')
-    {{ $group->subject }}그룹 접근가능회원 | {{ $config->title }}
+    {{ $group->subject }}그룹 접근가능회원 | {{ Cache::get("config.homepage")->title }}
 @endsection
 
 @section('include_script')
@@ -18,9 +18,7 @@
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading"><h2>'{{ $group->subject }}' 그룹 접근가능회원 (그룹아이디 : {{ $group->group_id }})</h2></div>
-            <form class="form-horizontal" role="form" method="GET" action="{{ route('admin.search') }}">
-                <input type="hidden" name="admin_page" value="accessibleUsers" />
-                <input type="hidden" name="groupId" value="{{ $group->id }}" />
+            <form class="form-horizontal" role="form" method="GET" action="{{ route('admin.accessUsers.show', $group->id) }}">
                  <p>
                     <select name="kind">
                         <option value="nick">회원 닉네임</option>
@@ -38,11 +36,21 @@
                         <thead>
                             <th class="text-center"><input type="checkbox" name="chkAll" onclick="checkAll(this.form)"/></th>
                             <th class="text-center">그룹</th>
-                            <th class="text-center">회원이메일</th>
-                            <th class="text-center">이름</th>
-                            <th class="text-center">닉네임</th>
-                            <th class="text-center">최종접속</th>
-                            <th class="text-center">처리일시</th>
+                            <th class="text-center">
+                                <a class="mb_tooltip" href="{{ route('admin.accessUsers.show', $group->id) }}?order=email&amp;direction={{$order=='email' ? $direction : 'asc'}}">회원이메일</a>
+                            </th>
+                            <th class="text-center">
+                                <a class="mb_tooltip" href="{{ route('admin.accessUsers.show', $group->id) }}?order=name&amp;direction={{$order=='name' ? $direction : 'asc'}}">이름</a>
+                            </th>
+                            <th class="text-center">
+                                <a class="mb_tooltip" href="{{ route('admin.accessUsers.show', $group->id) }}?order=nick&amp;direction={{$order=='nick' ? $direction : 'asc'}}">닉네임</a>
+                            </th>
+                            <th class="text-center">
+                                <a class="mb_tooltip" href="{{ route('admin.accessUsers.show', $group->id) }}?order=today_login&amp;direction={{$order=='today_login' ? $direction : 'asc'}}">최근접속</a>
+                            </th>
+                            <th class="text-center">
+                                <a class="mb_tooltip" href="{{ route('admin.accessUsers.show', $group->id) }}?order=created_at&amp;direction={{$order=='created_at' ? $direction : 'asc'}}">처리일시</a>
+                            </th>
                         </thead>
 
                         <tbody>

@@ -31,14 +31,11 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = $this->userModel->userList();
+        $params = $this->userModel->userList($request);
 
-        return view('admin.users.index', [
-            'title' => Cache::get("config.homepage")->title,
-            'users' => $users,
-        ]);
+        return view('admin.users.index', $params);
     }
 
     /**

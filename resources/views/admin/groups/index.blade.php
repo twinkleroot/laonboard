@@ -1,7 +1,7 @@
 @extends('themes.default.basic')
 
 @section('title')
-    게시판 그룹 설정 | {{ $config->title }}
+    게시판 그룹 설정 | {{ Cache::get("config.homepage")->title }}
 @endsection
 
 @section('include_script')
@@ -21,15 +21,14 @@
             <div class="panel-heading">
                 <a href="{{ route('admin.groups.index') }}" >처음</a> | 전체그룹 {{ $groups->total() }}개
             </div>
-            <form method="GET" id="searchForm" action="/admin/search">
-                <input type="hidden" id="admin_page" name="admin_page" value="boardGroup" />
+            <form method="GET" id="searchForm" action="{{ route('admin.groups.index') }}">
                 <div class="panel-heading">
                     <select name="kind" id="kind">
-                        <option value="subject">제목</option>
-                        <option value="group_id">ID</option>
-                        <option value="admin">그룹관리자</option>
+                        <option value="subject" @if($kind == 'subject') selected @endif>제목</option>
+                        <option value="group_id" @if($kind == 'group_id') selected @endif>그룹 ID</option>
+                        <option value="admin" @if($kind == 'admin') selected @endif>그룹관리자</option>
                     </select>
-                    <input type="text" id="keyword" name="keyword" value="" />
+                    <input type="text" id="keyword" name="keyword" @if($keyword != '') value="{{ $keyword }}" @endif />
                     <input type="submit" id="search" value="검색" />
                 </div>
             </form>
@@ -47,13 +46,21 @@
                     <table class="table table-hover">
                         <thead>
                             <th class="text-center"><input type="checkbox" name="chkAll" onclick="checkAll(this.form)"/></th>
-                            <th class="text-center">그룹 ID</th>
-                            <th class="text-center">제목</th>
-                            <th class="text-center">그룹관리자</th>
+                            <th class="text-center">
+                                <a class="mb_tooltip" href="{{ route('admin.groups.index') }}?order=group_id&amp;direction={{$order=='group_id' ? $direction : 'asc'}}">그룹 ID</a>
+                            </th>
+                            <th class="text-center">
+                                <a class="mb_tooltip" href="{{ route('admin.groups.index') }}?order=subject&amp;direction={{$order=='subject' ? $direction : 'asc'}}">제목</a>
+                            </th>
+                            <th class="text-center">
+                                <a class="mb_tooltip" href="{{ route('admin.groups.index') }}?order=admin&amp;direction={{$order=='admin' ? $direction : 'asc'}}">그룹관리자</a>
+                            </th>
                             <th class="text-center">게시판</th>
                             <th class="text-center">접근<br />사용</th>
                             <th class="text-center">접근<br />회원수</th>
-                            <th class="text-center">출력순서</th>
+                            <th class="text-center">
+                                <a class="mb_tooltip" href="{{ route('admin.groups.index') }}?order=order&amp;direction={{$order=='order' ? $direction : 'asc'}}">출력순서</a>
+                            </th>
                             <th class="text-center">접속기기</th>
                             <th class="text-center">관리</th>
                         </thead>

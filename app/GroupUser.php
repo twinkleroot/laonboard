@@ -77,27 +77,48 @@ class GroupUser extends Model
     }
 
     // 접근 가능 회원 목록을 표시한다.
-    public function getAccessibleUsers($id)
+    public function getAccessibleUsers($id, $request)
     {
-        $config = Cache::get("config.homepage");
+        $keyword = isset($request->keyword) ? $request->keyword : '';
+        $order = isset($request->order) ? $request->order : '';
+        $direction = isset($request->direction) ? $request->direction : '';
         $group = Group::find($id);
-        $users = $group->users()
-                ->select(DB::raw('users.*, count.count_groups'))
-                ->leftJoin(
-                    DB::raw('(select users.id as id, count(group_user.id) as count_groups
-                	from group_user
-                	left join users
-                	on group_user.user_id = users.id
-                	group by users.id) as count'),
-                    'users.id', '=', 'count.id'
-                )
-                ->paginate($config->pageRows);
+
+        $query = $group
+            ->users()
+            ->selectRaw('users.*, count.count_groups')
+            ->leftJoin(DB::raw(
+                '(select users.id as id,
+                count(group_user.id) as count_groups
+            	from group_user
+            	left join users
+            	on group_user.user_id = users.id
+            	group by users.id) as count'),
+                'users.id', '=', 'count.id'
+            );
+        // 검색 추가
+        if($keyword) {
+            $query = $query->where('users.nick', 'like', '%'. $keyword. '%');
+        }
+        // 정렬 추가
+        if($order) {
+            if($order == 'created_at') {
+                $query = $query->orderBy('group_user.created_at', $direction);
+            } else {
+                $query = $query->orderBy('users.'. $order, $direction);
+            }
+        } else {
+            $query = $query->orderBy('group_user.created_at', 'desc');
+        }
+
+        $users = $query->paginate(Cache::get("config.homepage")->pageRows);
 
         return [
-            'config' => $config,
             'group' => $group,
             'users' => $users,
-            'keyword' => ''
+            'keyword' => $keyword,
+            'order' => $order,
+            'direction' => $direction == 'desc' ? 'asc' : 'desc',
         ];
     }
 }

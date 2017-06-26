@@ -23,9 +23,9 @@ class BoardsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $params = $this->boardModel->getBoardIndexParams();
+        $params = $this->boardModel->getBoardIndexParams($request);
 
         return view('admin.boards.index', $params);
     }

@@ -23,9 +23,9 @@ class PointsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $params = $this->pointModel->getPointIndexParams();
+        $params = $this->pointModel->getPointIndexParams($request);
 
         return view('admin.points.index', $params);
     }

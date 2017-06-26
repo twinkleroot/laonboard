@@ -1,7 +1,7 @@
 @extends('themes.default.basic')
 
 @section('title')
-    게시판 관리 | {{ $config->title }}
+    게시판 관리 | {{ Cache::get("config.homepage")->title }}
 @endsection
 
 @section('include_script')
@@ -21,15 +21,14 @@
             <div class="panel-heading">
                 <a href="{{ route('admin.boards.index') }}" >전체목록</a> | 생성된 게시판수 {{ $boards->total() }}개
             </div>
-            <form class="form-horizontal" role="form" method="GET" action="{{ route('admin.search') }}">
-                <input type="hidden" name="admin_page" value="board" />
+            <form class="form-horizontal" role="form" method="GET" action="{{ route('admin.boards.index') }}">
                  <p>
                     <select name="kind">
                         <option value="table_name" @if($kind == 'table_name') selected @endif>TABLE</option>
                         <option value="subject" @if($kind == 'subject') selected @endif>제목</option>
                         <option value="group_id" @if($kind == 'group_id') selected @endif>그룹ID</option>
                     </select>
-                    <input type="text" name="keyword" value="{{ $keyword }}" />
+                    <input type="text" name="keyword" @if($keyword != '') value="{{ $keyword }}" @endif />
                     <input type="submit" class="btn btn-primary" value="검색" />
                 </p>
             </form>
@@ -52,18 +51,34 @@
                     <table class="table table-hover">
                         <thead>
                             <th class="text-center"><input type="checkbox" name="chkAll" onclick="checkAll(this.form)"/></th>
-                            <th class="text-center">그룹</th>
-                            <th class="text-center">TABLE</th>
-                            <th class="text-center">스킨</th>
-                            <th class="text-center">모바일<br />스킨</th>
-                            <th class="text-center">제목</th>
+                            <th class="text-center">
+                                <a class="mb_tooltip" href="{{ route('admin.boards.index') }}?order=group_id&amp;direction={{$order=='group_id' ? $direction : 'asc'}}">그룹</a>
+                            </th>
+                            <th class="text-center">
+                                <a class="mb_tooltip" href="{{ route('admin.boards.index') }}?order=table_name&amp;direction={{$order=='table_name' ? $direction : 'asc'}}">TABLE</a>
+                            </th>
+                            <th class="text-center">
+                                <a class="mb_tooltip" href="{{ route('admin.boards.index') }}?order=skin&amp;direction={{$order=='skin' ? $direction : 'desc'}}">스킨</a>
+                            </th>
+                            <th class="text-center">
+                                <a class="mb_tooltip" href="{{ route('admin.boards.index') }}?order=mobile_skin&amp;direction={{$order=='mobile_skin' ? $direction : 'desc'}}">모바일<br />스킨</a>
+                            </th>
+                            <th class="text-center">
+                                <a class="mb_tooltip" href="{{ route('admin.boards.index') }}?order=subject&amp;direction={{$order=='subject' ? $direction : 'asc'}}">제목</a>
+                            </th>
                             <th class="text-center">읽기P</th>
                             <th class="text-center">쓰기P</th>
                             <th class="text-center">댓글P</th>
                             <th class="text-center">다운P</th>
-                            <th class="text-center">SNS<br />사용</th>
-                            <th class="text-center">검색<br />사용</th>
-                            <th class="text-center">출력<br />순서</th>
+                            <th class="text-center">
+                                <a class="mb_tooltip" href="{{ route('admin.boards.index') }}?order=use_sns&amp;direction={{$order=='use_sns' ? $direction : 'asc'}}">SNS<br />사용</a>
+                            </th>
+                            <th class="text-center">
+                                <a class="mb_tooltip" href="{{ route('admin.boards.index') }}?order=use_search&amp;direction={{$order=='use_search' ? $direction : 'asc'}}">검색<br />사용</a>
+                            </th>
+                            <th class="text-center">
+                                <a class="mb_tooltip" href="{{ route('admin.boards.index') }}?order=order&amp;direction={{$order=='order' ? $direction : 'asc'}}">출력<br />순서</a>
+                            </th>
                             <th class="text-center">접속기기</th>
                             <th class="text-center">관리</th>
                         </thead>

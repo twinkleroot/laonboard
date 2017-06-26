@@ -28,18 +28,58 @@ class Point extends Model
     }
 
     // index 페이지에서 필요한 파라미터 가져오기
-    public function getPointIndexParams()
+    public function getPointIndexParams($request)
     {
-        $config = Cache::get("config.homepage");
-        $points = Point::orderBy('id', 'desc')->paginate($config->pageRows);
+        $kind = isset($request->kind) ? $request->kind : '';
+        $keyword = isset($request->keyword) ? $request->keyword : '';
+        $order = isset($request->order) ? $request->order : '';
+        $direction = isset($request->direction) ? $request->direction : '';
+        $searchEmail = '';
+        $query = '';
+
+        if($kind) {
+            if($kind == 'content') {
+                $query = Point::where($kind, 'like', '%'.$keyword.'%');
+            } else {
+                $user = User::where( [$kind => $keyword] )->first();
+                if($user) {
+                    // 검색한 유저의 id로 포인트 테이블 조회
+                    $query = Point::where(['user_id' => $user->id]);
+                    $sum = $user->point;
+                    $searchEmail = $user->email;
+                } else {
+                    // 유저가 없으므로 user_id를 0으로 해서 조회한다. (null error 방지용)
+                    $query = Point::where(['user_id' => 0]);
+                }
+            }
+        } else {
+            $query = Point::select('*');
+        }
+
+        // 정렬
+        if($order) {
+            if($order == 'email') {
+                $query = $query
+                    ->selectRaw('points.*, users.email as email')
+                    ->leftJoin('users', 'points.user_id', '=', 'users.id')
+                    ->orderBy('email', $direction);
+            } else {
+                $query = $query->orderBy($order, $direction);
+            }
+        } else {
+            $query = $query->orderBy('id', 'desc');
+        }
+
+        $points = $query->paginate(Cache::get("config.homepage")->pageRows);
 
         return [
-            'config' => $config,
             'points' => $points,
             'sum' => Point::sum('point'),   // 모든 유저의 포인트합을 구한다.
-            'kind' => '',
-            'keyword' => '',
-            'searchEmail' => '',
+            'kind' => $kind,
+            'keyword' => $keyword,
+            'order' => $order,
+            'direction' => $direction == 'desc' ? 'asc' : 'desc',
+            'searchEmail' => $searchEmail,
         ];
     }
 

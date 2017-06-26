@@ -25,9 +25,9 @@ class AccessibleUsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, Request $request)
     {
-        $params = $this->groupUserModel->getAccessibleUsers($id);
+        $params = $this->groupUserModel->getAccessibleUsers($id, $request);
 
         return view('admin.group_user.accessible_user_list', $params);
     }
@@ -39,7 +39,7 @@ class AccessibleUsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $id)
+    public function destroy($id, Request $request)
     {
         $message = $this->groupUserModel->delAccessibleGroups($request);
         return redirect(route('admin.accessUsers.show', $id))

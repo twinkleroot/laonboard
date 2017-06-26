@@ -30,20 +30,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
     // 환경 설정
     Route::get('config', ['as' => 'admin.config', 'uses' => 'Admin\ConfigController@index']);
     Route::put('config/update/{name}', ['as' => 'admin.config.update', 'uses' => 'Admin\ConfigController@update']);
-    // 회원관리 CRUD 컨트롤러
-    Route::resource('users', 'Admin\UsersController', [
-        'except' => [
-            'show',
-        ],
-        'names' => [
-            'create' => 'admin.users.create',
-            'index' => 'admin.users.index',
-            'store' => 'admin.users.store',
-            'destroy' => 'admin.users.destroy',
-            'update' => 'admin.users.update',
-            'edit' => 'admin.users.edit',
-        ]
-    ]);
+
     // 게시판 그룹 관리 리소스 컨트롤러에 추가적으로 라우팅을 구성(리소스 라우트보다 앞에 와야 함)
     Route::put('groups/selected_update', ['as' => 'admin.groups.selectedUpdate', 'uses' => 'Admin\GroupsController@selectedUpdate']);
     // 게시판 그룹관리 리소스 컨트롤러
@@ -60,6 +47,18 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
             'edit' => 'admin.groups.edit',
         ]
     ]);
+
+    // 게시판 그룹 관리 -> 그룹 접근가능회원 리소스 컨트롤러
+    Route::resource('accessible_users', 'Admin\AccessibleUsersController', [
+        'only' => [
+            'show', 'destroy',
+        ],
+        'names' => [
+            'show' => 'admin.accessUsers.show',
+            'destroy' => 'admin.accessUsers.destroy',
+        ],
+    ]);
+
     // 회원 관리 -> 접근가능그룹 리소스 컨트롤러
     Route::resource('accessible_groups', 'Admin\AccessibleGroupsController', [
         'only' => [
@@ -69,16 +68,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
             'show' => 'admin.accessGroups.show',
             'store' => 'admin.accessGroups.store',
             'destroy' => 'admin.accessGroups.destroy',
-        ],
-    ]);
-    // 게시판 그룹 관리 -> 그룹 접근가능회원 리소스 컨트롤러
-    Route::resource('accessible_users', 'Admin\AccessibleUsersController', [
-        'only' => [
-            'show', 'destroy',
-        ],
-        'names' => [
-            'show' => 'admin.accessUsers.show',
-            'destroy' => 'admin.accessUsers.destroy',
         ],
     ]);
 
@@ -98,6 +87,21 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
             'destroy' => 'admin.boards.destroy',
             'update' => 'admin.boards.update',
             'edit' => 'admin.boards.edit',
+        ]
+    ]);
+
+    // 회원관리 CRUD 컨트롤러
+    Route::resource('users', 'Admin\UsersController', [
+        'except' => [
+            'show',
+        ],
+        'names' => [
+            'create' => 'admin.users.create',
+            'index' => 'admin.users.index',
+            'store' => 'admin.users.store',
+            'destroy' => 'admin.users.destroy',
+            'update' => 'admin.users.update',
+            'edit' => 'admin.users.edit',
         ]
     ]);
 
