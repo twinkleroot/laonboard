@@ -154,17 +154,19 @@
         				<input type="checkbox" id="notice" name="notice" value="1" @if($type=='update' && strpos($board->notice, (string)$write->id) !== false) checked @endif> 공지
         			</label>
                 @endif
-                @if($board->use_dhtml_editor == 0)
+                @if(!$board->use_dhtml_editor)
         			<label for="html" class="checkbox-inline">
         				<input type="checkbox" id="html" name="html" onclick="htmlAutoBr(this);" value="" @if($type=='update' && strpos($write->option, 'html') !== false) checked @endif> html
         			</label>
+                @else
+                    <input type="hidden" name="html" value="html1" />
                 @endif
-                @if($board->use_secret == 1)
+                @if($board->use_secret)
                     <label for="secret" class="checkbox-inline">
         				<input type="checkbox" id="secret" name="secret" value="secret" @if($type=='update' && strpos($write->option, 'secret') !== false) checked @endif> 비밀글
         			</label>
                 @endif
-                @if($board->use_email == 1)
+                @if($board->use_email)
         			<label for="mail" class="checkbox-inline">
         				<input type="checkbox" id="mail" name="mail" value="mail"> 답변메일받기
         			</label>

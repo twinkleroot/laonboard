@@ -61,17 +61,18 @@ class RssFeed
           ->take($board->page_rows)
           ->get();
 
-        dd($writes);
+        // dd($writes);
         foreach ($writes as $write) {
           $item = new Item();
           $writeUrl = route('board.view', ['boardId' => $boardId, 'writeId' => $write->id]);
           $html = 0;
-          if(strpos($write->option, 'html')) {
+          if(strstr($write->option, 'html')) {
               $html = 1;
           }
           $item
             ->title($write->subject)
-            ->description(Util::convertContent('<![CDATA['. $write->content. ']]>', $html))
+            ->preferCdata(1)
+            ->description(Util::convertContent($write->content, $html))
             ->url($writeUrl)
             ->pubDate($write->created_at->timestamp)
             ->guid($writeUrl, true)

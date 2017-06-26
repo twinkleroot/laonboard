@@ -6,9 +6,10 @@
 
 @section('include_script')
     <script type="text/javascript">
+        var menuVal = 100100;
         jQuery("document").ready(function($){
             var nav = $('#body_tab_type2');
-             
+
             $(window).scroll(function () {
                 if ($(this).scrollTop() > 180) {
                     nav.addClass("f-tab");
@@ -218,7 +219,7 @@
 
                         <div class="panel-body">
                             <div class="col-md-offset-5">
-                                
+
                             </div>
                         </div>
                     </div>
@@ -245,7 +246,7 @@
                             수정하면 <input type="text" name="nickDate" value="{{ $configJoin->nickDate }}">일 동안 바꿀 수 없음
                         </div>
                     </div>
-                
+
                 <div class="panel-body">
                     <div class="form-group">
                         <label for="email" class="col-md-4 control-label">이름</label>
@@ -681,7 +682,7 @@
     <div id="admin_box6" class="admin_box">
         <div class="panel panel-default">
         <div class="panel-body">
-            
+
             <div class="panel-heading">회원가입 시 메일 설정</div>
             <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.config.update', ['name' => 'email.join']) }}">
                 {{ method_field('PUT') }}

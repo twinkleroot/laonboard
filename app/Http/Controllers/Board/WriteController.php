@@ -310,7 +310,7 @@ class WriteController extends Controller
         $rss = $feed->getRSS($boardId);
 
         return response($rss)
-            ->header('Content-type', 'application/rss+xml')
+            ->header('Content-type', 'text/xml')
             ->header('Cache-Control', 'no-cache, must-revalidate')
             ->header('Pragma', 'no-cache')
             ->header('charset', 'utf-8');
