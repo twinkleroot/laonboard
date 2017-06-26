@@ -27,7 +27,6 @@
     @yield('include_script')
 </head>
 <body>
-
 <div id="admin-header">
 	<div class="header-title sidebarmenu">
 		<h1><i class="fa fa-cogs"></i>Administrator</h1>
@@ -35,20 +34,25 @@
 
 	<div class="box-left sidebarmenu">
 		<div class="hdbt bt-menu" id="showmenu">
-			<i class="fa fa-bars"></i>
-			<span>menu</span>
-		</div>
+			<i class="fa fa-outdent"></i>
+		</div><!--
 		<div class="hdbt bt-home">
 			<a href="{{ url('/') }}">
 				<i class="fa fa-home"></i>
 				<span>home</span>
 			</a>
-		</div>
+		</div>-->
 	</div>
 
 	<div class="box-right pull-right">
 		<div class="hdtx">
 			<ul>
+				<li>
+					<a href="{{ url('/') }}">
+						<i class="fa fa-home"></i>
+						<span>Home</span>
+					</a>
+				</li>
 				<li>
 					<a href="{{ route('admin.extra_service') }}">부가서비스</a>
 				</li>
@@ -110,6 +114,12 @@
 	</div>
 </div>
 
+<div class="upbtn">
+	<a href="#admin-header">
+		<i class="fa fa-angle-up"></i>
+	</a>
+</div>
+
 <script>
 $(document).ready(function() {
 	$("a[id='" + menuVal+ "']").parent().parent().show();
@@ -139,6 +149,25 @@ $(document).ready(function() {
         $(this).parent().next('.sd_2depth').toggle(200);
         return false;
     });
+});
+
+$(document).ready(function(){
+	$(".upbtn").hide(); //top버튼
+	$(function () {
+		$(window).scroll(function () {
+			if ($(this).scrollTop() > 100) {
+			$('.upbtn').fadeIn();
+			} else {
+			$('.upbtn').fadeOut();
+			}
+		});
+		$('.upbtn a').click(function () {
+			$('body,html').animate({
+			scrollTop: 0
+			}, 500);
+			return false;
+		});
+	});
 });
 </script>
 

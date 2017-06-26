@@ -60,6 +60,8 @@ class RssFeed
           ->orderByRaw('num, reply')
           ->take($board->page_rows)
           ->get();
+
+        dd($writes);
         foreach ($writes as $write) {
           $item = new Item();
           $writeUrl = route('board.view', ['boardId' => $boardId, 'writeId' => $write->id]);
@@ -69,7 +71,7 @@ class RssFeed
           }
           $item
             ->title($write->subject)
-            ->description(Util::convertContent($write->content, $html))
+            ->description(Util::convertContent('<![CDATA['. $write->content. ']]>', $html))
             ->url($writeUrl)
             ->pubDate($write->created_at->timestamp)
             ->guid($writeUrl, true)
