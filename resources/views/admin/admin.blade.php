@@ -21,6 +21,10 @@
         window.Laravel = {!! json_encode([
             'csrfToken' => csrf_token(),
         ]) !!};
+
+        function alertclose() {
+	        document.getElementById("adm_save").style.display = "none";
+	    }
     </script>
 
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>

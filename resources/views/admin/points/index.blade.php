@@ -22,7 +22,7 @@
 @endif
 <div class="body-contents">
     <div id="pt">
-    	<ul id="pt_btn" class="mb10 pull-left">
+    	<ul id="adm_btn">
     		<li>
                 <button type="button" class="btn btn-sir pull-left" onclick="location.href='{{ route('admin.points.index') }}'">
     	             전체보기
@@ -43,7 +43,7 @@
     		</li>
     	</ul>
 
-    	<div id="pt_sch" class="mb10 pull-right">
+    	<div id="adm_sch">
     	    <form class="form-horizontal" role="form" method="GET" action="{{ route('admin.search') }}">
                 <input type="hidden" name="admin_page" value="point" />
 
