@@ -39,7 +39,7 @@ class WriteNotification extends Mailable
     public function build()
     {
         return $this->subject($this->mailSubject)
-                    ->view('mail.write_notification')
+                    ->view('mail.default.write_notification')
                     ->with([
                         'subject' => $this->writeSubject,
                         'name' => $this->name,

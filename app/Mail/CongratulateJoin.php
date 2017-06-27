@@ -38,7 +38,7 @@ class CongratulateJoin extends Mailable
                 'crypt' => $this->user->email_certify2
             ]);
         return $this->subject($this->subject)
-                    ->view('mail.congratulate_join')
+                    ->view('mail.default.congratulate_join')
                     ->with([
                         'user' => $this->user,
                         'url' => $url

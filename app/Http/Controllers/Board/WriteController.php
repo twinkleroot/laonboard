@@ -53,9 +53,8 @@ class WriteController extends Controller
             return view('message', $params);
         }
 
-        $params = array_add($params, 'mainTheme', 'dafault');
-
-        return view('board.index', $params);
+        $skin = $this->writeModel->board->skin ? : 'default';
+        return view('board.'. $skin. '.index', $params);
     }
 
     /**
@@ -89,7 +88,9 @@ class WriteController extends Controller
         // 요청 URI 추가
         $params = array_add($params, 'requestUri', $request->getRequestUri());
 
-        return view('board.view', $params);
+        $skin = $this->writeModel->board->skin ? : 'default';
+
+        return view('board.'. $skin. '.view', $params);
     }
 
     // 글 보기 중 링크 연결
@@ -102,8 +103,9 @@ class WriteController extends Controller
                 'message' => $result['message']
             ]);
         }
+        $skin = $this->writeModel->board->skin ? : 'default';
 
-        return view('board.link', [ 'linkUrl' => $result['linkUrl'] ]);
+        return view('board.'. $skin. '.link', [ 'linkUrl' => $result['linkUrl'] ]);
     }
 
     // 추천/비추천 ajax 메서드
@@ -126,8 +128,9 @@ class WriteController extends Controller
     public function create($boardId)
     {
         $params = $this->writeModel->getCreateParams($this->writeModel);
+        $skin = $this->writeModel->board->skin ? : 'default';
 
-        return view('board.form', $params);
+        return view('board.'. $skin. '.form', $params);
     }
 
     /**
@@ -180,8 +183,9 @@ class WriteController extends Controller
     public function edit($boardId, $writeId)
     {
         $params = $this->writeModel->getEditParams($boardId, $writeId, $this->writeModel);
+        $skin = $this->writeModel->board->skin ? : 'default';
 
-        return view('board.form', $params);
+        return view('board.'. $skin. '.form', $params);
     }
 
     /**
@@ -223,8 +227,9 @@ class WriteController extends Controller
     public function createReply($boardId, $writeId)
     {
         $params = $this->writeModel->getReplyParams($boardId, $writeId, $this->writeModel);
+        $skin = $this->writeModel->board->skin ? : 'default';
 
-        return view('board.form', $params);
+        return view('board.'. $skin. '.form', $params);
     }
 
     /**

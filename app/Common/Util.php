@@ -19,11 +19,12 @@ class Util
     }
 
     // 스킨 목록을 가져온다.
-    public static function getSkins()
+    public static function getSkins($type)
     {
-        $path = resource_path('views/themes');
+        $path = resource_path('views/'.$type);
         $dirs = File::directories($path);
-        $result = ['' => '선택안함'];
+        // $result = ['' => '선택안함'];
+        $result = [];
         foreach($dirs as $dir) {
             $result[basename($dir)] = basename($dir);
         }

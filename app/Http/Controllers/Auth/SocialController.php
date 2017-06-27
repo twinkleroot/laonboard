@@ -50,9 +50,9 @@ class SocialController extends Controller
             if($result == 'view') {
                 // 소셜 계정을 처음 사용해서 로그인 했을 경우 기존 계정과 연결/ 회원가입 화면으로 연결
                 $params = $this->socialModel->getSocialParams($provider);
-                $params = array_add($params, 'skin', Cache::get('config.theme')->name ? : 'default');
+                $skin = $this->config->skin ? : 'default';
 
-                return view('auth.social', $params);
+                return view('user.'. $skin. '.social', $params);
             } else { // 소셜 계정으로 로그인
                 return redirect(route('home'));
             }

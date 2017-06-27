@@ -24,7 +24,7 @@ class ScrapController extends Controller
     {
         $params = $this->scrap->getIndexParams();
 
-        return view('board.scrap.index', $params);
+        return view('board.default.scrap_index', $params);
     }
 
     /**
@@ -36,7 +36,7 @@ class ScrapController extends Controller
     {
         $existScrap = $this->scrap->getScrap($request);
         if($existScrap) {
-             return view('board.scrap.confirm', [
+             return view('board.default.scrap_confirm', [
                  'confirm' => '이미 스크랩하신 글 입니다.\\n\\n지금 스크랩을 확인하시겠습니까?'
              ]);
         }
@@ -49,7 +49,7 @@ class ScrapController extends Controller
             ]);
         }
 
-        return view('board.scrap.form', ['write' => $write, 'boardId' => $request->boardId]);
+        return view('board.default.scrap_form', ['write' => $write, 'boardId' => $request->boardId]);
     }
 
     /**
@@ -70,7 +70,7 @@ class ScrapController extends Controller
 
         $existScrap = $this->scrap->getScrap($request);
         if($existScrap) {
-             return view('board.scrap.confirm', [
+             return view('board.default.scrap_form', [
                  'confirm' => '이미 스크랩하신 글 입니다.\\n\\n지금 스크랩을 확인하시겠습니까?'
              ]);
         }
@@ -83,7 +83,7 @@ class ScrapController extends Controller
                 'popup' => 1
             ]);
         } else {
-            return view('board.scrap.confirm', [
+            return view('board.default.scrap_form', [
                  'confirm' => '이 글을 스크랩 하였습니다.\\n\\n지금 스크랩을 확인하시겠습니까?'
             ]);
         }

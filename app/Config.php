@@ -66,7 +66,9 @@ class Config extends Model
             'configEmailJoin' => Cache::get("config.email.join"),
             'configEmailVote' => Cache::get("config.email.vote"),
             'admins' => $admins,
-            'skins' => Util::getSkins()
+            'latestSkins' => Util::getSkins('latest'),
+            'searchSkins' => Util::getSkins('search'),
+            'userSkins' => Util::getSkins('user'),
         ];
     }
 
@@ -86,6 +88,8 @@ class Config extends Model
                 return $this->createConfigEmailJoin();
             case 'email.board':
                 return $this->createConfigEmailBoard();
+            case 'theme':
+                return $this->createConfigTheme();
             default:
                 # code...
                 break;
@@ -119,6 +123,7 @@ class Config extends Model
     public function createConfigJoin()
     {
         $configArr = array (
+          'skin' => config('gnu.skin'),
           'nickDate' => config('gnu.nickDate'),
           'name' => config('gnu.name'),
           'homepage' => config('gnu.homepage'),
@@ -196,6 +201,16 @@ class Config extends Model
         );
 
         return $this->createConfig('config.email.join', $configArr);
+    }
+
+    // 테마 설정 가져오기
+    public function createConfigTheme()
+    {
+        $configArr = array (
+          'name' => config('gnu.theme'),
+        );
+
+        return $this->createConfig('config.theme', $configArr);
     }
 
     // configs 테이블에 해당 row를 추가한다.

@@ -182,7 +182,7 @@
 
                                 <div class="col-md-6">
                                     <select name='newSkin'>
-                                        @foreach($skins as $key => $value)
+                                        @foreach($latestSkins as $key => $value)
                                             <option value='{{ $key }}' @if($configHomepage->newSkin == $key) selected @endif>
                                                 {{ $value }}
                                             </option>
@@ -197,7 +197,7 @@
 
                                 <div class="col-md-6">
                                     <select name='searchSkin'>
-                                        @foreach($skins as $key => $value)
+                                        @foreach($searchSkins as $key => $value)
                                             <option value='{{ $key }}' @if($configHomepage->searchSkin == $key) selected @endif>
                                                 {{ $value }}
                                             </option>
@@ -239,6 +239,22 @@
                     <div class="st_title">회원가입</div>
                     <div class="st_contents">
 
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="newSkin" class="col-md-4 control-label">회원 스킨</label>
+
+                        <div class="col-md-6">
+                            <select name='newSkin'>
+                                @foreach($userSkins as $key => $value)
+                                    <option value='{{ $key }}' @if($configJoin->skin == $key) selected @endif>
+                                        {{ $value }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
                     <div class="form-group">
                         <label for="nickDate" class="col-md-4 control-label">닉네임 수정</label>
 
@@ -246,7 +262,7 @@
                             수정하면 <input type="text" name="nickDate" value="{{ $configJoin->nickDate }}">일 동안 바꿀 수 없음
                         </div>
                     </div>
-
+                </div>
                 <div class="panel-body">
                     <div class="form-group">
                         <label for="email" class="col-md-4 control-label">이름</label>

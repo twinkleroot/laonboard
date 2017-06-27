@@ -21,6 +21,7 @@
   'pointTerm' => 0,
 
   // 회원 가입
+  'skin' => 'default',
   'nickDate' => 30,
   'name' => 0,
   'homepage' => 0,
@@ -76,4 +77,6 @@
   'emailJoinSuperAdmin' => 0,
   'emailJoinUser' => 0,
 
+  // 테마설정
+  'theme' => 'default',
 ) ;

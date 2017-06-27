@@ -36,8 +36,9 @@ class ContentController extends Controller
     public function show($id)
     {
         $params = $this->content->getContentView($id);
+        $skin = $params['content']->skin ? : 'default';
 
-        return view('content.show', $params);
+        return view('content.'. $skin. '.show', $params);
     }
 
     /**

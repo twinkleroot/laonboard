@@ -50,8 +50,8 @@ class RegisterController extends Controller
     // 회원 가입 페이지
     public function join()
     {
-        $skin = Cache::get('config.theme')->name ? : 'default';
-        return view('auth.register', ['skin' => $skin]);
+        $skin = $this->config->skin ? : 'default';
+        return view('user.'. $skin. '.register');
     }
 
     // 회원 가입 수행

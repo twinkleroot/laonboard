@@ -39,7 +39,9 @@ class PasswordController extends Controller
             $subject = $this->writeModel->find($writeId)->subject;
         }
 
-        return view('board.password', [
+        $skin = $this->writeModel->board->skin ? : 'default';
+
+        return view('board.'. $skin. '.password', [
             'subject' => $subject,
             'boardId' => $boardId,
             'writeId' => $writeId,

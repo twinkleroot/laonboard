@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Board;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\BoardNew;
+use Cache;
 
 class NewController extends Controller
 {
@@ -18,8 +19,9 @@ class NewController extends Controller
     public function index(Request $request)
     {
         $params = $this->boardNew->getIndexParams($request);
+        $skin = Cache::get('config.homepage')->newSkin ? : 'default';
 
-        return view('board.new.index', $params);
+        return view('board.'. $skin. '.new', $params);
     }
 
     public function destroy(Request $request)

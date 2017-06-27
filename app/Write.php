@@ -110,7 +110,7 @@ class Write extends Model
         $notices = explode(',', $this->board->notice);
 
         $result = [];
-        try {
+        // try {
             $result = $this->getWrites($writeModel, $request, $kind, $keyword, $currenctCategory);
             if($result['message'] != '') {
                 return [
@@ -121,12 +121,12 @@ class Write extends Model
                     $viewParams['page'] = 'page='. $result['writes']->currentPage();
                 }
             }
-        } catch (Exception $e) {
-            return [
-                'message' => '글이 존재하지 않습니다.\\n글이 삭제되었거나 이동하였을 수 있습니다.',
-                'redirect' => '/'
-            ];
-        }
+        // } catch (Exception $e) {
+        //     return [
+        //         'message' => '글이 존재하지 않습니다.\\n글이 삭제되었거나 이동하였을 수 있습니다.',
+        //         'redirect' => '/'
+        //     ];
+        // }
 
         return [
             'board' => $this->board,
@@ -171,7 +171,6 @@ class Write extends Model
             $write->user_id = encrypt($write->user_id);     // 라라벨 기본 지원 encrypt
             $write->subject = Util::searchKeyword($keyword, $write->subject);
         }
-
         // 페이징 버튼의 경로 지정 (항상 목록으로 이동하도록 하기)
         $writes->withPath('/board/'.$this->board->id);
 
@@ -222,6 +221,8 @@ class Write extends Model
                         'message' => $keyword. ' 사용자가 존재하지 않습니다.'
                     ];
                 }
+            } else if($kind == 'name') {
+                $query = $query->where($writeModel->table.'.name', $keyword);
             // 단독 키워드 검색(제목, 내용)
             } else {
                 $query = $query->where($kind, 'like', '%'.$keyword.'%');

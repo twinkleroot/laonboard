@@ -19,15 +19,17 @@ class MainController extends Controller
     public function index()
     {
         $mainContents = $this->main->getMainContents(Cache::get('config.homepage')->newSkin, 'default');
+        $theme = Cache::get('config.theme')->name;
 
-        return view('main', $mainContents);
+        return view('layouts.'. $theme. '.main', $mainContents);
     }
 
     // 게시판 그룹별 메인
     public function groupIndex($groupId)
     {
         $groupContents = $this->main->getGroupContents($groupId, Cache::get('config.homepage')->newSkin, 'default');
+        $theme = Cache::get('config.theme')->name;
 
-        return view('group', $groupContents);
+        return view('layouts.'. $theme. '.group', $groupContents);
     }
 }

@@ -41,7 +41,7 @@ class EmailCertify extends Mailable
                 'crypt' => $this->user->email_certify2
             ]);
         return $this->subject('['. Cache::get('config.homepage')->title. '] 인증확인 메일입니다.')
-                    ->view('mail.email_certify')
+                    ->view('mail.default.email_certify')
                     ->with([
                         'nick' => $this->nick,
                         'url' => $url,

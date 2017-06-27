@@ -36,6 +36,7 @@ class Point extends Model
         $direction = isset($request->direction) ? $request->direction : '';
         $searchEmail = '';
         $query = '';
+        $sum = Point::sum('point');
 
         if($kind) {
             if($kind == 'content') {
@@ -74,7 +75,7 @@ class Point extends Model
 
         return [
             'points' => $points,
-            'sum' => Point::sum('point'),   // 모든 유저의 포인트합을 구한다.
+            'sum' => $sum,   // 모든 유저의 포인트합을 구한다.
             'kind' => $kind,
             'keyword' => $keyword,
             'order' => $order,

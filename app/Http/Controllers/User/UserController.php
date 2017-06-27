@@ -19,12 +19,14 @@ class UserController extends Controller
 {
 
     public $config;
+    public $skin;
     public $rulePassword;
     public $userModel;
 
     public function __construct(Config $config, User $userModel)
     {
         $this->config = Cache::get("config.join");
+        $this->skin = $this->config->skin;
         $this->rulePassword = Config::getRulePassword('config.join', $this->config);
         $this->userModel = $userModel;
     }
@@ -32,7 +34,7 @@ class UserController extends Controller
     // 회원 정보 수정 폼
     public function edit()
     {
-        return view('user.edit', $this->userModel->editFormData($this->config));
+        return view('user.'. $this->skin. '.edit', $this->userModel->editFormData($this->config));
     }
 
     // 회원 정보 수정 폼에 앞서 비밀번호 한번 더 확인하는 폼
@@ -40,9 +42,9 @@ class UserController extends Controller
     {
         $user = auth()->user();
         if(is_null($user->password)) {
-            return view('user.set_password');   // 최초 비밀번호 설정
+            return view('user.'. $this->skin. '.set_password');   // 최초 비밀번호 설정
         } else {
-            return view('user.confirm_password', ['email' => $user->email, 'work' => $request->work]);
+            return view('user.'. $this->skin. '.confirm_password', ['email' => $user->email, 'work' => $request->work]);
         }
     }
 
@@ -80,7 +82,8 @@ class UserController extends Controller
             // 입력값 유효성 검사
             $rule = array_add($this->userModel->rulesPassword, 'password', $this->rulePassword);
             // 이메일을 변경할 경우 validation에 email 조건을 추가한다.
-            if($request->get('email') != $user->email) {
+            $changeEmail = $request->get('email') != $user->email;
+            if($changeEmail) {
                 $rule = array_add($rule, 'email', 'required|email|max:255|unique:users');
             }
 
@@ -91,11 +94,13 @@ class UserController extends Controller
             if($returnVal == 'notExistRecommend') {
                 return redirect(route('user.edit'))->withErrors(['recommend' => '추천인이 존재하지 않습니다.']);
             } else {
-                Auth::logout();
-                return redirect('/index')->with('message', $user->nick . '님의 회원정보가 변경되었습니다.');
+                if($changeEmail) {
+                    Auth::logout();
+                }
+                return redirect('/home')->with('message', $user->nick . '님의 회원정보가 변경되었습니다.');
             }
         } else {
-            return view('user.edit', $this->userModel->editFormData($this->config))
+            return view('user.'. $this->skin. '.edit', $this->userModel->editFormData($this->config))
                 ->withErrors(['reCaptcha' => '자동등록방지 입력이 틀렸습니다. 다시 입력해 주십시오.']);
         }
     }
@@ -103,7 +108,7 @@ class UserController extends Controller
     // 회원 가입 결과, 웰컴 페이지
     public function welcome(Request $request)
     {
-        return view('user.welcome', [
+        return view('user.'. $this->skin. '.welcome', [
             'nick' => $request->nick,
             'email' => $request->email,
         ]);
@@ -118,7 +123,7 @@ class UserController extends Controller
     // 메일인증 메일주소 변경 폼
     public function editEmail($email)
     {
-        return view('user.change_email', [
+        return view('user.'. $this->skin. '.change_email', [
             'email' => $email
         ]);
     }
@@ -146,7 +151,7 @@ class UserController extends Controller
         $point = new Point();
         $params = $point->getPointList($id);
 
-        return view('user.point', $params);
+        return view('user.'. $this->skin. '.point', $params);
     }
 
     // 자기소개
@@ -154,9 +159,7 @@ class UserController extends Controller
     {
         $params = $this->userModel->getProfileParams($idHashkey);
 
-        $params = array_add($params, 'skin', 'default');
-
-        return view('user.profile', $params);
+        return view('user.'. $this->skin. '.profile', $params);
     }
 
     // 회원 탈퇴

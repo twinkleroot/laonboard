@@ -21,8 +21,6 @@ Route::get('/group/{group}', ['as' => 'group', 'uses' => 'MainController@groupIn
 
 // 관리자 그룹
 Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
-    // 관리자 검색 기능
-    Route::get('search', ['as' => 'admin.search', 'uses' => 'Admin\SearchController@search']);
     // 관리자 메인
     Route::get('index', ['as' => 'admin.index', 'uses' => 'Admin\IndexController@index']);
     // 회원관리 리소스 컨트롤러에 추가적으로 라우팅을 구성(리소스 라우트보다 앞에 와야 함)
