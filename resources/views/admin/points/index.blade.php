@@ -22,7 +22,7 @@
 @endif
 <div class="body-contents">
     <div id="pt">
-    	<ul id="pt_btn" class="mb10 pull-left">
+    	<ul id="adm_btn">
     		<li>
                 <button type="button" class="btn btn-sir pull-left" onclick="location.href='{{ route('admin.points.index') }}'">
     	             전체보기
@@ -45,7 +45,6 @@
 
     	<div id="pt_sch" class="mb10 pull-right">
     	    <form class="form-horizontal" role="form" method="GET" action="{{ route('admin.points.index') }}">
-
     	        <label for="" class="sr-only">검색대상</label>
     			<select name="kind">
     				<option value="email" @if($kind == 'email') selected @endif>회원이메일</option>

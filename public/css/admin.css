@@ -35,27 +35,19 @@ body {
 }
 .savebtn {
 	position: fixed;
-	width: 50px;
-	height: 50px;
-	background: #587ef6;
-	right: 20px;
-	bottom: 20px;
-	z-index: 1;
-	text-align: center;
-    display: none;
+	top: 450px;
+	right:30px;
+	display:block;
+	border:1px solid #d8d8d8;
+	border-radius: 4px;
+	background: #fff;
+	width: auto;
 }
 .savebtn:hover {
-	background: #395ac1;
-	-webkit-transition: all 0.2s ease-in-out;
-    transition: all 0.2s ease-in-out;
+	
 }
 .savebtn a {
-	color: #fff;
-	text-decoration: none;
-	width: 100%;
-	height: 100%;
-	display: block;
-	line-height: 50px;
+	
 }
 .empty_table {
 	line-height: 150px;
@@ -390,6 +382,8 @@ body {
 }
 #body_tab_type2 ul li.tab:hover { 
 	background: #e8e8e8;
+	-webkit-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 }
 #body_tab_type2 ul li.tab:after {
 	content: '';
@@ -409,8 +403,8 @@ body {
 	width: 100%;
     transform: scaleX(1);
 }
-#body_tab_type2 ul li.tab.active {
-	border-bottom: 3px solid #587ef6;
+#body_tab_type2 ul li.tab.active:after {
+	transform: scaleX(1);
 }
 #body_tab_type2 ul li.tab a {
 	color: #333;
@@ -422,37 +416,73 @@ body {
 }
 #body_tab_type2.f-tab {
 	background: #fff;
-	border-left: 1px solid #d8d8d8;
-	border-right: 1px solid #d8d8d8;
+	padding: 0 10px;
 }
-.admin_box {
-	display: none;
+#body_tab_type2.f-tab ul li.tab:hover { 
+	background: #fff !important;
 }
 #admin_box1 {
 	display: block;
 }
-#body_tab_type2 + #admin_save {
+.adm_box {
+	display: none;
+}
+.adm_panel {
+	margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+}
+.adm_box_hd {
+	padding: 20px 30px;
+	background: #587ef6;
+	border-radius: 4px 4px 0 0;
+}
+.adm_box_title {
+	color: #fff;
+	font-weight: 600;
+	font-size: 13px;
+}
+.adm_box_close {
+	float: right; 
+	color: #fff;
+	font-size: 12px;
+	line-height: 20px;
+}
+.adm_box_down + .adm_box_bd {
+	transform: rotate(180deg);
+}
+.adm_box .adm_box_bd {
+	padding: 30px;
+	background: #fff;
+	border-radius: 0 0 4px 4px;
+}
+.required {
+	background: url('../images/required.jpg') top right repeat-y;
+}
+#body_tab_type2 + #adm_save {
 	margin-top: -1px;
 }
-#admin_save {
+#adm_save {
 	padding: 15px;
-	background: #587ef6;
+	background: #fff;
 	border-radius: 4px;
 	margin-bottom: 20px;
 }
-.admin_save_txt {
-	color: #fff;
+.adm_save_txt {
+	color: #587ef6;
 	font-size: 13px;
 	font-weight: bold;
 }
-.admin_alert_close {
+.adm_alert_close {
 	float: right;
 	font-size: 14px;
 	font-weight: normal;
 	line-height: 18px;
 	border: 0;
 	background: none;
-	color: #fff;
+	color: #587ef6;
 }
 /* body-tab이 fixed 되었을 때 추가될 클래스 */
 .f-tab {
@@ -475,8 +505,9 @@ body {
 	right: 0;
 	background: #f4f4f4;
 	margin: 0 -1px;
-	border-top: 1px solid #ddd;
-	border-bottom: 1px solid #ddd;
+}
+.f-tab + .body-contents {
+	margin-top: 51px;
 }
 .f-tab + .panel {
 	margin-top: 85px;
@@ -674,29 +705,45 @@ body {
 }
 
 /* 포인트 관리 */
-#pt_btn {
+#adm_btn {
 	padding: 0;
-}
-#pt_btn li {
-	list-style: none;
+	margin-bottom: 10px;
 	float: left;
-	margin-right: 5px;
 }
-#pt_btn li:after {
+#adm_btn:after {
 	content: '';
 	display: block;
 	clear: both;
 }
-#pt_btn span {
+#adm_btn li {
+	list-style: none;
+	float: left;
+	margin-right: 5px;
+}
+#adm_btn li:after {
+	content: '';
+	display: block;
+	clear: both;
+}
+#adm_btn span {
 	line-height: 34px; font-size: 14px;
 }
-#pt_sch select {
+#adm_sch {
+	margin-bottom: 10px;
+	float: right;
+}
+#adm_sch:after {
+	content: '';
+	display: block;
+	clear: both;
+}
+#adm_sch select {
 	height:34px; padding:6px; border: 1px solid #ccc;
 }
-#pt_sch .search {
+#adm_sch .search {
 	height:34px; padding:6px; border: 1px solid #d8d8d8; margin-right: -4px;
 }
-#pt_sch .search-icon {
+#adm_sch .search-icon {
 	border: 0; background: #fff; margin-left: -30px; outline: none;
 }
 #pt_change {
@@ -869,7 +916,7 @@ body {
 .form-inline p,
 .form-inline input,
 .form-inline label {
-	font-size: 12px;
+	font-size: 13px;
 }
 .filebox input[type="file"] { /* 파일 필드 숨기기 */ position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip:rect(0,0,0,0); border: 0; }
 
@@ -883,6 +930,17 @@ body {
 }
 .td_mngsmall {
 	width: 100px !important;
+}
+.td_email {
+	width: 200px;
+	text-align: left;
+}
+.td_nick {
+	width: 150px;
+	text-align: left;
+}
+.td_subject {
+	text-align: left;
 }
 #board input,
 #board select {
