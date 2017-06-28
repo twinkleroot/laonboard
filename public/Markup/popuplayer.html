@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="{{ config('app.locale') }}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>팝업레이어</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="../themes/default/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../themes/default/css/style.css">
+    <link rel="stylesheet" type="text/css" href="../font-awesome/css/font-awesome.css">
+
+    <!-- 팝업레이어용 CSS파일 -->
+    <link rel="stylesheet" type="text/css" href="../css/popuplayer.css">
+
+    <!-- Scripts -->
+    <script>
+        window.Laravel = {!! json_encode([
+            'csrfToken' => csrf_token(),
+        ]) !!};
+    </script>
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/common.js"></script>
+    <script>
+        $(function(){
+            $('.gnb-li.dropdown').hover(function() {
+                $(this).addClass('open');
+            }, function() {
+                $(this).removeClass('open');
+            });
+        });
+    </script>
+</head>
+
+<body>
+<!-- 팝업레이어 내용 -->
+<div id="popuplayer">
+    <h2>팝업레이어 알림</h2>
+    <div id="hd_pops_(숫자)" class="hd_pops" style="top:10px;left:10px"> <!-- 관리자에서 설정한 top, left값 삽입 -->
+    <!-- ↑ 생성된 순서에 따라 자동넘버링 됩니다 숫자는 누적이네요 -->
+        <div class="hd_pops_con" style="width:450px;height:500px"> <!-- 관리자에서 설정한 width, height값 삽입 -->
+            <!-- 관리자에서 설정한 내용 삽입 -->
+        </div>
+        <div class="hd_pops_footer">
+            <button class="hd_pops_reject hd_pops_(숫자) 24"><strong>24</strong>시간 동안 다시 열람하지 않습니다.</button>
+            <button class="hd_pops_close hd_pops_(숫자)">닫기</button>
+            <!-- ↑ 위 두 버튼도 생성된 순서에 따라 자동넘버링 됩니다 숫자는 누적이네요 -->
+        </div>
+    </div>
+</div>
+
+<script>
+$(function() {
+    $(".hd_pops_reject").click(function() {
+        var id = $(this).attr('class').split(' ');
+        var ck_name = id[1];
+        var exp_time = parseInt(id[2]);
+        $("#"+id[1]).css("display", "none");
+        set_cookie(ck_name, 1, exp_time, g5_cookie_domain);
+    });
+    $('.hd_pops_close').click(function() {
+        var idb = $(this).attr('class').split(' ');
+        $('#'+idb[1]).css('display','none');
+    });
+    $("#hd").css("z-index", 1000);
+});
+</script>
+<!-- 팝업레이어 내용끝 -->
+
+<!-- header -->
+<div id="header">
+<div class="container">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        <!-- logo -->
+        <a class="logo" href="{{ url('/') }}">
+            <img src="../themes/default/images/logo2.png">
+        </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+        <!-- menu -->
+        <ul class="gnb navbar-nav">
+            <li class="gnb-li">
+                <a href="{{ Cache::get('menuList')[$i]['link'] }}">메뉴1</a>
+            </li>
+            <li class="gnb-li"><a href="{{ route('new.index') }}">새글</a></li>
+            <li class="gnb-li"><a href="{{ route('login') }}">로그인</a></li>
+            <li class="gnb-li"><a href="{{ route('user.join') }}">회원가입</a></li>
+        </ul>
+    </div>
+</div>
+</div>
+
+<!-- contents -->
+<div id="contents">
+    @yield('content')
+</div>
+
+<footer id="footer">
+    <div class="container">
+        Copyright 2017 SIR. All Rights Reserved.
+    </div>
+</footer>
+
+<!-- Bootstrap core JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="{{ asset('bootstrap/js/ie10-viewport-bug-workaround.js') }}"></script>
+</body>
+</html>

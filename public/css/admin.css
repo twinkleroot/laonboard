@@ -369,7 +369,7 @@ body {
 #body_tab_type2 ul li {
 	list-style: none;
 	float: left;
-	line-height: 44px;
+	line-height: 41px;
 	font-size: 13px;
 }
 #body_tab_type2:after {
@@ -414,6 +414,25 @@ body {
 	width: 100%;
 	height: 100%;
 }
+#body_tab_type2 .txt {
+	display: block;
+	float: left;
+	padding: 0 10px;
+	line-height: 47px;
+	font-size: 13px;
+	font-weight: bold;
+}
+#body_tab_type2 .tab_right {
+	float: right;
+	color: #587ef6;
+	padding: 0 10px;
+}
+#body_tab_type2 .tab_right .tab_btn {
+	border: 0;
+	background: none;
+	line-height: 41px;
+	padding: 3px 10px 0;
+}
 #body_tab_type2.f-tab {
 	background: #fff;
 	padding: 0 10px;
@@ -450,12 +469,12 @@ body {
 	font-size: 12px;
 	line-height: 20px;
 }
-.adm_box_down + .adm_box_bd {
-	transform: rotate(180deg);
-}
-.adm_box .adm_box_bd {
+.adm_box_bd {
 	padding: 30px;
 	background: #fff;
+	border-radius: 4px;
+}
+.adm_box_hd + div {
 	border-radius: 0 0 4px 4px;
 }
 .required {
