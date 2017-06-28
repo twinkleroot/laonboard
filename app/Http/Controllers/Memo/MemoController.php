@@ -22,9 +22,10 @@ class MemoController extends Controller
      */
     public function index(Request $request)
     {
+        $skin = 'default';
         $params = $this->memo->getIndexParams($request);
 
-        return view('memo.index', $params);
+        return view('memo.'. $skin. '.index', $params);
     }
 
     /**
@@ -34,15 +35,16 @@ class MemoController extends Controller
      */
     public function create(Request $request)
     {
+        $skin = 'default';
         $result = $this->memo->getCreateParams($request);
 
         if( isset($result['message']) ) {
             return view('message', $result);
         } else {
             if(isset($request->to)) {
-                return view('memo.form', $result);
+                return view('memo.'. $skin. '.form', $result);
             } else {
-                return view('memo.form');
+                return view('memo.'. $skin. '.form');
             }
         }
     }
@@ -74,13 +76,14 @@ class MemoController extends Controller
      */
     public function show($id, Request $request)
     {
+        $skin = 'default';
         $params = $this->memo->getShowParams($id, $request);
 
         if( isset($params['message']) ) {
             return view('message', $params);
         }
 
-        return view('memo.show', $params);
+        return view('memo.'. $skin. '.show', $params);
     }
 
     /**
@@ -91,6 +94,7 @@ class MemoController extends Controller
      */
     public function destroy($id, Request $request)
     {
+        $skin = 'default';
         if($this->memo->deleteMemo($id)) {
             return redirect(route('memo.index'). '?kind='. $request->kind);
         } else {

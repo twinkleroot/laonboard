@@ -18,6 +18,7 @@ class ConfigRegister
      */
     public function handle($request, Closure $next)
     {
+        Config::where('name', 'config.join')->delete();
         // 홈페이지 기본환경 설정
         if(!Cache::has('config.homepage')) {
             Cache::forever('config.homepage', $this->registerConfigCache('homepage'));

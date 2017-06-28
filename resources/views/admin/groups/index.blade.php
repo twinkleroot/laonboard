@@ -1,4 +1,4 @@
-@extends('themes.default.basic')
+@extends('admin.admin')
 
 @section('title')
     게시판 그룹 설정 | {{ Cache::get("config.homepage")->title }}
@@ -15,7 +15,7 @@
   </div>
 @endif
 <div class="row">
-    <div class="col-md-10 col-md-offset-1">
+    <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">게시판 그룹 설정</div>
             <div class="panel-heading">
@@ -124,6 +124,7 @@
     </div>
 </div>
 <script>
+var menuVal = 300200;
 $(function(){
     // 선택 삭제 버튼 클릭
     $('#selected_delete').click(function(){

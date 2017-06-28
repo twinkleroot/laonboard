@@ -1,4 +1,4 @@
-@extends('themes.default.basic')
+@extends('admin.admin')
 
 @section('title')
      게시판 {{ $title }} | {{ $homePageConfig->title }}
@@ -1113,6 +1113,7 @@
     </div>
 </div>
 <script>
+var menuVal = 300100;
 $(function(){
     // 복사 버튼 클릭
     $(".board_copy").click(function(){

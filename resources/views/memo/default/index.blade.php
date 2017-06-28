@@ -62,7 +62,7 @@
 		                <li><a href="{{ route('new.index') }}?nick={{ $memo->nick }}">전체게시물</a></li>
                         @if(session()->get('admin'))
     		                <li><a href="{{ route('admin.users.edit', $memo->user_id_hashkey) }}" target="_blank">회원정보변경</a></li>
-    		                <li><a href="{{ route('admin.search') }}?admin_page=point&amp;kind=email&amp;keyword={{ $memo->email }}" target="_blank">포인트내역</a></li>
+    		                <li><a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $memo->email }}" target="_blank">포인트내역</a></li>
                         @endif
 		            </ul>
 				</td>

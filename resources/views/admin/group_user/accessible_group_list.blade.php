@@ -1,4 +1,4 @@
-@extends('themes.default.basic')
+@extends('admin.admin')
 
 @section('title')
     접근 가능 그룹 | {{ $config->title }}

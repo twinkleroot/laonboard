@@ -1,4 +1,4 @@
-@extends('themes.default.basic')
+@extends('admin.admin')
 
 @section('title')
     게시판 관리 | {{ Cache::get("config.homepage")->title }}
@@ -172,6 +172,7 @@
     </div>
 </div>
 <script>
+var menuVal = 300100;
 $(function(){
     // 선택 삭제 버튼 클릭
     $('#selected_delete').click(function(){

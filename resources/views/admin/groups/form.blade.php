@@ -1,4 +1,4 @@
-@extends('themes.default.basic')
+@extends('admin.admin')
 
 @section('title')
     게시판 그룹 {{ $title }} | {{ $config->title }}
@@ -110,4 +110,7 @@
         </div>
     </div>
 </div>
+<script>
+var menuVal = 300200;
+</script>
 @endsection
