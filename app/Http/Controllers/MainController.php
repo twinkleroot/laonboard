@@ -19,7 +19,7 @@ class MainController extends Controller
     public function index()
     {
         $mainContents = $this->main->getMainContents(Cache::get('config.homepage')->newSkin, 'default');
-        $theme = Cache::get('config.theme')->name;
+        $theme = Cache::get('config.theme')->name ? : 'default';
 
         return view('layouts.'. $theme. '.main', $mainContents);
     }
@@ -28,7 +28,7 @@ class MainController extends Controller
     public function groupIndex($groupId)
     {
         $groupContents = $this->main->getGroupContents($groupId, Cache::get('config.homepage')->newSkin, 'default');
-        $theme = Cache::get('config.theme')->name;
+        $theme = Cache::get('config.theme')->name ? : 'default';
 
         return view('layouts.'. $theme. '.group', $groupContents);
     }
