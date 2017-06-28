@@ -105,38 +105,54 @@
 </div>
 </div>
 
-<div id="photo_uploader" class="container">
-    <form class="form-horizontal" role="form" id="imageForm" method="POST" action="{{ route('image.upload')}}" onsubmit="return false;" enctype="multipart/form-data">
-    {{ csrf_field() }}
-	<div class="file_upload" id="file_uploader0">
+<form class="form-horizontal" role="form" id="imageForm" method="POST" action="{{ route('image.upload')}}" onsubmit="return false;" enctype="multipart/form-data">
+	{{ csrf_field() }}
+<div id="photoUploader" class="container">
+	<div class="file_upload" id="fileUploaderNo0">
 		<div>
-			<input type="text" id="fileName" class="file_input_textbox" readonly>
+			<input type="text" id="fileNameNo0" class="file_input_textbox" readonly>
 			<div class="file_input_div">
 				<input type="button" value="이미지 선택" class="file_input_button">
-				<input type="file" class="file_input_hidden" name="imageFile[]" id="imageFile0" onchange="javascript:document.getElementById('fileName').value = this.value">
+				<input type="file" class="file_input_hidden" name="imageFile[]" id="imageFileNo0" onchange="javascript:document.getElementById('fileNameNo0').value = this.value.replace(/c:\\fakepath\\/i,'')">
 			</div>
 		</div>
 
         <div class="file_upload_btn">
-			<button class="btn btn-sir" onclick="addImageField()">+</button>
+			<button class="btn btn-sir addImageField" id="btnNo0">+</button>
 		</div>
-		{{-- <div class="file_upload_btn">
-			<button class="btn btn-default">-</button>
-		</div> --}}
 	</div>
-    </form>
 </div>
+</form>
 
 </body>
 </html>
 
 <script>
+var saveHtml = document.getElementById('photoUploader').innerHTML;
+var count = 1;
+
 $(function(){
 
     // 이미지 업로드 클릭
     $("#ajaxSubmitBtn").click(function(e){
         e.preventDefault();
         apply();
+    });
+
+	// + 버튼
+    $(document).on('click', '.addImageField', function(){
+		saveHtml = saveHtml.replace(/No+[0-9]/g, 'No'+count);
+		document.getElementById('btnNo'+ (count-1)).innerHTML = '-';
+		document.getElementById('btnNo'+ (count-1)).classList.remove('addImageField', 'btn-sir');
+		document.getElementById('btnNo'+ (count-1)).classList.add('delImageField', 'btn-default');
+
+	    $("#photoUploader").append(saveHtml);
+    	count++;
+    });
+
+	// - 버튼
+    $(document).on('click', '.delImageField', function(){
+		document.getElementById(this.id).parentElement.parentElement.remove();
     });
 
 });
@@ -164,8 +180,7 @@ function applyAfter(data, statusText, xhr, $form)
     }
 }
 
-var count = 1;
-
+// 에디터 안으로 이미지 포함시키기
 function insertImagePathToEditor(data) {
     // html 태그 구성
     var html = '';
@@ -175,21 +190,6 @@ function insertImagePathToEditor(data) {
 
     opener.tinymce.activeEditor.execCommand("mceInsertContent",'false', html);
     window.close();
-}
-
-function addImageField() {
-    var saveHtml = document.getElementById('file_uploader'+count).innerHTML;
-    var idStr = "imageFile" + count;
-    var html = "<tr><td><input type=\"file\" name=\"imageFile[]\" id='" + idStr + "' /></td>"
-                + "<td><button type=\"button\" onclick=\"addImageField()\">+</button></td>"
-                + "<td><button type=\"button\" onclick=\"delImageField('" + count + "')\">-</button></td>"
-                + "</tr>";
-    $("#photo_uploader").append(html);
-    count++;
-}
-
-function delImageField(count) {
-    $("#imageFile"+count.toString()).parents('tr').remove();
 }
 
 </script>

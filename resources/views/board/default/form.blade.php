@@ -60,7 +60,7 @@
                     <select class="form-control" name="ca_name" required>
                         <option value>분류</option>
                         @foreach($categories as $category)
-                            <option value="{{ $category }}" @if($type != 'create' && $category == $write->ca_name) selected @endif>
+                            <option value="{{ $category }}" @if($type == 'update' && $category == $write->ca_name) selected @endif>
                                 {{ $category }}
                             </option>
                         @endforeach
@@ -172,32 +172,24 @@
         			</label>
                 @endif
     		</div>
-            @if( !($type == 'create' && is_null(auth()->user()) )
-                && !($type == 'update' && session()->get('admin') && $write->user_id != auth()->user()->id) )
-                <div class="pull-right">
-                    <button type="submit" class="btn btn-sir">작성완료</button>
-                    <button type="button" class="btn btn-default" onclick="history.back();">취소</button>
-                </div>
-            @endif
-    	</div>
-        @if( ($type == 'create' && is_null(auth()->user()) )
-            || ($type == 'update' && session()->get('admin') && $write->user_id != auth()->user()->id) )
-        <div class="clearfix">
-            <!-- 리캡챠 -->
-            <div class="pull-left g-recaptcha" data-sitekey="6LcKohkUAAAAANcgIst0HFMMT81Wq5HIxpiHhXGZ"></div>
-            @if ($errors->has('reCaptcha'))
-                <div class="form-group">
-                    <strong>{{ $errors->first('reCaptcha') }}</strong>
-                </span>
-            @endif
-        </div>
-        <div class="clearfix">
             <div class="pull-right">
                 <button type="submit" class="btn btn-sir">작성완료</button>
                 <button type="button" class="btn btn-default" onclick="history.back();">취소</button>
             </div>
-        </div>
+    	</div>
+        @if( ($type == 'create' && auth()->guest() )
+            || ($type == 'update' && !session()->get('admin') && $write->user_id != auth()->user()->id) )
+            <div class="clearfix">
+                <!-- 리캡챠 -->
+                <div class="pull-left g-recaptcha" data-sitekey="6LcKohkUAAAAANcgIst0HFMMT81Wq5HIxpiHhXGZ"></div>
+                @if ($errors->has('reCaptcha'))
+                    <div class="form-group">
+                        <strong>{{ $errors->first('reCaptcha') }}</strong>
+                    </span>
+                @endif
+            </div>
         @endif
+
     </form>
     <iframe id="formTarget" name="formTarget" style="display:none"></iframe>
     <form id="imageForm" action="{{ route('image.upload') }}" target="formTarget" method="post" enctype="multipart/form-data" style="width:0px;height:0;overflow:hidden">

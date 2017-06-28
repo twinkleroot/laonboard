@@ -635,6 +635,7 @@ class Write extends Model
         $categories = [];
         if( !is_null($board->category_list) ) {
             $categories = explode('|', $board->category_list);
+            $categories = array_map('trim', $categories);
         }
 
         $autosaveCount = 0;

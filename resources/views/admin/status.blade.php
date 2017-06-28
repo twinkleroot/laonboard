@@ -36,7 +36,7 @@
 
 @if( isset($message) )
     <div>
-        {!! $message !!}
+        {{ $message }}
     </div>
 @else
     <div id="chart"></div>
@@ -51,5 +51,5 @@
 @endsection
 
 <script>
-    var menuVal = 300600
+    var menuVal = 300600;
 </script>
