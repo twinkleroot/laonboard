@@ -4,10 +4,68 @@
      게시판 {{ $title }} | {{ $homePageConfig->title }}
 @endsection
 
+@section('include_script')
+    <script src="{{ asset('js/tinymce/tinymce.min.js') }}"></script>
+    <script>
+    var menuVal = 300100;
+    $(function(){
+        // 복사 버튼 클릭
+        $(".board_copy").click(function(){
+            window.open(this.href, "win_board_copy", "left=100,top=100,width=550,height=450");
+            return false;
+        });
+    });
+    // 환경설정에 입력된 포인트로 설정 함수
+    function set_point(f) {
+        if (f.config_env_point.checked) {
+            // alert(f.read_point.defaultValue);
+            f.read_point.value = {{ $boardConfig->readPoint }};
+            f.write_point.value = {{ $boardConfig->writePoint }};
+            f.comment_point.value = {{ $boardConfig->commentPoint }};
+            f.download_point.value = {{ $boardConfig->downloadPoint }};
+        } else {
+            f.read_point.value     = f.read_point.defaultValue;
+            f.write_point.value    = f.write_point.defaultValue;
+            f.comment_point.value  = f.comment_point.defaultValue;
+            f.download_point.value = f.download_point.defaultValue;
+        }
+    }
+
+    tinymce.init({
+        selector: '.editorArea',
+        language: 'ko_KR',
+        branding: false,
+        theme: "modern",
+        skin: "lightgray",
+        height: 400,
+        min_height: 400,
+        min_width: 750,
+        selection_toolbar: 'bold italic | quicklink h2 h3 blockquote',
+        plugins: 'link,autolink,image,imagetools,textcolor,lists,pagebreak,table,save,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,code',
+        toolbar: "undo redo | styleselect | forecolor bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table link customImage media code",
+        relative_urls: false,
+        setup: function(editor) {
+            editor.addButton('customImage', {
+                text: '사진',
+                icon: 'image',
+                onclick: function () {
+                    window.open('{{ route('image.form') }}','tinymcePop','width=640, height=480');
+                }
+            });
+        }
+    });
+    </script>
+@endsection
+
 @section('content')
 <div>
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
+            @if ($errors->any())
+                <script>
+                    alert("{{ $errors->first() }}");
+                </script>
+            @endif
             <div class="panel panel-default">
                 <div class="panel-heading"><h2>게시판 {{ $title }}</h2></div>
                 <form class="form-horizontal" role="form" method="POST" action="{{ $action }}">
@@ -73,13 +131,13 @@
                                 @endforeach
                             </td>
                         </tr>
-                        <tr>
+                        {{-- <tr>
                             <th>모바일 게시판 제목</th>
                             <td>
                                 모바일에서 보여지는 게시판 제목이 다른 경우에 입력합니다. 입력이 없으면 기본 게시판 제목이 출력됩니다.<br />
                                 <input type="text" name="mobile_subject" @if($type == 'edit') value="{{ $board->mobile_subject }}" @endif />
                             </td>
-                        </tr>
+                        </tr> --}}
                         <tr>
                             <th>접속기기</th>
                             <td>
@@ -351,7 +409,7 @@
                             <th>원글 수정 불가</th>
                             <td>
                                 댓글의 수가 설정 수 이상이면 원글을 수정할 수 없습니다. 0으로 설정하시면 댓글 수에 관계없이 수정할 수있습니다.<br />
-                                댓글<input type="text" name="count_modify" value="{{ $board['count_modify'] }}" />개 이상 달리면 수정불가
+                                댓글<input type="text" name="count_modify" value="{{ $board['count_modify'] }}" required />개 이상 달리면 수정불가
                             </td>
                             <td>
                                 <input type="checkbox" id="chk_group_count_modify" name="chk_group_count_modify" value="1" />
@@ -363,7 +421,7 @@
                         <tr>
                             <th>원글 삭제 불가</th>
                             <td>
-                                댓글<input type="text" name="count_delete" value="{{ $board['count_delete'] }}" />개 이상 달리면 삭제불가
+                                댓글<input type="text" name="count_delete" value="{{ $board['count_delete'] }}" required />개 이상 달리면 삭제불가
                             </td>
                             <td>
                                 <input type="checkbox" id="chk_group_count_delete" name="chk_group_count_delete" value="1" />
@@ -566,7 +624,7 @@
                             <td>
                                 본인확인 여부에 따라 게시물을 조회 할 수 있도록 합니다.<br />
                                     <select name="use_cert">
-                                        <option value="" selected>사용안함</option>
+                                        <option value="not-use" selected>사용안함</option>
                                         {{-- <option value="cert">본인확인된 회원전체</option>
                                         <option value="adult">본인확인된 성인회원만</option>
                                         <option value="hp-cert">휴대폰 본인확인된 회원전체</option>
@@ -585,7 +643,7 @@
                             <th>파일 업로드 개수</th>
                             <td>
                                 게시물 한건당 업로드 할 수 있는 파일의 최대 개수 (0 은 파일첨부 사용하지 않음)<br />
-                                <input type="text" name="upload_count" value="{{ $board['upload_count'] }}"/>
+                                <input type="text" name="upload_count" value="{{ $board['upload_count'] }}" required/>
                             </td>
                             <td>
                                 <input type="checkbox" id="chk_group_upload_count" name="chk_group_upload_count" value="1" />
@@ -598,7 +656,7 @@
                             <th>파일 업로드 용량</th>
                             <td>
                                 최대 1024M 이하 업로드 가능, 1 MB = 1,048,576 bytes<br />
-                                업로드 파일 한개당<input type="text" name="upload_size" value="{{ $board['upload_size'] }}"/>bytes 이하
+                                업로드 파일 한개당<input type="text" name="upload_size" value="{{ $board['upload_size'] }}" required />bytes 이하
                             </td>
                             <td>
                                 <input type="checkbox" id="chk_group_upload_size" name="chk_group_upload_size" value="1" />
@@ -746,10 +804,114 @@
                             </p>
                         </tr>
                         <tr>
+                            <th>스킨 디렉토리</th>
+                            <td>
+                                <select id="skin" name="skin" required>
+                                    @foreach ($skins as $skin)
+                                        <option @if($board['skin'] == $skin) selected @endif value="{{ $skin }}">
+                                            {{ $skin }}
+                                        </option>
+                                    @endforeach
+                                    </select>
+                            </td>
+                            <td>
+                                <input type="checkbox" id="chk_group_skin" name="chk_group_skin" value="1" />
+                                <label for="chk_group_skin">그룹적용</label>
+                                <input type="checkbox" id="chk_all_skin" name="chk_all_skin" value="1" />
+                                <label for="chk_all_skin">전체적용</label>
+                            </td>
+                        </tr>
+                        {{-- <tr>
+                            <th>모바일 스킨 디렉토리</th>
+                            <td>
+                                <select id="mobile_skin" name="mobile_skin" required>
+                                    @foreach ($mobileSkins as $skin)
+                                        <option @if($board['mobile_skin'] == $skin) selected @endif value="{{ $skin }}">
+                                            {{ $skin }}
+                                        </option>
+                                    @endforeach
+                                    </select>
+                            </td>
+                            <td>
+                                <input type="checkbox" id="chk_group_mobile_skin" name="chk_group_mobile_skin" value="1" />
+                                <label for="chk_group_mobile_skin">그룹적용</label>
+                                <input type="checkbox" id="chk_all_mobile_skin" name="chk_all_mobile_skin" value="1" />
+                                <label for="chk_all_mobile_skin">전체적용</label>
+                            </td>
+                        </tr> --}}
+                        <tr>
+                            <th>상단 파일 경로</th>
+                            <td>
+                                resources/views/layouts 이하의 경로로 확장자 빼고 입력해주세요.<br />
+                                <input type="text" id="include_head" name="include_head" value="{{ $board['include_head'] }}" />
+                            </td>
+                            <td>
+                                <input type="checkbox" id="chk_group_include_head" name="chk_group_include_head" value="1" />
+                                <label for="chk_group_include_head">그룹적용</label>
+                                <input type="checkbox" id="chk_all_include_head" name="chk_all_include_head" value="1" />
+                                <label for="chk_all_include_head">전체적용</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>하단 파일명</th>
+                            <td>
+                                resources/views/layouts 이하의 경로로 확장자 빼고 입력해주세요.<br />
+                                <input type="text" id="include_tail" name="include_tail" value="{{ $board['include_tail'] }}" />
+                            </td>
+                            <td>
+                                <input type="checkbox" id="chk_group_include_tail" name="chk_group_include_tail" value="1" />
+                                <label for="chk_group_include_tail">그룹적용</label>
+                                <input type="checkbox" id="chk_all_include_tail" name="chk_all_include_tail" value="1" />
+                                <label for="chk_all_include_tail">전체적용</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>상단 내용</th>
+                            <td>
+                                <div style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box;">
+                                    <textarea name="content_head" id="content_head" class="editorArea">{{ $board['content_head'] }}</textarea>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="checkbox" id="chk_group_content_head" name="chk_group_content_head" value="1" />
+                                <label for="chk_group_content_head">그룹적용</label>
+                                <input type="checkbox" id="chk_all_content_head" name="chk_all_content_head" value="1" />
+                                <label for="chk_all_content_head">전체적용</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>하단 내용</th>
+                            <td>
+                                <div style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box;">
+                                    <textarea name="content_tail" id="content_tail" class="editorArea">{{ $board['content_tail'] }}</textarea>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="checkbox" id="chk_group_content_tail" name="chk_group_content_tail" value="1" />
+                                <label for="chk_group_content_tail">그룹적용</label>
+                                <input type="checkbox" id="chk_all_content_tail" name="chk_all_content_tail" value="1" />
+                                <label for="chk_all_content_tail">전체적용</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>글쓰기 기본 내용</th>
+                            <td>
+                                <div style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box;">
+                                <textarea name="insert_content" rows="5">{{ $board['insert_content'] }}</textarea>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="checkbox" id="chk_group_insert_content" name="chk_group_insert_content" value="1" />
+                                <label for="chk_group_insert_content">그룹적용</label>
+                                <input type="checkbox" id="chk_all_insert_content" name="chk_all_insert_content" value="1" />
+                                <label for="chk_all_insert_content">전체적용</label>
+                            </td>
+                        </tr>
+                        <tr>
                             <th>제목 길이</th>
                             <td>
                                 목록에서의 제목 글자수. 잘리는 글은 … 로 표시<br />
-                                <input type="text" name="subject_len" value="{{ $board['subject_len'] }}"/>
+                                <input type="text" name="subject_len" value="{{ $board['subject_len'] }}" required/>
                             </td>
                             <td>
                                 <input type="checkbox" id="chk_group_subject_len" name="chk_group_subject_len" value="1" />
@@ -758,11 +920,11 @@
                                 <label for="chk_all_subject_len">전체적용</label>
                             </td>
                         </tr>
-                        <tr>
+                        {{-- <tr>
                             <th>모바일 제목 길이</th>
                             <td>
                                 목록에서의 제목 글자수. 잘리는 글은 … 로 표시<br />
-                                <input type="text" name="mobile_subject_len" value="{{ $board['mobile_subject_len'] }}"/>
+                                <input type="text" name="mobile_subject_len" value="{{ $board['mobile_subject_len'] }}" required/>
                             </td>
                             <td>
                                 <input type="checkbox" id="chk_group_mobile_subject_len" name="chk_group_mobile_subject_len" value="1" />
@@ -770,11 +932,11 @@
                                 <input type="checkbox" id="chk_all_mobile_subject_len" name="chk_all_mobile_subject_len" value="1" />
                                 <label for="chk_all_mobile_subject_len">전체적용</label>
                             </td>
-                        </tr>
+                        </tr> --}}
                         <tr>
                             <th>페이지당 목록 수</th>
                             <td>
-                                <input type="text" name="page_rows" value="{{ $board['page_rows'] }}"/>
+                                <input type="text" name="page_rows" value="{{ $board['page_rows'] }}" required/>
                             </td>
                             <td>
                                 <input type="checkbox" id="chk_group_page_rows" name="chk_group_page_rows" value="1" />
@@ -783,10 +945,10 @@
                                 <label for="chk_all_page_rows">전체적용</label>
                             </td>
                         </tr>
-                        <tr>
+                        {{-- <tr>
                             <th>모바일 페이지당 목록 수</th>
                             <td>
-                                <input type="text" name="mobile_page_rows" value="{{ $board['mobile_page_rows'] }}"/>
+                                <input type="text" name="mobile_page_rows" value="{{ $board['mobile_page_rows'] }}" required/>
                             </td>
                             <td>
                                 <input type="checkbox" id="chk_group_mobile_page_rows" name="chk_group_mobile_page_rows" value="1" />
@@ -794,12 +956,12 @@
                                 <input type="checkbox" id="chk_all_mobile_page_rows" name="chk_all_mobile_page_rows" value="1" />
                                 <label for="chk_all_mobile_page_rows">전체적용</label>
                             </td>
-                        </tr>
+                        </tr> --}}
                         <tr>
                             <th>갤러리 이미지 수</th>
                             <td>
                                 갤러리 형식의 게시판 목록에서 이미지를 한줄에 몇장씩 보여 줄 것인지를 설정하는 값<br />
-                                <input type="text" name="gallery_cols" value="{{ $board['gallery_cols'] }}"/>
+                                <input type="text" name="gallery_cols" value="{{ $board['gallery_cols'] }}" required/>
                             </td>
                             <td>
                                 <input type="checkbox" id="chk_group_gallery_cols" name="chk_group_gallery_cols" value="1" />
@@ -812,7 +974,7 @@
                             <th>갤러리 이미지 폭</th>
                             <td>
                                 갤러리 형식의 게시판 목록에서 썸네일 이미지의 폭을 설정하는 값<br />
-                                <input type="text" name="gallery_width" value="{{ $board['gallery_width'] }}"/>
+                                <input type="text" name="gallery_width" value="{{ $board['gallery_width'] }}" required/>
                             </td>
                             <td>
                                 <input type="checkbox" id="chk_group_gallery_width" name="chk_group_gallery_width" value="1" />
@@ -825,7 +987,7 @@
                             <th>갤러리 이미지 높이</th>
                             <td>
                                 갤러리 형식의 게시판 목록에서 썸네일 이미지의 높이를 설정하는 값<br />
-                                <input type="text" name="gallery_height" value="{{ $board['gallery_height'] }}"/>
+                                <input type="text" name="gallery_height" value="{{ $board['gallery_height'] }}" required/>
                             </td>
                             <td>
                                 <input type="checkbox" id="chk_group_gallery_height" name="chk_group_gallery_height" value="1" />
@@ -834,11 +996,11 @@
                                 <label for="chk_all_gallery_height">전체적용</label>
                             </td>
                         </tr>
-                        <tr>
+                        {{-- <tr>
                             <th>모바일 갤러리 이미지 폭</th>
                             <td>
                                 모바일로 접속시 갤러리 형식의 게시판 목록에서 썸네일 이미지의 폭을 설정하는 값<br />
-                                <input type="text" name="mobile_gallery_width" value="{{ $board['mobile_gallery_width'] }}"/>
+                                <input type="text" name="mobile_gallery_width" value="{{ $board['mobile_gallery_width'] }}" required/>
                             </td>
                             <td>
                                 <input type="checkbox" id="chk_group_mobile_gallery_width" name="chk_group_mobile_gallery_width" value="1" />
@@ -851,7 +1013,7 @@
                             <th>모바일 갤러리 이미지 높이</th>
                             <td>
                                 모바일로 접속시 갤러리 형식의 게시판 목록에서 썸네일 이미지의 높이를 설정하는 값<br />
-                                <input type="text" name="mobile_gallery_height" value="{{ $board['mobile_gallery_height'] }}"/>
+                                <input type="text" name="mobile_gallery_height" value="{{ $board['mobile_gallery_height'] }}" required/>
                             </td>
                             <td>
                                 <input type="checkbox" id="chk_group_mobile_gallery_height" name="chk_group_mobile_gallery_height" value="1" />
@@ -859,12 +1021,12 @@
                                 <input type="checkbox" id="chk_all_mobile_gallery_height" name="chk_all_mobile_gallery_height" value="1" />
                                 <label for="chk_all_mobile_gallery_height">전체적용</label>
                             </td>
-                        </tr>
+                        </tr> --}}
                         <tr>
                             <th>게시판 폭</th>
                             <td>
                                 100 이하는 %<br />
-                                <input type="text" name="table_width" value="{{ $board['table_width'] }}"/>
+                                <input type="text" name="table_width" value="{{ $board['table_width'] }}" required/>
                             </td>
                             <td>
                                 <input type="checkbox" id="chk_group_table_width" name="chk_group_table_width" value="1" />
@@ -877,7 +1039,7 @@
                             <th>이미지 폭 크기</th>
                             <td>
                                 게시판에서 출력되는 이미지의 폭 크기<br />
-                                <input type="text" name="image_width" value="{{ $board['image_width'] }}"/>
+                                <input type="text" name="image_width" value="{{ $board['image_width'] }}" required/>
                             </td>
                             <td>
                                 <input type="checkbox" id="chk_group_image_width" name="chk_group_image_width" value="1" />
@@ -890,7 +1052,7 @@
                             <th>새글 아이콘</th>
                             <td>
                                 글 입력후 new 이미지를 출력하는 시간. 0을 입력하시면 아이콘을 출력하지 않습니다.<br />
-                                <input type="text" name="new" value="{{ $board['new'] }}"/>
+                                <input type="text" name="new" value="{{ $board['new'] }}" required/>
                             </td>
                             <td>
                                 <input type="checkbox" id="chk_group_new" name="chk_group_new" value="1" />
@@ -903,7 +1065,7 @@
                             <th>인기글 아이콘</th>
                             <td>
                                 조회수가 설정값 이상이면 hot 이미지 출력. 0을 입력하시면 아이콘을 출력하지 않습니다.<br />
-                                <input type="text" name="hot" value="{{ $board['hot'] }}"/>
+                                <input type="text" name="hot" value="{{ $board['hot'] }}" required/>
                             </td>
                             <td>
                                 <input type="checkbox" id="chk_group_hot" name="chk_group_hot" value="1" />
@@ -1000,7 +1162,7 @@
                         <tr>
                             <th>글읽기 포인트</th>
                             <td>
-                                <input type="text" name="read_point" value='{{ $board['read_point'] }}' />
+                                <input type="text" name="read_point" value='{{ $board['read_point'] }}' required />
                             </td>
                             <td>
                                 <input type="checkbox" id="chk_group_read_point" name="chk_group_read_point" value="1" />
@@ -1012,7 +1174,7 @@
                         <tr>
                             <th>글쓰기 포인트</th>
                             <td>
-                                <input type="text" name="write_point" value='{{ $board['write_point'] }}' />
+                                <input type="text" name="write_point" value='{{ $board['write_point'] }}' required />
                             </td>
                             <td>
                                 <input type="checkbox" id="chk_group_write_point" name="chk_group_write_point" value="1" />
@@ -1024,7 +1186,7 @@
                         <tr>
                             <th>댓글쓰기 포인트</th>
                             <td>
-                                <input type="text" name="comment_point" value='{{ $board['comment_point'] }}' />
+                                <input type="text" name="comment_point" value='{{ $board['comment_point'] }}' required />
                             </td>
                             <td>
                                 <input type="checkbox" id="chk_group_comment_point" name="chk_group_comment_point" value="1" />
@@ -1036,7 +1198,7 @@
                         <tr>
                             <th>다운로드 포인트</th>
                             <td>
-                                <input type="text" name="download_point" value='{{ $board['download_point'] }}' />
+                                <input type="text" name="download_point" value='{{ $board['download_point'] }}' required />
                             </td>
                             <td>
                                 <input type="checkbox" id="chk_group_download_point" name="chk_group_download_point" value="1" />
@@ -1112,29 +1274,4 @@
         </div>
     </div>
 </div>
-<script>
-var menuVal = 300100;
-$(function(){
-    // 복사 버튼 클릭
-    $(".board_copy").click(function(){
-        window.open(this.href, "win_board_copy", "left=100,top=100,width=550,height=450");
-        return false;
-    });
-});
-// 환경설정에 입력된 포인트로 설정 함수
-function set_point(f) {
-    if (f.config_env_point.checked) {
-        // alert(f.read_point.defaultValue);
-        f.read_point.value = {{ $boardConfig->readPoint }};
-        f.write_point.value = {{ $boardConfig->writePoint }};
-        f.comment_point.value = {{ $boardConfig->commentPoint }};
-        f.download_point.value = {{ $boardConfig->downloadPoint }};
-    } else {
-        f.read_point.value     = f.read_point.defaultValue;
-        f.write_point.value    = f.write_point.defaultValue;
-        f.comment_point.value  = f.comment_point.defaultValue;
-        f.download_point.value = f.download_point.defaultValue;
-    }
-}
-</script>
 @endsection

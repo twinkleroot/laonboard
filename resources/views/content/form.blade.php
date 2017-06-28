@@ -69,14 +69,14 @@
             @endforeach
         </td>
     </tr>
-    <tr>
+    {{-- <tr>
         <th scope="row">모바일 내용</th>
         <td>
             <div style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box;">
                 <textarea name="mobile_content" id="mobile_content" class="editorArea">@if($type == 'update'){{ $content->mobile_content }}@endif</textarea>
             </div>
         </td>
-    </tr>
+    </tr> --}}
     <tr>
         <th scope="row"><label for="skin">스킨 디렉토리</label></th>
         <td>
@@ -89,7 +89,7 @@
             </select>
         </td>
     </tr>
-    <tr>
+    {{-- <tr>
         <th scope="row"><label for="mobile_skin">모바일스킨 디렉토리</label></th>
         <td>
             <select name="mobile_skin" id="mobile_skin">
@@ -100,7 +100,7 @@
             @endforeach
             </select>
         </td>
-    </tr>
+    </tr> --}}
     <tr>
         <th scope="row"><label for="tag_filter_use">태그 필터링 사용</label></th>
         <td>

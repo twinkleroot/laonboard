@@ -13,6 +13,9 @@
 @section('content')
 <!-- Board start -->
 <div id="board" class="container">
+    @if($board->content_head)
+        {!! $board->content_head !!}
+    @endif
 
 	<!-- 게시글 조회 -->
 	<div class="bd_rd_head">
@@ -82,11 +85,11 @@
 	<p>{!! $view->content !!}</p>
 
     <script>
-    $(document).ready(function(){
-        $(".bd_title").click(function(){
-            $(".bd_file_list").toggle();
+        $(document).ready(function(){
+            $(".bd_title").click(function(){
+                $(".bd_file_list").toggle();
+            });
         });
-    });
     </script>
 
     @if($view->file > 0)
@@ -288,10 +291,15 @@
 		</div>
 	</form>
     </aside>
+
+    @if($board->use_list_view)
+        @include('board.default.list')
+    @endif
+
+    @if($board->content_tail)
+        {!! $board->content_tail !!}
+    @endif
 </div>
-@if($board->use_list_view)
-    @include('board.default.list')
-@endif
 
 <script>
 var saveBefore = '';

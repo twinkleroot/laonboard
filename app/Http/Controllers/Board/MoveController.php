@@ -26,7 +26,7 @@ class MoveController extends Controller
     {
         $params = $this->move->getMoveParams($boardId, $request);
 
-        return view('board.default.move', $params);
+        return view('board.move', $params);
     }
 
     // 게시물 복사 및 이동 수행

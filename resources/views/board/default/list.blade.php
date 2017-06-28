@@ -4,8 +4,8 @@
 @endsection
 
 <!-- Board list start -->
-<div id="board" class="container">
- <form name="fBoardList" id="fBoardList" action="" onsubmit="return formBoardListSubmit(this);" method="post" target="move">
+
+<form name="fBoardList" id="fBoardList" action="" onsubmit="return formBoardListSubmit(this);" method="post" target="move">
     <input type="hidden" id='_method' name='_method' value='post' />
     <input type="hidden" id='type' name='type' value='' />
     <input type="hidden" id='page' name='page' value='{{ $writes->currentPage() }}' />
@@ -198,64 +198,62 @@
 	</table>
 </form>
 
-    <div class="bd_btn">
-        <ul class="pull-left">
-            <li id="pt_sch">
-                <form method="get" action="{{ route('board.index', $board->id) }}" onsubmit="return searchFormSubmit(this);">
-                    @if($currenctCategory != '')
-                        <input type="hidden" id='category' name='category' value='{{ $currenctCategory }}' />
-                    @endif
-                    <label for="kind" class="sr-only">검색대상</label>
-                    <select name="kind" id="kind">
-                        <option value="subject" @if($kind == 'subject') selected @endif>제목</option>
-                        <option value="content" @if($kind == 'content') selected @endif>내용</option>
-                        <option value="subject || content" @if($kind == 'subject || content') selected @endif>제목+내용</option>
-                        <option value="email, 0" @if($kind == 'email, 0') selected @endif>회원이메일</option>
-                        <option value="email, 1" @if($kind == 'email, 1') selected @endif>회원이메일(코)</option>
-                        <option value="nick, 0" @if($kind == 'nick, 0') selected @endif>글쓴이</option>
-                        <option value="nick, 1" @if($kind == 'nick, 1') selected @endif>글쓴이(코)</option>
-                    </select>
+<div class="bd_btn">
+    <ul class="pull-left">
+        <li id="pt_sch">
+            <form method="get" action="{{ route('board.index', $board->id) }}" onsubmit="return searchFormSubmit(this);">
+                @if($currenctCategory != '')
+                    <input type="hidden" id='category' name='category' value='{{ $currenctCategory }}' />
+                @endif
+                <label for="kind" class="sr-only">검색대상</label>
+                <select name="kind" id="kind">
+                    <option value="subject" @if($kind == 'subject') selected @endif>제목</option>
+                    <option value="content" @if($kind == 'content') selected @endif>내용</option>
+                    <option value="subject || content" @if($kind == 'subject || content') selected @endif>제목+내용</option>
+                    <option value="email, 0" @if($kind == 'email, 0') selected @endif>회원이메일</option>
+                    <option value="email, 1" @if($kind == 'email, 1') selected @endif>회원이메일(코)</option>
+                    <option value="nick, 0" @if($kind == 'nick, 0') selected @endif>글쓴이</option>
+                    <option value="nick, 1" @if($kind == 'nick, 1') selected @endif>글쓴이(코)</option>
+                </select>
 
-                    <label for="keyword" class="sr-only">검색어</label>
-                    <input type="text" name="keyword" id="keyword" value="" class="search" required>
-                    <button type="submit" id="" class="search-icon">
-                        <i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">검색</span>
-                    </button>
-                </form>
-            </li>
-        </ul>
-
-        <ul id="bd_btn">
-            <li class="mr0">
-                <button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->id) }}'">
-                    <i class="fa fa-pencil"></i> 글쓰기
+                <label for="keyword" class="sr-only">검색어</label>
+                <input type="text" name="keyword" id="keyword" value="" class="search" required>
+                <button type="submit" id="" class="search-icon">
+                    <i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">검색</span>
                 </button>
-            </li>
-        </ul>
-    </div>
+            </form>
+        </li>
+    </ul>
+
+    <ul id="bd_btn">
+        <li class="mr0">
+            <button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->id) }}'">
+                <i class="fa fa-pencil"></i> 글쓰기
+            </button>
+        </li>
+    </ul>
 </div>
 
-    {{-- 페이지 처리 --}}
-    @if($search == 1 && $currenctCategory != '')
-        {{ $writes->appends([
-            'category' => $currenctCategory,
-            'kind' => $kind,
-            'keyword' => $keyword,
-        ]) ->links() }}
-    @elseif($search != 1 && $currenctCategory != '')
-        {{ $writes->appends([
-            'category' => $currenctCategory,
-        ]) ->links() }}
-    @elseif($search == 1 && $currenctCategory == '')
-        {{ $writes->appends([
-            'kind' => $kind,
-            'keyword' => $keyword,
-        ]) ->links() }}
-    @else
-        {{ $writes->links() }}
-    @endif
+{{-- 페이지 처리 --}}
+@if($search == 1 && $currenctCategory != '')
+    {{ $writes->appends([
+        'category' => $currenctCategory,
+        'kind' => $kind,
+        'keyword' => $keyword,
+    ]) ->links() }}
+@elseif($search != 1 && $currenctCategory != '')
+    {{ $writes->appends([
+        'category' => $currenctCategory,
+    ]) ->links() }}
+@elseif($search == 1 && $currenctCategory == '')
+    {{ $writes->appends([
+        'kind' => $kind,
+        'keyword' => $keyword,
+    ]) ->links() }}
+@else
+    {{ $writes->links() }}
+@endif
 
-</div>
 <script>
 $(function(){
     var category = "{{ $currenctCategory }}";

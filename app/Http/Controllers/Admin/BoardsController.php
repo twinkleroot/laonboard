@@ -50,13 +50,19 @@ class BoardsController extends Controller
      */
     public function store(Request $request)
     {
-        $rule = [
-            'table_name' => 'required|max:20|unique:boards|regex:/^[a-zA-Z0-9_]+$/',
-            'group_id' => 'required',
-            'subject' => 'required',
-        ];
+        $rules = $this->rules();
+        $rules = array_add($rules, 'table_name', 'required|max:20|unique:boards|regex:/^[a-zA-Z0-9_]+$/');
 
-        $this->validate($request, $rule);
+        $messages = $this->messages();
+        $tableNameMessage = [
+            'table_name.required' => '테이블을 입력해 주세요.',
+            'table_name.max:20' => '테이블명은 20자리를 넘을 수 업습니다.',
+            'table_name.unique:boards' => '이미 등록된 테이블명입니다.',
+            'table_name.regex:/^[a-zA-Z0-9_]+$/' => '테이블명은 영문, 숫자, _만 입력 가능합니다.',
+        ];
+        $messages = array_collapse($messages, [$messages, $tableNameMessage]);
+
+        $this->validate($request, $this->rules(), $this->messages());
 
         $write = $this->boardModel->createWriteTable($request->table_name);
         $board = $this->boardModel->createBoard($request->all());
@@ -90,12 +96,7 @@ class BoardsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $rule = [
-            'group_id' => 'required',
-            'subject' => 'required',
-        ];
-
-        $this->validate($request, $rule);
+        $this->validate($request, $this->rules(), $this->messages());
 
         $subject = $this->boardModel->updateBoard($request->all(), $id);
 
@@ -104,6 +105,89 @@ class BoardsController extends Controller
         }
 
         return redirect(route('admin.boards.edit', $id))->with('message', $subject . ' 게시판의 설정이 변경되었습니다.');
+    }
+
+    public function rules()
+    {
+        return [
+            'group_id' => 'bail|required',
+            'subject' => 'bail|required',
+            'count_delete' => 'bail|numeric|required',
+            'count_modify' => 'bail|numeric|required',
+            'read_point' => 'bail|numeric|required',
+            'write_point' => 'bail|numeric|required',
+            'comment_point' => 'bail|numeric|required',
+            'download_point' => 'bail|numeric|required',
+            'table_width' => 'bail|numeric|required',
+            'subject_len' => 'bail|numeric|required',
+            'page_rows' => 'bail|numeric|required',
+            'new' => 'bail|numeric|required',
+            'hot' => 'bail|numeric|required',
+            'image_width' => 'bail|numeric|required',
+            'gallery_cols' => 'bail|numeric|required',
+            'gallery_width' => 'bail|numeric|required',
+            'gallery_height' => 'bail|numeric|required',
+            'upload_size' => 'bail|numeric|required',
+            'upload_count' => 'bail|numeric|required',
+            'order' => 'bail|numeric|nullable',
+            'write_min' => 'bail|numeric|nullable',
+            'write_max' => 'bail|numeric|nullable',
+            'comment_min' => 'bail|numeric|nullable',
+            'comment_max' => 'bail|numeric|nullable',
+            // 'mobile_subject_len' => 'bail|numeric|required',
+            // 'mobile_page_rows' => 'bail|numeric|required',
+            // 'mobile_gallery_width' => 'bail|numeric|required',
+            // 'mobile_gallery_height' => 'bail|numeric|required',
+        ];
+    }
+
+    // 에러 메세지
+    public function messages()
+    {
+        return [
+            'group_id.required' => '그룹을 입력해 주세요.',
+            'subject.required' => '게시판 제목을 입력해 주세요.',
+            'count_delete.required' => '원글 삭제 불가를 입력해 주세요.',
+            'count_modify.required' => '원글 수정 불가를 입력해 주세요.',
+            'read_point.required' => '글읽기 포인트를 입력해 주세요.',
+            'write_point.required' => '글쓰기 포인트를 입력해 주세요.',
+            'comment_point.required' => '댓글쓰기 포인트를 입력해 주세요.',
+            'download_point.required' => '다운로드 포인트를 입력해 주세요.',
+            'table_width.required' => '게시판 폭을 입력해 주세요.',
+            'subject_len.required' => '제목 길이를 입력해 주세요.',
+            'page_rows.required' => '페이지당 목록 수를 입력해 주세요.',
+            'new.required' => '새글 아이콘을 입력해 주세요.',
+            'hot.required' => '인기글 아이콘을 입력해 주세요.',
+            'image_width.required' => '이미지 폭 크기를 입력해 주세요.',
+            'gallery_cols.required' => '갤러리 이미지 수를 입력해 주세요.',
+            'gallery_width.required' => '갤러리 이미지 폭을 입력해 주세요.',
+            'gallery_height.required' => '갤러리 이미지 높이를 입력해 주세요.',
+            'upload_size.required' => '파일 업로드 용량을 입력해 주세요.',
+            'upload_count.required' => '파일 업로드 개수를 입력해 주세요.',
+
+            'count_delete.numeric' => '원글 삭제 불가 : 숫자가 아닙니다.',
+            'count_modify.numeric' => '원글 수정 불가 : 숫자가 아닙니다.',
+            'read_point.numeric' => '글읽기 포인트 : 숫자가 아닙니다.',
+            'write_point.numeric' => '글쓰기 포인트 : 숫자가 아닙니다.',
+            'comment_point.numeric' => '댓글쓰기 포인트 : 숫자가 아닙니다.',
+            'download_point.numeric' => '다운로드 포인트 : 숫자가 아닙니다.',
+            'table_width.numeric' => '게시판 폭 : 숫자가 아닙니다.',
+            'subject_len.numeric' => '제목 길이 : 숫자가 아닙니다.',
+            'page_rows.numeric' => '페이지당 목록 수 : 숫자가 아닙니다.',
+            'new.numeric' => '새글 아이콘 : 숫자가 아닙니다.',
+            'hot.numeric' => '인기글 아이콘 : 숫자가 아닙니다.',
+            'image_width.numeric' => '이미지 폭 크기 : 숫자가 아닙니다.',
+            'gallery_cols.numeric' => '갤러리 이미지 수 : 숫자가 아닙니다.',
+            'gallery_width.numeric' => '갤러리 이미지 폭 : 숫자가 아닙니다.',
+            'gallery_height.numeric' => '갤러리 이미지 높이 : 숫자가 아닙니다.',
+            'upload_size.numeric' => '파일 업로드 용량 : 숫자가 아닙니다.',
+            'upload_count.numeric' => '파일 업로드 개수 : 숫자가 아닙니다.',
+            'order.numeric' => '출력 순서 : 숫자가 아닙니다.',
+            'write_min.numeric' => '최소 글수 제한 : 숫자가 아닙니다.',
+            'write_max.numeric' => '최대 글수 제한 : 숫자가 아닙니다.',
+            'comment_min.numeric' => '최소 댓글수 제한 : 숫자가 아닙니다.',
+            'comment_max.numeric' => '최대 댓글수 제한 : 숫자가 아닙니다.',
+        ];
     }
 
     // 선택 수정 수행

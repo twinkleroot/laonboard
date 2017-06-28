@@ -64,10 +64,10 @@ class ContentController extends Controller
         $rules = $this->rules();
         $rules = array_add($rules, 'content_id', 'bail|required|max:20|unique:contents|regex:/^[a-zA-Z0-9_]+$/');
 
-        $this->validate($request, $this->rules(), $this->messages());
+        $this->validate($request, $rules, $this->messages());
 
         $result = $this->content->storeContent($request);
-
+        
         return redirect(route('contents.edit', $result));
     }
 

@@ -44,9 +44,8 @@ class Content extends Model
     // 관리자 - 내용 추가 데이터 가져오기
     public function getContentCreate()
     {
-        $skinList = Util::getSkins();
-        // 모바일 스킨이 저장되는 경로를 정해야 함 (임시로 PC스킨과 동일하게)
-        $mobileSkinList = Util::getSkins();
+        $skinList = Util::getSkins('content');
+        $mobileSkinList = Util::getSkins('content');
 
         return [
             'skinList' => $skinList,
@@ -77,9 +76,8 @@ class Content extends Model
                 $tailImageWidth = 750;
             }
         }
-        $skinList = Util::getSkins();
-        // 모바일 스킨이 저장되는 경로를 정해야 함 (임시로 PC스킨과 동일하게)
-        $mobileSkinList = Util::getSkins();
+        $skinList = Util::getSkins('content');
+        $mobileSkinList = Util::getSkins('content');
 
         return [
             'content' => $content,

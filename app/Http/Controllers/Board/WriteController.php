@@ -105,7 +105,7 @@ class WriteController extends Controller
         }
         $skin = $this->writeModel->board->skin ? : 'default';
 
-        return view('board.'. $skin. '.link', [ 'linkUrl' => $result['linkUrl'] ]);
+        return view('board.link', [ 'linkUrl' => $result['linkUrl'] ]);
     }
 
     // 추천/비추천 ajax 메서드

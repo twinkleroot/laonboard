@@ -22,15 +22,15 @@ class Util
     public static function getSkins($type)
     {
         $path = resource_path('views/'.$type);
-        $result = [];
-        // $result = ['' => '선택안함'];
+        // $result = [];
+        $result = ['' => '선택'];
         if(File::exists($path)) {
             $dirs = File::directories($path);
             foreach($dirs as $dir) {
                 $result[basename($dir)] = basename($dir);
             }
         }
-        
+
         return $result;
     }
 

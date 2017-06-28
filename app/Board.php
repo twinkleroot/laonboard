@@ -79,6 +79,8 @@ class Board extends Model
             'keyword' => $keyword,
             'order' => $order,
             'direction' => $direction == 'desc' ? 'asc' : 'desc',
+            'skins' => Util::getSkins('board'),
+            'mobileSkins' => count(Util::getSkins('boardMobile')) == 1 ? Util::getSkins('board') : Util::getSkins('boardMobile'),
         ];
     }
 
@@ -103,10 +105,10 @@ class Board extends Model
             'use_secret' => 0,
             'count_modify' => 1,
             'count_delete' => 1,
-            'page_rows' => config('gnu.pageRows'),             // 환경설정에 설정하는 폼 만들면 Config 모델에서 가져오도록 변경해야 함.
-            'mobile_page_rows' => config('gnu.mobilePageRows'),      // 환경설정에 설정하는 폼 만들면 Config 모델에서 가져오도록 변경해야 함.
-            'skin' => 'basic',
-            'mobile_skin' => 'basic',
+            'page_rows' => Cache::get("config.homepage")->pageRows,
+            'mobile_page_rows' => Cache::get("config.homepage")->mobilePageRows,
+            'skin' => 'default',
+            'mobile_skin' => 'default',
             'include_head' => '_head.php',
             'include_tail' => '_tail.php',
             'gallery_cols' => 4,
@@ -135,6 +137,8 @@ class Board extends Model
             'title' => '생성',
             'action' => route('admin.boards.store'),
             'type' => 'create',
+            'skins' => Util::getSkins('board'),
+            'mobileSkins' => count(Util::getSkins('boardMobile')) == 1 ? Util::getSkins('board') : Util::getSkins('boardMobile'),
         ];
     }
 
@@ -154,6 +158,8 @@ class Board extends Model
             'title' => '수정',
             'action' => route('admin.boards.update', $id),
             'type' => 'edit',
+            'skins' => Util::getSkins('board'),
+            'mobileSkins' => count(Util::getSkins('boardMobile')) == 1 ? Util::getSkins('board') : Util::getSkins('boardMobile'),
         ];
     }
 
@@ -175,14 +181,14 @@ class Board extends Model
     // (게시판 관리) 정보 수정
     public function updateBoard($data, $id)
     {
-        $data = array_except($data, ['_token']);
-        $data = Util::exceptNullData($data);
-
         $board = Board::findOrFail($id);
-
-        // 기존에 1이었던 값들 중에서 입력이 안들어 온 필드는 0으로 업데이트 해야한다.
+        $data = array_except($data, ['_token', '_method', 'id']);
         foreach($board->attributes as $key => $value) {
+            // 체크박스 체크가되었었다가 안된 필드는 0으로 업데이트 해야한다.
             if($value == 1 && !isset($data[$key])) {
+                $data = array_add($data, $key, 0);
+            } else if(in_array($key, ['write_min', 'write_max', 'comment_min', 'comment_max', 'order']) && !isset($data[$key])) {
+                // 기본값 적용 필드
                 $data = array_add($data, $key, 0);
             }
         }
@@ -286,6 +292,8 @@ class Board extends Model
     {
         $idArr = explode(',', $request->get('ids'));
         $groupIdArr = explode(',', $request->get('group_ids'));
+        $skinArr = explode(',', $request->get('skin_ids'));
+        $mobileSkinArr = explode(',', $request->get('mobile_skin_ids'));
         $subjectArr = explode(',', $request->get('subjects'));
         $readPointArr = explode(',', $request->get('read_points'));
         $writePointArr = explode(',', $request->get('write_points'));
@@ -303,6 +311,8 @@ class Board extends Model
             if(!is_null($board)) {
                 $board->update([
                     'group_id' => $groupIdArr[$index],
+                    'skin' => $skinArr[$index],
+                    'mobile_skin' => $mobileSkinArr[$index],
                     'subject' => $subjectArr[$index],
                     'read_point' => $readPointArr[$index],
                     'write_point' => $writePointArr[$index],

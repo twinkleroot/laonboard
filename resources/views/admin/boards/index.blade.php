@@ -36,6 +36,8 @@
             <form class="form-horizontal" role="form" method="POST" id="selectForm" action="">
                 <input type="hidden" id='ids' name='ids' value='' />
                 <input type="hidden" id='group_ids' name='group_ids' value='' />
+                <input type="hidden" id='skin_ids' name='skin_ids' value='' />
+                <input type="hidden" id='mobile_skin_ids' name='mobile_skin_ids' value='' />
                 <input type="hidden" id='subjects' name='subjects' value='' />
                 <input type="hidden" id='read_points' name='read_points' value='' />
                 <input type="hidden" id='write_points' name='write_points' value='' />
@@ -60,9 +62,9 @@
                             <th class="text-center">
                                 <a class="mb_tooltip" href="{{ route('admin.boards.index') }}?order=skin&amp;direction={{$order=='skin' ? $direction : 'desc'}}">스킨</a>
                             </th>
-                            <th class="text-center">
+                            {{-- <th class="text-center">
                                 <a class="mb_tooltip" href="{{ route('admin.boards.index') }}?order=mobile_skin&amp;direction={{$order=='mobile_skin' ? $direction : 'desc'}}">모바일<br />스킨</a>
-                            </th>
+                            </th> --}}
                             <th class="text-center">
                                 <a class="mb_tooltip" href="{{ route('admin.boards.index') }}?order=subject&amp;direction={{$order=='subject' ? $direction : 'asc'}}">제목</a>
                             </th>
@@ -99,8 +101,24 @@
                                     </select>
                                 </td>
                                 <td class="text-center"><a href="{{ route('board.index', $board->id) }}">{{ $board->table_name }}</a></td>
-                                <td class="text-center">{{ $board->skin }}</td>
-                                <td class="text-center">{{ $board->mobile_skin }}</td>
+                                <td class="text-center">
+                                    <select id="skin_{{ $board->id }}">
+                                    @foreach ($skins as $skin)
+                                        <option @if($board->skin == $skin) selected @endif value="{{ $skin }}">
+                                            {{ $skin }}
+                                        </option>
+                                    @endforeach
+                                    </select>
+                                </td>
+                                {{-- <td class="text-center">
+                                    <select id="mobile_skin_{{ $board->id }}">
+                                        @foreach ($mobileSkins as $skin)
+                                            <option @if($board->mobile_skin == $skin) selected @endif value="{{ $skin }}">
+                                                {{ $skin }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </td> --}}
                                 <td class="text-center">
                                     <input type="text" id="subject_{{ $board->id }}" value="{{ $board->subject }}" />
                                 </td>
@@ -200,6 +218,8 @@ $(function(){
         }
 
         var group_array = toUpdateBySelectOption("group_id", selected_id_array);
+        var skin_array = toUpdateBySelectOption("skin", selected_id_array);
+        var mobile_skin_array = toUpdateBySelectOption("mobile_skin", selected_id_array);
         var subject_array = toUpdateByText("subject", selected_id_array);
         var read_point_array = toUpdateByText("read_point", selected_id_array);
         var write_point_array = toUpdateByText("write_point", selected_id_array);
@@ -212,6 +232,8 @@ $(function(){
 
         $('#ids').val(selected_id_array);
         $('#group_ids').val(group_array);
+        $('#skin_ids').val(skin_array);
+        $('#mobile_skin_ids').val(mobile_skin_array);
         $('#subjects').val(subject_array);
         $('#read_points').val(read_point_array);
         $('#write_points').val(write_point_array);

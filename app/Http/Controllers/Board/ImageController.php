@@ -31,7 +31,7 @@ class ImageController extends Controller
 
         $imageFileInfo = getimagesize($imagePath);
 
-        return view('board.default.viewImage', [
+        return view('board.viewImage', [
             'imagePath' => $folder.'/'.$imageName,
             'width' => $imageFileInfo[0],
             'height' => $imageFileInfo[1],
