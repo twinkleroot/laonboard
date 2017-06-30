@@ -70,46 +70,22 @@
 </div>
 
 <div class="sidebar sidebarmenu">
+	@foreach(session()->get(auth()->user()->id_hashkey.'_admin_primary_menu') as $key => $primaryMenu)
 	<ul class="category">
         <div class="side_1depth">
-		    <a href="#" class="sd_1depth">환경설정</a>
+		    <a href="#" class="sd_1depth">{{ $primaryMenu[0] }}</a>
 		</div>
+		@if(count(session()->get(auth()->user()->id_hashkey.'_admin_sub_menu')) > 0)
 		<ul class="sd_2depth">
-			<li><a href="{{ route('admin.config')}}" id="100100">기본환경설정</a></li>
-		    <li><a href="#" id="100200">관리권한설정</a></li>
-	        <li><a href="#" id="100300">테마설정</a></li>
-	        <li><a href="{{ route('admin.menus.index') }}" id="100400">메뉴설정</a></li>
-	        <li><a href="{{ route('admin.email') }}" id="100500">메일테스트</a></li>
-	        <li><a href="#" id="100600">팝업레이어관리</a></li>
-	        <li><a href="#" id="100700">세션파일 일괄삭제</a></li>
-	        <li><a href="#" id="100800">캐시파일 일괄삭제</a></li>
-	        <li><a href="#" id="100900">썸네일파일 일괄삭제</a></li>
-	        <li><a href="{{ route('admin.phpinfo') }}" id="101000">phpinfo()</a></li>
-	        <li><a href="{{ route('admin.extra_service') }}" id="101100">부가서비스</a></li>
+			@foreach(session()->get(auth()->user()->id_hashkey.'_admin_sub_menu') as $subMenuCode => $subMenu)
+				@if(substr($key, 0, 1) == substr($subMenuCode, 0, 1))
+				<li><a href="{{ $subMenu[1] ? route($subMenu[1]) : '' }}" id="{{ $subMenuCode }}">{{ $subMenu[0] }}</a></li>
+				@endif
+			@endforeach
 		</ul>
+		@endif
 	</ul>
-	<ul class="category">
-        <div class="side_1depth">
-		    <a href="#" class="sd_1depth">회원관리</a>
-		</div>
-		<ul class="sd_2depth">
-			<li><a href="{{ route('admin.users.index') }}" id="200100">회원관리</a></li>
-		    <li><a href="{{ route('admin.points.index') }}" id="200200">포인트관리</a></li>
-		</ul>
-	</ul>
-	<ul class="category">
-        <div class="side_1depth">
-		    <a href="#" class="sd_1depth">게시판관리</a>
-		</div>
-		<ul class="sd_2depth">
-			<li><a href="{{ route('admin.boards.index') }}" id="300100">게시판관리</a></li>
-		    <li><a href="{{ route('admin.groups.index') }}" id="300200">게시판그룹관리</a></li>
-	        <li><a href="#" id="300300">인기검색어관리</a></li>
-	        <li><a href="#" id="300400">인기검색어순위</a></li>
-	        <li><a href="{{ route('contents.index') }}" id="300500">내용관리</a></li>
-	        <li><a href="{{ route('admin.status.write') }}" id="300600">글/댓글현황</a></li>
-		</ul>
-	</ul>
+	@endforeach
 </div>
 
 <div id="admin-body" class="sidebarmenu2">

@@ -10,7 +10,7 @@ class IndexController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('level:10');
+        $this->middleware('admin');
     }
 
     public function index()

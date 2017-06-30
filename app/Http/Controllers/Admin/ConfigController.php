@@ -12,7 +12,7 @@ class ConfigController extends Controller
 
     public function __construct(Config $configModel)
     {
-        $this->middleware('level:10');
+        $this->middleware('super');
 
         $this->configModel = $configModel;
     }

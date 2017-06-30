@@ -20,7 +20,7 @@ class UsersController extends Controller
 
     public function __construct(Config $config, User $userModel)
     {
-        $this->middleware('level:10');
+        $this->middleware('admin');
 
         $this->config = Cache::get("config.join");
         $this->rulePassword = Config::getRulePassword('config.join', $this->config);

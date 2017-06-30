@@ -48,7 +48,11 @@ class Memo extends Model
         }
 
         if( isset($request->to) ) {
-            $toUser = User::where('id_hashkey', $request->to)->first();
+            if(mb_strlen($request->to, 'utf-8') > 10) {  // 커뮤니티 쪽에서 들어올 때 user의 id가 아닌 id_hashKey가 넘어온다.
+                $toUser = User::where('id_hashkey', $request->to)->first();
+            } else {
+                $toUser = User::find($request->to);
+            }
 
             if( is_null($toUser)) {
                 return ["message" => "회원정보가 존재하지 않습니다.\\n\\n탈퇴하였을 수 있습니다."];
@@ -57,14 +61,18 @@ class Memo extends Model
                 return ["message" => "정보공개를 하지 않았습니다."];
             }
 
-            $memo = Memo::where('id', $request->id)
-                    ->whereRaw('recv_user_id = '. $user->id. ' or send_user_id = '. $user->id)
-                    ->first();
-            $content = '';
-            if($memo) {
-                $content = "\n >\n >\n >"
-                            .str_replace("\n", "\n> ", Util::getText($memo->memo, 0))
-                          ."\n > >";
+            if($request->id) {
+                $memo = Memo::where('id', $request->id)
+                        ->where('recv_user_id', $user->id)
+                        ->first();
+                $content = '';
+                if($memo) {
+                    $content = "\n >\n >\n >"
+                                .str_replace("\n", "\n> ", Util::getText($memo->memo, 0))
+                              ."\n > >";
+                }
+            } else {
+                $content = '';
             }
 
             return [

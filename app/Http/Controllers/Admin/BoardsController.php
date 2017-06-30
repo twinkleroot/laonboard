@@ -14,7 +14,7 @@ class BoardsController extends Controller
 
     public function __construct(Board $board)
     {
-        $this->middleware('level:10');
+        $this->middleware('admin');
 
         $this->boardModel = $board;
     }

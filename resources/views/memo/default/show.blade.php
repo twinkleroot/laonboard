@@ -31,7 +31,9 @@
 			@if($nextMemo)
 				<a class="btn btn-default" href="{{ route('memo.show', $nextMemo) }}?kind={{ $kind }}">다음쪽지</a>
 			@endif
-			<a class="btn btn-default" href="{{ route('memo.create') }}?to={{ $memo->user_id_hashkey }}&amp;id={{ $memo->id }}">답장</a>
+			@if($kind!='send')
+				<a class="btn btn-default" href="{{ route('memo.create') }}?to={{ $memo->user_id_hashkey }}&amp;id={{ $memo->id }}">답장</a>
+			@endif
 			<a class="btn btn-default" href="{{ route('memo.index') }}?kind={{ $kind }}">목록보기</a>
 			<button class="btn btn-default" onclick="window.close();">창닫기</button>
 		</div>
@@ -59,7 +61,7 @@
 		                <li><a href="{{ route('new.index') }}?nick={{ $memo->nick }}">전체게시물</a></li>
                         @if(session()->get('admin'))
     		                <li><a href="{{ route('admin.users.edit', $memo->user_id_hashkey) }}" target="_blank">회원정보변경</a></li>
-    		                <li><a href="{{ route('admin.search') }}?admin_page=point&amp;kind=email&amp;keyword={{ $memo->email }}" target="_blank">포인트내역</a></li>
+    		                <li><a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $memo->email }}" target="_blank">포인트내역</a></li>
                         @endif
 		            </ul>
 				</span>

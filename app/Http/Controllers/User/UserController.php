@@ -155,9 +155,9 @@ class UserController extends Controller
     }
 
     // 자기소개
-    public function profile($idHashkey)
+    public function profile($id)
     {
-        $params = $this->userModel->getProfileParams($idHashkey);
+        $params = $this->userModel->getProfileParams($id);
 
         return view('user.'. $this->skin. '.profile', $params);
     }

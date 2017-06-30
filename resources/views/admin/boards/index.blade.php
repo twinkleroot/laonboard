@@ -177,9 +177,8 @@
             </form>
 
             {{-- 페이지 처리 --}}
-            {{ str_contains(url()->current(), 'search')
+            {{ str_contains(url()->full(), 'kind')
                 ? $boards->appends([
-                    'admin_page' => 'board',
                     'kind' => $kind,
                     'keyword' => $keyword,
                 ])->links()

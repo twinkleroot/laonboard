@@ -77,11 +77,9 @@
             </form>
 
             {{-- 페이지 처리 --}}
-            {{ str_contains(url()->current(), 'search')
+            {{ str_contains(url()->full(), 'keyword')
                 ? $users->appends([
-                    'admin_page' => 'accessibleUsers',
                     'groupId' => $group->id,
-                    'kind' => $kind,
                     'keyword' => $keyword,
                 ])->links()
                 : $users->links()
@@ -91,6 +89,7 @@
     </div>
 </div>
 <script>
+var menuVal = 300200;
 $(function(){
     // 선택 삭제 버튼 클릭
     $('#selected_delete').click(function(){

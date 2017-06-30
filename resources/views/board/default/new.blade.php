@@ -79,17 +79,21 @@
 					<span class="bd_subject"><a href="/board/{{ $boardNew->board_id}}/view/{{ $boardNew->write_parent. $boardNew->commentTag }}">{{ $boardNew->write->subject }}</a></span>
 				</td>
 				<td class="bd_name">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $boardNew->write->name }}</a>
+                    @if(!$boardNew->user_id)
+                        {{ $boardNew->name }}
+                    @else
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $boardNew->name }}</a>
 					<ul class="dropdown-menu" role="menu">
 		                <li><a href="{{ route('memo.create') }}?to={{ $boardNew->user_id_hashkey }}" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지보내기</a></li>
 		                <li><a href="#">메일보내기</a></li>
 		                <li><a href="{{ route('user.profile', $boardNew->user_id_hashkey) }}" class="winProfile" target="_blank" onclick="winProfile(this.href); return false;">자기소개</a></li>
-		                <li><a href="{{ route('new.index') }}?nick={{ $boardNew->write->name }}">전체게시물</a></li>
+		                <li><a href="{{ route('new.index') }}?nick={{ $boardNew->name }}">전체게시물</a></li>
                         @if(session()->get('admin'))
     		                <li><a href="{{ route('admin.users.edit', $boardNew->user_id_hashkey) }}" target="_blank">회원정보변경</a></li>
     		                <li><a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $boardNew->user_email }}" target="_blank">포인트내역</a></li>
                         @endif
 		            </ul>
+                    @endif
 				</td>
 				<td class="bd_date">@if($today->toDateString() == substr($boardNew->write->created_at, 0, 10)) @hourAndMin($boardNew->write->created_at) @else @monthAndDay($boardNew->write->created_at) @endif</td>
 			</tr>

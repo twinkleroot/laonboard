@@ -13,7 +13,7 @@ class AccessibleUsersController extends Controller
 
     public function __construct(GroupUser $groupUser)
     {
-        $this->middleware('level:10');
+        $this->middleware('admin');
 
         $this->groupUserModel = $groupUser;
     }

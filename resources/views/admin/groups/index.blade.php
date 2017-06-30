@@ -111,9 +111,8 @@
             </form>
 
             {{-- 페이지 처리 --}}
-            {{ str_contains(url()->current(), 'search')
+            {{ str_contains(url()->full(), 'kind')
                 ? $groups->appends([
-                    'admin_page' => 'boardGroup',
                     'kind' => $kind,
                     'keyword' => $keyword,
                 ])->links()

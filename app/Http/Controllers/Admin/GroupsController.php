@@ -12,7 +12,7 @@ class GroupsController extends Controller
 
     public function __construct(Group $groupModel)
     {
-        $this->middleware('level:10');
+        $this->middleware('admin');
 
         $this->groupModel = $groupModel;
     }
