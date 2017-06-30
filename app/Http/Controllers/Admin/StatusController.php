@@ -11,6 +11,11 @@ use App\BoardNew;
 
 class StatusController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('admin');
+    }
+
     public function writeStatus(Request $request)
     {
         // 뷰에 필요한 파라미터

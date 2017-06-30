@@ -75,6 +75,18 @@ class User extends Authenticatable
 
     }
 
+    public function isAdmin()
+    {
+        if($this->isSuperAdmin()) {
+            return true;
+        }
+        $manageAuth = ManageAuth::where('user_id', auth()->user()->id)->first();
+        if($manageAuth) {
+            return true;
+        }
+        return false;
+    }
+
     public function isSuperAdmin()
     {
         if(auth()->user()->email === Cache::get('config.homepage')->superAdmin) {
@@ -403,9 +415,13 @@ class User extends Authenticatable
     }
 
     // 자기소개에 필요한 파라미터 가져오기
-    public function getProfileParams($idHashkey)
+    public function getProfileParams($id)
     {
-        $user = User::where('id_hashkey', $idHashkey)->first();
+        if(mb_strlen($id, 'utf-8') > 10) {  // 커뮤니티 쪽에서 들어올 때 user의 id가 아닌 id_hashKey가 넘어온다.
+            $user = User::where('id_hashkey', $id)->first();
+        } else {
+            $user = User::find($id);
+        }
         if(is_null($user)) {
             return '회원정보가 존재하지 않습니다.\\n\\n탈퇴하였을 수 있습니다.';
         }

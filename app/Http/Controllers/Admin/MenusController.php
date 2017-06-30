@@ -13,6 +13,8 @@ class MenusController extends Controller
 
     public function __construct(Menu $menu)
     {
+        $this->middleware('super');
+
         $this->menuModel = $menu;
     }
     /**

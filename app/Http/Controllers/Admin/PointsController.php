@@ -13,7 +13,7 @@ class PointsController extends Controller
 
     public function __construct(Point $point)
     {
-        $this->middleware('level:10');
+        $this->middleware('admin');
 
         $this->pointModel = $point;
     }

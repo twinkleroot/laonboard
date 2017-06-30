@@ -7,6 +7,11 @@ use App\Http\Controllers\Controller;
 
 class SimpleController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('admin');
+    }
+
     // phpinfo()
     public function phpinfo()
     {

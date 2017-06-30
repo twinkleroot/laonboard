@@ -158,9 +158,8 @@
             </form>
 
             {{-- 페이지 처리 --}}
-            {{ str_contains(url()->current(), 'search')
+            {{ str_contains(url()->full(), 'kind')
                 ? $users->appends([
-                    'admin_page' => 'user',
                     'kind' => $kind,
                     'keyword' => $keyword,
                 ])->links()

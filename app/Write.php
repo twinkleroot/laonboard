@@ -110,7 +110,7 @@ class Write extends Model
         $notices = explode(',', $this->board->notice);
 
         $result = [];
-        // try {
+        try {
             $result = $this->getWrites($writeModel, $request, $kind, $keyword, $currenctCategory);
             if($result['message'] != '') {
                 return [
@@ -121,12 +121,12 @@ class Write extends Model
                     $viewParams['page'] = 'page='. $result['writes']->currentPage();
                 }
             }
-        // } catch (Exception $e) {
-        //     return [
-        //         'message' => '글이 존재하지 않습니다.\\n글이 삭제되었거나 이동하였을 수 있습니다.',
-        //         'redirect' => '/'
-        //     ];
-        // }
+        } catch (Exception $e) {
+            return [
+                'message' => '글이 존재하지 않습니다.\\n글이 삭제되었거나 이동하였을 수 있습니다.',
+                'redirect' => '/'
+            ];
+        }
 
         return [
             'board' => $this->board,

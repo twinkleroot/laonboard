@@ -57,6 +57,12 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        // 관리자 메뉴구성
+        'admin.menu' => \App\Http\Middleware\AdminMenu::class,
+        // 관리자만 접근가능할 때 사용
+        'admin' => \App\Http\Middleware\IsAdmin::class,
+        // 최고관리자만 접근가능할 때 사용
+        'super' => \App\Http\Middleware\IsSuperAdmin::class,
         // 유저의 레벨을 기준으로 접근 가능 여부 판단
         'level' => \App\Http\Middleware\CheckLevel::class,
         // 유저의 레벨과 게시판 마다의 레벨 기준을 비교해서 접근 가능 여부 판단

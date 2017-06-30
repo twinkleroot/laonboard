@@ -4,6 +4,10 @@
     포인트 관리 | {{ Cache::get("config.homepage")->title }}
 @endsection
 
+@section('include_script')
+    <script src="{{ asset('js/common.js') }}"></script>
+@endsection
+
 @section('content')
 <div class="body-head">
     <div class="pull-left">
@@ -59,7 +63,7 @@
     		    </button>
     	    </form>
         </div>
-        <form class="form-horizontal" role="form" method="POST" id="selectForm" action="">
+        <form class="form-horizontal" role="form" method="POST" id="selectForm" action="" onsubmit="return onSubmit(this);">
             <input type="hidden" id='ids' name='ids' value='' />
             {{ csrf_field() }}
             {{ method_field('DELETE')}}
@@ -92,7 +96,7 @@
         			<!-- 하단 tr이 출력될 목록갯수에 따라 반복 -->
         			<tr>
         				<td>
-        					<input type="checkbox" name="chk[]" class="pointId" value='{{ $point->id }}' />
+        					<input type="checkbox" name="chkId[]" class="pointId" value='{{ $point->id }}' />
         				</td>
         				<td><a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $point->user->email }}">{{ $point->user->email }}</a></td>
         				<td>{{ $point->user->nick }}</td>
@@ -117,9 +121,8 @@
         </form>
 
         {{-- 페이지 처리 --}}
-        {{ str_contains(url()->current(), 'search')
+        {{ str_contains(url()->full(), 'kind')
             ? $points->appends([
-                'admin_page' => 'point',
                 'kind' => $kind,
                 'keyword' => $keyword,
             ])->links()
@@ -173,7 +176,7 @@ $(function(){
         var selected_id_array = selectIdsByCheckBox(".pointId");
 
         if(selected_id_array.length == 0) {
-            alert('게시판을 선택해 주세요.')
+            alert('게시판을 선택해 주세요.');
             return;
         }
 
@@ -183,29 +186,12 @@ $(function(){
     });
 });
 
-// 선택한 항목들 id값 배열에 담기
-function selectIdsByCheckBox(className) {
-    var send_array = Array();
-    var send_cnt = 0;
-    var chkbox = $(className);
-
-    for(i=0; i<chkbox.length; i++) {
-        if(chkbox[i].checked == true) {
-            send_array[send_cnt] = chkbox[i].value;
-            send_cnt++;
-        }
+function onSubmit(form) {
+    if(!confirm("선택한 항목을 정말 삭제하시겠습니까?")) {
+        return false;
     }
 
-    return send_array;
-}
-
-// 모두 선택
-function checkAll(form) {
-    var chk = document.getElementsByName("chk[]");
-
-    for (i=0; i<chk.length; i++) {
-        chk[i].checked = form.chkAll.checked;
-    }
+    return true;
 }
 </script>
 @endsection

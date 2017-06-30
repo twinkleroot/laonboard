@@ -20,14 +20,26 @@ Route::get('/home', ['as' => 'home', 'uses' => 'MainController@index'] );
 Route::get('/group/{group}', ['as' => 'group', 'uses' => 'MainController@groupIndex'] );
 
 // 관리자 그룹
-Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
+Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], function() {
     // 관리자 메인
     Route::get('index', ['as' => 'admin.index', 'uses' => 'Admin\IndexController@index']);
     // 회원관리 리소스 컨트롤러에 추가적으로 라우팅을 구성(리소스 라우트보다 앞에 와야 함)
     Route::put('users/selected_update', ['as' => 'admin.users.selectedUpdate', 'uses' => 'Admin\UsersController@selectedUpdate']);
-    // 환경 설정
+    // 기본 환경 설정
     Route::get('config', ['as' => 'admin.config', 'uses' => 'Admin\ConfigController@index']);
     Route::put('config/update/{name}', ['as' => 'admin.config.update', 'uses' => 'Admin\ConfigController@update']);
+
+    // 관리 권한 설정 리소스 컨트롤러
+    Route::resource('manageAuth', 'Admin\ManageAuthController', [
+        'only' => [
+            'index', 'store', 'destroy',
+        ],
+        'names' => [
+            'index' => 'admin.manageAuth.index',
+            'store' => 'admin.manageAuth.store',
+            'destroy' => 'admin.manageAuth.destroy',
+        ]
+    ]);
 
     // 게시판 그룹 관리 리소스 컨트롤러에 추가적으로 라우팅을 구성(리소스 라우트보다 앞에 와야 함)
     Route::put('groups/selected_update', ['as' => 'admin.groups.selectedUpdate', 'uses' => 'Admin\GroupsController@selectedUpdate']);
@@ -138,7 +150,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
     // 부가서비스
     Route::get('extra_service', ['as' => 'admin.extra_service', 'uses' => 'Admin\SimpleController@extraService']);
     // 글,댓글 현황
-    Route::get('status/write', ['as' => 'admin.status.write', 'uses' => 'Admin\StatusController@writeStatus']);
+    Route::get('status', ['as' => 'admin.status', 'uses' => 'Admin\StatusController@writeStatus']);
 });
 
 

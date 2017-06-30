@@ -79,7 +79,7 @@
             <li class="gnb-li"><a href="{{ route('login') }}">로그인</a></li>
             <li class="gnb-li"><a href="{{ route('user.join') }}">회원가입</a></li>
             @else <!-- else -->
-                @if(Auth::user()->level == 10) <!-- 공개권한: 관리자 -->
+                @if(Auth::user()->isAdmin()) <!-- 공개권한: 관리자 -->
                     <li class="gnb-li"><a href="{{ route('admin.index') }}">관리자 모드</a></li>
                 @endif <!-- 공개권한: 관리자 end -->
                 <!-- 공개권한: 회원 -->
@@ -90,7 +90,7 @@
                     <!-- 2depth -->
                     <ul class="dropdown-menu" role="menu">
 
-                        @if(Auth::user()->level < 10)
+                        @if(!Auth::user()->isAdmin())
                             <li><a href="{{ route('user.checkPassword') }}?work=edit">회원 정보 수정</a></li>
                         @endif
                         <li>
@@ -107,7 +107,7 @@
                                 {{ csrf_field() }}
                             </form>
                         </li>
-                        @if(Auth::user()->level < 10)
+                        @if(!Auth::user()->isAdmin())
                             <li><a href="{{ route('user.checkPassword') }}?work=leave">회원 탈퇴</a></li>
                         @endif
                     </ul>
