@@ -86,6 +86,8 @@
                     </th>
                     <th>
                         <a class="mb_tooltip" href="{{ route('admin.users.index') }}?order=nick&amp;direction={{$order=='nick' ? $direction : 'asc'}}">닉네임</a>
+                        <ul class="dropdown-menu" role="menu">
+                        </ul>
                     </th>
                     <th>
                         상태/<a class="mb_tooltip" href="{{ route('admin.users.index') }}?order=level&amp;direction={{$order=='level' ? $direction : 'desc'}}">권한</a>
@@ -112,7 +114,14 @@
                                 <span class="tooltiptext">{{ $user->ip }}</span>
                             </div>
                         </td>
-                        <td class="text-left">{{ $user->nick }}</td>
+                        <td class="td_nick">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $user->nick }}</a>
+
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">하위메뉴</a></li>
+                                <li><a href="#">하위메뉴</a></li>
+                            </ul>
+                        </td>
                         <td>
                         @if(!is_null($user->leave_date))
                             <span class="mb_msg withdraw">탈퇴</span>
@@ -158,8 +167,9 @@
             </form>
 
             {{-- 페이지 처리 --}}
-            {{ str_contains(url()->full(), 'kind')
+            {{ str_contains(url()->current(), 'search')
                 ? $users->appends([
+                    'admin_page' => 'user',
                     'kind' => $kind,
                     'keyword' => $keyword,
                 ])->links()

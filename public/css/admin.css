@@ -958,6 +958,14 @@ body {
 	width: 150px;
 	text-align: left;
 }
+.td_nick.open {
+	position: relative;
+}
+.td_nick .dropdown-menu {
+	top: 33px;
+	left: 10px;
+	font-size: 12px;
+}
 .td_subject {
 	text-align: left;
 }
