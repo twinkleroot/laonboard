@@ -100,6 +100,21 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
         ]
     ]);
 
+    // 내용 관리
+    Route::get('contents/{content}/delete', ['as' => 'admin.contents.destroy', 'uses' => 'Admin\ContentsController@destroy']);
+    Route::resource('contents', 'Admin\ContentsController', [
+        'except' => [
+            'destroy', 'show'
+        ],
+        'names' => [
+            'index' => 'admin.contents.index',
+            'create' => 'admin.contents.create',
+            'store' => 'admin.contents.store',
+            'edit' => 'admin.contents.edit',
+            'update' => 'admin.contents.update',
+        ],
+    ]);
+
     // 회원관리 CRUD 컨트롤러
     Route::resource('users', 'Admin\UsersController', [
         'except' => [
@@ -150,7 +165,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
     // 부가서비스
     Route::get('extra_service', ['as' => 'admin.extra_service', 'uses' => 'Admin\SimpleController@extraService']);
     // 글,댓글 현황
-    Route::get('status', ['as' => 'admin.status', 'uses' => 'Admin\StatusController@writeStatus']);
+    Route::get('status', ['as' => 'admin.status', 'uses' => 'Admin\StatusController@index']);
 });
 
 
@@ -176,25 +191,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('user/disconnectSocialAccount', ['as' => 'user.disconnectSocialAccount', 'uses' => 'User\UserController@disconnectSocialAccount']);
     // 자기소개
     Route::get('user/profile/{id}', ['as' => 'user.profile', 'uses' => 'User\UserController@profile']);
-    // 내용 관리
-    Route::get('contents/{content}/delete', ['as' => 'contents.destroy', 'uses' => 'Content\ContentController@destroy'])
-        ->middleware(['level:10']);
-    Route::resource('contents', 'Content\ContentController', [
-        'except' => [
-            'destroy'
-        ],
-        'names' => [
-            'index' => 'contents.index',
-            'show' => 'contents.show',
-            'create' => 'contents.create',
-            'store' => 'contents.store',
-            'edit' => 'contents.edit',
-            'update' => 'contents.update',
-        ],
-        'middleware' => [
-            'level:10',
-        ]
-    ]);
+
 
     // 쪽지
     Route::get('memo/{memo}/delete', ['as' => 'memo.destroy', 'uses' => 'Memo\MemoController@destroy']);
@@ -211,7 +208,7 @@ Route::group(['middleware' => 'auth'], function() {
     ]);
 });
 // 내용관리 보기는 인증이 없어도 가능
-Route::get('contents/{content}', ['as' => 'contents.show', 'uses' => 'Content\ContentController@show']);
+Route::get('contents/{content}', ['as' => 'contents.show', 'uses' => 'Content\ContentsController@show']);
 
 // 소셜 로그인 - 콜백 함수에서 회원 로그인 여부로 분기 (콜백함수 경로 지정은 config/services.php 에서)
 Route::get('social/{provider}', ['as' => 'social', 'uses' => 'Auth\SocialController@redirectToProvider']);

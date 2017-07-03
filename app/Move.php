@@ -113,7 +113,7 @@ class Move
                 $write = $writeModel->find($writeId);
                 $numArray = array_add($numArray, $write->id, $write->num);
             }
-            $numArray = array_unique($numArray);
+            $numArray = array_values(array_unique($numArray));
             $result = [];
             foreach($numArray as $key => $value) {
                 array_push($result, $value);

@@ -3,11 +3,11 @@
 namespace App\Policies;
 
 use App\User;
-use App\Admin\AdminUser;
+use App\Admin\Content;
 use App\Common\Util;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class UserPolicy
+class ContentPolicy
 {
     use HandlesAuthorization;
 
@@ -19,53 +19,53 @@ class UserPolicy
     }
 
     /**
-     * Determine whether the user can view the user.
+     * Determine whether the user can view the content.
      *
      * @param  \App\User  $user
-     * @param  \App\Admin\AdminUser\  $user
+     * @param  \App\Admin\Content  $content
      * @return mixed
      */
-    public function index(User $user, AdminUser $adminUser)
+    public function index(User $user, Content $content)
     {
-        $menuCode = ['200100', 'r'];
+        $menuCode = ['300400', 'r'];
         return Util::getManageAuthModel($menuCode);
     }
 
     /**
-     * Determine whether the user can create users.
+     * Determine whether the user can create contents.
      *
      * @param  \App\User  $user
      * @return mixed
      */
     public function create(User $user)
     {
-        $menuCode = ['200100', 'w'];
+        $menuCode = ['300400', 'w'];
         return Util::getManageAuthModel($menuCode);
     }
 
     /**
-     * Determine whether the user can update the user.
+     * Determine whether the user can update the content.
      *
      * @param  \App\User  $user
-     * @param  \App\Admin\AdminUser\  $user
+     * @param  \App\Admin\Content  $content
      * @return mixed
      */
-    public function update(User $user, AdminUser $adminUser)
+    public function update(User $user, Content $content)
     {
-        $menuCode = ['200100', 'w'];
+        $menuCode = ['300400', 'w'];
         return Util::getManageAuthModel($menuCode);
     }
 
     /**
-     * Determine whether the user can delete the user.
+     * Determine whether the user can delete the content.
      *
      * @param  \App\User  $user
-     * @param  \App\Admin\AdminUser\  $user
+     * @param  \App\Admin\Content  $content
      * @return mixed
      */
-    public function delete(User $user, AdminUser $adminUser)
+    public function delete(User $user, Content $content)
     {
-        $menuCode = ['200100', 'd'];
+        $menuCode = ['300400', 'd'];
         return Util::getManageAuthModel($menuCode);
     }
 }

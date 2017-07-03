@@ -70,14 +70,14 @@
 </div>
 
 <div class="sidebar sidebarmenu">
-	@foreach(session()->get(auth()->user()->id_hashkey.'_admin_primary_menu') as $key => $primaryMenu)
+	@foreach(cache(auth()->user()->id_hashkey.'_admin_primary_menu') as $key => $primaryMenu)
 	<ul class="category">
         <div class="side_1depth">
 		    <a href="#" class="sd_1depth">{{ $primaryMenu[0] }}</a>
 		</div>
-		@if(count(session()->get(auth()->user()->id_hashkey.'_admin_sub_menu')) > 0)
+		@if(count(cache(auth()->user()->id_hashkey.'_admin_sub_menu')) > 0)
 		<ul class="sd_2depth">
-			@foreach(session()->get(auth()->user()->id_hashkey.'_admin_sub_menu') as $subMenuCode => $subMenu)
+			@foreach(cache(auth()->user()->id_hashkey.'_admin_sub_menu') as $subMenuCode => $subMenu)
 				@if(substr($key, 0, 1) == substr($subMenuCode, 0, 1))
 				<li><a href="{{ $subMenu[1] ? route($subMenu[1]) : '' }}" id="{{ $subMenuCode }}">{{ $subMenu[0] }}</a></li>
 				@endif

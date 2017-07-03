@@ -6,17 +6,29 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Lava;
+use Gate;
 use App\Board;
 use App\BoardNew;
+use App\Common\Util;
 
 class StatusController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('admin');
+
+    public function index(Request $request) {
+        $menuCode = ['300500', 'r'];
+
+        if(auth()->user()->isSuperAdmin() || Gate::allows('view-admin-mailtest', Util::getManageAuthModel($menuCode))) {
+            $params = $this->writeStatus($request);
+            return view('admin.status', $params)->with('chart', $params['renderChart']);
+        } else {
+            return view('message', [
+                'message' => '최고관리자 또는 관리권한이 있는 회원만 접근 가능합니다.',
+                'redirect' => '/admin/index'
+            ]);
+        }
     }
 
-    public function writeStatus(Request $request)
+    private function writeStatus(Request $request)
     {
         // 뷰에 필요한 파라미터
         $boards = Board::all();
@@ -49,7 +61,8 @@ class StatusController extends Controller
                 Lava::LineChart('Chart', $chartDataTable, $chartOptions) :
                 Lava::ColumnChart('Chart', $chartDataTable, $chartOptions);
 
-        return view('admin.status', $params)->with('chart', $renderChart);
+        $params['renderChart'] = $renderChart;
+        return $params;
     }
 
     // 기간 구성 배열

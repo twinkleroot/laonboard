@@ -7,7 +7,6 @@ use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use App\Write;
 use App\Point;
-use App\Config;
 use App\Board;
 use App\BoardFile;
 use App\BoardGood;

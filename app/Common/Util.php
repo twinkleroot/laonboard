@@ -8,10 +8,25 @@ use Image;
 use File;
 use App\Write;
 use App\Board;
+use App\ManageAuth;
 
 class Util
 {
-    // 캐시 삭제
+    // 관리 권한 설정 데이터를 가져온다.
+    public static function getManageAuthModel($menuCode)
+    {
+        $manageAuth = ManageAuth::
+            where([
+                'user_id' => auth()->user()->id,
+                'menu' => $menuCode[0],
+            ])
+            ->where('auth', 'like', '%'. $menuCode[1]. '%')
+            ->first();
+
+        return $manageAuth;
+    }
+
+    // 게시판 캐시 삭제
     public static function deleteCache($base, $boardTableName)
     {
         $cacheName = $base. '-'. $boardTableName;

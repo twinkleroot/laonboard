@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Admin\AdminUser;
 use App\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Password;
@@ -11,6 +12,7 @@ use Carbon\Carbon;
 use Cache;
 use App\Config;
 use App\GroupUser;
+use App\Common\Util;
 
 class UsersController extends Controller
 {
@@ -18,10 +20,8 @@ class UsersController extends Controller
     public $userModel;
     public $rulePassword;
 
-    public function __construct(Config $config, User $userModel)
+    public function __construct(Config $config, AdminUser $userModel)
     {
-        $this->middleware('admin');
-
         $this->config = Cache::get("config.join");
         $this->rulePassword = Config::getRulePassword('config.join', $this->config);
         $this->userModel = $userModel;
@@ -33,6 +33,10 @@ class UsersController extends Controller
      */
     public function index(Request $request)
     {
+        if (auth()->user()->cant('index', $this->userModel)) {
+            abort(403, '해당 액션에 대한 권한이 없습니다.');
+        }
+
         $params = $this->userModel->userList($request);
 
         return view('admin.users.index', $params);
@@ -45,6 +49,10 @@ class UsersController extends Controller
      */
     public function create()
     {
+        if (auth()->user()->cant('create', AdminUser::class)) {
+            abort(403, '해당 액션에 대한 권한이 없습니다.');
+        }
+
         $user = auth()->user();
         return view('admin.users.create', [
                 'title' => Cache::get("config.homepage")->title,
@@ -61,6 +69,10 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
+        if (auth()->user()->cant('create', AdminUser::class)) {
+            abort(403, '해당 액션에 대한 권한이 없습니다.');
+        }
+
         $rule = [
             'email' => 'required|email|max:255|unique:users',
             'nick' => 'required|nick_length:2,4|unique:users|alpha_num',
@@ -84,6 +96,10 @@ class UsersController extends Controller
      */
     public function edit($id)
     {
+        if (auth()->user()->cant('update', $this->userModel)) {
+            abort(403, '해당 액션에 대한 권한이 없습니다.');
+        }
+
         $user;
         if(mb_strlen($id, 'utf-8') > 10) {  // 커뮤니티 쪽에서 들어올 때 user의 id가 아닌 id_hashKey가 넘어온다.
             $user = User::where('id_hashkey', $id)->first();
@@ -109,6 +125,10 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if (auth()->user()->cant('update', $this->userModel)) {
+            abort(403, '해당 액션에 대한 권한이 없습니다.');
+        }
+
         $user = User::findOrFail($id);
 
         if($request->get('change_password') !== '') {
@@ -149,6 +169,10 @@ class UsersController extends Controller
     */
     public function selectedUpdate(Request $request)
     {
+        if (auth()->user()->cant('update', $this->userModel)) {
+            abort(403, '해당 액션에 대한 권한이 없습니다.');
+        }
+
         $this->userModel->selectedUpdate($request);
 
         return redirect(route('admin.users.index'))->with('message', '선택한 회원정보가 수정되었습니다.');
@@ -162,6 +186,10 @@ class UsersController extends Controller
      */
     public function destroy(Request $request, $id)
     {
+        if (auth()->user()->cant('delete', $this->userModel)) {
+            abort(403, '해당 액션에 대한 권한이 없습니다.');
+        }
+
         $ids = $request->get('ids');
         $result = User::whereRaw('id in (' . $ids . ') ')->delete();
 

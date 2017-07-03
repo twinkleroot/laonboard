@@ -8,9 +8,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Point;
-use App\Config;
-use Cache;
-use Auth;
 
 class LoginSuccessful
 {
@@ -49,18 +46,27 @@ class LoginSuccessful
         }
 
         // 회원 가입인 경우($isUserJoin == true) 로그인 포인트를 부여하지 않음.
-        if( !Point::isUserJoin($event->user) ) {
+        if( !$this->isUserJoin($event->user) ) {
             // 당일 첫 로그인 포인트 부여
-            Point::addPoint([
-                'user' => $event->user,
-                'relTable' => '@login',
-                'relEmail' => $event->user->email,
-                'relAction' => $nowDate,
-                'content' => $nowDate . ' 첫 로그인',
-                'type' => 'login',
-            ]);
+            $point = new Point();
+            $point->insertPoint($event->user->id, cache("config.homepage")->loginPoint, $nowDate . ' 첫 로그인', '@login', $event->user->email);
         }
 
+    }
+
+    // 회원 가입 후 로그인 시키는 상태인지 검사
+    private function isUserJoin($user)
+    {
+        $point = Point::where('user_id', $user->id)
+                ->whereRaw('date(datetime) = date(CURRENT_DATE())')     // 다음날부터 로그인시 로그인 포인트 받음
+                ->orderBy('id', 'desc')
+                ->first();
+
+        if(str_contains($point['content'], '회원가입')) {
+            return true;
+        }
+
+        return false;
     }
 
 }

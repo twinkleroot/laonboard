@@ -71,7 +71,7 @@
                             <tr>
                                 <td class="text-center">
                                     <input type="checkbox" name="chkId[]" class="groupId" value='{{ $group->id }}' /></td>
-                                <td class="text-center"><a href="">{{ $group->group_id }}</a></td>
+                                <td class="text-center"><a href="{{ route('group', $group->id) }}">{{ $group->group_id }}</a></td>
                                 <td class="text-center"><input type="text" id='subject_{{ $group->id }}' value='{{ $group->subject }}' /></td>
                                 <td class="text-center"><input type="text" id='admin_{{ $group->id }}' value='{{ $group->admin }}' /></td>
                                 <td class="text-center"><a href="/admin/search?admin_page=board&amp;kind=group_id&amp;keyword={{ $group->group_id }}">{{ $group->count_board }}</a></td>

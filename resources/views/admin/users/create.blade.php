@@ -122,7 +122,7 @@
                             <label for="level" class="col-md-2 control-label">회원권한</label>
                             <div class="col-md-3">
                                 <select class="form-control" name="level">
-                                    @for($i=1;$i<=10;$i++)
+                                    @for($i=1;$i<=auth()->user()->level;$i++)
                                     <option value={{ $i }} @if($config->joinLevel == $i) selected @endif>
                                         {{ $i }}
                                     </option>

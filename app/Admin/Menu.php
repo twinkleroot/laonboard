@@ -1,10 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Admin;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Group;
-use App\Board;
+use App\Admin\Group;
+use App\Admin\Board;
 use Cache;
 use DB;
 

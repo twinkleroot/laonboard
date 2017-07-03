@@ -21,7 +21,7 @@ class AdminMenu
         $primaryMenu = [];
         $subMenu = [];
         // 세션에 등록된 메뉴가 없으면
-        if(!session()->get($user->id_hashkey.'_admin_primary_menu')) {
+        if(!cache($user->id_hashkey.'_admin_primary_menu')) {
             if($user->isSuperAdmin()) { // 최고관리자일 때 모든 메뉴 가져오기
                 foreach($menus as $key => $value) {
                     if( substr($key, -3) == '000') {
@@ -38,11 +38,10 @@ class AdminMenu
                 }
             }
 
-            // 세션에 기록
-            session()->put($user->id_hashkey.'_admin_primary_menu', $primaryMenu);
-            session()->put($user->id_hashkey.'_admin_sub_menu', $subMenu);
+            // 캐시에 기록
+            cache([$user->id_hashkey.'_admin_primary_menu' => $primaryMenu], 120);
+            cache([$user->id_hashkey.'_admin_sub_menu' => $subMenu], 120);
         }
-
 
         return $next($request);
     }

@@ -14,6 +14,7 @@ use App\Mail\EmailCertify;
 
 class Notification
 {
+    // 글쓰기 후 알림 메일 보내기
     public function sendWriteNotification($writeModel, $writeId)
     {
         $board = $writeModel->board;
@@ -64,9 +65,7 @@ class Notification
             $arrayEmail[] = $parentWrite->email;
         }
         // null값과 중복된 메일 주소 제거
-        $arrayEmail = array_filter($arrayEmail);
-        $uniqueEmail = array_unique($arrayEmail);
-        $uniqueEmail = array_values($uniqueEmail);
+        $uniqueEmail = array_values(array_unique(array_filter($arrayEmail)));
 
         foreach($uniqueEmail as $to) {
             $toUser = User::where('email', $to)->first();

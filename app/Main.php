@@ -3,7 +3,6 @@
 namespace App;
 
 use App\Board;
-use App\Menu;
 use App\Group;
 use DB;
 use Cache;
@@ -55,6 +54,7 @@ class Main
         ];
     }
 
+    // 최근 게시물
     private function getLatestWrites($boards, $pageRows, $titleLength)
     {
         $latestList = array();

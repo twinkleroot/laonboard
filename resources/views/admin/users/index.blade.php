@@ -131,7 +131,7 @@
                             <span class="mb_msg">정상</span>
                         @endif
                             <select id='level_{{ $user->id }}'>
-                                @for ($i=1; $i<=10; $i++)
+                                @for ($i=1; $i<=auth()->user()->level; $i++)
                                     <option value='{{ $i }}' {{ $user->level == $i ? 'selected' : '' }}>{{ $i }}</option>
                                 @endfor
                             </select>

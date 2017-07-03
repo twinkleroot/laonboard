@@ -18,7 +18,7 @@ class CreatePointsTable extends Migration
                 $table->increments('id');
                 // users 테이블에 대한 참조키
                 $table->integer('user_id')->unsigned();
-                $table->foreign('user_id')->references('id')->on('users');
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
                 $table->timestamp('datetime')->nullable();
                 $table->string('content')->nullable();

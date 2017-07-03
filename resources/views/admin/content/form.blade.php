@@ -14,7 +14,7 @@
 
 @section('content')
 <div class="body-contents">
-    <form name="contentform" onsubmit="return contentFormCheck(this);" @if($type == "update") action="{{ route('contents.update', $content->id)}}" @else action="{{ route('contents.store')}}" @endif method="post" enctype="multipart/form-data">
+    <form name="contentform" onsubmit="return contentFormCheck(this);" @if($type == "update") action="{{ route('admin.contents.update', $content->id)}}" @else action="{{ route('admin.contents.store')}}" @endif method="post" enctype="multipart/form-data">
     <input type="hidden" name="type" value="{{ $type }}">
     <input type="hidden" name="html" value="1">
     @if($type == "update")
@@ -152,7 +152,7 @@
     </tbody>
     </table>
         <input type="submit" value="확인" class="btn_submit">
-        <a href="{{ route('contents.index') }}">목록</a>
+        <a href="{{ route('admin.contents.index') }}">목록</a>
     </form>
 </div>
 <script>

@@ -3,12 +3,20 @@
 namespace App\Policies;
 
 use App\User;
-use App\Board;
+use App\Admin\Board;
+use App\Common\Util;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class BoardPolicy
 {
     use HandlesAuthorization;
+
+    public function before($user, $ability)
+    {
+        if ($user->isSuperAdmin()) {
+            return true;
+        }
+    }
 
     /**
      * Determine whether the user can view the board.
@@ -19,8 +27,8 @@ class BoardPolicy
      */
     public function index(User $user, Board $board)
     {
-        dd($user->id);
-        return $user->id == 2;
+        $menuCode = ['300100', 'r'];
+        return Util::getManageAuthModel($menuCode);
     }
 
     /**
@@ -31,7 +39,8 @@ class BoardPolicy
      */
     public function create(User $user)
     {
-        return $user->id === 2;
+        $menuCode = ['300100', 'w'];
+        return Util::getManageAuthModel($menuCode);
     }
 
     /**
@@ -43,7 +52,8 @@ class BoardPolicy
      */
     public function update(User $user, Board $board)
     {
-        return $user->id === 2;
+        $menuCode = ['300100', 'w'];
+        return Util::getManageAuthModel($menuCode);
     }
 
     /**
@@ -55,6 +65,20 @@ class BoardPolicy
      */
     public function delete(User $user, Board $board)
     {
-        return $user->id === 2;
+        $menuCode = ['300100', 'd'];
+        return Util::getManageAuthModel($menuCode);
+    }
+
+    /**
+     * Determine whether the user can delete the board.
+     *
+     * @param  \App\User  $user
+     * @param  \App\Board  $board
+     * @return mixed
+     */
+    public function copy(User $user)
+    {
+        $menuCode = ['300100', 'w'];
+        return Util::getManageAuthModel($menuCode);
     }
 }

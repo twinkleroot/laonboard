@@ -65,14 +65,12 @@ class User extends Authenticatable
     public function points()
     {
         return $this->hasMany(Point::class);
-
     }
 
     // Write 모델과의 관계설정
     public function writes()
     {
         return $this->hasMany(Write::class);
-
     }
 
     public function isAdmin()
@@ -80,10 +78,11 @@ class User extends Authenticatable
         if($this->isSuperAdmin()) {
             return true;
         }
-        $manageAuth = ManageAuth::where('user_id', auth()->user()->id)->first();
-        if($manageAuth) {
+
+        if(ManageAuth::where('user_id', auth()->user()->id)->first()) {
             return true;
         }
+
         return false;
     }
 
@@ -248,14 +247,8 @@ class User extends Authenticatable
         $user = User::create($userInfo);
 
         // 회원 가입 축하 포인트 부여
-        Point::addPoint([
-            'user' => $user,
-            'relTable' => '@users',
-            'relEmail' => $user->email,
-            'relAction' => '회원가입',
-            'content' => '회원가입 축하',
-            'type' => 'join',
-        ]);
+        $point = new Point();
+        $point->insertPoint($user->id, Cache::get("config.join")->joinPoint, '회원가입 축하', '@users', $user->email);
 
         // Users 테이블의 주 키인 id의 해시 값을 만들어서 저장한다. (게시글에 사용자 번호 노출 방지)
         $user->id_hashkey = str_replace("/", "-", bcrypt($user->id));
@@ -297,14 +290,8 @@ class User extends Authenticatable
             $recommendedId = $recommendedUser->id;
 
             // 추천인에게 포인트 부여
-            Point::addPoint([
-                'user' => $recommendedUser,
-                'relTable' => '@users',
-                'relEmail' => $recommendedUser->email,
-                'relAction' => $user->email . ' 추천',
-                'content' => $user->email . '의 추천인',
-                'type' => 'recommend',
-            ]);
+            $point = new Point();
+            $point->insertPoint($recommendedUser->id, Cache::get("config.join")->recommendPoint, $user->email . '의 추천인', '@users', $recommendedUser->email, $user->email . ' 추천');
 
             $recommendedUser->save();
         }
@@ -461,109 +448,4 @@ class User extends Authenticatable
         return $user->nick. '님께서는 '. Carbon::now()->format('Y년 m월 d일'). '에 회원에서 탈퇴하셨습니다.';
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////
-    // 관리자에서 사용하는 메서드
-    //////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // 회원 목록
-    public function userList($request)
-    {
-        $kind = isset($request->kind) ? $request->kind : '';
-        $keyword = isset($request->keyword) ? $request->keyword : '';
-        $order = isset($request->order) ? $request->order : '';
-        $direction = isset($request->direction) ? $request->direction : '';
-        $interceptUsers = 0;
-        $leaveUsers = 0;
-
-        $query =
-            DB::table('users as u')
-            ->select(DB::raw('
-                u.*,
-                (   select count(gu.id)
-                    from group_user as gu
-                    where gu.user_id = u.id
-                ) as count_groups'
-            ));
-
-        // 정렬
-        if($order) {
-            $query = $query->orderBy($order, $direction);
-        } else {
-            $query = $query->orderBy('u.created_at', 'desc');
-        }
-        // 최고 관리자가 아니면 관리자보다 등급이 같거나 낮은 사람만 조회가능.
-        if( !auth()->user()->isSuperAdmin() ) {
-            $query = $query->where('level', '<=', auth()->user()->level);
-        }
-
-        if($kind) {
-            if($kind == 'level') {   // 권한으로 검색
-                $query = $query->where($kind, $keyword);
-            } else {    // 이메일, 닉네임, IP, 추천인, 가입일, 최근접속일으로 검색
-                $query = $query->where($kind, 'like', '%'. $keyword. '%');
-            }
-        }
-
-        $users = $query->paginate(Cache::get("config.homepage")->pageRows);
-        $interceptUsers = $query->whereNotNull('intercept_date')->count();
-        $leaveUsers = $query->whereNotNull('leave_date')->count();
-
-        return [
-            'users' => $users,
-            'interceptUsers' => $interceptUsers,
-            'leaveUsers' => $leaveUsers,
-            'kind' => $kind,
-            'keyword' => $keyword,
-            'order' => $order,
-            'direction' => $direction == 'desc' ? 'asc' : 'desc',
-        ];
-    }
-
-    // 회원 추가
-    public function addUser($data)
-    {
-        $data = array_except($data, ['_token']);
-
-        $data = Util::exceptNullData($data);
-
-        $data['password'] = bcrypt($data['password']);  // 비밀번호 암호화
-
-        $user = User::create($data);
-
-        $user->id_hashkey = str_replace("/", "-", bcrypt($user->id));   // id 암호화
-        $user->save();
-
-        return $user;
-    }
-
-    // 선택 수정
-    public function selectedUpdate($request)
-    {
-        $idArr = explode(',', $request->get('ids'));
-        $openArr = explode(',', $request->get('opens'));
-        $mailingArr = explode(',', $request->get('mailings'));
-        $smsArr = explode(',', $request->get('smss'));
-        $interceptArr = explode(',', $request->get('intercepts'));
-        $levelArr = explode(',', $request->get('levels'));
-
-        $index = 0;
-        foreach($idArr as $id) {
-            $user = User::find($id);
-
-            if(!is_null($user)) {
-                $user->update([
-                    // 'certify' => $request->get('certify'),
-                    'open' => $openArr[$index] == '1' ? 1 : 0,
-                    'mailing' => $mailingArr[$index] == '1' ? 1 : 0,
-                    'sms' => $smsArr[$index] == '1' ? 1 : 0,
-                    // 'adult' => $request->get('adult') == '1' ? 1 : 0,
-                    'intercept_date' => $interceptArr[$index] == 1 ? Carbon::now()->format('Ymj') : null ,
-                    'level' => $levelArr[$index],
-                ]);
-                $index++;
-            } else {
-                abort('500', '정보를 수정할 회원이 존재하지 않습니다. 회원이 잘 선택 되었는지 확인해 주세요.');
-            }
-        }
-    }
 }

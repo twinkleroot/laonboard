@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Menu;
+use App\Admin\Menu;
 
 class MenusController extends Controller
 {

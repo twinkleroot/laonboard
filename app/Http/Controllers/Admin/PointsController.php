@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Point;
+use App\Admin\Point;
 
 class PointsController extends Controller
 {
@@ -13,8 +13,6 @@ class PointsController extends Controller
 
     public function __construct(Point $point)
     {
-        $this->middleware('admin');
-
         $this->pointModel = $point;
     }
 
@@ -25,6 +23,10 @@ class PointsController extends Controller
      */
     public function index(Request $request)
     {
+        if (auth()->user()->cant('index', $this->pointModel)) {
+            abort(403, '포인트 관리 목록 보기에 대한 권한이 없습니다.');
+        }
+
         $params = $this->pointModel->getPointIndexParams($request);
 
         return view('admin.points.index', $params);
@@ -38,6 +40,9 @@ class PointsController extends Controller
      */
     public function store(Request $request)
     {
+        if (auth()->user()->cant('create', $this->pointModel)) {
+            abort(403, '포인트 추가에 대한 권한이 없습니다.');
+        }
 
         $rule = [
             'email' => 'required|email',
@@ -47,10 +52,12 @@ class PointsController extends Controller
 
         $this->validate($request, $rule);
 
-        $message = $this->pointModel->givePoint($request->all());
+        $result = $this->pointModel->givePoint($request->all());
 
-        if($message != 'success') {
+        if(isset($result['message'])) {
             return redirect(route('message'))->with('message', $message);
+        } else if($result == -1){
+            return redirect(route('message'))->with('message', '포인트 추가에 실패하였습니다.');
         } else {
             return redirect()->back();
         }
@@ -64,6 +71,10 @@ class PointsController extends Controller
      */
     public function destroy($id)
     {
+        if (auth()->user()->cant('delete', $this->pointModel)) {
+            abort(403, '포인트 삭제에 대한 권한이 없습니다.');
+        }
+
         $this->pointModel->deletePointOnAdmin($id);
 
         return redirect()->back();

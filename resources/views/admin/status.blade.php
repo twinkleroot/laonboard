@@ -1,13 +1,13 @@
 @extends('admin.admin')
 
 @section('title')
-    글, 댓글 현황 | {{ Cache::get("config.homepage")->title }}
+    글, 댓글 현황 | {{ cache("config.homepage")->title }}
 @endsection
 
 @section('content')
 <div id="mb" class="">
     <div class="mb_sch mb10">
-        <form method="get" action="{{ route('admin.status.write') }}">
+        <form method="get" action="{{ route('admin.status') }}">
             {{ csrf_field() }}
             <label for="boardId" class="sr-only">게시판종류</label>
             <select name="boardId" id="boardId">
@@ -51,5 +51,5 @@
 @endsection
 
 <script>
-    var menuVal = 300600;
+    var menuVal = 300500;
 </script>
