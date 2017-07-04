@@ -6,55 +6,6 @@
 
 @section('include_script')
     <script src="{{ asset('tinymce/tinymce.min.js') }}"></script>
-    <script>
-    var menuVal = 300100;
-    $(function(){
-        // 복사 버튼 클릭
-        $(".board_copy").click(function(){
-            window.open(this.href, "win_board_copy", "left=100,top=100,width=550,height=450");
-            return false;
-        });
-    });
-    // 환경설정에 입력된 포인트로 설정 함수
-    function set_point(f) {
-        if (f.config_env_point.checked) {
-            // alert(f.read_point.defaultValue);
-            f.read_point.value = {{ $boardConfig->readPoint }};
-            f.write_point.value = {{ $boardConfig->writePoint }};
-            f.comment_point.value = {{ $boardConfig->commentPoint }};
-            f.download_point.value = {{ $boardConfig->downloadPoint }};
-        } else {
-            f.read_point.value     = f.read_point.defaultValue;
-            f.write_point.value    = f.write_point.defaultValue;
-            f.comment_point.value  = f.comment_point.defaultValue;
-            f.download_point.value = f.download_point.defaultValue;
-        }
-    }
-
-    tinymce.init({
-        selector: '.editorArea',
-        language: 'ko_KR',
-        branding: false,
-        theme: "modern",
-        skin: "lightgray",
-        height: 400,
-        min_height: 400,
-        min_width: 750,
-        selection_toolbar: 'bold italic | quicklink h2 h3 blockquote',
-        plugins: 'link,autolink,image,imagetools,textcolor,lists,pagebreak,table,save,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,code',
-        toolbar: "undo redo | styleselect | forecolor bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table link customImage media code",
-        relative_urls: false,
-        setup: function(editor) {
-            editor.addButton('customImage', {
-                text: '사진',
-                icon: 'image',
-                onclick: function () {
-                    window.open('{{ route('image.form') }}','tinymcePop','width=640, height=480');
-                }
-            });
-        }
-    });
-    </script>
 @endsection
 
 @section('content')
@@ -857,7 +808,7 @@
                             <th>레이아웃 파일 경로</th>
                             <td>
                                 resources/views/layouts 이하의 경로로 확장자 빼고 입력해주세요.<br />
-                                <input type="text" id="layout" name="layout" value="{{ $board['layout'] }}" />
+                                <input type="text" id="layout" name="layout" value="{{ $board['layout'] ? : 'default.basic' }}" />
                             </td>
                             <td>
                                 <input type="checkbox" id="chk_group_layout" name="chk_group_layout" value="1" />
@@ -1275,4 +1226,53 @@
         </div>
     </div>
 </div>
+<script>
+var menuVal = 300100;
+$(function(){
+    // 복사 버튼 클릭
+    $(".board_copy").click(function(){
+        window.open(this.href, "win_board_copy", "left=100,top=100,width=550,height=450");
+        return false;
+    });
+});
+// 환경설정에 입력된 포인트로 설정 함수
+function set_point(f) {
+    if (f.config_env_point.checked) {
+        // alert(f.read_point.defaultValue);
+        f.read_point.value = {{ $boardConfig->readPoint }};
+        f.write_point.value = {{ $boardConfig->writePoint }};
+        f.comment_point.value = {{ $boardConfig->commentPoint }};
+        f.download_point.value = {{ $boardConfig->downloadPoint }};
+    } else {
+        f.read_point.value     = f.read_point.defaultValue;
+        f.write_point.value    = f.write_point.defaultValue;
+        f.comment_point.value  = f.comment_point.defaultValue;
+        f.download_point.value = f.download_point.defaultValue;
+    }
+}
+
+tinymce.init({
+    selector: '.editorArea',
+    language: 'ko_KR',
+    branding: false,
+    theme: "modern",
+    skin: "lightgray",
+    height: 400,
+    min_height: 400,
+    min_width: 750,
+    selection_toolbar: 'bold italic | quicklink h2 h3 blockquote',
+    plugins: 'link,autolink,image,imagetools,textcolor,lists,pagebreak,table,save,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,code',
+    toolbar: "undo redo | styleselect | forecolor bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table link customImage media code",
+    relative_urls: false,
+    setup: function(editor) {
+        editor.addButton('customImage', {
+            text: '사진',
+            icon: 'image',
+            onclick: function () {
+                window.open('{{ route('image.form') }}','tinymcePop','width=640, height=480');
+            }
+        });
+    }
+});
+</script>
 @endsection

@@ -15,8 +15,9 @@ class AddSomeColumnBoardsTable extends Migration
     {
         Schema::table('boards', function (Blueprint $table) {
             $table->tinyInteger('use_recaptcha')->default(0);
-            $table->renameColumn('include_head', 'layout');
+            $table->dropColumn('include_head');
             $table->dropColumn('include_tail');
+            $table->string('layout')->nullable();
         });
     }
 
@@ -29,7 +30,8 @@ class AddSomeColumnBoardsTable extends Migration
     {
         Schema::table('boards', function (Blueprint $table) {
             $table->dropColumn('use_recaptcha');
-            $table->renameColumn('layout', 'include_head');
+            $table->dropColumn('layout');
+            $table->string('include_head')->nullable();
             $table->string('include_tail')->nullable();
         });
     }
