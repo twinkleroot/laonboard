@@ -141,11 +141,9 @@
                 <div class="form-group">
                     <label for="color" class="col-md-2 control-label">팝업레이어 색상</label>
                     <div class="col-md-2">
-                        <div class="row">
-                            <div id="cp2" class="input-group colorpicker-component">
-                                <input type="text" name="color" id="color" class="form-control" value="{{ $type == 'update' ? $popup->color : $default['color'] }}" />
-                                <span class="input-group-addon"><i></i></span>
-                            </div>
+                        <div id="cp2" class="input-group colorpicker-component">
+                            <input type="text" name="color" id="color" class="form-control" value="{{ $type == 'update' ? $popup->color : $default['color'] }}" />
+                            <span class="input-group-addon"><i></i></span>
                         </div>
                     </div>
                 </div>
