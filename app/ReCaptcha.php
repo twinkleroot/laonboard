@@ -14,7 +14,7 @@ class ReCaptcha extends Model
     */
     public static function reCaptcha(Request $request) {
         $url = 'https://www.google.com/recaptcha/api/siteverify'
-                . '?secret=6LcKohkUAAAAADEUyJACikihe7KdNaDqqlM32KTu&response='
+                . '?secret=6LfctScUAAAAAJAjgAtoT-E9TO4C4zDqzFQXBF54&response='
                 . $request['g-recaptcha-response'];
         $flag = json_decode(file_get_contents($url));
 

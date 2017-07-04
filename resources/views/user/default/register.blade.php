@@ -9,7 +9,7 @@
 @endsection
 
 @section('include_script')
-    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <script src='https://www.google.com/recaptcha/api.js' async defer></script>
 @endsection
 
 @section('content')
@@ -23,8 +23,8 @@
             <h3 class="panel-title">회원가입</h3>
         </div>
         <div class="panel-body row">
-            <form class="contents col-md-8 col-md-offset-2" role="form" method="POST" action="{{ route('user.register') }}">
-            {{ csrf_field() }}
+            <form class="contents col-md-8 col-md-offset-2" id="registerForm" role="form" method="POST" action="{{ route('user.register') }}">
+                {{ csrf_field() }}
                 <div class="form-group {{ $errors->has('email') ? ' has-error' : '' }}">
                     <label for="email">이메일</label>
                     <input id="email" type="email" name="email" class="form-control" value="{{ old('email') }}" placeholder="이메일 주소를 입력하세요" required autofocus>
@@ -68,23 +68,27 @@
                     @endif
                 </div>
 
-                <!-- 리캡챠 -->
-                <div class="form-group {{ $errors->has('reCaptcha') ? ' has-error' : '' }}" style="height:80px;">
-                    <div class="g-recaptcha" data-sitekey="6LcKohkUAAAAANcgIst0HFMMT81Wq5HIxpiHhXGZ"></div>
-                        @if ($errors->has('reCaptcha'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('reCaptcha') }}</strong>
-                            </span>
-                        @endif
-                </div>
-
                 <div class="form-group">
-                    <button type="submit" class="btn btn-lg btn-block btn-sir">회원가입</button>
+                    <button type="button" class="btn btn-lg btn-block btn-sir" onclick="validate();">회원가입</button>
                 </div>
+                <!-- 리캡챠 -->
+            	<div id='recaptcha' class="g-recaptcha"
+            		data-sitekey="{{ env('GOOGLE_INVISIBLE_RECAPTCHA_KEY') }}"
+            		data-callback="onSubmit"
+            		data-size="invisible" style="display:none">
+            	</div>
             </form>
         </div>
     </div>
 </div>
 </div>
 </div>
+<script>
+function onSubmit(token) {
+	$("#registerForm").submit();
+}
+function validate(event) {
+	grecaptcha.execute();
+}
+</script>
 @endsection

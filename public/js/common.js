@@ -2,6 +2,20 @@
 var errmsg = "";
 var errfld = null;
 
+// 쿠키 입력
+function set_cookie(name, value, expirehours, domain)
+{
+    var today = new Date();
+    today.setTime(today.getTime() + (60*60*1000*expirehours));
+
+    var cookie_value = escape(value) + "; path=/; expires=" + today.toGMTString() + ";";
+    document.cookie = name + "=" + cookie_value;
+
+    if (domain) {
+        document.cookie += "domain=" + domain + ";";
+    }
+}
+
 // 모두 선택
 function checkAll(form) {
     var chk = document.getElementsByName("chkId[]");

@@ -21,6 +21,7 @@ return array(
     'CreateMenusTable' => $baseDir . '/database/migrations/2017_04_17_103514_create_menus_table.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
     'CreatePointsTable' => $baseDir . '/database/migrations/2017_04_12_174132_create_points_table.php',
+    'CreatePopupTable' => $baseDir . '/database/migrations/2017_07_03_110439_create_popup_table.php',
     'CreateScrapsTable' => $baseDir . '/database/migrations/2017_06_12_144109_create_scraps_table.php',
     'CreateSocialLoginTable' => $baseDir . '/database/migrations/2017_03_17_115255_create_social_login_table.php',
     'CreateUsersTable' => $baseDir . '/database/migrations/2014_10_12_000000_create_users_table.php',

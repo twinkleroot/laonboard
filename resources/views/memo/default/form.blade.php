@@ -15,7 +15,7 @@
     <!-- js -->
 	<script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/common.js') }}"></script>
-	<script src="https://www.google.com/recaptcha/api.js"></script>
+	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body class="white">
 
@@ -26,7 +26,7 @@
 		</div>
 
 		<div class="cbtn">
-			<button class="btn btn-sir" onclick="memoSubmit();">보내기</button>
+			<button class="btn btn-sir" onclick="validate();">보내기</button>
 			<button class="btn btn-default" onclick="window.close();">창닫기</button>
 		</div>
 	</div>
@@ -59,31 +59,26 @@
 					내용
 				</td>
 				<td>
-					<textarea class="form-control" rows="4" name="memo" required>@if( isset($content) ) {{ $content }} @else {{ old('memo') }} @endif</textarea>
-				</td>
-			</tr>
-			<tr>
-				<td class="popin">
-					자동등록방지
-				</td>
-				<td>
-					<!-- 리캡챠 -->
-                    <div class="g-recaptcha" data-sitekey="6LcKohkUAAAAANcgIst0HFMMT81Wq5HIxpiHhXGZ"></div>
-                    @if ($errors->has('reCaptcha'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('reCaptcha') }}</strong>
-                        </span>
-                    @endif
+					<textarea class="form-control" rows="4" name="memo" id="memo" required>@if( isset($content) ) {{ $content }} @else {{ old('memo') }} @endif</textarea>
 				</td>
 			</tr>
 		</tbody>
 	</table>
+	<!-- 리캡챠 -->
+	<div id='recaptcha' class="g-recaptcha"
+		data-sitekey="{{ env('GOOGLE_INVISIBLE_RECAPTCHA_KEY') }}"
+		data-callback="onSubmit"
+		data-size="invisible" style="display:none">
+	</div>
 	</form>
 </div>
 
 <script>
-function memoSubmit() {
+function onSubmit(token) {
 	$("#memoForm").submit();
+}
+function validate(event) {
+	grecaptcha.execute();
 }
 </script>
 

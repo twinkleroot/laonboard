@@ -41,81 +41,47 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
         ]
     ]);
 
-    // 게시판 그룹 관리 리소스 컨트롤러에 추가적으로 라우팅을 구성(리소스 라우트보다 앞에 와야 함)
-    Route::put('groups/selected_update', ['as' => 'admin.groups.selectedUpdate', 'uses' => 'Admin\GroupsController@selectedUpdate']);
-    // 게시판 그룹관리 리소스 컨트롤러
-    Route::resource('groups', 'Admin\GroupsController', [
-        'except' => [
-            'show',
+    // 메뉴 추가 팝업창에 대상 선택에 따라서 view를 load하는 기능
+    Route::post('menus/result', ['as' => 'admin.menus.result', 'uses' => 'Admin\MenusController@result']);
+    // 메뉴 설정 리소스 컨트롤러
+    Route::resource('menus', 'Admin\MenusController', [
+        'only' => [
+            'index', 'create', 'store',
         ],
         'names' => [
-            'create' => 'admin.groups.create',
-            'index' => 'admin.groups.index',
-            'store' => 'admin.groups.store',
-            'destroy' => 'admin.groups.destroy',
-            'update' => 'admin.groups.update',
-            'edit' => 'admin.groups.edit',
+            'index' => 'admin.menus.index',
+            'create' => 'admin.menus.create',
+            'store' => 'admin.menus.store',
         ]
     ]);
 
-    // 게시판 그룹 관리 -> 그룹 접근가능회원 리소스 컨트롤러
-    Route::resource('accessible_users', 'Admin\AccessibleUsersController', [
-        'only' => [
+    // 메일 발송 테스트
+    Route::get('mail', ['as' => 'admin.email', 'uses' => 'Admin\MailController@index']);
+    Route::post('mail/send', ['as' => 'admin.email.send', 'uses' => 'Admin\MailController@postMail']);
+
+    // 팝업레이어 관리 리소스 컨트롤러
+    Route::get('popups/{id}', ['as' => 'admin.popups.destroy', 'uses' => 'Admin\PopupsController@destroy'])
+        ->where('id', '[0-9]+');
+    Route::resource('popups', 'Admin\PopupsController', [
+        'except' => [
             'show', 'destroy',
         ],
         'names' => [
-            'show' => 'admin.accessUsers.show',
-            'destroy' => 'admin.accessUsers.destroy',
-        ],
-    ]);
-
-    // 회원 관리 -> 접근가능그룹 리소스 컨트롤러
-    Route::resource('accessible_groups', 'Admin\AccessibleGroupsController', [
-        'only' => [
-            'show', 'store', 'destroy',
-        ],
-        'names' => [
-            'show' => 'admin.accessGroups.show',
-            'store' => 'admin.accessGroups.store',
-            'destroy' => 'admin.accessGroups.destroy',
-        ],
-    ]);
-
-    // 게시판 관리 리소스 컨트롤러에 추가적으로 라우팅을 구성(리소스 라우트보다 앞에 와야 함)
-    Route::put('boards/selected_update', ['as' => 'admin.boards.selectedUpdate', 'uses' => 'Admin\BoardsController@selectedUpdate']);
-    Route::get('boards/copy/{boardId}', ['as' => 'admin.boards.copyForm', 'uses' => 'Admin\BoardsController@copyForm']);
-    Route::post('boards/copy', ['as' => 'admin.boards.copy', 'uses' => 'Admin\BoardsController@copy']);
-    // 게시판 관리 리소스 컨트롤러
-    Route::resource('boards', 'Admin\BoardsController', [
-        'except' => [
-            'show',
-        ],
-        'names' => [
-            'create' => 'admin.boards.create',
-            'index' => 'admin.boards.index',
-            'store' => 'admin.boards.store',
-            'destroy' => 'admin.boards.destroy',
-            'update' => 'admin.boards.update',
-            'edit' => 'admin.boards.edit',
+            'index' => 'admin.popups.index',
+            'create' => 'admin.popups.create',
+            'store' => 'admin.popups.store',
+            'edit' => 'admin.popups.edit',
+            'update' => 'admin.popups.update',
         ]
     ]);
 
-    // 내용 관리
-    Route::get('contents/{content}/delete', ['as' => 'admin.contents.destroy', 'uses' => 'Admin\ContentsController@destroy']);
-    Route::resource('contents', 'Admin\ContentsController', [
-        'except' => [
-            'destroy', 'show'
-        ],
-        'names' => [
-            'index' => 'admin.contents.index',
-            'create' => 'admin.contents.create',
-            'store' => 'admin.contents.store',
-            'edit' => 'admin.contents.edit',
-            'update' => 'admin.contents.update',
-        ],
-    ]);
+    // phpinfo()
+    Route::get('phpinfo', ['as' => 'admin.phpinfo', 'uses' => 'Admin\SimpleController@phpinfo']);
 
-    // 회원관리 CRUD 컨트롤러
+    // 부가서비스
+    Route::get('extra_service', ['as' => 'admin.extra_service', 'uses' => 'Admin\SimpleController@extraService']);
+
+    // 회원관리 리소스 컨트롤러
     Route::resource('users', 'Admin\UsersController', [
         'except' => [
             'show',
@@ -142,30 +108,83 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
         ]
     ]);
 
-    // 메뉴 추가 팝업창에 대상 선택에 따라서 view를 load하는 기능
-    Route::post('menus/result', ['as' => 'admin.menus.result', 'uses' => 'Admin\MenusController@result']);
-    // 메뉴 설정 리소스 컨트롤러
-    Route::resource('menus', 'Admin\MenusController', [
-        'only' => [
-            'index', 'create', 'store',
+    // 게시판 관리 리소스 컨트롤러에 추가적으로 라우팅을 구성(리소스 라우트보다 앞에 와야 함)
+    Route::put('boards/selected_update', ['as' => 'admin.boards.selectedUpdate', 'uses' => 'Admin\BoardsController@selectedUpdate']);
+    Route::get('boards/copy/{boardId}', ['as' => 'admin.boards.copyForm', 'uses' => 'Admin\BoardsController@copyForm']);
+    Route::post('boards/copy', ['as' => 'admin.boards.copy', 'uses' => 'Admin\BoardsController@copy']);
+    // 게시판 관리 리소스 컨트롤러
+    Route::resource('boards', 'Admin\BoardsController', [
+        'except' => [
+            'show',
         ],
         'names' => [
-            'index' => 'admin.menus.index',
-            'create' => 'admin.menus.create',
-            'store' => 'admin.menus.store',
+            'create' => 'admin.boards.create',
+            'index' => 'admin.boards.index',
+            'store' => 'admin.boards.store',
+            'destroy' => 'admin.boards.destroy',
+            'update' => 'admin.boards.update',
+            'edit' => 'admin.boards.edit',
         ]
     ]);
 
-    // 메일 발송 테스트
-    Route::get('mail', ['as' => 'admin.email', 'uses' => 'Admin\MailController@index']);
-    Route::post('mail/send', ['as' => 'admin.email.send', 'uses' => 'Admin\MailController@postMail']);
+    // 게시판 그룹 관리 리소스 컨트롤러에 추가적으로 라우팅을 구성(리소스 라우트보다 앞에 와야 함)
+    Route::put('groups/selected_update', ['as' => 'admin.groups.selectedUpdate', 'uses' => 'Admin\GroupsController@selectedUpdate']);
+    // 게시판 그룹관리 리소스 컨트롤러
+    Route::resource('groups', 'Admin\GroupsController', [
+        'except' => [
+            'show',
+        ],
+        'names' => [
+            'create' => 'admin.groups.create',
+            'index' => 'admin.groups.index',
+            'store' => 'admin.groups.store',
+            'destroy' => 'admin.groups.destroy',
+            'update' => 'admin.groups.update',
+            'edit' => 'admin.groups.edit',
+        ]
+    ]);
 
-    // phpinfo()
-    Route::get('phpinfo', ['as' => 'admin.phpinfo', 'uses' => 'Admin\SimpleController@phpinfo']);
-    // 부가서비스
-    Route::get('extra_service', ['as' => 'admin.extra_service', 'uses' => 'Admin\SimpleController@extraService']);
+    // (회원) 접근가능그룹 리소스 컨트롤러
+    Route::resource('accessible_groups', 'Admin\AccessibleGroupsController', [
+        'only' => [
+            'show', 'store', 'destroy',
+        ],
+        'names' => [
+            'show' => 'admin.accessGroups.show',
+            'store' => 'admin.accessGroups.store',
+            'destroy' => 'admin.accessGroups.destroy',
+        ],
+    ]);
+
+    // (그룹) 접근가능회원 리소스 컨트롤러
+    Route::resource('accessible_users', 'Admin\AccessibleUsersController', [
+        'only' => [
+            'show', 'destroy',
+        ],
+        'names' => [
+            'show' => 'admin.accessUsers.show',
+            'destroy' => 'admin.accessUsers.destroy',
+        ],
+    ]);
+
+    // 내용 관리
+    Route::get('contents/{content}/delete', ['as' => 'admin.contents.destroy', 'uses' => 'Admin\ContentsController@destroy']);
+    Route::resource('contents', 'Admin\ContentsController', [
+        'except' => [
+            'destroy', 'show'
+        ],
+        'names' => [
+            'index' => 'admin.contents.index',
+            'create' => 'admin.contents.create',
+            'store' => 'admin.contents.store',
+            'edit' => 'admin.contents.edit',
+            'update' => 'admin.contents.update',
+        ],
+    ]);
+
     // 글,댓글 현황
     Route::get('status', ['as' => 'admin.status', 'uses' => 'Admin\StatusController@index']);
+
 });
 
 

@@ -1,4 +1,4 @@
-@extends('layouts.'. $board->include_head)
+@extends('layouts.default.basic')
 
 @section('title')
     {{ $board->subject }} 리스트 | {{ Cache::get("config.homepage")->title }}
@@ -22,5 +22,3 @@
         @endif
     </div>
 @endsection
-
-@include('layouts.'. $board->include_tail)

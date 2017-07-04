@@ -9,7 +9,7 @@
 @endsection
 
 @section('include_script')
-    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <script src='https://www.google.com/recaptcha/api.js' async defer></script>
     <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
     <script src="{{ url('js/postcode.js') }}"></script>
 @endsection
@@ -31,7 +31,7 @@
             <h3 class="panel-title">회원 정보 수정</h3>
         </div>
         <div class="panel-body row">
-            <form class="contents col-md-10 col-md-offset-1" role="form" method="POST" action="{{ route('user.update') }}">
+            <form class="contents col-md-10 col-md-offset-1" role="form" id="userForm" method="POST" action="{{ route('user.update') }}">
             {{ csrf_field() }}
             {{ method_field('PUT') }}
 
@@ -66,34 +66,7 @@
                     <input type="password" class="form-control" name="password_confirmation" required>
                 </div>
 
-                @if(
-                    $config->name == 1
-                    or $config->homepage == 1
-                    or $config->tel == 1
-                    or $config->hp == 1
-                    or $config->addr == 1
-                )
-                    <div class="panel-heading">
-                        <p class="heading-p">
-                            <span class="heading-span">개인정보 입력</span>
-                        </p>
-                    </div>
-                @endif
-
-                @if($config->name == 1) <!-- 이름 -->
-                    <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                        <label for="name" class="control-label">이름</label>
-                        <input id="name" type="text" class="form-control" name="name" value="{{ $user->name }}">
-
-                        @if ($errors->has('name'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('name') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-                @endif
-
-                @if($nickChangable) <!-- 닉네임 (필수) -->
+                @if($nickChangable)
                     <div class="form-group{{ $errors->has('nick') ? ' has-error' : '' }}">
                         <label for="nick" class="control-label">닉네임</label>
 
@@ -111,6 +84,27 @@
                                 </span>
                             @endif
                         </div>
+                    </div>
+                @endif
+
+                @if($config->name or $config->homepage or $config->tel or $config->hp or $config->addr)
+                    <div class="panel-heading">
+                        <p class="heading-p">
+                            <span class="heading-span">개인정보 입력</span>
+                        </p>
+                    </div>
+                @endif
+
+                @if($config->name == 1) <!-- 이름 -->
+                    <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                        <label for="name" class="control-label">이름</label>
+                        <input id="name" type="text" class="form-control" name="name" value="{{ $user->name }}">
+
+                        @if ($errors->has('name'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('name') }}</strong>
+                            </span>
+                        @endif
                     </div>
                 @endif
 
@@ -292,20 +286,15 @@
                     </div>
                 </div>
 
-                <!-- 리캡챠 -->
-                <div class="form-group{{ $errors->has('reCaptcha') ? ' has-error' : '' }}">
-                    <div class="g-recaptcha" data-sitekey="6LcKohkUAAAAANcgIst0HFMMT81Wq5HIxpiHhXGZ"></div>
-                    @if ($errors->has('reCaptcha'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('reCaptcha') }}</strong>
-                        </span>
-                    @endif
-                </div>
-
                 <div class="form-group">
-                        <button type="submit" class="btn btn-sir">변경하기</button>
-                        <a class="btn btn-sir" href="{{ route('home') }}">취소</a>
-                    </div>
+                    <button type="button" class="btn btn-sir" onclick="validate();">변경하기</button>
+                    <a href="{{ route('home') }}" class="btn btn-sir">취소</a>
+                </div>
+                <div id='recaptcha' class="g-recaptcha"
+            		data-sitekey="{{ env('GOOGLE_INVISIBLE_RECAPTCHA_KEY') }}"
+            		data-callback="onSubmit"
+            		data-size="invisible" style="display:none">
+            	</div>
             </form>
         </div>
         </div>
@@ -313,6 +302,12 @@
 </div>
 </div>
 <script>
+function onSubmit(token) {
+	$("#userForm").submit();
+}
+function validate(event) {
+	grecaptcha.execute();
+}
 $(function(){
 
     var socials = [];

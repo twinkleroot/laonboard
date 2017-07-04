@@ -40,6 +40,7 @@
 <body>
 <!-- header -->
 <div id="header">
+    @yield('popup')
 <div class="container">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -90,7 +91,7 @@
                     <!-- 2depth -->
                     <ul class="dropdown-menu" role="menu">
 
-                        @if(!Auth::user()->isAdmin())
+                        @if(!Auth::user()->isSuperAdmin())
                             <li><a href="{{ route('user.checkPassword') }}?work=edit">회원 정보 수정</a></li>
                         @endif
                         <li>

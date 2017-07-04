@@ -28,7 +28,7 @@ class ContentsController extends Controller
 
         $contents = $this->content->getContentList();
 
-        return view('admin.content.index', [
+        return view('admin.contents.index', [
             'contents' => $contents
         ]);
     }
@@ -46,7 +46,7 @@ class ContentsController extends Controller
 
         $params = $this->content->getContentCreate();
 
-        return view('admin.content.form', $params);
+        return view('admin.contents.form', $params);
     }
 
     /**
@@ -85,7 +85,7 @@ class ContentsController extends Controller
 
         $params = $this->content->getContentEdit($id);
 
-        return view('admin.content.form', $params);
+        return view('admin.contents.form', $params);
     }
 
     /**

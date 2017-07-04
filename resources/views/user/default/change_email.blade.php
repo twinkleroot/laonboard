@@ -9,7 +9,7 @@
 @endsection
 
 @section('include_script')
-    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <script src='https://www.google.com/recaptcha/api.js' async defer></script>
 @endsection
 
 @section('content')
@@ -22,7 +22,7 @@
             <h3 class="panel-title">메일인증 메일주소 변경</h3>
         </div>
         <div class="panel-body row">
-            <form class="contents col-md-10 col-md-offset-1" role="form" method="POST" action="{{ route('user.email.update') }}">
+            <form class="contents col-md-10 col-md-offset-1" id="emailForm" role="form" method="POST" action="{{ route('user.email.update') }}">
             {{ csrf_field() }}
             {{ method_field('PUT') }}
                 <input type="hidden" name="beforeEmail" value="{{ $email }}" />
@@ -38,24 +38,28 @@
                     <input type="email" class="form-control" name="email" value="{{ $email }}">
                 </div>
 
-                <!-- 리캡챠 -->
-                <div class="form-group{{ $errors->has('reCaptcha') ? ' has-error' : '' }}">
-                    <div class="g-recaptcha" data-sitekey="6LcKohkUAAAAANcgIst0HFMMT81Wq5HIxpiHhXGZ"></div>
-                    @if ($errors->has('reCaptcha'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('reCaptcha') }}</strong>
-                        </span>
-                    @endif
-                </div>
-
                 <div class="form-group">
-                    <button type="submit" class="btn btn-sir">인증메일변경</button>
-                    <a class="btn btn-sir" href="{{ route('index') }}">취소</a>
+                    <button type="button" class="btn btn-sir" onclick="validate();">인증메일변경</button>
+                    <a class="btn btn-sir" href="{{ route('home') }}">취소</a>
                 </div>
+                <!-- 리캡챠 -->
+            	<div id='recaptcha' class="g-recaptcha"
+            		data-sitekey="{{ env('GOOGLE_INVISIBLE_RECAPTCHA_KEY') }}"
+            		data-callback="onSubmit"
+            		data-size="invisible" style="display:none">
+            	</div>
             </form>
         </div>
     </div>
 </div>
 </div>
 </div>
+<script>
+function onSubmit(token) {
+	$("#emailForm").submit();
+}
+function validate(event) {
+	grecaptcha.execute();
+}
+</script>
 @endsection

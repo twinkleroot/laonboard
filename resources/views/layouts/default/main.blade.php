@@ -4,9 +4,12 @@
     메인 | {{ Cache::get("config.homepage")->title }}
 @endsection
 
-@section('content')
+{{-- 팝업 레이어 --}}
+@section('popup')
+    @include('board.popup')
+@endsection
 
+@section('content')
     {{-- 최근 게시물 리스트--}}
     @include('latest.default.list')
-
 @endsection

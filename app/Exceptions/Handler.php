@@ -4,7 +4,8 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Auth\AuthenticationException;
-use \Illuminate\Session\TokenMismatchException;
+use Illuminate\Session\TokenMismatchException;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -49,8 +50,13 @@ class Handler extends ExceptionHandler
             return response()->view('errors.tokenMismatch');
         }
 
+        if ($exception instanceof QueryException) {
+            return response()->view('errors.queryError');
+        }
+
         return parent::render($request, $exception);
     }
+
 
     /**
      * Convert an authentication exception into an unauthenticated response.

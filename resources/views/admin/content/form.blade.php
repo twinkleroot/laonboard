@@ -14,7 +14,7 @@
 
 @section('content')
 <div class="body-contents">
-    <form name="contentform" onsubmit="return contentFormCheck(this);" @if($type == "update") action="{{ route('admin.contents.update', $content->id)}}" @else action="{{ route('admin.contents.store')}}" @endif method="post" enctype="multipart/form-data">
+    <form name="contentform" onsubmit="return contentFormCheck(this);" action="{{ $type == "update" ? route('admin.contents.update', $content->id) : route('admin.contents.store') }}" @endif method="POST" enctype="multipart/form-data">
     <input type="hidden" name="type" value="{{ $type }}">
     <input type="hidden" name="html" value="1">
     @if($type == "update")

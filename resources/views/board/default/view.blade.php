@@ -237,7 +237,7 @@
         <input type="hidden" name="requestUri" id="requestUri" value="{{ $requestUri }}"/>
         <input type="hidden" name="_method" id="_method" />
 
-        @if( !auth()->user() )  <!-- 비회원일경우 노출 -->
+        @if( auth()->guest() )  <!-- 비회원일경우 노출 -->
         <article id="comment_box">
     		<div class="form-inline info_user">
     			<div class="form-group">
@@ -250,15 +250,6 @@
     			    <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호">
     			</div>
             </div>
-            <div class="form-inline info_user">
-                <!-- 리캡챠 -->
-                <div class="form-group g-recaptcha" id="recaptcha_zone" data-sitekey="6LcKohkUAAAAANcgIst0HFMMT81Wq5HIxpiHhXGZ"></div>
-            </div>
-            @if ($errors->has('reCaptcha'))
-                <div class="form-group">
-                    <strong>{{ $errors->first('reCaptcha') }}</strong>
-                </span>
-            @endif
         </article>
         @endif
         <div class="form-inline info_user">
@@ -286,9 +277,20 @@
 
 	    <div class="row clearfix">
 			<div class="pull-right col-md-3">
-				<input type="submit" id="btnSubmit" class="btn btn-sir btn-block btn-lg" value="댓글등록" />
+                @if( auth()->guest() )
+                    <!-- 리캡챠 -->
+                	<div id='recaptcha' class="g-recaptcha"
+                		data-sitekey="{{ env('GOOGLE_INVISIBLE_RECAPTCHA_KEY') }}"
+                		data-callback="onSubmit"
+                		data-size="invisible" style="display:none">
+                	</div>
+                    <button type="button" class="btn btn-sir btn-block btn-lg" onclick="validate();">댓글등록</button>
+                @else
+                    <button type="submit" id="btnSubmit" class="btn btn-sir btn-block btn-lg">댓글등록</button>
+                @endif
 			</div>
 		</div>
+
 	</form>
     </aside>
 
@@ -305,8 +307,15 @@
 var saveBefore = '';
 var saveHtml = document.getElementById('commentWriteArea').innerHTML;
 
-function commentSubmit(form) {
+function validate(event) {
+	grecaptcha.execute();
+}
 
+function onSubmit(token) {
+	$("#commentForm").submit();
+}
+
+function commentSubmit(form) {
     var subject = "";
     var content = "";
 
@@ -356,30 +365,25 @@ function commentSubmit(form) {
         return false;
     }
 
-    if (typeof(f.name) != 'undefined') {
-        f.name.value = f.name.value.replace(pattern, "");
-        if (f.name.value == '') {
+    if (typeof(form.name) != 'undefined') {
+        form.name.value = form.name.value.replace(pattern, "");
+        if (form.name.value == '') {
             alert('이름이 입력되지 않았습니다.');
-            f.name.focus();
+            form.name.focus();
             return false;
         }
     }
 
-    if (typeof(f.password) != 'undefined') {
-        f.password.value = f.password.value.replace(pattern, "");
-        if (f.password.value == '') {
+    if (typeof(form.password) != 'undefined') {
+        form.password.value = form.password.value.replace(pattern, "");
+        if (form.password.value == '') {
             alert('비밀번호가 입력되지 않았습니다.');
-            f.password.focus();
+            form.password.focus();
             return false;
         }
     }
-
-    // if($is_guest) echo chk_captcha_js();
-
-    document.getElementById("btnSubmit").disabled = "disabled";
 
     return true;
-
 }
 
 // 댓글의 답변, 수정 관련 조정 함수
@@ -504,6 +508,5 @@ function commentDelete()
 {
     return confirm("이 댓글을 삭제하시겠습니까?");
 }
-
 </script>
 @endsection

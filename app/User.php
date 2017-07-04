@@ -110,19 +110,6 @@ class User extends Authenticatable
         return false;
     }
 
-    // 추천인 닉네임 구하기
-    public function recommendedPerson($user)
-    {
-        $recommendedNick = '';
-        if(!is_null($user->recommend)) {
-            $recommendedNick = User::where([
-                'id' => $user->recommend,
-            ])->first()->nick;
-        }
-
-        return $recommendedNick;
-    }
-
     // 회원 정보 수정 페이지에 전달할 데이터
     public function editFormData($config)
     {
@@ -162,6 +149,22 @@ class User extends Authenticatable
         ];
 
         return $editFormData;
+    }
+
+    // 추천인 닉네임 구하기
+    public function recommendedPerson($user)
+    {
+        $recommendedNick = '';
+        if($user->recommend) {
+            $recommendedUser = User::where([
+                'id' => $user->recommend,
+            ])->first();
+            if($recommendedUser) {
+                $recommendedNick = $recommendedUser->nick;
+            }
+        }
+
+        return $recommendedNick;
     }
 
     // 닉네임 변경 가능 여부
@@ -302,7 +305,7 @@ class User extends Authenticatable
             'id_hashkey' => str_replace("/", "-", bcrypt($user->id)),  // 회원정보수정때마다 id_hashkey를 변경한다.
             'name' => $request->get('name'),
             'nick' => $request->has('nick') ? $request->get('nick') : $user->nick,
-            'nick_date' => $request->has('nick') ? $nowDate : $user->nick_date,
+            'nick_date' => $request->has('nick') != $user->nick ? $nowDate : $user->nick_date,
             'homepage' => $request->get('homepage'),
             'hp' => $request->get('hp'),
             'tel' => $request->get('tel'),

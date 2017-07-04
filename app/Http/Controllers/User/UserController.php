@@ -41,10 +41,12 @@ class UserController extends Controller
     public function checkPassword(Request $request)
     {
         $user = auth()->user();
+        $work = is_null($request->work) ? session()->get('work') : $request->work;
+
         if(is_null($user->password)) {
             return view('user.'. $this->skin. '.set_password');   // 최초 비밀번호 설정
         } else {
-            return view('user.'. $this->skin. '.confirm_password', ['email' => $user->email, 'work' => $request->work]);
+            return view('user.'. $this->skin. '.confirm_password', ['email' => $user->email, 'work' => $work]);
         }
     }
 
@@ -59,7 +61,7 @@ class UserController extends Controller
         if(Auth::validate(['email' => $email, 'password' => $request->get('password') ])) {
             return redirect(route('user.'. $work));
         } else {
-            return redirect(route('user.checkPassword'))->with('message', '비밀번호가 틀립니다.');
+            return redirect(route('user.checkPassword'))->with('message', '비밀번호가 틀립니다.')->with('work', $work);
         }
     }
 

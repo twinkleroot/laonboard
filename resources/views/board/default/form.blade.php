@@ -6,7 +6,7 @@
 
 @section('include_script')
     <script src="{{ asset('js/tinymce/tinymce.min.js') }}"></script>
-    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 @endsection
 
 @section('content')
@@ -173,21 +173,18 @@
                 @endif
     		</div>
             <div class="pull-right">
-                <button type="submit" class="btn btn-sir">작성완료</button>
+                <button type="button" class="btn btn-sir" onclick="validate();">작성완료</button>
                 <button type="button" class="btn btn-default" onclick="history.back();">취소</button>
             </div>
     	</div>
         @if( ($type == 'create' && auth()->guest() )
             || ($type == 'update' && !session()->get('admin') && $write->user_id != auth()->user()->id) )
-            <div class="clearfix">
-                <!-- 리캡챠 -->
-                <div class="pull-left g-recaptcha" data-sitekey="6LcKohkUAAAAANcgIst0HFMMT81Wq5HIxpiHhXGZ"></div>
-                @if ($errors->has('reCaptcha'))
-                    <div class="form-group">
-                        <strong>{{ $errors->first('reCaptcha') }}</strong>
-                    </span>
-                @endif
-            </div>
+            <!-- 리캡챠 -->
+        	<div id='recaptcha' class="g-recaptcha"
+        		data-sitekey="{{ env('GOOGLE_INVISIBLE_RECAPTCHA_KEY') }}"
+        		data-callback="onSubmit"
+        		data-size="invisible" style="display:none">
+        	</div>
         @endif
 
     </form>
@@ -231,6 +228,12 @@ function htmlAutoBr(obj) {
     } else {
         obj.value = "";
     }
+}
+function onSubmit(token) {
+	$("#fwrite").submit();
+}
+function validate(event) {
+	grecaptcha.execute();
 }
 </script>
 @endsection
