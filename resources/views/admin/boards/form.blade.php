@@ -5,7 +5,7 @@
 @endsection
 
 @section('include_script')
-    <script src="{{ asset('js/tinymce/tinymce.min.js') }}"></script>
+    <script src="{{ asset('tinymce/tinymce.min.js') }}"></script>
     <script>
     var menuVal = 300100;
     $(function(){
@@ -492,6 +492,20 @@
                             </td>
                         </tr>
                         <tr>
+                            <th>회원 자동입력방지(구글리캡챠) 사용</th>
+                            <td>
+                                <input type="checkbox" id="use_recaptcha" name="use_recaptcha" value="1"
+                                    @if($type == 'edit' && $board->use_recaptcha == 1 ) checked @endif />
+                                <label for="use_recaptcha">사용</label>
+                            </td>
+                            <td>
+                                <input type="checkbox" id="chk_group_use_rss_view" name="chk_group_use_rss_view" value="1" />
+                                <label for="chk_group_use_rss_view">그룹적용</label>
+                                <input type="checkbox" id="chk_all_use_rss_view" name="chk_all_use_rss_view" value="1" />
+                                <label for="chk_all_use_rss_view">전체적용</label>
+                            </td>
+                        </tr>
+                        <tr>
                             <th>추천 사용</th>
                             <td>
                                 <input type="checkbox" id="use_good" name="use_good" value="1"
@@ -840,29 +854,16 @@
                             </td>
                         </tr> --}}
                         <tr>
-                            <th>상단 파일 경로</th>
+                            <th>레이아웃 파일 경로</th>
                             <td>
                                 resources/views/layouts 이하의 경로로 확장자 빼고 입력해주세요.<br />
-                                <input type="text" id="include_head" name="include_head" value="{{ $board['include_head'] }}" />
+                                <input type="text" id="layout" name="layout" value="{{ $board['layout'] }}" />
                             </td>
                             <td>
-                                <input type="checkbox" id="chk_group_include_head" name="chk_group_include_head" value="1" />
-                                <label for="chk_group_include_head">그룹적용</label>
-                                <input type="checkbox" id="chk_all_include_head" name="chk_all_include_head" value="1" />
-                                <label for="chk_all_include_head">전체적용</label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>하단 파일명</th>
-                            <td>
-                                resources/views/layouts 이하의 경로로 확장자 빼고 입력해주세요.<br />
-                                <input type="text" id="include_tail" name="include_tail" value="{{ $board['include_tail'] }}" />
-                            </td>
-                            <td>
-                                <input type="checkbox" id="chk_group_include_tail" name="chk_group_include_tail" value="1" />
-                                <label for="chk_group_include_tail">그룹적용</label>
-                                <input type="checkbox" id="chk_all_include_tail" name="chk_all_include_tail" value="1" />
-                                <label for="chk_all_include_tail">전체적용</label>
+                                <input type="checkbox" id="chk_group_layout" name="chk_group_layout" value="1" />
+                                <label for="chk_group_layout">그룹적용</label>
+                                <input type="checkbox" id="chk_all_layout" name="chk_all_layout" value="1" />
+                                <label for="chk_all_layout">전체적용</label>
                             </td>
                         </tr>
                         <tr>

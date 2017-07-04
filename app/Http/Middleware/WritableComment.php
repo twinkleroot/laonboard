@@ -36,15 +36,10 @@ class WritableComment
 
         if(!$user) {
             // 이름이 누락되어 있는지 확인
-            if($request->name == '') {
+            if($request->userName  == '') {
                 $message = '이름은 필히 입력하셔야 합니다.';
                 return redirect(route('message'))->with('message', $message);
             }
-        }
-        // 댓글 쓰기 간격 검사
-        if( !Util::checkWriteInterval() ) {
-            $message = '너무 빠른 시간내에 게시물을 연속해서 올릴 수 없습니다.';
-            return redirect(route('message'))->with('message', $message);
         }
 
         return $next($request);

@@ -18,7 +18,7 @@
             <div class="hd_pops_con" style="width:{{ $popup->width }}px;height:{{ $popup->height }}px">
                 {!! $popup->content !!}
             </div>
-            <div class="hd_pops_footer">
+            <div class="hd_pops_footer" style="background:{{ $popup->color}};">
                 <button class="hd_pops_reject hd_pops_{{ $popup->id }} {{ $popup->disable_hours }}"><strong>24</strong>시간 동안 다시 열람하지 않습니다.</button>
                 <button class="hd_pops_close hd_pops_{{ $popup->id }}">닫기</button>
             </div>

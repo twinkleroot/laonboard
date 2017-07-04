@@ -4,9 +4,14 @@
     팝업레이어 {{ $type == 'create' ? '입력' : '수정' }} | {{ cache('config.homepage')->title }}
 @endsection
 
+@section('include_css')
+    <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap-colorpicker/css/bootstrap-colorpicker.min.css') }}">
+@endsection
+
 @section('include_script')
     <script src="{{ asset('js/common.js') }}"></script>
-    <script src="{{ asset('js/tinymce/tinymce.min.js') }}"></script>
+    <script src="{{ asset('bootstrap-colorpicker/js/bootstrap-colorpicker.js') }}"></script>
+    <script src="{{ asset('tinymce/tinymce.min.js') }}"></script>
     <script>
         var menuVal = 100600
     </script>
@@ -134,6 +139,17 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="color" class="col-md-2 control-label">팝업레이어 색상</label>
+                    <div class="col-md-2">
+                        <div class="row">
+                            <div id="cp2" class="input-group colorpicker-component">
+                                <input type="text" name="color" id="color" class="form-control" value="{{ $type == 'update' ? $popup->color : $default['color'] }}" />
+                                <span class="input-group-addon"><i></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="subject" class="col-md-2 control-label">팝업 제목</label>
                     <div class="col-md-7">
                         <input type="text" class="form-control" name="subject" id="subject" value="{{ $type == 'update' ? $popup->subject : '' }}" required size="80">
@@ -142,7 +158,7 @@
                 <div class="form-group">
                     <label for="content" class="col-md-2 control-label">내용</label>
                     <div class="col-md-7">
-                        <textarea class="form-control editorArea" name="content" id="content" rows="10">{{ $type == 'update' ? $popup->content : '' }}</textarea> <!-- 에디터 삽입 -->
+                        <textarea class="form-control editorArea" name="content" id="content" rows="10">{{ $type == 'update' ? $popup->content : '' }}</textarea>
                     </div>
                 </div>
             </div>
@@ -151,6 +167,9 @@
 </div>
 </form>
 <script>
+$(function() {
+    $('#cp2').colorpicker();
+});
 function popupFormCheck(f)
 {
     var errmsg = "";

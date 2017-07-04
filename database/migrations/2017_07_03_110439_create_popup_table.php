@@ -23,6 +23,7 @@ class CreatePopupTable extends Migration
             $table->integer('top')->default(0)->nullable();
             $table->integer('height')->default(0)->nullable();
             $table->integer('width')->default(0)->nullable();
+            $table->string('color')->nullable()->default('#000000');
             $table->text('subject')->nullable();
             $table->text('content')->nullable();
             $table->tinyInteger('content_html')->default(0)->nullable();

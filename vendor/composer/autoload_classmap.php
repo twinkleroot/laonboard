@@ -6,6 +6,8 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AddColumnPopupsTable' => $baseDir . '/database/migrations/2017_07_04_160428_add_column_popups_table.php',
+    'AddSomeColumnBoardsTable' => $baseDir . '/database/migrations/2017_07_04_121959_add_some_column_boards_table.php',
     'ConfigsTableSeeder' => $baseDir . '/database/seeds/ConfigsTableSeeder.php',
     'CreateAuthTable' => $baseDir . '/database/migrations/2017_06_29_110439_create_auth_table.php',
     'CreateAutosavesTable' => $baseDir . '/database/migrations/2017_05_16_183110_create_autosaves_table.php',

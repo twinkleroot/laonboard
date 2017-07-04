@@ -152,7 +152,6 @@ class Config extends Model
     public function createConfigBoard()
     {
         $configArr = array (
-          'delaySecond' => config('gnu.delaySecond'),
           'linkTarget' => config('gnu.linkTarget'),
           'readPoint' => config('gnu.readPoint'),
           'writePoint' => config('gnu.writePoint'),

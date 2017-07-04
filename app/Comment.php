@@ -147,7 +147,7 @@ class Comment
             $email = $user->email;
             $homepage = $user->homepage;
         } else {
-            $name = $request->name;
+            $name = $request->userName;
             $password = bcrypt($request->password);
         }
 

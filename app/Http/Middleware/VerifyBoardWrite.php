@@ -24,11 +24,6 @@ class VerifyBoardWrite
             $message = '내용을 입력해 주세요.';
             return redirect(route('message'))->with('message', $message);
         }
-        // 글쓰기 간격 검사
-        if( !Util::checkWriteInterval() ) {
-            $message = '너무 빠른 시간내에 게시물을 연속해서 올릴 수 없습니다.';
-            return redirect(route('message'))->with('message', $message);
-        }
         // 글 내용 검사
         if( !Util::checkIncorrectContent($request) ) {
             $message = '내용에 올바르지 않은 코드가 다수 포함되어 있습니다.';

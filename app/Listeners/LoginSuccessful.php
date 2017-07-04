@@ -41,7 +41,7 @@ class LoginSuccessful
         $event->user->save();
 
         // 관리자 임을 세션에 등록
-        if($event->user->level == 10) {
+        if($event->user->isAdmin()) {
             session()->put('admin', true);
         }
 

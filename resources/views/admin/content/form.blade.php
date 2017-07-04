@@ -6,7 +6,7 @@
 
 @section('include_script')
     <script src="{{ asset('js/common.js') }}"></script>
-    <script src="{{ asset('js/tinymce/tinymce.min.js') }}"></script>
+    <script src="{{ asset('tinymce/tinymce.min.js') }}"></script>
     <script>
         var menuVal = 300500
     </script>

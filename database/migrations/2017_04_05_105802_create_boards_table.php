@@ -47,6 +47,7 @@ class CreateBoardsTable extends Migration
                 $table->tinyInteger('use_secret')->default(0);
                 $table->tinyInteger('use_dhtml_editor')->default(0);
                 $table->tinyInteger('use_rss_view')->default(0);
+                $table->tinyInteger('use_recaptcha')->default(0);
                 $table->tinyInteger('use_good')->default(0);
                 $table->tinyInteger('use_nogood')->default(0);
                 $table->tinyInteger('use_name')->default(0);
@@ -65,8 +66,7 @@ class CreateBoardsTable extends Migration
                 $table->integer('image_width')->default(0);
                 $table->string('skin')->nullable();
                 $table->string('mobile_skin')->nullable();
-                $table->string('include_head')->nullable();
-                $table->string('include_tail')->nullable();
+                $table->string('layout')->nullable();
                 $table->text('content_head')->nullable();
                 $table->text('mobile_content_head')->nullable();
                 $table->text('content_tail')->nullable();

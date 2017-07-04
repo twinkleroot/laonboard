@@ -35,6 +35,7 @@ class Popup extends Model
             'width' => 450,
             'height' => 500,
             'content_html' => 2,
+            'color' => '#000000',
         ];
         return [
             'default' => $default,

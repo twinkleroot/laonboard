@@ -389,6 +389,8 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
     );
 
     public static $classMap = array (
+        'AddColumnPopupsTable' => __DIR__ . '/../..' . '/database/migrations/2017_07_04_160428_add_column_popups_table.php',
+        'AddSomeColumnBoardsTable' => __DIR__ . '/../..' . '/database/migrations/2017_07_04_121959_add_some_column_boards_table.php',
         'ConfigsTableSeeder' => __DIR__ . '/../..' . '/database/seeds/ConfigsTableSeeder.php',
         'CreateAuthTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_29_110439_create_auth_table.php',
         'CreateAutosavesTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_16_183110_create_autosaves_table.php',

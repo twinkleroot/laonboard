@@ -46,7 +46,6 @@
   'passwordPolicyNumber' => 0,
 
   // 게시판 기본
-  'delaySecond' => 30,
   'linkTarget' => '_blank',
   'readPoint' => 0,
   'writePoint' => 0,

@@ -46,7 +46,7 @@ class CommentController extends Controller
 
             return redirect($request->requestUri. '#comment'. $result);
         } else {
-            return Redirect::to(URL::previous() . "#comment_box")->withInput()->withErrors(['reCaptcha' => '자동등록방지 입력이 틀렸습니다. 다시 입력해 주십시오.']);
+            return Redirect::to(URL::previous() . "#comment_box")->withInput();
         }
     }
 

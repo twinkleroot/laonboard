@@ -49,21 +49,21 @@ class Util
         return $result;
     }
 
-    // 글쓰기 간격 검사
-    public static function checkWriteInterval()
-    {
-        $dt = Carbon::now();
-        $interval = Cache::get("config.board")->delaySecond;
-
-        if(session()->has('postTime')) {
-            if(session()->get('postTime') >= $dt->subSecond($interval) && !session()->get('admin')) {
-                return false;
-            }
-        }
-        session()->put('postTime', Carbon::now());
-
-        return true;
-    }
+    // 글쓰기 간격 검사 - 기능 삭제 : 17.07.04
+    // public static function checkWriteInterval($board)
+    // {
+    //     $dt = Carbon::now();
+    //     $interval = $board->delaySecond;
+    //
+    //     if(session()->has('postTime')) {
+    //         if(session()->get('postTime') >= $dt->subSecond($interval) && !session()->get('admin')) {
+    //             return false;
+    //         }
+    //     }
+    //     session()->put('postTime', Carbon::now());
+    //
+    //     return true;
+    // }
 
     // 올바르지 않은 코드가 글 내용에 다수 들어가 있는지 검사
     public static function checkIncorrectContent($request)

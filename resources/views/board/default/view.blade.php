@@ -1,4 +1,4 @@
-@extends('layouts.default.basic')
+@extends('layouts.'. $board->layout)
 
 @section('title')
     {{ $view->subject }} > {{ $board->subject }} | {{ Cache::get('config.homepage')->title }}
@@ -241,8 +241,8 @@
         <article id="comment_box">
     		<div class="form-inline info_user">
     			<div class="form-group">
-    			    <label for="name" class="sr-only">이름</label>
-    			    <input type="text" class="form-control" id="name" name="name" placeholder="이름">
+    			    <label for="userName" class="sr-only">이름</label>
+    			    <input type="text" class="form-control" id="userName" name="userName" placeholder="이름">
     			</div>
 
     			<div class="form-group">
@@ -277,13 +277,15 @@
 
 	    <div class="row clearfix">
 			<div class="pull-right col-md-3">
-                @if( auth()->guest() )
+                @if(auth()->user() && auth()->user()->isAdmin())
+                    <button type="submit" id="btnSubmit" class="btn btn-sir btn-block btn-lg">댓글등록</button>
+                @elseif( (auth()->user() && $board->use_recaptcha) || auth()->guest())
                     <!-- 리캡챠 -->
-                	<div id='recaptcha' class="g-recaptcha"
-                		data-sitekey="{{ env('GOOGLE_INVISIBLE_RECAPTCHA_KEY') }}"
-                		data-callback="onSubmit"
-                		data-size="invisible" style="display:none">
-                	</div>
+                    <div id='recaptcha' class="g-recaptcha"
+                        data-sitekey="{{ env('GOOGLE_INVISIBLE_RECAPTCHA_KEY') }}"
+                        data-callback="onSubmit"
+                        data-size="invisible" style="display:none">
+                    </div>
                     <button type="button" class="btn btn-sir btn-block btn-lg" onclick="validate();">댓글등록</button>
                 @else
                     <button type="submit" id="btnSubmit" class="btn btn-sir btn-block btn-lg">댓글등록</button>
@@ -365,11 +367,14 @@ function commentSubmit(form) {
         return false;
     }
 
-    if (typeof(form.name) != 'undefined') {
-        form.name.value = form.name.value.replace(pattern, "");
-        if (form.name.value == '') {
+    if (typeof(form.userName) != 'undefined') {
+        console.log(form.userName);
+        console.log(typeof(form.userName));
+        console.log(form.userName.value);
+        form.userName.value = form.userName.value.replace(pattern, "");
+        if (form.userName.value == '') {
             alert('이름이 입력되지 않았습니다.');
-            form.name.focus();
+            form.userName.focus();
             return false;
         }
     }
