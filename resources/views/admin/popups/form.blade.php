@@ -142,8 +142,19 @@
                     <label for="color" class="col-md-2 control-label">팝업레이어 색상</label>
                     <div class="col-md-2">
                         <div class="row">
-                            <div id="cp2" class="input-group colorpicker-component">
+                            <div id="cp1" class="input-group colorpicker-component">
                                 <input type="text" name="color" id="color" class="form-control" value="{{ $type == 'update' ? $popup->color : $default['color'] }}" />
+                                <span class="input-group-addon"><i></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="color_button" class="col-md-2 control-label">팝업레이어 버튼 색상</label>
+                    <div class="col-md-2">
+                        <div class="row">
+                            <div id="cp2" class="input-group colorpicker-component">
+                                <input type="text" name="color_button" id="color_button" class="form-control" value="{{ $type == 'update' ? $popup->color_button : $default['color_button'] }}" />
                                 <span class="input-group-addon"><i></i></span>
                             </div>
                         </div>
@@ -168,6 +179,7 @@
 </form>
 <script>
 $(function() {
+    $('#cp1').colorpicker();
     $('#cp2').colorpicker();
 });
 function popupFormCheck(f)

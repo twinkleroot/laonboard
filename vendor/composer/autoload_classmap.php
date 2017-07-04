@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'AddColumnPopupsTable' => $baseDir . '/database/migrations/2017_07_04_160428_add_column_popups_table.php',
+    'AddPopupButtonColorColumnPopupsTable' => $baseDir . '/database/migrations/2017_07_04_164331_add_popup_button_color_column_popups_table.php',
     'AddSomeColumnBoardsTable' => $baseDir . '/database/migrations/2017_07_04_121959_add_some_column_boards_table.php',
     'ConfigsTableSeeder' => $baseDir . '/database/seeds/ConfigsTableSeeder.php',
     'CreateAuthTable' => $baseDir . '/database/migrations/2017_06_29_110439_create_auth_table.php',
@@ -557,7 +558,6 @@ return array(
     'SebastianBergmann\\RecursionContext\\InvalidArgumentException' => $vendorDir . '/sebastian/recursion-context/src/InvalidArgumentException.php',
     'SebastianBergmann\\ResourceOperations\\ResourceOperations' => $vendorDir . '/sebastian/resource-operations/src/ResourceOperations.php',
     'SebastianBergmann\\Version' => $vendorDir . '/sebastian/version/src/Version.php',
-    'TestMigration' => $baseDir . '/database/migrations/2017_07_04_162954_test_migration.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/src/Template.php',
     'UsersTableSeeder' => $baseDir . '/database/seeds/UsersTableSeeder.php',
 );
