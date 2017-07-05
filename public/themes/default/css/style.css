@@ -568,6 +568,7 @@ div {
 .sv_wrap.open>.dropdown-menu {
 	top: 17px;
 	left: 20px;
+	margin-bottom: 20px;
 }
 .sv_wrap.open>.dropdown-menu li a {
 	padding: 3px;

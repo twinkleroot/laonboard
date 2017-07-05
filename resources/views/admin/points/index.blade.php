@@ -47,7 +47,7 @@
     		</li>
     	</ul>
 
-    	<div id="pt_sch" class="mb10 pull-right">
+    	<div id="adm_sch" class="mb10 pull-right">
     	    <form class="form-horizontal" role="form" method="GET" action="{{ route('admin.points.index') }}">
     	        <label for="" class="sr-only">검색대상</label>
     			<select name="kind">

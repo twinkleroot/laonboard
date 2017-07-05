@@ -765,6 +765,12 @@ body {
 #adm_sch .search-icon {
 	border: 0; background: #fff; margin-left: -30px; outline: none;
 }
+#adm_sch .period {
+	width:83px; height:33px; padding:6px; border: 1px solid #d8d8d8; font-size: 12px; margin: 0 5px;
+}
+#adm_sch .search2 {
+	width: 33px; height: 33px; border: 0; background: #587ef6; color: #fff; font-size: 12px;
+}
 #pt_change {
 	margin: 40px 0;
 }
@@ -900,6 +906,17 @@ body {
 }
 .mb_tooltip:hover .tooltiptext {
 	visibility: visible;
+}
+.adm_sort {
+	border-bottom: 1px dotted #888;
+	padding: 1px 0;
+	margin-left: 3px;
+    position: relative;
+    display: inline-block;
+}
+.adm_sort:hover {
+	color: #333;
+	text-decoration: none;
 }
 .mb_msg {
 	display: inline-block;
