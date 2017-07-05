@@ -37,10 +37,11 @@
 @if( $chart )
     <div id="chart"></div>
     @if($selectType == 'line' || !$selectType)
-        @linechart('Chart', 'chart')
-        {{-- {{ Lava::render('LineChart','Chart', 'chart') }} --}}
+        {{-- @linechart('Chart', 'chart') --}}
+        {!! Lava::render('LineChart','Chart', 'chart') !!}
     @else
         @columnchart('Chart', 'chart')
+        {!! Lava::render('ColumnChart','Chart', 'chart') !!}
     @endif
 @else
     <div>
