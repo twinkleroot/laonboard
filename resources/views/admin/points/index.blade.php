@@ -74,17 +74,17 @@
         					<input type="checkbox" name="chkAll" onclick="checkAll(this.form)" />
         				</th>
         				<th>
-                            <a class="mb_tooltip" href="{{ route('admin.points.index') }}?order=email&amp;direction={{$order=='email' ? $direction : 'asc'}}">회원이메일</a>
+                            <a class="adm_sort" href="{{ route('admin.points.index') }}?order=email&amp;direction={{$order=='email' ? $direction : 'asc'}}">회원이메일</a>
                         </th>
         				<th>닉네임</th>
         				<th>
-                            <a class="mb_tooltip" href="{{ route('admin.points.index') }}?order=content&amp;direction={{$order=='content' ? $direction : 'asc'}}">포인트 내용</a>
+                            <a class="adm_sort" href="{{ route('admin.points.index') }}?order=content&amp;direction={{$order=='content' ? $direction : 'asc'}}">포인트 내용</a>
                         </th>
         				<th>
-                            <a class="mb_tooltip" href="{{ route('admin.points.index') }}?order=point&amp;direction={{$order=='point' ? $direction : 'asc'}}">포인트</a>
+                            <a class="adm_sort" href="{{ route('admin.points.index') }}?order=point&amp;direction={{$order=='point' ? $direction : 'asc'}}">포인트</a>
                         </th>
         				<th>
-                            <a class="mb_tooltip" href="{{ route('admin.points.index') }}?order=datetime&amp;direction={{$order=='datetime' ? $direction : 'asc'}}">일시</a>
+                            <a class="adm_sort" href="{{ route('admin.points.index') }}?order=datetime&amp;direction={{$order=='datetime' ? $direction : 'asc'}}">일시</a>
                         </th>
         				<th>만료일</th>
         				<th>포인트합</th>
