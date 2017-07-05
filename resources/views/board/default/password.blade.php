@@ -1,4 +1,4 @@
-@extends('layouts.'. $board->layout)
+@extends('layouts.'. ($board->layout ? : 'default.basic'))
 
 @section('title')
     비밀번호 확인 | {{ Cache::get("config.homepage")->title }}

@@ -629,7 +629,7 @@ class Write extends Model
     }
 
     // (게시판) 글 쓰기 폼
-    public function getCreateParams($writeModel)
+    public function getCreateParams($writeModel, $request)
     {
         $board = $this->board;
         $categories = [];
@@ -646,6 +646,7 @@ class Write extends Model
         return [
             'type' => 'create',
             'board' => $board,
+            'currenctCategory' => $request->category ? : '',
             'categories' => $categories,
             'autosaveCount' => $autosaveCount,
         ];

@@ -39,7 +39,7 @@
     					RSS
     				</button>
                 @endif
-				<button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->id) }}'">
+				<button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->id). '?'. $request->getQueryString() }}'">
 					<i class="fa fa-pencil"></i> 글쓰기
 				</button>
 			</li>
@@ -227,9 +227,9 @@
 
     <ul id="bd_btn">
         <li class="mr0">
-            <button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->id) }}'">
-                <i class="fa fa-pencil"></i> 글쓰기
-            </button>
+            <button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->id). '?'. $request->getQueryString() }}'">
+				<i class="fa fa-pencil"></i> 글쓰기
+			</button>
         </li>
     </ul>
 </div>

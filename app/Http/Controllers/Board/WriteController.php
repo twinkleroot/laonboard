@@ -124,9 +124,9 @@ class WriteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($boardId)
+    public function create(Request $request, $boardId)
     {
-        $params = $this->writeModel->getCreateParams($this->writeModel);
+        $params = $this->writeModel->getCreateParams($this->writeModel, $request);
         $skin = $this->writeModel->board->skin ? : 'default';
 
         return view('board.'. $skin. '.form', $params);

@@ -53,6 +53,15 @@
         <a class="logo" href="{{ url('/') }}">
             <img src="{{ asset('themes/default/images/logo2.png') }}">
         </a>
+        <!-- 사이트 내 전체검색 -->
+        <form class="hd_sch" name="searchBox" method="get" action="{{ route('search')}}" onsubmit="">
+            <fieldset>
+                <legend>사이트 내 전체검색</legend>
+                <label for="keyword" class="sr-only">검색어 필수</strong></label>
+                <input type="text" name="keyword" id="keyword" maxlength="20">
+                <input type="submit" id="searchSubmit" value="검색">
+            </fieldset>
+        </form>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
         <!-- menu -->

@@ -19,7 +19,8 @@ class StatusController extends Controller
 
         if(auth()->user()->isSuperAdmin() || Gate::allows('view-admin-mailtest', Util::getManageAuthModel($menuCode))) {
             $params = $this->writeStatus($request);
-            return view('admin.status', $params)->with('chart', $params['renderChart']);
+            $chart = isset($params['renderChart']) ? $params['renderChart'] : '';
+            return view('admin.status.index', $params)->with('chart', $chart);
         } else {
             return view('message', [
                 'message' => '최고관리자 또는 관리권한이 있는 회원만 접근 가능합니다.',
@@ -50,7 +51,7 @@ class StatusController extends Controller
         $datas = $this->getChartSource($request, $dataByPeriod['query'], $unit);
         if(count($datas) == 0) {
             $params = array_add($params, 'message', '차트를 만들 데이터가 없습니다.');
-            return view('admin.status', $params);
+            return $params;
         }
         // 차트 행,열, 데이터 추가
         $chartDataTable = $this->getChartDataTable($datas, $dataByPeriod['pattern'], $period);

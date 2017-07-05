@@ -1,4 +1,4 @@
-@extends('layouts.'. $board->layout)
+@extends('layouts.'. ($board->layout ? : 'default.basic'))
 
 @section('title')
     {{ $view->subject }} > {{ $board->subject }} | {{ Cache::get('config.homepage')->title }}

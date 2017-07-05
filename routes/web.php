@@ -19,6 +19,9 @@ Route::get('/home', ['as' => 'home', 'uses' => 'MainController@index'] );
 // 게시판 그룹별 메인
 Route::get('/group/{group}', ['as' => 'group', 'uses' => 'MainController@groupIndex'] );
 
+// 게시판 그룹별 메인
+Route::get('/search', ['as' => 'search', 'uses' => 'Search\SearchController@result'] );
+
 // 관리자 그룹
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], function() {
     // 관리자 메인

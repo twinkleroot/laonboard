@@ -34,11 +34,7 @@
     </div>
 </div>
 
-@if( isset($message) )
-    <div>
-        {{ $message }}
-    </div>
-@else
+@if( $chart )
     <div id="chart"></div>
     @if($selectType == 'line' || !$selectType)
         @linechart('Chart', 'chart')
@@ -46,6 +42,10 @@
     @else
         @columnchart('Chart', 'chart')
     @endif
+@else
+    <div>
+        {{ $message }}
+    </div>
 @endif
 
 @endsection

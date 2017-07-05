@@ -1,4 +1,4 @@
-@extends('layouts.'. $board->layout)
+@extends('layouts.'. ($board->layout ? : 'default.basic'))
 
 @section('title')
     {{ $board->subject }} 게시글 작성 | {{ Cache::get("config.homepage")->title }}
@@ -60,7 +60,7 @@
                     <select class="form-control" name="ca_name" required>
                         <option value>분류</option>
                         @foreach($categories as $category)
-                            <option value="{{ $category }}" @if($type == 'update' && $category == $write->ca_name) selected @endif>
+                            <option value="{{ $category }}" @if( ($type == 'update' && $category == $write->ca_name) || ($type == 'create' && $category == $currenctCategory ) ) selected @endif>
                                 {{ $category }}
                             </option>
                         @endforeach
