@@ -111,26 +111,18 @@ class Write extends Model
 
         $result = [];
         try {
-            $result = $this->getWrites($writeModel, $request, $kind, $keyword, $currenctCategory);
-            if($result['message'] != '') {
-                return [
-                    'message' => $result['message'],
-                ];
-            } else {
-                if($result['writes']->currentPage() > 1) {
-                    $viewParams['page'] = 'page='. $result['writes']->currentPage();
-                }
+            $writes = $this->getWrites($writeModel, $request, $kind, $keyword, $currenctCategory);
+
+            if($writes->currentPage() > 1) {
+                $viewParams['page'] = 'page='. $writes->currentPage();
             }
         } catch (Exception $e) {
-            return [
-                'message' => '글이 존재하지 않습니다.\\n글이 삭제되었거나 이동하였을 수 있습니다.',
-                'redirect' => '/'
-            ];
+            return [ 'message' => $e->getMessage() ];
         }
 
         return [
             'board' => $this->board,
-            'writes' => $result['writes'],
+            'writes' => $writes,
             'userLevel' => $userLevel,
             'kind' => $kind,
             'keyword' => $keyword,
@@ -148,7 +140,6 @@ class Write extends Model
     {
         // select ~ from ~ where까지 얻어온다.
         $query = $this->getWritesWhere($writeModel, $kind, $keyword, $currenctCategory);
-
         // 어떤 필드를 기준으로 정렬할 것인지
         $sortField = $this->getSortField();
 
@@ -163,21 +154,23 @@ class Write extends Model
             $writes = $query->orderByRaw($sortField)->paginate($this->board->page_rows);
         }
 
-
         // 가져온게시글 가공
         // 1. 뷰에 내보내는 아이디 검색의 링크url에는 암호화된 id를 링크로 건다.
         // 2. 검색일 경우 검색 키워드 색깔 표시를 다르게 한다.
         foreach($writes as $write) {
             $write->user_id = encrypt($write->user_id);     // 라라벨 기본 지원 encrypt
             $write->subject = Util::searchKeyword($keyword, $write->subject);
+            $parentWrite = $write;
+            // 댓글일 경우 부모글의 제목을 댓글의 제목으로 넣기
+            if($write->is_comment) {
+                $parentWrite = $writeModel->where('id', $write->parent)->first();
+                $write->subject = $parentWrite->subject;
+            }
         }
         // 페이징 버튼의 경로 지정 (항상 목록으로 이동하도록 하기)
         $writes->withPath('/board/'.$this->board->id);
 
-        return [
-            'writes' => $writes,
-            'message' => '',
-        ];
+        return $writes;
     }
 
     // (게시판 리스트) select ~ from ~ where까지 얻어온다.
@@ -185,9 +178,8 @@ class Write extends Model
     {
         // 기본 ( 공지는 기본만 가져간다. )
         $query = $writeModel
-                ->selectRaw($writeModel->table.'.*, users.level as user_level, users.email as user_email, users.id_hashKey as user_id_hashKey')
-                ->leftJoin('users', 'users.id', '=', $writeModel->table.'.user_id')
-                ->where('is_comment', 0);
+                ->selectRaw($writeModel->table.'.*, users.level as user_level, users.id_hashKey as user_id_hashKey')
+                ->leftJoin('users', 'users.id', '=', $writeModel->table.'.user_id');
 
         // + 카테고리
         if($currenctCategory != '') {
@@ -204,29 +196,39 @@ class Write extends Model
             } else if(str_contains($kind, '||')) { // 제목 + 내용으로 검색
                 $kinds = explode('||', preg_replace("/\s+/", "", $kind));
                 // 검색 쿼리 붙이기
-                foreach($kinds as $kind) {
-                    $query = $query->where($kind, 'like', '%'.$keyword.'%', 'or');
+                for($i=0; $i<count($kinds); $i++) {
+                    if (preg_match("/[a-zA-Z]/", $keyword)) {
+                        $whereStr = "INSTR(LOWER($kinds[$i]), LOWER('$keyword'))";
+                    } else {
+                        $whereStr = "INSTR($kinds[$i], '$keyword')";
+                    }
+
+                    if($i == 0) {
+                        $query = $query->whereRaw($whereStr);
+                    } else {
+                        $query = $query->orWhereRaw($whereStr);
+                    }
                 }
             // 코멘트 검색이 select box에 있는 경우
             } else if(str_contains($kind, ',')) {
                 $kinds = explode(',', preg_replace("/\s+/", "", $kind));
                 $user = User::where($kinds[0], $keyword)->first();
                 // 검색 쿼리 붙이기
-                if(!is_null($user)) {
+                if($user) {
                     $query = $query->where('user_id', $user->id)
                                    ->where('is_comment', $kinds[1]);
                 } else {
-                    return [
-                        'writes' => null,
-                        'message' => $keyword. ' 사용자가 존재하지 않습니다.'
-                    ];
+                    throw new Exception($keyword. ' 사용자가 존재하지 않습니다.');
                 }
             } else if($kind == 'name') {
                 $query = $query->where($writeModel->table.'.name', $keyword);
             // 단독 키워드 검색(제목, 내용)
             } else {
-                $query = $query->where($kind, 'like', '%'.$keyword.'%');
+                // $query = $query->where($kind, 'like', '%'.$keyword.'%');
+                $query = $query->whereRaw("INSTR($kind, '$keyword')");
             }
+        } else {
+            $query = $query->where('is_comment', 0);
         }
 
         return $query;
@@ -245,18 +247,18 @@ class Write extends Model
         // 공지 글은 가장 앞에 나와야 하므로 컬렉션의 위치를 조절해서 수동으로 페이징 한다.
         $totalWrites = $query->orderByRaw($sortField)->get();
 
+        $notices = explode(',', trim($this->board->notice));
+        $notices = array_filter($notices);
+
         // 컬렉션 분할 (공지 + 그 외)
-        $notices = explode(',', $this->board->notice);
         // 공지 게시물들
         $noticeWrites = collect();
-        $noticeWrites = $totalWrites->filter(function ($value, $key) {
-            $notices = explode(',', $this->board->notice);
+        $noticeWrites = $totalWrites->filter(function ($value, $key) use($notices) {
             return in_array($value->id, $notices);
         });
         // 그 외 게시물들
         $filteredWrites = collect();
-        $filteredWrites = $totalWrites->reject(function ($value, $key) {
-            $notices = explode(',', $this->board->notice);
+        $filteredWrites = $totalWrites->reject(function ($value, $key) use($notices) {
             return in_array($value->id, $notices);
         });
 
@@ -274,29 +276,21 @@ class Write extends Model
     // 글 목록 결과물에 공지사항이 있는지 검사한다.
     private function hasNotice($writeModel, $kind, $keyword, $currenctCategory)
     {
-        // select ~ from ~ where까지 얻어온다.
-        $query = $this->getWritesWhere($writeModel, $kind, $keyword, $currenctCategory);
+        $notices = explode(',', trim($this->board->notice));
+        $notices = array_filter($notices);
 
-        $notices = explode(',', $this->board->notice);
-        for($i=0; $i<count($notices); $i++) {
-            $notices[$i] = (integer)$notices[$i];
-        }
-        $result = $query->whereIn($writeModel->table. '.id', $notices)->get();
-
-        return count($result) > 0 ? true : false;
+        return count($notices) > 0 ? true : false;
     }
 
     public function getViewParams($request, $boardId, $writeId, $writeModel)
     {
         $write = $writeModel->find($writeId);
 
-        // 조회수 증가, 포인트 부여
-        $result = $this->beforeRead($write, $request);
-
-        if(is_string($result)) {
-            return [ 'message' => $result ];
-        } else {
-            $write->hit = $result;
+        try {
+            // 조회수 증가, 포인트 부여
+            $write->hit = $this->beforeRead($write, $request);
+        } catch (Exception $e) {
+            return [ 'message' => $e->getMessage() ];
         }
 
         // 글쓰기 할때 html 체크에 따라 글 내용 보여주는 방식을 다르게 한다.
@@ -313,6 +307,11 @@ class Write extends Model
             $write->content = Util::convertContent($write->content, 2);
         } else {
             $write->content = Util::convertContent($write->content, $html);
+        }
+
+        // 검색어 색깔 다르게 표시
+        if($request->has('keyword')) {
+            $write->content = Util::searchKeyword($request->keyword, $write->content);
         }
 
         // 관리자 여부에 따라 ip 다르게 보여주기
@@ -473,21 +472,16 @@ class Write extends Model
     // 글 읽기 전 프로세스
     public function beforeRead($write, $request)
     {
-        $sessionName = 'session_view_'. $this->board->table_name. '_'. $write->id;
         $hit = $write->hit;
         $user = auth()->user();
-        $userId = is_null($user) ? 0 : $user->id;
+        $userId = !$user ? 0 : $user->id;
+        $userHash = !$user ? '' : $user->id_hashkey;
+        $sessionName = "session_view_". $this->board->table_name. '_'. $write->id. '_'. $userHash;
         if(!session()->get($sessionName) && $userId != $write->user_id) {
             // 조회수 증가
             $hit = $this->increaseHit($write);
-            if(!$userId) {
-                // 포인트 계산(차감)
-                $message = $this->calculatePoint($write, $request, 'read');
-
-                if($message != '') {
-                    return $message;
-                }
-            }
+            // 포인트 계산(차감)
+            $message = $this->calculatePoint($write, $request, 'read');
 
             session()->put($sessionName, true);
         }
@@ -532,25 +526,22 @@ class Write extends Model
                 break;
         }
         // 작성자가 본인이면 통과
-        $userId = is_null($user) ? 0 : $user->id;
-        $userPoint = is_null($user) ? 0 : $user->point;
+        $userId = !$user ? 0 : $user->id;
+        $userPoint = !$user ? 0 : $user->point;
         if($write->user_id > 0 && $write->user_id == $userId) {
             ;
-        } else if(is_null($user) && $boardlevel == 1 && $write->ip == $request->ip()) {
+        } else if(!$user && $boardlevel == 1 && $write->ip == $request->ip()) {
             ;
         } else {
             // 포인트 사용 && 소모되는 포인트가 있는지 && 현재 사용자가 갖고 있는 포인트로 사용 가능한지 검사
-            if (Cache::get("config.homepage")->usePoint
-                && $boardPoint
-                && $userPoint + $boardPoint < 0) {
-                    return '보유하신 포인트('.number_format($userPoint).')가 없거나 모자라서'. $contentPiece. '('.number_format($boardPoint).')가 불가합니다.\\n\\n포인트를 적립하신 후 다시'.$contentPiece.' 해 주십시오.';
+            if (Cache::get("config.homepage")->usePoint && $boardPoint && $userPoint + $boardPoint < 0) {
+                $message = '보유하신 포인트('.number_format($userPoint).')가 없거나 모자라서'. $contentPiece. '('.number_format($boardPoint).')가 불가합니다.\\n\\n포인트를 적립하신 후 다시'.$contentPiece.' 해 주십시오.';
+                throw new Exception($message);
             }
             // 포인트 부여(글 읽기, 파일 다운로드)
             $this->point->insertPoint($userId, $boardPoint,
                 $this->board->subject . ' ' . $write->id . $contentPiece, $this->board->table_name, $write->id, $action);
         }
-
-        return '';
     }
 
     // 글 읽기 중 링크 연결
@@ -653,7 +644,7 @@ class Write extends Model
     }
 
     // 글 수정 폼
-    public function getEditParams($boardId, $writeId, $writeModel)
+    public function getEditParams($boardId, $writeId, $writeModel, $request)
     {
         $write = $writeModel->find($writeId);
 
@@ -674,7 +665,7 @@ class Write extends Model
         $write->file = $uploadedFileCount < $configUploadFileCount ? $configUploadFileCount : $uploadedFileCount;
 
         // 글쓰기와 같은 폼을 쓰기때문에 글 쓰기할 때 가져왔던 파라미터를 가져온다.
-        $createParams = $this->getCreateParams($writeModel);
+        $createParams = $this->getCreateParams($writeModel, $request);
         $createParams['type'] = 'update';
 
         $params = [
@@ -688,11 +679,11 @@ class Write extends Model
     }
 
     // 답변 글 폼
-    public function getReplyParams($boardId, $writeId, $writeModel)
+    public function getReplyParams($boardId, $writeId, $writeModel, $request)
     {
         $write = $writeModel->find($writeId);
         // 글쓰기와 같은 폼을 쓰기때문에 글 쓰기할 때 가져왔던 파라미터를 가져온다.
-        $createParams = $this->getCreateParams($writeModel);
+        $createParams = $this->getCreateParams($writeModel, $request);
         $createParams['type'] = 'reply';
 
         $write->subject = 'Re: '. $write->subject;

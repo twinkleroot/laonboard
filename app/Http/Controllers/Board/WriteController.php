@@ -75,7 +75,7 @@ class WriteController extends Controller
 
         // 댓글 데이터
         $comment = new Comment();
-        $params = array_collapse([$params, $comment->getCommentsParams($this->writeModel, $boardId, $writeId)]);
+        $params = array_collapse([$params, $comment->getCommentsParams($this->writeModel, $boardId, $writeId, $request)]);
 
         // 전체 목록 보기 선택시 목록 데이터
         if($this->writeModel->board->use_list_view) {
@@ -179,9 +179,9 @@ class WriteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($boardId, $writeId)
+    public function edit($boardId, $writeId, Request $request)
     {
-        $params = $this->writeModel->getEditParams($boardId, $writeId, $this->writeModel);
+        $params = $this->writeModel->getEditParams($boardId, $writeId, $this->writeModel, $request);
         $skin = $this->writeModel->board->skin ? : 'default';
 
         return view('board.'. $skin. '.form', $params);
@@ -223,9 +223,9 @@ class WriteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function createReply($boardId, $writeId)
+    public function createReply($boardId, $writeId, Request $request)
     {
-        $params = $this->writeModel->getReplyParams($boardId, $writeId, $this->writeModel);
+        $params = $this->writeModel->getReplyParams($boardId, $writeId, $this->writeModel, $request);
         $skin = $this->writeModel->board->skin ? : 'default';
 
         return view('board.'. $skin. '.form', $params);

@@ -3,6 +3,7 @@
 namespace App\Admin;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 use Cache;
 
 class ManageAuth extends Model

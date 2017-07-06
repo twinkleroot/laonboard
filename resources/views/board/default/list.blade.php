@@ -103,9 +103,9 @@
                             <a href="{{ route('board.index', $board->id). '?category='. $write->ca_name }}">{{ $write->ca_name }}</a>
                         @endif
                         @if($viewParams == '')
-                            <a href="/board/{{ $board->id }}/view/{{ $write->id }}">{{ $write->subject }}</a>
+                            <a href="/board/{{ $board->id }}/view/{{ $write->parent }}">{{ $write->subject }}</a>
                         @else
-                            <a href="/board/{{ $board->id }}/view/{{ $write->id }}?{{ $viewParams }}">
+                            <a href="/board/{{ $board->id }}/view/{{ $write->parent }}?{{ $viewParams }}">
                                 {!! $write->subject !!}
                             </a>
                         @endif
@@ -142,7 +142,7 @@
                             <li><a href="{{ route('user.profile', $write->user_id_hashKey) }}" class="winProfile" target="_blank" onclick="winProfile(this.href); return false;">자기소개</a></li>
                             @if(session()->get('admin'))
         		                <li><a href="{{ route('admin.users.edit', $write->user_id_hashKey) }}" target="_blank">회원정보변경</a></li>
-        		                <li><a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $write->user_email }}" target="_blank">포인트내역</a></li>
+        		                <li><a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $write->email }}" target="_blank">포인트내역</a></li>
                             @endif
                         @endif
                             <li>
@@ -186,6 +186,8 @@
                                 <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>
                             @endif
                         </ul>
+                    @else
+                        {{ $write->name }}
                     @endif
                 </td>
 				<td class="bd_date">@monthAndDay($write->created_at)</td>
@@ -217,8 +219,8 @@
                 </select>
 
                 <label for="keyword" class="sr-only">검색어</label>
-                <input type="text" name="keyword" id="keyword" value="" class="search" required>
-                <button type="submit" id="" class="search-icon">
+                <input type="text" name="keyword" id="keyword" value="{{ $keyword }}" class="search" required>
+                <button type="submit" class="search-icon">
                     <i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">검색</span>
                 </button>
             </form>

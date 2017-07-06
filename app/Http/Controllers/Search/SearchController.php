@@ -4,41 +4,289 @@ namespace App\Http\Controllers\Search;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Board;
+use App\Group;
+use App\GroupUser;
+use App\User;
+use App\Write;
+use App\Common\Util;
+use App\Common\CustomPaginator;
 
 class SearchController extends Controller
 {
+    public $kind;
+    public $keyword;
+    public $operator;
+    public $groupId;
+    public $boardId;
+    public $pageRow = 10;
+    public $page;
+    public $user;
+    public $userLevel;
+
     public function result(Request $request)
     {
-        // 1
-        // 검색어를 받아서 특수문자를 제거한다.
-        // or, and를 받는다.
-        // 그룹 id를 받는다. 아니면 전체
-        // 검색필드를 찾는다. (제목+내용, 제목, 내용, 회원이메일, 회원이름)
-        // 한 게시판마다 3개의 게시물만 나오도록 한다.
-        // boards 테이블에서의 검색 : group_id, table_name, read_level 을 검색
-        // 검색 조건1 : use_search = 1, list_level <= $user->list_level
-        // 검색 조건2 : 그룹을 선택했으면 group_id = $groupId
-        // 검색 조건3 : 게시판을 선택했으면 table_name = $tableName
-        // 정렬 : order by order, group_id, table_name
+        $keyword = $request->has('keyword') ? $request->keyword : '';   // 검색어
+        $this->keyword = Util::getSearchString($keyword);
+        $this->kind = $request->has('kind') ? $request->kind : 'subject||content';    // 검색필드
+        $this->operator = $request->has('operator') ? $request->operator : '';    // 연산자
+        $this->groupId = $request->has('groupId') ? $request->groupId : '';   // 그룹명
+        $this->boardId = $request->has('boardId') ? $request->boardId : '';    // 게시판 id
+        $this->page = $request->has('page') ? $request->page : 1 ;
+        $this->user = auth()->user();
+        $this->userLevel = $this->user ? $this->user->level : 1;
 
-        // 2
-        // 이렇게 나온 $boards를 foreach돌리면서 해당 게시판이 속한 그룹의 use_access, admin(그룹관리자)를 검색한다.
-        // 그룹 접근을 사용할 때
-        // 현재 그룹에 현재 $user가 접근할 수 있는지 group_users를 검색한다.(그룹 관리자가 있고 $user가 그룹 관리자면 통과)
-        // 그렇게 해서 접근할 수 있는 테이블명을 최종 검색할 table_name과 read_level로 배열에 저장한다.
+        $kinds = explode('||', trim($this->kind));                            // 검색필드를 구분자로 나눈다.
+        $keywords = explode(' ', strip_tags($this->keyword));                 // 검색어를 구분자로 나눈다.
 
-        // 3 - where절 만들기
-        // stripslashes() -> getText() 로 검색 결과 input창에 표시할 검색어를 정제한다. 모던 php에서도 할만한지 찾아보기.
-        // 특수문자를 제거한 검색어를 구분자로 나눈다.
-        // 검색어의 공백을 제거한다.
-        // 검색필드를 || 구분자로 나눈다.
-        // 검색필드 수 만큼 다중 필드 검색이 가능하게 한다. query()에 where()절을 더할 수 있도록 한다.
-        // 내용 검색일 때 영어로 된 검색어와 아닌 검색어를 구분해서 처리한다.
-        // switch_case 문에 없는 검색필드는 항상 거짓 결과로 나오도록 처리한다.
-
-        // 4
-        // 3의 where절로 검색할 테이블마다 검색해서 각 게시판마다 모델객체를 내보낸다.
+        // 검색 조건에 따라 Board 모델을 구한다.
+        $boards = $this->getBoards();
+        // 접근할 수 없는 그룹을 조회한 Board모델에서 제외 시킨다.
+        $boards = $this->rejectGroupAccess($boards);
+        // 게시판 마다 해당 검색필드와 검색어로 검색한다.
+        $writes = $this->searchWrites($boards, $keywords, $kinds);
+        // 쿼리 스트링 만들기
+        $queryStrings = $this->createQueryStrings();
         // 모델들을 합치고 page마다 10개 단위로 나눠서 CustomPaginator로 보내서 화면에 처리한다.
-        return view('search.default.result');
+        $writesWithPagination = $this->mergeAndPaginate($writes, $queryStrings['pagination']);
+
+        $params = [
+            'groups' => Group::orderBy('group_id')->get(),
+            'writes' => $writesWithPagination,
+            'boards' => $writes,
+            'kind' => $this->kind,
+            'keyword' => $this->keyword,
+            'operator' => $this->operator,
+            'groupId' => $this->groupId,
+            'boardId' => $this->boardId,
+            'page' => $this->page,
+            'commonQueryString' => $queryStrings['common'],
+            'allBoardTabQueryString' => $queryStrings['allBoardTab'],
+            'boardTabQueryString' => $queryStrings['boardTab'],
+            'paginationQueryString' => $queryStrings['pagination']
+        ];
+
+        return view('search.default.result', $params);
+    }
+
+    // 검색 조건에 따라 Board 모델을 구한다.
+    private function getBoards()
+    {
+        $boardQuery = Board::where('use_search', 1)
+            ->where('list_level', '<=', $this->userLevel);
+
+        if($this->groupId) {
+            $boardQuery = $boardQuery->where('group_id', $this->groupId);
+        }
+        if($this->boardId) {
+            $boardQuery = $boardQuery->where('id', $this->boardId);
+        }
+
+        $orderColumn = 'boards.order';  // table prefix를 붙일 수 있어서 변수로 뺌.
+        $boards = $boardQuery->orderByRaw($orderColumn. ', group_id, table_name')->get();
+
+        return $boards;
+    }
+
+    // 접근할 수 없는 그룹을 조회한 Board모델에서 제외 시킨다.
+    private function rejectGroupAccess($boards)
+    {
+        $user = $this->user;
+        return $boards->reject(function ($board, $key) use ($user) {
+            if(!$user || !$user->isSuperAdmin()) {  // 비회원이거나 최고관리자가 아닐때
+                $group = $board->group;
+                if($group->use_access) {    // 그룹 접근을 사용할 때
+                    if(!$user || ($group->admin && !$user->isGroupAdmin($group))) { // 비회원이거나 그룹관리자가 존재하고 그룹관리자가 아닐떄
+                        $userId = $user ? $user->id : 0;
+                        $groupUser = GroupUser::
+                            where([
+                                'group_id' => $group->id,
+                                'user_id' => $userId,
+                            ])
+                            ->where('user_id', '<>', '')
+                            ->first();
+                        return is_null($groupUser);
+                    }
+                }
+            }
+            return false;
+        });
+    }
+
+    // 게시판마다 해당 검색필드와 검색어로 검색해서 Write모델을 모은 컬렉션으로 리턴한다.
+    private function searchWrites($boards, $keywords, $kinds)
+    {
+        $result = [];
+        // 게시판 마다 해당 검색필드와 검색어로 검색한다.
+        foreach($boards as $board) {
+            $writeModel = new Write($board->id);
+            $writeModel->setTableName($board->table_name);
+            $query = $writeModel
+                ->selectRaw($writeModel->getTable().'.*, users.id_hashKey as user_id_hashKey')
+                ->leftJoin('users', 'users.id', '=', $writeModel->getTable().'.user_id')
+                ->whereRaw('1=1');
+
+            // 검색어 만큼 루프를 돌린다.
+            foreach($keywords as $searchStr) {
+                if(trim($searchStr) == '') {
+                    continue;
+                }
+
+                // 인기 검색어 추가
+
+                // 첫번째 검색필드 땐 operator에 따라 where 메소드 넣기, 나머진 orWhere()
+                for($i=0; $i<count($kinds); $i++) {
+                    $op = ($this->operator == 'or') ? 'or' : 'and';
+                    switch ($kinds[$i]) {
+                        case 'user_id':
+                        case 'name':
+                            if($i == 0 && $op == 'and') {
+                                $query = $query->where($kinds[$i], $searchStr);
+                            } else {
+                                $query = $query->orWhere($kinds[$i], $searchStr);
+                            }
+                            break;
+                        case 'subject':
+                        case 'content':
+                            if (preg_match("/[a-zA-Z]/", $searchStr)) {
+                                $whereStr = "INSTR(LOWER($kinds[$i]), LOWER('$searchStr'))";
+                            } else {
+                                $whereStr = "INSTR($kinds[$i], '$searchStr')";
+                            }
+
+                            if($i == 0 && $op == 'and') {
+                                $query = $query->whereRaw($whereStr);
+                            } else {
+                                $query = $query->orWhereRaw($whereStr);
+                            }
+                            break;
+                        default:
+                            if($i == 0 && $op == 'and') {
+                                $query = $query->whereRaw("1=0");
+                            } else {
+                                $query = $query->orWhereRaw("1=0");
+                            }
+                            break;
+                    }
+                }
+            }
+            $writes = $query->get();
+            // 검색 결과로 내보낼 게시물을 재가공 한다.
+            $writes = $this->recreateWrites($writes, $board, $writeModel, $kinds, $keywords);
+
+            // 검색된 게시물이 있는 게시판만 결과물에 포함한다.
+            if(count($writes) > 0) {
+                $result[$board->id] = $writes;
+            }
+        }
+
+        return $result;
+    }
+
+    private function recreateWrites($writes, $board, $writeModel, $kinds, $keywords)
+    {
+        $writes->boardSubject = $board->subject;
+        $writes->boardId = $board->id;
+        // 각 게시물 row에 게시판 id를 넣어준다.
+        foreach($writes as $write) {
+            $parentWrite = $write;
+            $subject = $write->subject;
+            $content = $write->content;
+            // 댓글일 경우 부모글의 제목을 댓글의 제목으로 넣기
+            if($write->is_comment) {
+                $parentWrite = $writeModel->where('id', $write->parent)->first();
+                $subject = $parentWrite->subject;
+            }
+            $subject = Util::getText($subject);
+            // 검색어 색깔 다르게 표시
+            if( in_array('subject', $kinds) ) {
+                $subject = Util::searchKeyword($keywords, $subject);
+            }
+
+            // 댓글이나 원글 중 비밀글이 포함되어 있을 경우 표시
+            if( strstr($write->option. $parentWrite->option, 'secret')) {
+                $content = '[비밀글 입니다.]';
+            } else {
+                if($board->read_level <= $this->userLevel) {
+                    $content = strip_tags($content);
+                    $content = Util::getText($content, 1);
+                    $content = strip_tags($content);
+                    $content = str_replace('&nbsp;', '', $content);
+                    $content = Util::cutString($content, 300, "…");
+                }
+
+                if( in_array('content', $kinds) ) {
+                    $content = Util::searchKeyword($keywords, $content);
+                }
+            }
+
+            $write->subject = $subject;
+            $write->content = $content;
+            $write->boardSubject = $board->subject;
+            $write->boardId = $board->id;
+        }
+
+        return $writes;
+    }
+
+    private function createQueryStrings()
+    {
+        // 모두 필요한 파라미터
+        $commonArray = [
+            'kind' => $this->kind,
+            'keyword' => $this->keyword,
+            'operator' => $this->operator,
+        ];
+        $commonQueryString = $this->assemblyQueryString($commonArray);
+
+        // 전체 게시판 탭
+        $allBoardTabArray = $this->groupId ? array_add($commonArray, 'groupId', $this->groupId) : $commonArray;
+        $allBoardTabQueryString = $this->assemblyQueryString($allBoardTabArray);
+
+        // 상단 게시판 탭
+        $boardTabArray = array_collapse([$commonArray, [
+            'groupId' => $this->groupId,
+            'boardId' => $this->boardId,
+        ]]);
+        $boardTabQueryString = $this->assemblyQueryString($boardTabArray);
+
+        // 페이징 링크
+        $paginationArray = ($this->page > 1) ? array_add($boardTabArray, 'page', $this->page) : $boardTabArray;
+        $paginationQueryString = $this->assemblyQueryString($paginationArray);
+
+        return [
+            'common' => $commonQueryString,
+            'allBoardTab' => $allBoardTabQueryString,
+            'boardTab' => $boardTabQueryString,
+            'pagination' => $paginationQueryString,
+        ];
+    }
+
+    // 쿼리 스트링 조립
+    private function assemblyQueryString($querys)
+    {
+        $result = [];
+        foreach($querys as $key => $value) {
+            if($value) {
+                $result[] = "$key=$value";
+            }
+        }
+        return implode('&', $result);
+    }
+
+    // 결과 게시물 모델을 합치고 페이징한다.
+    private function mergeAndPaginate($writes, $paginationQueryString)
+    {
+        $mergeWrites = collect();
+        foreach($writes as $write) {
+            $write[0]->boardChange = 1;
+            $mergeWrites = $mergeWrites->merge($write);
+        }
+        $sliceWrites = $mergeWrites->slice($this->pageRow * ($this->page - 1), $this->pageRow);
+
+        $writes = new CustomPaginator($sliceWrites, count($mergeWrites), $this->pageRow, $this->page);
+        $writes->withPath('/search?'. $paginationQueryString);
+
+        return $writes;
     }
 }

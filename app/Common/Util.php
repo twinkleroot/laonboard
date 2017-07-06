@@ -12,6 +12,24 @@ use App\ManageAuth;
 
 class Util
 {
+    // 검색어 특수문자 제거
+    public static function getSearchString($keyword)
+    {
+        $pattern = array();
+        $pattern[] = '#\.*/+#';
+        $pattern[] = '#\\\*#';
+        $pattern[] = '#\.{2,}#';
+        $pattern[] = '#[/\'\"%=*\#\(\)\|\+\&\!\$~\{\}\[\]`;:\?\^\,]+#';
+
+        $replace = array();
+        $replace[] = '';
+        $replace[] = '';
+        $replace[] = '.';
+        $replace[] = '';
+
+        return preg_replace($pattern, $replace, $keyword);
+    }
+
     // 관리 권한 설정 데이터를 가져온다.
     public static function getManageAuthModel($menuCode)
     {
@@ -156,10 +174,14 @@ class Util
         $src = array('/', '|');
         $dst = array('\/', '\|');
 
-        if (!trim($keyword)) return $subject;
+        if( !is_array($keyword) ) {
+            if (!trim($keyword)) return $subject;
 
-        // 검색어 전체를 공란으로 나눈다
-        $s = explode(' ', $keyword);
+            // 검색어 전체를 공란으로 나눈다
+            $s = explode(' ', $keyword);
+        } else {
+            $s = $keyword;
+        }
 
         // "/(검색1|검색2)/i" 와 같은 패턴을 만듬
         $pattern = '';
@@ -219,12 +241,13 @@ class Util
     public static function getText($str, $html=0, $restore=false)
     {
         $source[] = "<";
-        $target[] = "&lt;";
         $source[] = ">";
-        $target[] = "&gt;";
         $source[] = "\"";
-        $target[] = "&#034;";
         $source[] = "\'";
+
+        $target[] = "&lt;";
+        $target[] = "&gt;";
+        $target[] = "&#034;";
         $target[] = "&#039;";
 
         if($restore) {

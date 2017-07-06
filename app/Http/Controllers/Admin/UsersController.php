@@ -34,7 +34,7 @@ class UsersController extends Controller
     public function index(Request $request)
     {
         if (auth()->user()->cant('index', $this->userModel)) {
-            abort(403, '해당 액션에 대한 권한이 없습니다.');
+            abort(403, '회원 목록 보기에 대한 권한이 없습니다.');
         }
 
         $params = $this->userModel->userList($request);
@@ -50,7 +50,7 @@ class UsersController extends Controller
     public function create()
     {
         if (auth()->user()->cant('create', AdminUser::class)) {
-            abort(403, '해당 액션에 대한 권한이 없습니다.');
+            abort(403, '회원 추가에 대한 권한이 없습니다.');
         }
 
         $user = auth()->user();
@@ -70,7 +70,7 @@ class UsersController extends Controller
     public function store(Request $request)
     {
         if (auth()->user()->cant('create', AdminUser::class)) {
-            abort(403, '해당 액션에 대한 권한이 없습니다.');
+            abort(403, '회원 추가에 대한 권한이 없습니다.');
         }
 
         $rule = [
@@ -97,7 +97,7 @@ class UsersController extends Controller
     public function edit($id)
     {
         if (auth()->user()->cant('update', $this->userModel)) {
-            abort(403, '해당 액션에 대한 권한이 없습니다.');
+            abort(403, '회원 정보 수정에 대한 권한이 없습니다.');
         }
 
         $user;
@@ -126,7 +126,7 @@ class UsersController extends Controller
     public function update(Request $request, $id)
     {
         if (auth()->user()->cant('update', $this->userModel)) {
-            abort(403, '해당 액션에 대한 권한이 없습니다.');
+            abort(403, '회원 정보 수정에 대한 권한이 없습니다.');
         }
 
         $user = User::findOrFail($id);
@@ -170,7 +170,7 @@ class UsersController extends Controller
     public function selectedUpdate(Request $request)
     {
         if (auth()->user()->cant('update', $this->userModel)) {
-            abort(403, '해당 액션에 대한 권한이 없습니다.');
+            abort(403, '회원 정보 수정에 대한 권한이 없습니다.');
         }
 
         $this->userModel->selectedUpdate($request);
@@ -187,12 +187,12 @@ class UsersController extends Controller
     public function destroy(Request $request, $id)
     {
         if (auth()->user()->cant('delete', $this->userModel)) {
-            abort(403, '해당 액션에 대한 권한이 없습니다.');
+            abort(403, '회원 삭제에 대한 권한이 없습니다.');
         }
 
         $ids = $request->get('ids');
         $result = User::whereRaw('id in (' . $ids . ') ')->delete();
 
-        return redirect(route('admin.users.index'))->with('message', '선택한 회원정보가 삭제되었습니다.');
+        return redirect(route('admin.users.index'))->with('message', '선택한 회원이 삭제되었습니다.');
     }
 }

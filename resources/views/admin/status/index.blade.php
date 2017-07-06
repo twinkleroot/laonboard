@@ -40,7 +40,7 @@
         {{-- @linechart('Chart', 'chart') --}}
         {!! Lava::render('LineChart','Chart', 'chart') !!}
     @else
-        @columnchart('Chart', 'chart')
+        {{-- @columnchart('Chart', 'chart') --}}
         {!! Lava::render('ColumnChart','Chart', 'chart') !!}
     @endif
 @else
