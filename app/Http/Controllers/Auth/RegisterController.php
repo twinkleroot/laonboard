@@ -9,9 +9,9 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Auth;
 use Cache;
-use App\Config;
 use App\User;
 use App\ReCaptcha;
+use App\Admin\Config;
 
 class RegisterController extends Controller
 {
@@ -30,7 +30,6 @@ class RegisterController extends Controller
     // use RegistersUsers;
 
     public $config;
-    public $rulePassword;
     public $userModel;
 
     /**
@@ -43,7 +42,6 @@ class RegisterController extends Controller
         $this->middleware('guest');
 
         $this->config = Cache::get("config.join");
-        $this->rulePassword = Config::getRulePassword('config.join', $this->config);
         $this->userModel = $userModel;
     }
 
@@ -58,7 +56,10 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         if(ReCaptcha::reCaptcha($request)) {    // 구글 리캡챠 체크
-            $rule = array_add($this->userModel->rulesRegister, 'password', $this->rulePassword);
+
+            $adminConfig = new Config();
+            $rulePassword = $adminConfig->getPasswordRuleByConfigPolicy();
+            $rule = array_add($this->userModel->rulesRegister, 'password', $rulePassword);
             $this->validate($request, $rule);
 
             $user = $this->userModel->joinUser($request, $this->config);

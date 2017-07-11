@@ -98,7 +98,9 @@
                         <ul>
                 @endif
                             <li class="contents">
-                                <span class="sch_subject"><a href="/board/{{ $write->boardId }}/view/{{ $write->parent }}">{!! $write->subject !!}</a> <a href="/board/{{ $write->boardId }}/view/{{ $write->parent }}" target="_blank">[새창으로 열기]</a></span>
+                                <span class="sch_subject">
+                                    <a href="/board/{{ $write->boardId }}/view/{{ $write->parent. $write->queryString }}">{!! $write->subject !!}</a> <a href="/board/{{ $write->boardId }}/view/{{ $write->parent. $write->queryString }}" target="_blank">[새창으로 열기]</a>
+                                </span>
                                 <p>
                                     {!! $write->content !!}
                                 </p>

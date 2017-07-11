@@ -1,4 +1,13 @@
-<p>
-    토큰 정보가 올바르지 않습니다.
-</p>
-<button type="button" onclick="history.back();">이전페이지로</button>
+<html>
+<head>
+    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script>
+        $(document).ready(function(){
+            alert("토큰 정보가 올바르지 않습니다.");
+            history.back();
+        });
+    </script>
+</head>
+<body>
+</body>
+</html>

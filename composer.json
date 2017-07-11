@@ -8,6 +8,7 @@
         "php": ">=5.6.4",
         "barryvdh/laravel-debugbar": "~2.0",
         "doctrine/dbal": "~2.0",
+        "eternicode/bootstrap-datepicker": "^1.6",
         "guzzlehttp/guzzle": "^6.2",
         "intervention/image": "^2.3",
         "itsjavi/bootstrap-colorpicker": "^2.5",

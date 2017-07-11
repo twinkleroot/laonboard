@@ -4,26 +4,22 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Admin\Config;
 use App\Admin\AdminUser;
 use App\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Password;
 use Carbon\Carbon;
 use Cache;
-use App\Config;
 use App\GroupUser;
 use App\Common\Util;
 
 class UsersController extends Controller
 {
-    public $config;
     public $userModel;
-    public $rulePassword;
 
-    public function __construct(Config $config, AdminUser $userModel)
+    public function __construct(AdminUser $userModel)
     {
-        $this->config = Cache::get("config.join");
-        $this->rulePassword = Config::getRulePassword('config.join', $this->config);
         $this->userModel = $userModel;
     }
     /**
@@ -55,9 +51,7 @@ class UsersController extends Controller
 
         $user = auth()->user();
         return view('admin.users.create', [
-                'title' => Cache::get("config.homepage")->title,
                 'user' => $user,
-                'config' => $this->config
             ]);
     }
 
@@ -73,10 +67,12 @@ class UsersController extends Controller
             abort(403, '회원 추가에 대한 권한이 없습니다.');
         }
 
+        $adminConfig = new Config();
+        $rulePassword = $adminConfig->getPasswordRuleByConfigPolicy();
         $rule = [
             'email' => 'required|email|max:255|unique:users',
             'nick' => 'required|nick_length:2,4|unique:users|alpha_num',
-            'password' => $this->rulePassword[0] . '|' . $this->rulePassword[2],
+            'password' => $rulePassword[0] . '|' . $rulePassword[2],
         ];
 
         $this->validate($request, $rule);

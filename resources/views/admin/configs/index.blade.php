@@ -444,15 +444,6 @@
                 {{ csrf_field() }}
                 <div class="panel-body">
                     <div class="form-group">
-                        <label for="delaySecond" class="col-md-4 control-label">글쓰기 간격</label>
-
-                        <div class="col-md-6">
-                            <input type="text" name="delaySecond" value="{{ $configBoard->delaySecond }}">초 지난후 가능
-                        </div>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <div class="form-group">
                         <label for="linkTarget" class="col-md-4 control-label">새창 링크</label>
 
                         <div class="col-md-6">

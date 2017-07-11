@@ -11,6 +11,7 @@ use App\User;
 use App\Write;
 use App\Common\Util;
 use App\Common\CustomPaginator;
+use App\Admin\Popular;
 
 class SearchController extends Controller
 {
@@ -44,7 +45,7 @@ class SearchController extends Controller
         // 접근할 수 없는 그룹을 조회한 Board모델에서 제외 시킨다.
         $boards = $this->rejectGroupAccess($boards);
         // 게시판 마다 해당 검색필드와 검색어로 검색한다.
-        $writes = $this->searchWrites($boards, $keywords, $kinds);
+        $writes = $this->searchWrites($request, $boards, $keywords, $kinds);
         // 쿼리 스트링 만들기
         $queryStrings = $this->createQueryStrings();
         // 모델들을 합치고 page마다 10개 단위로 나눠서 CustomPaginator로 보내서 화면에 처리한다.
@@ -114,10 +115,12 @@ class SearchController extends Controller
     }
 
     // 게시판마다 해당 검색필드와 검색어로 검색해서 Write모델을 모은 컬렉션으로 리턴한다.
-    private function searchWrites($boards, $keywords, $kinds)
+    private function searchWrites($request, $boards, $keywords, $kinds)
     {
         $result = [];
+        $popular = new Popular();
         // 게시판 마다 해당 검색필드와 검색어로 검색한다.
+        $boardIndex = 0;
         foreach($boards as $board) {
             $writeModel = new Write($board->id);
             $writeModel->setTableName($board->table_name);
@@ -133,17 +136,20 @@ class SearchController extends Controller
                 }
 
                 // 인기 검색어 추가
+                if($boardIndex == 0) {
+                    $popular->addPopular($kinds, $searchStr, $request);
+                }
 
                 // 첫번째 검색필드 땐 operator에 따라 where 메소드 넣기, 나머진 orWhere()
                 for($i=0; $i<count($kinds); $i++) {
                     $op = ($this->operator == 'or') ? 'or' : 'and';
                     switch ($kinds[$i]) {
-                        case 'user_id':
+                        case 'email':
                         case 'name':
                             if($i == 0 && $op == 'and') {
-                                $query = $query->where($kinds[$i], $searchStr);
+                                $query = $query->where($writeModel->getTable(). '.'. $kinds[$i], $searchStr);
                             } else {
-                                $query = $query->orWhere($kinds[$i], $searchStr);
+                                $query = $query->orWhere($writeModel->getTable(). '.'. $kinds[$i], $searchStr);
                             }
                             break;
                         case 'subject':
@@ -172,30 +178,43 @@ class SearchController extends Controller
             }
             $writes = $query->get();
             // 검색 결과로 내보낼 게시물을 재가공 한다.
-            $writes = $this->recreateWrites($writes, $board, $writeModel, $kinds, $keywords);
+            $writes = $this->recreateWrites($request, $writes, $board, $writeModel, $kinds, $keywords);
 
             // 검색된 게시물이 있는 게시판만 결과물에 포함한다.
             if(count($writes) > 0) {
                 $result[$board->id] = $writes;
             }
+
+            $boardIndex++;
         }
 
         return $result;
     }
 
-    private function recreateWrites($writes, $board, $writeModel, $kinds, $keywords)
+    // 검색 결과물 가공하기
+    private function recreateWrites($request, $writes, $board, $writeModel, $kinds, $keywords)
     {
         $writes->boardSubject = $board->subject;
         $writes->boardId = $board->id;
+        // 댓글 때문에 원글을 계속 조회하는 문제 수정
+        $tmpParent = 0;
+        $parentWrite = null;
         // 각 게시물 row에 게시판 id를 넣어준다.
         foreach($writes as $write) {
-            $parentWrite = $write;
             $subject = $write->subject;
             $content = $write->content;
+            $queryString = "?kind=". $request->kind. "&keyword=". $request->keyword;
             // 댓글일 경우 부모글의 제목을 댓글의 제목으로 넣기
             if($write->is_comment) {
-                $parentWrite = $writeModel->where('id', $write->parent)->first();
-                $subject = $parentWrite->subject;
+                $queryString .= '#comment'. $write->id;
+                if($tmpParent != $write->parent) {
+                    $parentWrite = $writeModel->where('id', $write->parent)->first();
+                    $tmpParent = $parentWrite->id;
+                }
+
+                $subject = '댓글 | '. $parentWrite->subject;
+            } else {
+                $parentWrite = $write;
             }
             $subject = Util::getText($subject);
             // 검색어 색깔 다르게 표시
@@ -224,6 +243,7 @@ class SearchController extends Controller
             $write->content = $content;
             $write->boardSubject = $board->subject;
             $write->boardId = $board->id;
+            $write->queryString = $queryString;
         }
 
         return $writes;

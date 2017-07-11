@@ -19,7 +19,7 @@ Route::get('/home', ['as' => 'home', 'uses' => 'MainController@index'] );
 // 게시판 그룹별 메인
 Route::get('/group/{group}', ['as' => 'group', 'uses' => 'MainController@groupIndex'] );
 
-// 게시판 그룹별 메인
+// 전체 검색 결과
 Route::get('/search', ['as' => 'search', 'uses' => 'Search\SearchController@result'] );
 
 // 관리자 그룹
@@ -170,6 +170,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
         ],
     ]);
 
+    // 인기 검색어 관리
+    Route::get('populars/index', ['as' => 'admin.populars.index', 'uses' => 'Admin\PopularsController@index']);
+    Route::delete('populars/destroy/{ids}', ['as' => 'admin.populars.destroy', 'uses' => 'Admin\PopularsController@destroy']);
+    // 인기 검색어 순위
+    Route::get('populars/rank', ['as' => 'admin.populars.rank', 'uses' => 'Admin\PopularsController@rank']);
+
     // 내용 관리
     Route::get('contents/{content}/delete', ['as' => 'admin.contents.destroy', 'uses' => 'Admin\ContentsController@destroy']);
     Route::resource('contents', 'Admin\ContentsController', [
@@ -187,6 +193,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
 
     // 글,댓글 현황
     Route::get('status', ['as' => 'admin.status', 'uses' => 'Admin\StatusController@index']);
+
 
 });
 

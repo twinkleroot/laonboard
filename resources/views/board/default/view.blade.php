@@ -84,27 +84,19 @@
 
 	<p>{!! $view->content !!}</p>
 
-    <script>
-        $(document).ready(function(){
-            $(".bd_title").click(function(){
-                $(".bd_file_list").toggle();
-            });
-        });
-    </script>
-
     @if($view->file > 0)
-        @foreach($boardFiles as $file)
             <div class="bd_file">
                 <i class="fa fa-paperclip"></i>
-                <span class="bd_title">첨부된 파일 {{ count($file) }}개</span>
+                <span class="bd_title">첨부된 파일 {{ count($boardFiles) }}개</span>
+                @foreach($boardFiles as $file)
                 <ul class="bd_file_list" role="menu">
                     <li>
                         <i class="fa fa-download"></i><a href="/board/{{ $board->id }}/view/{{ $view->id }}/download/{{ $file->board_file_no }}">{{ $file->source }}</a>
                         <span class="downcount">(다운로드 횟수: {{ $file->download }}회 / DATE : {{ $file->created_at }}) </span>
                     </li>
                 </ul>
+                @endforeach
             </div>
-        @endforeach
     @endif
     @if($board->use_signature && $signature)
         <div class="bd_sign">
@@ -445,8 +437,11 @@ function commentBox(commentId, work) {
 
 // 댓글 입력폼이 보이도록 처리하기위해서 추가 (root님)
 commentBox('', 'c');
-
 $(function() {
+    $(".bd_title").click(function(){
+        $(".bd_file_list").toggle();
+    });
+    
     $(".viewOriginalImage").click(function() {
         var width = $(this).attr('width');
         var height = $(this).attr('height');

@@ -17,14 +17,11 @@ class Config extends Model
     protected $guarded = [];
 
     public $timestamps = false;
-
-    // json형태로 저장된 설정을 배열형태로 변환하는 메소드
-    public function pullConfig($config) {
-        return json_decode($config->vars);
-    }
+    public $table='configs';
 
     // 비밀번호 정책 설정에 따라 비밀번호 정규식 조합
-    public static function getRulePassword($name, $config) {
+    public function getPasswordRuleByConfigPolicy() {
+        $config = Cache::get('config.join');
         $rulePieces = array();
         $ruleString = array();
         $ruleArr = [
@@ -50,6 +47,11 @@ class Config extends Model
         array_push($ruleArr,  'regex:' . $ruleString);
 
         return $ruleArr;
+    }
+
+    // json형태로 저장된 설정을 배열형태로 변환하는 메소드
+    public function pullConfig($config) {
+        return json_decode($config->vars);
     }
 
     // 환경 설정 인덱스 페이지에 들어갈 데이터

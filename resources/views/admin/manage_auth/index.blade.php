@@ -65,10 +65,10 @@
         					<input type="checkbox" name="chkAll" onclick="checkAll(this.form)" />
         				</th>
         				<th>
-                            <a class="mb_tooltip" href="{{ route('admin.manageAuth.index') }}?order=email&amp;direction={{$order=='email' ? $direction : 'asc'}}">회원이메일</a>
+                            <a class="mb_tooltip" href="{{ route('admin.manageAuth.index')."?keyword=$keyword&order=email&direction=" }}{{ $order == "email" ? $direction : "asc" }}">회원이메일</a>
                         </th>
         				<th>
-                            <a class="mb_tooltip" href="{{ route('admin.manageAuth.index') }}?order=nick&amp;direction={{$order=='nick' ? $direction : 'asc'}}">닉네임</a>
+                            <a class="mb_tooltip" href="{{ route('admin.manageAuth.index')."?keyword=$keyword&order=nick&direction=" }}{{ $order == "nick" ? $direction : "asc" }}">닉네임</a>
                         </th>
         				<th>메뉴</th>
         				<th>권한</th>
@@ -111,10 +111,11 @@
         </form>
 
         {{-- 페이지 처리 --}}
-        {{ str_contains(url()->full(), 'kind')
-            ? $points->appends([
-                'kind' => $kind,
+        {{ str_contains(url()->full(), 'keyword')
+            ? $manageAuthList->appends([
                 'keyword' => $keyword,
+                'order' => $order,
+                'direction' => $direction == 'desc' ? 'asc' : 'desc',
             ])->links()
             : $manageAuthList->links()
         }}

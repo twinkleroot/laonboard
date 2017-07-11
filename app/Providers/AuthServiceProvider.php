@@ -9,13 +9,17 @@ use App\Admin\Group;
 use App\Admin\Point;
 use App\Admin\AdminUser;
 use App\Admin\Content;
+use App\Admin\Popup;
+use App\Admin\Popular;
 use App\Admin\GroupUser;
 use App\Policies\BoardPolicy;
 use App\Policies\UserPolicy;
 use App\Policies\GroupPolicy;
 use App\Policies\PointPolicy;
+use App\Policies\PopupPolicy;
 use App\Policies\GroupUserPolicy;
 use App\Policies\ContentPolicy;
+use App\Policies\PopularPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -31,6 +35,8 @@ class AuthServiceProvider extends ServiceProvider
         GroupUser::class => GroupUserPolicy::class,
         Content::class => ContentPolicy::class,
         Point::class => PointPolicy::class,
+        Popup::class => PopupPolicy::class,
+        Popular::class => PopularPolicy::class,
     ];
 
     /**

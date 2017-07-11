@@ -35,12 +35,14 @@ class ManageAuth extends Model
         $query = ManageAuth::selectRaw('manage_auth.*, users.email as user_email, users.nick as user_nick')
             ->leftJoin('users', 'manage_auth.user_id', '=', 'users.id');
 
+        // 검색
         if($keyword) {
             $query = $query->where('users.email', 'like', $keyword);
         }
 
+        // 정렬
         if($order) {
-            $query = $query->orderBy('users.'. $order, $direction);
+            $query = $query->orderBy('user_'. $order, $direction);
         } else {
             $query = $query->orderByRaw('manage_auth.user_id, manage_auth.menu');
         }

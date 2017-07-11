@@ -37,6 +37,7 @@ class Popup extends Model
             'content_html' => 2,
             'color' => '#000000',
             'color_button' => '#393939',
+            'color_button_font' => '#ffffff',
         ];
         return [
             'default' => $default,

@@ -1,7 +1,7 @@
 @extends('admin.admin')
 
 @section('title')
-    회원 추가 | {{ $title }}
+    회원 추가 | {{ Cache::get("config.homepage")->title }}
 @endsection
 
 @section('include_script')
@@ -123,7 +123,7 @@
                             <div class="col-md-3">
                                 <select class="form-control" name="level">
                                     @for($i=1;$i<=auth()->user()->level;$i++)
-                                    <option value={{ $i }} @if($config->joinLevel == $i) selected @endif>
+                                    <option value={{ $i }} @if(Cache::get("config.join")->joinLevel == $i) selected @endif>
                                         {{ $i }}
                                     </option>
                                     @endfor
@@ -133,7 +133,7 @@
                         <div class="form-group">
                             <label for="point" class="col-md-2 control-label">포인트</label>
                             <div class="col-md-3">
-                                <input type="text" class="form-control" name="point" value="{{ $config->joinPoint }}">
+                                <input type="text" class="form-control" name="point" value="{{ Cache::get("config.join")->joinPoint }}">
                             </div>
                         </div>
                         <div class="form-group">

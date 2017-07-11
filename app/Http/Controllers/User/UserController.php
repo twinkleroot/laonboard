@@ -12,7 +12,7 @@ use Carbon\Carbon;
 use App\ReCaptcha;
 use App\User;
 use App\Point;
-use App\Config;
+use App\Admin\Config;
 use App\Notification;
 
 class UserController extends Controller
@@ -27,8 +27,10 @@ class UserController extends Controller
     {
         $this->config = Cache::get("config.join");
         $this->skin = $this->config->skin;
-        $this->rulePassword = Config::getRulePassword('config.join', $this->config);
         $this->userModel = $userModel;
+
+        $adminConfig = new Config();
+        $this->rulePassword = $adminConfig->getPasswordRuleByConfigPolicy();
     }
 
     // 회원 정보 수정 폼

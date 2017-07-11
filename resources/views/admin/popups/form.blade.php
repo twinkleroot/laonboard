@@ -157,6 +157,15 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="color_button_font" class="col-md-2 control-label">팝업레이어 버튼 폰트 색상</label>
+                    <div class="col-md-2">
+                        <div id="cp3" class="input-group colorpicker-component">
+                            <input type="text" name="color_button_font" id="color_button_font" class="form-control" value="{{ $type == 'update' ? $popup->color_button_font : $default['color_button'] }}" />
+                            <span class="input-group-addon"><i></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="subject" class="col-md-2 control-label">팝업 제목</label>
                     <div class="col-md-7">
                         <input type="text" class="form-control" name="subject" id="subject" value="{{ $type == 'update' ? $popup->subject : '' }}" required size="80">
@@ -177,6 +186,7 @@
 $(function() {
     $('#cp1').colorpicker();
     $('#cp2').colorpicker();
+    $('#cp3').colorpicker();
 });
 function popupFormCheck(f)
 {

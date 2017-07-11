@@ -19,6 +19,7 @@ use App\Common\CustomPaginator;
 use App\Autosave;
 use App\BoardNew;
 use App\BoardFile;
+use App\Admin\Popular;
 
 
 class Write extends Model
@@ -104,6 +105,18 @@ class Write extends Model
         if($request->has('keyword')) {
             $keyword = $request->keyword;
             $viewParams['keyword'] = 'keyword='. $keyword;
+        }
+
+        // 인기 검색어 추가
+        if($kind && $keyword) {
+            $kinds = [];
+            if(strpos($kind, '||')) {
+                $kinds = explode('||', $kind);
+            } else {
+                $kinds = explode(',', $kind);
+            }
+            $popular = new Popular();
+            $popular->addPopular($kinds, $keyword, $request);
         }
 
         $userLevel = is_null(Auth::user()) ? 1 : Auth::user()->level;
@@ -224,7 +237,6 @@ class Write extends Model
                 $query = $query->where($writeModel->table.'.name', $keyword);
             // 단독 키워드 검색(제목, 내용)
             } else {
-                // $query = $query->where($kind, 'like', '%'.$keyword.'%');
                 $query = $query->whereRaw("INSTR($kind, '$keyword')");
             }
         } else {

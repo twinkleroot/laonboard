@@ -19,8 +19,8 @@
                 {!! $popup->content !!}
             </div>
             <div class="hd_pops_footer" style="background:{{ $popup->color}};">
-                <button class="hd_pops_reject hd_pops_{{ $popup->id }} {{ $popup->disable_hours }}" style="background:{{ $popup->color_button }};"><strong>24</strong>시간 동안 다시 열람하지 않습니다.</button>
-                <button class="hd_pops_close hd_pops_{{ $popup->id }}" style="background:{{ $popup->color_button }};">닫기</button>
+                <button class="hd_pops_reject hd_pops_{{ $popup->id }} {{ $popup->disable_hours }}" style="background:{{ $popup->color_button }};color:{{ $popup->color_button_font }};"><strong>24</strong>시간 동안 다시 열람하지 않습니다.</button>
+                <button class="hd_pops_close hd_pops_{{ $popup->id }}" style="background:{{ $popup->color_button }};color:{{ $popup->color_button_font }};">닫기</button>
             </div>
         </div>
         @endif
