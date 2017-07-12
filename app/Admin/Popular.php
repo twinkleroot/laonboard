@@ -80,11 +80,17 @@ class Popular extends Model
     {
         $fromDate = isset($request->fromDate) ? $request->fromDate : Carbon::now()->toDateString();
         $toDate = isset($request->toDate) ? $request->toDate : Carbon::now()->toDateString();
+        $listType = isset($request->list) ? $request->list : 0; // 전체목록인지 기간검색인지
         $pageRows = Cache::get('config.homepage')->pageRows;
-        $ranks = Popular::selectRaw('word, count(*) as cnt')
-            ->whereRaw("trim(word) <> ''")
-            ->whereBetween('date', [$fromDate, $toDate])
-            ->groupBy('word')
+        $query = Popular::selectRaw('word, count(*) as cnt')
+            ->whereRaw("trim(word) <> ''");
+        if( !$listType ) {
+            $query = $query->whereBetween('date', [$fromDate, $toDate]);
+        } else {
+            $fromDate = '';
+            $toDate = '';
+        }
+        $ranks = $query->groupBy('word')
             ->orderByRaw('cnt desc, word asc')
             ->paginate($pageRows);
 

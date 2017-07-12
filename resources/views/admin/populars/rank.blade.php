@@ -29,7 +29,7 @@
     <div id="auth_list">
     	<ul id="adm_btn">
             <li>
-                <button type="button" class="btn btn-sir" onclick="location.href='/admin/populars/rank';">
+                <button type="button" class="btn btn-sir" onclick="location.href='{{ route('admin.populars.rank') }}?list=all';">
                      전체목록
                 </button>
             </li>

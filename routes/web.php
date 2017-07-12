@@ -78,6 +78,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
         ]
     ]);
 
+    // 세션 일괄 삭제
+    Route::get('session/delete', ['as' => 'admin.session.delete', 'uses' => 'Admin\SimpleController@deleteSession']);
+    // 캐시 일괄 삭제
+    Route::get('cache/delete', ['as' => 'admin.cache.delete', 'uses' => 'Admin\SimpleController@deleteCache']);
+    // 썸네일 일괄 삭제
+    Route::get('thumbnail/delete', ['as' => 'admin.thumbnail.delete', 'uses' => 'Admin\SimpleController@deleteThumbnail']);
+
     // phpinfo()
     Route::get('phpinfo', ['as' => 'admin.phpinfo', 'uses' => 'Admin\SimpleController@phpinfo']);
 

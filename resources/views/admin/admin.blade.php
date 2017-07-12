@@ -32,6 +32,7 @@
 </head>
 <body>
 <div id="admin-header">
+
 	<div class="header-title sidebarmenu">
 		<h1><i class="fa fa-cogs"></i>Administrator</h1>
 	</div>
