@@ -121,6 +121,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
     // 게시판 관리 리소스 컨트롤러에 추가적으로 라우팅을 구성(리소스 라우트보다 앞에 와야 함)
     Route::put('boards/selected_update', ['as' => 'admin.boards.selectedUpdate', 'uses' => 'Admin\BoardsController@selectedUpdate']);
     Route::get('boards/copy/{boardId}', ['as' => 'admin.boards.copyForm', 'uses' => 'Admin\BoardsController@copyForm']);
+    Route::get('boards/{boardId}/thumbnail/delete', ['as' => 'admin.boards.thumbnail.delete', 'uses' => 'Admin\BoardsController@deleteThumbnail']);
     Route::post('boards/copy', ['as' => 'admin.boards.copy', 'uses' => 'Admin\BoardsController@copy']);
     // 게시판 관리 리소스 컨트롤러
     Route::resource('boards', 'Admin\BoardsController', [
@@ -274,7 +275,7 @@ Route::group(['prefix' => 'board/{boardId}'], function () {
         ->where('boardId', '[0-9]+');
     // 글 읽기
     Route::get('view/{writeId}', ['as' => 'board.view', 'uses' => 'Board\WriteController@view'])
-        ->middleware('level.board:read_level', 'valid.board', 'valid.write', 'secret.board');
+        ->middleware('level.board:read_level', 'valid.board', 'valid.write', 'comment.view.parent', 'secret.board');
     // 글 읽기 중 링크 연결
     Route::get('view/{writeId}/link/{linkNo}', ['as' => 'board.link', 'uses' => 'Board\WriteController@link'])
         ->middleware('level.board:read_level', 'valid.board', 'valid.write');

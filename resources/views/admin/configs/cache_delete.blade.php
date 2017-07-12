@@ -30,7 +30,7 @@
             foreach($caches as $cache) {
                 $count++;
                 echo "<li>$cache</li>";
-                cache()->forget($cacheName);
+                cache()->forget($cache);
             }
         ?>
     	<li>완료됨</li>

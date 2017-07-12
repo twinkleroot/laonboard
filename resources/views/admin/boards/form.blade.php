@@ -1,11 +1,12 @@
 @extends('admin.admin')
 
 @section('title')
-     게시판 {{ $title }} | {{ $homePageConfig->title }}
+     게시판 {{ $type == 'create' ? '생성' : '수정' }} | {{ cache("config.homepage")->title }}
 @endsection
 
 @section('include_script')
     <script src="{{ asset('tinymce/tinymce.min.js') }}"></script>
+    <script src="{{ asset('js/common.js') }}"></script>
 @endsection
 
 @section('content')
@@ -18,8 +19,9 @@
                 </script>
             @endif
             <div class="panel panel-default">
-                <div class="panel-heading"><h2>게시판 {{ $title }}</h2></div>
+                <div class="panel-heading"><h2>게시판 {{ $type == 'create' ? '생성' : '수정' }}</h2></div>
                 <form class="form-horizontal" role="form" method="POST" action="{{ $action }}">
+                    <input type="hidden" name="queryString" value="{{ $queryString }}" />
                     {{ csrf_field() }}
                 @if($type == 'edit')
                     {{ method_field('PUT') }}
@@ -128,13 +130,13 @@
                             <button type="submit" class="btn btn-primary">
                                 확인
                             </button>
-                            <a class="btn btn-primary" href="{{ route('admin.boards.index') }}">목록</a>
+                            <a class="btn btn-primary" href="{{ route('admin.boards.index'). $queryString }}">목록</a>
                             @if($type == 'edit')
                                 <a href="{{ route('admin.boards.copyForm', $board->id) }}" class="btn btn-primary board_copy" target="win_board_copy">
                                     게시판 복사
                                 </a>
                                 <a class="btn btn-primary" href="{{ route('board.index', $board->id) }}">게시판 바로가기</a>
-                                <a class="btn btn-primary" href="">게시판 썸네일 삭제</a>
+                                <a class="btn btn-primary" href="{{ route('admin.boards.thumbnail.delete', $board->id). $queryString }}?dir={{ $board->table_name }}" onclick="return del2(this.href, '게시판 썸네일 파일을 삭제하시겠습니까?');">게시판 썸네일 삭제</a>
                             @endif
                         </div>
                     </div>
@@ -332,13 +334,13 @@
                             <button type="submit" class="btn btn-primary">
                                 확인
                             </button>
-                            <a class="btn btn-primary" href="{{ route('admin.boards.index') }}">목록</a>
+                            <a class="btn btn-primary" href="{{ route('admin.boards.index'). $queryString }}">목록</a>
                             @if($type == 'edit')
                                 <a href="{{ route('admin.boards.copyForm', $board->id) }}" class="btn btn-primary board_copy" target="win_board_copy">
                                     게시판 복사
                                 </a>
                                 <a class="btn btn-primary" href="{{ route('board.index', $board->id) }}">게시판 바로가기</a>
-                                <a class="btn btn-primary" href="">게시판 썸네일 삭제</a>
+                                <a class="btn btn-primary" href="{{ route('admin.boards.thumbnail.delete', $board->id). $queryString }}?dir={{ $board->table_name }}" onclick="return del2(this.href, '게시판 썸네일 파일을 삭제하시겠습니까?');">게시판 썸네일 삭제</a>
                             @endif
                         </div>
                     </div>
@@ -744,13 +746,13 @@
                             <button type="submit" class="btn btn-primary">
                                 확인
                             </button>
-                            <a class="btn btn-primary" href="{{ route('admin.boards.index') }}">목록</a>
+                            <a class="btn btn-primary" href="{{ route('admin.boards.index'). $queryString }}">목록</a>
                             @if($type == 'edit')
                                 <a href="{{ route('admin.boards.copyForm', $board->id) }}" class="btn btn-primary board_copy" target="win_board_copy">
                                     게시판 복사
                                 </a>
                                 <a class="btn btn-primary" href="{{ route('board.index', $board->id) }}">게시판 바로가기</a>
-                                <a class="btn btn-primary" href="">게시판 썸네일 삭제</a>
+                                <a class="btn btn-primary" href="{{ route('admin.boards.thumbnail.delete', $board->id). $queryString }}?dir={{ $board->table_name }}" onclick="return del2(this.href, '게시판 썸네일 파일을 삭제하시겠습니까?');">게시판 썸네일 삭제</a>
                             @endif
                         </div>
                     </div>
@@ -1080,13 +1082,13 @@
                             <button type="submit" class="btn btn-primary">
                                 확인
                             </button>
-                            <a class="btn btn-primary" href="{{ route('admin.boards.index') }}">목록</a>
+                            <a class="btn btn-primary" href="{{ route('admin.boards.index'). $queryString }}">목록</a>
                             @if($type == 'edit')
                                 <a href="{{ route('admin.boards.copyForm', $board->id) }}" class="btn btn-primary board_copy" target="win_board_copy">
                                     게시판 복사
                                 </a>
                                 <a class="btn btn-primary" href="{{ route('board.index', $board->id) }}">게시판 바로가기</a>
-                                <a class="btn btn-primary" href="">게시판 썸네일 삭제</a>
+                                <a class="btn btn-primary" href="{{ route('admin.boards.thumbnail.delete', $board->id). $queryString }}?dir={{ $board->table_name }}" onclick="return del2(this.href, '게시판 썸네일 파일을 삭제하시겠습니까?');">게시판 썸네일 삭제</a>
                             @endif
                         </div>
                     </div>
@@ -1165,13 +1167,13 @@
                             <button type="submit" class="btn btn-primary">
                                 확인
                             </button>
-                            <a class="btn btn-primary" href="{{ route('admin.boards.index') }}">목록</a>
+                            <a class="btn btn-primary" href="{{ route('admin.boards.index'). $queryString }}">목록</a>
                             @if($type == 'edit')
                                 <a href="{{ route('admin.boards.copyForm', $board->id) }}" class="btn btn-primary board_copy" target="win_board_copy">
                                     게시판 복사
                                 </a>
                                 <a class="btn btn-primary" href="{{ route('board.index', $board->id) }}">게시판 바로가기</a>
-                                <a class="btn btn-primary" href="">게시판 썸네일 삭제</a>
+                                <a class="btn btn-primary" href="{{ route('admin.boards.thumbnail.delete', $board->id). $queryString }}?dir={{ $board->table_name }}" onclick="return del2(this.href, '게시판 썸네일 파일을 삭제하시겠습니까?');">게시판 썸네일 삭제</a>
                             @endif
                         </div>
                     </div>
@@ -1210,13 +1212,13 @@
                             <button type="submit" class="btn btn-primary">
                                 확인
                             </button>
-                            <a class="btn btn-primary" href="{{ route('admin.boards.index') }}">목록</a>
+                            <a class="btn btn-primary" href="{{ route('admin.boards.index'). $queryString }}">목록</a>
                             @if($type == 'edit')
                                 <a href="{{ route('admin.boards.copyForm', $board->id) }}" class="btn btn-primary board_copy" target="win_board_copy">
                                     게시판 복사
                                 </a>
                                 <a class="btn btn-primary" href="{{ route('board.index', $board->id) }}">게시판 바로가기</a>
-                                <a class="btn btn-primary" href="">게시판 썸네일 삭제</a>
+                                <a class="btn btn-primary" href="{{ route('admin.boards.thumbnail.delete', $board->id). $queryString }}?dir={{ $board->table_name }}" onclick="return del2(this.href, '게시판 썸네일 파일을 삭제하시겠습니까?');">게시판 썸네일 삭제</a>
                             @endif
                         </div>
                     </div>

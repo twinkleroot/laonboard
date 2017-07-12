@@ -80,6 +80,8 @@ class Kernel extends HttpKernel
         'valid.write' => \App\Http\Middleware\CheckValidWrite::class,
         'valid.board' => \App\Http\Middleware\CheckValidBoard::class,
         'valid.user' => \App\Http\Middleware\CheckValidUser::class,
+        // 글 보기 할 때 요청한 경로의 글이 댓글이면 원글을 보여주도록
+        'comment.view.parent' => \App\Http\Middleware\CommentViewParent::class,
         // 비밀글 조회 전 체크할 내용
         'secret.board' => \App\Http\Middleware\CheckSecretView::class,
         'can.action.write.immediately' => \App\Http\Middleware\CanActionWriteImmediately::class,

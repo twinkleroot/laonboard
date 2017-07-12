@@ -76,7 +76,7 @@ class BoardsController extends Controller
         $this->validate($request, $this->rules(), $this->messages());
 
         $write = $this->boardModel->createWriteTable($request->table_name);
-        $board = $this->boardModel->createBoard($request->all());
+        $board = $this->boardModel->storeBoard($request->all());
 
         if(is_null($board) && $write) {
             abort('500', '게시판 생성에 실패하였습니다.');
@@ -91,13 +91,13 @@ class BoardsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
         if (auth()->user()->cant('update', $this->boardModel)) {
             abort(403, '게시판 수정에 대한 권한이 없습니다.');
         }
 
-        $params = $this->boardModel->getBoardEditParams($id);
+        $params = $this->boardModel->getBoardEditParams($request, $id);
 
         return view('admin.boards.form', $params);
     }
@@ -123,7 +123,8 @@ class BoardsController extends Controller
             abort('500', '게시판 설정의 수정에 실패하였습니다.');
         }
 
-        return redirect(route('admin.boards.edit', $id))->with('message', $subject . ' 게시판의 설정이 수정되었습니다.');
+        return redirect(route('admin.boards.edit', $id). $request->queryString)
+            ->with('message', $subject . ' 게시판의 설정이 수정되었습니다.');
     }
 
     // 선택 수정 수행
@@ -215,6 +216,15 @@ class BoardsController extends Controller
             'popup' => 0,
             'redirect' => '/admin/boards/copy/'. $originalBoard->id,
         ]);
+    }
+
+    public function deleteThumbnail(Request $request, $id)
+    {
+        $params = $this->boardModel->deleteThumbnail($request->dir, $id);
+        $queryString = $request->getQueryString();
+        $params = array_add($params, 'queryString', $queryString);
+
+        return view('admin.boards.thumbnail_delete', $params);
     }
 
     public function rules()

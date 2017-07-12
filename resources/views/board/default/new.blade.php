@@ -22,11 +22,11 @@
 		<ul>
 			<li id="pt_sch">
 				<form method='get' action='{{ route('new.index') }}'>
-					<label for="group" class="sr-only">그룹</label>
-					<select name="group" id="group">
+					<label for="groupId" class="sr-only">그룹</label>
+					<select name="groupId" id="groupId">
 						<option value="">전체그룹</option>
                         @foreach($groups as $group)
-	                        <option value="{{ $group->group_id }}" @if($groupName == $group->group_id) selected @endif>{{ $group->subject }}</option>
+	                        <option value="{{ $group->id }}" @if($groupId == $group->id) selected @endif>{{ $group->subject }}</option>
                         @endforeach
 					</select>
 
@@ -73,8 +73,12 @@
                 @if(session()->get('admin'))
 				<td class="bd_check"><input type="checkbox" name="chkId[]" class="newId" value='{{ $boardNew->id }}'></td>
                 @endif
-				<td class="bd_group"><a href="">{{ $boardNew->group_subject }}</a></td>
-				<td class="bd_board"><a href="">{{ $boardNew->subject }}</a></td>
+				<td class="bd_group">
+                    <a href="{{ route('new.index') }}?groupId={{ $boardNew->group_id }}">{{ $boardNew->group_subject }}</a>
+                </td>
+				<td class="bd_board">
+                    <a href="{{ route('board.index', $boardNew->board_id) }}">{{ $boardNew->subject }}</a>
+                </td>
 				<td>
 					<span class="bd_subject"><a href="/board/{{ $boardNew->board_id}}/view/{{ $boardNew->write_parent. $boardNew->commentTag }}">{{ $boardNew->write->subject }}</a></span>
 				</td>

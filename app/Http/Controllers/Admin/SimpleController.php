@@ -48,7 +48,6 @@ class SimpleController extends Controller
     // 썸네일 파일 일괄삭제
     public function deleteThumbnail()
     {
-        $menuCode = ['100720', 'r'];
         $path = storage_path('app/public');
         $directories = File::directories($path);
         foreach($directories as $dir) {

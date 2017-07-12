@@ -98,9 +98,27 @@
         				<td>
         					<input type="checkbox" name="chkId[]" class="pointId" value='{{ $point->id }}' />
         				</td>
-        				<td><a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $point->user->email }}">{{ $point->user->email }}</a></td>
-        				<td>{{ $point->user->nick }}</td>
-        				<td>{{ $point->content }}</td>
+        				<td class="text-left">
+                            <a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $point->user->email }}">{{ $point->user->email }}</a>
+                        </td>
+        				<td class="td_nick">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $point->user->nick }}</a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="{{ route('memo.create') }}?to={{ $point->user->id }}" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지보내기</a></li>
+                                <li><a href="#">메일보내기</a></li>
+                                <li><a href="{{ route('user.profile', $point->user->id) }}" class="winProfile" target="_blank" onclick="winProfile(this.href); return false;">자기소개</a></li>
+        		                <li><a href="{{ route('admin.users.edit', $point->user->id) }}" target="_blank">회원정보변경</a></li>
+        		                <li><a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $point->user->email }}" target="_blank">포인트내역</a></li>
+                                <li><a href="{{ route('new.index') }}?nick={{ $point->user->nick }}">전체게시물</a></li>
+                            </ul>
+                        </td>
+        				<td>
+                            @if(!preg_match("/^\@/", $point->rel_table) && $point->rel_table)
+                                <a href="/board/{{ $point->rel_table }}/view/{{ $point->rel_email }}" target="_blank">{{ $point->content }}</a>
+                            @else
+                                {{ $point->content }}
+                            @endif
+                        </td>
         				<td>{{ number_format($point->point) }}</td>
         				<td>{{ $point->datetime }}</td>
         				<td>{{ $point->expire_date == '9999-12-31' ? '' : $point->expire_date }}</td>

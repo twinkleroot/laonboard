@@ -9,6 +9,7 @@ use App\Admin\Group;
 use App\Write;
 use DB;
 use Cache;
+use File;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 
@@ -74,6 +75,8 @@ class Board extends Model
         $boards = $query->paginate(Cache::get("config.homepage")->pageRows);
         $groups = Group::get();
 
+        $queryString = "?kind=$kind&keyword=$keyword&page=". $boards->currentPage();
+
         return [
             'boards' => $boards,
             'groups' => $groups,
@@ -81,8 +84,10 @@ class Board extends Model
             'keyword' => $keyword,
             'order' => $order,
             'direction' => $direction == 'desc' ? 'asc' : 'desc',
+            'queryString' => $queryString,
+            'queryStringWithOrderBy' => $queryString. "&order=$order&direction=$direction",
             'skins' => Util::getSkins('board'),
-            'mobileSkins' => count(Util::getSkins('boardMobile')) == 1 ? Util::getSkins('board') : Util::getSkins('boardMobile'),
+            // 'mobileSkins' => count(Util::getSkins('boardMobile')) == 1 ? Util::getSkins('board') : Util::getSkins('boardMobile'),
         ];
     }
 
@@ -138,7 +143,6 @@ class Board extends Model
             'board' => $board,      // 배열
             'groups' => $groups,
             'selectedGroup' => $selectedGroup,
-            'title' => '생성',
             'action' => route('admin.boards.store'),
             'type' => 'create',
             'skins' => Util::getSkins('board'),
@@ -146,29 +150,8 @@ class Board extends Model
         ];
     }
 
-    // (게시판 관리) edit 페이지에서 필요한 파라미터 가져오기
-    public function getBoardEditParams($id)
-    {
-        $board = Board::findOrFail($id);
-        $groups = Group::get();
-        $keyword = Group::find($board->group_id)->group_id;
-
-        return [
-            'homePageConfig' => Cache::get("config.homepage"),
-            'boardConfig' => Cache::get("config.board"),
-            'board' => $board,      // 객체
-            'groups' => $groups,
-            'keyword' => $keyword,
-            'title' => '수정',
-            'action' => route('admin.boards.update', $id),
-            'type' => 'edit',
-            'skins' => Util::getSkins('board'),
-            'mobileSkins' => count(Util::getSkins('boardMobile')) == 1 ? Util::getSkins('board') : Util::getSkins('boardMobile'),
-        ];
-    }
-
     // (게시판 관리) board 테이블에 새 게시판 행 추가
-    public function createBoard($data)
+    public function storeBoard($data)
     {
         $data = array_except($data, ['_token']);
 
@@ -182,11 +165,38 @@ class Board extends Model
         return Board::create($data);
     }
 
+    // (게시판 관리) edit 페이지에서 필요한 파라미터 가져오기
+    public function getBoardEditParams($request, $id)
+    {
+        $board = Board::findOrFail($id);
+        $groups = Group::get();
+        $kind = $request->has('kind') ? $request->kind : '';
+        $keyword = $request->has('keyword') ? $request->keyword : '';
+        $order = $request->has('order') ? $request->order : '';
+        $direction = $request->has('direction') ? $request->direction : '';
+        $page = $request->has('page') ? $request->page : '';
+        // $keyword = Group::find($board->group_id)->group_id;
+
+        $queryString = "?kind=$kind&keyword=$keyword&order=$order&direction=$direction&page=$page";
+
+        return [
+            'boardConfig' => Cache::get("config.board"),
+            'board' => $board,      // 객체
+            'groups' => $groups,
+            // 'keyword' => $keyword,
+            'action' => route('admin.boards.update', $id),
+            'type' => 'edit',
+            'skins' => Util::getSkins('board'),
+            'queryString' => $queryString,
+            // 'mobileSkins' => count(Util::getSkins('boardMobile')) == 1 ? Util::getSkins('board') : Util::getSkins('boardMobile'),
+        ];
+    }
+
     // (게시판 관리) 정보 수정
     public function updateBoard($data, $id)
     {
         $board = Board::findOrFail($id);
-        $data = array_except($data, ['_token', '_method', 'id']);
+        $data = array_except($data, ['_token', '_method', 'id', 'queryString']);
         foreach($board->attributes as $key => $value) {
             // 체크박스 체크가되었었다가 안된 필드는 0으로 업데이트 해야한다.
             if($value == 1 && !isset($data[$key])) {
@@ -393,6 +403,25 @@ class Board extends Model
         } else {
             return false;
         }
+    }
+
+    // 게시판 썸네일 삭제
+    public function deleteThumbnail($dirName, $id)
+    {
+        $path = storage_path("app/public/$dirName");
+        $files = File::files($path);
+        $results = [];
+        foreach($files as $file) {
+            $baseFileName = basename($file);
+            if(substr($baseFileName, 0, 6) == 'thumb-') {
+                $results[] = $file;
+            }
+        }
+
+        return [
+            'board' => Board::find($id),
+            'files' => $results
+        ];
     }
 
 }

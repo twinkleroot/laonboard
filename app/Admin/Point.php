@@ -5,6 +5,7 @@ namespace App\Admin;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use App\User;
+use App\Board;
 use Cache;
 use App\Point as AppPoint;
 
@@ -71,6 +72,13 @@ class Point extends Model
         }
 
         $points = $query->paginate(Cache::get("config.homepage")->pageRows);
+
+        foreach($points as $point) {
+            $board = Board::where('table_name', $point->rel_table)->first();
+            if($board) {
+                $point->rel_table = $board->id;
+            }
+        }
 
         return [
             'points' => $points,

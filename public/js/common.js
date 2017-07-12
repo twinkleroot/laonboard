@@ -67,6 +67,16 @@ function del(href)
     }
 }
 
+// 삭제 검사 확인2
+function del2(href, message)
+{
+    if(confirm(message)) {
+        document.location.href = href;
+    } else {
+        return false;
+    }
+}
+
 // 필드 검사
 function check_field(fld, msg)
 {

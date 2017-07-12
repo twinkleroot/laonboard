@@ -33,7 +33,7 @@ class BoardNew extends Model
         return [
             'groups' => $groups,
             'boardNewList' => $boardNewList,
-            'groupName' => isset($request->group) ? $request->group : '',
+            'groupId' => isset($request->groupId) ? $request->groupId : '',
             'type' => isset($request->type) ? $request->type : '',
             'nick' => isset($request->nick) ? $request->nick : '',
             'today' => Carbon::now(),
@@ -43,17 +43,17 @@ class BoardNew extends Model
     // 새글 목록에 검색 조건 추가
     private function getNewWritesThroughSearch($request, $groups)
     {
-        $query = BoardNew::selectRaw('board_news.*, boards.table_name, boards.subject, boards.mobile_subject, groups.subject as group_subject, groups.id as group_id')
+        $query =
+            BoardNew::selectRaw('board_news.*, boards.table_name, boards.subject, boards.mobile_subject, groups.subject as group_subject, groups.id as group_id')
             ->leftJoin('boards', 'boards.id', '=', 'board_news.board_id')
             ->leftJoin('groups', 'groups.id', '=', 'boards.group_id')
             ->where('boards.use_search', 1);
 
-        $groupName = isset($request->group) ? $request->group : '';
+        $groupId = isset($request->groupId) ? $request->groupId : '';
         $type = isset($request->type) ? $request->type : '';
         $nick = isset($request->nick) ? $request->nick : '';
 
-        if($groupName) {
-            $groupId = $groups->where('group_id', $groupName)->first()->id;
+        if($groupId) {
             $query = $query->where('groups.id', $groupId);
         }
         if($type) {
@@ -75,7 +75,7 @@ class BoardNew extends Model
     }
 
     // 새글 목록에 화면 표시용 데이터 추가
-    private function processBoardNewList($boardNewList)
+    public function processBoardNewList($boardNewList)
     {
         foreach($boardNewList as $boardNew) {
             $writeTable = 'write_'.$boardNew->table_name;

@@ -34,7 +34,7 @@
 <div id="admin-header">
 
 	<div class="header-title sidebarmenu">
-		<h1><i class="fa fa-cogs"></i>Administrator</h1>
+		<a href="{{ route('admin.index') }}"><h1><i class="fa fa-cogs"></i>Administrator</h1></a>
 	</div>
 
 	<div class="box-left sidebarmenu">

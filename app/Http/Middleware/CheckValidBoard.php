@@ -20,8 +20,7 @@ class CheckValidBoard
         $board = Board::find($request->boardId);
         if(is_null($board)) {
             return redirect(route('message'))
-               ->with('message', '잘못된 경로입니다. 다시 확인해 주세요.')
-               ->with('redirect', '/');
+               ->with('message', '존재하지 않는 게시판입니다. 경로를 확인해 주세요.');
         }
 
         return $next($request);

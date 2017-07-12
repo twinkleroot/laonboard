@@ -28,7 +28,7 @@
                         <option value="subject" @if($kind == 'subject') selected @endif>제목</option>
                         <option value="group_id" @if($kind == 'group_id') selected @endif>그룹ID</option>
                     </select>
-                    <input type="text" name="keyword" @if($keyword != '') value="{{ $keyword }}" @endif />
+                    <input type="text" name="keyword" value="{{ $keyword }}" />
                     <input type="submit" class="btn btn-primary" value="검색" />
                 </p>
             </form>
@@ -37,7 +37,7 @@
                 <input type="hidden" id='ids' name='ids' value='' />
                 <input type="hidden" id='group_ids' name='group_ids' value='' />
                 <input type="hidden" id='skin_ids' name='skin_ids' value='' />
-                <input type="hidden" id='mobile_skin_ids' name='mobile_skin_ids' value='' />
+                {{-- <input type="hidden" id='mobile_skin_ids' name='mobile_skin_ids' value='' /> --}}
                 <input type="hidden" id='subjects' name='subjects' value='' />
                 <input type="hidden" id='read_points' name='read_points' value='' />
                 <input type="hidden" id='write_points' name='write_points' value='' />
@@ -54,32 +54,32 @@
                         <thead>
                             <th class="text-center"><input type="checkbox" name="chkAll" onclick="checkAll(this.form)"/></th>
                             <th class="text-center">
-                                <a class="mb_tooltip" href="{{ route('admin.boards.index') }}?order=group_id&amp;direction={{$order=='group_id' ? $direction : 'asc'}}">그룹</a>
+                                <a class="mb_tooltip" href="{{ route('admin.boards.index'). $queryString }}&amp;order=group_id&amp;direction={{$order=='group_id' ? $direction : 'asc'}}">그룹</a>
                             </th>
                             <th class="text-center">
-                                <a class="mb_tooltip" href="{{ route('admin.boards.index') }}?order=table_name&amp;direction={{$order=='table_name' ? $direction : 'asc'}}">TABLE</a>
+                                <a class="mb_tooltip" href="{{ route('admin.boards.index'). $queryString }}&amp;order=table_name&amp;direction={{$order=='table_name' ? $direction : 'asc'}}">TABLE</a>
                             </th>
                             <th class="text-center">
-                                <a class="mb_tooltip" href="{{ route('admin.boards.index') }}?order=skin&amp;direction={{$order=='skin' ? $direction : 'desc'}}">스킨</a>
+                                <a class="mb_tooltip" href="{{ route('admin.boards.index'). $queryString }}&amp;order=skin&amp;direction={{$order=='skin' ? $direction : 'desc'}}">스킨</a>
                             </th>
                             {{-- <th class="text-center">
                                 <a class="mb_tooltip" href="{{ route('admin.boards.index') }}?order=mobile_skin&amp;direction={{$order=='mobile_skin' ? $direction : 'desc'}}">모바일<br />스킨</a>
                             </th> --}}
                             <th class="text-center">
-                                <a class="mb_tooltip" href="{{ route('admin.boards.index') }}?order=subject&amp;direction={{$order=='subject' ? $direction : 'asc'}}">제목</a>
+                                <a class="mb_tooltip" href="{{ route('admin.boards.index'). $queryString }}&amp;order=subject&amp;direction={{$order=='subject' ? $direction : 'asc'}}">제목</a>
                             </th>
                             <th class="text-center">읽기P</th>
                             <th class="text-center">쓰기P</th>
                             <th class="text-center">댓글P</th>
                             <th class="text-center">다운P</th>
                             <th class="text-center">
-                                <a class="mb_tooltip" href="{{ route('admin.boards.index') }}?order=use_sns&amp;direction={{$order=='use_sns' ? $direction : 'asc'}}">SNS<br />사용</a>
+                                <a class="mb_tooltip" href="{{ route('admin.boards.index'). $queryString }}&amp;order=use_sns&amp;direction={{$order=='use_sns' ? $direction : 'asc'}}">SNS<br />사용</a>
                             </th>
                             <th class="text-center">
-                                <a class="mb_tooltip" href="{{ route('admin.boards.index') }}?order=use_search&amp;direction={{$order=='use_search' ? $direction : 'asc'}}">검색<br />사용</a>
+                                <a class="mb_tooltip" href="{{ route('admin.boards.index'). $queryString }}&amp;order=use_search&amp;direction={{$order=='use_search' ? $direction : 'asc'}}">검색<br />사용</a>
                             </th>
                             <th class="text-center">
-                                <a class="mb_tooltip" href="{{ route('admin.boards.index') }}?order=order&amp;direction={{$order=='order' ? $direction : 'asc'}}">출력<br />순서</a>
+                                <a class="mb_tooltip" href="{{ route('admin.boards.index'). $queryString }}&amp;order=order&amp;direction={{$order=='order' ? $direction : 'asc'}}">출력<br />순서</a>
                             </th>
                             <th class="text-center">접속기기</th>
                             <th class="text-center">관리</th>
@@ -153,7 +153,7 @@
                                     </select>
                                 </td>
                                 <td class="text-center">
-                                    <a href="{{ route('admin.boards.edit', $board->id) }}">수정</a>
+                                    <a href="{{ route('admin.boards.edit', $board->id). $queryStringWithOrderBy }}">수정</a>
                                     <a href="{{ route('admin.boards.copyForm', $board->id) }}" class="board_copy" target="win_board_copy">
                                         복사
                                     </a>
@@ -176,16 +176,18 @@
                 </div>
             </form>
 
-            {{-- 페이지 처리 --}}
-            {{ str_contains(url()->full(), 'kind')
-                ? $boards->appends([
-                    'kind' => $kind,
-                    'keyword' => $keyword,
-                ])->links()
-                : $boards->links()
-            }}
 
         </div>
+        {{-- 페이지 처리 --}}
+        {{ str_contains(url()->full(), 'kind')
+            ? $boards->appends([
+                'kind' => $kind,
+                'keyword' => $keyword,
+                'order' => $order,
+                'direction' => $direction
+                ])->links()
+                : $boards->links()
+        }}
     </div>
 </div>
 <script>
