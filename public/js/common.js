@@ -2,6 +2,41 @@
 var errmsg = "";
 var errfld = null;
 
+// 체크박스로 업데이트할 값 배열에 담기
+function toUpdateByCheckBox(id, selected_id_array) {
+    var send_array = Array();
+    for(i=0; i<selected_id_array.length; i++) {
+        var chkbox = $('input[id= ' + id + '_' + selected_id_array[i] + ']');
+        if(chkbox.is(':checked')) {
+            send_array[i] = chkbox.val();
+        } else {
+            send_array[i] = 0;
+        }
+    }
+
+    return send_array;
+}
+
+// 셀렉트박스로 업데이트할 값 배열에 담기
+function toUpdateBySelectOption(id, selected_id_array) {
+    var send_array = Array();
+    for(i=0; i<selected_id_array.length; i++) {
+        send_array[i] = $('select[id=' + id + '_' + selected_id_array[i] + ']').val();
+    }
+
+    return send_array;
+}
+
+// 텍스트 입력으로 업데이트할 값 배열에 담기
+function toUpdateByText(id, selected_id_array) {
+    var send_array = Array();
+    for(i=0; i<selected_id_array.length; i++) {
+        send_array[i] = $('input[id=' + id + '_' + selected_id_array[i] + ']').val();
+    }
+
+    return send_array;
+}
+
 // 쿠키 입력
 function set_cookie(name, value, expirehours, domain)
 {

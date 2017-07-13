@@ -67,7 +67,9 @@ class SearchController extends Controller
             'paginationQueryString' => $queryStrings['pagination']
         ];
 
-        return view('search.default.result', $params);
+        $skin = cache('config.homepage')->searchSkin ? : 'default';
+
+        return view("search.$skin.result", $params);
     }
 
     // 검색 조건에 따라 Board 모델을 구한다.

@@ -41,66 +41,79 @@
                 <input type="hidden" id='orders' name='orders' value='' />
                 <input type="hidden" id='devices' name='devices' value='' />
                 <input type="hidden" id='_method' name='_method' value='' />
+                {{ csrf_field() }}
                 <div class="panel-body">
-                    {{ csrf_field() }}
                     <table class="table table-hover">
-                        <thead>
-                            <th class="text-center"><input type="checkbox" name="chkAll" onclick="checkAll(this.form)"/></th>
-                            <th class="text-center">
-                                <a class="mb_tooltip" href="{{ route('admin.groups.index') }}?order=group_id&amp;direction={{$order=='group_id' ? $direction : 'asc'}}">그룹 ID</a>
-                            </th>
-                            <th class="text-center">
-                                <a class="mb_tooltip" href="{{ route('admin.groups.index') }}?order=subject&amp;direction={{$order=='subject' ? $direction : 'asc'}}">제목</a>
-                            </th>
-                            <th class="text-center">
-                                <a class="mb_tooltip" href="{{ route('admin.groups.index') }}?order=admin&amp;direction={{$order=='admin' ? $direction : 'asc'}}">그룹관리자</a>
-                            </th>
-                            <th class="text-center">게시판</th>
-                            <th class="text-center">접근<br />사용</th>
-                            <th class="text-center">접근<br />회원수</th>
-                            <th class="text-center">
-                                <a class="mb_tooltip" href="{{ route('admin.groups.index') }}?order=order&amp;direction={{$order=='order' ? $direction : 'asc'}}">출력순서</a>
-                            </th>
-                            <th class="text-center">접속기기</th>
-                            <th class="text-center">관리</th>
-                        </thead>
+                    <thead>
+                        <th class="text-center"><input type="checkbox" name="chkAll" onclick="checkAll(this.form)"/></th>
+                        <th class="text-center">
+                            <a class="mb_tooltip" href="{{ route('admin.groups.index') }}?order=group_id&amp;direction={{$order=='group_id' ? $direction : 'asc'}}">그룹 ID</a>
+                        </th>
+                        <th class="text-center">
+                            <a class="mb_tooltip" href="{{ route('admin.groups.index') }}?order=subject&amp;direction={{$order=='subject' ? $direction : 'asc'}}">제목</a>
+                        </th>
+                        <th class="text-center">
+                            <a class="mb_tooltip" href="{{ route('admin.groups.index') }}?order=admin&amp;direction={{$order=='admin' ? $direction : 'asc'}}">그룹관리자</a>
+                        </th>
+                        <th class="text-center">게시판</th>
+                        <th class="text-center">접근<br />사용</th>
+                        <th class="text-center">접근<br />회원수</th>
+                        <th class="text-center">
+                            <a class="mb_tooltip" href="{{ route('admin.groups.index') }}?order=order&amp;direction={{$order=='order' ? $direction : 'asc'}}">출력순서</a>
+                        </th>
+                        <th class="text-center">접속기기</th>
+                        <th class="text-center">관리</th>
+                    </thead>
 
-                        <tbody>
-                        @if(count($groups) > 0)
-                        @foreach ($groups as $group)
-                            <tr>
-                                <td class="text-center">
-                                    <input type="checkbox" name="chkId[]" class="groupId" value='{{ $group->id }}' /></td>
-                                <td class="text-center"><a href="{{ route('group', $group->id) }}">{{ $group->group_id }}</a></td>
-                                <td class="text-center"><input type="text" id='subject_{{ $group->id }}' value='{{ $group->subject }}' /></td>
-                                <td class="text-center"><input type="text" id='admin_{{ $group->id }}' value='{{ $group->admin }}' /></td>
-                                <td class="text-center"><a href="/admin/search?admin_page=board&amp;kind=group_id&amp;keyword={{ $group->group_id }}">{{ $group->count_board }}</a></td>
-                                <td class="text-center">
-                                    <input type='checkbox' id='use_access_{{ $group->id }}' value='1'
-                                        {{ ($group->use_access == '1' ? 'checked' : '') }}/></td>
-                                <td class="text-center">
-                                    <a href="{{ route('admin.accessUsers.show', $group->id)}}">{{ $group->count_users }}</a></td>
-                                <td class="text-center"><input type="text" id='order_{{ $group->id }}' value='{{ $group->order }}' /></td>
-                                <td class="text-center">
-                                    <select id='device_{{ $group->id }}'>
-                                        <option value='both' {{ $group->device == 'both' ? 'selected' : '' }}>both</option>
-                                        <option value='pc' {{ $group->device == 'pc' ? 'selected' : '' }}>pc</option>
-                                        <option value='mobile' {{ $group->device == 'mobile' ? 'selected' : '' }}>mobile</option>
-                                    </select>
-                                </td>
-                                <td class="text-center">
-                                    <a class="btn btn-primary" href="{{ route('admin.groups.edit', $group->id) }}">수정</a>
-                                </td>
-                            </tr>
-                        @endforeach
-                        @else
+                    <tbody>
+                    @if(count($groups) > 0)
+                    @foreach ($groups as $group)
                         <tr>
-                            <td class="text-center" colspan="15">
-                                자료가 없습니다.
+                            <td class="text-center">
+                                <input type="checkbox" name="chkId[]" class="groupId" value='{{ $group->id }}' />
+                            </td>
+                            <td class="text-center">
+                                <a href="{{ route('group', $group->id) }}">{{ $group->group_id }}</a>
+                            </td>
+                            <td class="text-center">
+                                <input type="text" id='subject_{{ $group->id }}' value='{{ $group->subject }}' />
+                            </td>
+                            <td class="text-center">
+                                <input type="text" id='admin_{{ $group->id }}' value='{{ $group->admin }}' />
+                            </td>
+                            <td class="text-center">
+                                <a href="{{ route('admin.boards.index'). "?kind=group_id&keyword=". $group->group_id  }}">{{ $group->count_board }}</a>
+                            </td>
+                            <td class="text-center">
+                                <input type='checkbox' id='use_access_{{ $group->id }}' value='1'
+                                    {{ ($group->use_access == '1' ? 'checked' : '') }}/>
+                                </td>
+                            <td class="text-center">
+                                <a href="{{ route('admin.accessUsers.show', $group->id)}}">{{ $group->count_users }}</a>
+                            </td>
+                            <td class="text-center">
+                                <input type="text" id='order_{{ $group->id }}' value='{{ $group->order }}' />
+                            </td>
+                            <td class="text-center">
+                                <select id='device_{{ $group->id }}'>
+                                    <option value='both' {{ $group->device == 'both' ? 'selected' : '' }}>both</option>
+                                    <option value='pc' {{ $group->device == 'pc' ? 'selected' : '' }}>pc</option>
+                                    <option value='mobile' {{ $group->device == 'mobile' ? 'selected' : '' }}>mobile</option>
+                                </select>
+                            </td>
+                            <td class="text-center">
+                                <a class="btn btn-primary" href="{{ route('admin.groups.edit', $group->id) }}">수정</a>
                             </td>
                         </tr>
-                        @endif
-                        </tbody>
+                    @endforeach
+                    @else
+                    <tr>
+                        <td class="text-center" colspan="15">
+                            자료가 없습니다.
+                        </td>
+                    </tr>
+                    @endif
+                    </tbody>
                     </table>
                 </div>
                 <div class="panel-heading">
@@ -134,6 +147,10 @@ $(function(){
             return;
         }
 
+        if( !confirm("한번 삭제한 자료는 복구할 방법이 없습니다.\n\n정말 삭제하시겠습니까?")) {
+            return;
+        }
+
         $('#ids').val(selected_id_array);
         $('#_method').val('DELETE');
         <?php $ids=''; ?>
@@ -152,9 +169,9 @@ $(function(){
         }
 
         // 목록에서 제목, 그룹관리자, 접근사용, 출력순서, 접속기기 변경 가능
-        var subject_array = toUpdateByInput("subject", selected_id_array);
-        var admin_array = toUpdateByInput("admin", selected_id_array);
-        var order_array = toUpdateByInput("order", selected_id_array);
+        var subject_array = toUpdateByText("subject", selected_id_array);
+        var admin_array = toUpdateByText("admin", selected_id_array);
+        var order_array = toUpdateByText("order", selected_id_array);
         var use_access_array = toUpdateByCheckBox("use_access", selected_id_array);
         var device_array = toUpdateBySelectOption("device", selected_id_array);
 
@@ -170,37 +187,5 @@ $(function(){
     });
 
 });
-
-function toUpdateByCheckBox(id, selected_id_array) {
-    var send_array = Array();
-    for(i=0; i<selected_id_array.length; i++) {
-        var chkbox = $('input[id= ' + id + '_' + selected_id_array[i] + ']');
-        if(chkbox.is(':checked')) {
-            send_array[i] = chkbox.val();
-        } else {
-            send_array[i] = 0;
-        }
-    }
-
-    return send_array;
-}
-
-function toUpdateByInput(id, selected_id_array) {
-    var send_array = Array();
-    for(i=0; i<selected_id_array.length; i++) {
-        send_array[i] = $('input[id= ' + id + '_' + selected_id_array[i] + ']').val();
-    }
-
-    return send_array;
-}
-
-function toUpdateBySelectOption(id, selected_id_array) {
-    var send_array = Array();
-    for(i=0; i<selected_id_array.length; i++) {
-        send_array[i] = $('select[id=' + id + '_' + selected_id_array[i] + ']').val();
-    }
-
-    return send_array;
-}
 </script>
 @endsection

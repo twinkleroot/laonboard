@@ -26,7 +26,7 @@ class ManageAuthController extends Controller
     {
         $params = $this->authModel->getIndexParams($request);
 
-        return view('admin.manage_auth.index', $params);
+        return view('admin.configs.manage_auth', $params);
     }
 
     /**

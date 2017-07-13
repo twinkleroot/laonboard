@@ -31,7 +31,7 @@ class AccessibleUsersController extends Controller
 
         $params = $this->groupUserModel->getAccessibleUsers($id, $request);
 
-        return view('admin.group_user.accessible_user_list', $params);
+        return view('admin.group_users.accessible_user_list', $params);
     }
 
     /**

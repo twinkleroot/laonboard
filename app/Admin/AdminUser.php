@@ -124,12 +124,12 @@ class AdminUser extends Model
     }
 
     // 회원 추가
-    public function addUser($data)
+    public function addUser($request)
     {
+        $data = $request->all();
         $data = array_except($data, ['_token']);
-
         $data = Util::exceptNullData($data);
-
+        $data = array_add($data, 'ip', $request->ip());
         $data['password'] = bcrypt($data['password']);  // 비밀번호 암호화
 
         $user = AdminUser::create($data);

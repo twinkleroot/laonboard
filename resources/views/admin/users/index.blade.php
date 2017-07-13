@@ -232,28 +232,5 @@ $(function(){
     });
 
 });
-
-function toUpdateByCheckBox(id, selected_id_array) {
-    var send_array = Array();
-    for(i=0; i<selected_id_array.length; i++) {
-        var chkbox = $('input[id= ' + id + '_' + selected_id_array[i] + ']');
-        if(chkbox.is(':checked')) {
-            send_array[i] = chkbox.val();
-        } else {
-            send_array[i] = 0;
-        }
-    }
-
-    return send_array;
-}
-
-function toUpdateBySelectOption(id, selected_id_array) {
-    var send_array = Array();
-    for(i=0; i<selected_id_array.length; i++) {
-        send_array[i] = $('select[id=' + id + '_' + selected_id_array[i] + ']').val();
-    }
-
-    return send_array;
-}
 </script>
 @endsection

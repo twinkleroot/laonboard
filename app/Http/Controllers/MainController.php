@@ -19,21 +19,21 @@ class MainController extends Controller
     // 홈페이지 메인
     public function index(Request $request)
     {
-        $theme = Cache::get('config.theme')->name ? : 'default';
+        $skin = Cache::get('config.theme')->name ? : 'default';
         $mainContents = $this->main->getMainContents(Cache::get('config.homepage')->newSkin, 'default');
 
         $popup = new Popup();
         $mainContents['popups'] = $popup->getPopupData();
 
-        return view('layouts.'. $theme. '.main', $mainContents);
+        return view('layouts.'. $skin. '.main', $mainContents);
     }
 
     // 게시판 그룹별 메인
     public function groupIndex($groupId)
     {
-        $theme = Cache::get('config.theme')->name ? : 'default';
+        $skin = Cache::get('config.theme')->name ? : 'default';
         $groupContents = $this->main->getGroupContents($groupId, Cache::get('config.homepage')->newSkin, 'default');
 
-        return view('layouts.'. $theme. '.group', $groupContents);
+        return view('layouts.'. $skin. '.group', $groupContents);
     }
 }

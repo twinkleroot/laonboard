@@ -20,7 +20,7 @@ class StatusController extends Controller
         if(auth()->user()->isSuperAdmin() || Gate::allows('view-admin-mailtest', Util::getManageAuthModel($menuCode))) {
             $params = $this->writeStatus($request);
             $chart = isset($params['renderChart']) ? $params['renderChart'] : '';
-            return view('admin.status.index', $params)->with('chart', $chart);
+            return view('admin.boards.status', $params)->with('chart', $chart);
         } else {
             return view('message', [
                 'message' => '최고관리자 또는 관리권한이 있는 회원만 접근 가능합니다.',

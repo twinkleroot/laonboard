@@ -63,7 +63,7 @@
     		    </button>
     	    </form>
         </div>
-        <form class="form-horizontal" role="form" method="POST" id="selectForm" action="" onsubmit="return onSubmit(this);">
+        <form class="form-horizontal" role="form" method="POST" id="selectForm" action="">
             <input type="hidden" id='ids' name='ids' value='' />
             {{ csrf_field() }}
             {{ method_field('DELETE')}}
@@ -198,18 +198,14 @@ $(function(){
             return;
         }
 
+        if( !confirm("한번 삭제한 자료는 복구할 방법이 없습니다.\n\n정말 삭제하시겠습니까?")) {
+            return;
+        }
+
         $('#ids').val(selected_id_array);
         $('#selectForm').attr('action', '/admin/points/' + selected_id_array);
         $('#selectForm').submit();
     });
 });
-
-function onSubmit(form) {
-    if(!confirm("선택한 항목을 정말 삭제하시겠습니까?")) {
-        return false;
-    }
-
-    return true;
-}
 </script>
 @endsection

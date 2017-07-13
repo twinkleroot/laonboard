@@ -11,5 +11,5 @@
 
 @section('content')
     {{-- 최근 게시물 리스트--}}
-    @include('latest.default.list')
+    @include('latest.default.index')
 @endsection

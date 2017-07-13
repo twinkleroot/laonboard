@@ -202,6 +202,10 @@ $(function(){
             return;
         }
 
+        if( !confirm("한번 삭제한 자료는 복구할 방법이 없습니다.\n\n정말 삭제하시겠습니까?")) {
+            return;
+        }
+
         $('#ids').val(selected_id_array);
         $('#_method').val('DELETE');
         $('#selectForm').attr('action', '/admin/boards/' + selected_id_array);
@@ -256,39 +260,5 @@ $(function(){
     });
 });
 
-// 체크박스로 업데이트할 값 배열에 담기
-function toUpdateByCheckBox(id, selected_id_array) {
-    var send_array = Array();
-    for(i=0; i<selected_id_array.length; i++) {
-        var chkbox = $('input[id= ' + id + '_' + selected_id_array[i] + ']');
-        if(chkbox.is(':checked')) {
-            send_array[i] = chkbox.val();
-        } else {
-            send_array[i] = 0;
-        }
-    }
-
-    return send_array;
-}
-
-// 셀렉트박스로 업데이트할 값 배열에 담기
-function toUpdateBySelectOption(id, selected_id_array) {
-    var send_array = Array();
-    for(i=0; i<selected_id_array.length; i++) {
-        send_array[i] = $('select[id=' + id + '_' + selected_id_array[i] + ']').val();
-    }
-
-    return send_array;
-}
-
-// 텍스트 입력으로 업데이트할 값 배열에 담기
-function toUpdateByText(id, selected_id_array) {
-    var send_array = Array();
-    for(i=0; i<selected_id_array.length; i++) {
-        send_array[i] = $('input[id=' + id + '_' + selected_id_array[i] + ']').val();
-    }
-
-    return send_array;
-}
 </script>
 @endsection

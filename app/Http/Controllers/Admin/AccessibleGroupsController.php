@@ -32,7 +32,7 @@ class AccessibleGroupsController extends Controller
 
         $params = $this->groupUserModel->getAccessibleGroups($id);
 
-        return view('admin.group_user.accessible_group_list', $params);
+        return view('admin.group_users.accessible_group_list', $params);
     }
 
     /**

@@ -26,8 +26,7 @@ Route::get('/search', ['as' => 'search', 'uses' => 'Search\SearchController@resu
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], function() {
     // 관리자 메인
     Route::get('index', ['as' => 'admin.index', 'uses' => 'Admin\IndexController@index']);
-    // 회원관리 리소스 컨트롤러에 추가적으로 라우팅을 구성(리소스 라우트보다 앞에 와야 함)
-    Route::put('users/selected_update', ['as' => 'admin.users.selectedUpdate', 'uses' => 'Admin\UsersController@selectedUpdate']);
+
     // 기본 환경 설정
     Route::get('config', ['as' => 'admin.config', 'uses' => 'Admin\ConfigController@index']);
     Route::put('config/update/{name}', ['as' => 'admin.config.update', 'uses' => 'Admin\ConfigController@update']);
@@ -43,6 +42,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
             'destroy' => 'admin.manageAuth.destroy',
         ]
     ]);
+
+    // 테마 설정
+    Route::get('theme', ['as' => 'admin.themes.index', 'uses' => 'Admin\ThemeController@index']);
 
     // 메뉴 추가 팝업창에 대상 선택에 따라서 view를 load하는 기능
     Route::post('menus/result', ['as' => 'admin.menus.result', 'uses' => 'Admin\MenusController@result']);
@@ -91,6 +93,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
     // 부가서비스
     Route::get('extra_service', ['as' => 'admin.extra_service', 'uses' => 'Admin\SimpleController@extraService']);
 
+    // 회원관리 리소스 컨트롤러에 추가적으로 라우팅을 구성(리소스 라우트보다 앞에 와야 함)
+    Route::put('users/selected_update', ['as' => 'admin.users.selectedUpdate', 'uses' => 'Admin\UsersController@selectedUpdate']);
     // 회원관리 리소스 컨트롤러
     Route::resource('users', 'Admin\UsersController', [
         'except' => [

@@ -77,7 +77,7 @@ class UsersController extends Controller
 
         $this->validate($request, $rule);
 
-        $user = $this->userModel->addUser($request->all());
+        $user = $this->userModel->addUser($request);
         if(is_null($user)) {
             abort('500', '회원추가가 실패하였습니다.');
         }

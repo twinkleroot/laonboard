@@ -17,7 +17,7 @@ class MailController extends Controller
     public function index()
     {
         if(auth()->user()->isSuperAdmin() || Gate::allows('view-admin-mailtest', Util::getManageAuthModel($this->menuCode))) {
-            return view('admin.email.index');
+            return view('admin.configs.mail_test');
         } else {
             return view('message', [
                 'message' => '최고관리자 또는 관리권한이 있는 회원만 접근 가능합니다.',
