@@ -49,7 +49,7 @@ class LoginSuccessful
         if( !$this->isUserJoin($event->user) ) {
             // 당일 첫 로그인 포인트 부여
             $point = new Point();
-            $point->insertPoint($event->user->id, cache("config.homepage")->loginPoint, $nowDate . ' 첫 로그인', '@login', $event->user->email);
+            $point->insertPoint($event->user->id, cache("config.homepage")->loginPoint, $nowDate . ' 첫 로그인', '@login', $event->user->email, $nowDate);
         }
 
     }

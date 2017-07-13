@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Admin\Point;
+use Exception;
 
 class PointsController extends Controller
 {
@@ -51,16 +52,14 @@ class PointsController extends Controller
         ];
 
         $this->validate($request, $rule);
-
-        $result = $this->pointModel->givePoint($request->all());
-
-        if(isset($result['message'])) {
-            return redirect(route('message'))->with('message', $message);
-        } else if($result == -1){
-            return redirect(route('message'))->with('message', '포인트 추가에 실패하였습니다.');
-        } else {
-            return redirect()->back();
+        $result;
+        try {
+            $result = $this->pointModel->givePoint($request);
+        } catch (Exception $e) {
+            return redirect(route('message'))->with('message', $e->getMessage());
         }
+
+        return redirect()->back();
     }
 
     /**

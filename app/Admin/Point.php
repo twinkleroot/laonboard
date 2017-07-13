@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\User;
 use App\Board;
 use Cache;
+use Exception;
 use App\Point as AppPoint;
 
 class Point extends Model
@@ -42,7 +43,7 @@ class Point extends Model
             if($kind == 'content') {
                 $query = Point::where($kind, 'like', '%'.$keyword.'%');
             } else {
-                $user = User::where( [$kind => $keyword] )->first();
+                $user = User::where($kind, $keyword)->first();
                 if($user) {
                     // 검색한 유저의 id로 포인트 테이블 조회
                     $query = Point::where(['user_id' => $user->id]);
@@ -92,26 +93,26 @@ class Point extends Model
     }
 
     // (포인트 관리) 포인트 증감 설정
-    public function givePoint($data)
+    public function givePoint($request)
     {
-        $user = User::where('email', $data['email'])->first();
+        $user = User::where('email', $request->email)->first();
 
         if(!is_null($user)) {
             $relAction = 'admin-' . substr(bcrypt(Carbon::now()), 0, 15);
 
             // 포인트 부여
-            if($user->point + $data['point'] < 0) {
-                return ['message' => '포인트를 깎는 경우 현재 포인트보다 작으면 안됩니다.'];
+            if($user->point + $request->point < 0) {
+                throw new Exception('포인트를 깎는 경우 현재 포인트보다 작으면 안됩니다.');
             }
-            $user->point += $data['point'];
+            $user->point += $request->point;
             $user->save();
 
             // 포인트 내역에 기록
             $appPoint = new AppPoint();
 
-            return $appPoint->insertPoint($user->id, $data['point'], $data['content'], '@passive', $user->email, $relAction);
+            return $appPoint->insertPoint($user->id, $request->point, $request->content, '@passive', $user->email, $relAction);
         } else {
-            return ['message' => '존재하는 회원 이메일이 아닙니다.'];
+            throw new Exception('존재하는 회원 이메일이 아닙니다.');
         }
     }
 
@@ -120,25 +121,37 @@ class Point extends Model
     {
         $idArr = explode(',', $ids);
 
+        $appPoint = new AppPoint();
         foreach($idArr as $id) {
-            // 유저 테이블의 point에 반영.
+            // 포인트 내역 정보
             $point = Point::find($id);
-            $user = User::find($point->user_id);
-            $user->point -= $point->point;
-            $user->save();
+            if($point->point < 0) {
+                $userId = $point->user_id;
+                $usePoint = abs($point->point);
 
-            // 포인트 내역의 user_point에 반영
-            $laterPointList = Point::where('id', '>', $point->id)
-                                    ->where('user_id', $user->id)
-                                    ->get();
-
-            foreach($laterPointList as $laterPoint) {
-                $laterPoint->user_point -= $point->point;
-                $laterPoint->save();
+                if($point->rel_table == '@expire') {
+                    $appPoint->deleteExpirePoint($userId, $usePoint);
+                } else {
+                    $appPoint->deleteUsePoint($userId, $usePoint);
+                }
+            } else {
+                if($point->use_point > 0) {
+                    $appPoint->insertPoint($userId, $point->use_point, $point->id);
+                }
             }
 
-            // 선택된 포인트 내역 삭제
-            $point->delete($id);
+            // 포인트 내역 삭제
+            Point::destroy($id);
+
+            // 포인트 내역의 user_point에 반영
+            Point::where('id', '>', $point->id)
+            ->where('user_id', $point->user_id)
+            ->decrement('user_point', $point->point);
+
+            // User->point에 반영
+            $user = $point->user;
+            $user->point = $appPoint->getPointSum($user->id);
+            $user->save();
         }
     }
 }

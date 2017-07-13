@@ -15,7 +15,6 @@ use App\Notification;
 use App\ReCaptcha;
 use Auth;
 use Cache;
-use Exception;
 use App\Services\RssFeed;
 use Illuminate\Pagination\Paginator;
 
