@@ -10,7 +10,7 @@
             <tr>
                 <th scope="row">Maker</th>
                 <td>
-                    @if($info['makerUri'])
+                    @if(isset($info['makerUri']))
                         <a href="{{ $info['makerUri'] }}" target="_blank" class="thdt_home">{{ $info['maker'] }}</a>
                     @else
                         {{ $info['maker'] }}
@@ -20,7 +20,7 @@
             <tr>
                 <th scope="row">License</th>
                 <td>
-                    @if($info['licenseUri'])
+                    @if(isset($info['licenseUri']))
                         <a href="{{ $info['licenseUri'] }}" target="_blank" class="thdt_home">{{ $info['license'] }}</a>
                     @else
                         {{ $info['license'] }}

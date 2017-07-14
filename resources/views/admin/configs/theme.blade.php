@@ -54,7 +54,7 @@
                         <button class="theme_sl use_apply" data-theme="{{ $theme['name'] }}" data-name="{{ $theme['info']['themeName'] }}">테마적용</button>
                     @endif
                     <a href="#" class="theme_pr">미리보기</a>
-                    <button class="theme_preview">상세보기</button>
+                    <button class="theme_preview" data-theme="{{ $theme['name'] }}">상세보기</button>
                 </div>
             </li>
         @endforeach

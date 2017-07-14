@@ -227,10 +227,10 @@ class ThemeController extends Controller
         $theme = $request->theme ? : 'default';
         $info = $this->getThemeInfo($theme);
         $info['themeName'] = Util::getText($info['themeName']);
-        $info['maker'] = Util::getText($info['maker']);
-        $info['license'] = Util::getText($info['license']);
-        $info['version'] = Util::getText($info['version']);
-        $info['detail'] = Util::getText($info['detail']);
+        $info['maker'] = isset($info['maker']) ? Util::getText($info['maker']) : '';
+        $info['license'] = isset($info['license']) ? Util::getText($info['license']) : '';
+        $info['version'] = isset($info['version']) ? Util::getText($info['version']) : '';
+        $info['detail'] = isset($info['detail']) ? Util::getText($info['detail']) : '';
 
         return view('admin.configs.theme_detail', [
             'theme' => $theme,
