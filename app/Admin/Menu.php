@@ -55,12 +55,21 @@ class Menu extends Model
         switch ($type) {
             case 'group':
                 $results = Group::select('id', 'group_id', 'subject')->orderBy('order', 'desc')->orderBy('group_id', 'desc')->get();
+                foreach($results as $result) {
+                    $result = $this->cookingSubject($result, $result->id);
+                }
                 break;
             case 'board':
                 $results = Board::select('id', 'subject')->orderBy('order', 'desc')->orderBy('id', 'desc')->get();
+                foreach($results as $result) {
+                    $result = $this->cookingSubject($result, $result->id);
+                }
                 break;
             case 'content':
                 $results = Content::orderBy('id', 'desc')->get();
+                foreach($results as $result) {
+                    $result = $this->cookingSubject($result, $result->content_id);
+                }
                 break;
             default:
                 # code...
@@ -71,6 +80,15 @@ class Menu extends Model
             'type' => $type,
             'results' => $results,
         ];
+    }
+
+    private function cookingSubject($result, $id)
+    {
+        $menu = Menu::where('name', $result->subject)->whereRaw("INSTR(link, '$id')")->first();
+        if($menu) {
+            $result->subject .= ' (이미 추가 된 메뉴)';
+        }
+        return $result;
     }
 
     // Menu 테이블의 모든 데이터를 삭제하고 auto-incrementing ID를 0으로 초기화 한다.

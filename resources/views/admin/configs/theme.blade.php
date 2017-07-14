@@ -52,39 +52,6 @@
                 <button class="theme_preview">상세보기</button>
             </div>
         </li>
-        <li class="themebox">
-            <div class="tmli_if">
-                <span class="img"><img src="http://scontent.cdninstagram.com/t51.2885-15/s480x480/e35/12145610_1672253046395088_1360158264_n.jpg?ig_cache_key=MTExMzUzNDM4OTMxMDM4Mzc3NQ%3D%3D.2"></span>
-                <span class="txt">스킨명</span>
-            </div>
-            <div class="tmli_btn">
-                <button class="theme_sl use_apply">테마적용</button>
-                <a href="#" class="theme_pr">미리보기</a>
-                <button class="theme_preview">상세보기</button>
-            </div>
-        </li>
-        <li class="themebox">
-            <div class="tmli_if">
-                <span class="img"><img src="http://scontent.cdninstagram.com/t51.2885-15/s480x480/e35/12145610_1672253046395088_1360158264_n.jpg?ig_cache_key=MTExMzUzNDM4OTMxMDM4Mzc3NQ%3D%3D.2"></span>
-                <span class="txt">스킨명</span>
-            </div>
-            <div class="tmli_btn">
-                <button class="theme_sl use_apply">테마적용</button>
-                <a href="#" class="theme_pr">미리보기</a>
-                <button class="theme_preview">상세보기</button>
-            </div>
-        </li>
-        <li class="themebox">
-            <div class="tmli_if">
-                <span class="img"><img src="http://scontent.cdninstagram.com/t51.2885-15/s480x480/e35/12145610_1672253046395088_1360158264_n.jpg?ig_cache_key=MTExMzUzNDM4OTMxMDM4Mzc3NQ%3D%3D.2"></span>
-                <span class="txt">스킨명</span>
-            </div>
-            <div class="tmli_btn">
-                <button class="theme_sl use_apply">테마적용</button>
-                <a href="#" class="theme_pr">미리보기</a>
-                <button class="theme_preview">상세보기</button>
-            </div>
-        </li>
     </ul>
 </div>
 @endsection

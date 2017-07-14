@@ -21,7 +21,7 @@ class ConfigController extends Controller
     {
         $params = $this->configModel->getConfigIndexParams();
 
-        return view('admin.configs.index', $params);
+        return view('admin.configs.basic', $params);
     }
 
     public function update($name, Request $request)
@@ -70,13 +70,6 @@ class ConfigController extends Controller
                     $message = '회원가입 시 메일 설정 변경이 완료되었습니다.';
                 } else {
                     $message = '회원가입 시 메일 설정 변경에 실패하였습니다.';
-                }
-                break;
-            case 'email.vote':
-                if($this->configModel->updateConfig($data, $name)) {
-                    $message = '투표 기타의견 작성 시 메일 설정 변경이 완료되었습니다.';
-                } else {
-                    $message = '투표 기타의견 작성 시 메일 설정 변경에 실패하였습니다.';
                 }
                 break;
             default:

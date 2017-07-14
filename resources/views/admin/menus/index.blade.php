@@ -54,9 +54,16 @@
                     <tr class="menu_list menu_group_{{ substr($menu['code'], 0, 2) }}">
                         <td class="text-center @if(strlen($menu['code']) == 4) sub_menu_class @endif">
                             <input type="hidden" name="code[]" value="{{ substr($menu['code'], 0, 2) }}">
-                            @if(strlen($menu['code']) == 4) <div class="row"> <div class="col-md-2">ㄴ</div> <div class="col-md-10"> @endif
-                            <input type="text" class="form-control" name="name[]" value="{{ $menu['name']}}" />
-                            @if(strlen($menu['code']) == 4) </div></div> @endif
+                            @if(strlen($menu['code']) == 4)
+                                <div class="row">
+                                    <div class="col-md-2">ㄴ</div>
+                                    <div class="col-md-10">
+                                        <input type="text" class="form-control" name="name[]" value="{{ $menu['name']}}" />
+                                    </div>
+                                </div>
+                            @else
+                                <input type="text" class="form-control" name="name[]" value="{{ $menu['name']}}" />
+                            @endif
                         </td>
                         <td class="text-center">
                             <input type="text" class="form-control" name="link[]" value="{{ $menu['link']}}" />
