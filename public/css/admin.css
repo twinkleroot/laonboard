@@ -440,6 +440,9 @@ body {
 #body_tab_type2.f-tab ul li.tab:hover { 
 	background: #fff !important;
 }
+#body_tab_type2 .submit_btn {
+	float: right;
+}
 #admin_box1 {
 	display: block;
 }

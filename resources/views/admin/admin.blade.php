@@ -40,13 +40,7 @@
 	<div class="box-left sidebarmenu">
 		<div class="hdbt bt-menu" id="showmenu">
 			<i class="fa fa-outdent"></i>
-		</div><!--
-		<div class="hdbt bt-home">
-			<a href="{{ url('/') }}">
-				<i class="fa fa-home"></i>
-				<span>home</span>
-			</a>
-		</div>-->
+		</div>
 	</div>
 
 	<div class="box-right pull-right">
