@@ -1,4 +1,4 @@
-@extends('layouts.'. ($board->layout ? : 'default.basic'))
+@extends( 'layout.'. ($board->layout ? : cache('config.skin')->layout. '.basic') )
 
 @section('title')
     {{ $board->subject }} 게시글 작성 | {{ Cache::get("config.homepage")->title }}

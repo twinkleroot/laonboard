@@ -78,4 +78,12 @@
 
   // 테마설정
   'theme' => 'default',
+
+  // 개별 스킨 설정
+  'layoutSkin' => 'default',
+  'boardSkin' => 'default',
+  'contentSkin' => 'default',
+  'mailSkin' => 'default',
+  'memoSkin' => 'default',
+  'latestSkin' => 'default',
 ) ;

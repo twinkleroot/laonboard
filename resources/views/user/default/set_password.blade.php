@@ -1,4 +1,4 @@
-@extends('layouts.default.basic')
+@extends('layout.'. cache('config.skin')->layout. '.basic')
 
 @section('title')
     최초 비밀번호 설정 | {{ Cache::get("config.homepage")->title }}

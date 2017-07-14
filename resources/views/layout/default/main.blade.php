@@ -1,4 +1,4 @@
-@extends('layouts.default.basic')
+@extends('layout.'. cache('config.skin')->layout. '.basic')
 
 @section('title')
     메인 | {{ Cache::get("config.homepage")->title }}
@@ -11,5 +11,5 @@
 
 @section('content')
     {{-- 최근 게시물 리스트--}}
-    @include('latest.default.index')
+    @include("latest.$skin.index")
 @endsection

@@ -1,4 +1,4 @@
-@extends('layouts.'. ($board->layout ? : 'default.basic'))
+@extends( 'layout.'. ($board->layout ? : cache('config.skin')->layout. '.basic') )
 
 @section('title')
     {{ $view->subject }} > {{ $board->subject }} | {{ Cache::get('config.homepage')->title }}
@@ -441,7 +441,7 @@ $(function() {
     $(".bd_title").click(function(){
         $(".bd_file_list").toggle();
     });
-    
+
     $(".viewOriginalImage").click(function() {
         var width = $(this).attr('width');
         var height = $(this).attr('height');

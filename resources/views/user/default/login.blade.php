@@ -1,4 +1,4 @@
-@extends('layouts.default.basic')
+@extends('layout.'. cache('config.skin')->layout. '.basic')
 
 @section('title')
     로그인 | {{ Cache::get("config.homepage")->title }}

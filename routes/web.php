@@ -45,6 +45,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
 
     // 테마 설정
     Route::get('theme', ['as' => 'admin.themes.index', 'uses' => 'Admin\ThemeController@index']);
+    Route::post('theme/update', ['as' => 'admin.themes.update', 'uses' => 'Admin\ThemeController@update']);
+    Route::post('theme/update/skin', ['as' => 'admin.themes.update.skin', 'uses' => 'Admin\ThemeController@updateSkin']);
+    Route::post('theme/detail', ['as' => 'admin.themes.detail', 'uses' => 'Admin\ThemeController@detail']);
 
     // 메뉴 추가 팝업창에 대상 선택에 따라서 view를 load하는 기능
     Route::post('menus/result', ['as' => 'admin.menus.result', 'uses' => 'Admin\MenusController@result']);
@@ -359,8 +362,8 @@ Route::resource('scrap', 'Board\ScrapController', [
 ]);
 
 // 새글
-Route::get('new', ['as' => 'new.index', 'uses' => 'Board\NewController@index']);
-Route::post('new', ['as' => 'new.destroy', 'uses' => 'Board\NewController@destroy'])
+Route::get('new', ['as' => 'new.index', 'uses' => 'BoardNew\BoardNewController@index']);
+Route::post('new', ['as' => 'new.destroy', 'uses' => 'BoardNew\BoardNewController@destroy'])
     ->middleware('auth');
 
 // 이미지 관련
