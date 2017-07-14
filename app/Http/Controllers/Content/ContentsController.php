@@ -26,7 +26,7 @@ class ContentsController extends Controller
         $params = $this->content->getContentView($id);
         $skin = $params['content']->skin ? : 'default';
 
-        return view('content.'. $skin. '.show', $params);
+        return view()->exists("content.$skin.show") ? view("content.$skin.show", $params) : view("content.default.show", $params);
     }
 
 

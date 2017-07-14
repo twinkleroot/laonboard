@@ -26,7 +26,7 @@ class UserController extends Controller
     public function __construct(Config $config, User $userModel)
     {
         $this->config = Cache::get("config.join");
-        $this->skin = $this->config->skin;
+        $this->skin = $this->config->skin ? : 'default';
         $this->userModel = $userModel;
 
         $adminConfig = new Config();
@@ -36,7 +36,9 @@ class UserController extends Controller
     // 회원 정보 수정 폼
     public function edit()
     {
-        return view('user.'. $this->skin. '.edit', $this->userModel->editFormData($this->config));
+        $params = $this->userModel->editFormData($this->config);
+        $skin = $this->skin;
+        return view()->exists("user.$skin.edit") ? view("user.$skin.edit", $params) : view("user.default.edit", $params);
     }
 
     // 회원 정보 수정 폼에 앞서 비밀번호 한번 더 확인하는 폼
@@ -44,11 +46,14 @@ class UserController extends Controller
     {
         $user = auth()->user();
         $work = is_null($request->work) ? session()->get('work') : $request->work;
+        $params = ['email' => $user->email, 'work' => $work];
+        $skin = $this->skin;
 
         if(is_null($user->password)) {
-            return view('user.'. $this->skin. '.set_password');   // 최초 비밀번호 설정
+            // 최초 비밀번호 설정
+            return view()->exists("user.$skin.set_password") ? view("user.$skin.set_password") : view("user.default.set_password");
         } else {
-            return view('user.'. $this->skin. '.confirm_password', ['email' => $user->email, 'work' => $work]);
+            return view()->exists("user.$skin.confirm_password") ? view("user.$skin.confirm_password", $params) : view("user.default.confirm_password", $params);
         }
     }
 
@@ -81,6 +86,9 @@ class UserController extends Controller
     // 회원 정보 수정
     public function update(Request $request)
     {
+        $params = $this->userModel->editFormData($this->config);
+        $skin = $this->skin;
+        $errors = ['reCaptcha' => '자동등록방지 입력이 틀렸습니다. 다시 입력해 주십시오.'];
         if(ReCaptcha::reCaptcha($request)) {    // 구글 리캡챠 체크
             $user = auth()->user();
             // 입력값 유효성 검사
@@ -104,18 +112,17 @@ class UserController extends Controller
                 return redirect('/home')->with('message', $user->nick . '님의 회원정보가 변경되었습니다.');
             }
         } else {
-            return view('user.'. $this->skin. '.edit', $this->userModel->editFormData($this->config))
-                ->withErrors(['reCaptcha' => '자동등록방지 입력이 틀렸습니다. 다시 입력해 주십시오.']);
+            return view()->exists("user.$skin.edit") ? view("user.$skin.edit", $params)->withErrors($errors) : view("user.default.edit", $params)->withErrors($errors);
         }
     }
 
     // 회원 가입 결과, 웰컴 페이지
     public function welcome(Request $request)
     {
-        return view('user.'. $this->skin. '.welcome', [
-            'nick' => $request->nick,
-            'email' => $request->email,
-        ]);
+        $params = ['nick' => $request->nick, 'email' => $request->email,];
+        $skin = $this->skin;
+
+        return view()->exists("user.$skin.welcome") ? view("user.$skin.welcome", $params) : view("user.default.welcome", $params);
     }
 
     // 회원 정보 수정에서 소셜 연결 해제
@@ -127,9 +134,10 @@ class UserController extends Controller
     // 메일인증 메일주소 변경 폼
     public function editEmail($email)
     {
-        return view('user.'. $this->skin. '.change_email', [
-            'email' => $email
-        ]);
+        $params = ['email' => $email];
+        $skin = $this->skin;
+
+        return view()->exists("user.$skin.change_email") ? view("user.$skin.change_email", $params) : view("user.default.change_email", $params);
     }
 
     // 메일인증 메일주소 변경 실행
@@ -153,17 +161,19 @@ class UserController extends Controller
     public function pointList($id)
     {
         $point = new Point();
+        $skin = $this->skin;
         $params = $point->getPointList($id);
 
-        return view('user.'. $this->skin. '.point', $params);
+        return view()->exists("user.$skin.point") ? view("user.$skin.point", $params) : view("user.default.point", $params);
     }
 
     // 자기소개
     public function profile($id)
     {
+        $skin = $this->skin;
         $params = $this->userModel->getProfileParams($id);
 
-        return view('user.'. $this->skin. '.profile', $params);
+        return view()->exists("user.$skin.profile") ? view("user.$skin.profile", $params) : view("user.default.profile", $params);
     }
 
     // 회원 탈퇴

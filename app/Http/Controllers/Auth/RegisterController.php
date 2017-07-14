@@ -49,7 +49,7 @@ class RegisterController extends Controller
     public function join()
     {
         $skin = $this->config->skin ? : 'default';
-        return view('user.'. $skin. '.register');
+        return view()->exists("user.$skin.register") ? view("user.$skin.register") : view("user.default.register");
     }
 
     // 회원 가입 수행

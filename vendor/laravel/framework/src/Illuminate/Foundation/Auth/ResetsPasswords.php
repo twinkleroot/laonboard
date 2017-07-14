@@ -21,7 +21,7 @@ trait ResetsPasswords
     public function getEmail()
     {
         $skin = Cache::get('config.join')->skin ? : 'default';
-        return view('user.'. $skin. '.password_email');
+        return view()->exists("user.$skin.password_email") ? view("user.$skin.password_email") : view("user.default.password_email");
     }
 
     /**
@@ -69,7 +69,8 @@ trait ResetsPasswords
          }
 
          $skin = Cache::get('config.join')->skin ? : 'default';
-         return view('user.'. $skin. '.password_reset')->with('token', $token);
+
+         return view()->exists("user.$skin.password_reset") ? view("user.$skin.password_reset")->with('token', $token) : view("user.default.password_reset")->with('token', $token);
      }
 
     /**

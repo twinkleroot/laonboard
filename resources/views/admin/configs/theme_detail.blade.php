@@ -1,5 +1,5 @@
 <div id="theme_detail">
-    <div class="thdt_img"><img src="{{ asset("images/screenshot_$theme.png") }}"></div>
+    <div class="thdt_img"><img src="{{ asset(env('SCREENSHOT_PREFIX')."$theme.png") }}"></div>
     <div class="thdt_if">
         <h2>{{ $info['themeName'] }}</h2>
         <table>
