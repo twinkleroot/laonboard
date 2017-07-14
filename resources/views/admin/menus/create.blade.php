@@ -43,7 +43,6 @@
 <div id="bd_menu_form" class="container">
     <form class="form-horizontal">
     {{ csrf_field() }}
-        <!-- 대상선택 -->
         <div class="form-group">
             <label for="" class="col-sm-2 col-xs-3 control-label" style="text-align: left;">대상선택</label>
             <div class="col-sm-3 col-xs-4">
@@ -94,7 +93,7 @@ function addMenuList(name, link, code)
 
     var menuList = $("#menulist", opener.document);
     var ms = new Date().getTime();
-    var childIcon='';
+    var addedMenuName = "<input type=\"text\" class=\"form-control\" name=\"name[]\" value=\""+name+"\" id=\"name_"+ms+"\" required class=\"required frm_input full_input\">";
 
     var sub_menu_class;
     @if($new == 'new')
@@ -102,13 +101,13 @@ function addMenuList(name, link, code)
     @else
         sub_menu_class = " class=\"text-center sub_menu_class\"";
         // 임시로 ㄴ 으로 화면에 표시함.
-        childIcon = "ㄴ";
+        addedMenuName = "<div class=\"row\"><div class=\"col-md-2\">ㄴ</div><div class=\"col-md-10\">" + addedMenuName + "</div></div>";
     @endif
 
     var list = "<tr class=\"menu_list menu_group_"+ code + "\">";
     list += "<td" + sub_menu_class + ">";
     list += "<input type=\"hidden\" name=\"code[]\" value=\""+ code +"\">";
-    list += childIcon + "<input type=\"text\" class=\"form-control\" name=\"name[]\" value=\""+name+"\" id=\"name_"+ms+"\" required class=\"required frm_input full_input\">";
+    list += addedMenuName;
     list += "</td>";
     list += "<td class='text-center'>";
     list += "<input type=\"text\" class=\"form-control\" name=\"link[]\" value=\""+link+"\" id=\"link_"+ms+"\" required class=\"required frm_input full_input\">";

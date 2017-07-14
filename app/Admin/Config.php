@@ -66,7 +66,6 @@ class Config extends Model
             'configEmailDefault' => Cache::get("config.email.default"),
             'configEmailBoard' => Cache::get("config.email.board"),
             'configEmailJoin' => Cache::get("config.email.join"),
-            'configEmailVote' => Cache::get("config.email.vote"),
             'admins' => $admins,
             'latestSkins' => Util::getSkins('latest'),
             'searchSkins' => Util::getSkins('search'),
@@ -92,6 +91,8 @@ class Config extends Model
                 return $this->createConfigEmailBoard();
             case 'theme':
                 return $this->createConfigTheme();
+            case 'skin':
+                return $this->createConfigSkin();
             default:
                 # code...
                 break;
@@ -102,20 +103,20 @@ class Config extends Model
     public function createConfigHomepage()
     {
         $configArr = array (
-          'title' => config('gnu.title'),
-          'superAdmin' => config('gnu.superAdmin'),
-          'usePoint' => config('gnu.usePoint'),
-          'loginPoint' => config('gnu.loginPoint'),
-          'memoSendPoint' => config('gnu.memoSendPoint'),
-          'openDate' => config('gnu.openDate'),
-          'newRows' => config('gnu.newRows'),
-          'pageRows' => config('gnu.pageRows'),
-          'mobilePageRows' => config('gnu.mobilePageRows'),
-          'writePages' => config('gnu.writePages'),
-          'mobilePages' => config('gnu.mobilePages'),
-          'newSkin' => config('gnu.newSkin'),
-          'searchSkin' => config('gnu.searchSkin'),
-          'pointTerm' => config('gnu.pointTerm'),
+            'title' => config('gnu.title'),
+            'superAdmin' => config('gnu.superAdmin'),
+            'usePoint' => config('gnu.usePoint'),
+            'loginPoint' => config('gnu.loginPoint'),
+            'memoSendPoint' => config('gnu.memoSendPoint'),
+            'openDate' => config('gnu.openDate'),
+            'newRows' => config('gnu.newRows'),
+            'pageRows' => config('gnu.pageRows'),
+            'mobilePageRows' => config('gnu.mobilePageRows'),
+            'writePages' => config('gnu.writePages'),
+            'mobilePages' => config('gnu.mobilePages'),
+            'newSkin' => config('gnu.newSkin'),
+            'searchSkin' => config('gnu.searchSkin'),
+            'pointTerm' => config('gnu.pointTerm'),
         );
 
         return $this->createConfig('config.homepage', $configArr);
@@ -125,26 +126,26 @@ class Config extends Model
     public function createConfigJoin()
     {
         $configArr = array (
-          'skin' => config('gnu.skin'),
-          'nickDate' => config('gnu.nickDate'),
-          'name' => config('gnu.name'),
-          'homepage' => config('gnu.homepage'),
-          'tel' => config('gnu.tel'),
-          'hp' => config('gnu.hp'),
-          'addr' => config('gnu.addr'),
-          'signature' => config('gnu.signature'),
-          'profile' => config('gnu.profile'),
-          'recommend' => config('gnu.recommend'),
-          'joinLevel' => config('gnu.joinLevel'),
-          'joinPoint' => config('gnu.joinPoint'),
-          'recommendPoint' => config('gnu.recommendPoint'),
-          'banId' => config('gnu.banId'),
-          'stipulation' => config('gnu.stipulation'),
-          'privacy' => config('gnu.privacy'),
-          'passwordPolicyUpper' => config('gnu.passwordPolicyUpper'),
-          'passwordPolicyNumber' => config('gnu.passwordPolicyNumber'),
-          'passwordPolicySpecial' => config('gnu.passwordPolicySpecial'),
-          'passwordPolicyDigits' => config('gnu.passwordPolicyDigits'),
+            'skin' => config('gnu.skin'),
+            'nickDate' => config('gnu.nickDate'),
+            'name' => config('gnu.name'),
+            'homepage' => config('gnu.homepage'),
+            'tel' => config('gnu.tel'),
+            'hp' => config('gnu.hp'),
+            'addr' => config('gnu.addr'),
+            'signature' => config('gnu.signature'),
+            'profile' => config('gnu.profile'),
+            'recommend' => config('gnu.recommend'),
+            'joinLevel' => config('gnu.joinLevel'),
+            'joinPoint' => config('gnu.joinPoint'),
+            'recommendPoint' => config('gnu.recommendPoint'),
+            'banId' => config('gnu.banId'),
+            'stipulation' => config('gnu.stipulation'),
+            'privacy' => config('gnu.privacy'),
+            'passwordPolicyUpper' => config('gnu.passwordPolicyUpper'),
+            'passwordPolicyNumber' => config('gnu.passwordPolicyNumber'),
+            'passwordPolicySpecial' => config('gnu.passwordPolicySpecial'),
+            'passwordPolicyDigits' => config('gnu.passwordPolicyDigits'),
         );
 
         return $this->createConfig('config.join', $configArr);
@@ -154,16 +155,16 @@ class Config extends Model
     public function createConfigBoard()
     {
         $configArr = array (
-          'linkTarget' => config('gnu.linkTarget'),
-          'readPoint' => config('gnu.readPoint'),
-          'writePoint' => config('gnu.writePoint'),
-          'commentPoint' => config('gnu.commentPoint'),
-          'downloadPoint' => config('gnu.downloadPoint'),
-          'searchPart' => config('gnu.searchPart'),
-          'imageExtension' => config('gnu.imageExtension'),
-          'flashExtension' => config('gnu.flashExtension'),
-          'movieExtension' => config('gnu.movieExtension'),
-          'filter' => config('gnu.filter'),
+            'linkTarget' => config('gnu.linkTarget'),
+            'readPoint' => config('gnu.readPoint'),
+            'writePoint' => config('gnu.writePoint'),
+            'commentPoint' => config('gnu.commentPoint'),
+            'downloadPoint' => config('gnu.downloadPoint'),
+            'searchPart' => config('gnu.searchPart'),
+            'imageExtension' => config('gnu.imageExtension'),
+            'flashExtension' => config('gnu.flashExtension'),
+            'movieExtension' => config('gnu.movieExtension'),
+            'filter' => config('gnu.filter'),
         );
 
         return $this->createConfig('config.board', $configArr);
@@ -173,9 +174,9 @@ class Config extends Model
     public function createConfigEmailDefault()
     {
         $configArr = array (
-          'emailUse' => config('gnu.emailUse'),
-          'emailCertify' => config('gnu.emailCertify'),
-          'formmailIsMember' => config('gnu.formmailIsMember'),
+            'emailUse' => config('gnu.emailUse'),
+            'emailCertify' => config('gnu.emailCertify'),
+            'formmailIsMember' => config('gnu.formmailIsMember'),
         );
 
         return $this->createConfig('config.email.default', $configArr);
@@ -184,11 +185,11 @@ class Config extends Model
     public function createConfigEmailBoard()
     {
         $configArr = array (
-          'emailWriteSuperAdmin' => config('gnu.emailWriteSuperAdmin'),
-          'emailWriteGroupAdmin' => config('gnu.emailWriteGroupAdmin'),
-          'emailWriteBoardAdmin' => config('gnu.emailWriteBoardAdmin'),
-          'emailWriter' => config('gnu.emailWriter'),
-          'emailAllCommenter' => config('gnu.emailAllCommenter'),
+            'emailWriteSuperAdmin' => config('gnu.emailWriteSuperAdmin'),
+            'emailWriteGroupAdmin' => config('gnu.emailWriteGroupAdmin'),
+            'emailWriteBoardAdmin' => config('gnu.emailWriteBoardAdmin'),
+            'emailWriter' => config('gnu.emailWriter'),
+            'emailAllCommenter' => config('gnu.emailAllCommenter'),
         );
 
         return $this->createConfig('config.email.board', $configArr);
@@ -197,8 +198,8 @@ class Config extends Model
     public function createConfigEmailJoin()
     {
         $configArr = array (
-          'emailJoinSuperAdmin' => config('gnu.emailJoinSuperAdmin'),
-          'emailJoinUser' => config('gnu.emailJoinUser'),
+            'emailJoinSuperAdmin' => config('gnu.emailJoinSuperAdmin'),
+            'emailJoinUser' => config('gnu.emailJoinUser'),
         );
 
         return $this->createConfig('config.email.join', $configArr);
@@ -208,10 +209,25 @@ class Config extends Model
     public function createConfigTheme()
     {
         $configArr = array (
-          'name' => config('gnu.theme'),
+            'name' => config('gnu.theme'),
         );
 
         return $this->createConfig('config.theme', $configArr);
+    }
+
+    // 개별 스킨 설정 가져오기
+    public function createConfigSkin()
+    {
+        $configArr = array (
+            'layout' => config('gnu.layoutSkin'),
+            'board' => config('gnu.boardSkin'),
+            'content' => config('gnu.contentSkin'),
+            'mail' => config('gnu.mailSkin'),
+            'memo' => config('gnu.memoSkin'),
+            'latest' => config('gnu.latestSkin'),
+        );
+
+        return $this->createConfig('config.skin', $configArr);
     }
 
     // configs 테이블에 해당 row를 추가한다.
@@ -224,24 +240,26 @@ class Config extends Model
     }
 
     // 설정을 변경한다.
-    public function updateConfig($data, $name)
+    public function updateConfig($data, $name, $theme = 0)
     {
         // DB엔 안들어가는 값은 데이터 배열에서 제외한다.
-        $data = array_except($data, ['_token']);
-        $data = array_except($data, ['_method']);
+        $data = array_except($data, ['_token', '_method']);
 
         $config = Config::where('name', 'config.'. $name)->first();
 
         if($name == 'homepage') {       // 홈페이지 기본 환경 설정 일때
             Cache::forget("config.homepage");   // 설정이 변경될 때 캐시를 지운다.
-            $data = array_add($data, 'usePoint', isset($data['usePoint']) ? $data['usePoint'] : 0);
+            if( !$theme ) {
+                $data = array_add($data, 'usePoint', isset($data['usePoint']) ? $data['usePoint'] : 0);
+            }
         } else if($name == 'join') {    // 회원 가입 설정 일 때
             Cache::forget("config.join");   // 설정이 변경될 때 캐시를 지운다.
-            $data['banId'] = [ 0 => $data['banId'] ];
-            // checkbox 입력이 unckecked일 때 배열에 값을 0으로 추가.
-            $data = array_add($data, 'passwordPolicySpecial', isset($data['passwordPolicySpecial']) ? $data['passwordPolicySpecial'] : 0);
-            $data = array_add($data, 'passwordPolicyUpper', isset($data['passwordPolicyUpper']) ? $data['passwordPolicyUpper'] : 0);
-            $data = array_add($data, 'passwordPolicyNumber', isset($data['passwordPolicyNumber']) ? $data['passwordPolicyNumber'] : 0);
+            if( !$theme ) {
+                $data['banId'] = [ 0 => $data['banId'] ];
+                $data = array_add($data, 'passwordPolicySpecial', isset($data['passwordPolicySpecial']) ? $data['passwordPolicySpecial'] : 0);
+                $data = array_add($data, 'passwordPolicyUpper', isset($data['passwordPolicyUpper']) ? $data['passwordPolicyUpper'] : 0);
+                $data = array_add($data, 'passwordPolicyNumber', isset($data['passwordPolicyNumber']) ? $data['passwordPolicyNumber'] : 0);
+            }
         } else if($name == 'board') {   // 게시판 기본 설정일 때
             Cache::forget("config.board");  // 설정이 변경될 때 캐시를 지운다.
             $data['filter'] = [ 0 => $data['filter'] ];
@@ -261,6 +279,10 @@ class Config extends Model
             Cache::forget("config.email.join");  // 설정이 변경될 때 캐시를 지운다.
             $data = array_add($data, 'emailJoinSuperAdmin', isset($data['emailJoinSuperAdmin']) ? $data['emailJoinSuperAdmin'] : 0);
             $data = array_add($data, 'emailJoinUser', isset($data['emailJoinUser']) ? $data['emailJoinUser'] : 0);
+        } else if($name == 'theme') {
+            Cache::forget("config.theme");
+        } else if($name == 'skin') {
+            Cache::forget("config.skin");
         }
 
         // json 형식으로 되어 있는 설정값을 배열로 바꾼다.

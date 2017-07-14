@@ -809,7 +809,7 @@
                         <tr>
                             <th>레이아웃 파일 경로</th>
                             <td>
-                                resources/views/layouts 이하의 경로로 확장자 빼고 입력해주세요.<br />
+                                resources/views/layout 이하의 경로로 확장자 빼고 입력해주세요.<br />
                                 <input type="text" id="layout" name="layout" value="{{ $board['layout'] ? : 'default.basic' }}" />
                             </td>
                             <td>

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\New;
+namespace App\Http\Controllers\BoardNew;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\BoardNew;
 use Cache;
 
-class NewController extends Controller
+class BoardNewController extends Controller
 {
     public $boardNew;
 

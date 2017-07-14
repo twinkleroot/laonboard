@@ -1,4 +1,4 @@
-@extends('layouts.default.basic')
+@extends('layout.'. cache('config.skin')->layout. '.basic')
 
 @section('title')
     {{ $board->table_name }} 리스트 | {{ Cache::get("config.homepage")->title }}

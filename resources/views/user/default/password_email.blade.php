@@ -1,4 +1,4 @@
-@extends('layouts.default.basic')
+@extends('layout.'. cache('config.skin')->layout. '.basic')
 
 @section('title')
     비밀번호 재설정 | {{ Cache::get("config.homepage")->title }}
