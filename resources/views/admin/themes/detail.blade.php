@@ -1,35 +1,39 @@
 <div id="theme_detail">
-    <div class="thdt_img"><img src="{{ asset(env('SCREENSHOT_PREFIX')."$theme.png") }}"></div>
+    <div class="thdt_img"><img src="{{ asset("images/screenshot_$theme.png") }}"></div>
     <div class="thdt_if">
-        <h2>{{ $info['themeName'] }}</h2>
+        <button type="button" class="close_btn">닫기</button>
+        <a href="">
+            <h2>{{ $info['themeName'] }}<i class="thdt_icon fa fa-home" aria-hidden="true"></i></h2>
+        </a>
         <table>
-            <tr>
-                <th scope="row">Version</th>
-                <td>{{ $info['version'] }}</td>
-            </tr>
-            <tr>
-                <th scope="row">Maker</th>
-                <td>
-                    @if(isset($info['makerUri']))
-                        <a href="{{ $info['makerUri'] }}" target="_blank" class="thdt_home">{{ $info['maker'] }}</a>
-                    @else
-                        {{ $info['maker'] }}
-                    @endif
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">License</th>
-                <td>
-                    @if(isset($info['licenseUri']))
-                        <a href="{{ $info['licenseUri'] }}" target="_blank" class="thdt_home">{{ $info['license'] }}</a>
-                    @else
-                        {{ $info['license'] }}
-                    @endif
-                </td>
-            </tr>
+            <tbody>
+                <tr>
+                    <th scope="row">Version</th>
+                    <td>{{ $info['version'] }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Maker</th>
+                    <td>
+                        @if(isset($info['makerUri']))
+                            <a href="{{ $info['makerUri'] }}" target="_blank" class="thdt_home">{{ $info['maker'] }}<i class="thdt_icon fa fa-home" aria-hidden="true"></i></a>
+                        @else
+                            {{ $info['maker'] }}
+                        @endif
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">License</th>
+                    <td>
+                        @if(isset($info['licenseUri']))
+                            <a href="{{ $info['licenseUri'] }}" target="_blank" class="thdt_home">{{ $info['license'] }}<i class="thdt_icon fa fa-home" aria-hidden="true"></i></a>
+                        @else
+                            {{ $info['license'] }}
+                        @endif
+                    </td>
+                </tr>
+            </tbody>
         </table>
         <p>{{ $info['detail'] }}</p>
-        <button type="button" class="close_btn">닫기</button>
     </div>
 </div>
 

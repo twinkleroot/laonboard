@@ -48,9 +48,10 @@
         <li class="tab"><a href="#admin-header">글작성시 메일</a></li>
         <li class="tab"><a href="#admin-header">회원가입시 메일</a></li>
     </ul>
+
+    <div class="submit_btn" style="line-height: 42px; padding-right: 10px;">
+    </div>
 </div>
-
-
 
 <div class="body-contents">
     @if(Session::has('message'))
@@ -62,18 +63,16 @@
         </div>
     @endif
 
-    <div id="admin_box1" class="adm_box">
+    <div id="admin_box1">
+        <form role="form" method="POST" action="{{ route('admin.config.update', ['name' => 'homepage']) }}">
+        {{ method_field('PUT') }}
+        {{ csrf_field() }}
         <div class="adm_panel">
             <div class="adm_box_hd">
                 <span class="adm_box_title">기본 환경설정</span>
             </div>
             <div class="adm_box_bd">
-                <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.config.update', ['name' => 'homepage']) }}">
-                {{ method_field('PUT') }}
-                {{ csrf_field() }}
-                    <div class="savebtn">
-                        <input type="submit" class="btn btn-sir" value="설정변경"/>
-                    </div> <!-- Submit 고정 -->
+                <div class="form-horizontal">                    
                     <div class="form-group">
                         <label for="title" class="col-md-2 control-label">홈페이지 제목</label>
                         <div class="col-md-5">
@@ -214,12 +213,12 @@
                             </div>
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 
-    <div id="admin_box2" class="adm_box">
+    <div id="admin_box2">
         <div class="adm_panel">
             <div class="adm_box_bd">
                 <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.config.update', ['name' => 'join']) }}">
@@ -435,7 +434,7 @@
             </div>
         </div>
     </div>
-    <div id="admin_box3" class="adm_box">
+    <div id="admin_box3">
         <div class="panel panel-default">
         <div class="panel-body">
                 <div class="panel-heading">게시판 기본 설정</div>
@@ -552,7 +551,7 @@
             </div>
         </div>
     </div>
-    <div id="admin_box4" class="adm_box">
+    <div id="admin_box4">
         <div class="panel panel-default">
         <div class="panel-body">
                 <div class="panel-heading">기본 메일 환경 설정</div>
@@ -601,7 +600,7 @@
             </div>
         </div>
     </div>
-    <div id="admin_box5" class="adm_box">
+    <div id="admin_box5">
         <div class="panel panel-default">
         <div class="panel-body">
                 <div class="panel-heading">게시판 글 작성시 메일 설정</div>
@@ -672,7 +671,7 @@
             </div>
         </div>
     </div>
-    <div id="admin_box6" class="adm_box">
+    <div id="admin_box6">
         <div class="panel panel-default">
         <div class="panel-body">
 
