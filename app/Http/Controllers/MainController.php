@@ -20,20 +20,20 @@ class MainController extends Controller
     public function index(Request $request)
     {
         $skin = Cache::get('config.theme')->name ? : 'default';
-        $mainContents = $this->main->getMainContents(Cache::get('config.skin')->latest, 'default');
+        $params = $this->main->getMainContents(Cache::get('config.skin')->latest, 'default');
 
         $popup = new Popup();
-        $mainContents['popups'] = $popup->getPopupData();
+        $params['popups'] = $popup->getPopupData();
 
-        return view()->exists("layout.$skin.main") ? view("layout.$skin.main", $mainContents) : view("layout.default.main", $mainContents);
+        return viewDefault("layout.$skin.main", $params);
     }
 
     // 게시판 그룹별 메인 (그룹별 메인은 레이아웃스킨 + 메인스킨 + 최근게시물스킨 조합)
     public function groupIndex($groupId)
     {
         $skin = Cache::get('config.theme')->name ? : 'default';
-        $groupContents = $this->main->getGroupContents($groupId, Cache::get('config.skin')->latest, 'default');
+        $params = $this->main->getGroupContents($groupId, Cache::get('config.skin')->latest, 'default');
 
-        return view()->exists("layout.$skin.group") ? view("layout.$skin.group", $groupContents) : view("layout.default.group", $groupContents);
+        return viewDefault("layout.$skin.group", $params);
     }
 }

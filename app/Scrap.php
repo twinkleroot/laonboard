@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 use Cache;
+use Exception;
 use Carbon\Carbon;
 use App\Common\Util;
 use App\Comment;
@@ -95,7 +96,7 @@ class Scrap extends Model
         return $write;
     }
 
-    public function getWriteModel($request)
+    private function getWriteModel($request)
     {
         $writeModel = new Write($request->boardId);
         $writeModel->setTableName($writeModel->board->table_name);
@@ -107,12 +108,23 @@ class Scrap extends Model
     public function storeScrap($request)
     {
         $writeModel = $this->getWriteModel($request);
+        $write = $writeModel->find($request->writeId);
+        if( !$write ) {
+            return [ 'message' => '스크랩하시려는 게시글이 존재하지 않습니다.' ];
+        }
+        $existScrap = $this->getScrap($request);
+        if($existScrap) {
+             return [ 'confirm' => '이미 스크랩하신 글 입니다.\\n\\n지금 스크랩을 확인하시겠습니까?' ];
+        }
+
+
         $comment = new Comment();
         $notification = new Notification();
-        $result = $comment->storeComment($writeModel, $request);
-
-        if(isset($result['message'])) {
-            return ['message' => $result['message']];
+        $result;
+        try {
+            $result = $comment->storeComment($writeModel, $request);
+        } catch (Exception $e) {
+            return [ 'message' => $e->getMessage() ];
         }
 
         return Scrap::Create([

@@ -52,7 +52,7 @@ class SocialController extends Controller
                 $params = $this->socialModel->getSocialParams($provider);
                 $skin = $this->config->skin ? : 'default';
 
-                return view()->exists("user.$skin.social") ? view("user.$skin.social", $params) : view("user.default.social", $params);
+                return viewDefault("user.$skin.social", $params);
             } else { // 소셜 계정으로 로그인
                 return redirect(route('home'));
             }

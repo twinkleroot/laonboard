@@ -17,7 +17,7 @@ trait SendsPasswordResetEmails
     {
         $skin = Cache::get('config.join')->skin ? : 'default';
 
-        return view('user.'. $skin. '.password_email');
+        return viewDefault("user.$skin.password_email");
     }
 
     /**

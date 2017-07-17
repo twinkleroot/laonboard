@@ -25,7 +25,7 @@ class MemoController extends Controller
         $skin = cache('config.skin')->memo ? : 'default';
         $params = $this->memo->getIndexParams($request);
 
-        return view()->exists("memo.$skin.index") ? view("memo.$skin.index", $params) : view("memo.default.index", $params);
+        return viewDefault("memo.$skin.index", $params);
     }
 
     /**
@@ -36,15 +36,15 @@ class MemoController extends Controller
     public function create(Request $request)
     {
         $skin = cache('config.skin')->memo ? : 'default';
-        $result = $this->memo->getCreateParams($request);
+        $params = $this->memo->getCreateParams($request);
 
-        if( isset($result['message']) ) {
-            return view('message', $result);
+        if( isset($params['message']) ) {
+            return view('message', $params);
         } else {
             if(isset($request->to)) {
-                return view()->exists("memo.$skin.form") ? view("memo.$skin.form", $result) : view("memo.default.form", $result);
+                return viewDefault("memo.$skin.form", $params);
             } else {
-                return view()->exists("memo.$skin.form") ? view("memo.$skin.form") : view("memo.default.form");
+                return viewDefault("memo.$skin.form");
             }
         }
     }
@@ -83,7 +83,7 @@ class MemoController extends Controller
             return view('message', $params);
         }
 
-        return view()->exists("memo.$skin.show") ? view("memo.$skin.show", $params) : view("memo.default.show", $params);
+        return viewDefault("memo.$skin.show", $params);
     }
 
     /**

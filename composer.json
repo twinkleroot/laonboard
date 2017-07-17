@@ -31,7 +31,8 @@
         ],
         "psr-4": {
             "App\\": "app/"
-        }
+        },
+        "files": ["app/Helpers/globalFunctions.php"]
     },
     "autoload-dev": {
         "psr-4": {

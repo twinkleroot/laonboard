@@ -46,8 +46,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
     // 테마 설정
     Route::get('theme', ['as' => 'admin.themes.index', 'uses' => 'Admin\ThemeController@index']);
     Route::post('theme/update', ['as' => 'admin.themes.update', 'uses' => 'Admin\ThemeController@update']);
-    Route::post('theme/update/skin', ['as' => 'admin.themes.update.skin', 'uses' => 'Admin\ThemeController@updateSkin']);
+    Route::post('theme/update/skins', ['as' => 'admin.themes.update.skin', 'uses' => 'Admin\ThemeController@updateSkins']);
+    // 테마 상세보기 레이어
     Route::post('theme/detail', ['as' => 'admin.themes.detail', 'uses' => 'Admin\ThemeController@detail']);
+    // 테마 미리보기
+    Route::get('theme/preview/{themeName}/index', ['as' => 'admin.themes.preview.index', 'uses' => 'Admin\ThemePreviewController@index']);
+    Route::get('theme/preview/{themeName}/board/list', ['as' => 'admin.themes.preview.board.list', 'uses' => 'Admin\ThemePreviewController@boardList']);
+    Route::get('theme/preview/{themeName}/board/view', ['as' => 'admin.themes.preview.board.view', 'uses' => 'Admin\ThemePreviewController@boardView']);
 
     // 메뉴 추가 팝업창에 대상 선택에 따라서 view를 load하는 기능
     Route::post('menus/result', ['as' => 'admin.menus.result', 'uses' => 'Admin\MenusController@result']);

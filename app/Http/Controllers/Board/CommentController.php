@@ -33,10 +33,12 @@ class CommentController extends Controller
     public function store(Request $request)
     {
         if(auth()->user() || ReCaptcha::reCaptcha($request)) {    // 구글 리캡챠 체크
-            $result = $this->comment->storeComment($this->writeModel, $request);
-            if(isset($result['message'])) {
+            $result;
+            try {
+                $result = $this->comment->storeComment($this->writeModel, $request);
+            } catch (Exception $e) {
                 return view('message', [
-                    'message' => $result['message']
+                    'message' => $e->getMessage()
                 ]);
             }
 

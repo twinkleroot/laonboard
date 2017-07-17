@@ -34,12 +34,12 @@
     </div>
 </div>
 <div id="body_tab_type2">
-    <span class="txt">설치된 테마 : {{ count($themes) }}</span>
+    <span class="txt">설치된 테마 : {{ count($layoutSkins) }}</span>
 </div>
 <div class="body-contents">
     <ul class="theme_list">
-        @if(count($themes) > 0)
-        @foreach($themes as $theme)
+        @if(count($layoutSkins) > 0)
+        @foreach($layoutSkins as $theme)
             <li class="themebox">
                 <div class="tmli_if">
                     <span class="img">
@@ -53,7 +53,7 @@
                     @else
                         <button class="theme_sl use_apply" data-theme="{{ $theme['name'] }}" data-name="{{ $theme['info']['themeName'] }}">테마적용</button>
                     @endif
-                    <a href="#" class="theme_pr">미리보기</a>
+                    <a href="{{ route('admin.themes.preview.index', $theme['name']) }}" class="theme_pr" target="_blank">미리보기</a>
                     <button class="theme_preview" data-theme="{{ $theme['name'] }}">상세보기</button>
                 </div>
             </li>
@@ -71,8 +71,8 @@
         <div class="col-md-2">
             <select class="form-control" name="layoutSkin" id="layoutSkin">
                 @foreach($layoutSkins as $skin)
-                    <option value='{{ $skin }}' @if(cache('config.skin')->layout == $skin) selected @endif>
-                        {{ $skin }}
+                    <option value='{{ $skin['name'] }}' @if(cache('config.skin')->layout == $skin['name']) selected @endif>
+                        {{ $skin['name'] }}
                     </option>
                 @endforeach
             </select>

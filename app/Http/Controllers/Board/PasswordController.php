@@ -40,15 +40,16 @@ class PasswordController extends Controller
         }
 
         $skin = $this->writeModel->board->skin ? : 'default';
-
-        return view('board.'. $skin. '.password', [
+        $params = [
             'subject' => $subject,
             'boardId' => $boardId,
             'writeId' => $writeId,
             'commentId' => $commentId,
             'type' => $type,
             'nextUrl' => $request->nextUrl
-        ]);
+        ];
+
+        return viewDefault("board.$skin.password", $params);
     }
 
     // 비밀번호 비교

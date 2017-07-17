@@ -4,6 +4,7 @@ namespace App;
 
 use App\Board;
 use App\Group;
+use App\Common\Util;
 use DB;
 use Cache;
 
@@ -11,10 +12,10 @@ class Main
 {
     public function getMainContents($skin, $default)
     {
-        if(!$skin) {
-            $skin = $default;
-        }
-        $boards = Board::selectRaw('boards.*, groups.id as group_id, groups.subject as group_subject, groups.order as group_order')
+        $skin = view()->exists("latest.$skin.index") ? $skin : $default;
+
+        $boards =
+            Board::selectRaw('boards.*, groups.id as group_id, groups.subject as group_subject, groups.order as group_order')
             ->leftJoin('groups', 'groups.id', '=', 'boards.group_id')
             ->where('boards.device', '<>', 'mobile')
             ->where('boards.use_cert', 'not-use')
@@ -32,10 +33,10 @@ class Main
 
     public function getGroupContents($groupId, $skin, $default)
     {
-        if(!$skin) {
-            $skin = $default;
-        }
-        $boards = Board::where([
+        $skin = view()->exists("latest.$skin.index") ? $skin : $default;
+
+        $boards =
+            Board::where([
                 'group_id' => $groupId,
                 'use_cert' => 'not-use',
             ])

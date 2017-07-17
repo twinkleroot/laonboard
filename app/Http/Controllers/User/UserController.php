@@ -38,7 +38,7 @@ class UserController extends Controller
     {
         $params = $this->userModel->editFormData($this->config);
         $skin = $this->skin;
-        return view()->exists("user.$skin.edit") ? view("user.$skin.edit", $params) : view("user.default.edit", $params);
+        return viewDefault("user.$skin.edit", $params);
     }
 
     // 회원 정보 수정 폼에 앞서 비밀번호 한번 더 확인하는 폼
@@ -51,9 +51,9 @@ class UserController extends Controller
 
         if(is_null($user->password)) {
             // 최초 비밀번호 설정
-            return view()->exists("user.$skin.set_password") ? view("user.$skin.set_password") : view("user.default.set_password");
+            return viewDefault("user.$skin.set_password");
         } else {
-            return view()->exists("user.$skin.confirm_password") ? view("user.$skin.confirm_password", $params) : view("user.default.confirm_password", $params);
+            return viewDefault("user.$skin.confirm_password", $params);
         }
     }
 
@@ -88,7 +88,7 @@ class UserController extends Controller
     {
         $params = $this->userModel->editFormData($this->config);
         $skin = $this->skin;
-        $errors = ['reCaptcha' => '자동등록방지 입력이 틀렸습니다. 다시 입력해 주십시오.'];
+        $errors = ['message' => '자동등록방지 입력이 틀렸습니다. 다시 입력해 주십시오.'];
         if(ReCaptcha::reCaptcha($request)) {    // 구글 리캡챠 체크
             $user = auth()->user();
             // 입력값 유효성 검사
@@ -109,10 +109,10 @@ class UserController extends Controller
                 if($changeEmail) {
                     Auth::logout();
                 }
-                return redirect('/home')->with('message', $user->nick . '님의 회원정보가 변경되었습니다.');
+                return redirect('/home');
             }
         } else {
-            return view()->exists("user.$skin.edit") ? view("user.$skin.edit", $params)->withErrors($errors) : view("user.default.edit", $params)->withErrors($errors);
+            return viewDefault("user.$skin.edit", $params)->withErrors($errors);
         }
     }
 
@@ -122,7 +122,7 @@ class UserController extends Controller
         $params = ['nick' => $request->nick, 'email' => $request->email,];
         $skin = $this->skin;
 
-        return view()->exists("user.$skin.welcome") ? view("user.$skin.welcome", $params) : view("user.default.welcome", $params);
+        return viewDefault("user.$skin.welcome", $params);
     }
 
     // 회원 정보 수정에서 소셜 연결 해제
@@ -137,7 +137,7 @@ class UserController extends Controller
         $params = ['email' => $email];
         $skin = $this->skin;
 
-        return view()->exists("user.$skin.change_email") ? view("user.$skin.change_email", $params) : view("user.default.change_email", $params);
+        return viewDefault("user.$skin.change_email", $params);
     }
 
     // 메일인증 메일주소 변경 실행
@@ -164,7 +164,7 @@ class UserController extends Controller
         $skin = $this->skin;
         $params = $point->getPointList($id);
 
-        return view()->exists("user.$skin.point") ? view("user.$skin.point", $params) : view("user.default.point", $params);
+        return viewDefault("user.$skin.point", $params);
     }
 
     // 자기소개
@@ -173,7 +173,7 @@ class UserController extends Controller
         $skin = $this->skin;
         $params = $this->userModel->getProfileParams($id);
 
-        return view()->exists("user.$skin.profile") ? view("user.$skin.profile", $params) : view("user.default.profile", $params);
+        return viewDefault("user.$skin.profile", $params);
     }
 
     // 회원 탈퇴

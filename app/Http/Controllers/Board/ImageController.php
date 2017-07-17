@@ -30,18 +30,19 @@ class ImageController extends Controller
         }
 
         $imageFileInfo = getimagesize($imagePath);
-
-        return view('board.viewImage', [
+        $params = [
             'imagePath' => $folder.'/'.$imageName,
             'width' => $imageFileInfo[0],
             'height' => $imageFileInfo[1],
-        ]);
+        ];
+
+        return view('board.viewImage', $params);
     }
 
     // 이미지 업로드 페이지 열기(팝업)
     public function popup()
     {
-        return view('board.default.uploadImage');
+        return view('board.uploadImage');
     }
 
     // 이미지 업로드 실행

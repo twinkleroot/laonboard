@@ -3,7 +3,6 @@
 namespace App\Admin;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Admin\Popup;
 
 class Popup extends Model
 {

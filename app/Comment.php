@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Cache;
 use DB;
+use Exception;
 use Carbon\Carbon;
 use App\User;
 use App\Board;
@@ -119,10 +120,10 @@ class Comment
             $comment = $writeModel->where('id', $request->commentId)->first();   // 원 댓글
 
             if( is_null($comment) ) {
-                return [ 'message' => '답변할 댓글이 없습니다.\\n\\n답변하는 동안 댓글이 삭제되었을 수 있습니다.'];
+                throw new Exception('답변할 댓글이 없습니다.\\n\\n답변하는 동안 댓글이 삭제되었을 수 있습니다.');
             }
             if(strlen($comment->comment_reply) == 5) {
-                return [ 'message' => '더 이상 답변하실 수 없습니다.\\n\\n답변은 5단계 까지만 가능합니다.'];
+                throw new Exception('더 이상 답변하실 수 없습니다.\\n\\n답변은 5단계 까지만 가능합니다.');
             }
 
             $tmpComment = $comment->comment;

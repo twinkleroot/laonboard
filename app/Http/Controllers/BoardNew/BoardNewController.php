@@ -21,7 +21,7 @@ class BoardNewController extends Controller
         $params = $this->boardNew->getIndexParams($request);
         $skin = Cache::get('config.homepage')->newSkin ? : 'default';
 
-        return view()->exists("new.$skin.index") ? view("new.$skin.index", $params) : view("new.default.index", $params);
+        return viewDefault("new.$skin.index", $params);
     }
 
     public function destroy(Request $request)

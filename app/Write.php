@@ -294,7 +294,7 @@ class Write extends Model
         return count($notices) > 0 ? true : false;
     }
 
-    public function getViewParams($request, $boardId, $writeId, $writeModel)
+    public function getViewParams($writeModel, $boardId, $writeId, $request)
     {
         $write = $writeModel->find($writeId);
 

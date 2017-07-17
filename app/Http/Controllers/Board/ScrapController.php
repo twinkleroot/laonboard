@@ -24,7 +24,7 @@ class ScrapController extends Controller
     {
         $params = $this->scrap->getIndexParams();
 
-        return view('board.default.scrap_index', $params);
+        return view('board.scrap_index', $params);
     }
 
     /**
@@ -36,7 +36,7 @@ class ScrapController extends Controller
     {
         $existScrap = $this->scrap->getScrap($request);
         if($existScrap) {
-             return view('board.default.scrap_confirm', [
+             return view('board.scrap_confirm', [
                  'confirm' => '이미 스크랩하신 글 입니다.\\n\\n지금 스크랩을 확인하시겠습니까?'
              ]);
         }
@@ -49,7 +49,7 @@ class ScrapController extends Controller
             ]);
         }
 
-        return view('board.default.scrap_form', ['write' => $write, 'boardId' => $request->boardId]);
+        return view('board.scrap_form', ['write' => $write, 'boardId' => $request->boardId]);
     }
 
     /**
@@ -60,21 +60,6 @@ class ScrapController extends Controller
      */
     public function store(Request $request)
     {
-        $write = $this->scrap->getWrite($request);
-        if( is_null($write)) {
-            return view('message', [
-                'message' => '스크랩하시려는 게시글이 존재하지 않습니다.',
-                'popup' => 1
-            ]);
-        }
-
-        $existScrap = $this->scrap->getScrap($request);
-        if($existScrap) {
-             return view('board.default.scrap_form', [
-                 'confirm' => '이미 스크랩하신 글 입니다.\\n\\n지금 스크랩을 확인하시겠습니까?'
-             ]);
-        }
-
         $result = $this->scrap->storeScrap($request);
 
         if(isset($result['message'])) {
@@ -82,10 +67,10 @@ class ScrapController extends Controller
                 'message' => $result['message'],
                 'popup' => 1
             ]);
+        } else if(isset($result['confirm'])){
+            return view('board.scrap_confirm')->with('confirm', $result['confirm']);
         } else {
-            return view('board.default.scrap_form', [
-                 'confirm' => '이 글을 스크랩 하였습니다.\\n\\n지금 스크랩을 확인하시겠습니까?'
-            ]);
+            return view('board.scrap_confirm')->with('confirm', '이 글을 스크랩 하였습니다.\\n\\n지금 스크랩을 확인하시겠습니까?');
         }
     }
 

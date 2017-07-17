@@ -15,9 +15,9 @@
 @endsection
 
 @section('content')
-@if(Session::has('message'))
+@if($errors->has('message'))
     <div class="alert alert-info">
-    {{ Session::get('message') }}
+    {{ $errors->first('message') }}
     </div>
 @endif
 <div class="container">

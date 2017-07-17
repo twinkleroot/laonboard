@@ -15,8 +15,8 @@ trait AuthenticatesUsers
     public function showLoginForm()
     {
         $skin = Cache::get('config.join')->skin ? : 'default';
-        return view()->exists("user.$skin.login") ? view("user.$skin.login") : view("user.default.login");
-        // return view("user.$skin.login");
+
+        return viewDefault("user.$skin.login");
     }
     /**
      * Handle a login request to the application.
@@ -33,7 +33,7 @@ trait AuthenticatesUsers
                 'confirm' => '메일로 메일인증을 받으셔야 로그인 가능합니다.\\n다른 메일주소로 변경하여 인증하시려면 취소를 클릭하시기 바랍니다.',
                 'redirect' => route('user.email.edit', $request->email),
             ];
-            return view()->exists("user.$skin.login_confirm") ? view("user.$skin.login_confirm", $params) : view("user.default.login_confirm", $params);
+            return viewDefault("user.$skin.login_confirm", $params);
         }
 
         if($user && $user->leave_date) {
