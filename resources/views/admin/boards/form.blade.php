@@ -1089,8 +1089,8 @@
                                 </a>
                                 <a class="btn btn-primary" href="{{ route('board.index', $board->id) }}">게시판 바로가기</a>
                                 <a class="btn btn-primary" href="{{ route('admin.boards.thumbnail.delete', $board->id). $queryString }}?dir={{ $board->table_name }}" onclick="return del2(this.href, '게시판 썸네일 파일을 삭제하시겠습니까?');">게시판 썸네일 삭제</a>
-                                <button type="button" class="btn btn-primary" onclick="getThemeGalleryConfig()">테마 이미지설정 가져오기</button>
                             @endif
+                            <button type="button" class="btn btn-primary" onclick="getThemeGalleryConfig()">테마 이미지설정 가져오기</button>
                         </div>
                     </div>
                 </section>
