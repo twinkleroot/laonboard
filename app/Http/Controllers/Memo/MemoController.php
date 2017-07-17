@@ -22,10 +22,10 @@ class MemoController extends Controller
      */
     public function index(Request $request)
     {
-        $skin = 'default';
+        $skin = cache('config.skin')->memo ? : 'default';
         $params = $this->memo->getIndexParams($request);
 
-        return view('memo.'. $skin. '.index', $params);
+        return view()->exists("memo.$skin.index") ? view("memo.$skin.index", $params) : view("memo.default.index", $params);
     }
 
     /**
@@ -35,16 +35,16 @@ class MemoController extends Controller
      */
     public function create(Request $request)
     {
-        $skin = 'default';
+        $skin = cache('config.skin')->memo ? : 'default';
         $result = $this->memo->getCreateParams($request);
 
         if( isset($result['message']) ) {
             return view('message', $result);
         } else {
             if(isset($request->to)) {
-                return view('memo.'. $skin. '.form', $result);
+                return view()->exists("memo.$skin.form") ? view("memo.$skin.form", $result) : view("memo.default.form", $result);
             } else {
-                return view('memo.'. $skin. '.form');
+                return view()->exists("memo.$skin.form") ? view("memo.$skin.form") : view("memo.default.form");
             }
         }
     }
@@ -76,14 +76,14 @@ class MemoController extends Controller
      */
     public function show($id, Request $request)
     {
-        $skin = 'default';
+        $skin = cache('config.skin')->memo ? : 'default';
         $params = $this->memo->getShowParams($id, $request);
 
         if( isset($params['message']) ) {
             return view('message', $params);
         }
 
-        return view('memo.'. $skin. '.show', $params);
+        return view()->exists("memo.$skin.show") ? view("memo.$skin.show", $params) : view("memo.default.show", $params);
     }
 
     /**
@@ -94,7 +94,6 @@ class MemoController extends Controller
      */
     public function destroy($id, Request $request)
     {
-        $skin = 'default';
         if($this->memo->deleteMemo($id)) {
             return redirect(route('memo.index'). '?kind='. $request->kind);
         } else {

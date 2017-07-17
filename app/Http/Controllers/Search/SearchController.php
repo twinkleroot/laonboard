@@ -69,7 +69,7 @@ class SearchController extends Controller
 
         $skin = cache('config.homepage')->searchSkin ? : 'default';
 
-        return view("search.$skin.result", $params);
+        return view()->exists("search.$skin.result") ? view("search.$skin.result", $params) : view("search.default.result", $params);
     }
 
     // 검색 조건에 따라 Board 모델을 구한다.

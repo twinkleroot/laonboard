@@ -25,7 +25,7 @@ class MainController extends Controller
         $popup = new Popup();
         $mainContents['popups'] = $popup->getPopupData();
 
-        return view('layout.'. $skin. '.main', $mainContents);
+        return view()->exists("layout.$skin.main") ? view("layout.$skin.main", $mainContents) : view("layout.default.main", $mainContents);
     }
 
     // 게시판 그룹별 메인 (그룹별 메인은 레이아웃스킨 + 메인스킨 + 최근게시물스킨 조합)
@@ -34,6 +34,6 @@ class MainController extends Controller
         $skin = Cache::get('config.theme')->name ? : 'default';
         $groupContents = $this->main->getGroupContents($groupId, Cache::get('config.skin')->latest, 'default');
 
-        return view('layout.'. $skin. '.group', $groupContents);
+        return view()->exists("layout.$skin.group") ? view("layout.$skin.group", $groupContents) : view("layout.default.group", $groupContents);
     }
 }
