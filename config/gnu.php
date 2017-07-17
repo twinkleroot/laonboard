@@ -86,4 +86,12 @@
   'mailSkin' => 'default',
   'memoSkin' => 'default',
   'latestSkin' => 'default',
+
+  // 게시판 테마 설정
+  'gallery_cols' => 4,
+  'gallery_width' => 174,
+  'gallery_height' => 124,
+  // 'mobile_gallery_width' => 125,
+  // 'mobile_gallery_height' => 100,
+  'image_width' => 600,
 ) ;
