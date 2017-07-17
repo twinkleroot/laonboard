@@ -34,15 +34,11 @@
     </div>
 </div>
 <div id="body_tab_type2">
-<<<<<<< HEAD:resources/views/admin/themes/index.blade.php
-    <span class="txt">설치된 테마 : {{ count($layoutSkins) }}</span>
-=======
     <ul>
         <li class="tab"><a href="#admin-header">테마설정</a></li>
         <li class="tab"><a href="#admin-header">개별스킨설정</a></li>
     </ul>
-    <span class="txt">설치된 테마 : {{ count($themes) }}</span>
->>>>>>> olivia:resources/views/admin/configs/theme.blade.php
+    <span class="txt">설치된 테마 : {{ count($layoutSkins) }}</span>
 </div>
 <div class="body-contents">
     <ul class="theme_list">
