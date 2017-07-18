@@ -1090,6 +1090,7 @@
                                 <a class="btn btn-primary" href="{{ route('board.index', $board->id) }}">게시판 바로가기</a>
                                 <a class="btn btn-primary" href="{{ route('admin.boards.thumbnail.delete', $board->id). $queryString }}?dir={{ $board->table_name }}" onclick="return del2(this.href, '게시판 썸네일 파일을 삭제하시겠습니까?');">게시판 썸네일 삭제</a>
                             @endif
+                            <button type="button" class="btn btn-primary" onclick="getThemeGalleryConfig()">테마 이미지설정 가져오기</button>
                         </div>
                     </div>
                 </section>
@@ -1251,6 +1252,18 @@ function set_point(f) {
         f.comment_point.value  = f.comment_point.defaultValue;
         f.download_point.value = f.download_point.defaultValue;
     }
+}
+
+// 테마 이미지 설정 불러오기
+function getThemeGalleryConfig() {
+    if(!confirm("현재 테마의 게시판 이미지 설정을 적용하시겠습니까?")) {
+        return false;
+    }
+
+    $("input[name=gallery_cols]").val("{{ config('gnu.gallery_cols') }}");
+    $("input[name=gallery_width]").val("{{ config('gnu.gallery_width') }}");
+    $("input[name=gallery_height]").val("{{ config('gnu.gallery_height') }}");
+    $("input[name=image_width]").val("{{ config('gnu.image_width') }}");
 }
 
 tinymce.init({

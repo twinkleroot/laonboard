@@ -145,6 +145,7 @@ class Board extends Model
             'selectedGroup' => $selectedGroup,
             'action' => route('admin.boards.store'),
             'type' => 'create',
+            'queryString' => '',
             'skins' => Util::getSkins('board'),
             // 'mobileSkins' => count(Util::getSkins('boardMobile')) == 1 ? Util::getSkins('board') : Util::getSkins('boardMobile'),
         ];
