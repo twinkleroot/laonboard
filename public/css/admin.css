@@ -440,6 +440,9 @@ body {
 #body_tab_type2.f-tab ul li.tab:hover { 
 	background: #fff !important;
 }
+#body_tab_type2 .submit_btn {
+	float: right;
+}
 #admin_box1 {
 	display: block;
 }
@@ -1022,12 +1025,19 @@ body {
 	margin: 5px;
 }
 .tmli_if .img {
-	width: 300px;
-	height: 250px;
+	display: block;
+	min-width: 256px;
+	min-height: 192px;
+	background: #fff;
 }
 .tmli_if .img img {
 	width: 100%;
 	height: 100%;
+	min-width: 256px;
+	min-height: 192px;
+}
+.tmli_if .img img:hover {
+	opacity: 0.6;
 }
 .tmli_if .txt {
 	border-top: 1px solid #d8d8d8;
@@ -1082,7 +1092,8 @@ body {
 	margin: -5px;
 }
 .themebox {
-	width: 20%; float: left;
+	width: 268px;
+	float: left;
 	min-width: 268px;
 }
 .themebox:after {
@@ -1111,6 +1122,85 @@ body {
 	font-weight: bold;
 	background: #fff;
 }
+#theme_detail {
+	position: absolute;
+	top: 220px;
+	left: 30px;
+	background: #fff;
+	border: 1px solid #d8d8d8;
+	z-index: 99999;
+}
+#theme_detail:after {
+	content: '';
+	display: block;
+	clear: both;
+}
+#theme_detail .thdt_img {
+	padding: 20px;
+	padding-right: 0;
+	float: left;
+	width: 600px;
+}
+#theme_detail .thdt_img img {
+	width: 100%;
+	height: auto;
+}
+#theme_detail .thdt_if {
+	padding: 20px;
+	float: left;
+	width: 300px;
+}
+#theme_detail .thdt_if .close_btn {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	background: url(../../images/close.gif) no-repeat 50% 50%;
+	width: 30px;
+	height: 30px;
+	border: 0;
+	overflow: hidden;
+	text-indent: -9999px;
+}
+#theme_detail .thdt_if a:hover {
+	color: #333;
+}
+#theme_detail .thdt_if h2 {
+	margin: 0;
+	font-size: 18px;
+	font-weight: bold;
+}
+#theme_detail .thdt_if .thdt_icon {
+	font-size: 12px;
+	font-weight: normal;
+	color: #ccc;
+	vertical-align: bottom;
+	margin-left: 5px;
+}
+#theme_detail table {
+	border-collapse: collapse;
+	margin: 15px 0 10px;
+	font-size: 12px;
+}
+#theme_detail table th {
+	border: 1px solid #d1dee2;
+	background: #e5ecef;
+	width: 50px;
+	padding: 10px;
+	text-align: left;
+}
+#theme_detail table td {
+	border: 1px solid #ececec;
+	padding: 10px;
+}
+#theme_detail .thdt_if p {
+	font-size: 12px;
+	line-height: 1.7;
+	padding: 10px;
+	background: #f5f5f5;
+	height: 260px;
+	overflow-y: auto;
+	margin-bottom: 0;
+}
 .file_delete {
 	padding: 0 0 0 20px;
 }
@@ -1132,7 +1222,6 @@ body {
 	color: #587ef6;
 	font-weight: bold;
 }
-
 
 #sch_res_list {
 	border-radius: 4px;

@@ -34,6 +34,10 @@
     </div>
 </div>
 <div id="body_tab_type2">
+    <ul>
+        <li class="tab"><a href="#admin-header">테마설정</a></li>
+        <li class="tab"><a href="#admin-header">개별스킨설정</a></li>
+    </ul>
     <span class="txt">설치된 테마 : {{ count($layoutSkins) }}</span>
 </div>
 <div class="body-contents">
@@ -43,7 +47,7 @@
             <li class="themebox">
                 <div class="tmli_if">
                     <span class="img">
-                        <img src="{{ asset(env('SCREENSHOT_PREFIX').$theme['name'].".png") }}">
+                        <img src="{{ asset("images/screenshot_".$theme['name'].".png") }}">
                     </span>
                     <span class="txt">{{ $theme['info']['themeName'] }}</span>
                 </div>

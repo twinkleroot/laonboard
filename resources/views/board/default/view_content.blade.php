@@ -212,9 +212,9 @@
     @endif
     <input type="hidden" name="_method" id="_method" />
 
-    @if( auth()->guest() )  <!-- 비회원일경우 노출 -->
     <article id="comment_box">
         <div class="form-inline info_user">
+            @if( auth()->guest() )  <!-- 비회원일경우 노출 -->
             <div class="form-group">
                 <label for="userName" class="sr-only">이름</label>
                 <input type="text" class="form-control" id="userName" name="userName" placeholder="이름">
@@ -224,16 +224,14 @@
                 <label for="password" class="sr-only">비밀번호</label>
                 <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호">
             </div>
+            @endif
+            <div class="form-group checkbox">
+                <label>
+                    <input type="checkbox" name="secret" id="secret" value="secret"><span>비밀글 사용</span>
+                </label>
+            </div>
         </div>
     </article>
-    @endif
-    <div class="form-inline info_user">
-        <div class="form-group checkbox">
-            <label>
-                <input type="checkbox" name="secret" id="secret" value="secret"><span>비밀글 사용</span>
-            </label>
-        </div>
-    </div>
     @if($board->comment_min || $board->comment_max)
         <span id="charCount"></span>글자
     @endif

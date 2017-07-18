@@ -683,7 +683,7 @@ div {
 	float: left;
 	padding: 0 20px;
 	font-size: 12px;
-	padding: 8px 12px;
+	padding: 0;
 	margin: 0 3px;
 	border: 1px solid #ddd;
 	border-top: 3px solid #ddd;
@@ -695,6 +695,10 @@ div {
 }
 .bd_category ul li:first-child {
 	margin-left: 0;
+}
+.bd_category ul li a {
+	display: block;
+	padding: 8px 12px;
 }
 .bd_category .on {
 	border-top: 3px solid #587ef6;
@@ -745,6 +749,11 @@ div {
 .bd_subject {
 	text-align: left;
 	margin-right: 3px;
+}
+.bd_subject .subject_cg {
+	font-weight: bold;
+	color: #587ef6 !important;
+	margin-right: 5px;
 }
 .sch_key {
 	background: yellow;
@@ -1495,7 +1504,7 @@ div {
 #memo a {
 	color: #333;
 }
-#memo .table>tbody>tr>td.popin {
+.table>tbody>tr>td.popin {
 	background: #f0f0f0;
 	font-weight: bold;
 	text-align: left;
@@ -1654,4 +1663,8 @@ div {
 .welc_email strong {
 	color: #587ef6;
 	font-weight: bold;
+}
+
+#mail .help-block {
+	margin-bottom: 0;
 }

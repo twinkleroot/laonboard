@@ -5,12 +5,44 @@
 @endsection
 
 @section('content')
-<div>
-    <a href="{{ route('admin.themes.preview.index', $theme) }}">인덱스 화면</a>
-    <a href="{{ route('admin.themes.preview.board.list', $theme) }}">게시글 리스트</a>
-    <a href="{{ route('admin.themes.preview.board.view', $theme) }}">게시글 보기</a>
-</div>
+<style>
+body {
+    margin-top: 54px;
+}
+#preview_item {
+    position: fixed;
+    top: 0;
+    background: #333;
+    width: 100%;
+    text-align: center;
+    display: block;
+    height: 54px;
+}
+#preview_item ul {
+    padding: 10px 0;
+    margin: 0 auto;
+    display: inline-block;
+}
+#preview_item ul:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+#preview_item li {
+    float: left;
+    list-style: none;
+    margin: 0 5px;
+}
+</style>
+<section id="preview_item">
+    <ul>
+        <li><a href="{{ route('admin.themes.preview.index', $theme) }}" class="btn btn-default" role="button">인덱스 화면</a></li>
+        <li><a href="{{ route('admin.themes.preview.board.list', $theme) }}" class="btn btn-default" role="button">게시글 리스트</a></li>
+        <li><a href="{{ route('admin.themes.preview.board.view', $theme) }}" class="btn btn-default" role="button">게시글 보기</a></li>
+    </ul>   
+</section>
 
+<section id="preview_content">
     @if($type == 'index')
         @include("latest.$skin.index")
     @elseif($type == 'boardList')
@@ -38,5 +70,5 @@
             @endif
         </div>
     @endif
-
+</section>
 @endsection
