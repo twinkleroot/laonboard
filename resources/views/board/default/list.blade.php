@@ -100,7 +100,7 @@
 
 					<span class="bd_subject">
                         @if($board->use_category == 1 )
-                            <a href="{{ route('board.index', $board->id). '?category='. $write->ca_name }}">{{ $write->ca_name }}</a>
+                            <a href="{{ route('board.index', $board->id). '?category='. $write->ca_name }}" class="subject_cg">{{ $write->ca_name }}</a>
                         @endif
                         @if($viewParams == '')
                             <a href="/board/{{ $board->id }}/view/{{ $write->parent }}">{{ $write->subject }}</a>
