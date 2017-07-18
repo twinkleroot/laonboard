@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Common;
+namespace App\Services;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class CustomPaginator extends LengthAwarePaginator

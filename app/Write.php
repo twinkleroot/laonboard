@@ -14,8 +14,7 @@ use App\User;
 use App\Board;
 use App\Point;
 use App\Scrap;
-use App\Common\Util;
-use App\Common\CustomPaginator;
+use App\Services\CustomPaginator;
 use App\Autosave;
 use App\BoardNew;
 use App\BoardFile;
@@ -172,7 +171,7 @@ class Write extends Model
         // 2. 검색일 경우 검색 키워드 색깔 표시를 다르게 한다.
         foreach($writes as $write) {
             $write->user_id = encrypt($write->user_id);     // 라라벨 기본 지원 encrypt
-            $write->subject = Util::searchKeyword($keyword, $write->subject);
+            $write->subject = searchKeyword($keyword, $write->subject);
             $parentWrite = $write;
             // 댓글일 경우 부모글의 제목을 댓글의 제목으로 넣기
             if($write->is_comment) {
@@ -191,7 +190,7 @@ class Write extends Model
     {
         // 기본 ( 공지는 기본만 가져간다. )
         $query = $writeModel
-                ->selectRaw($writeModel->table.'.*, users.level as user_level, users.id_hashKey as user_id_hashKey')
+                ->selectRaw($writeModel->table.'.*, users.level as user_level, users.id_hashkey as user_id_hashkey')
                 ->leftJoin('users', 'users.id', '=', $writeModel->table.'.user_id');
 
         // + 카테고리
@@ -316,14 +315,14 @@ class Write extends Model
 
          // 에디터를 사용하면서 html에 체크하지 않았을 때
         if($this->board->use_dhtml_editor && $html == 0) {
-            $write->content = Util::convertContent($write->content, 2);
+            $write->content = convertContent($write->content, 2);
         } else {
-            $write->content = Util::convertContent($write->content, $html);
+            $write->content = convertContent($write->content, $html);
         }
 
         // 검색어 색깔 다르게 표시
         if($request->has('keyword')) {
-            $write->content = Util::searchKeyword($request->keyword, $write->content);
+            $write->content = searchKeyword($request->keyword, $write->content);
         }
 
         // 관리자 여부에 따라 ip 다르게 보여주기
@@ -359,7 +358,7 @@ class Write extends Model
                     continue;
                 }
                 // 이미지 경로를 가져와서 썸네일만든 후 서버에 저장
-                $imageFileInfo = Util::getViewThumbnail($this->board, $boardFile->file, $this->board->table_name);
+                $imageFileInfo = getViewThumbnail($this->board, $boardFile->file, $this->board->table_name);
 
                 array_push($imgFiles, $imageFileInfo);
                 // 이미지 파일은 파일 첨부 컬렉션에서는 제외
@@ -391,7 +390,7 @@ class Write extends Model
 
         for($i=0; $i<count($matches[1]); $i++) {
             // 썸네일 만들기
-            $imageFileInfo = Util::getViewThumbnail($this->board, basename($matches[1][$i]), 'editor');
+            $imageFileInfo = getViewThumbnail($this->board, basename($matches[1][$i]), 'editor');
 
             $html = "a href='". route('image.original'). "?type=editor&amp;imageName=". str_replace("thumb-", "", $imageFileInfo['name']). "'"
                     . " class='viewOriginalImage' width='". $imageFileInfo[0]. "' height='". $imageFileInfo[1]. "' target='viewImage'>"
@@ -408,7 +407,7 @@ class Write extends Model
     {
         $write = $writeModel->find($writeId);
         // 파라미터 구하기
-        $params = Util::getParamsFromQueryString($request->server('QUERY_STRING'));
+        $params = $request->query();
 
         $kind = isset($params['kind']) ? $params['kind'] : '';
         $keyword = isset($params['keyword']) ? $params['keyword'] : '';
@@ -668,7 +667,7 @@ class Write extends Model
             ])->get();
         }
         foreach($boardFiles as $file) {
-            $file->filesize = Util::getFileSize($file->filesize);
+            $file->filesize = getFileSize($file->filesize);
         }
 
         // 파일첨부 칸이 최소한 환경설정에서 설정한 대로 나올 수 있도록 file 값을 조정한다.
@@ -830,7 +829,7 @@ class Write extends Model
         Autosave::where('unique_id', $request->uid)->delete();
 
         // 메인 최신글 캐시 삭제
-        Util::deleteCache('main', $this->board->table_name);
+        deleteCache('main', $this->board->table_name);
 
         return $lastInsertId;
     }
@@ -933,7 +932,7 @@ class Write extends Model
         $writeModel->where('id', $writeId)->update($inputData);
 
         // 메인 최신글 캐시 삭제
-        Util::deleteCache('main', $this->board->table_name);
+        deleteCache('main', $this->board->table_name);
 
         return $writeModel->find($writeId);
     }
@@ -1088,7 +1087,7 @@ class Write extends Model
        $this->deleteNotice($writeId);
 
        // 메인 최신글 캐시 삭제
-       Util::deleteCache('main', $this->board->table_name);
+       deleteCache('main', $this->board->table_name);
 
        return $result;
     }
@@ -1116,6 +1115,34 @@ class Write extends Model
         }
 
         return $inputData;
+    }
+
+	// 제목과 내용에 금지단어가 있는지 검사
+	public function banWordFilter(Request $request)
+    {
+        $subject = $request->subject;
+        $content = $request->content;
+
+        $filterStrs = explode(',', trim(implode(',', cache("config.board")->filter)));
+        $returnArr['subject'] = '';
+        $returnArr['content'] = '';
+        foreach($filterStrs as $str) {
+            // 제목 필터링 (찾으면 중지)
+            $pos = stripos($subject, $str);
+            if ($pos !== false) {
+                $returnArr['subject'] = $str;
+                break;
+            }
+
+            // 내용 필터링 (찾으면 중지)
+            $pos = stripos($content, $str);
+            if ($pos !== false) {
+                $returnArr['content'] = $str;
+                break;
+            }
+        }
+
+        return $returnArr;
     }
 
 }

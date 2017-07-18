@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\User;
 use App\Admin\Content;
-use App\Common\Util;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ContentPolicy
@@ -28,7 +27,7 @@ class ContentPolicy
     public function index(User $user, Content $content)
     {
         $menuCode = ['300400', 'r'];
-        return Util::getManageAuthModel($menuCode);
+        return getManageAuthModel($menuCode);
     }
 
     /**
@@ -40,7 +39,7 @@ class ContentPolicy
     public function create(User $user)
     {
         $menuCode = ['300400', 'w'];
-        return Util::getManageAuthModel($menuCode);
+        return getManageAuthModel($menuCode);
     }
 
     /**
@@ -53,7 +52,7 @@ class ContentPolicy
     public function update(User $user, Content $content)
     {
         $menuCode = ['300400', 'w'];
-        return Util::getManageAuthModel($menuCode);
+        return getManageAuthModel($menuCode);
     }
 
     /**
@@ -66,6 +65,6 @@ class ContentPolicy
     public function delete(User $user, Content $content)
     {
         $menuCode = ['300400', 'd'];
-        return Util::getManageAuthModel($menuCode);
+        return getManageAuthModel($menuCode);
     }
 }

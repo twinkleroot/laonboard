@@ -5,7 +5,6 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use DB;
-use App\Common\Util;
 
 class Autosave extends Model
 {
@@ -45,7 +44,7 @@ class Autosave extends Model
     {
         $lists = Autosave::where('user_id', auth()->user()->id)->orderBy('id', 'desc')->get();
         foreach($lists as $list) {
-            $list->subject = htmlspecialchars(Util::utf8Strcut($list->subject, 20), ENT_QUOTES);
+            $list->subject = htmlspecialchars(utf8Strcut($list->subject, 20), ENT_QUOTES);
         }
         return $lists;
     }

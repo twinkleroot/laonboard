@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Write;
 use App\Board;
-use App\Common\Util;
 use Carbon\Carbon;
 use Cache;
 use Suin\RSSWriter\Channel;
@@ -70,7 +69,7 @@ class RssFeed
           $item
             ->title($write->subject)
             ->preferCdata(1)
-            ->description(Util::convertContent($write->content, $html))
+            ->description(convertContent($write->content, $html))
             ->url($writeUrl)
             ->pubDate($write->created_at->timestamp)
             ->guid($writeUrl, true)

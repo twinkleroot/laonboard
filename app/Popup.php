@@ -4,7 +4,6 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
-use App\Common\Util;
 
 class Popup extends Model
 {
@@ -24,7 +23,7 @@ class Popup extends Model
             ->get();
 
         foreach($popups as $popup) {
-            $popup->content = Util::convertContent($popup->content, 1);
+            $popup->content = convertContent($popup->content, 1);
         }
 
         return $popups;

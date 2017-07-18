@@ -3,7 +3,6 @@
 namespace App\Policies;
 
 use App\User;
-use App\Common\Util;
 use App\Admin\Popup;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -27,7 +26,7 @@ class PopupPolicy
     public function index(User $user, Popup $popup)
     {
         $menuCode = ['100600', 'r'];
-        return Util::getManageAuthModel($menuCode);
+        return getManageAuthModel($menuCode);
     }
 
     /**
@@ -39,7 +38,7 @@ class PopupPolicy
     public function create(User $user)
     {
         $menuCode = ['100600', 'w'];
-        return Util::getManageAuthModel($menuCode);
+        return getManageAuthModel($menuCode);
     }
 
     /**
@@ -52,7 +51,7 @@ class PopupPolicy
     public function update(User $user, Popup $popup)
     {
         $menuCode = ['100600', 'w'];
-        return Util::getManageAuthModel($menuCode);
+        return getManageAuthModel($menuCode);
     }
 
     /**
@@ -65,6 +64,6 @@ class PopupPolicy
     public function delete(User $user, Popup $popup)
     {
         $menuCode = ['100600', 'd'];
-        return Util::getManageAuthModel($menuCode);
+        return getManageAuthModel($menuCode);
     }
 }

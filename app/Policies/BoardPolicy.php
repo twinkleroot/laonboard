@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\User;
 use App\Admin\Board;
-use App\Common\Util;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class BoardPolicy
@@ -28,7 +27,7 @@ class BoardPolicy
     public function index(User $user, Board $board)
     {
         $menuCode = ['300100', 'r'];
-        return Util::getManageAuthModel($menuCode);
+        return getManageAuthModel($menuCode);
     }
 
     /**
@@ -40,7 +39,7 @@ class BoardPolicy
     public function create(User $user)
     {
         $menuCode = ['300100', 'w'];
-        return Util::getManageAuthModel($menuCode);
+        return getManageAuthModel($menuCode);
     }
 
     /**
@@ -53,7 +52,7 @@ class BoardPolicy
     public function update(User $user, Board $board)
     {
         $menuCode = ['300100', 'w'];
-        return Util::getManageAuthModel($menuCode);
+        return getManageAuthModel($menuCode);
     }
 
     /**
@@ -66,7 +65,7 @@ class BoardPolicy
     public function delete(User $user, Board $board)
     {
         $menuCode = ['300100', 'd'];
-        return Util::getManageAuthModel($menuCode);
+        return getManageAuthModel($menuCode);
     }
 
     /**
@@ -79,6 +78,6 @@ class BoardPolicy
     public function copy(User $user)
     {
         $menuCode = ['300100', 'w'];
-        return Util::getManageAuthModel($menuCode);
+        return getManageAuthModel($menuCode);
     }
 }

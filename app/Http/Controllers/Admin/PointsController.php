@@ -56,7 +56,7 @@ class PointsController extends Controller
         try {
             $result = $this->pointModel->givePoint($request);
         } catch (Exception $e) {
-            return redirect(route('message'))->with('message', $e->getMessage());
+			return alert($e->getMessage());
         }
 
         return redirect()->back();

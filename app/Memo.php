@@ -5,7 +5,6 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Cache;
 use Carbon\Carbon;
-use App\Common\Util;
 use App\User;
 use App\Point;
 
@@ -68,7 +67,7 @@ class Memo extends Model
                 $content = '';
                 if($memo) {
                     $content = "\n >\n >\n >"
-                                .str_replace("\n", "\n> ", Util::getText($memo->memo, 0))
+                                .str_replace("\n", "\n> ", convertText($memo->memo, 0))
                               ."\n > >";
                 }
             } else {

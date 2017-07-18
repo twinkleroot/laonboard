@@ -4,7 +4,6 @@ namespace App\Admin;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use App\Common\Util;
 use App\Admin\Group;
 use App\Write;
 use DB;
@@ -86,8 +85,8 @@ class Board extends Model
             'direction' => $direction == 'desc' ? 'asc' : 'desc',
             'queryString' => $queryString,
             'queryStringWithOrderBy' => $queryString. "&order=$order&direction=$direction",
-            'skins' => Util::getSkins('board'),
-            // 'mobileSkins' => count(Util::getSkins('boardMobile')) == 1 ? Util::getSkins('board') : Util::getSkins('boardMobile'),
+            'skins' => getSkins('board'),
+            // 'mobileSkins' => count(getSkins('boardMobile')) == 1 ? getSkins('board') : getSkins('boardMobile'),
         ];
     }
 
@@ -146,8 +145,8 @@ class Board extends Model
             'action' => route('admin.boards.store'),
             'type' => 'create',
             'queryString' => '',
-            'skins' => Util::getSkins('board'),
-            // 'mobileSkins' => count(Util::getSkins('boardMobile')) == 1 ? Util::getSkins('board') : Util::getSkins('boardMobile'),
+            'skins' => getSkins('board'),
+            // 'mobileSkins' => count(getSkins('boardMobile')) == 1 ? getSkins('board') : getSkins('boardMobile'),
         ];
     }
 
@@ -156,7 +155,7 @@ class Board extends Model
     {
         $data = array_except($data, ['_token']);
 
-        $data = Util::exceptNullData($data);
+        $data = exceptNullData($data);
 
         // 그룹 적용, 전체 적용 수행(그리고 사용한 필드를 배열에서 제외시킴.)
         $data = $this->applyBoard($data, 'chk_group');
@@ -187,9 +186,9 @@ class Board extends Model
             // 'keyword' => $keyword,
             'action' => route('admin.boards.update', $id),
             'type' => 'edit',
-            'skins' => Util::getSkins('board'),
+            'skins' => getSkins('board'),
             'queryString' => $queryString,
-            // 'mobileSkins' => count(Util::getSkins('boardMobile')) == 1 ? Util::getSkins('board') : Util::getSkins('boardMobile'),
+            // 'mobileSkins' => count(getSkins('boardMobile')) == 1 ? getSkins('board') : getSkins('boardMobile'),
         ];
     }
 
@@ -280,7 +279,7 @@ class Board extends Model
         if($data['copy_case'] == 'schema_only') {
             $originalData['notice'] = '';
         }
-        $originalData = Util::exceptNullData($originalData);
+        $originalData = exceptNullData($originalData);
         $originalData = array_except($originalData, ['id']);
 
         return Board::create($originalData);

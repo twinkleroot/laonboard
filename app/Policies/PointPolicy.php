@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\User;
 use App\Admin\Point;
-use App\Common\Util;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PointPolicy
@@ -27,7 +26,7 @@ class PointPolicy
     public function index(User $user, Point $point)
     {
         $menuCode = ['200200', 'r'];
-        return Util::getManageAuthModel($menuCode);
+        return getManageAuthModel($menuCode);
     }
 
     /**
@@ -39,7 +38,7 @@ class PointPolicy
     public function create(User $user)
     {
         $menuCode = ['200200', 'w'];
-        return Util::getManageAuthModel($menuCode);
+        return getManageAuthModel($menuCode);
     }
 
     /**
@@ -52,6 +51,6 @@ class PointPolicy
     public function delete(User $user, Point $point)
     {
         $menuCode = ['200200', 'd'];
-        return Util::getManageAuthModel($menuCode);
+        return getManageAuthModel($menuCode);
     }
 }

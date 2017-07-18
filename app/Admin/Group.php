@@ -7,7 +7,6 @@ use DB;
 use Cache;
 use App\User;
 use App\Admin\Board;
-use App\Common\Util;
 
 class Group extends Model
 {
@@ -105,7 +104,7 @@ class Group extends Model
     {
         $data = array_except($data, ['_token']);
 
-        $data = Util::exceptNullData($data);
+        $data = exceptNullData($data);
 
         return Group::create($data);
 
@@ -180,7 +179,7 @@ class Group extends Model
     public function updateGroup($data, $id)
     {
         $data = array_except($data, ['_token']);
-        $data = Util::exceptNullData($data);
+        $data = exceptNullData($data);
 
         $group = Group::findOrFail($id);
 

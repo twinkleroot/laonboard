@@ -18,8 +18,7 @@ class CheckValidUser
     {
         $user = User::find(auth()->user()->id);
         if(is_null($user)) {
-            return redirect(route('message'))
-               ->with('message', '탈퇴하거나 가입하지 않은 회원입니다.');
+            return alert('탈퇴하거나 가입하지 않은 회원입니다.');
         }
 
         return $next($request);

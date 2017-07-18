@@ -7,7 +7,6 @@ use DB;
 use Cache;
 use Exception;
 use Carbon\Carbon;
-use App\Common\Util;
 use App\Comment;
 use App\Notification;
 
@@ -69,7 +68,7 @@ class Scrap extends Model
                     $scrap->write_empty = 1;
                     $scrap->write_subject = '';
                 } else {
-                    $scrap->write_subject = Util::getText(Util::cutString($write->subject, 20));
+                    $scrap->write_subject = convertText(cutString($write->subject, 20));
                 }
             }
         }

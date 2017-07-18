@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\User;
 use App\Admin\GroupUser;
-use App\Common\Util;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class GroupUserPolicy
@@ -27,7 +26,7 @@ class GroupUserPolicy
     public function index(User $user, GroupUser $groupUser)
     {
         $menuCode = ['300200', 'r'];
-        return Util::getManageAuthModel($menuCode);
+        return getManageAuthModel($menuCode);
     }
 
     /**
@@ -39,7 +38,7 @@ class GroupUserPolicy
     public function create(User $user)
     {
         $menuCode = ['300200', 'w'];
-        return Util::getManageAuthModel($menuCode);
+        return getManageAuthModel($menuCode);
     }
 
     /**
@@ -52,6 +51,6 @@ class GroupUserPolicy
     public function delete(User $user, GroupUser $groupUser)
     {
         $menuCode = ['300200', 'd'];
-        return Util::getManageAuthModel($menuCode);
+        return getManageAuthModel($menuCode);
     }
 }

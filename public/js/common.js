@@ -76,6 +76,12 @@ function selectIdsByCheckBox(className) {
     return send_array;
 }
 
+// 메일 보내기 팝업 띄우기
+function winFormMail(href) {
+    var newWin = window.open(href, 'winFormMail', 'left=100, top=100, width=600, height=600, scrollbars=1');
+    newWin.focus();
+}
+
 // 스크랩 팝업 띄우기
 function winScrap(href) {
     var newWin = window.open(href, 'winScrap', 'left=100, top=100, width=600, height=600, scrollbars=1');

@@ -96,12 +96,7 @@ class UsersController extends Controller
             abort(403, '회원 정보 수정에 대한 권한이 없습니다.');
         }
 
-        $user;
-        if(mb_strlen($id, 'utf-8') > 10) {  // 커뮤니티 쪽에서 들어올 때 user의 id가 아닌 id_hashKey가 넘어온다.
-            $user = User::where('id_hashkey', $id)->first();
-        } else {
-            $user = User::find($id);
-        }
+        $user = getUser($id);
         if( is_null($user) ) {
             return view('message', ['message' => '존재하지 않는 회원입니다.', 'redirect' => '/index' ]);
         }

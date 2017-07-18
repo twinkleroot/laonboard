@@ -13,16 +13,16 @@ class Theme
 {
     public function getIndexParams()
     {
-        $layoutSkins = Util::getSkins('layout');
+        $layoutSkins = getSkins('layout');
         $layoutSkins = $this->getThemeList($layoutSkins);
-        $boardSkins = Util::getSkins('board');
-        $userSkins = Util::getSkins('user');
-        $latestSkins = Util::getSkins('latest');
-        $newSkins = Util::getSkins('new');
-        $searchSkins = Util::getSkins('search');
-        $contentSkins = Util::getSkins('content');
-        $mailSkins = Util::getSkins('mail');
-        $memoSkins = Util::getSkins('memo');
+        $boardSkins = getSkins('board');
+        $userSkins = getSkins('user');
+        $latestSkins = getSkins('latest');
+        $newSkins = getSkins('new');
+        $searchSkins = getSkins('search');
+        $contentSkins = getSkins('content');
+        $mailSkins = getSkins('mail');
+        $memoSkins = getSkins('memo');
 
         return [
             'layoutSkins' => $layoutSkins,
@@ -138,7 +138,7 @@ class Theme
     // 해당 항목에 스킨이 있는지 조사
     private function hasSkin($type, $name)
     {
-        $skins = Util::getSkins($type);
+        $skins = getSkins($type);
         return in_array(strtolower($name), $skins);
     }
 
@@ -177,11 +177,11 @@ class Theme
     {
         $theme = $request->theme ? : 'default';
         $info = $this->getThemeInfo($theme);
-        $info['themeName'] = Util::getText($info['themeName']);
-        $info['maker'] = isset($info['maker']) ? Util::getText($info['maker']) : '';
-        $info['license'] = isset($info['license']) ? Util::getText($info['license']) : '';
-        $info['version'] = isset($info['version']) ? Util::getText($info['version']) : '';
-        $info['detail'] = isset($info['detail']) ? Util::getText($info['detail']) : '';
+        $info['themeName'] = convertText($info['themeName']);
+        $info['maker'] = isset($info['maker']) ? convertText($info['maker']) : '';
+        $info['license'] = isset($info['license']) ? convertText($info['license']) : '';
+        $info['version'] = isset($info['version']) ? convertText($info['version']) : '';
+        $info['detail'] = isset($info['detail']) ? convertText($info['detail']) : '';
 
         return [
             'theme' => $theme,

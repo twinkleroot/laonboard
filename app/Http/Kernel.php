@@ -88,6 +88,8 @@ class Kernel extends HttpKernel
         'can.delete.comment.immediately' => \App\Http\Middleware\CanDeleteCommentImmediately::class,
         // RSS 조회 가능한지 검사
         'rss' => \App\Http\Middleware\CheckRss::class,
+        // 메일 보내기가 가능한지 검사
+        'send.mail' => \App\Http\Middleware\CheckSendMail::class,
 
     ];
 }

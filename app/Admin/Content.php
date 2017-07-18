@@ -5,7 +5,6 @@ namespace App\Admin;
 use Illuminate\Database\Eloquent\Model;
 use File;
 use Cache;
-use App\Common\Util;
 
 class Content extends Model
 {
@@ -28,8 +27,8 @@ class Content extends Model
     // 관리자 - 내용 추가 데이터 가져오기
     public function getContentCreate()
     {
-        $skinList = Util::getSkins('content');
-        $mobileSkinList = Util::getSkins('content');
+        $skinList = getSkins('content');
+        $mobileSkinList = getSkins('content');
 
         return [
             'skinList' => $skinList,
@@ -60,8 +59,8 @@ class Content extends Model
                 $tailImageWidth = 750;
             }
         }
-        $skinList = Util::getSkins('content');
-        $mobileSkinList = Util::getSkins('content');
+        $skinList = getSkins('content');
+        $mobileSkinList = getSkins('content');
 
         return [
             'content' => $content,

@@ -31,12 +31,12 @@ class WritableReply
                $message = '공지에는 답변 할 수 없습니다.';
             } else if ($user->level < $board->reply_level) {
                $message = '글을 답변할 권한이 없습니다.';
-           } else if (!is_null($write) && strlen($write->reply) == 10) { // 최대 답변은 테이블에 잡아놓은 wr_reply 사이즈만큼만 가능합니다.
+            } else if (!is_null($write) && strlen($write->reply) == 10) { // 최대 답변은 테이블에 잡아놓은 wr_reply 사이즈만큼만 가능합니다.
                $message = "더 이상 답변하실 수 없습니다.\\n답변은 10단계 까지만 가능합니다.";
             }
 
             if( $message != '' ) {
-                return redirect(route('message'))->with('message', $message);
+                return alert($message);
             }
         }
         return $next($request);

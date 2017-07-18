@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\User;
 use App\Admin\Popular;
-use App\Common\Util;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PopularPolicy
@@ -28,7 +27,7 @@ class PopularPolicy
     public function index(User $user, Popular $popular)
     {
         $menuCode = ['300300', 'r'];
-        return Util::getManageAuthModel($menuCode);
+        return getManageAuthModel($menuCode);
     }
 
     /**
@@ -41,7 +40,7 @@ class PopularPolicy
     public function rank(User $user, Popular $popular)
     {
         $menuCode = ['300310', 'r'];
-        return Util::getManageAuthModel($menuCode);
+        return getManageAuthModel($menuCode);
     }
 
     /**
@@ -54,6 +53,6 @@ class PopularPolicy
     public function delete(User $user, Popular $popular)
     {
         $menuCode = ['300300', 'd'];
-        return Util::getManageAuthModel($menuCode);
+        return getManageAuthModel($menuCode);
     }
 }

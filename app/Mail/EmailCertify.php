@@ -7,7 +7,6 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\User;
-use Cache;
 
 class EmailCertify extends Mailable
 {
@@ -40,12 +39,14 @@ class EmailCertify extends Mailable
                 'id' => $this->user->id_hashkey,
                 'crypt' => $this->user->email_certify2
             ]);
-        return $this->subject('['. Cache::get('config.homepage')->title. '] 인증확인 메일입니다.')
-                    ->view('mail.default.email_certify')
-                    ->with([
-                        'nick' => $this->nick,
-                        'url' => $url,
-                        'isEmailChange' => $this->isEmailChange
-                    ]);
+
+        return $this
+            ->subject('['. cache('config.homepage')->title. '] 인증확인 메일입니다.')
+            ->view('mail.default.email_certify')
+            ->with([
+                'nick' => $this->nick,
+                'url' => $url,
+                'isEmailChange' => $this->isEmailChange
+            ]);
     }
 }

@@ -52,6 +52,7 @@ class WriteController extends Controller
         }
 
         $skin = $this->writeModel->board->skin ? : 'default';
+
         return viewDefault("board.$skin.index", $params);
     }
 
@@ -305,6 +306,12 @@ class WriteController extends Controller
 
         $returnUrl = route('board.index', $boardId). ($request->page == 1 ? '' : '?page='. $request->page);
         return redirect($returnUrl);
+    }
+
+	// 제목과 내용에 금지단어가 있는지 검사
+	public function filter(Request $request)
+    {
+        return $this->writeModel->banWordFilter($request);
     }
 
     // RSS 보기

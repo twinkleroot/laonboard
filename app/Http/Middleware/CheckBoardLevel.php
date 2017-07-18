@@ -46,9 +46,9 @@ class CheckBoardLevel
             }
 
             if($user) {
-                return redirect(route('message'))->with('message', $message);
+                return alert($message);
             } else {
-                return redirect(route('message'))->with('message', $message)->with('redirect', '/login');
+                return alertRedirect($message, '/login');
             }
         }
         return $next($request);

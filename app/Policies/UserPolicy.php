@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\User;
 use App\Admin\AdminUser;
-use App\Common\Util;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class UserPolicy
@@ -28,7 +27,7 @@ class UserPolicy
     public function index(User $user, AdminUser $adminUser)
     {
         $menuCode = ['200100', 'r'];
-        return Util::getManageAuthModel($menuCode);
+        return getManageAuthModel($menuCode);
     }
 
     /**
@@ -40,7 +39,7 @@ class UserPolicy
     public function create(User $user)
     {
         $menuCode = ['200100', 'w'];
-        return Util::getManageAuthModel($menuCode);
+        return getManageAuthModel($menuCode);
     }
 
     /**
@@ -53,7 +52,7 @@ class UserPolicy
     public function update(User $user, AdminUser $adminUser)
     {
         $menuCode = ['200100', 'w'];
-        return Util::getManageAuthModel($menuCode);
+        return getManageAuthModel($menuCode);
     }
 
     /**
@@ -66,6 +65,6 @@ class UserPolicy
     public function delete(User $user, AdminUser $adminUser)
     {
         $menuCode = ['200100', 'd'];
-        return Util::getManageAuthModel($menuCode);
+        return getManageAuthModel($menuCode);
     }
 }

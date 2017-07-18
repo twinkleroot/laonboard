@@ -71,11 +71,11 @@ class SocialController extends Controller
     {
         // 존재하는 닉네임인지 검사
         if(!is_null(User::where('nick', $request->get('nick'))->first())) {
-            return redirect(route('message'))->with('message', '이미 존재하는 닉네임입니다.');
+			return alert('이미 존재하는 닉네임입니다.');
         }
         // 존재하는 이메일인지 검사
         if(!is_null(User::where('email', $request->get('email'))->first())) {
-            return redirect(route('message'))->with('message', '이미 존재하는 이메일입니다.');
+			return alert('이미 존재하는 이메일입니다.');
         }
 
         // 회원가입
@@ -94,7 +94,7 @@ class SocialController extends Controller
         // 해당 이메일로 가입한 회원이 존재하는지 검사
         $user = User::where('email', $request->get('email'))->first();
         if(is_null($user)) {
-            return redirect(route('message'))->with('message', '가입된 이메일이 아닙니다.');
+			return alert('가입된 이메일이 아닙니다.');
         }
         // 입력한 비밀번호와 인증된 사용자의 비밀번호를 비교한다.
         if(Auth::attempt(['email' => $request->get('email'), 'password' => $request->get('password') ], false, false)) {
@@ -105,7 +105,7 @@ class SocialController extends Controller
 
             return redirect(route('home'));
         } else {
-            return redirect(route('message'))->with('message', '비밀번호가 틀립니다.\n비밀번호는 대소문자를 구분합니다.');
+			return alert("비밀번호가 틀립니다.\\n비밀번호는 대소문자를 구분합니다.");
         }
     }
 

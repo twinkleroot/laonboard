@@ -9,7 +9,6 @@ use File;
 use App\BoardFile;
 use Carbon\Carbon;
 use App\Board;
-use App\Common\Util;
 
 class Move
 {
@@ -91,7 +90,7 @@ class Move
                 }
 
                 // 메인 최신글 캐시 삭제
-                Util::deleteCache('main', $board->table_name);
+                deleteCache('main', $board->table_name);
             }
             $message = '게시물 복사가 완료되었습니다.';
         } else {

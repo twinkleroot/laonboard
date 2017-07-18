@@ -9,7 +9,6 @@ use Lava;
 use Gate;
 use App\Board;
 use App\BoardNew;
-use App\Common\Util;
 
 class StatusController extends Controller
 {
@@ -17,7 +16,7 @@ class StatusController extends Controller
     public function index(Request $request) {
         $menuCode = ['300500', 'r'];
 
-        if(auth()->user()->isSuperAdmin() || Gate::allows('view-admin-mailtest', Util::getManageAuthModel($menuCode))) {
+        if(auth()->user()->isSuperAdmin() || Gate::allows('view-admin-mailtest', getManageAuthModel($menuCode))) {
             $params = $this->writeStatus($request);
             $chart = isset($params['renderChart']) ? $params['renderChart'] : '';
             return view('admin.boards.status', $params)->with('chart', $chart);

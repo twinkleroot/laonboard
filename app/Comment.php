@@ -13,7 +13,6 @@ use App\Board;
 use App\Point;
 use App\Group;
 use App\BoardNew;
-use App\Common\Util;
 
 class Comment
 {
@@ -33,7 +32,7 @@ class Comment
 
             // 검색어 색깔 다르게 표시
             if($request->has('keyword')) {
-                $comment->content = Util::searchKeyword($request->keyword, $comment->content);
+                $comment->content = searchKeyword($request->keyword, $comment->content);
             }
         }
 
@@ -217,7 +216,7 @@ class Comment
         $board->update(['count_comment' => $board->count_comment + 1]);
 
         // 메인 최신글 캐시 삭제
-        Util::deleteCache('main', $board->table_name);
+        deleteCache('main', $board->table_name);
 
         return $newCommentId;
     }
@@ -277,7 +276,7 @@ class Comment
         ]);
 
         // 메인 최신글 캐시 삭제
-        Util::deleteCache('main', $board->table_name);
+        deleteCache('main', $board->table_name);
 
         return $result;
     }
@@ -322,7 +321,7 @@ class Comment
         }
 
         // 메인 최신글 캐시 삭제
-        Util::deleteCache('main', $board->table_name);
+        deleteCache('main', $board->table_name);
     }
 
 }

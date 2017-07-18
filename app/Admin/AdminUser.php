@@ -10,7 +10,6 @@ use App\Admin\Group;
 use App\Write;
 use DB;
 use Cache;
-use App\Common\Util;
 use Carbon\Carbon;
 
 class AdminUser extends Model
@@ -128,7 +127,7 @@ class AdminUser extends Model
     {
         $data = $request->all();
         $data = array_except($data, ['_token']);
-        $data = Util::exceptNullData($data);
+        $data = exceptNullData($data);
         $data = array_add($data, 'ip', $request->ip());
         $data['password'] = bcrypt($data['password']);  // 비밀번호 암호화
 

@@ -3,7 +3,7 @@
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script>
         $(document).ready(function(){
-            alert("{{ $message }}");
+            alert("{!! $message !!}");
 
             var popup = {{ isset($popup) ? $popup : 0 }};
             var reload = {{ isset($reload) ? $reload : 0 }};

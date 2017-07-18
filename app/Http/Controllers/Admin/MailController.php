@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Mail\EmailSendTest;
 use App\User;
-use App\Common\Util;
 
 class MailController extends Controller
 {
@@ -16,7 +15,7 @@ class MailController extends Controller
 
     public function index()
     {
-        if(auth()->user()->isSuperAdmin() || Gate::allows('view-admin-mailtest', Util::getManageAuthModel($this->menuCode))) {
+        if(auth()->user()->isSuperAdmin() || Gate::allows('view-admin-mailtest', getManageAuthModel($this->menuCode))) {
             return view('admin.configs.mail_test');
         } else {
             return view('message', [
@@ -28,7 +27,7 @@ class MailController extends Controller
 
     public function postMail(Request $request)
     {
-        if(Gate::allows('view-admin-mailtest', Util::getManageAuthModel($this->menuCode))) {
+        if(Gate::allows('view-admin-mailtest', getManageAuthModel($this->menuCode))) {
             $toAddresses = explode(',', $request->email);
             $successAddress = [];
             foreach($toAddresses as $to) {

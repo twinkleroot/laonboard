@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use Gate;
 use File;
-use App\Common\Util;
 use App\Board;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -69,7 +68,7 @@ class SimpleController extends Controller
     public function phpinfo()
     {
         $menuCode = ['100800', 'r'];
-        if(auth()->user()->isSuperAdmin() || Gate::allows('view-admin-mailtest', Util::getManageAuthModel($menuCode))) {
+        if(auth()->user()->isSuperAdmin() || Gate::allows('view-admin-mailtest', getManageAuthModel($menuCode))) {
             return view('admin.configs.phpinfo');
         } else {
             return view('message', [
@@ -83,7 +82,7 @@ class SimpleController extends Controller
     public function extraService()
     {
         $menuCode = ['100810', 'r'];
-        if(auth()->user()->isSuperAdmin() || Gate::allows('view-admin-mailtest', Util::getManageAuthModel($menuCode))) {
+        if(auth()->user()->isSuperAdmin() || Gate::allows('view-admin-mailtest', getManageAuthModel($menuCode))) {
             return view('admin.configs.extra_service');
         } else {
             return view('message', [

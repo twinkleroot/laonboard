@@ -4,7 +4,6 @@ namespace App\Admin;
 
 use Illuminate\Database\Eloquent\Model;
 use App\User;
-use App\Common\Util;
 use Cache;
 
 class Config extends Model
@@ -67,9 +66,9 @@ class Config extends Model
             'configEmailBoard' => Cache::get("config.email.board"),
             'configEmailJoin' => Cache::get("config.email.join"),
             'admins' => $admins,
-            'latestSkins' => Util::getSkins('latest'),
-            'searchSkins' => Util::getSkins('search'),
-            'userSkins' => Util::getSkins('user'),
+            'latestSkins' => getSkins('latest'),
+            'searchSkins' => getSkins('search'),
+            'userSkins' => getSkins('user'),
         ];
     }
 

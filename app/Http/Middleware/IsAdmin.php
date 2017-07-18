@@ -21,9 +21,7 @@ class IsAdmin
         if($user->isAdmin()) {
             return $next($request);
         }
-        
-        return redirect(route('message'))
-           ->with('message',  '최고관리자 또는 관리권한이 있는 회원만 접근 가능합니다.')
-           ->with('redirect', '/');
+
+        return alertRedirect('최고관리자 또는 관리권한이 있는 회원만 접근 가능합니다.');
     }
 }

@@ -18,10 +18,10 @@ class CheckRss
     {
         $board = Board::find($request->boardId);
         if($board->read_level >= 2) {
-            return redirect(route('message'))->with('message', '비회원 읽기가 가능한 게시판만 RSS 지원합니다.');
+            return alert('비회원 읽기가 가능한 게시판만 RSS 지원합니다.');
         }
         if(!$board->use_rss_view) {
-            return redirect(route('message'))->with('message', 'RSS 보기가 금지되어 있습니다.');
+            return alert('RSS 보기가 금지되어 있습니다.');
         }
 
         return $next($request);

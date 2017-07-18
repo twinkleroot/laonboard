@@ -18,8 +18,7 @@ class IsSuperAdmin
         $user = auth()->user();
 
         if(!$user->IsSuperAdmin()) {
-            return redirect(route('message'))
-               ->with('message', '최고관리자만 접근 가능합니다.');
+            return alert('최고관리자만 접근 가능합니다.');
         }
 
         return $next($request);

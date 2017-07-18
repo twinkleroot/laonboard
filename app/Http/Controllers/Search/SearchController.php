@@ -9,8 +9,7 @@ use App\Group;
 use App\GroupUser;
 use App\User;
 use App\Write;
-use App\Common\Util;
-use App\Common\CustomPaginator;
+use App\Services\CustomPaginator;
 use App\Admin\Popular;
 
 class SearchController extends Controller
@@ -28,7 +27,7 @@ class SearchController extends Controller
     public function result(Request $request)
     {
         $keyword = $request->has('keyword') ? $request->keyword : '';   // 검색어
-        $this->keyword = Util::getSearchString($keyword);
+        $this->keyword = getSearchString($keyword);
         $this->kind = $request->has('kind') ? $request->kind : 'subject||content';    // 검색필드
         $this->operator = $request->has('operator') ? $request->operator : '';    // 연산자
         $this->groupId = $request->has('groupId') ? $request->groupId : '';   // 그룹명
@@ -218,10 +217,10 @@ class SearchController extends Controller
             } else {
                 $parentWrite = $write;
             }
-            $subject = Util::getText($subject);
+            $subject = convertText($subject);
             // 검색어 색깔 다르게 표시
             if( in_array('subject', $kinds) ) {
-                $subject = Util::searchKeyword($keywords, $subject);
+                $subject = searchKeyword($keywords, $subject);
             }
 
             // 댓글이나 원글 중 비밀글이 포함되어 있을 경우 표시
@@ -230,14 +229,14 @@ class SearchController extends Controller
             } else {
                 if($board->read_level <= $this->userLevel) {
                     $content = strip_tags($content);
-                    $content = Util::getText($content, 1);
+                    $content = convertText($content, 1);
                     $content = strip_tags($content);
                     $content = str_replace('&nbsp;', '', $content);
-                    $content = Util::cutString($content, 300, "…");
+                    $content = cutString($content, 300, "…");
                 }
 
                 if( in_array('content', $kinds) ) {
-                    $content = Util::searchKeyword($keywords, $content);
+                    $content = searchKeyword($keywords, $content);
                 }
             }
 

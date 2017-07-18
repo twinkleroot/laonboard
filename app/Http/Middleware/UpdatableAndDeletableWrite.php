@@ -71,9 +71,8 @@ class UpdatableAndDeletableWrite
             } else {
                 if($write->user_id) {
                     $message = '로그인 후 수정하세요.';
-                    return redirect('message')
-                        ->with('message', $message)
-                        ->with('redirect', route('login'). '?url='. route('board.view', ['boardId' => $board->id, 'writeId' => $write->id]));
+                    $redirect = route('login'). '?url='. route('board.view', ['boardId' => $board->id, 'writeId' => $write->id]);
+                    return alertRedirect($message, $redirect);
                 }
             }
         }
@@ -93,7 +92,7 @@ class UpdatableAndDeletableWrite
         }
 
         if($message != '') {
-            return redirect(route('message'))->with('message', $message);
+            return alert($message);
         }
 
         return $next($request);

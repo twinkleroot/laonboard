@@ -1,10 +1,8 @@
 @section('fisrt_include_css')
-    <link rel="alternate" type="application/rss+xml" href="{{ url('rss') }}"
-        title="RSS Feed {{ config('rss.title') }}">
+    <link rel="alternate" type="application/rss+xml" href="{{ url('rss') }}" title="RSS Feed {{ config('rss.title') }}">
 @endsection
 
 <!-- Board list start -->
-
 <form name="fBoardList" id="fBoardList" action="" onsubmit="return formBoardListSubmit(this);" method="post" target="move">
     <input type="hidden" id='_method' name='_method' value='post' />
     <input type="hidden" id='type' name='type' value='' />
@@ -138,7 +136,7 @@
                         <ul class="dropdown-menu" role="menu">
                         @if($write->user_level)
                             <li><a href="{{ route('memo.create') }}?to={{ $write->user_id_hashkey }}" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지보내기</a></li>
-                            <li><a href="#">메일보내기</a></li>
+                            <li><a href="{{ route('mail.send')}}?to={{ $write->user_id_hashkey }}" class="winFormMail" target="_blank" onclick="winFormMail(this.href); return false;">메일보내기</a></li>
                             <li><a href="{{ route('user.profile', $write->user_id_hashKey) }}" class="winProfile" target="_blank" onclick="winProfile(this.href); return false;">자기소개</a></li>
                             @if(session()->get('admin'))
         		                <li><a href="{{ route('admin.users.edit', $write->user_id_hashKey) }}" target="_blank">회원정보변경</a></li>

@@ -32,7 +32,7 @@
                         </header>
 
                         <div id="ctt_con">
-                            {!! App\Common\Util::convertContent($content->content, $content->html, $content->tag_filter_use) !!}
+                            {!! convertContent($content->content, $content->html, $content->tag_filter_use) !!}
                         </div>
                     </article>
 

@@ -241,7 +241,6 @@ Route::group(['middleware' => 'auth'], function() {
     // 자기소개
     Route::get('user/profile/{id}', ['as' => 'user.profile', 'uses' => 'User\UserController@profile']);
 
-
     // 쪽지
     Route::get('memo/{memo}/delete', ['as' => 'memo.destroy', 'uses' => 'Memo\MemoController@destroy']);
     Route::resource('memo', 'Memo\MemoController', [
@@ -255,6 +254,8 @@ Route::group(['middleware' => 'auth'], function() {
             'store' => 'memo.store',
         ],
     ]);
+
+    Route::get('mail/send', ['as' => 'mail.send', 'uses' => 'User\MailController@send'])->middleware('send.mail');
 });
 // 내용관리 보기는 인증이 없어도 가능
 Route::get('contents/{content}', ['as' => 'contents.show', 'uses' => 'Content\ContentsController@show']);
@@ -397,4 +398,4 @@ Route::group(['middleware' => 'valid.user'], function () {
 });
 
 // ajax api
-Route::post('ajax/filter', ['as' => 'ajax.filter', 'uses' => 'Board\FilterController@filter']);
+Route::post('ajax/filter', ['as' => 'ajax.filter', 'uses' => 'Board\WriteController@filter']);
