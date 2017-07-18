@@ -70,11 +70,16 @@
 				<th>글쓴이</th>
 				<th>날짜</th>
 				<th>조회</th>
+				@if($board->use_good)
 				<th>추천</th>
+				@endif
+				@if($board->use_nogood)
 				<th>비추천</th>
+				@endif
 			</tr>
 		</thead>
 		<tbody>
+		@if(count($writes) > 0)
         @foreach($writes as $write)
             @if($kind != 'user_id' && in_array($write->id, $notices) && $search == 0 && $currenctCategory == '')
             <tr id="bd_notice">
@@ -125,10 +130,10 @@
                         @if(str_contains($write->option, 'secret'))
                             <img src="/themes/default/images/icon_secret.gif"> <!-- 비밀 -->
                         @endif
+						@if($write->comment > 0)
+							<span class="bd_cmt">{{ $write->comment }}</span>
+						@endif
                     </span>
-                    @if($write->comment > 0)
-                        <span class="bd_cmt">{{ $write->comment }}</span>
-                    @endif
 				</td>
 				<td class="bd_name">
                     @if(auth()->user() && $board->use_sideview)
@@ -137,9 +142,9 @@
                         @if($write->user_level)
                             <li><a href="{{ route('memo.create') }}?to={{ $write->user_id_hashkey }}" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지보내기</a></li>
                             <li><a href="{{ route('mail.send')}}?to={{ $write->user_id_hashkey }}" class="winFormMail" target="_blank" onclick="winFormMail(this.href); return false;">메일보내기</a></li>
-                            <li><a href="{{ route('user.profile', $write->user_id_hashKey) }}" class="winProfile" target="_blank" onclick="winProfile(this.href); return false;">자기소개</a></li>
+                            <li><a href="{{ route('user.profile', $write->user_id_hashkey) }}" class="winProfile" target="_blank" onclick="winProfile(this.href); return false;">자기소개</a></li>
                             @if(session()->get('admin'))
-        		                <li><a href="{{ route('admin.users.edit', $write->user_id_hashKey) }}" target="_blank">회원정보변경</a></li>
+        		                <li><a href="{{ route('admin.users.edit', $write->user_id_hashkey) }}" target="_blank">회원정보변경</a></li>
         		                <li><a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $write->email }}" target="_blank">포인트내역</a></li>
                             @endif
                         @endif
@@ -190,10 +195,21 @@
                 </td>
 				<td class="bd_date">@monthAndDay($write->created_at)</td>
 				<td class="bd_hits">{{ $write->hit }}</td>
+				@if($board->use_good)
 				<td class="bd_re"><span class="up">{{ $write->good }}</span></td>
+				@endif
+				@if($board->use_nogood)
 				<td class="bd_nre">{{ $write->nogood }}</td>
+				@endif
 			</tr>
         @endforeach
+		@else
+			<tr>
+				<td>
+					게시물이 없습니다.
+				</td>
+			</tr>
+		@endif
 		</tbody>
 	</table>
 </form>

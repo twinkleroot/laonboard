@@ -288,7 +288,7 @@ function deleteCache($base, $boardTableName)
     cache($cacheName);
 }
 
-function getViewThumbnail($board, $imageName, $folder)
+function getViewThumbnail($board, $imageName, $folder, $type="view")
 {
     $imgPath = storage_path('app/public/'. $folder);
 
@@ -312,8 +312,16 @@ function getViewThumbnail($board, $imageName, $folder)
     if($size[0] <= $thumbWidth) {
         return $size;
     }
+	$height = round(($thumbWidth * $size[1]) / $size[0]);
+	$files = explode('.', $imageName);
+	$postfix;
+	if($type == 'list') {	// 글 목록에서 썸네일을 필요로 할 때 (ex - 갤러리 게시판)
+		$postfix = $board->gallery_height. '.'. $files[1];
+	} else {
+		$postfix = $thumbWidth. 'X'. $height. '.'. $files[1];
+	}
+	$thumbFilePath = $imgPath. '/thumb-'. $files[0]. '_'. $postfix;
 
-    $thumbFilePath = $imgPath. '/thumb-'. $imageName;
     if( !file_exists($thumbFilePath) ) {
         if($size[2] == 2 && function_exists('exif_read_data')) {
             $degree = 0;
@@ -341,14 +349,16 @@ function getViewThumbnail($board, $imageName, $folder)
             }
         }
         // 썸네일 높이
-        $thumbHeight = round(($thumbWidth * $size[1]) / $size[0]);
-        $img = $img->resize($thumbWidth, $thumbHeight, function ($constraint) {
+        $thumbHeight = round(($thumbWidth * $size[1]) / $size[0]) > $board->gallery_height ? round(($thumbWidth * $size[1]) / $size[0]) : $board->gallery_height;
+        $img = $img
+			->resize($thumbWidth, $thumbHeight, function ($constraint) {
                     $constraint->aspectRatio();
-                })->save($thumbFilePath);
+                })
+			->save($thumbFilePath);
     }
 
     $thumbSize = getimagesize($thumbFilePath);
-    $thumbSize = array_add($thumbSize, 'name', 'thumb-'. $imageName);
+    $thumbSize = array_add($thumbSize, 'name', basename($thumbFilePath));
     // 썸네일 정보의 바로 사용가능한 width와 height에는 원본 width와 height를 넣는다.
     $thumbSize[0] = $size[0];
     $thumbSize[1] = $size[1];

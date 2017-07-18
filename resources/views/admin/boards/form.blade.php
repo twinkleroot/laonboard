@@ -911,7 +911,7 @@
                                 <label for="chk_all_mobile_page_rows">전체적용</label>
                             </td>
                         </tr> --}}
-                        <tr>
+                        {{-- <tr>
                             <th>갤러리 이미지 수</th>
                             <td>
                                 갤러리 형식의 게시판 목록에서 이미지를 한줄에 몇장씩 보여 줄 것인지를 설정하는 값<br />
@@ -923,8 +923,8 @@
                                 <input type="checkbox" id="chk_all_gallery_cols" name="chk_all_gallery_cols" value="1" />
                                 <label for="chk_all_gallery_cols">전체적용</label>
                             </td>
-                        </tr>
-                        <tr>
+                        </tr> --}}
+                        {{-- <tr>
                             <th>갤러리 이미지 폭</th>
                             <td>
                                 갤러리 형식의 게시판 목록에서 썸네일 이미지의 폭을 설정하는 값<br />
@@ -936,7 +936,7 @@
                                 <input type="checkbox" id="chk_all_gallery_width" name="chk_all_gallery_width" value="1" />
                                 <label for="chk_all_gallery_width">전체적용</label>
                             </td>
-                        </tr>
+                        </tr> --}}
                         <tr>
                             <th>갤러리 이미지 높이</th>
                             <td>
@@ -976,7 +976,7 @@
                                 <label for="chk_all_mobile_gallery_height">전체적용</label>
                             </td>
                         </tr> --}}
-                        <tr>
+                        {{-- <tr>
                             <th>게시판 폭</th>
                             <td>
                                 100 이하는 %<br />
@@ -988,7 +988,7 @@
                                 <input type="checkbox" id="chk_all_table_width" name="chk_all_table_width" value="1" />
                                 <label for="chk_all_table_width">전체적용</label>
                             </td>
-                        </tr>
+                        </tr> --}}
                         <tr>
                             <th>이미지 폭 크기</th>
                             <td>
@@ -1260,8 +1260,8 @@ function getThemeGalleryConfig() {
         return false;
     }
 
-    $("input[name=gallery_cols]").val("{{ config('gnu.gallery_cols') }}");
-    $("input[name=gallery_width]").val("{{ config('gnu.gallery_width') }}");
+    // $("input[name=gallery_cols]").val("{{ config('gnu.gallery_cols') }}");
+    // $("input[name=gallery_width]").val("{{ config('gnu.gallery_width') }}");
     $("input[name=gallery_height]").val("{{ config('gnu.gallery_height') }}");
     $("input[name=image_width]").val("{{ config('gnu.image_width') }}");
 }

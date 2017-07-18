@@ -57,21 +57,142 @@
 	@endif
 
 	<!-- 갤러리형 게시판 -->
-	<input type="checkbox" name=""> <!-- 전체선택 -->
+	<input type="checkbox" name="chkAll" onclick="checkAll(this.form)"> <!-- 전체선택 -->
 	<div id="gry" class="row">
+		@if(count($writes) > 0)
+		@foreach($writes as $write)
 		<div class="col-md-3 col-sm-6 col-xs-12 gry"> <!-- 한줄에 4개 배치 -->
-			<input type="checkbox" name="">
+			<input type="checkbox" name="chkId[]" class="writeId" value='{{ $write->id }}'>
 			<div>
-				<div class="gry_img"> <!-- height 기본값 150px로 css처리 해둠 -->
-					<img src="https://file.namu.moe/file/%ED%8C%8C%EC%9D%BC%3Av7NtafG.png">
+				<div class="gry_img" style="height:{{ $board->gallery_height }}px;"> <!-- height 기본값 150px로 css처리 해둠 -->
+					@if($viewParams == '')
+                    <a href="/board/{{ $board->id }}/view/{{ $write->parent }}">
+                    @else
+                    <a href="/board/{{ $board->id }}/view/{{ $write->parent }}?{{ $viewParams }}">
+					@endif
+						@if($write->listThumbnailPath == '공지' || $write->listThumbnailPath == 'no image')
+							{{ $write->listThumbnailPath }}
+						@else
+						<img src="{{ $write->listThumbnailPath }}" style="width:100%;min-height:{{ $board->gallery_height }}px;">
+						@endif
+					</a>
 				</div>
 				<div class="gry_info">
-					<p>게시물 제목을 입력하세요</p>
-					<span><i class="fa fa-user"></i>최고관리자</span>
-					<span><i class="fa fa-clock-o"></i>17-04-11</span>
+					<p>
+						<span class="bd_subject">
+							@if($board->use_category == 1 )
+	                        <a href="{{ route('board.index', $board->id). '?category='. $write->ca_name }}" class="subject_cg">{{ $write->ca_name }}</a>
+	                        @endif
+							@if($viewParams == '')
+	                        <a href="/board/{{ $board->id }}/view/{{ $write->parent }}">
+								@if(isset($request->writeId) && $request->writeId == $write->id)
+								<span class="read">	{{-- 열람중 --}}
+									{!! $write->subject !!}
+								</span>
+								@else
+								{!! $write->subject !!}
+								@endif
+							</a>
+	                        @else
+	                        <a href="/board/{{ $board->id }}/view/{{ $write->parent }}?{{ $viewParams }}">
+								@if(isset($request->writeId) && $request->writeId == $write->id)
+								<span class="read">	{{-- 열람중 --}}
+									{!! $write->subject !!}
+								</span>
+								@else
+								{!! $write->subject !!}
+								@endif
+	                        @endif
+							{{-- 글올린시간 + 설정에 있는 신규 글 시간 > 현재 시간 --}}
+	                        @if(date($write->created_at->addHours(24)) > date("Y-m-d H:i:s", time()) && $board->new != 0 )
+	                        <img src="/themes/default/images/icon_new.gif"> <!-- 새글 -->
+							@endif
+							<!-- 인기글 -->
+	                        @if($write->hit >= $board->hot)
+                            <img src="/themes/default/images/icon_hot.gif"> <!-- 인기 -->
+	                        @endif
+							@if($write->comment > 0)
+	                        <span class="bd_cmt">{{ $write->comment }}</span>
+	                    	@endif
+						</span>
+					</p>
+					<span>
+						@if(auth()->user() && $board->use_sideview)
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true"><i class="fa fa-user"></i>{{ $write->name }}</a>
+                        <ul class="dropdown-menu" role="menu">
+                        @if($write->user_level)
+                            <li><a href="{{ route('memo.create') }}?to={{ $write->user_id_hashkey }}" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지보내기</a></li>
+                            <li><a href="{{ route('mail.send')}}?to={{ $write->user_id_hashkey }}" class="winFormMail" target="_blank" onclick="winFormMail(this.href); return false;">메일보내기</a></li>
+                            <li><a href="{{ route('user.profile', $write->user_id_hashkey) }}" class="winProfile" target="_blank" onclick="winProfile(this.href); return false;">자기소개</a></li>
+                            @if(session()->get('admin'))
+    		                <li><a href="{{ route('admin.users.edit', $write->user_id_hashkey) }}" target="_blank">회원정보변경</a></li>
+    		                <li><a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $write->email }}" target="_blank">포인트내역</a></li>
+                            @endif
+                        @endif
+                            <li>
+                            @if($currenctCategory!='')
+                            <a href="/board/{{ $board->id }}?category={{ $currenctCategory }}&amp;kind=user_id&amp;keyword={{ $write->user_id }}">
+                            @else
+                            <a href="/board/{{ $board->id }}?kind=user_id&amp;keyword={{ $write->user_id }}">
+                            @endif
+                            닉네임으로 검색
+                            </a>
+                            </li>
+                        @if($write->user_level)
+                            <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>
+                        @endif
+                        </ul>
+                    @elseif($board->use_sideview)
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
+                        <ul class="dropdown-menu" role="menu">
+                            @if($write->user_level)
+                                <li>
+                                @if($currenctCategory!='')
+                                    <a href="/board/{{ $board->id }}?category={{ $currenctCategory }}&amp;kind=user_id&amp;keyword={{ $write->user_id }}">
+                                @else
+                                    <a href="/board/{{ $board->id }}?kind=user_id&amp;keyword={{ $write->user_id }}">
+                                @endif
+                                    닉네임으로 검색
+                                    </a>
+                                </li>
+                            @else
+                                <li>
+                                @if($currenctCategory!='')
+                                    <a href="/board/{{ $board->id }}?category={{ $currenctCategory }}&amp;kind=user_id&amp;keyword={{ $write->user_id }}">
+                                @else
+                                    <a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $write->name }}">
+                                @endif
+                                    이름으로 검색
+                                    </a>
+                                </li>
+                            @endif
+                            @if($write->user_level)
+                                <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>
+                            @endif
+                        </ul>
+                    @else
+                        {{ $write->name }}
+                    @endif
+					</span>
+					<span><i class="fa fa-clock-o"></i>@monthAndDay($write->created_at)</span>
+					<span><i class="fa fa-clock-o"></i>{{ $write->hit }}</span>
+					@if($board->use_good)
+					<span><i class="fa fa-clock-o"></i>{{ $write->good }}</span>
+					@endif
+					@if($board->use_nogood)
+					<span><i class="fa fa-clock-o"></i>{{ $write->nogood }}</span>
+					@endif
 				</div>
 			</div>
 		</div>
+		@endforeach
+		@else
+			<div>
+				<div>
+					게시물이 없습니다.
+				</div>
+			</div>
+		@endif
 	</div>
 </form>
 

@@ -178,12 +178,57 @@ class Write extends Model
                 $parentWrite = $writeModel->where('id', $write->parent)->first();
                 $write->subject = $parentWrite->subject;
             }
+			$board = $writeModel->board;
+			if($board->skin == 'gallery') {
+				$write->listThumbnailPath = $this->getListThumbnail($write);
+			}
         }
         // 페이징 버튼의 경로 지정 (항상 목록으로 이동하도록 하기)
         $writes->withPath('/board/'.$this->board->id);
 
         return $writes;
     }
+
+	private function getListThumbnail($write)
+	{
+		$notices = explode(',', trim($this->board->notice));
+		if(in_array($write->id, $notices)) {
+			return '공지';
+		}
+
+		$imgExtension = cache("config.board")->imageExtension;
+        $boardFiles = [];
+        $imgFiles = [];
+		$imageFileInfo = '';
+        if($write->file > 0) {	// 첨부파일에 이미지가 있는지 검사해서 있으면 하나만 썸네일로 만들어서 가져온다.
+            $boardFiles = BoardFile::where(['board_id' => $this->board->id, 'write_id' => $write->id])->get();
+
+            foreach($boardFiles as $boardFile) {
+                $filePiece = explode('.', $boardFile->file);
+                if( !str_contains($imgExtension, last($filePiece))) {
+                    continue;
+                }
+                // 이미지 경로를 가져와서 썸네일만든 후 서버에 저장
+                $imageFileInfo = getViewThumbnail($this->board, $boardFile->file, $this->board->table_name, 'list');
+				$imageFileInfo = array_add($imageFileInfo, 'path', '/storage/'. $this->board->table_name. '/'. $imageFileInfo['name']);
+				break;
+            }
+        } else {	// 에디터로 작성한 내용에 이미지가 있는지 검사해서 있으면 하나만 썸네일로 만들어서 가져온다.
+	        preg_match_all("/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i", $write->content, $matches);
+
+	        for($i=0; $i<count($matches[1]); $i++) {
+	            $imageFileInfo = getViewThumbnail($this->board, basename($matches[1][$i]), 'editor', 'list');
+				$imageFileInfo = array_add($imageFileInfo, 'path', '/storage/editor/'. $imageFileInfo['name']);
+				break;
+			}
+		}
+
+		if($imageFileInfo) {
+			return $imageFileInfo['path'];
+		} else {
+			return 'no image';
+		}
+	}
 
     // (게시판 리스트) select ~ from ~ where까지 얻어온다.
     public function getWritesWhere($writeModel, $kind, $keyword, $currenctCategory)
@@ -342,8 +387,7 @@ class Write extends Model
         }
 
         // 첨부 파일과 이미지 파일 분류
-        $boardConfig = Cache::get("config.board");
-        $imgExtension = $boardConfig->imageExtension;
+        $imgExtension = cache("config.board")->imageExtension;
         $boardFiles = [];
         $imgFiles = [];
         if($write->file > 0) {
