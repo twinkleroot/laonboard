@@ -102,15 +102,8 @@
                             <a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $point->user->email }}">{{ $point->user->email }}</a>
                         </td>
         				<td class="td_nick">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $point->user->nick }}</a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('memo.create') }}?to={{ $point->user->id }}" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지보내기</a></li>
-                                <li><a href="#">메일보내기</a></li>
-                                <li><a href="{{ route('user.profile', $point->user->id) }}" class="winProfile" target="_blank" onclick="winProfile(this.href); return false;">자기소개</a></li>
-        		                <li><a href="{{ route('admin.users.edit', $point->user->id) }}" target="_blank">회원정보변경</a></li>
-        		                <li><a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $point->user->email }}" target="_blank">포인트내역</a></li>
-                                <li><a href="{{ route('new.index') }}?nick={{ $point->user->nick }}">전체게시물</a></li>
-                            </ul>
+							@component('admin.sideview', ['id' => $point->user->id, 'nick' => $point->user->nick, 'email' => $point->user->email])
+                            @endcomponent
                         </td>
         				<td>
                             @if(!preg_match("/^\@/", $point->rel_table) && $point->rel_table)

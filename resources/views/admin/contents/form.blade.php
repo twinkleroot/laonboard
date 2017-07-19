@@ -1,7 +1,7 @@
 @extends('admin.admin')
 
 @section('title')
-     내용 {{ $type == '' ? '입력' : '수정' }} | {{ Cache::get('config.homepage')->title }}
+     내용 {{ $type == '' ? '입력' : '수정' }} | {{ cache('config.homepage')->title }}
 @endsection
 
 @section('include_script')
@@ -14,7 +14,7 @@
 
 @section('content')
 <div class="body-contents">
-    <form name="contentform" onsubmit="return contentFormCheck(this);" action="{{ $type == "update" ? route('admin.contents.update', $content->id) : route('admin.contents.store') }}" @endif method="POST" enctype="multipart/form-data">
+    <form name="contentform" onsubmit="return contentFormCheck(this);" action="{{ $type == "update" ? route('admin.contents.update', $content->id) : route('admin.contents.store') }}" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="type" value="{{ $type }}">
     <input type="hidden" name="html" value="1">
     @if($type == "update")

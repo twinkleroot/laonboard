@@ -278,7 +278,7 @@ function utf8Strcut($str, $size, $suffix='...' )
 // 관리 권한 설정 데이터를 가져온다.
 function getManageAuthModel($menuCode)
 {
-	$manageAuth = ManageAuth::
+	$manageAuth = \App\Admin\ManageAuth::
 		where([
 			'user_id' => auth()->user()->id,
 			'menu' => $menuCode[0],

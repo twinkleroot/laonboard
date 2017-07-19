@@ -83,15 +83,8 @@
         				</td>
         				<td class="td_email"><a href="{{ route('admin.manageAuth.index') }}?keyword={{ $auth->user_email }}">{{ $auth->user_email }}</a></td>
         				<td class="td_nick">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $auth->user_nick }}</a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('memo.create') }}?to={{ $auth->user_id }}" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지보내기</a></li>
-                                <li><a href="#">메일보내기</a></li>
-                                <li><a href="{{ route('user.profile', $auth->user_id) }}" class="winProfile" target="_blank" onclick="winProfile(this.href); return false;">자기소개</a></li>
-        		                <li><a href="{{ route('admin.users.edit', $auth->user_id) }}" target="_blank">회원정보변경</a></li>
-        		                <li><a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $auth->user_email }}" target="_blank">포인트내역</a></li>
-                                <li><a href="{{ route('new.index') }}?nick={{ $auth->user_nick }}">전체게시물</a></li>
-                            </ul>
+							@component('admin.sideview', ['id' => $auth->user_id, 'nick' => $auth->user_nick, 'email' => $auth->user_email])
+                            @endcomponent
                         </td>
         				<td class="td_subject">{{ $auth->menu }}</td>
         				<td class="td_mngsmall">{{ $auth->auth }}</td>
