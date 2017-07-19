@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Mail;
 use Auth;
 use Cache;
+use Exception;
 use Socialite;
 use Carbon\Carbon;
 use App\ReCaptcha;
@@ -185,5 +186,49 @@ class UserController extends Controller
             'message' => $message,
             'redirect' => route('home')
         ]);
+    }
+
+	// 인증 메일 클릭했을 때 처리하기
+    public function emailCertify(Request $request, $id, $crypt)
+    {
+        $user = getUser($id);
+
+        $message = '메일인증 요청 정보가 올바르지 않습니다.';
+        if($user->email_certify2 == $crypt) {
+            if($user->update([
+                'email_certify' => Carbon::now(),
+                'email_certify2' => null,
+                'level' => cache("config.join")->joinLevel,
+            ])) {
+                $message = '메일인증 처리를 완료하였습니다. \\n\\n지금부터 회원님은 사이트를 원활하게 이용하실 수 있습니다.';
+            }
+        }
+        return alertClose($message);
+    }
+
+	// 툴팁 : 메일 보내기 양식
+	public function form(Request $request)
+    {
+		$skin = $this->skin;
+		$params = [];
+		try {
+			$params = $this->userModel->getFormMailParams($request);
+		} catch (Exception $e) {
+			return alertClose($e->getMessage());
+		}
+
+        return viewDefault("user.$skin.formmail", $params);
+    }
+
+	// 메일 보내기 실행
+	public function send(Request $request)
+    {
+		try {
+			$this->userModel->sendFormMail($request);
+		} catch (Exception $e) {
+			return alertClose($e->getMessage());
+		}
+
+        return alertClose('메일을 정상적으로 발송하였습니다.');
     }
 }

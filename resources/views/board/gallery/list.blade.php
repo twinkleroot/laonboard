@@ -118,56 +118,43 @@
 					</p>
 					<span>
 						@if(auth()->user() && $board->use_sideview)
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true"><i class="fa fa-user"></i>{{ $write->name }}</a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
                         <ul class="dropdown-menu" role="menu">
                         @if($write->user_level)
-                            <li><a href="{{ route('memo.create') }}?to={{ $write->user_id_hashkey }}" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지보내기</a></li>
-                            <li><a href="{{ route('mail.send')}}?to={{ $write->user_id_hashkey }}" class="winFormMail" target="_blank" onclick="winFormMail(this.href); return false;">메일보내기</a></li>
-                            <li><a href="{{ route('user.profile', $write->user_id_hashkey) }}" class="winProfile" target="_blank" onclick="winProfile(this.href); return false;">자기소개</a></li>
+                            <li><a href="{{ route('memo.create') }}?to={{ $write->user_id }}" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지보내기</a></li>
+                            <li><a href="{{ route('user.mail.form')}}?to={{ $write->user_id }}" class="winFormMail" target="_blank" onclick="winFormMail(this.href); return false;">메일보내기</a></li>
+                            <li><a href="{{ route('user.profile', $write->user_id) }}" class="winProfile" target="_blank" onclick="winProfile(this.href); return false;">자기소개</a></li>
                             @if(session()->get('admin'))
-    		                <li><a href="{{ route('admin.users.edit', $write->user_id_hashkey) }}" target="_blank">회원정보변경</a></li>
+    		                <li><a href="{{ route('admin.users.edit', $write->user_id) }}" target="_blank">회원정보변경</a></li>
     		                <li><a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $write->email }}" target="_blank">포인트내역</a></li>
                             @endif
-                        @endif
-                            <li>
-                            @if($currenctCategory!='')
-                            <a href="/board/{{ $board->id }}?category={{ $currenctCategory }}&amp;kind=user_id&amp;keyword={{ $write->user_id }}">
-                            @else
-                            <a href="/board/{{ $board->id }}?kind=user_id&amp;keyword={{ $write->user_id }}">
-                            @endif
-                            닉네임으로 검색
-                            </a>
+							<li>
+                                <a href="/board/{{ $board->id }}?kind=user_id&amp;keyword={{ $write->user_id }}&amp;category={{ $currenctCategory }}">닉네임으로 검색</a>
                             </li>
+						@else
+							<li>
+								<a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a>
+                            </li>
+						@endif
                         @if($write->user_level)
                             <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>
                         @endif
                         </ul>
-                    @elseif($board->use_sideview)
+                    @elseif(auth()->guest() && $board->use_sideview)
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
                         <ul class="dropdown-menu" role="menu">
                             @if($write->user_level)
-                                <li>
-                                @if($currenctCategory!='')
-                                    <a href="/board/{{ $board->id }}?category={{ $currenctCategory }}&amp;kind=user_id&amp;keyword={{ $write->user_id }}">
-                                @else
-                                    <a href="/board/{{ $board->id }}?kind=user_id&amp;keyword={{ $write->user_id }}">
-                                @endif
-                                    닉네임으로 검색
-                                    </a>
-                                </li>
-                            @else
-                                <li>
-                                @if($currenctCategory!='')
-                                    <a href="/board/{{ $board->id }}?category={{ $currenctCategory }}&amp;kind=user_id&amp;keyword={{ $write->user_id }}">
-                                @else
-                                    <a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $write->name }}">
-                                @endif
-                                    이름으로 검색
-                                    </a>
-                                </li>
-                            @endif
+							<li><a href="{{ route('user.mail.form')}}?to={{ $write->user_id }}" class="winFormMail" target="_blank" onclick="winFormMail(this.href); return false;">메일보내기</a></li>
+							<li>
+                                <a href="/board/{{ $board->id }}?kind=user_id&amp;keyword={{ $write->user_id }}&amp;category={{ $currenctCategory }}">닉네임으로 검색</a>
+                            </li>
+							@else
+							<li>
+								<a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a>
+                            </li>
+							@endif
                             @if($write->user_level)
-                                <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>
+                            <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>
                             @endif
                         </ul>
                     @else
@@ -208,10 +195,10 @@
                     <option value="subject" @if($kind == 'subject') selected @endif>제목</option>
                     <option value="content" @if($kind == 'content') selected @endif>내용</option>
                     <option value="subject || content" @if($kind == 'subject || content') selected @endif>제목+내용</option>
-                    <option value="email, 0" @if($kind == 'email, 0') selected @endif>회원이메일</option>
-                    <option value="email, 1" @if($kind == 'email, 1') selected @endif>회원이메일(코)</option>
-                    <option value="nick, 0" @if($kind == 'nick, 0') selected @endif>글쓴이</option>
-                    <option value="nick, 1" @if($kind == 'nick, 1') selected @endif>글쓴이(코)</option>
+					<option value="nick, 0" @if($kind == 'nick, 0') selected @endif>회원닉네임</option>
+                    <option value="nick, 1" @if($kind == 'nick, 1') selected @endif>회원닉네임(코)</option>
+                    <option value="name, 0" @if($kind == 'name, 0') selected @endif>글쓴이</option>
+                    <option value="name, 1" @if($kind == 'name, 1') selected @endif>글쓴이(코)</option>
                 </select>
 
                 <label for="keyword" class="sr-only">검색어</label>

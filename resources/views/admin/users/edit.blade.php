@@ -1,7 +1,7 @@
 @extends('admin.admin')
 
 @section('title')
-    회원 수정 | {{ $title }}
+    회원 정보 수정 | {{ cache("config.homepage")->title }}
 @endsection
 
 @section('include_script')

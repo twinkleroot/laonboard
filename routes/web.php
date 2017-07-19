@@ -213,8 +213,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
 
     // 글,댓글 현황
     Route::get('status', ['as' => 'admin.status', 'uses' => 'Admin\StatusController@index']);
-
-
 });
 
 
@@ -236,6 +234,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('user/confirm_password', ['as' => 'user.confirmPassword', 'uses' => 'User\UserController@confirmPassword']);
     Route::get('user/leave', ['as' => 'user.leave', 'uses' => 'User\UserController@leave']);
     Route::get('user/point/{id}', ['as' => 'user.point', 'uses' => 'User\UserController@pointList']);
+
     // 회원 정보 수정 - 소셜 로그인 계정 연결 해제
     Route::post('user/disconnectSocialAccount', ['as' => 'user.disconnectSocialAccount', 'uses' => 'User\UserController@disconnectSocialAccount']);
     // 자기소개
@@ -254,8 +253,6 @@ Route::group(['middleware' => 'auth'], function() {
             'store' => 'memo.store',
         ],
     ]);
-
-    Route::get('mail/send', ['as' => 'mail.send', 'uses' => 'User\MailController@send'])->middleware('send.mail');
 });
 // 내용관리 보기는 인증이 없어도 가능
 Route::get('contents/{content}', ['as' => 'contents.show', 'uses' => 'Content\ContentsController@show']);
@@ -272,12 +269,14 @@ Route::post('social/connectExistAccount', ['as' => 'social.connectExistAccount',
 Route::get('user/join', ['as' => 'user.join', 'uses' => 'Auth\RegisterController@join']);
 Route::post('user/register', ['as' => 'user.register', 'uses' => 'Auth\RegisterController@register']);
 Route::get('user/welcome', ['as' => 'user.welcome', 'uses' => 'User\UserController@welcome']);
-// 메일 인증 메일 주소 변경
+// 툴팁 : 메일 보내기
+Route::get('user/mail/send', ['as' => 'user.mail.form', 'uses' => 'User\UserController@form'])->middleware('form.mail');
+Route::post('user/mail/send', ['as' => 'user.mail.send', 'uses' => 'User\UserController@send'])->middleware('send.mail');
+// 메일 인증 이메일 주소 변경
 Route::get('user/email/edit/{email}', ['as' => 'user.email.edit', 'uses' => 'User\UserController@editEmail']);
 Route::put('user/email/update', ['as' => 'user.email.update', 'uses' => 'User\UserController@updateEmail']);
-
 // 이메일 인증 라우트
-Route::get('emailCertify/id/{id}/crypt/{crypt}', ['as' => 'emailCertify', 'uses' => 'User\MailController@emailCertify']);
+Route::get('user/emailCertify/id/{id}/crypt/{crypt}', ['as' => 'user.email.certify', 'uses' => 'User\UserController@emailCertify']);
 // 처리 결과 메세지를 경고창으로 알려주는 페이지
 Route::get('message', ['as' => 'message', 'uses' => 'Message\MessageController@message']);
 

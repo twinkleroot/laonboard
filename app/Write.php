@@ -170,7 +170,7 @@ class Write extends Model
         // 1. 뷰에 내보내는 아이디 검색의 링크url에는 암호화된 id를 링크로 건다.
         // 2. 검색일 경우 검색 키워드 색깔 표시를 다르게 한다.
         foreach($writes as $write) {
-            $write->user_id = encrypt($write->user_id);     // 라라벨 기본 지원 encrypt
+            $write->user_id = $write->user_id_hashkey;     // 라라벨 기본 지원 encrypt
             $write->subject = searchKeyword($keyword, $write->subject);
             $parentWrite = $write;
             // 댓글일 경우 부모글의 제목을 댓글의 제목으로 넣기
@@ -247,8 +247,8 @@ class Write extends Model
         if($kind != '' && $keyword != '') {
             if($kind == 'user_id') {
                 // 암호화된 user_id를 복호화해서 검색한다.
-                $userId = decrypt($keyword);    // 라라벨 기본 지원 decrypt
-
+                // $userId = decrypt($keyword);    // 라라벨 기본 지원 decrypt
+				$userId = User::where('id_hashkey', $keyword)->first()->id;
                 $query = $query->where('user_id', $userId);
             } else if(str_contains($kind, '||')) { // 제목 + 내용으로 검색
                 $kinds = explode('||', preg_replace("/\s+/", "", $kind));
@@ -269,16 +269,18 @@ class Write extends Model
             // 코멘트 검색이 select box에 있는 경우
             } else if(str_contains($kind, ',')) {
                 $kinds = explode(',', preg_replace("/\s+/", "", $kind));
-                $user = User::where($kinds[0], $keyword)->first();
-                // 검색 쿼리 붙이기
-                if($user) {
-                    $query = $query->where('user_id', $user->id)
-                                   ->where('is_comment', $kinds[1]);
-                } else {
-                    throw new Exception($keyword. ' 사용자가 존재하지 않습니다.');
-                }
-            } else if($kind == 'name') {
-                $query = $query->where($writeModel->table.'.name', $keyword);
+				if($kinds[0] == 'nick') {	// 닉네임 검색
+	                $user = User::where('nick', $keyword)->first();
+	                // 검색 쿼리 붙이기
+	                if($user) {
+	                    $query = $query->where(['user_id' => $user->id, 'is_comment'=> $kinds[1]])
+	                                   ->where('is_comment', $kinds[1]);
+	                } else {
+	                    throw new Exception($keyword. ' 사용자가 존재하지 않습니다.');
+	                }
+				} else {	// 글쓴이 검색
+					$query = $query->where([$writeModel->table.'.name' => $keyword, 'is_comment'=> $kinds[1]]);
+				}
             // 단독 키워드 검색(제목, 내용)
             } else {
                 $query = $query->whereRaw("INSTR($kind, '$keyword')");

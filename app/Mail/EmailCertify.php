@@ -35,7 +35,7 @@ class EmailCertify extends Mailable
      */
     public function build()
     {
-        $url = route('emailCertify', [
+        $url = route('user.email.certify', [
                 'id' => $this->user->id_hashkey,
                 'crypt' => $this->user->email_certify2
             ]);

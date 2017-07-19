@@ -11,9 +11,12 @@ use App\Write;
 use Auth;
 use DB;
 use Cache;
+use Exception;
+use Mail;
 use App\Common\Util;
 use App\Notification;
 use App\GroupUser;
+use App\Mail\FormMailSend;
 use Carbon\Carbon;
 
 
@@ -450,5 +453,48 @@ class User extends Authenticatable
 
         return $user->nick. '님께서는 '. Carbon::now()->format('Y년 m월 d일'). '에 회원에서 탈퇴하셨습니다.';
     }
+
+	public function getFormMailParams($request)
+	{
+		$user = getUser($request->to);
+		$email = $request->has('email') ? $request->email : '';
+		$decEmail;
+		if($email) {
+			$decEmail = decrypt($email);
+			if( getEmailAddress($decEmail) == '' ) {
+				throw new Exception('이메일이 올바르지 않습니다.');
+			}
+		} else {
+			throw new Exception('이메일이 올바르지 않습니다.');
+		}
+		$name = $request->has('name') ? convertText(stripslashes($request->name), true) : $email;
+
+		return [
+			'user' => $user,
+			'name' => $name,
+			'email' => $email,
+		];
+	}
+
+	public function sendFormMail($request)
+	{
+		$to = decrypt($request->to);
+		if (substr_count($to, "@") > 1) {
+    		throw new Exception('한번에 한사람에게만 메일을 발송할 수 있습니다.');
+		}
+		$name = $request->name;
+		$email = $request->email;
+		$subject = $request->subject;
+		$content = $request->content;
+		$type = $request->type;
+		$files = $request->file;
+		$content = stripslashes($content);
+		if ($type == 2) {
+		    $type = 1;
+		    $content = str_replace("\n", "<br>", $content);
+		}
+
+		Mail::to($to)->send(new FormMailSend($name, $email, $subject, $content, $type, $files));
+	}
 
 }

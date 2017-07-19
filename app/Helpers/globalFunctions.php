@@ -49,7 +49,15 @@ function getUser($id)
         $user = \App\User::find($id);
     }
 
-    return $user;
+    return $user ? : new \App\User();
+}
+
+// 이메일 주소 추출
+function getEmailAddress($email)
+{
+    preg_match("/[0-9a-z._-]+@[a-z0-9._-]{4,}/i", $email, $matches);
+
+    return count($matches) > 0 ? $matches[0] : '';
 }
 
 // Text 형식으로 변환

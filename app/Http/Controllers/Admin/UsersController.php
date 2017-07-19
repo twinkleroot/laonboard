@@ -79,9 +79,9 @@ class UsersController extends Controller
 
         $user = $this->userModel->addUser($request);
         if(is_null($user)) {
-            abort('500', '회원추가가 실패하였습니다.');
+            abort('500', '회원추가에 실패하였습니다.');
         }
-        return redirect(route('admin.users.index'))->with('message', $user->nick . ' 회원이 추가되었습니다.');
+        return redirect(route('admin.users.edit', $user->id));
     }
 
     /**
@@ -101,7 +101,6 @@ class UsersController extends Controller
             return view('message', ['message' => '존재하지 않는 회원입니다.', 'redirect' => '/index' ]);
         }
         return view('admin.users.edit', [
-                'title' => Cache::get("config.homepage")->title,
                 'user' => $user,
                 'id' => $id
             ]);
@@ -120,7 +119,7 @@ class UsersController extends Controller
             abort(403, '회원 정보 수정에 대한 권한이 없습니다.');
         }
 
-        $user = User::findOrFail($id);
+        $user = getUser($id);
 
         if($request->get('change_password') !== '') {
             $user->password = bcrypt($request->get('change_password'));
@@ -132,7 +131,7 @@ class UsersController extends Controller
             'name' => $request->get('name'),
             'nick' => $request->get('nick'),
             'level' => $request->get('level'),
-            'point' => $request->get('point'),
+            // 'point' => $request->get('point'),	// 포인트 부여 및 차감은 [회원관리 - 포인트관리]에서
             'homepage' => $request->get('homepage'),
             'hp' => $request->get('hp'),
             'tel' => $request->get('tel'),
@@ -152,7 +151,7 @@ class UsersController extends Controller
             // 본인확인방법, 회원아이콘은 다른데서 변경하는 듯.
         ]);
 
-        return redirect(route('admin.users.index'))->with('message', $user->nick . '의 회원정보가 수정되었습니다.');
+        return redirect()->back();
     }
 
     /**
