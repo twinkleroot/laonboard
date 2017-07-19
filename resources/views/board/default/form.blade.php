@@ -91,62 +91,75 @@
 
         @if($board->use_dhtml_editor == 1)
             {{-- 에디터 --}}
-            <div class="mb10" style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box;">
+            <div style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px;">
                 <textarea name="content" id="editorArea">@if($type == 'update'){{ $write->content }}@endif</textarea>
             </div>
         @else
-        	<div class="mb10" style="border: 1px solid #ccc; background: #fff; min-height: 400px; padding: 20px; border-radius: 4px; box-sizing: border-box;">
-                <textarea name="content" maxlength="65536" style="width:100%; min-height:400px" required>@if($type == 'update'){{ $write->content }}@endif</textarea>
+        	<div style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px; padding: 2px;">
+                <textarea name="content" maxlength="65536" style="width:100%; min-height:400px; border:0;" required>@if($type == 'update'){{ $write->content }}@endif</textarea>
         	</div>
         @endif
 
-    	<div class="row">
-    		<div class="form-group mb10 col-xs-8">
-    		    <label for="link1" class="sr-only">링크 1</label>
-    		    <input type="url" class="form-control" id="link1" name="link1" placeholder="링크 1" @if($type == 'update')value={{ $write->link1 }}@endif>
-    		</div>
-
-    		<div class="form-group mb10 col-xs-8">
-    		    <label for="link2" class="sr-only">링크 2</label>
-    		    <input type="url" class="form-control" id="link2" name="link2" placeholder="링크 2" @if($type == 'update')value={{ $write->link2 }}@endif>
-    		</div>
-
-    		<div class="form-group mb10 col-xs-5">
-                @if($type=='update')
-                    @foreach($boardFiles as $boardFile)
-                        <label for="attach_file" class="sr-only">파일첨부</label>
-                        <input type="file" id="attach_file" name="attach_file[]" placeholder="파일첨부"
-                        title="파일첨부 {{ $loop->index + 1 }} : 용량 {{ $board->upload_size }} 바이트 이하만 업로드 가능">
-                        @if($board->use_file_content)
-                            <input type="text" class="form-control" id="file_content" name="file_content[]"
-                            value="{{ $boardFile->content }}" title="파일 설명을 입력해 주세요." size="50" placeholder="파일 설명">
-                        @endif
-                        <input type="checkbox" id="{{ 'file_del'. $loop->index }}" name="file_del[{{ $loop->index }}]" value=1 />
-                        <label for="{{ 'file_del'. $loop->index }}">{{ $boardFile->source.'('.$boardFile->filesize.') 파일 삭제' }}</label>
-                    @endforeach
-                    @for($i=0; $i<$board->upload_count-count($boardFiles); $i++)
-                        <label for="attach_file" class="sr-only">파일첨부</label>
-                        <input type="file" id="attach_file" name="attach_file[]" placeholder="파일첨부"
-                        title="파일첨부 {{ $i + 1 }} : 용량 {{ $board->upload_size }} 바이트 이하만 업로드 가능">
-                        @if($board->use_file_content)
-                            <input type="text" class="form-control" id="file_content" name="file_content[]"
-                            title="파일 설명을 입력해 주세요." size="50" placeholder="파일 설명">
-                        @endif
-                    @endfor
-                @else
-                    @for($i=0; $i<$board->upload_count; $i++)
-                        <label for="attach_file" class="sr-only">파일첨부</label>
-                        <input type="file" id="attach_file" name="attach_file[]" placeholder="파일첨부"
-                        title="파일첨부 {{ $i + 1 }} : 용량 {{ $board->upload_size }} 바이트 이하만 업로드 가능">
-                        @if($board->use_file_content)
-                            <input type="text" class="form-control" id="file_content" name="file_content[]"
-                            title="파일 설명을 입력해 주세요." size="50" placeholder="파일 설명">
-                        @endif
-                    @endfor
-                @endif
-    		</div>
-    	</div>
-
+        <div class="wt_more">
+            <div class="add">
+                <div class="link">
+                    <i class="fa fa-link"></i>
+                    <span class="bd_title">링크추가</span>
+                </div>
+                <div class="link_list" style="display: none;">
+                    <div class="item">
+                        <label for="link1" class="sr-only">링크 1</label>
+                        <input type="url" class="form-control" id="link1" name="link1" placeholder="링크 1" @if($type == 'update')value={{ $write->link1 }}@endif>
+                    </div>
+                    <div class="item">
+                        <label for="link2" class="sr-only">링크 2</label>
+                        <input type="url" class="form-control" id="link2" name="link2" placeholder="링크 2" @if($type == 'update')value={{ $write->link2 }}@endif>
+                    </div>
+                </div>
+                <div class="file">
+                    <i class="fa fa-download"></i>
+                    <span class="bd_title">파일추가</span>
+                </div>
+                <div class="file_list" style="display: none;">
+                    @if($type=='update')
+                        @foreach($boardFiles as $boardFile)
+                        <div class="item">
+                            <label for="attach_file" class="sr-only">파일첨부</label>
+                            <input type="file" id="attach_file" name="attach_file[]" placeholder="파일첨부" title="파일첨부 {{ $loop->index + 1 }} : 용량 {{ $board->upload_size }} 바이트 이하만 업로드 가능">
+                            @if($board->use_file_content)
+                                <input type="text" class="form-control" id="file_content" name="file_content[]"
+                                value="{{ $boardFile->content }}" title="파일 설명을 입력해 주세요." size="50" placeholder="파일 설명">
+                            @endif
+                            <input type="checkbox" id="{{ 'file_del'. $loop->index }}" name="file_del[{{ $loop->index }}]" value=1 />
+                            <label for="{{ 'file_del'. $loop->index }}">{{ $boardFile->source.'('.$boardFile->filesize.') 파일 삭제' }}</label>
+                        </div>
+                        @endforeach
+                        @for($i=0; $i<$board->upload_count-count($boardFiles); $i++)
+                        <div class="item">
+                            <label for="attach_file" class="sr-only">파일첨부</label>
+                            <input type="file" id="attach_file" name="attach_file[]" placeholder="파일첨부"
+                            title="파일첨부 {{ $i + 1 }} : 용량 {{ $board->upload_size }} 바이트 이하만 업로드 가능">
+                            @if($board->use_file_content)
+                                <input type="text" class="form-control" id="file_content" name="file_content[]" title="파일 설명을 입력해 주세요." size="50" placeholder="파일 설명">
+                            @endif
+                        </div>
+                        @endfor
+                        @else
+                            @for($i=0; $i<$board->upload_count; $i++)
+                            <div class="item">
+                                <label for="attach_file" class="sr-only">파일첨부</label>
+                                <input type="file" id="attach_file" name="attach_file[]" placeholder="파일첨부"
+                                title="파일첨부 {{ $i + 1 }} : 용량 {{ $board->upload_size }} 바이트 이하만 업로드 가능">
+                                @if($board->use_file_content)
+                                    <input type="text" class="form-control" id="file_content" name="file_content[]"
+                                    title="파일 설명을 입력해 주세요." size="50" placeholder="파일 설명">
+                                @endif
+                            </div>
+                        @endfor
+                    @endif
+                </div>
+            </div>
+        </div>
     	<div class="clearfix">
     		<div class="pull-left">
                 @if(session()->get('admin'))
@@ -235,5 +248,13 @@ function onSubmit(token) {
 function validate(event) {
 	grecaptcha.execute();
 }
+$(function() {
+    $(".link").click(function(){
+        $(".link_list").toggle();
+    });
+    $(".file").click(function(){
+        $(".file_list").toggle();
+    });
+});
 </script>
 @endsection
