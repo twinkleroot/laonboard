@@ -69,14 +69,14 @@
         <div class="bd_file">
             <i class="fa fa-paperclip"></i>
             <span class="bd_title">첨부된 파일 {{ count($boardFiles) }}개</span>
-			<ul class="bd_file_list" role="menu">
             @foreach($boardFiles as $file)
+			<ul class="bd_file_list" role="menu">
                 <li>
                     <i class="fa fa-download"></i><a href="/board/{{ $board->id }}/view/{{ $view->id }}/download/{{ $file->board_file_no }}">{{ $file->source }}</a>
                     <span class="downcount">(다운로드 횟수: {{ $file->download }}회 / DATE : {{ $file->created_at }}) </span>
                 </li>
-            @endforeach
 			</ul>
+            @endforeach
         </div>
 @endif
 @if($board->use_signature && $signature)

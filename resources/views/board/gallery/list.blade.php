@@ -71,7 +71,7 @@
                     <a href="/board/{{ $board->id }}/view/{{ $write->parent }}?{{ $viewParams }}">
 					@endif
 						@if($write->listThumbnailPath == '공지' || $write->listThumbnailPath == 'no image')
-							{{ $write->listThumbnailPath }}
+							<span class="gry_txt" style="padding: calc( {{ $board->gallery_height }}px / 2 - 10px ) 0;">{{ $write->listThumbnailPath }}</span>
 						@else
 						<img src="{{ $write->listThumbnailPath }}" style="width:100%;min-height:{{ $board->gallery_height }}px;">
 						@endif
@@ -162,19 +162,19 @@
                     @endif
 					</span>
 					<span><i class="fa fa-clock-o"></i>@monthAndDay($write->created_at)</span>
-					<span><i class="fa fa-clock-o"></i>{{ $write->hit }}</span>
+					<span><i class="fa fa-clock-o"></i>{{ $write->hit }}</span><br>
 					@if($board->use_good)
-					<span><i class="fa fa-clock-o"></i>{{ $write->good }}</span>
+					<span><i class="fa fa-thumbs-up"></i>{{ $write->good }}</span>
 					@endif
 					@if($board->use_nogood)
-					<span><i class="fa fa-clock-o"></i>{{ $write->nogood }}</span>
+					<span><i class="fa fa-thumbs-down"></i>{{ $write->nogood }}</span>
 					@endif
 				</div>
 			</div>
 		</div>
 		@endforeach
 		@else
-			<div style="background: #fff;margin:0 15px; border: 1px solid #d8d8d8; border-radius: 4px;">
+			<div class="gry_empty_table">
 				<span class="empty_table">
                     <i class="fa fa-exclamation-triangle"></i> 게시물이 없습니다.
                 </span>
