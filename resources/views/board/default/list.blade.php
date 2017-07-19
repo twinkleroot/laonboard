@@ -192,8 +192,10 @@
         @endforeach
 		@else
 			<tr>
-				<td>
-					게시물이 없습니다.
+				<td colspan="6">
+					<span class="empty_table">
+                        <i class="fa fa-exclamation-triangle"></i> 게시물이 없습니다.
+                    </span>
 				</td>
 			</tr>
 		@endif

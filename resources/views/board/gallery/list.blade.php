@@ -174,10 +174,10 @@
 		</div>
 		@endforeach
 		@else
-			<div>
-				<div>
-					게시물이 없습니다.
-				</div>
+			<div style="background: #fff;margin:0 15px; border: 1px solid #d8d8d8; border-radius: 4px;">
+				<span class="empty_table">
+                    <i class="fa fa-exclamation-triangle"></i> 게시물이 없습니다.
+                </span>
 			</div>
 		@endif
 	</div>
