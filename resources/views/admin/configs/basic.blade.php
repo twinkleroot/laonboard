@@ -213,6 +213,8 @@
                             </div>
                         </div>
                     </div>
+
+                    <input type="submit" class="btn btn-sir" value="설정변경"/>
                 </div>
             </div>
         </form>
@@ -226,10 +228,6 @@
                 {{ csrf_field() }}
                     <div class="st_title">회원가입</div>
                     <div class="st_contents">
-
-                    <div class="savebtn">
-                        <input type="submit" class="btn btn-sir" value="설정변경"/>
-                    </div> <!-- Submit 고정 -->
                     <div class="panel-body">
                         <div class="form-group">
                             <label for="newSkin" class="col-md-4 control-label">회원 스킨</label>
@@ -430,6 +428,7 @@
                             </div>
                         </div>
                     </div>
+                    <input type="submit" class="btn btn-sir" value="설정변경"/>
                 </form>
             </div>
         </div>

@@ -977,7 +977,8 @@ body {
 .td_date {
 	width: 150px !important;
 }
-.td_email {
+.td_email,
+.td_id {
 	width: 170px;
 	text-align: left;
 }
