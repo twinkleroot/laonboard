@@ -121,7 +121,7 @@ class User extends Authenticatable
     }
 
     // 회원 정보 수정 페이지에 전달할 데이터
-    public function editFormData()
+    public function editParams()
     {
         $user = Auth::user();
 
@@ -147,8 +147,7 @@ class User extends Authenticatable
             }
         }
 
-		$dir = storage_path('app/public/user/'. substr($user->email,0,2));
-		$path = $dir. '/'. $user->email. '.gif';
+		$path = storage_path('app/public/user/'. substr($user->email,0,2). '/'). $user->email. '.gif';
 		$url = '/storage/user/'. substr($user->email,0,2). '/'. $user->email. '.gif';
 
         $editFormData = [
@@ -333,33 +332,14 @@ class User extends Authenticatable
     // 회원 정보 수정
     public function updateUserInfo($request)
     {
-        $user = Auth::user();
+        $user = auth()->user();
         $openChangable = $this->openChangable($user, Carbon::now());
 
         // 현재 시간 date type으로 받기
         $nowDate = Carbon::now()->toDateString();
 
-        // 추천인 닉네임 받은 것을 해당 닉네임의 id로 조회
-        $recommendedId = '';
-        if($request->has('recommend')) {
-            $recommendedUser = User::where([
-                'nick' => $request->get('recommend'),
-            ])->first();
-
-            if(is_null($recommendedUser)) {
-                throw new Exception('추천인이 존재하지 않습니다.');
-            }
-			if ($user->id == $recommendedUser->id) {
-	            throw new Exception('본인을 추천할 수 없습니다.');
-	        }
-            $recommendedId = $recommendedUser->id;
-
-            // 추천인에게 포인트 부여
-            $point = new Point();
-            $point->insertPoint($recommendedId, cache("config.join")->recommendPoint, $user->email . '의 추천인', '@users', $recommendedUser->email, $user->email . ' 추천');
-
-            $recommendedUser->save();
-        }
+		// 추천인 입력
+		$recommendedId = $this->insertRecommend($request, $user);
 
 		$email = getEmailAddress(trim($request->email));
         $toUpdateUserInfo = [
@@ -375,9 +355,9 @@ class User extends Authenticatable
             'addr1' => cleanXssTags($request->addr1),
             'addr2' => cleanXssTags($request->addr2),
             'zip' => preg_replace('/[^0-9]/', '', $request->zip),
-            'signature' => $request->signature,
-            'profile' => $request->profile,
-            'memo' => $request->memo,
+			'signature' => trim($request->signature),
+            'profile' => trim($request->profile),
+            'memo' => trim($request->memo),
             'mailing' => $request->has('mailing') ? $request->mailing : 0,
             'sms' => $request->has('sms') ? $request->sms : 0,
             'recommend' => $request->has('recommend') ? $recommendedId : $user->recommend,
@@ -403,25 +383,52 @@ class User extends Authenticatable
                 // 라우트 경로 구분을 위해 /는 제거해 줌.
                 'email_certify2' => str_replace("/", "-", bcrypt($request->ip() . Carbon::now()) ),
                 'level' => 1,   // 인증하기 전 회원 레벨은 1
-            ] ]);
+            ]]);
 
             // 이메일 인증 메일 발송
             $notification = new Notification();
             $notification->sendEmailCertify($request->get('email'), $user, $toUpdateUserInfo['nick'], $isEmailChange);
         }
 
-		$dir = storage_path('app/public/user/'. substr($email,0,2));
-		$path = $dir. '/'. $email. '.gif';
+		$path = storage_path('app/public/user/'. substr($email,0,2). '/'). $email. '.gif';
 		// 아이콘 삭제
 		$this->iconDelete($request, $path);
 		// 아이콘 업로드
-		$this->iconUpload($request, $email, $dir, $path);
+		$this->iconUpload($request, $email, $path);
 
         return $user->update($toUpdateUserInfo);
     }
 
+	// 추천인 입력
+	public function insertRecommend($request, $user)
+	{
+		// 추천인 닉네임 받은 것을 해당 닉네임의 id로 조회
+        $recommendedId = '';
+        if($request->has('recommend')) {
+            $recommendedUser = User::where([
+                'nick' => $request->recommend,
+            ])->first();
+
+            if(is_null($recommendedUser)) {
+                throw new Exception('추천인이 존재하지 않습니다. 닉네임을 확인하고 다시 입력해 주세요.');
+            }
+			if (!auth()->user()->isSuperAdmin() && auth()->user()->id == $recommendedUser->id) {
+	            throw new Exception('본인을 추천할 수 없습니다.');
+	        }
+            $recommendedId = $recommendedUser->id;
+
+            // 추천인에게 포인트 부여
+            $point = new Point();
+            $point->insertPoint($recommendedId, cache("config.join")->recommendPoint, $user->email . '의 추천인', '@users', $recommendedUser->email, $user->email . ' 추천');
+
+            $recommendedUser->save();
+        }
+
+		return $recommendedId;
+	}
+
 	// 아이콘 삭제
-	private function iconDelete($request, $path)
+	public function iconDelete($request, $path)
 	{
 		if($request->has('delIcon') && $request->delIcon) {
 			File::delete($path);
@@ -429,9 +436,12 @@ class User extends Authenticatable
 	}
 
 	// 아이콘 업로드
-	private function iconUpload($request, $email, $dir, $path)
+	public function iconUpload($request, $email, $path)
 	{
 		if(isset($request->icon)) {
+			if(auth()->user()->level < cache('config.join')->iconLevel) {
+				abort(500, '회원아이콘 업로드를 할 수 없는 등급입니다.');
+			}
 			$file = $request->icon;
 			$fileName = $file->getClientOriginalName();
 			if ( preg_match("/(\.gif)$/i", $fileName) ) {
@@ -453,7 +463,9 @@ class User extends Authenticatable
 						}
 		                //=================================================================\
 					} else {
-						$file->storeAs($dir, $email. '.gif');
+						$dir = '/user/'. substr($email,0,2);
+						$storeFileName = $email. '.gif';
+						$file->storeAs($dir, $storeFileName);
 					}
 		        } else {
 		            abort(500, '회원아이콘을 '.number_format(cache('config.join')->memberIconSize).'바이트 이하로 업로드 해주십시오.');

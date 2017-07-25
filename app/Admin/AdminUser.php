@@ -8,6 +8,7 @@ use App\SocialLogin;
 use App\Admin\Point;
 use App\Admin\Group;
 use App\Write;
+use App\User as AppUser;
 use DB;
 use Cache;
 use Carbon\Carbon;
@@ -143,6 +144,83 @@ class AdminUser extends Model
         return $user->id;
     }
 
+	public function editParams($user, $id)
+	{
+		// 회원아이콘 경로
+		$path = storage_path('app/public/user/'. substr($user->email,0,2). '/'). $user->email. '.gif';
+		$url = '/storage/user/'. substr($user->email,0,2). '/'. $user->email. '.gif';
+
+		$appUser = new AppUser();
+		$recommend = $appUser->recommendedPerson(getUser($id));
+
+        return [
+            'user' => $user,
+            'id' => $id,
+			'iconUrl' => $url,
+			'iconPath' => $path,
+			'recommend' => $recommend,
+        ];
+	}
+
+	// 회원 정보 수정
+	public function updateUserInfo($request, $id)
+	{
+		$user = getUser($id);
+
+		$password = $user->password;
+        if($request->get('change_password') !== '') {
+            $password = bcrypt($request->get('change_password'));
+        }
+
+        $nowDate = Carbon::now()->toDateString();
+
+		$appUser = new AppUser();
+		// 추천인 입력
+		$recommendedId = $appUser->insertRecommend($request, $user);
+
+		$toUpdateUserInfo = [
+            'name' => cleanXssTags($request->name),
+            'password' => $password,
+            'nick' => $request->has('nick') ? trim($request->nick) : $user->nick,
+			'nick_date' => $request->has('nick') != $user->nick ? $nowDate : $user->nick_date,
+            'level' => $request->level,
+            // 'point' => $request->get('point'),	// 포인트 부여 및 차감은 [회원관리 - 포인트관리]에서
+            'homepage' => cleanXssTags($request->homepage),
+            'hp' => hyphenHpNumber($request->hp),
+            'tel' => cleanXssTags($request->tel),
+            'certify' => !$request->certify_signal ? '' : $request->certify,
+            'adult' => $request->adult,
+			'addr1' => cleanXssTags($request->addr1),
+            'addr2' => cleanXssTags($request->addr2),
+            'zip' => preg_replace('/[^0-9]/', '', $request->zip),
+            'mailing' => $request->mailing,
+            'sms' => $request->sms,
+            'open' => $request->open,
+            'signature' => trim($request->signature),
+            'profile' => trim($request->profile),
+            'memo' => trim($request->memo),
+            'leave_date' => $request->leave_date,
+            'intercept_date' => $request->intercept_date,
+			'recommend' => $request->has('recommend') ? $recommendedId : $user->recommend,
+        ];
+
+		// 정보공개 체크박스에 체크를 했거나 기존에 open값과 open입력값이 다르다면 기존 open 값에 open 입력값을 넣는다.
+		if($request->has('open') || $user->open != $request->open) {
+			$toUpdateUserInfo = array_collapse([ $toUpdateUserInfo, [
+				'open' => $request->open,
+				'open_date' => $nowDate
+			] ]);
+		}
+
+		$path = storage_path('app/public/user/'. substr($user->email,0,2). '/'). $user->email. '.gif';
+		// 아이콘 삭제
+		$appUser->iconDelete($request, $path);
+		// 아이콘 업로드
+		$appUser->iconUpload($request, $user->email, $path);
+
+        $user->update($toUpdateUserInfo);
+	}
+
     // 선택 수정
     public function selectedUpdate($request)
     {
@@ -173,4 +251,11 @@ class AdminUser extends Model
             }
         }
     }
+
+	// 선택 삭제
+	public function deleteUser($request)
+	{
+		$ids = $request->ids;
+        $result = User::whereRaw('id in (' . $ids . ') ')->delete();
+	}
 }

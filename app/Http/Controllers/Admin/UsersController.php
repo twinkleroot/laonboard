@@ -6,13 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Admin\Config;
 use App\Admin\AdminUser;
-use App\User;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Password;
-use Carbon\Carbon;
-use Cache;
-use App\GroupUser;
-use App\Common\Util;
 
 class UsersController extends Controller
 {
@@ -49,9 +42,8 @@ class UsersController extends Controller
             abort(403, '회원 추가에 대한 권한이 없습니다.');
         }
 
-        $user = auth()->user();
         return view('admin.users.create', [
-            'user' => $user,
+            'user' => auth()->user(),
         ]);
     }
 
@@ -95,13 +87,13 @@ class UsersController extends Controller
         }
 
         $user = getUser($id);
-        if( !($user) ) {
+        if(!$user) {
 			return alertRedirect('존재하지 않는 회원입니다.', '/admin/index');
         }
-        return view('admin.users.edit', [
-                'user' => $user,
-                'id' => $id
-            ]);
+
+		$params = $this->userModel->editParams($user, $id);
+
+        return view('admin.users.edit', $params);
     }
 
     /**
@@ -117,37 +109,7 @@ class UsersController extends Controller
             abort(403, '회원 정보 수정에 대한 권한이 없습니다.');
         }
 
-        $user = getUser($id);
-
-        if($request->get('change_password') !== '') {
-            $user->password = bcrypt($request->get('change_password'));
-
-            $user->save();
-        }
-
-        $user->update([
-            'name' => $request->get('name'),
-            'nick' => $request->get('nick'),
-            'level' => $request->get('level'),
-            // 'point' => $request->get('point'),	// 포인트 부여 및 차감은 [회원관리 - 포인트관리]에서
-            'homepage' => $request->get('homepage'),
-            'hp' => $request->get('hp'),
-            'tel' => $request->get('tel'),
-            'certify' => $request->get('certify'),
-            'adult' => $request->get('adult'),
-            'addr1' => $request->get('addr1'),
-            'addr2' => $request->get('addr2'),
-            'zip' => $request->get('zip'),
-            'mailing' => $request->get('mailing'),
-            'sms' => $request->get('sms'),
-            'open' => $request->get('open'),
-            'signature' => $request->get('signature'),
-            'profile' => $request->get('profile'),
-            'memo' => $request->get('memo'),
-            'leave_date' => $request->get('leave_date'),
-            'intercept_date' => $request->get('intercept_date'),
-            // 본인확인방법, 회원아이콘은 다른데서 변경하는 듯.
-        ]);
+		$this->userModel->updateUserInfo($request, $id);
 
         return redirect()->back();
     }
@@ -172,14 +134,13 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request)
     {
         if (auth()->user()->cant('delete', $this->userModel)) {
             abort(403, '회원 삭제에 대한 권한이 없습니다.');
         }
 
-        $ids = $request->get('ids');
-        $result = User::whereRaw('id in (' . $ids . ') ')->delete();
+		$this->userModel->deleteUser($request);
 
         return redirect(route('admin.users.index'))->with('message', '선택한 회원이 삭제되었습니다.');
     }
