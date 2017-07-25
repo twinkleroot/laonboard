@@ -214,7 +214,7 @@
                     </div>
                 @endif
 
-				@if(cache('config.join')->useMemberIcon)
+				@if(cache('config.join')->useMemberIcon && $user->level >= cache('config.join')->iconLevel)
 				<div class="form-group row {{ $errors->has('icon') ? ' has-error' : '' }}">
                     <label for="icon" class="col-xs-12 control-label">회원아이콘</label>
 
@@ -304,7 +304,7 @@
                         <label for="recommend" class="col-xs-12 control-label">추천인 닉네임</label>
 
                         <div class="col-xs-12">
-                            <input type="text" class="form-control" name="recommend" value="{{ $recommend!='' ? $recommend : old('recommend') }}">
+                            <input type="text" class="form-control" name="recommend" value="{{ $recommend ? : old('recommend') }}">
                         </div>
 
                     </div>

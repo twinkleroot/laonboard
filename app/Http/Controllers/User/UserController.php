@@ -44,7 +44,7 @@ class UserController extends Controller
 		session()->put("ss_cert_hash", "");
 		session()->put("ss_cert_type", "");
 
-        $params = $this->userModel->editFormData();
+        $params = $this->userModel->editParams();
         $skin = $this->skin;
 
         return viewDefault("user.$skin.edit", $params);
@@ -96,7 +96,7 @@ class UserController extends Controller
     public function update(Request $request)
     {
 		ReCaptcha::reCaptcha($request);
-        $params = $this->userModel->editFormData();
+        $params = $this->userModel->editParams();
         $skin = $this->skin;
         $user = auth()->user();
 		$rule = [];
