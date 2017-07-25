@@ -18,6 +18,12 @@ body.white {
     display: block;
     text-align: center;
 }
+.gry_empty_table {
+	background: #fff;
+	margin:0 15px;
+ 	border: 1px solid #d8d8d8;
+ 	border-radius: 4px;
+}
 div {
 	word-wrap:break-word
 }
@@ -744,7 +750,7 @@ div {
 }
 .read {
 	font-weight: bold;
-	color: #ff6699;
+	color: #ff6699 !important;
 }
 .bd_subject {
 	text-align: left;
@@ -823,11 +829,22 @@ div {
 	opacity: 0.6;
 	background: #fff;
 }
+.gry_img .gry_txt {
+	display: block;
+	background: #f7f7f7;
+	width: 100%;
+	font-size: 12px;
+	font-weight: bold;
+	line-height: 20px;
+	text-align: center;
+	box-sizing: border-box;
+}
 .gry_info p {
 	font-weight: 600; margin-bottom: 5px;
 }
 .gry_info span {
 	font-size: 13px; color: #aaa; margin-right: 10px;
+	line-height: 1.8; display: inline-block;
 }
 #gry i {
 	margin-right: 5px;
@@ -1073,12 +1090,21 @@ div {
 	margin: 0 8px;
 	font-size: 12px;
 }
-.wt_more .add .link a,
-.wt_more .add .file a {
+.wt_more .add .link,
+.wt_more .add .file {
 	font-size: 0;
 	padding: 12px 0;
 	width: 100%;
 	display: block;
+	cursor: pointer;
+}
+.wt_more .add .link_list,
+.wt_more .add .file_list {
+	padding: 0px 30px 13px;
+}
+.wt_more .add .link_list .item,
+.wt_more .add .file_list .item {
+	padding: 2px 0;
 }
 .wt_more .add .link i,
 .wt_more .add .link span,
