@@ -18,7 +18,6 @@ Route::get('/', ['as' => 'home', 'uses' => 'MainController@index'] );
 Route::get('/home', ['as' => 'home', 'uses' => 'MainController@index'] );
 // 게시판 그룹별 메인
 Route::get('/group/{group}', ['as' => 'group', 'uses' => 'MainController@groupIndex'] );
-
 // 전체 검색 결과
 Route::get('/search', ['as' => 'search', 'uses' => 'Search\SearchController@result'] );
 
@@ -224,6 +223,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
 
 // 인증에 관련한 라우트들
 Auth::routes();
+// 내용관리
+Route::get('contents/{id}', ['as' => 'contents.show', 'uses' => 'Content\ContentsController@show']);
 // 쪽지 보내기 (리소스 라우트보다 먼저 나와야 함)
 Route::get('memo/create', ['as' => 'memo.create', 'uses' => 'Memo\MemoController@create']);
 // 인증이 필요한 라우트 그룹
