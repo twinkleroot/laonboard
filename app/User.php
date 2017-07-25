@@ -471,7 +471,7 @@ class User extends Authenticatable
 		            abort(500, '회원아이콘을 '.number_format(cache('config.join')->memberIconSize).'바이트 이하로 업로드 해주십시오.');
 		        }
 		    } else {
-		        abort(500, $fileName.'은(는) gif 파일이 아닙니다.');
+		        abort(500, $fileName.'은(는) gif 파일이 아닙니다. 아이콘은 gif 파일만 가능합니다.');
 		    }
 		}
 	}
