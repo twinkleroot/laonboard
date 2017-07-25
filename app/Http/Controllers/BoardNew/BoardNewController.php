@@ -26,13 +26,7 @@ class BoardNewController extends Controller
 
     public function destroy(Request $request)
     {
-        $message = $this->boardNew->deleteWrites($request->chkId);
-
-        if($message != '') {
-            return view('message', [
-                'message' => $message,
-            ]);
-        }
+        $this->boardNew->deleteWrites($request->chkId);
 
         return redirect(route('new.index'));
     }

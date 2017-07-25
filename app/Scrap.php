@@ -109,22 +109,15 @@ class Scrap extends Model
         $writeModel = $this->getWriteModel($request);
         $write = $writeModel->find($request->writeId);
         if( !$write ) {
-            return [ 'message' => '스크랩하시려는 게시글이 존재하지 않습니다.' ];
+            throw new Exception('스크랩하시려는 게시글이 존재하지 않습니다.');
         }
         $existScrap = $this->getScrap($request);
         if($existScrap) {
-             return [ 'confirm' => '이미 스크랩하신 글 입니다.\\n\\n지금 스크랩을 확인하시겠습니까?' ];
+             return 'exist';
         }
-
 
         $comment = new Comment();
-        $notification = new Notification();
-        $result;
-        try {
-            $result = $comment->storeComment($writeModel, $request);
-        } catch (Exception $e) {
-            return [ 'message' => $e->getMessage() ];
-        }
+        $comment->storeComment($writeModel, $request);
 
         return Scrap::Create([
             'user_id' => auth()->user()->id,

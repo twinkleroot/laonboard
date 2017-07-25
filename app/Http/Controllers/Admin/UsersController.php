@@ -51,8 +51,8 @@ class UsersController extends Controller
 
         $user = auth()->user();
         return view('admin.users.create', [
-                'user' => $user,
-            ]);
+            'user' => $user,
+        ]);
     }
 
     /**
@@ -77,11 +77,9 @@ class UsersController extends Controller
 
         $this->validate($request, $rule);
 
-        $user = $this->userModel->addUser($request);
-        if(is_null($user)) {
-            abort('500', '회원추가에 실패하였습니다.');
-        }
-        return redirect(route('admin.users.edit', $user->id));
+        $id = $this->userModel->addUser($request);
+
+        return redirect(route('admin.users.edit', $id));
     }
 
     /**
@@ -97,8 +95,8 @@ class UsersController extends Controller
         }
 
         $user = getUser($id);
-        if( is_null($user) ) {
-            return view('message', ['message' => '존재하지 않는 회원입니다.', 'redirect' => '/index' ]);
+        if( !($user) ) {
+			return alertRedirect('존재하지 않는 회원입니다.', '/admin/index');
         }
         return view('admin.users.edit', [
                 'user' => $user,

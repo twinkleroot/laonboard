@@ -21,10 +21,7 @@ class StatusController extends Controller
             $chart = isset($params['renderChart']) ? $params['renderChart'] : '';
             return view('admin.boards.status', $params)->with('chart', $chart);
         } else {
-            return view('message', [
-                'message' => '최고관리자 또는 관리권한이 있는 회원만 접근 가능합니다.',
-                'redirect' => '/admin/index'
-            ]);
+            return alertRedirect('최고관리자 또는 관리권한이 있는 회원만 접근 가능합니다.', '/admin/index');
         }
     }
 

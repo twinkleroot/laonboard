@@ -48,7 +48,6 @@ class AccessibleUsersController extends Controller
         }
 
         $message = $this->groupUserModel->delAccessibleGroups($request);
-        return redirect(route('admin.accessUsers.show', $id))
-            ->with('message', $message);
+        return redirect(route('admin.accessUsers.show', $id))->with('message', $message);
     }
 }

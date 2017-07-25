@@ -41,10 +41,9 @@ trait AuthenticatesUsers
             $leaveYear = substr($leaveDate, 0, 4);
             $leaveMonth = substr($leaveDate, 4, 2);
             $leaveDay = substr($leaveDate, 6, 2);
-            return view('message', [
-                'message' => '탈퇴한 아이디이므로 접근하실 수 없습니다.\\n탈퇴일 : '. $leaveYear. '년'. $leaveMonth. '월'. $leaveDay. '일',
-                'redirect' => route('home')
-            ]);
+			$message = '탈퇴한 아이디이므로 접근하실 수 없습니다.\\n탈퇴일 : '. $leaveYear. '년'. $leaveMonth. '월'. $leaveDay. '일';
+			
+			return alertRedirect($message);
         }
 
         $this->validateLogin($request);

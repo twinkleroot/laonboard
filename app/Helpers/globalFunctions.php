@@ -18,9 +18,19 @@ function alertClose($message)
     return redirect(route('message'))->with('message', $message)->with('popup', 1);
 }
 
-function alertRedirect($message, $redirect='/')
+function alertRedirect($message, $redirect="/")
 {
     return redirect(route('message'))->with('message', $message)->with('redirect', $redirect);
+}
+
+function alertErrorWithInput($message, $key)
+{
+    return redirect()->back()->withErrors([$key => $message])->withInput();
+}
+
+function confirm($message, $redirect)
+{
+	return redirect(route('confirm'))->with('message', $message)->with('redirect', $redirect);
 }
 
 // 스킨 목록을 가져온다.
@@ -50,14 +60,6 @@ function getUser($id)
     }
 
     return $user ? : new \App\User();
-}
-
-// 이메일 주소 추출
-function getEmailAddress($email)
-{
-    preg_match("/[0-9a-z._-]+@[a-z0-9._-]{4,}/i", $email, $matches);
-
-    return count($matches) > 0 ? $matches[0] : '';
 }
 
 // Text 형식으로 변환
@@ -372,4 +374,27 @@ function getViewThumbnail($board, $imageName, $folder, $type="view")
     $thumbSize[1] = $size[1];
 
     return $thumbSize;
+}
+
+// 휴대폰번호의 숫자만 취한 후 중간에 하이픈(-)을 넣는다.
+function hyphenHpNumber($hp)
+{
+    $hp = preg_replace("/[^0-9]/", "", $hp);
+    return preg_replace("/([0-9]{3})([0-9]{3,4})([0-9]{4})$/", "\\1-\\2-\\3", $hp);
+}
+
+// XSS 관련 태그 제거
+function cleanXssTags($str)
+{
+    $str = preg_replace('#</*(?:applet|b(?:ase|gsound|link)|embed|frame(?:set)?|i(?:frame|layer)|l(?:ayer|ink)|meta|object|s(?:cript|tyle)|title|xml)[^>]*+>#i', '', $str);
+
+    return $str;
+}
+
+// 이메일 주소 추출
+function getEmailAddress($email)
+{
+    preg_match("/[0-9a-z._-]+@[a-z0-9._-]{4,}/i", $email, $matches);
+
+    return count($matches) > 0 ? $matches[0] : '';
 }

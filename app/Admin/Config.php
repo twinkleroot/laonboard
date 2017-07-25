@@ -65,6 +65,7 @@ class Config extends Model
             'configEmailDefault' => Cache::get("config.email.default"),
             'configEmailBoard' => Cache::get("config.email.board"),
             'configEmailJoin' => Cache::get("config.email.join"),
+            'configCert' => Cache::get("config.cert"),
             'admins' => $admins,
             'latestSkins' => getSkins('latest'),
             'searchSkins' => getSkins('search'),
@@ -92,6 +93,8 @@ class Config extends Model
                 return $this->createConfigTheme();
             case 'skin':
                 return $this->createConfigSkin();
+            case 'cert':
+                return $this->createConfigCert();
             default:
                 # code...
                 break;
@@ -121,36 +124,7 @@ class Config extends Model
         return $this->createConfig('config.homepage', $configArr);
     }
 
-    // 회원 가입 설정을 config 테이블에 추가한다.
-    public function createConfigJoin()
-    {
-        $configArr = array (
-            'skin' => config('gnu.skin'),
-            'nickDate' => config('gnu.nickDate'),
-            'name' => config('gnu.name'),
-            'homepage' => config('gnu.homepage'),
-            'tel' => config('gnu.tel'),
-            'hp' => config('gnu.hp'),
-            'addr' => config('gnu.addr'),
-            'signature' => config('gnu.signature'),
-            'profile' => config('gnu.profile'),
-            'recommend' => config('gnu.recommend'),
-            'joinLevel' => config('gnu.joinLevel'),
-            'joinPoint' => config('gnu.joinPoint'),
-            'recommendPoint' => config('gnu.recommendPoint'),
-            'banId' => config('gnu.banId'),
-            'stipulation' => config('gnu.stipulation'),
-            'privacy' => config('gnu.privacy'),
-            'passwordPolicyUpper' => config('gnu.passwordPolicyUpper'),
-            'passwordPolicyNumber' => config('gnu.passwordPolicyNumber'),
-            'passwordPolicySpecial' => config('gnu.passwordPolicySpecial'),
-            'passwordPolicyDigits' => config('gnu.passwordPolicyDigits'),
-        );
-
-        return $this->createConfig('config.join', $configArr);
-    }
-
-    // 게시판 기본 설정을 config 테이블에 추가한다.
+	// 게시판 기본 설정을 config 테이블에 추가한다.
     public function createConfigBoard()
     {
         $configArr = array (
@@ -167,6 +141,56 @@ class Config extends Model
         );
 
         return $this->createConfig('config.board', $configArr);
+    }
+
+    // 회원 가입 설정을 config 테이블에 추가한다.
+    public function createConfigJoin()
+    {
+        $configArr = array (
+            'skin' => config('gnu.skin'),
+            'nickDate' => config('gnu.nickDate'),
+            'name' => config('gnu.name'),
+            'homepage' => config('gnu.homepage'),
+            'tel' => config('gnu.tel'),
+            'hp' => config('gnu.hp'),
+            'addr' => config('gnu.addr'),
+            'signature' => config('gnu.signature'),
+            'profile' => config('gnu.profile'),
+            'joinLevel' => config('gnu.joinLevel'),
+            'joinPoint' => config('gnu.joinPoint'),
+            'leaveDay' => config('gnu.leaveDay'),
+            'useMemberIcon' => config('gnu.useMemberIcon'),
+            'iconLevel' => config('gnu.iconLevel'),
+            'memberIconSize' => config('gnu.memberIconSize'),
+            'memberIconWidth' => config('gnu.memberIconWidth'),
+            'memberIconHeight' => config('gnu.memberIconHeight'),
+			'recommend' => config('gnu.recommend'),
+            'recommendPoint' => config('gnu.recommendPoint'),
+            'banId' => config('gnu.banId'),
+            'stipulation' => config('gnu.stipulation'),
+            'privacy' => config('gnu.privacy'),
+            'passwordPolicyUpper' => config('gnu.passwordPolicyUpper'),
+            'passwordPolicyNumber' => config('gnu.passwordPolicyNumber'),
+            'passwordPolicySpecial' => config('gnu.passwordPolicySpecial'),
+            'passwordPolicyDigits' => config('gnu.passwordPolicyDigits'),
+        );
+
+        return $this->createConfig('config.join', $configArr);
+    }
+
+	// 개별 스킨 설정 가져오기
+    public function createConfigCert()
+    {
+        $configArr = array (
+            'certUse' => config('gnu.certUse'),
+            'certIpin' => config('gnu.certIpin'),
+            'certHp' => config('gnu.certHp'),
+            'certKcbCd' => config('gnu.certKcbCd'),
+            'certLimit' => config('gnu.certLimit'),
+            'certReq' => config('gnu.certReq'),
+        );
+
+        return $this->createConfig('config.cert', $configArr);
     }
 
     // 기본 메일 환경 설정을 config 테이블에 추가한다.
@@ -282,6 +306,10 @@ class Config extends Model
             Cache::forget("config.theme");
         } else if($name == 'skin') {
             Cache::forget("config.skin");
+        } else if($name == 'cert') {
+            Cache::forget("config.cert");
+			$data = array_add($data, 'certLimit', isset($data['certLimit']) ? $data['certLimit'] : 0);
+			$data = array_add($data, 'certReq', isset($data['certReq']) ? $data['certReq'] : 0);
         }
 
         // json 형식으로 되어 있는 설정값을 배열로 바꾼다.

@@ -11,12 +11,13 @@ use App\Write;
 use Auth;
 use DB;
 use Cache;
-use Exception;
 use Mail;
-use App\Common\Util;
+use File;
+use Exception;
 use App\Notification;
 use App\GroupUser;
 use App\Mail\FormMailSend;
+use App\Cert;
 use Carbon\Carbon;
 
 
@@ -76,6 +77,12 @@ class User extends Authenticatable
         return $this->hasMany(Write::class);
     }
 
+    // Cert 모델과의 관계설정
+    public function certs()
+    {
+        return $this->hasMany(Cert::class);
+    }
+
     public function isAdmin()
     {
         if($this->isSuperAdmin()) {
@@ -91,7 +98,7 @@ class User extends Authenticatable
 
     public function isSuperAdmin()
     {
-        if(auth()->user()->email === Cache::get('config.homepage')->superAdmin) {
+        if(auth()->user()->email === cache('config.homepage')->superAdmin) {
             return true;
         }
         return false;
@@ -114,21 +121,21 @@ class User extends Authenticatable
     }
 
     // 회원 정보 수정 페이지에 전달할 데이터
-    public function editFormData($config)
+    public function editFormData()
     {
         $user = Auth::user();
 
         // 정보공개 변경여부
         $openChangable = $this->openChangable($user, Carbon::now());
 
-        $SocialLogin = SocialLogin::where('user_id', $user->id)->get();
+        $socialLogins = SocialLogin::where('user_id', $user->id)->get();
         $socials = [
             'naver' => '',
             'google' => '',
             'facebook' => '',
         ];
 
-        foreach($SocialLogin as $sociallogin) {
+        foreach($socialLogins as $sociallogin) {
             if($sociallogin['provider'] == 'naver') {
                 $socials['naver'] = $sociallogin['social_id'];
             }
@@ -140,15 +147,21 @@ class User extends Authenticatable
             }
         }
 
+		$dir = storage_path('app/public/user/'. substr($user->email,0,2));
+		$path = $dir. '/'. $user->email. '.gif';
+		$url = '/storage/user/'. substr($user->email,0,2). '/'. $user->email. '.gif';
+
         $editFormData = [
             'user' => $user,
-            'config' => $config,
-            'openDate' => Cache::get("config.homepage")->openDate,                      // 정보공개 변경 가능 일
-            'nickChangable' => $this->nickChangable($user, Carbon::now(), $config),     // 닉네임 변경여부
-            'openChangable' => $openChangable[0],                                       // 정보공개 변경 여부
-            'dueDate' => $openChangable[1],                                             // 정보공개 언제까지 변경 못하는지 날짜
-            'recommend' => $this->recommendedPerson($user),                             // 추천인 닉네임 id로 가져오기
-            'socials' => $socials,                                                      // 소셜에 연결한 정보
+            'config' => cache("config.join"),
+            'openDate' => cache("config.homepage")->openDate,				// 정보공개 변경 가능 일
+            'nickChangable' => $this->nickChangable($user, Carbon::now()),  // 닉네임 변경여부
+            'openChangable' => $openChangable[0],                           // 정보공개 변경 여부
+            'dueDate' => $openChangable[1],                                 // 정보공개 언제까지 변경 못하는지 날짜
+            'recommend' => $this->recommendedPerson($user),                 // 추천인 닉네임 id로 가져오기
+            'socials' => $socials,                                          // 소셜에 연결한 정보
+			'iconPath' => $path,
+			'iconUrl' => $url,
         ];
 
         return $editFormData;
@@ -171,13 +184,13 @@ class User extends Authenticatable
     }
 
     // 닉네임 변경 가능 여부
-    public function nickChangable($user, $current, $config)
+    public function nickChangable($user, $current)
     {
         // 현재 시간과 로그인한 유저의 닉네임변경시간과의 차이
         $nickDiff = $current->diffInDays($user->nick_date);
         // 닉네임 변경 여부
         $nickChangable = false;
-        if($nickDiff > $config->nickDate) {
+        if($nickDiff > cache("config.join")->nickDate) {
             $nickChangable = true;
         }
 
@@ -187,7 +200,7 @@ class User extends Authenticatable
     // 정보공개 변경 가능 여부
     public function openChangable($user, $current)
     {
-        $config = Cache::get("config.homepage");
+        $configOpenDate = cache("config.homepage")->openDate;
         $openChangable = array(false, $current);
 
         $openDate = $user->open_date;
@@ -196,10 +209,10 @@ class User extends Authenticatable
             $openChangable[0] = true;
         } else {
             $openDiff = $current->diffInDays($openDate);
-            if($openDiff >= $config->openDate) {
+            if($openDiff >= $configOpenDate) {
                 $openChangable[0] = true;
             }
-            $openChangable[1] = $openDate->addDays($config->openDate);
+            $openChangable[1] = $openDate->addDays($configOpenDate);
         }
 
         return $openChangable;
@@ -214,12 +227,12 @@ class User extends Authenticatable
     }
 
     // 회원 가입
-    public function joinUser($request, $config)
+    public function joinUser($request)
     {
         $nowDate = Carbon::now()->toDateString();
 
         $userInfo = [
-            'email' => $request->get('email'),
+            'email' => getEmailAddress($request->get('email')),
             'password' => $request->has('password') ? bcrypt($request->get('password')) : '',
             'nick' => $request->get('nick'),
             'nick_date' => $nowDate,
@@ -233,7 +246,7 @@ class User extends Authenticatable
         ];
 
         // 이메일 인증을 사용할 경우
-        if(Cache::get('config.email.default')->emailCertify) {
+        if(cache('config.email.default')->emailCertify) {
             $addUserInfo = [
                 'email_certify' => null,
                 // 라우트 경로 구분을 위해 /는 제거해 줌.
@@ -244,17 +257,22 @@ class User extends Authenticatable
         } else {    // 이메일 인증을 사용하지 않을 경우
             $addUserInfo = [
                 'email_certify' => Carbon::now(),
-                'level' => $config->joinLevel,
+                'level' => cache('config.join')->joinLevel,
             ];
 
             $userInfo = array_collapse([$userInfo, $addUserInfo]);
         }
+
+		// 본인확인 정보가 넘어온 경우
+		$addCertInfo = $this->getCertInfo($request);
+		$userInfo = array_collapse([$userInfo, $addCertInfo]);
+
         // 회원정보로 유저를 추가한다.
         $user = User::create($userInfo);
 
         // 회원 가입 축하 포인트 부여
         $point = new Point();
-        $point->insertPoint($user->id, Cache::get("config.join")->joinPoint, '회원가입 축하', '@users', $user->email);
+        $point->insertPoint($user->id, cache("config.join")->joinPoint, '회원가입 축하', '@users', $user->email);
 
         // Users 테이블의 주 키인 id의 해시 값을 만들어서 저장한다. (게시글에 사용자 번호 노출 방지)
         $user->id_hashkey = str_replace("/", "-", bcrypt($user->id));
@@ -263,19 +281,57 @@ class User extends Authenticatable
 
         $notification = new Notification();
         // 회원 가입 축하 메일 발송 (인증도 포함되어 있음)
-        if(Cache::get('config.email.join')->emailJoinUser) {
+        if(cache('config.email.join')->emailJoinUser) {
             $notification->sendCongratulateJoin($user);
         }
         // 최고관리자에게 회원 가입 알림 메일 발송
-        if(Cache::get('config.email.join')->emailJoinSuperAdmin) {
+        if(cache('config.email.join')->emailJoinSuperAdmin) {
             $notification->sendJoinNotification($user);
         }
 
         return $user;
     }
 
+	// 사용자에 저장할 본인 확인 정보 가져오기
+	private function getCertInfo($request)
+	{
+		$certType = session()->get('ss_cert_type');
+		$certNo = session()->get('ss_cert_no');
+		$name = $request->has('name') ? cleanXssTags(trim($request->name)) : '';
+		$hp = $request->has('hp') ? trim($request->hp) : '';
+		if(cache('config.cert')->certUse && $certType && $certNo) {
+			// 해시값이 같은 경우에만 본인확인 값을 저장한다.
+    		if( session()->get('ss_cert_hash') == md5($name.$certType.session()->get('ss_cert_birth').$certNo) ) {
+				$userInfo = [
+					'hp' => $hp,
+					'certify' => $certType,
+					'adult' => session()->get('ss_cert_adult'),
+					'birth' => session()->get('ss_cert_birth'),
+					'sex' => session()->get('ss_cert_sex'),
+					'dupinfo' => session()->get('ss_cert_dupinfo'),
+					'name' => $name,
+				];
+
+				return $userInfo;
+			}
+		} else {
+			$userInfo = [
+				'hp' => $hp,
+				'certify' => '',
+				'adult' => 0,
+				'birth' => '',
+				'sex' => '',
+				'name' => $name,
+			];
+
+			return $userInfo;
+		}
+
+		return [];
+	}
+
     // 회원 정보 수정
-    public function updateUserInfo($request, $config)
+    public function updateUserInfo($request)
     {
         $user = Auth::user();
         $openChangable = $this->openChangable($user, Carbon::now());
@@ -291,35 +347,39 @@ class User extends Authenticatable
             ])->first();
 
             if(is_null($recommendedUser)) {
-                return 'notExistRecommend';
+                throw new Exception('추천인이 존재하지 않습니다.');
             }
+			if ($user->id == $recommendedUser->id) {
+	            throw new Exception('본인을 추천할 수 없습니다.');
+	        }
             $recommendedId = $recommendedUser->id;
 
             // 추천인에게 포인트 부여
             $point = new Point();
-            $point->insertPoint($recommendedUser->id, Cache::get("config.join")->recommendPoint, $user->email . '의 추천인', '@users', $recommendedUser->email, $user->email . ' 추천');
+            $point->insertPoint($recommendedId, cache("config.join")->recommendPoint, $user->email . '의 추천인', '@users', $recommendedUser->email, $user->email . ' 추천');
 
             $recommendedUser->save();
         }
 
+		$email = getEmailAddress(trim($request->email));
         $toUpdateUserInfo = [
-            'email' => $request->get('email'),
-            'password' => bcrypt($request->get('password')),
+            'email' => $email,
+            'password' => bcrypt($request->password),
             'id_hashkey' => str_replace("/", "-", bcrypt($user->id)),  // 회원정보수정때마다 id_hashkey를 변경한다.
-            'name' => $request->get('name'),
-            'nick' => $request->has('nick') ? $request->get('nick') : $user->nick,
+            // 'name' => $request->get('name'),
+            'nick' => $request->has('nick') ? trim($request->nick) : $user->nick,
             'nick_date' => $request->has('nick') != $user->nick ? $nowDate : $user->nick_date,
-            'homepage' => $request->get('homepage'),
-            'hp' => $request->get('hp'),
-            'tel' => $request->get('tel'),
-            'addr1' => $request->get('addr1'),
-            'addr2' => $request->get('addr2'),
-            'zip' => $request->get('zip'),
-            'signature' => $request->get('signature'),
-            'profile' => $request->get('profile'),
-            'memo' => $request->get('memo'),
-            'mailing' => $request->has('mailing') ? $request->get('mailing') : 0,
-            'sms' => $request->has('sms') ? $request->get('sms') : 0,
+            'homepage' => cleanXssTags($request->homepage),
+            // 'hp' => $request->get('hp'),
+            'tel' => cleanXssTags($request->tel),
+            'addr1' => cleanXssTags($request->addr1),
+            'addr2' => cleanXssTags($request->addr2),
+            'zip' => preg_replace('/[^0-9]/', '', $request->zip),
+            'signature' => $request->signature,
+            'profile' => $request->profile,
+            'memo' => $request->memo,
+            'mailing' => $request->has('mailing') ? $request->mailing : 0,
+            'sms' => $request->has('sms') ? $request->sms : 0,
             'recommend' => $request->has('recommend') ? $recommendedId : $user->recommend,
         ];
 
@@ -331,9 +391,13 @@ class User extends Authenticatable
             ] ]);
         }
 
+		// 본인확인에 포함된 정보
+		$addCertInfo = $this->getCertInfo($request);
+		$toUpdateUserInfo = array_collapse([$toUpdateUserInfo, $addCertInfo]);
+
         $isEmailChange = $request->get('email') != $user->email;
         // 이메일 인증을 사용하고 이메일이 변경될 경우 이메일 인증을 다시 해야한다.
-        if(Cache::get('config.email.default')->emailCertify && $isEmailChange) {
+        if(cache('config.email.default')->emailCertify && $isEmailChange) {
             $toUpdateUserInfo = array_collapse([ $toUpdateUserInfo, [
                 'email_certify' => null,
                 // 라우트 경로 구분을 위해 /는 제거해 줌.
@@ -341,16 +405,64 @@ class User extends Authenticatable
                 'level' => 1,   // 인증하기 전 회원 레벨은 1
             ] ]);
 
-            $user->update($toUpdateUserInfo);
             // 이메일 인증 메일 발송
             $notification = new Notification();
             $notification->sendEmailCertify($request->get('email'), $user, $toUpdateUserInfo['nick'], $isEmailChange);
-        } else {
-            $user->update($toUpdateUserInfo);
         }
 
-        return 'finishUpdate';
+		$dir = storage_path('app/public/user/'. substr($email,0,2));
+		$path = $dir. '/'. $email. '.gif';
+		// 아이콘 삭제
+		$this->iconDelete($request, $path);
+		// 아이콘 업로드
+		$this->iconUpload($request, $email, $dir, $path);
+
+        return $user->update($toUpdateUserInfo);
     }
+
+	// 아이콘 삭제
+	private function iconDelete($request, $path)
+	{
+		if($request->has('delIcon') && $request->delIcon) {
+			File::delete($path);
+		}
+	}
+
+	// 아이콘 업로드
+	private function iconUpload($request, $email, $dir, $path)
+	{
+		if(isset($request->icon)) {
+			$file = $request->icon;
+			$fileName = $file->getClientOriginalName();
+			if ( preg_match("/(\.gif)$/i", $fileName) ) {
+		        // 아이콘 용량이 설정값보다 이하만 업로드 가능
+		        if (filesize($file) <= cache('config.join')->memberIconSize) {
+					if(File::exists($path)) {
+						//=================================================================\
+		                // 090714
+		                // gif 파일에 악성코드를 심어 업로드 하는 경우를 방지
+		                // 에러메세지는 출력하지 않는다.
+		                //-----------------------------------------------------------------
+		                $size = getimagesize($path);
+
+						if ($size[2] != 1) { // gif 파일이 아니면 올라간 이미지를 삭제한다.
+							File::delete($path);
+						// 아이콘의 폭 또는 높이가 설정값 보다 크다면 이미 업로드 된 아이콘 삭제
+						} else if ($size[0] > cache('config.join')->memberIconWidth || $size[1] > cache('config.join')->memberIconHeight) {
+		                    File::delete($path);
+						}
+		                //=================================================================\
+					} else {
+						$file->storeAs($dir, $email. '.gif');
+					}
+		        } else {
+		            abort(500, '회원아이콘을 '.number_format(cache('config.join')->memberIconSize).'바이트 이하로 업로드 해주십시오.');
+		        }
+		    } else {
+		        abort(500, $fileName.'은(는) gif 파일이 아닙니다.');
+		    }
+		}
+	}
 
     // 회원 정보 수정에서 소셜 연결 해제
     public function disconnectSocialAccount($request)
@@ -410,21 +522,20 @@ class User extends Authenticatable
     // 자기소개에 필요한 파라미터 가져오기
     public function getProfileParams($id)
     {
-        if(mb_strlen($id, 'utf-8') > 10) {  // 커뮤니티 쪽에서 들어올 때 user의 id가 아닌 id_hashKey가 넘어온다.
-            $user = User::where('id_hashkey', $id)->first();
-        } else {
-            $user = User::find($id);
-        }
+        $user = getUser($id);
+		if(auth()->guest()) {
+			abort(500, '회원만 이용할 수 있습니다.');
+		}
         if(is_null($user)) {
-            return '회원정보가 존재하지 않습니다.\\n\\n탈퇴하였을 수 있습니다.';
+            abort(500, '회원정보가 존재하지 않습니다.\\n\\n탈퇴하였을 수 있습니다.');
         }
         $loginedUser = auth()->user();
         if(!$loginedUser->open && !$loginedUser->isSuperAdmin() && $loginedUser->id != $user->id) {
-            return '자신의 정보를 공개하지 않으면 다른분의 정보를 조회할 수 없습니다.\\n\\n정보공개 설정은 회원정보수정에서 하실 수 있습니다.';
+            abort(500, '자신의 정보를 공개하지 않으면 다른분의 정보를 조회할 수 없습니다.\\n\\n정보공개 설정은 회원정보수정에서 하실 수 있습니다.');
         }
 
         if(!$user->open && !$loginedUser->isSuperAdmin() && $loginedUser->id != $user->id) {
-            return '정보공개를 하지 않았습니다.';
+            abort(500, '정보공개를 하지 않았습니다.');
         }
 
         // 가입일과 오늘 날짜와의 차이
@@ -454,6 +565,7 @@ class User extends Authenticatable
         return $user->nick. '님께서는 '. Carbon::now()->format('Y년 m월 d일'). '에 회원에서 탈퇴하셨습니다.';
     }
 
+	// 툴팁 : 메일 보내기 양식
 	public function getFormMailParams($request)
 	{
 		$user = getUser($request->to);
@@ -462,10 +574,10 @@ class User extends Authenticatable
 		if($email) {
 			$decEmail = decrypt($email);
 			if( getEmailAddress($decEmail) == '' ) {
-				throw new Exception('이메일이 올바르지 않습니다.');
+				abort(500, '이메일이 올바르지 않습니다.');
 			}
 		} else {
-			throw new Exception('이메일이 올바르지 않습니다.');
+			abort(500, '이메일이 올바르지 않습니다.');
 		}
 		$name = $request->has('name') ? convertText(stripslashes($request->name), true) : $email;
 
@@ -476,11 +588,12 @@ class User extends Authenticatable
 		];
 	}
 
+	// 툴팁 : 메일 보내기 실행
 	public function sendFormMail($request)
 	{
 		$to = decrypt($request->to);
 		if (substr_count($to, "@") > 1) {
-    		throw new Exception('한번에 한사람에게만 메일을 발송할 수 있습니다.');
+    		abort(500, '한번에 한사람에게만 메일을 발송할 수 있습니다.');
 		}
 		$name = $request->name;
 		$email = $request->email;

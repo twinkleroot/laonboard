@@ -52,12 +52,8 @@ class PointsController extends Controller
         ];
 
         $this->validate($request, $rule);
-        $result;
-        try {
-            $result = $this->pointModel->givePoint($request);
-        } catch (Exception $e) {
-			return alert($e->getMessage());
-        }
+		
+        $this->pointModel->givePoint($request);
 
         return redirect()->back();
     }

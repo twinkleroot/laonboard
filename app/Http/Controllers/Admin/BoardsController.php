@@ -79,7 +79,7 @@ class BoardsController extends Controller
         $board = $this->boardModel->storeBoard($request->all());
 
         if(is_null($board) && $write) {
-            abort('500', '게시판 생성에 실패하였습니다.');
+            abort(500, '게시판 생성에 실패하였습니다.');
         }
 
         return redirect(route('admin.boards.index'))->with('message', $board->subject . ' 게시판이 생성되었습니다.');
@@ -120,7 +120,7 @@ class BoardsController extends Controller
         $subject = $this->boardModel->updateBoard($request->all(), $id);
 
         if(!$subject) {
-            abort('500', '게시판 설정의 수정에 실패하였습니다.');
+            abort(500, '게시판 설정의 수정에 실패하였습니다.');
         }
 
         return redirect(route('admin.boards.edit', $id). $request->queryString)
@@ -207,7 +207,7 @@ class BoardsController extends Controller
         }
 
         if(is_null($board) && $write) {
-            abort('500', '게시판 복사에 실패하였습니다.');
+            abort(500, '게시판 복사에 실패하였습니다.');
         }
 
         return view('message', [

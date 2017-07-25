@@ -119,10 +119,10 @@ class Comment
             $comment = $writeModel->where('id', $request->commentId)->first();   // 원 댓글
 
             if( is_null($comment) ) {
-                throw new Exception('답변할 댓글이 없습니다.\\n\\n답변하는 동안 댓글이 삭제되었을 수 있습니다.');
+                abort(500, '답변할 댓글이 없습니다.\\n\\n답변하는 동안 댓글이 삭제되었을 수 있습니다.');
             }
             if(strlen($comment->comment_reply) == 5) {
-                throw new Exception('더 이상 답변하실 수 없습니다.\\n\\n답변은 5단계 까지만 가능합니다.');
+                abort(500, '더 이상 답변하실 수 없습니다.\\n\\n답변은 5단계 까지만 가능합니다.');
             }
 
             $tmpComment = $comment->comment;
@@ -251,7 +251,7 @@ class Comment
         if (is_null($result->reply)) {
             $replyChar = $baginReplyChar;
         } else if ($result->reply == $endReplyChar) { // A~Z은 26 입니다.
-            return '더 이상 답변하실 수 없습니다.\\n답변은 26개 까지만 가능합니다.';
+            abort(500, '더 이상 답변하실 수 없습니다.\\n답변은 26개 까지만 가능합니다.');
         } else {
             $replyChar = chr(ord($result->reply) + $replyNumber);
         }
@@ -278,7 +278,7 @@ class Comment
         // 메인 최신글 캐시 삭제
         deleteCache('main', $board->table_name);
 
-        return $result;
+        return $commentId;
     }
 
     // 댓글 삭제
@@ -292,14 +292,11 @@ class Comment
 
         // 댓글 포인트 삭제, 부여되었던 포인트 삭제 및 조정 반영
         if($comment->user_id) {
-            $delPointResult = $point->deleteWritePoint($writeModel, $board->id, $commentId);
-            if($delPointResult <= 0) {
-                return '정상적으로 댓글을 삭제하는데 실패하였습니다.(포인트 삭제)';
-            }
+            $point->deleteWritePoint($writeModel, $board->id, $commentId);
         }
         // 댓글 삭제
         if(!$writeModel->where('id', $commentId)->delete()) {
-            return '정상적으로 댓글을 삭제하는데 실패하였습니다.(댓글 삭제)';
+            abort(500, '정상적으로 댓글을 삭제하는데 실패하였습니다.(댓글 삭제)');
         }
 
         $updateWriteAboutComment = $writeModel->where('id', $write->id)->update([
@@ -307,17 +304,17 @@ class Comment
             'comment' => $write->comment - 1    // 원글의 댓글 숫자 감소
         ]);
         if(!$updateWriteAboutComment) {
-            return '정상적으로 원글의 정보를 변경하는데 실패하였습니다.';
+            abort(500, '정상적으로 원글의 정보를 변경하는데 실패하였습니다.');
         }
 
         // 게시판의 댓글 개수 감소
         if(!$board->update(['count_comment' => $board->count_comment - 1])) {
-            return '정상적으로 게시판의 정보를 변경하는데 실패하였습니다.';
+            abort(500, '정상적으로 게시판의 정보를 변경하는데 실패하였습니다.');
         }
 
         // 새글 삭제
         if(!BoardNew::where(['board_id' => $board->id, 'write_id' => $commentId])->delete()) {
-            return '정상적으로 새글을 삭제하는데 실패하였습니다.';
+            abort(500, '정상적으로 새글을 삭제하는데 실패하였습니다.');
         }
 
         // 메인 최신글 캐시 삭제

@@ -1,7 +1,7 @@
 @extends('layout.'. cache('config.skin')->layout. '.basic')
 
 @section('title')
-    회원 정보 수정 | {{ Cache::get("config.homepage")->title }}
+    회원 정보 수정 | {{ cache("config.homepage")->title }}
 @endsection
 
 @section('include_css')
@@ -12,6 +12,7 @@
     <script src='https://www.google.com/recaptcha/api.js' async defer></script>
     <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
     <script src="{{ url('js/postcode.js') }}"></script>
+	<script src="{{ url('js/certify.js') }}"></script>
 @endsection
 
 @section('content')
@@ -31,9 +32,19 @@
             <h3 class="panel-title">회원 정보 수정</h3>
         </div>
         <div class="panel-body row">
-            <form class="contents col-md-10 col-md-offset-1" role="form" id="userForm" method="POST" action="{{ route('user.update') }}">
-            {{ csrf_field() }}
-            {{ method_field('PUT') }}
+            <form class="contents col-md-10 col-md-offset-1" role="form" id="userForm" name="userForm" method="POST" action="{{ route('user.update') }}" enctype="multipart/form-data" autocomplete="off">
+				@if(cache('config.cert')->certHp || cache('config.cert')->certIpin)
+				<input type="hidden" name="certType" value="">
+				@if(!$config->name)
+				<input type="hidden" name="name" value="">
+				@endif
+				@if(!$config->hp)
+				<input type="hidden" name="hp" value="">
+				@endif
+				<input type="hidden" name="certNo" value="">
+				@endif
+	            {{ csrf_field() }}
+	            {{ method_field('PUT') }}
 
                 <div class="panel-heading">
                     <p class="heading-p">
@@ -70,7 +81,7 @@
                     <div class="form-group{{ $errors->has('nick') ? ' has-error' : '' }}">
                         <label for="nick" class="control-label">닉네임</label>
 
-                        <div class="col-md-6">
+                        {{-- <div class="col-md-6"> --}}
                             <p>
                                 공백없이 한글, 영문, 숫자만 입력 가능 <br />
                                 (한글2자, 영문4자 이상)<br />
@@ -83,7 +94,7 @@
                                     <strong>{{ $errors->first('nick') }}</strong>
                                 </span>
                             @endif
-                        </div>
+                        {{-- </div> --}}
                     </div>
                 @endif
 
@@ -95,11 +106,20 @@
                     </div>
                 @endif
 
-                @if($config->name == 1) <!-- 이름 -->
+                @if($config->name) <!-- 이름 -->
                     <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                         <label for="name" class="control-label">이름</label>
-                        <input id="name" type="text" class="form-control" name="name" value="{{ $user->name }}">
-
+						@if(cache('config.cert'))
+						<p>
+                            아이핀 본인확인 후에는 이름이 자동 입력되고 휴대폰 본인확인 후에는 이름과 휴대폰번호가 자동 입력되어 수동으로 입력할수 없게 됩니다.
+                        </p>
+						@endif
+                        <input id="name" type="text" class="form-control" name="name" value="{{ $user->name }}" @if($user->certify) readonly @endif>
+						@if($user->certify)
+						<div class="helpbox bg-danger">
+                            <p>휴대폰 본인확인 및 성인인증 완료</p>
+                        </div>
+						@endif
                         @if ($errors->has('name'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('name') }}</strong>
@@ -108,7 +128,7 @@
                     </div>
                 @endif
 
-                @if($config->homepage == 1) <!-- 홈페이지 -->
+                @if($config->homepage) <!-- 홈페이지 -->
                     <div class="form-group{{ $errors->has('homepage') ? ' has-error' : '' }}">
                         <label for="homepage" class="control-label">홈페이지</label>
 
@@ -122,7 +142,7 @@
                     </div>
                 @endif
 
-                @if($config->tel == 1) <!-- 전화번호 -->
+                @if($config->tel) <!-- 전화번호 -->
                     <div class="form-group{{ $errors->has('tel') ? ' has-error' : '' }}">
                         <label for="tel" class="control-label">전화번호</label>
 
@@ -136,7 +156,7 @@
                     </div>
                 @endif
 
-                @if($config->hp == 1) <!-- 휴대폰번호 -->
+                @if($config->hp) <!-- 휴대폰번호 -->
                     <div class="form-group{{ $errors->has('hp') ? ' has-error' : '' }}">
                         <label for="hp" class="control-label">휴대폰번호</label>
 
@@ -150,7 +170,7 @@
                     </div>
                 @endif
 
-                @if($config->addr == 1) <!-- 주소 -->
+                @if($config->addr) <!-- 주소 -->
                     <div class="form-group">
                         <label for="addr1" class="control-label">주소</label>
 
@@ -180,20 +200,43 @@
                     </p>
                 </div>
 
-                @if($config->signature == 1) <!-- 서명 -->
+                @if($config->signature) <!-- 서명 -->
                     <div class="form-group">
                         <label for="signature" class="control-label">서명</label>
-                            <textarea name="signature" class="form-control">{{ $user->signature }}</textarea>
+                        <textarea name="signature" class="form-control">{{ $user->signature }}</textarea>
                     </div>
                 @endif
 
-                @if($config->profile == 1) <!-- 자기소개 -->
+                @if($config->profile) <!-- 자기소개 -->
                     <div class="form-group">
                         <label for="profile" class="control-label">자기소개</label>
-
-                            <textarea name="profile" class="form-control">{{ $user->profile }}</textarea>
+                        <textarea name="profile" class="form-control">{{ $user->profile }}</textarea>
                     </div>
                 @endif
+
+				@if(cache('config.join')->useMemberIcon)
+				<div class="form-group row {{ $errors->has('icon') ? ' has-error' : '' }}">
+                    <label for="icon" class="col-xs-12 control-label">회원아이콘</label>
+
+                    <div class="col-xs-12">
+						<p>
+							이미지 크기는 가로 {{ cache('config.join')->memberIconWidth }}픽셀, 세로 {{ cache('config.join')->memberIconHeight }}픽셀 이하로 해주세요.<br>
+							gif만 가능하며 용량 {{ cache('config.join')->memberIconSize }}바이트 이하만 등록됩니다.
+						</p>
+                        <input id="icon" type="file" name="icon">
+						@if(File::exists($iconPath))
+						<img src="{{ $iconUrl }}" alt="회원아이콘">
+		                <input type="checkbox" name="delIcon" value="1" id="delIcon">
+		                <label for="delIcon">삭제</label>
+						@endif
+                        @if ($errors->has('icon'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('icon') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                </div>
+				@endif
 
                 <div class="form-group row {{ $errors->has('mailing') ? ' has-error' : '' }}">
                     <label for="mailing" class="col-xs-12 control-label">메일링서비스</label>
@@ -256,7 +299,7 @@
                     </div>
                 </div>
 
-                @if($config->recommend == 1) <!-- 추천인 -->
+                @if($config->recommend) <!-- 추천인 -->
                     <div class="form-group row {{ $errors->has('recommend') ? ' has-error' : '' }}">
                         <label for="recommend" class="col-xs-12 control-label">추천인 닉네임</label>
 
@@ -264,11 +307,6 @@
                             <input type="text" class="form-control" name="recommend" value="{{ $recommend!='' ? $recommend : old('recommend') }}">
                         </div>
 
-                        @if ($errors->has('recommend'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('recommend') }}</strong>
-                            </span>
-                        @endif
                     </div>
                 @endif
 
@@ -289,6 +327,12 @@
                 <div class="form-group">
                     <button type="button" class="btn btn-sir" onclick="validate();">변경하기</button>
                     <a href="{{ route('home') }}" class="btn btn-sir">취소</a>
+					@if(cache('config.cert')->certIpin)
+					<button type="button" class="btn btn-sir" id="win_ipin_cert">아이핀 본인확인</button>
+					@endif
+					@if(cache('config.cert')->certHp)
+					<button type="button" class="btn btn-sir" id="win_hp_cert">휴대폰 본인확인</button>
+					@endif
                 </div>
                 <div id='recaptcha' class="g-recaptcha"
             		data-sitekey="{{ env('GOOGLE_INVISIBLE_RECAPTCHA_KEY') }}"
@@ -309,6 +353,29 @@ function validate(event) {
 	grecaptcha.execute();
 }
 $(function(){
+
+	// 아이핀인증
+    $("#win_ipin_cert").click(function() {
+        if(!cert_confirm())
+            return false;
+
+        var url = "http://ahn13.gnutest.com/gnu5/plugin/okname/ipin1.php";
+		{{-- var url = "{{ route('cert.kcb.ipin') }}"; --}}
+        certify_win_open('kcb-ipin', url);
+        return;
+    });
+
+	// 휴대폰인증
+    $("#win_hp_cert").click(function() {
+        if(!cert_confirm())
+            return false;
+
+		@if(cache('config.cert')->certHp == 'kcb')
+			certify_win_open("kcb-hp", "{{ route('cert.kcb.hp1')}}");
+		@endif
+
+        return;
+    });
 
     var socials = [];
 

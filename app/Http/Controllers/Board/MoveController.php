@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Write;
 use App\Move;
+use Exception;
 
 class MoveController extends Controller
 {
@@ -34,17 +35,14 @@ class MoveController extends Controller
     {
         $writeIds = session()->get('writeIds');
         // 복사 및 이동
-        $message = '';
-        $message = $this->move->copyWrites($this->writeModel, $writeIds, $request);
-        if($request->type == 'move') {
-            $message .= $this->move->moveWrites($this->writeModel, $writeIds, $request);
-            $message = str_replace("복사가", "이동이", $message);
-        }
+		try {
+			$this->move->copyWrites($this->writeModel, $writeIds, $request);
+			if($request->type == 'move') {
+	            $this->move->moveWrites($this->writeModel, $writeIds, $request);
+	        }
+		} catch (Exception $e) {
+			return alertClose($e->getMessage());
+		}
 
-        return view('message', [
-            'message' => $message,
-            'popup' => 1,
-            'openerRedirect' => route("board.index", $boardId),
-        ]);
     }
 }

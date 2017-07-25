@@ -47,10 +47,6 @@ class WriteController extends Controller
     {
         $params = $this->writeModel->getIndexParams($this->writeModel, $request);
 
-        if(isset($params['message'])) {
-            return view('message', $params);
-        }
-
         $skin = $this->writeModel->board->skin ? : 'default';
 
         return viewDefault("board.$skin.index", $params);
@@ -66,12 +62,6 @@ class WriteController extends Controller
     {
         // 글 보기 데이터
         $params = $this->writeModel->getViewParams($this->writeModel, $boardId, $writeId, $request);
-
-        if(isset($params['message'])) {
-            return view('message', [
-                'message' => $params['message']
-            ]);
-        }
 
         // 댓글 데이터
         $comment = new Comment();
@@ -95,27 +85,17 @@ class WriteController extends Controller
     // 글 보기 중 링크 연결
     public function link($boardId, $writeId, $linkNo)
     {
-        $result = $this->writeModel->beforeLink($this->writeModel, $writeId, $linkNo);
+        $linkUrl = $this->writeModel->beforeLink($this->writeModel, $writeId, $linkNo);
 
-        if(isset($result['message'])) {
-            return view('message', [
-                'message' => $result['message']
-            ]);
-        }
-
-        return view('board.link', [ 'linkUrl' => $result['linkUrl'] ]);
+        return view('board.link', [ 'linkUrl' => $linkUrl ]);
     }
 
     // 추천/비추천 ajax 메서드
     public function good($boardId, $writeId, $good)
     {
-        $result = $this->boardGoodModel->good($this->writeModel, $writeId, $good);
+        $count = $this->boardGoodModel->good($this->writeModel, $writeId, $good);
 
-        if(isset($result['error'])) {
-            return [ 'error' => $result['error'] ];
-        }
-
-        return [ 'count' => $result['count'] ];
+        return [ 'count' => $count ];
     }
 
     /**
@@ -139,37 +119,20 @@ class WriteController extends Controller
      */
     public function store(Request $request, $boardId)
     {
-        if(auth()->user() || ReCaptcha::reCaptcha($request)) {    // 구글 리캡챠 체크
-            $result = $this->writeModel->storeWrite($this->writeModel, $request);
+        if(auth()->guest() || (!auth()->user()->isSuperAdmin() && $this->writeModel->board->use_recaptcha)) {
+			ReCaptcha::reCaptcha($request);
+		}
+        $writeId = $this->writeModel->storeWrite($this->writeModel, $request);
 
-            $writeId = 0;
-            if(isset($result['message']) && !preg_match("/^[A-Z]+$/", $result['message'])) {
-                return view('message', [
-                        'message' => $result['message'],
-                        'redirect' => route('board.view', ['boardId' => $boardId, 'writeId' => $request->writeId]),
-                    ]);
-            } else {
-                $writeId = $result;
-            }
-
-            if(count($request->attach_file) > 0) {
-                $message = $this->boardFileModel->createBoardFiles($request, $boardId, $writeId);
-                if($message != '') {
-                    return view('message', [
-                        'message' => $message,
-                        'redirect' => route('board.index', $boardId),
-                    ]);
-                }
-            }
-
-            if(Cache::get('config.email.default')->emailUse && $this->writeModel->board->use_email) {
-                $this->notification->sendWriteNotification($this->writeModel, $writeId);
-            }
-
-            return redirect(route('board.view', ['boardId' => $boardId, 'writeId' => $writeId] ));
-        } else {
-            return redirect()->back()->withInput()->withErrors(['reCaptcha' => '자동등록방지 입력이 틀렸습니다. 다시 입력해 주십시오.']);
+        if(count($request->attach_file) > 0) {
+            $this->boardFileModel->createBoardFiles($request, $boardId, $writeId);
         }
+
+        if(cache('config.email.default')->emailUse && $this->writeModel->board->use_email) {
+            $this->notification->sendWriteNotification($this->writeModel, $writeId);
+        }
+
+        return redirect(route('board.view', ['boardId' => $boardId, 'writeId' => $writeId] ));
     }
 
     /**
@@ -195,22 +158,13 @@ class WriteController extends Controller
      */
     public function update(Request $request, $boardId, $writeId)
     {
-        $file = 0;
+        $fileCount = 0;
         if(count($request->file_del) > 0 || count($request->attach_file) > 0) {
             // 첨부 파일 변경
-            $result = $this->boardFileModel->updateBoardFiles($request, $boardId, $writeId);
-
-            if(isset($result['message'])) {
-                return view('message', [
-                    'message' => $result['message'],
-                    'redirect' => route('board.index', $boardId),
-                ]);
-            } else {
-                $file = $result['fileCount'];
-            }
+            $fileCount = $this->boardFileModel->updateBoardFiles($request, $boardId, $writeId);
         }
         // 게시 글 수정
-        $this->writeModel->updateWrite($this->writeModel, $request, $writeId, $file);
+        $this->writeModel->updateWrite($this->writeModel, $request, $writeId, $fileCount);
 
         return redirect(route('board.view', ['boardId' => $boardId, 'writeId' => $writeId] ));
     }
@@ -241,21 +195,15 @@ class WriteController extends Controller
         $message = $redirect = '';
         $board = Board::find($boardId);
 
-        if( $this->writeModel->hasReply($this->writeModel, $writeId) ) {
-            $message = '이 글과 관련된 답변글이 존재하므로 삭제 할 수 없습니다.\\n\\n우선 답변글부터 삭제하여 주십시오.';
-        } else if( $this->writeModel->hasComment($this->writeModel, $writeId)) {
-            $message = '이 글과 관련된 코멘트가 존재하므로 삭제 할 수 없습니다.\\n\\n코멘트가 '. $board->count_delete. '건 이상 달린 원글은 삭제할 수 없습니다.';
-        } else {
-            $message = $this->deleteWriteCascade($boardId, $writeId);
-            $redirect = route('board.index', $boardId);
-        }
+		$this->writeModel->checkReply($this->writeModel, $writeId);
+		$this->writeModel->checkComment($this->writeModel, $writeId);
 
-        if($message != '') {
-            return view('message', [
-                'message' => $message,
-                'redirect' => $redirect,
-            ]);
-        }
+		try {
+			$this->deleteWriteCascade($boardId, $writeId);
+		} catch (Exception $e) {
+			$redirect = route('board.index', $boardId);
+			alertRedirect($e->getMessage(), $redirect);
+		}
 
         $returnUrl = route('board.index', $boardId). ($request->page == 1 ? '' : '?page='. $request->page);
         return redirect($returnUrl);
@@ -274,12 +222,12 @@ class WriteController extends Controller
         // 서버에서 파일 삭제, 썸네일 삭제, 에디터 첨부 이미지 파일, 썸네일 삭제, 파일 테이블 삭제
         $delFileResult = $this->boardFileModel->deleteWriteAndAttachFile($boardId, $writeId);
         if( array_search(false, $delFileResult) === false ) {
-            $message .= '정상적으로 게시글을 삭제하는데 실패하였습니다.(첨부 파일 삭제)';
+            abort(500, '정상적으로 게시글을 삭제하는데 실패하였습니다.(첨부 파일 삭제)');
         }
         // 게시글 삭제
         $delWriteResult = $this->writeModel->deleteWrite($this->writeModel, $writeId);
         if($delWriteResult <= 0) {
-            $message .= '정상적으로 게시글을 삭제하는데 실패하였습니다.(글 삭제)';
+            abort(500, '정상적으로 게시글을 삭제하는데 실패하였습니다.(게시글 삭제)');
         }
 
         return $message;
@@ -295,13 +243,12 @@ class WriteController extends Controller
     {
         $ids = explode(',', $writeId);
         foreach($ids as $id) {
-            $message = $this->deleteWriteCascade($boardId, $id);
-            if($message != '') {
-                return view('message', [
-                    'message' => '('. $id. '번 글)'. $message,
-                    'redirect' => route('board.index', $boardId),
-                ]);
-            }
+			try {
+				$this->deleteWriteCascade($boardId, $writeId);
+			} catch (Exception $e) {
+				$redirect = route('board.index', $boardId);
+				alertRedirect("($id번 글) ". $e->getMessage(), $redirect);
+			}
         }
 
         $returnUrl = route('board.index', $boardId). ($request->page == 1 ? '' : '?page='. $request->page);

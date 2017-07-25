@@ -105,12 +105,6 @@ class ContentsController extends Controller
 
         $result = $this->content->updateContent($request, $id);
 
-        if(!$result) {
-            return view('message', [
-                'message' => '내용변경에 실패하였습니다.'
-            ]);
-        }
-
         return redirect(route('contents.edit', $result));
     }
 

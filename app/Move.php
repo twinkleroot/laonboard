@@ -43,8 +43,7 @@ class Move
         // 선택한 대상 게시판들
         $boards = Board::whereIn('id', $boardIds)->get();
 
-        $message = '';
-        if( !is_null($boards) ) {
+        if($boards) {
             foreach($boards as $board) {
                 // 게시판 테이블 셋팅
                 // $destinationWrite : 복사되서 게시물이 추가되는 게시판
@@ -92,12 +91,10 @@ class Move
                 // 메인 최신글 캐시 삭제
                 deleteCache('main', $board->table_name);
             }
-            $message = '게시물 복사가 완료되었습니다.';
+            abort(200, '게시물 복사가 완료되었습니다.');
         } else {
-            $message = '게시물 복사에 실패하였습니다.';
+            abort(500, '게시물 복사에 실패하였습니다.');
         }
-
-        return $message;
     }
 
     // 선택한 id들을 갖고 num값을 얻는다.
@@ -167,32 +164,26 @@ class Move
             $writes = $writeModel->whereIn('id', $writeIds)->get();
         }
 
-        $message = '';
         foreach($writes as $write) {
-            $message .= $this->deleteMovedFileAndWrite($writeModel, $request->boardId, $write->id, $request->type);
+            $this->deleteMovedFileAndWrite($writeModel, $request->boardId, $write->id, $request->type);
         }
-
-        return $message;
     }
 
     // 기존 원본 첨부파일 삭제
     private function deleteMovedFileAndWrite($writeModel, $boardId, $writeId, $type)
     {
-        $message = '';
         // 서버에서 파일 삭제, 썸네일 삭제, 에디터 첨부 이미지 파일, 썸네일 삭제, 파일 테이블 삭제
         $boardFile = new BoardFile();
         $delFileResult = $boardFile->deleteWriteAndAttachFile($boardId, $writeId, $type);
         if( array_search(false, $delFileResult) === false ) {
-            $message .= '정상적으로 게시글을 이동하는데 실패하였습니다.('. $boardId. '게시판'. $writeId. '번 글의 첨부 파일 삭제)\\n';
+            abort(500, '정상적으로 게시글을 이동하는데 실패하였습니다.('. $boardId. '게시판'. $writeId. '번 글의 첨부 파일 삭제)\\n');
         }
 
         // 게시글 삭제
         $delWriteResult = $writeModel->deleteWrite($writeModel, $writeId);
         if($delWriteResult <= 0) {
-            $message .= '정상적으로 게시글을 이동하는데 실패하였습니다.('. $boardId. '게시판'. $writeId. '번 글의 삭제)\\n';
+            abort(500, '정상적으로 게시글을 이동하는데 실패하였습니다.('. $boardId. '게시판'. $writeId. '번 글의 삭제)\\n');
         }
-
-        return $message;
     }
 
 }

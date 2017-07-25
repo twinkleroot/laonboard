@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
 use Carbon\Carbon;
 use DB;
 use Cache;
@@ -110,7 +109,6 @@ class BoardNew extends Model
         $comment = new Comment();
         $point = new Point();
         $boardFile = new BoardFile();
-        $message = '';
         foreach($boardNews as $boardNew) {
             $write = new Write($boardNew->board_id);
             $write->setTableName($boardNew->table_name);
@@ -118,26 +116,22 @@ class BoardNew extends Model
             $writeId = $boardNew->write_id;
             // 원글 삭제
             if($writeId == $boardNew->write_parent) {
-                $delPointResult = $point->deleteWritePoint($write, $boardId, $writeId);
-                if($delPointResult <= 0) {
-                    $message .= '정상적으로 게시글을 삭제하는데 실패하였습니다.(포인트 삭제)';
-                }
+                $point->deleteWritePoint($write, $boardId, $writeId);
                 // 서버에서 파일 삭제, 썸네일 삭제, 에디터 첨부 이미지 파일, 썸네일 삭제, 파일 테이블 삭제
                 $delFileResult = $boardFile->deleteWriteAndAttachFile($boardId, $writeId);
                 if( array_search(false, $delFileResult) === false ) {
-                    $message .= '정상적으로 게시글을 삭제하는데 실패하였습니다.(첨부 파일 삭제)';
+                    abort(500, '정상적으로 게시글을 삭제하는데 실패하였습니다.(첨부 파일 삭제)');
                 }
                 // 게시글 삭제
                 $delWriteResult = $write->deleteWrite($write, $writeId);
                 if($delWriteResult <= 0) {
-                    $message .= '정상적으로 게시글을 삭제하는데 실패하였습니다.(글 삭제)';
+                    abort(500, '정상적으로 게시글을 삭제하는데 실패하였습니다.(글 삭제)');
                 }
             } else {    // 댓글 삭제
-                $message = $comment->deleteComment($write, $boardId, $writeId);
+                $comment->deleteComment($write, $boardId, $writeId);
             }
         }
 
-        return $message;
     }
 
 }

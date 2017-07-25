@@ -224,6 +224,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
 
 // 인증에 관련한 라우트들
 Auth::routes();
+// 쪽지 보내기 (리소스 라우트보다 먼저 나와야 함)
+Route::get('memo/create', ['as' => 'memo.create', 'uses' => 'Memo\MemoController@create']);
 // 인증이 필요한 라우트 그룹
 Route::group(['middleware' => 'auth'], function() {
     // 사용자가 회원 정보 수정할 때 관련한 라우트들
@@ -234,29 +236,24 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('user/confirm_password', ['as' => 'user.confirmPassword', 'uses' => 'User\UserController@confirmPassword']);
     Route::get('user/leave', ['as' => 'user.leave', 'uses' => 'User\UserController@leave']);
     Route::get('user/point/{id}', ['as' => 'user.point', 'uses' => 'User\UserController@pointList']);
-
     // 회원 정보 수정 - 소셜 로그인 계정 연결 해제
     Route::post('user/disconnectSocialAccount', ['as' => 'user.disconnectSocialAccount', 'uses' => 'User\UserController@disconnectSocialAccount']);
-    // 자기소개
-    Route::get('user/profile/{id}', ['as' => 'user.profile', 'uses' => 'User\UserController@profile']);
 
     // 쪽지
     Route::get('memo/{memo}/delete', ['as' => 'memo.destroy', 'uses' => 'Memo\MemoController@destroy']);
     Route::resource('memo', 'Memo\MemoController', [
         'except' => [
-            'edit', 'update', 'destroy'
+            'edit', 'update', 'destroy', 'create'
         ],
         'names' => [
             'index' => 'memo.index',
             'show' => 'memo.show',
-            'create' => 'memo.create',
             'store' => 'memo.store',
         ],
     ]);
 });
-// 내용관리 보기는 인증이 없어도 가능
-Route::get('contents/{content}', ['as' => 'contents.show', 'uses' => 'Content\ContentsController@show']);
-
+// 자기소개
+Route::get('user/profile/{id}', ['as' => 'user.profile', 'uses' => 'User\UserController@profile']);
 // 소셜 로그인 - 콜백 함수에서 회원 로그인 여부로 분기 (콜백함수 경로 지정은 config/services.php 에서)
 Route::get('social/{provider}', ['as' => 'social', 'uses' => 'Auth\SocialController@redirectToProvider']);
 Route::get('social/{provider}/callback/', ['as' => 'social.callback', 'uses' => 'Auth\SocialController@handleProviderCallback']);
@@ -279,6 +276,7 @@ Route::put('user/email/update', ['as' => 'user.email.update', 'uses' => 'User\Us
 Route::get('user/emailCertify/id/{id}/crypt/{crypt}', ['as' => 'user.email.certify', 'uses' => 'User\UserController@emailCertify']);
 // 처리 결과 메세지를 경고창으로 알려주는 페이지
 Route::get('message', ['as' => 'message', 'uses' => 'Message\MessageController@message']);
+Route::get('confirm', ['as' => 'confirm', 'uses' => 'Message\MessageController@confirm']);
 
 Route::group(['prefix' => 'board/{boardId}'], function () {
     // 글 목록 + 검색
@@ -327,7 +325,7 @@ Route::group(['prefix' => 'board/{boardId}'], function () {
     // 커뮤니티에서의 관리자 기능
     // 글 목록 : 선택 삭제, 선택 복사, 선택 이동,
     // 글 보기 : 복사, 이동, 삭제, 수정
-    Route::group(['middleware' => ['auth', 'level:10', 'valid.board']], function() {
+    Route::group(['middleware' => ['auth', 'super', 'valid.board']], function() {
         // 복사, 이동 폼
         Route::get('move', ['as' => 'board.view.move', 'uses' => 'Board\MoveController@move']);
         // 선택 복사, 이동 폼
@@ -398,3 +396,7 @@ Route::group(['middleware' => 'valid.user'], function () {
 
 // ajax api
 Route::post('ajax/filter', ['as' => 'ajax.filter', 'uses' => 'Board\WriteController@filter']);
+
+// KCB 본인 확인 서비스
+Route::get('cert/kcb/hpcert1', ['as' => 'cert.kcb.hp1', 'uses' => 'User\CertController@kcbHpCert1']);
+Route::post('cert/kcb/hpcert2', ['as' => 'cert.kcb.hp2', 'uses' => 'User\CertController@kcbHpCert2']);

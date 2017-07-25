@@ -50,7 +50,7 @@
                 <a href="#B">부가설정</a>
             </li>
             <li class="tab">
-                <a href="#C">본인인증</a>
+                <a href="#C">본인확인</a>
             </li>
             <li class="tab">
                 <a href="#more">여분필드</a>
@@ -318,32 +318,32 @@
                         </div>
                     </section>
                     <section id="C">
-                        <div class="st_title">본인인증</div>
+                        <div class="st_title">본인확인</div>
                         <div class="st_contents">
                             <div class="form-group">
                                 <label for="certify_case" class="col-md-2 control-label">본인확인방법</label>
                                 <div class="col-md-5">
-                                    <input type="radio" name="certify_case" id="certify_case_ipin" value="0" />
+                                    <input type="radio" name="certify_case" id="certify_case_ipin" value="0" @if($user->certify == 'ipin') checked @endif />
                                         <label for="certify_case_ipin">아이핀</label>
-                                    <input type="radio" name="certify_case" id="certify_case_hp" value="1" />
+                                    <input type="radio" name="certify_case" id="certify_case_hp" value="1" @if($user->certify == 'hp') checked @endif />
                                         <label for="certify_case_hp">휴대폰</label>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="certify" class="col-md-2 control-label">본인확인</label>
                                 <div class="col-md-5">
-                                    <input type="radio" name="certify" id="certify_yes" @if($user->certify == 1) checked @endif value="1" />
+                                    <input type="radio" name="certify" id="certify_yes" @if($user->certify) checked @endif value="1" />
                                         <label for="certify_yes">예</label>
-                                    <input type="radio" name="certify" id="certify_no" @if($user->certify == 0 || empty($user->certify)) checked @endif value="0" />
+                                    <input type="radio" name="certify" id="certify_no" @if(!$user->certify || empty($user->certify)) checked @endif value="0" />
                                         <label for="certify_no">아니오</label>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for=adult" class="col-md-2 control-label">성인인증</label>
+                                <label for="adult" class="col-md-2 control-label">성인인증</label>
                                 <div class="col-md-5">
-                                    <input type="radio" name="adult" id="adult_yes" @if($user->adult === 1) checked @endif value="1" />
+                                    <input type="radio" name="adult" id="adult_yes" @if($user->adult) checked @endif value="1" />
                                         <label for="adult_yes">예</label>
-                                    <input type="radio" name="adult" id="adult_no" @if($user->adult === 0) checked @endif value="0" />
+                                    <input type="radio" name="adult" id="adult_no" @if(!$user->adult || empty($user->adult)) checked @endif value="0" />
                                         <label for="adult_no">아니오</label>
                                 </div>
                             </div>

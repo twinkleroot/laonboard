@@ -32,7 +32,7 @@
 		<ul class="container">
 			<li><a href="{{ route('memo.index') }}?kind=recv">받은쪽지</a></li>
 			<li><a href="{{ route('memo.index') }}?kind=send">보낸쪽지</a></li>
-			<li><a href="{{ route('memo.create') }}">쪽지쓰기</a></li>
+			<li><a href="{{ route('memo.create') }}?to=">쪽지쓰기</a></li>
 		</ul>
 	</div>
 </div>
@@ -55,16 +55,11 @@
 			<tr>
 				<td class="bd_name">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $memo->nick }}</a>
-					<ul class="dropdown-menu" role="menu">
-                        <li><a href="{{ route('memo.create') }}?to={{ $memo->user_id_hashkey }}" target="_blank" onclick="winMemo(this.href); return false;">쪽지보내기</a></li>
-		                <li><a href="#">메일보내기</a></li>
-		                <li><a href="#">자기소개</a></li>
-		                <li><a href="{{ route('new.index') }}?nick={{ $memo->nick }}">전체게시물</a></li>
-                        @if(session()->get('admin'))
-    		                <li><a href="{{ route('admin.users.edit', $memo->user_id_hashkey) }}" target="_blank">회원정보변경</a></li>
-    		                <li><a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $memo->email }}" target="_blank">포인트내역</a></li>
-                        @endif
-		            </ul>
+                    <ul class="dropdown-menu" role="menu">
+						@component('board.sideview', ['id' => $memo->user_id_hashkey, 'name' => $memo->nick, 'email' => $memo->email])
+                        @endcomponent
+						<li><a href="{{ route('new.index') }}?nick={{ $memo->nick }}">전체게시물</a></li>
+                    </ul>
 				</td>
 				<td class="bd_time"><a href="{{ route('memo.show', $memo->id) }}?kind={{ $kind }}">{{ $memo->send_timestamp }}</a></td>
 				<td class="bd_time"><a href="{{ route('memo.show', $memo->id) }}?kind={{ $kind }}">{{ $memo->read_timestamp ? : '아직 읽지 않음' }}</a></td>

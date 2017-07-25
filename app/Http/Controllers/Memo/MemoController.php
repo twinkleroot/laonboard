@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Memo;
 use App\ReCaptcha;
+use Exception;
 
 class MemoController extends Controller
 {
@@ -36,17 +37,16 @@ class MemoController extends Controller
     public function create(Request $request)
     {
         $skin = cache('config.skin')->memo ? : 'default';
-        $params = $this->memo->getCreateParams($request);
+		$params = [];
+		try {
+			$params = $this->memo->getCreateParams($request);
+		} catch (Exception $e) {
+			return alertClose($e->getMessage());
+		}
 
-        if( isset($params['message']) ) {
-            return view('message', $params);
-        } else {
-            if(isset($request->to)) {
-                return viewDefault("memo.$skin.form", $params);
-            } else {
-                return viewDefault("memo.$skin.form");
-            }
-        }
+		// dd($params);
+
+        return viewDefault("memo.$skin.form", $params);
     }
 
     /**
@@ -57,15 +57,12 @@ class MemoController extends Controller
      */
     public function store(Request $request)
     {
-        if(ReCaptcha::reCaptcha($request)) {    // 구글 리캡챠 체크
-            $message = $this->memo->storeMemo($request);
-            return view('message', [
-                    'message' => $message,
-                    'redirect' => route('memo.index'). '?kind=send'
-            ]);
-        } else {
-            return redirect()->back()->withInput()->withErrors(['reCaptcha' => '자동등록방지 입력이 틀렸습니다. 다시 입력해 주십시오.']);
-        }
+		ReCaptcha::reCaptcha($request);	// 구글 리캡챠 체크
+		try {
+			$this->memo->storeMemo($request);
+		} catch (Exception $e) {
+			return alertRedirect($e->getMessage(), route('memo.index'). '?kind=send');
+		}
     }
 
     /**
@@ -77,11 +74,12 @@ class MemoController extends Controller
     public function show($id, Request $request)
     {
         $skin = cache('config.skin')->memo ? : 'default';
-        $params = $this->memo->getShowParams($id, $request);
-
-        if( isset($params['message']) ) {
-            return view('message', $params);
-        }
+		$params = [];
+		try {
+			$params = $this->memo->getShowParams($id, $request);
+		} catch (Exception $e) {
+			return alert($e->getMessage());
+		}
 
         return viewDefault("memo.$skin.show", $params);
     }
@@ -97,7 +95,7 @@ class MemoController extends Controller
         if($this->memo->deleteMemo($id)) {
             return redirect(route('memo.index'). '?kind='. $request->kind);
         } else {
-            return view('message', ['message' => '쪽지 삭제에 실패하였습니다.']);
+            return alert('쪽지 삭제에 실패하였습니다.');
         }
 
     }

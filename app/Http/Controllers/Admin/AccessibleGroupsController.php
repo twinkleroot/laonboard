@@ -50,8 +50,7 @@ class AccessibleGroupsController extends Controller
 
         $message = $this->groupUserModel->addAccessibleGroups($request);
 
-        return redirect(route('admin.accessGroups.show', $request->get('user_id')))
-            ->with('message', $message);
+        return redirect(route('admin.accessGroups.show', $request->get('user_id')))->with('message', $message);
     }
 
     /**
@@ -68,7 +67,6 @@ class AccessibleGroupsController extends Controller
         }
 
         $message = $this->groupUserModel->delAccessibleGroups($request);
-        return redirect(route('admin.accessGroups.show', $id))
-            ->with('message', $message);
+        return redirect(route('admin.accessGroups.show', $id))->with('message', $message);
     }
 }

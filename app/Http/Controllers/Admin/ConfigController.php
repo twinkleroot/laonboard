@@ -37,6 +37,13 @@ class ConfigController extends Controller
                     $message = '홈페이지 기본 환경설정 변경에 실패하였습니다.';
                 }
                 break;
+			case 'board':
+				if($this->configModel->updateConfig($data, $name)) {
+					$message = '게시판 기본 설정 변경이 완료되었습니다.';
+				} else {
+					$message = '게시판 기본 설정 변경에 실패하였습니다.';
+				}
+				break;
             case 'join':
                 if($this->configModel->updateConfig($data, $name)) {
                     $message = '회원가입 설정 변경이 완료되었습니다.';
@@ -44,11 +51,11 @@ class ConfigController extends Controller
                     $message = '회원가입 설정 변경에 실패하였습니다.';
                 }
                 break;
-            case 'board':
+            case 'cert':
                 if($this->configModel->updateConfig($data, $name)) {
-                    $message = '게시판 기본 설정 변경이 완료되었습니다.';
+                    $message = '본인확인 설정 변경이 완료되었습니다.';
                 } else {
-                    $message = '게시판 기본 설정 변경에 실패하였습니다.';
+                    $message = '본인확인 설정 변경에 실패하였습니다.';
                 }
                 break;
             case 'email.default':

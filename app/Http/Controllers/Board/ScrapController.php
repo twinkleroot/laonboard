@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Board;
 use App\Scrap;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Exception;
 
 class ScrapController extends Controller
 {
@@ -36,17 +37,12 @@ class ScrapController extends Controller
     {
         $existScrap = $this->scrap->getScrap($request);
         if($existScrap) {
-             return view('board.scrap_confirm', [
-                 'confirm' => '이미 스크랩하신 글 입니다.\\n\\n지금 스크랩을 확인하시겠습니까?'
-             ]);
+			return confirm('이미 스크랩하신 글 입니다.\\n\\n지금 스크랩을 확인하시겠습니까?', route('scrap.index'));
         }
 
         $write = $this->scrap->getWrite($request);
         if($write->is_comment) {
-            return view('message', [
-                'message' => '코멘트는 스크랩 할 수 없습니다.',
-                'popup' => 1
-            ]);
+			return alertClose('코멘트는 스크랩 할 수 없습니다.');
         }
 
         return view('board.scrap_form', ['write' => $write, 'boardId' => $request->boardId]);
@@ -60,17 +56,17 @@ class ScrapController extends Controller
      */
     public function store(Request $request)
     {
-        $result = $this->scrap->storeScrap($request);
+		$result = '';
+		try {
+			$result = $this->scrap->storeScrap($request);
+		} catch (Exception $e) {
+			return alertClose($e->getMessage());
+		}
 
-        if(isset($result['message'])) {
-            return view('message', [
-                'message' => $result['message'],
-                'popup' => 1
-            ]);
-        } else if(isset($result['confirm'])){
-            return view('board.scrap_confirm')->with('confirm', $result['confirm']);
+        if($result == 'exist'){
+			return confirm('이미 스크랩하신 글 입니다.\\n\\n지금 스크랩을 확인하시겠습니까?', route('scrap.index'));
         } else {
-            return view('board.scrap_confirm')->with('confirm', '이 글을 스크랩 하였습니다.\\n\\n지금 스크랩을 확인하시겠습니까?');
+			return confirm('이 글을 스크랩 하였습니다.\\n\\n지금 스크랩을 확인하시겠습니까?', route('scrap.index'));
         }
     }
 

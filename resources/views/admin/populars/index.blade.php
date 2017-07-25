@@ -23,7 +23,7 @@
     <div id="auth_list">
     	<ul id="adm_btn">
             <li>
-                <button type="button" class="btn btn-sir">
+                <button type="button" class="btn btn-sir" onclick="location.href='{{ route('admin.populars.index') }}'">
                      전체목록
                 </button>
             </li>
@@ -75,7 +75,9 @@
                             <td class="td_chk">
                                 <input type="checkbox" name="chkId[]" class="popularId" value='{{ $popular->id }}' />
                             </td>
-                            <td class="td_subject">{{ $popular->word }}</td>
+                            <td class="td_subject">
+								<a href="{{ route('admin.populars.index'). "?kind=word&keyword=". $popular->word }}">{{ $popular->word }}</a>
+							</td>
             				<td class="td_mngsmall">{{ $popular->date }}</td>
                             <td class="td_mngsmall">{{ $popular->ip }}</td>
             			</tr>

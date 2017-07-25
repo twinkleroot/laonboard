@@ -23,12 +23,7 @@ class Download
             ;
         } else if(!session()->get($sessionName)) { // 사용자의 다운로드 세션이 존재하지 않는다면
             // 포인트 차감
-            $message = $writeModel->calculatePoint($write, $request, 'download');
-
-            // 포인트 관련 에러 메세지가 있으면 출력함
-            if($message != '') {
-                return [ 'message' => $message ];
-            }
+            $writeModel->calculatePoint($write, $request, 'download');
 
             // 다운로드 횟수 증가
             $file->where([

@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Database\QueryException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -51,7 +52,11 @@ class Handler extends ExceptionHandler
         }
 
         if ($exception instanceof QueryException) {
-            return response()->view('errors.queryError');
+            return response()->view('errors.query');
+        }
+
+        if ($exception instanceof MethodNotAllowedHttpException) {
+            return response()->view('errors.methodNotAllowed');
         }
 
         return parent::render($request, $exception);

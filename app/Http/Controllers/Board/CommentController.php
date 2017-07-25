@@ -32,50 +32,31 @@ class CommentController extends Controller
     // 댓글 저장
     public function store(Request $request)
     {
-        if(auth()->user() || ReCaptcha::reCaptcha($request)) {    // 구글 리캡챠 체크
-            $result;
-            try {
-                $result = $this->comment->storeComment($this->writeModel, $request);
-            } catch (Exception $e) {
-                return view('message', [
-                    'message' => $e->getMessage()
-                ]);
-            }
+		if(auth()->guest() || (!auth()->user()->isSuperAdmin() && $this->writeModel->board->use_recaptcha)) {
+			ReCaptcha::reCaptcha($request);
+			// return Redirect::to(URL::previous() . "#comment_box")->withInput();
+		}
+        $result = $this->comment->storeComment($this->writeModel, $request);
 
-            if(Cache::get('config.email.default')->emailUse && $this->writeModel->board->use_email) {
-                $this->notification->sendWriteNotification($this->writeModel, $result);
-            }
-
-            return redirect($request->requestUri. '#comment'. $result);
-        } else {
-            return Redirect::to(URL::previous() . "#comment_box")->withInput();
+        if(cache('config.email.default')->emailUse && $this->writeModel->board->use_email) {
+            $this->notification->sendWriteNotification($this->writeModel, $result);
         }
+
+        return redirect($request->requestUri. '#comment'. $result);
     }
 
     // 댓글 수정
     public function update(Request $request)
     {
-        $result = $this->comment->updateComment($this->writeModel, $request);
+        $id = $this->comment->updateComment($this->writeModel, $request);
 
-        if(!$result) {
-            return view('message', [
-                'message' => '댓글 수정에 실패하였습니다.'
-            ]);
-        }
-
-        return redirect($request->requestUri. '#comment'. $request->commentId);
+        return redirect($request->requestUri. '#comment'. $id);
     }
 
     // 댓글 삭제
     public function destroy(Request $request, $boardId, $writeId, $commentId)
     {
-        $message = $this->comment->deleteComment($this->writeModel, $boardId, $commentId);
-
-        if($message) {
-            return view('message', [
-                'message' => $message
-            ]);
-        }
+        $this->comment->deleteComment($this->writeModel, $boardId, $commentId);
 
         return redirect(route('board.view', ['boardId' => $boardId, 'writeId' => $writeId]));
     }

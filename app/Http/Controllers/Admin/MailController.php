@@ -18,10 +18,7 @@ class MailController extends Controller
         if(auth()->user()->isSuperAdmin() || Gate::allows('view-admin-mailtest', getManageAuthModel($this->menuCode))) {
             return view('admin.configs.mail_test');
         } else {
-            return view('message', [
-                'message' => '최고관리자 또는 관리권한이 있는 회원만 접근 가능합니다.',
-                'redirect' => '/admin/index'
-            ]);
+			return alertRedirect('최고관리자 또는 관리권한이 있는 회원만 접근 가능합니다.', '/admin/index');
         }
     }
 
@@ -41,10 +38,7 @@ class MailController extends Controller
 
             return redirect(route('admin.email'))->with('successAddress', $successAddress);
         } else {
-            return view('message', [
-                'message' => '최고관리자 또는 관리권한이 있는 회원만 접근 가능합니다.',
-                'redirect' => '/admin/index'
-            ]);
+			return alertRedirect('최고관리자 또는 관리권한이 있는 회원만 접근 가능합니다.', '/admin/index');
         }
     }
 }

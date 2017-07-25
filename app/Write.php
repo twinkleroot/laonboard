@@ -121,15 +121,10 @@ class Write extends Model
         $userLevel = is_null(Auth::user()) ? 1 : Auth::user()->level;
         $notices = explode(',', $this->board->notice);
 
-        $result = [];
-        try {
-            $writes = $this->getWrites($writeModel, $request, $kind, $keyword, $currenctCategory);
+        $writes = $this->getWrites($writeModel, $request, $kind, $keyword, $currenctCategory);
 
-            if($writes->currentPage() > 1) {
-                $viewParams['page'] = 'page='. $writes->currentPage();
-            }
-        } catch (Exception $e) {
-            return [ 'message' => $e->getMessage() ];
+        if($writes->currentPage() > 1) {
+            $viewParams['page'] = 'page='. $writes->currentPage();
         }
 
         return [
@@ -189,47 +184,6 @@ class Write extends Model
         return $writes;
     }
 
-	private function getListThumbnail($write)
-	{
-		$notices = explode(',', trim($this->board->notice));
-		if(in_array($write->id, $notices)) {
-			return '공지';
-		}
-
-		$imgExtension = cache("config.board")->imageExtension;
-        $boardFiles = [];
-        $imgFiles = [];
-		$imageFileInfo = '';
-        if($write->file > 0) {	// 첨부파일에 이미지가 있는지 검사해서 있으면 하나만 썸네일로 만들어서 가져온다.
-            $boardFiles = BoardFile::where(['board_id' => $this->board->id, 'write_id' => $write->id])->get();
-
-            foreach($boardFiles as $boardFile) {
-                $filePiece = explode('.', $boardFile->file);
-                if( !str_contains($imgExtension, last($filePiece))) {
-                    continue;
-                }
-                // 이미지 경로를 가져와서 썸네일만든 후 서버에 저장
-                $imageFileInfo = getViewThumbnail($this->board, $boardFile->file, $this->board->table_name, 'list');
-				$imageFileInfo = array_add($imageFileInfo, 'path', '/storage/'. $this->board->table_name. '/'. $imageFileInfo['name']);
-				break;
-            }
-        } else {	// 에디터로 작성한 내용에 이미지가 있는지 검사해서 있으면 하나만 썸네일로 만들어서 가져온다.
-	        preg_match_all("/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i", $write->content, $matches);
-
-	        for($i=0; $i<count($matches[1]); $i++) {
-	            $imageFileInfo = getViewThumbnail($this->board, basename($matches[1][$i]), 'editor', 'list');
-				$imageFileInfo = array_add($imageFileInfo, 'path', '/storage/editor/'. $imageFileInfo['name']);
-				break;
-			}
-		}
-
-		if($imageFileInfo) {
-			return $imageFileInfo['path'];
-		} else {
-			return 'no image';
-		}
-	}
-
     // (게시판 리스트) select ~ from ~ where까지 얻어온다.
     public function getWritesWhere($writeModel, $kind, $keyword, $currenctCategory)
     {
@@ -276,7 +230,7 @@ class Write extends Model
 	                    $query = $query->where(['user_id' => $user->id, 'is_comment'=> $kinds[1]])
 	                                   ->where('is_comment', $kinds[1]);
 	                } else {
-	                    throw new Exception($keyword. ' 사용자가 존재하지 않습니다.');
+	                    abort(500, $keyword. ' 사용자가 존재하지 않습니다.');
 	                }
 				} else {	// 글쓴이 검색
 					$query = $query->where([$writeModel->table.'.name' => $keyword, 'is_comment'=> $kinds[1]]);
@@ -297,6 +251,15 @@ class Write extends Model
     {
         return is_null($this->board->sort_field) ? 'num, reply' : $this->board->sort_field;
     }
+
+	// 글 목록 결과물에 공지사항이 있는지 검사한다.
+	private function hasNotice($writeModel, $kind, $keyword, $currenctCategory)
+	{
+		$notices = explode(',', trim($this->board->notice));
+		$notices = array_filter($notices);
+
+		return count($notices) > 0 ? true : false;
+	}
 
     // 수동 페이징
     public function customPaging($request, $query, $sortField)
@@ -331,25 +294,53 @@ class Write extends Model
         return $writes;
     }
 
-    // 글 목록 결과물에 공지사항이 있는지 검사한다.
-    private function hasNotice($writeModel, $kind, $keyword, $currenctCategory)
-    {
-        $notices = explode(',', trim($this->board->notice));
-        $notices = array_filter($notices);
+	private function getListThumbnail($write)
+	{
+		$notices = explode(',', trim($this->board->notice));
+		if(in_array($write->id, $notices)) {
+			return '공지';
+		}
 
-        return count($notices) > 0 ? true : false;
-    }
+		$imgExtension = cache("config.board")->imageExtension;
+        $boardFiles = [];
+        $imgFiles = [];
+		$imageFileInfo = '';
+        if($write->file > 0) {	// 첨부파일에 이미지가 있는지 검사해서 있으면 하나만 썸네일로 만들어서 가져온다.
+            $boardFiles = BoardFile::where(['board_id' => $this->board->id, 'write_id' => $write->id])->get();
+
+            foreach($boardFiles as $boardFile) {
+                $filePiece = explode('.', $boardFile->file);
+                if( !str_contains($imgExtension, last($filePiece))) {
+                    continue;
+                }
+                // 이미지 경로를 가져와서 썸네일만든 후 서버에 저장
+                $imageFileInfo = getViewThumbnail($this->board, $boardFile->file, $this->board->table_name, 'list');
+				$imageFileInfo = array_add($imageFileInfo, 'path', '/storage/'. $this->board->table_name. '/'. $imageFileInfo['name']);
+				break;
+            }
+        } else {	// 에디터로 작성한 내용에 이미지가 있는지 검사해서 있으면 하나만 썸네일로 만들어서 가져온다.
+	        preg_match_all("/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i", $write->content, $matches);
+
+	        for($i=0; $i<count($matches[1]); $i++) {
+	            $imageFileInfo = getViewThumbnail($this->board, basename($matches[1][$i]), 'editor', 'list');
+				$imageFileInfo = array_add($imageFileInfo, 'path', '/storage/editor/'. $imageFileInfo['name']);
+				break;
+			}
+		}
+
+		if($imageFileInfo) {
+			return $imageFileInfo['path'];
+		} else {
+			return 'no image';
+		}
+	}
 
     public function getViewParams($writeModel, $boardId, $writeId, $request)
     {
         $write = $writeModel->find($writeId);
 
-        try {
-            // 조회수 증가, 포인트 부여
-            $write->hit = $this->beforeRead($write, $request);
-        } catch (Exception $e) {
-            return [ 'message' => $e->getMessage() ];
-        }
+        // 조회수 증가, 포인트 부여
+        $write->hit = $this->beforeRead($write, $request);
 
         // 글쓰기 할때 html 체크에 따라 글 내용 보여주는 방식을 다르게 한다.
         // html = 0 - 체크안함, 1 - 체크 후 취소, 2 - 체크 후 확인
@@ -425,6 +416,81 @@ class Write extends Model
             'boardFiles' => $boardFiles,
             'imgFiles' => $imgFiles,
         ];
+    }
+
+	// 글 읽기 전 프로세스
+    public function beforeRead($write, $request)
+    {
+        $hit = $write->hit;
+        $user = auth()->user();
+        $userId = !$user ? 0 : $user->id;
+        $userHash = !$user ? '' : $user->id_hashkey;
+        $sessionName = "session_view_". $this->board->table_name. '_'. $write->id. '_'. $userHash;
+        if(!session()->get($sessionName) && $userId != $write->user_id) {
+            // 조회수 증가
+            $hit = $this->increaseHit($write);
+            // 포인트 계산(차감)
+            $this->calculatePoint($write, $request, 'read');
+
+            session()->put($sessionName, true);
+        }
+
+        return $hit;
+    }
+
+    // 조회수 증가
+    public function increaseHit($write)
+    {
+        $hit = $write->hit + 1;
+        DB::table('write_'. $this->board->table_name)
+            ->where('id', $write->id)
+            ->update(['hit' => $hit]);
+
+        return $hit;
+    }
+
+    // 소비성 포인트 계산(글 읽기, 파일 다운로드)
+    public function calculatePoint($write, $request, $type)
+    {
+        $user = auth()->user();
+        $boardlevel = 0;
+        $useBoardPoint = 0;
+        $action = '';
+        $contentPiece = '';
+        switch ($type) {
+            case 'read':
+                $boardlevel = $this->board->read_level;
+                $boardPoint = $this->board->read_point;
+                $action = '읽기';
+                $contentPiece = ' 글읽기';
+                break;
+            case 'download':
+                $boardlevel = $this->board->download_level;
+                $boardPoint = $this->board->download_point;
+                $action = '다운로드';
+                $contentPiece = ' 파일 다운로드';
+                break;
+            default:
+                # code...
+                break;
+        }
+        // 작성자가 본인이면 통과
+        $userId = !$user ? 0 : $user->id;
+        $userPoint = !$user ? 0 : $user->point;
+        if($write->user_id > 0 && $write->user_id == $userId) {
+            ;
+        } else if(!$user && $boardlevel == 1 && $write->ip == $request->ip()) {
+            ;
+        } else {
+            // 포인트 사용 && 소모되는 포인트가 있는지 && 현재 사용자가 갖고 있는 포인트로 사용 가능한지 검사
+            if (Cache::get("config.homepage")->usePoint && $boardPoint && $userPoint + $boardPoint < 0) {
+                $message = '보유하신 포인트('.number_format($userPoint).')가 없거나 모자라서'. $contentPiece. '('.number_format($boardPoint).')가 불가합니다.\\n\\n포인트를 적립하신 후 다시'.$contentPiece.' 해 주십시오.';
+
+				abort(500, $message);
+            }
+            // 포인트 부여(글 읽기, 파일 다운로드)
+            $this->point->insertPoint($userId, $boardPoint, $this->board->subject . ' ' . $write->id . $contentPiece, $this->board->table_name, $write->id, $action);
+        }
     }
 
     // 에디터로 업로드한 이미지 경로를 추출해서 내용의 img 태그 부분을 교체한다.
@@ -526,90 +592,13 @@ class Write extends Model
         return $url;
     }
 
-    // 글 읽기 전 프로세스
-    public function beforeRead($write, $request)
-    {
-        $hit = $write->hit;
-        $user = auth()->user();
-        $userId = !$user ? 0 : $user->id;
-        $userHash = !$user ? '' : $user->id_hashkey;
-        $sessionName = "session_view_". $this->board->table_name. '_'. $write->id. '_'. $userHash;
-        if(!session()->get($sessionName) && $userId != $write->user_id) {
-            // 조회수 증가
-            $hit = $this->increaseHit($write);
-            // 포인트 계산(차감)
-            $message = $this->calculatePoint($write, $request, 'read');
-
-            session()->put($sessionName, true);
-        }
-
-        return $hit;
-    }
-
-    // 조회수 증가
-    public function increaseHit($write)
-    {
-        $hit = $write->hit + 1;
-        DB::table('write_'. $this->board->table_name)
-            ->where('id', $write->id)
-            ->update(['hit' => $hit]);
-
-        return $hit;
-    }
-
-    // 소비성 포인트 계산(글 읽기, 파일 다운로드)
-    public function calculatePoint($write, $request, $type)
-    {
-        $user = auth()->user();
-        $boardlevel = 0;
-        $useBoardPoint = 0;
-        $action = '';
-        $contentPiece = '';
-        switch ($type) {
-            case 'read':
-                $boardlevel = $this->board->read_level;
-                $boardPoint = $this->board->read_point;
-                $action = '읽기';
-                $contentPiece = ' 글읽기';
-                break;
-            case 'download':
-                $boardlevel = $this->board->download_level;
-                $boardPoint = $this->board->download_point;
-                $action = '다운로드';
-                $contentPiece = ' 파일 다운로드';
-                break;
-            default:
-                # code...
-                break;
-        }
-        // 작성자가 본인이면 통과
-        $userId = !$user ? 0 : $user->id;
-        $userPoint = !$user ? 0 : $user->point;
-        if($write->user_id > 0 && $write->user_id == $userId) {
-            ;
-        } else if(!$user && $boardlevel == 1 && $write->ip == $request->ip()) {
-            ;
-        } else {
-            // 포인트 사용 && 소모되는 포인트가 있는지 && 현재 사용자가 갖고 있는 포인트로 사용 가능한지 검사
-            if (Cache::get("config.homepage")->usePoint && $boardPoint && $userPoint + $boardPoint < 0) {
-                $message = '보유하신 포인트('.number_format($userPoint).')가 없거나 모자라서'. $contentPiece. '('.number_format($boardPoint).')가 불가합니다.\\n\\n포인트를 적립하신 후 다시'.$contentPiece.' 해 주십시오.';
-                throw new Exception($message);
-            }
-            // 포인트 부여(글 읽기, 파일 다운로드)
-            $this->point->insertPoint($userId, $boardPoint,
-                $this->board->subject . ' ' . $write->id . $contentPiece, $this->board->table_name, $write->id, $action);
-        }
-    }
-
     // 글 읽기 중 링크 연결
     public function beforeLink($writeModel, $writeId, $linkNo)
     {
         $write = $writeModel->find($writeId);
         $linkUrl = '';
         if(!$write['link'.$linkNo]) {
-            return [
-                'message' => '링크가 없습니다.',
-            ];
+            abort(500, '링크가 없습니다.');
         }
 
         // 링크 연결수 증가
@@ -622,9 +611,7 @@ class Write extends Model
         // 글에 있는 링크를 링크 페이지로 넘김
         $linkUrl = $write['link'.$linkNo];
 
-        return [
-            'linkUrl' => $linkUrl,
-        ];
+        return $linkUrl;
     }
 
     // 링크 연결수 증가
@@ -655,12 +642,7 @@ class Write extends Model
             ;
         } else if(!session()->get($sessionName)) { // 사용자의 다운로드 세션이 존재하지 않는다면
             // 포인트 차감
-            $message = $this->calculatePoint($write, $request, 'download');
-
-            // 포인트 관련 에러 메세지가 있으면 출력함
-            if($message != '') {
-                return [ 'message' => $message ];
-            }
+            $this->calculatePoint($write, $request, 'download');
 
             // 다운로드 횟수 증가
             $file->where([
@@ -793,9 +775,6 @@ class Write extends Model
             }
             $num = $write->num;
             $reply = $this->getReplyValue($writeModel, $write);
-            if(!preg_match("/^[A-Z]+$/", $reply)) {
-                return ['message' => $reply];
-            }
         }
 
         // 회원 글쓰기 일 때
@@ -908,7 +887,7 @@ class Write extends Model
         if (is_null($result->reply)) {
             $replyChar = $baginReplyChar;
         } else if ($result->reply == $endReplyChar) { // A~Z은 26 입니다.
-            return '더 이상 답변하실 수 없습니다.\\n답변은 26개 까지만 가능합니다.';
+            abort(500, '더 이상 답변하실 수 없습니다.\\n답변은 26개 까지만 가능합니다.');
         } else {
             $replyChar = chr(ord($result->reply) + $replyNumber);
         }
@@ -1063,7 +1042,7 @@ class Write extends Model
     }
 
     // 해당 글에 답변글이 달려 있는지 확인한다.
-    public function hasReply($writeModel, $writeId)
+    public function checkReply($writeModel, $writeId)
     {
         $write = $writeModel->find($writeId);
         $replyCount = $writeModel->where('reply', 'like', $write->reply.'%')
@@ -1071,14 +1050,12 @@ class Write extends Model
                         ->where(['num' => $write->num, 'is_comment' => 0])
                         ->count('id');
         if($replyCount > 0 && !session()->get('admin')) {
-            return true;
+            abort(500, '이 글과 관련된 답변글이 존재하므로 삭제 할 수 없습니다.\\n\\n우선 답변글부터 삭제하여 주십시오.');
         }
-
-        return false;
     }
 
     // 해당 글에 댓글이 달려 있는지 확인한다.
-    public function hasComment($writeModel, $writeId)
+    public function checkComment($writeModel, $writeId)
     {
         $user = auth()->user();
         $userId = is_null($user) ? 0 : $user->id;
@@ -1086,9 +1063,8 @@ class Write extends Model
                         ->where(['parent' => $writeId, 'is_comment' => 1])
                         ->count('id');
         if($commentCount >= $this->board->count_delete && !session()->get('admin')) {
-            return true;
+            abort(500, '이 글과 관련된 코멘트가 존재하므로 삭제 할 수 없습니다.\\n\\n코멘트가 '. $board->count_delete. '건 이상 달린 원글은 삭제할 수 없습니다.');
         }
-        return false;
     }
 
     // 글 삭제 - 게시글 삭제

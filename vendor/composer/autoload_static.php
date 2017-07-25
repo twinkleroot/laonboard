@@ -416,6 +416,7 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         'CreateBoardGoodsTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_12_110031_create_board_goods_table.php',
         'CreateBoardNewsTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_13_171247_create_board_news_table.php',
         'CreateBoardsTable' => __DIR__ . '/../..' . '/database/migrations/2017_04_05_105802_create_boards_table.php',
+        'CreateCertHistoryTable' => __DIR__ . '/../..' . '/database/migrations/2017_07_24_093931_create_cert_history_table.php',
         'CreateConfigsTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_21_154604_create_configs_table.php',
         'CreateContentsTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_09_093555_create_contents_table.php',
         'CreateGroupUserTable' => __DIR__ . '/../..' . '/database/migrations/2017_04_03_144538_create_group_user_table.php',
@@ -960,6 +961,7 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         'SebastianBergmann\\ResourceOperations\\ResourceOperations' => __DIR__ . '/..' . '/sebastian/resource-operations/src/ResourceOperations.php',
         'SebastianBergmann\\Version' => __DIR__ . '/..' . '/sebastian/version/src/Version.php',
         'Text_Template' => __DIR__ . '/..' . '/phpunit/php-text-template/src/Template.php',
+        'UpdateJoinCertConfig' => __DIR__ . '/../..' . '/database/migrations/2017_07_21_154804_update_join_cert_config.php',
         'UsersTableSeeder' => __DIR__ . '/../..' . '/database/seeds/UsersTableSeeder.php',
     );
 

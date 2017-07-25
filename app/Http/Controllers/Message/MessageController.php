@@ -16,4 +16,12 @@ class MessageController extends Controller
             'popup' => Session::has('popup') ? Session::get('popup') : '',
         ]);
     }
+
+    public function confirm(Request $request)
+    {
+        return view('confirm', [
+            'message' => Session::has('message') ? Session::get('message') : '',
+            'redirect' => Session::has('redirect') ? Session::get('redirect') : '',
+        ]);
+    }
 }

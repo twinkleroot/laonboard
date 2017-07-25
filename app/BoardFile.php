@@ -28,24 +28,17 @@ class BoardFile extends Model
         $files = $request->attach_file;
         $fileCount = count($files);
         if($fileCount > $board->upload_count) {
-            return '첨부파일을 '.number_format($board->upload_count).'개 이하로 업로드 해주십시오.';
+            abort(500, '첨부파일을 '.number_format($board->upload_count).'개 이하로 업로드 해주십시오.');
         } else {
             $uploadFileInfos = array();
             for($i=0; $i<$fileCount; $i++) {
                 array_push($uploadFileInfos, $this->getToUploadFileInfo($request, $writeId, $i));
             }
 
-            $message = $this->makeReturnMessage($uploadFileInfos); // 리턴시킬 메세지 배열에서 뽑아내서 생성
-            if($message != '') {
-                return $message;
-            }
-
             // 서버에 파일 업로드
             $this->uploadFiles($request, $board->table_name);
             // 파일 테이블에 기록
             $this->insertBoardFiles($uploadFileInfos);
-
-            return $message;
         }
     }
 
@@ -56,7 +49,7 @@ class BoardFile extends Model
         $files = $request->attach_file;
         $fileCount = count($files);
         if($fileCount && $fileCount > $board->upload_count) {
-            return ['message' => '기존 파일을 삭제하신 후 첨부파일을 '.number_format($board->upload_count).'개 이하로 업로드 해주십시오.'];
+            abort(500, '기존 파일을 삭제하신 후 첨부파일을 '.number_format($board->upload_count).'개 이하로 업로드 해주십시오.');
         } else {
             for($i=0; $i<count($_FILES['attach_file']['name']); $i++) {
                 // 파일 삭제 체크가 되어 있으면
@@ -65,11 +58,11 @@ class BoardFile extends Model
                     $delFile = $this->selectBoardFile($boardId, $writeId, $i)->first();
                     // 기존 파일과 썸네일을 삭제한다.
                     if( !$this->deleteFileOnServer($board->table_name, $delFile->file) ) {
-                        return ['message' => '업로드한 파일을 삭제하는데 실패하였습니다.'];
+                        abort(500, '업로드한 파일을 삭제하는데 실패하였습니다.');
                     }
                     // 파일 테이블의 해당 행을(board_file_no) 삭제한다.
                     if( $this->selectBoardFile($boardId, $writeId, $i)->delete() < 1) {
-                        return ['message' => '파일정보 삭제에 실패하였습니다.'];
+                        abort(500, '파일정보 삭제에 실패하였습니다.');
                     }
                 }
                 // 새 파일 업로드를 했을 때
@@ -82,24 +75,24 @@ class BoardFile extends Model
                     if( !is_null($delFile) ) {
                         // 기존 파일과 썸네일을 삭제한다.
                         if( !$this->deleteFileOnServer($board->table_name, $delFile->file) ) {
-                            return ['message' => '기존 파일을 삭제하는데 실패하였습니다.'];
+                            abort(500, '기존 파일을 삭제하는데 실패하였습니다.');
                         }
                         // 선택한 파일을 업로드 한다.
                         if( !$this->uploadFile($files[$i], $board->table_name) ) {
-                            return ['message' => '선택한 파일을 업로드하는데 실패했습니다.'];
+                            abort(500, '선택한 파일을 업로드하는데 실패했습니다.');
                         }
                         // 파일 테이블의 해당 행을(board_file_no) 수정한다.
                         if ($this->selectBoardFile($boardId, $writeId, $i)->update($newFile) < 1) {
-                            return ['message' => '선택한 파일의 정보를 수정하는데 실패했습니다.'];
+                            abort(500, '선택한 파일의 정보를 수정하는데 실패했습니다.');
                         }
                     } else { // 비어있는 번호라면
                         // 선택한 파일을 업로드 한다.
                         if( !$this->uploadFile($files[$i], $board->table_name) ) {
-                            return ['message' => '선택한 파일을 업로드하는데 실패했습니다.'];
+                            abort(500, '선택한 파일을 업로드하는데 실패했습니다.');
                         }
                         // 파일 테이블의 해당 행을(board_file_no) 삽입한다.
                         if( !$this->selectBoardFile($boardId, $writeId, $i)->insert($newFile) ) {
-                            return ['message' => '선택한 파일의 정보를 추가하는데 실패했습니다.'];
+                            abort(500, '선택한 파일의 정보를 추가하는데 실패했습니다.');
                         }
                     }
                 }
@@ -109,13 +102,15 @@ class BoardFile extends Model
             $updateAllFiles = BoardFile::where(['board_id' => $boardId, 'write_id' => $writeId])->get();
             $index = 0;
             foreach($updateAllFiles as $updateAllFile) {
-                $this->selectBoardFile($boardId, $writeId, $updateAllFile->board_file_no)
+                $this
+				->selectBoardFile($boardId, $writeId, $updateAllFile->board_file_no)
                 ->update(['board_file_no' => $index]);
-                $index++;
+
+				$index++;
             }
 
         }
-        return ['fileCount' => $updateAllFiles->count()];
+        return $updateAllFiles->count();
     }
 
     // BoardFile의 Primary key where절 까지의 Builder
@@ -134,11 +129,8 @@ class BoardFile extends Model
         $file = $request->attach_file[$index];
         $uploadFileInfo = array();
             // 서버에 설정된 값보다 큰파일을 업로드 한다면
-            $message = $this->checkServerUploadError($file);
-            if($message) {
-                $uploadFileInfo['message'] = $message;
-                return $uploadFileInfo;
-            }
+            $this->checkServerUploadError($file);
+
             $image = getimagesize($file);
             $uploadFileInfo = [
                 'board_id' => $request->boardId,
@@ -163,9 +155,9 @@ class BoardFile extends Model
         $fileName = $file->getClientOriginalName();
         $error = $file->getError();
         if($error == 1) {
-            return '\"'.$fileName.'\" 파일의 용량이 서버에 설정('.ini_get('upload_max_filesize').')된 값보다 크므로 업로드 할 수 없습니다.\\n';
+            abort(500, '\"'.$fileName.'\" 파일의 용량이 서버에 설정('.ini_get('upload_max_filesize').')된 값보다 크므로 업로드 할 수 없습니다.\\n');
         } else if($error != 0) {
-            return '\"'.$fileName.'\" 파일이 정상적으로 업로드 되지 않았습니다.\\n';
+            abort(500, '\"'.$fileName.'\" 파일이 정상적으로 업로드 되지 않았습니다.\\n');
         }
     }
 
@@ -195,30 +187,18 @@ class BoardFile extends Model
         }
     }
 
-    // 리턴시킬 메세지 생성
-    private function makeReturnMessage($uploadFileInfos)
-    {
-        $message = '';
-        foreach($uploadFileInfos as $uploadFileInfo) {
-            if(isset($uploadFileInfo['message']) && $uploadFileInfo['message'] != '') {
-                $message .= $uploadFileInfo['message'];
-            }
-        }
-        return $message;
-    }
-
     // 기존 파일과 썸네일을 삭제한다.
     public function deleteFileOnServer($tableName, $delFileName)
     {
         // 기존 파일을 삭제한다.
-        $path = storage_path('app/public/'. $tableName);
-        $pathAndFile = $path. '/'. $delFileName;
+        $dir = storage_path('app/public/'. $tableName);
+        $path = $dir. '/'. $delFileName;
         // 기존 썸네일을 삭제한다.
-        $pathAndThumbnail =  $path. '/thumb-'. $delFileName;
+        $thumbnailPath =  $dir. '/thumb-'. $delFileName;
 
-        $returnVal = File::delete($pathAndFile);
-        if(File::exists($pathAndThumbnail)) {
-            $returnVal = File::delete($pathAndThumbnail);
+        $returnVal = File::delete($path);
+        if(File::exists($thumbnailPath)) {
+            $returnVal = File::delete($thumbnailPath);
         }
 
         return $returnVal;
@@ -246,11 +226,12 @@ class BoardFile extends Model
             $result[$index++] = $this->deleteEditorImage($content);
         }
         // 파일 테이블 삭제
-        $result[$index] = BoardFile::where([
-                        'board_id' => $boardId,
-                        'write_id' => $writeId,
-                    ])
-                    ->delete() > 0 ? true : false;
+        $result[$index] =
+			BoardFile::where([
+                'board_id' => $boardId,
+                'write_id' => $writeId,
+            ])
+            ->delete() > 0 ? true : false;
 
         return $result;
     }

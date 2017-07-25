@@ -19,15 +19,13 @@ use App\Notification;
 class UserController extends Controller
 {
 
-    public $config;
     public $skin;
     public $rulePassword;
     public $userModel;
 
     public function __construct(Config $config, User $userModel)
     {
-        $this->config = Cache::get("config.join");
-        $this->skin = $this->config->skin ? : 'default';
+        $this->skin = cache("config.join")->skin ? : 'default';
         $this->userModel = $userModel;
 
         $adminConfig = new Config();
@@ -37,8 +35,18 @@ class UserController extends Controller
     // 회원 정보 수정 폼
     public function edit()
     {
-        $params = $this->userModel->editFormData($this->config);
+		if(session()->get('admin')) {
+			return alertRedirect('관리자의 회원정보는 관리자 화면에서 수정해 주십시오.');
+		}
+
+		// 본인확인 관련 세션 초기화
+		session()->put("ss_cert_no", "");
+		session()->put("ss_cert_hash", "");
+		session()->put("ss_cert_type", "");
+
+        $params = $this->userModel->editFormData();
         $skin = $this->skin;
+
         return viewDefault("user.$skin.edit", $params);
     }
 
@@ -87,34 +95,31 @@ class UserController extends Controller
     // 회원 정보 수정
     public function update(Request $request)
     {
-        $params = $this->userModel->editFormData($this->config);
+		ReCaptcha::reCaptcha($request);
+        $params = $this->userModel->editFormData();
         $skin = $this->skin;
-        $errors = ['message' => '자동등록방지 입력이 틀렸습니다. 다시 입력해 주십시오.'];
-        if(ReCaptcha::reCaptcha($request)) {    // 구글 리캡챠 체크
-            $user = auth()->user();
-            // 입력값 유효성 검사
+        $user = auth()->user();
+		$rule = [];
+        // 비밀번호를 변경할 경우 validation에 password 조건을 추가한다.
+		if($request->password && !Auth::validate(['email' => $user->email, 'password' => $request->password ])) {
             $rule = array_add($this->userModel->rulesPassword, 'password', $this->rulePassword);
-            // 이메일을 변경할 경우 validation에 email 조건을 추가한다.
-            $changeEmail = $request->get('email') != $user->email;
-            if($changeEmail) {
-                $rule = array_add($rule, 'email', 'required|email|max:255|unique:users');
-            }
-
-            $this->validate($request, $rule);
-
-            $returnVal = $this->userModel->updateUserInfo($request, $this->config);
-
-            if($returnVal == 'notExistRecommend') {
-                return redirect(route('user.edit'))->withErrors(['recommend' => '추천인이 존재하지 않습니다.']);
-            } else {
-                if($changeEmail) {
-                    Auth::logout();
-                }
-                return redirect('/home');
-            }
-        } else {
-            return viewDefault("user.$skin.edit", $params)->withErrors($errors);
         }
+        // 이메일을 변경할 경우 validation에 email 조건을 추가한다.
+		$email = getEmailAddress($request->email);
+        $changeEmail = ($email != $user->email);
+        if($changeEmail) {
+            $rule = array_add($rule, 'email', 'required|email|max:255|unique:users');
+        }
+
+        $this->validate($request, $rule);
+
+		$this->userModel->updateUserInfo($request);
+
+		if($changeEmail) {
+			Auth::logout();
+		}
+
+		return redirect(route('user.edit'));
     }
 
     // 회원 가입 결과, 웰컴 페이지
@@ -144,18 +149,11 @@ class UserController extends Controller
     // 메일인증 메일주소 변경 실행
     public function updateEmail(Request $request)
     {
-        if(ReCaptcha::reCaptcha($request)) {    // 구글 리캡챠 체크
-            // 메일인증 메일주소 변경
-            $result = $this->userModel->changeCertifyEmail($request);
+		ReCaptcha::reCaptcha($request);
+        // 메일인증 메일주소 변경
+        $result = $this->userModel->changeCertifyEmail($request);
 
-            $message = '인증메일을 '. $result. ' 메일로 다시 보내드렸습니다.\\n\\잠시후 '. $result. ' 메일을 확인하여 주십시오.';
-            return view('message', [
-                'message' => $message,
-                'redirect' => '/',
-            ]);
-        } else {
-            return back()->withErrors(['reCaptcha' => '자동등록방지 입력이 틀렸습니다. 다시 입력해 주십시오.']);
-        }
+	    return alertRedirect('인증메일을 '. $result. ' 메일로 다시 보내드렸습니다.\\n\\잠시후 '. $result. ' 메일을 확인하여 주십시오.');
     }
 
     // 개인 별 포인트 목록
@@ -172,7 +170,12 @@ class UserController extends Controller
     public function profile($id)
     {
         $skin = $this->skin;
-        $params = $this->userModel->getProfileParams($id);
+		$params = [];
+		try {
+			$params = $this->userModel->getProfileParams($id);
+		} catch (Exception $e) {
+			return alertClose($e->getMessage());
+		}
 
         return viewDefault("user.$skin.profile", $params);
     }
@@ -182,10 +185,7 @@ class UserController extends Controller
     {
         $message = $this->userModel->leaveUser();
 
-        return view('message', [
-            'message' => $message,
-            'redirect' => route('home')
-        ]);
+        return alertRedirect($message);
     }
 
 	// 인증 메일 클릭했을 때 처리하기
@@ -231,4 +231,5 @@ class UserController extends Controller
 
         return alertClose('메일을 정상적으로 발송하였습니다.');
     }
+
 }

@@ -42,22 +42,22 @@ class Memo extends Model
     public function getCreateParams($request)
     {
         $user = auth()->user();
+		if( !$user ) {
+			abort(500, '회원만 이용할 수 있습니다.');
+		}
         if( !$user->open && !$user->isSuperAdmin() && $user->id_hashkey != $request->to) {
-            return ["message" => "자신의 정보를 공개하지 않으면 다른분에게 쪽지를 보낼 수 없습니다. 정보공개 설정은 회원정보수정에서 하실 수 있습니다."];
+            abort(500, "자신의 정보를 공개하지 않으면 다른분에게 쪽지를 보낼 수 없습니다. 정보공개 설정은 회원정보수정에서 하실 수 있습니다.");
         }
-
+		$content = '';
+		$to = '';
         if( isset($request->to) ) {
-            if(mb_strlen($request->to, 'utf-8') > 10) {  // 커뮤니티 쪽에서 들어올 때 user의 id가 아닌 id_hashKey가 넘어온다.
-                $toUser = User::where('id_hashkey', $request->to)->first();
-            } else {
-                $toUser = User::find($request->to);
-            }
+			$toUser = getUser($request->to);
 
             if( is_null($toUser)) {
-                return ["message" => "회원정보가 존재하지 않습니다.\\n\\n탈퇴하였을 수 있습니다."];
+                abort(500, "회원정보가 존재하지 않습니다.\\n\\n탈퇴하였을 수 있습니다.");
             }
             if( !$toUser->open && !$user->isSuperAdmin()) {
-                return ["message" => "정보공개를 하지 않았습니다."];
+                abort(500, "정보공개를 하지 않았습니다.");
             }
 
             if($request->id) {
@@ -66,19 +66,19 @@ class Memo extends Model
                         ->first();
                 $content = '';
                 if($memo) {
-                    $content = "\n >\n >\n >"
-                                .str_replace("\n", "\n> ", convertText($memo->memo, 0))
-                              ."\n > >";
+                    $content = "\n >\n >\n >".str_replace("\n", "\n> ", convertText($memo->memo, 0))."\n > >";
                 }
             } else {
                 $content = '';
             }
 
-            return [
-                'content' => $content,
-                'to' => $toUser->nick
-            ];
+			$to = $toUser->nick;
         }
+
+		return [
+			'content' => $content,
+			'to' => $to
+		];
     }
 
     // 쪽지 전송 모든 과정
@@ -103,21 +103,12 @@ class Memo extends Model
             }
         }
 
-        // 탈퇴, 차단 회원, 정보공개 안한 회원 등에게는 쪽지를 전송하지 않는다.
-        $message = $this->checkErrorList($errorList);
-        if($message) {
-            return $message;
-        }
-        // 쪽지보낼 때 차감되는 포인트 만큼 보유하고 있는지 확인한다.
-        $message = $this->checkPoint($currentUser, $toList);
-        if($message) {
-            return $message;
-        }
-        // 쪽지 전송
-        $message = $this->sendMemo($currentUser, $toList, $request);
-        if($message) {
-            return $message;
-        }
+		// 탈퇴, 차단 회원, 정보공개 안한 회원 등에게는 쪽지를 전송하지 않는다.
+		$this->checkErrorList($errorList);
+		// 쪽지보낼 때 차감되는 포인트 만큼 보유하고 있는지 확인한다.
+		$this->checkPoint($currentUser, $toList);
+		// 쪽지 전송
+		$this->sendMemo($currentUser, $toList, $request);
     }
 
     // 탈퇴, 차단 회원, 정보공개 안한 회원 등에게는 쪽지를 전송하지 않는다.
@@ -125,7 +116,7 @@ class Memo extends Model
     {
         $errorMsg = implode(',', $errorList);
         if($errorMsg && !session()->get('admin')) {
-            return "회원닉네임 (". $errorMsg. ") 은(는) 존재(또는 정보공개)하지 않는 회원닉네임 이거나 탈퇴, 접근차단된 회원닉네임 입니다.\\n쪽지를 발송하지 않았습니다.";
+            abort(500, "회원닉네임 (". $errorMsg. ") 은(는) 존재(또는 정보공개)하지 않는 회원닉네임 이거나 탈퇴, 접근차단된 회원닉네임 입니다.\\n쪽지를 발송하지 않았습니다.");
         }
     }
 
@@ -136,7 +127,7 @@ class Memo extends Model
             if($toList) {
                 $point = Cache::get('config.homepage')->memoSendPoint * count($toList);
                 if($point && ($currentUser->point - $point < 0)) {
-                    return "보유하신 포인트(". number_format($currentUser->point). "점)가 모자라서 쪽지를 보낼 수 없습니다.";
+                    abort(500, "보유하신 포인트(". number_format($currentUser->point). "점)가 모자라서 쪽지를 보낼 수 없습니다.");
                 }
             }
         }
@@ -174,7 +165,7 @@ class Memo extends Model
         }
         // 결과 메세지
         $strNickList = implode(',', $nickList);
-        return $strNickList. ' 님께 쪽지를 전달하였습니다.';
+        abort(200, $strNickList. ' 님께 쪽지를 전달하였습니다.');
     }
 
     // 메모 읽기
@@ -182,7 +173,7 @@ class Memo extends Model
     {
         $kind = $request->kind;
         if($kind != 'recv' && $kind != 'send') {
-            return [ 'message' => 'kind 값이 제대로 넘어오지 않았습니다.'];
+            abort(500, 'kind 값이 제대로 넘어오지 않았습니다.');
         } else if($kind == 'recv') { // 쪽지 읽은 시간 기록
             $this->writeReadTime($id);
         }

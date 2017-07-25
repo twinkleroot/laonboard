@@ -71,10 +71,7 @@ class SimpleController extends Controller
         if(auth()->user()->isSuperAdmin() || Gate::allows('view-admin-mailtest', getManageAuthModel($menuCode))) {
             return view('admin.configs.phpinfo');
         } else {
-            return view('message', [
-                'message' => '최고관리자 또는 관리권한이 있는 회원만 접근 가능합니다.',
-                'redirect' => '/admin/index'
-            ]);
+            return alertRedirect('최고관리자 또는 관리권한이 있는 회원만 접근 가능합니다.', '/admin/index');
         }
     }
 
@@ -85,10 +82,7 @@ class SimpleController extends Controller
         if(auth()->user()->isSuperAdmin() || Gate::allows('view-admin-mailtest', getManageAuthModel($menuCode))) {
             return view('admin.configs.extra_service');
         } else {
-            return view('message', [
-                'message' => '최고관리자 또는 관리권한이 있는 회원만 접근 가능합니다.',
-                'redirect' => '/admin/index'
-            ]);
+            return alertRedirect('최고관리자 또는 관리권한이 있는 회원만 접근 가능합니다.', '/admin/index');
         }
     }
 }

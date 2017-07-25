@@ -104,11 +104,11 @@ class Content extends Model
 
         $this->uploadContentImage($request);
 
-        if($result) {
-            return $content->content_id;
-        }
-
-        return 0;
+        if(!$result) {
+			abort(500, '내용변경에 실패하였습니다.');
+		}
+		
+		return $content->content_id;
     }
 
     // 상단, 하단이미지 업로드

@@ -40,7 +40,7 @@ class SocialController extends Controller
         try {
             $userFromSocial = Socialite::with($provider)->user();
         } catch (InvalidStateException $e) {
-            return view('message', ['message' => '잘못된 접근입니다.']);
+            return alert('잘못된 접근입니다.');
         }
 
         // 소셜 로그인

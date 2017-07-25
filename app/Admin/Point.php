@@ -97,12 +97,12 @@ class Point extends Model
     {
         $user = User::where('email', $request->email)->first();
 
-        if(!is_null($user)) {
+        if($user) {
             $relAction = 'admin-' . substr(bcrypt(Carbon::now()), 0, 15);
 
             // 포인트 부여
             if($user->point + $request->point < 0) {
-                throw new Exception('포인트를 깎는 경우 현재 포인트보다 작으면 안됩니다.');
+                abort(500, '포인트를 깎는 경우 현재 포인트보다 작으면 안됩니다.');
             }
             $user->point += $request->point;
             $user->save();
@@ -110,9 +110,9 @@ class Point extends Model
             // 포인트 내역에 기록
             $appPoint = new AppPoint();
 
-            return $appPoint->insertPoint($user->id, $request->point, $request->content, '@passive', $user->email, $relAction);
+            $appPoint->insertPoint($user->id, $request->point, $request->content, '@passive', $user->email, $relAction);
         } else {
-            throw new Exception('존재하는 회원 이메일이 아닙니다.');
+            abort(500, '존재하는 회원 이메일이 아닙니다.');
         }
     }
 

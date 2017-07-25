@@ -22,14 +22,18 @@ class ConfigRegister
         if(!Cache::has('config.homepage')) {
             Cache::forever('config.homepage', $this->registerConfigCache('homepage'));
         }
+		// 게시판 기본 설정
+		if(!Cache::has('config.board')) {
+			Cache::forever('config.board', $this->registerConfigCache('board'));
+		}
         // 회원 가입 설정
         if(!Cache::has('config.join')) {
             Cache::forever('config.join', $this->registerConfigCache('join'));
         }
-        // 게시판 기본 설정
-        if(!Cache::has('config.board')) {
-            Cache::forever('config.board', $this->registerConfigCache('board'));
-        }
+		// 본인 확인 설정
+		if(!Cache::has('config.cert')) {
+			Cache::forever('config.cert', $this->registerConfigCache('cert'));
+		}
         // 기본 메일 환경 설정
         if(!Cache::has('config.email.default')) {
             Cache::forever('config.email.default', $this->registerConfigCache('email.default'));

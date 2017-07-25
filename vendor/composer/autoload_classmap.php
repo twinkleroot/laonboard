@@ -17,6 +17,7 @@ return array(
     'CreateBoardGoodsTable' => $baseDir . '/database/migrations/2017_05_12_110031_create_board_goods_table.php',
     'CreateBoardNewsTable' => $baseDir . '/database/migrations/2017_06_13_171247_create_board_news_table.php',
     'CreateBoardsTable' => $baseDir . '/database/migrations/2017_04_05_105802_create_boards_table.php',
+    'CreateCertHistoryTable' => $baseDir . '/database/migrations/2017_07_24_093931_create_cert_history_table.php',
     'CreateConfigsTable' => $baseDir . '/database/migrations/2017_03_21_154604_create_configs_table.php',
     'CreateContentsTable' => $baseDir . '/database/migrations/2017_06_09_093555_create_contents_table.php',
     'CreateGroupUserTable' => $baseDir . '/database/migrations/2017_04_03_144538_create_group_user_table.php',
@@ -561,5 +562,6 @@ return array(
     'SebastianBergmann\\ResourceOperations\\ResourceOperations' => $vendorDir . '/sebastian/resource-operations/src/ResourceOperations.php',
     'SebastianBergmann\\Version' => $vendorDir . '/sebastian/version/src/Version.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/src/Template.php',
+    'UpdateJoinCertConfig' => $baseDir . '/database/migrations/2017_07_21_154804_update_join_cert_config.php',
     'UsersTableSeeder' => $baseDir . '/database/seeds/UsersTableSeeder.php',
 );

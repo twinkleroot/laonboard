@@ -133,10 +133,14 @@ class AdminUser extends Model
 
         $user = AdminUser::create($data);
 
+		if(is_null($user)) {
+			abort(500, '회원추가에 실패하였습니다.');
+		}
+
         $user->id_hashkey = str_replace("/", "-", bcrypt($user->id));   // id 암호화
         $user->save();
 
-        return $user;
+        return $user->id;
     }
 
     // 선택 수정
