@@ -497,7 +497,7 @@
                                 <select name='useMemberIcon' class='level'>
                                     <option value='0' @if($configJoin->useMemberIcon == 0) selected @endif>미사용</option>
                                     <option value='1' @if($configJoin->useMemberIcon == 1) selected @endif>아이콘만 표시</option>
-                                    <option value='2' @if($configJoin->useMemberIcon == 2) selected @endif>아이콘+이름 표시</option>
+                                    <option value='2' @if($configJoin->useMemberIcon == 2) selected @endif>아이콘+닉네임 표시</option>
                                 </select>
                             </div>
                         </div>

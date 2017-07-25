@@ -26,6 +26,15 @@ trait AuthenticatesUsers
      */
     public function login(Request $request)
     {
+		$referUrl = $request->server('HTTP_REFERER');
+		$divUrl = explode('?', $referUrl);
+		if(count($divUrl) > 1) {
+			$queryString = $divUrl[1];
+			$segments = explode('=', $queryString);
+			if($segments[0] == 'nextUrl') {
+				$this->redirectTo = $segments[1];
+			}
+		}
         $user = User::where('email', $request->email)->first();
         $skin = Cache::get('config.join')->skin ? : 'default';
         if($user && Cache::get('config.email.default')->emailCertify && $user->level == 1) {
@@ -42,7 +51,7 @@ trait AuthenticatesUsers
             $leaveMonth = substr($leaveDate, 4, 2);
             $leaveDay = substr($leaveDate, 6, 2);
 			$message = '탈퇴한 아이디이므로 접근하실 수 없습니다.\\n탈퇴일 : '. $leaveYear. '년'. $leaveMonth. '월'. $leaveDay. '일';
-			
+
 			return alertRedirect($message);
         }
 

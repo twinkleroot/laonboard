@@ -24,7 +24,7 @@
 @endsection
 
 @section('content')
-<form role="form" method="POST" action="{{ route('admin.users.update', $id) }}">
+<form role="form" method="POST" action="{{ route('admin.users.update', $id) }}" enctype="multipart/form-data" autocomplete="off">
 {{ csrf_field() }}
 <div class="body-head">
     <div class="pull-left">
@@ -271,9 +271,9 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="" class="col-md-2 control-label">추천인</label>
+                                <label for="recommend" class="col-md-2 control-label">추천인</label>
                                 <div class="col-md-3">
-                                    <input type="text" class="form-control" id="?">
+                                    <input type="text" class="form-control" name="recommend" id="recommend" placeholder="닉네임" value="{{ $recommend }}">
                                 </div>
                             </div>
                         </div>
@@ -309,10 +309,17 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="" class="col-md-2 control-label">회원아이콘</label>
+                                <label for="icon" class="col-md-2 control-label">회원아이콘</label>
                                 <div class="col-md-5">
-                                    <input type="file" name="icon" value="">
-                                    <p class="help-block">이미지 크기는 넓이 22픽셀 높이 22픽셀로 해주세요.</p>
+                                    <input type="file" name="icon" id="icon">
+									@if(File::exists($iconPath))
+									<img src="{{ $iconUrl }}" alt="회원아이콘">
+					                <input type="checkbox" name="delIcon" value="1" id="delIcon">
+					                <label for="delIcon">삭제</label>
+									@endif
+                                    <p class="help-block">이미지 크기는 넓이 {{ cache('config.join')->memberIconWidth }}픽셀 높이 {{ cache('config.join')->memberIconHeight }}픽셀로 해주세요.<br>
+									gif만 가능하며 용량 {{ cache('config.join')->memberIconSize }}바이트 이하만 등록됩니다.
+									</p>
                                 </div>
                             </div>
                         </div>
@@ -323,18 +330,18 @@
                             <div class="form-group">
                                 <label for="certify_case" class="col-md-2 control-label">본인확인방법</label>
                                 <div class="col-md-5">
-                                    <input type="radio" name="certify_case" id="certify_case_ipin" value="0" @if($user->certify == 'ipin') checked @endif />
+                                    <input type="radio" name="certify" id="certify_case_ipin" value="ipin" @if($user->certify == 'ipin') checked @endif />
                                         <label for="certify_case_ipin">아이핀</label>
-                                    <input type="radio" name="certify_case" id="certify_case_hp" value="1" @if($user->certify == 'hp') checked @endif />
+                                    <input type="radio" name="certify" id="certify_case_hp" value="hp" @if($user->certify == 'hp') checked @endif />
                                         <label for="certify_case_hp">휴대폰</label>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="certify" class="col-md-2 control-label">본인확인</label>
                                 <div class="col-md-5">
-                                    <input type="radio" name="certify" id="certify_yes" @if($user->certify) checked @endif value="1" />
+                                    <input type="radio" name="certify_signal" id="certify_yes" @if($user->certify) checked @endif value="1" />
                                         <label for="certify_yes">예</label>
-                                    <input type="radio" name="certify" id="certify_no" @if(!$user->certify || empty($user->certify)) checked @endif value="0" />
+                                    <input type="radio" name="certify_signal" id="certify_no" @if(!$user->certify || empty($user->certify)) checked @endif value="0" />
                                         <label for="certify_no">아니오</label>
                                 </div>
                             </div>
