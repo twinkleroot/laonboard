@@ -618,10 +618,6 @@
                 {{ csrf_field() }}
                     <div class="st_title">본인확인 설정</div>
                     <div class="st_contents">
-
-                    <div class="savebtn">
-                        <input type="submit" class="btn btn-sir" value="설정변경"/>
-                    </div> <!-- Submit 고정 -->
                     <div class="panel-body">
                         <div class="form-group">
                             <label for="certUse" class="col-md-4 control-label">본인확인</label>
@@ -696,6 +692,7 @@
 	                        </div>
 	                    </div>
 	                </div>
+                     <input type="submit" class="btn btn-sir" value="설정변경"/>
                 </form>
             </div>
         </div>

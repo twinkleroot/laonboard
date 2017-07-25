@@ -836,6 +836,15 @@ body {
 .mb_btn span {
 	line-height: 34px; font-size: 14px;
 }
+.mb_sch {
+	margin-bottom: 10px;
+	float: right;
+}
+.mb_sch:after {
+	content: "";
+	display: block;
+	clear: both;
+}
 .mb_sch select {
 	height:34px; padding:6px; border: 1px solid #ccc;
 }
