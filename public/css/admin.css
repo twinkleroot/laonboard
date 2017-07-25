@@ -106,7 +106,7 @@ body {
 	font-size: 18px;
 	font-weight: 600;
 	color: #fff;
-	padding: 0 20px;
+	padding-left: 20px;
 	line-height: 80px;
 
 	font-family: 'Loto';
@@ -836,6 +836,15 @@ body {
 .mb_btn span {
 	line-height: 34px; font-size: 14px;
 }
+.mb_sch {
+	margin-bottom: 10px;
+	float: right;
+}
+.mb_sch:after {
+	content: "";
+	display: block;
+	clear: both;
+}
 .mb_sch select {
 	height:34px; padding:6px; border: 1px solid #ccc;
 }
@@ -977,7 +986,8 @@ body {
 .td_date {
 	width: 150px !important;
 }
-.td_email {
+.td_email,
+.td_id {
 	width: 170px;
 	text-align: left;
 }

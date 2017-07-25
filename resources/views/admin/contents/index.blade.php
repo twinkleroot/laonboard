@@ -53,11 +53,9 @@
             @if($contents->total() > 0)
             @foreach ($contents as $content)
                 <tr>
-                    <td class="text-left">
-                        {{ $content->content_id }}
-                    </td>
-                    <td class="text-left">{{ $content->subject }}</td>
-                    <td>
+                    <td class="td_id">{{ $content->content_id }}</td>
+                    <td class="td_subject">{{ $content->subject }}</td>
+                    <td class="td_mngsmall">
                         <a href="{{ route('admin.contents.edit', $content->content_id) }}">수정</a>
                         <a href="{{ route('contents.show', $content->content_id) }}">보기</a>
                         <a href="{{ route('admin.contents.destroy', $content->id) }}" onclick="del(this.href); return false;">삭제</a>

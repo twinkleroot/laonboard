@@ -8,3 +8,4 @@ Homestead.yaml
 .env
 .env.example
 sftp-config.json
+/storage/okname/bin/okname_x64

@@ -21,8 +21,8 @@ body.white {
 .gry_empty_table {
 	background: #fff;
 	margin:0 15px;
- 	border: 1px solid #d8d8d8;
- 	border-radius: 4px;
+	border: 1px solid #d8d8d8;
+	border-radius: 4px;
 }
 div {
 	word-wrap:break-word
