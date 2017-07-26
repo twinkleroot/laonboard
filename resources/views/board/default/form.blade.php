@@ -218,8 +218,8 @@ tinymce.init({
     min_height: 400,
     min_width: 400,
     selection_toolbar: 'bold italic | quicklink h2 h3 blockquote',
-    plugins: 'link,autolink,image,imagetools,textcolor,lists,pagebreak,table,save,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking',
-    toolbar: "undo redo | styleselect | forecolor bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table link customImage media",
+    plugins: 'link,autolink,image,imagetools,textcolor,lists,pagebreak,table,save,insertdatetime,preview,media,searchreplace,print,contextmenu,directionality,fullscreen,noneditable,visualchars',
+    toolbar: "nonbreaking undo redo | styleselect | forecolor bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table link customImage media",
     relative_urls: false,
     setup: function(editor) {
         editor.addButton('customImage', {
@@ -231,6 +231,7 @@ tinymce.init({
         });
     }
 });
+
 function htmlAutoBr(obj) {
     if (obj.checked) {
         var result = confirm("자동 줄바꿈을 하시겠습니까?\n\n자동 줄바꿈은 게시물 내용중 줄바뀐 곳을<br>태그로 변환하는 기능입니다.");
