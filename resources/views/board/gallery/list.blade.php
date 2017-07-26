@@ -123,7 +123,7 @@
 						@if($write->user_level)
 							@component('board.sideview', ['id' => $write->user_id, 'name' => $write->name, 'email' => $write->email])
                             @endcomponent
-							<li><a href="/board/{{ $board->id }}?kind=user_id&amp;keyword={{ $write->user_id }}&amp;category={{ $currenctCategory }}">닉네임으로 검색</a></li>
+							<li><a href="/board/{{ $board->id }}?kind=user_id&amp;keyword={{ $write->user_id }}&amp;category={{ $currenctCategory }}">이 회원이 작성한 글</a></li>
 						@else
 							<li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
 						@endif
@@ -137,7 +137,7 @@
 						@if($write->user_level)
 							@component('board.sideview', ['id' => $write->user_id, 'name' => $write->name, 'email' => $write->email])
                             @endcomponent
-                            <li><a href="/board/{{ $board->id }}?kind=user_id&amp;keyword={{ $write->user_id }}&amp;category={{ $currenctCategory }}">닉네임으로 검색</a></li>
+                            <li><a href="/board/{{ $board->id }}?kind=user_id&amp;keyword={{ $write->user_id }}&amp;category={{ $currenctCategory }}">이 회원이 작성한 글</a></li>
 						@else
 							<li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
 						@endif
@@ -183,10 +183,8 @@
                     <option value="subject" @if($kind == 'subject') selected @endif>제목</option>
                     <option value="content" @if($kind == 'content') selected @endif>내용</option>
                     <option value="subject || content" @if($kind == 'subject || content') selected @endif>제목+내용</option>
-					<option value="nick, 0" @if($kind == 'nick, 0') selected @endif>회원닉네임</option>
-                    <option value="nick, 1" @if($kind == 'nick, 1') selected @endif>회원닉네임(코)</option>
                     <option value="name, 0" @if($kind == 'name, 0') selected @endif>글쓴이</option>
-                    <option value="name, 1" @if($kind == 'name, 1') selected @endif>글쓴이(코)</option>
+                    <option value="name, 1" @if($kind == 'name, 1') selected @endif>글쓴이(코멘트 포함)</option>
                 </select>
 
                 <label for="keyword" class="sr-only">검색어</label>

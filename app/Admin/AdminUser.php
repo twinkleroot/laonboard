@@ -4,13 +4,18 @@ namespace App\Admin;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use App\SocialLogin;
 use App\Admin\Point;
 use App\Admin\Group;
+use App\Admin\ManageAuth;
+use App\Admin\GroupUser;
+use App\SocialLogin;
 use App\Write;
+use App\Memo;
+use App\Scrap;
+use App\Board;
 use App\User as AppUser;
+use File;
 use DB;
-use Cache;
 use Carbon\Carbon;
 
 class AdminUser extends Model
@@ -108,7 +113,7 @@ class AdminUser extends Model
             }
         }
 
-        $users = $query->paginate(Cache::get("config.homepage")->pageRows);
+        $users = $query->paginate(cache("config.homepage")->pageRows);
         $interceptUsers = $query->whereNotNull('intercept_date')->count();
         $leaveUsers = $query->whereNotNull('leave_date')->count();
 
@@ -255,7 +260,41 @@ class AdminUser extends Model
 	// 선택 삭제
 	public function deleteUser($request)
 	{
-		$ids = $request->ids;
-        $result = User::whereRaw('id in (' . $ids . ') ')->delete();
+		// 회원자료는 정보만 없앤 후 아이디는 보관하여 다른 사람이 사용하지 못하도록 함
+		foreach(explode(',', $request->ids) as $id) {
+			AdminUser::find($id)
+			->update([
+				'password' => '',
+				'level' => 1,
+				'homepage' => '',
+				'tel' => '',
+				'hp' => '',
+				'zip' => '',
+				'addr1' => '',
+				'addr2' => '',
+				'birth' => '',
+				'sex' => '',
+				'signature' => '',
+				'memo' => Carbon::now()->format("Ymd"). ' 삭제함',
+			]);
+		// 포인트 테이블에서 삭제
+		Point::where('user_id', $id)->delete($id);
+	    // 그룹접근가능 삭제
+		GroupUser::where('user_id', $id)->delete($id);
+	    // 쪽지 삭제
+		Memo::where('send_user_id', $id)->orWhere('recv_user_id', $id)->delete($id);
+	    // 스크랩 삭제
+		Scrap::where('user_id', $id)->delete($id);
+	    // 관리권한 삭제
+		ManageAuth::where('user_id', $id)->delete($id);
+	    // 그룹관리자인 경우 그룹관리자를 공백으로
+		$user = getUser($id);
+		Group::where('admin', $user->email)->update([ 'admin' => '' ]);
+	    // 게시판관리자인 경우 게시판관리자를 공백으로
+		Board::where('admin', $user->email)->update([ 'admin' => '' ]);
+	    // 아이콘 삭제
+		$path = storage_path('app/public/user/'. substr($user->email,0,2). '/'). $user->email. '.gif';
+		File::delete($path);
+		}
 	}
 }

@@ -106,7 +106,7 @@
                     </div>
                 @endif
 
-                @if($config->name) <!-- 이름 -->
+                @if((cache('config.cert')->certUse && cache('config.cert')->certHp) || $config->name) <!-- 이름 -->
                     <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                         <label for="name" class="control-label">이름</label>
 						@if(cache('config.cert'))
@@ -156,17 +156,20 @@
                     </div>
                 @endif
 
-                @if($config->hp) <!-- 휴대폰번호 -->
-                    <div class="form-group{{ $errors->has('hp') ? ' has-error' : '' }}">
+                @if( (cache('config.cert')->certUse && cache('config.cert')->certHp) || $config->hp) <!-- 휴대폰번호 -->
+                    <div class="form-group">
                         <label for="hp" class="control-label">휴대폰번호</label>
 
-                        <input id="hp" type="text" class="form-control" name="hp" value="{{ $user->hp }}">
-
-                            @if ($errors->has('hp'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('hp') }}</strong>
-                                </span>
-                            @endif
+						<div class="form-group row">
+							<div class="col-xs-8">
+	                            <input id="hp" type="text" class="form-control" name="hp" value="{{ $user->hp }}">
+	                        </div>
+							@if(cache('config.cert')->certHp)
+							<div class="col-xs-4">
+								<input type="button" class="btn btn-block btn-sir" id="win_hp_cert" style="height: 40px;" value="휴대폰 본인확인">
+	                        </div>
+							@endif
+						</div>
                     </div>
                 @endif
 
@@ -327,12 +330,6 @@
                 <div class="form-group">
                     <button type="button" class="btn btn-sir" onclick="validate();">변경하기</button>
                     <a href="{{ route('home') }}" class="btn btn-sir">취소</a>
-					@if(cache('config.cert')->certIpin)
-					<button type="button" class="btn btn-sir" id="win_ipin_cert">아이핀 본인확인</button>
-					@endif
-					@if(cache('config.cert')->certHp)
-					<button type="button" class="btn btn-sir" id="win_hp_cert">휴대폰 본인확인</button>
-					@endif
                 </div>
                 <div id='recaptcha' class="g-recaptcha"
             		data-sitekey="{{ env('GOOGLE_INVISIBLE_RECAPTCHA_KEY') }}"

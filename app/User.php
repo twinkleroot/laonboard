@@ -341,10 +341,16 @@ class User extends Authenticatable
 		// 추천인 입력
 		$recommendedId = $this->insertRecommend($request, $user);
 
+		$password = $user->password;
+		// 비밀번호 변경시
+		if($request->password && !Auth::validate(['email' => $user->email, 'password' => $request->password ])) {
+			$password = bcrypt($request->password);
+		}
+
 		$email = getEmailAddress(trim($request->email));
         $toUpdateUserInfo = [
             'email' => $email,
-            'password' => bcrypt($request->password),
+            'password' => $password,
             'id_hashkey' => str_replace("/", "-", bcrypt($user->id)),  // 회원정보수정때마다 id_hashkey를 변경한다.
             // 'name' => $request->get('name'),
             'nick' => $request->has('nick') ? trim($request->nick) : $user->nick,

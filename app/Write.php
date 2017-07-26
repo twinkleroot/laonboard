@@ -223,17 +223,9 @@ class Write extends Model
             // 코멘트 검색이 select box에 있는 경우
             } else if(str_contains($kind, ',')) {
                 $kinds = explode(',', preg_replace("/\s+/", "", $kind));
-				if($kinds[0] == 'nick') {	// 닉네임 검색
-	                $user = User::where('nick', $keyword)->first();
-	                // 검색 쿼리 붙이기
-	                if($user) {
-	                    $query = $query->where(['user_id' => $user->id, 'is_comment'=> $kinds[1]])
-	                                   ->where('is_comment', $kinds[1]);
-	                } else {
-	                    abort(500, $keyword. ' 사용자가 존재하지 않습니다.');
-	                }
-				} else {	// 글쓴이 검색
-					$query = $query->where([$writeModel->table.'.name' => $keyword, 'is_comment'=> $kinds[1]]);
+				$query = $query->where($writeModel->table.'.name', $keyword);
+				if($kinds[1] == 0) {	// 글쓴이 원글만 검색
+					$query = $query->where('is_comment', $kinds[1]);
 				}
             // 단독 키워드 검색(제목, 내용)
             } else {

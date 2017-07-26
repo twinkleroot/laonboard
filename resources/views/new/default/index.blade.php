@@ -122,7 +122,11 @@
     </form>
 </div>
 
-{{ $boardNewList->links() }}
+{{ $boardNewList->appends([
+        'groupId' => $groupId,
+        'type' => $type,
+        'nick' => $nick,
+    ])->links() }}
 
 <script>
 function confirmDel() {
