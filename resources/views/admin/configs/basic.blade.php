@@ -42,7 +42,7 @@
 <div id="body_tab_type2">
     <ul>
         <li class="tab"><a href="#admin-header">기본환경설정</a></li>
-		<li class="tab"><a href="#admin-header">게시판기본</a></li>
+        <li class="tab"><a href="#admin-header">게시판기본</a></li>
         <li class="tab"><a href="#admin-header">회원가입</a></li>
         <li class="tab"><a href="#admin-header">본인확인</a></li>
         <li class="tab"><a href="#admin-header">메일환경</a></li>
@@ -221,7 +221,7 @@
         </form>
     </div>
 
-	<div id="admin_box2">
+    <div id="admin_box2">
         <div class="panel panel-default">
         <div class="panel-body">
                 <div class="panel-heading">게시판 기본 설정</div>
@@ -488,12 +488,12 @@
                             </div>
                         </div>
                     </div>
-					<div class="panel-body">
+                    <div class="panel-body">
                         <div class="form-group">
                             <label for="useMemberIcon" class="col-md-4 control-label">회원아이콘 사용</label>
 
                             <div class="col-md-6">
-								게시물에 게시자 닉네임 대신 아이콘 사용
+                                게시물에 게시자 닉네임 대신 아이콘 사용
                                 <select name='useMemberIcon' class='level'>
                                     <option value='0' @if($configJoin->useMemberIcon == 0) selected @endif>미사용</option>
                                     <option value='1' @if($configJoin->useMemberIcon == 1) selected @endif>아이콘만 표시</option>
@@ -502,7 +502,7 @@
                             </div>
                         </div>
                     </div>
-					<div class="panel-body">
+                    <div class="panel-body">
                         <div class="form-group">
                             <label for="iconLevel" class="col-md-4 control-label">아이콘 업로드 권한</label>
 
@@ -517,7 +517,7 @@
                             </div>
                         </div>
                     </div>
-					<div class="panel-body">
+                    <div class="panel-body">
                         <div class="form-group">
                             <label for="memberIconSize" class="col-md-4 control-label">회원아이콘 용량</label>
 
@@ -526,7 +526,7 @@
                             </div>
                         </div>
                     </div>
-					<div class="panel-body">
+                    <div class="panel-body">
                         <div class="form-group">
                             <label for="memberIconWidthAndHeigth" class="col-md-4 control-label">회원아이콘 사이즈</label>
 
@@ -536,7 +536,7 @@
                             </div>
                         </div>
                     </div>
-					<div class="panel-body">
+                    <div class="panel-body">
                         <div class="form-group">
                             <label for="recommend" class="col-md-4 control-label">추천인 제도</label>
 
@@ -635,7 +635,7 @@
                         <div class="form-group">
                             <label for="certIpin" class="col-md-4 control-label">아이핀 본인확인</label>
 
-							<select name='certIpin'>
+                            <select name='certIpin'>
                                 <option value @if(!$configCert->certIpin) selected @endif>사용안함</option>
                                 <option value='kcb' @if($configCert->certIpin == 'kcb') selected @endif>코리아크레딧뷰로(KCB) 아이핀</option>
                             </select>
@@ -645,7 +645,7 @@
                         <div class="form-group">
                             <label for="certHp" class="col-md-4 control-label">휴대폰 본인확인</label>
 
-							<select name='certHp'>
+                            <select name='certHp'>
                                 <option value @if(!$configCert->certHp) selected @endif>사용안함</option>
                                 <option value='kcb' @if($configCert->certHp == 'kcb') selected @endif>코리아크레딧뷰로(KCB) 휴대폰 본인확인</option>
                                 {{-- <option value='kcp' @if($configCert->certHp == 'kcp') selected @endif>NHN KCP 휴대폰 본인확인</option>
@@ -658,15 +658,15 @@
                             <label for="certKcbCd" class="col-md-4 control-label">코리아크레딧뷰로 KCB 회원사ID</label>
 
                             <div class="col-md-6">
-								KCB 회원사ID를 입력해 주십시오.<br />
-								서비스에 가입되어 있지 않다면, KCB와 계약체결 후 회원사ID를 발급 받으실 수 있습니다.<br />
-								이용하시려는 서비스에 대한 계약을 아이핀, 휴대폰 본인확인 각각 체결해주셔야 합니다.<br />
-								아이핀 본인확인 테스트의 경우에는 KCB 회원사ID가 필요 없으나,<br />
-								휴대폰 본인확인 테스트의 경우 KCB 에서 따로 발급 받으셔야 합니다.<br />
+                                KCB 회원사ID를 입력해 주십시오.<br />
+                                서비스에 가입되어 있지 않다면, KCB와 계약체결 후 회원사ID를 발급 받으실 수 있습니다.<br />
+                                이용하시려는 서비스에 대한 계약을 아이핀, 휴대폰 본인확인 각각 체결해주셔야 합니다.<br />
+                                아이핀 본인확인 테스트의 경우에는 KCB 회원사ID가 필요 없으나,<br />
+                                휴대폰 본인확인 테스트의 경우 KCB 에서 따로 발급 받으셔야 합니다.<br />
                                 <input type="text" name="certKcbCd" value="{{ $configCert->certKcbCd }}">
                             </div>
-							<a href="http://sir.kr/main/service/b_ipin.php" target="_blank">KCB 아이핀 서비스 신청페이지</a>
-							<a href="http://sir.kr/main/service/b_cert.php" target="_blank">KCB 휴대폰 본인확인 서비스 신청페이지</a>
+                            <a href="http://sir.kr/main/service/b_ipin.php" target="_blank">KCB 아이핀 서비스 신청페이지</a>
+                            <a href="http://sir.kr/main/service/b_cert.php" target="_blank">KCB 휴대폰 본인확인 서비스 신청페이지</a>
                         </div>
                     </div>
                     <div class="panel-body">
@@ -674,24 +674,24 @@
                             <label for="certLimit" class="col-md-4 control-label">본인확인 이용제한</label>
 
                             <div class="col-md-6">
-								하루동안 아이핀과 휴대폰 본인확인 인증 이용회수를 제한할 수 있습니다.<br />
-								회수제한은 실서비스에서 아이핀과 휴대폰 본인확인 인증에 개별 적용됩니다.<br />
-								0 으로 설정하시면 회수제한이 적용되지 않습니다.<br />
+                                하루동안 아이핀과 휴대폰 본인확인 인증 이용회수를 제한할 수 있습니다.<br />
+                                회수제한은 실서비스에서 아이핀과 휴대폰 본인확인 인증에 개별 적용됩니다.<br />
+                                0 으로 설정하시면 회수제한이 적용되지 않습니다.<br />
                                 <input type="text" name="certLimit" value="{{ $configCert->certLimit }}">회
                             </div>
                         </div>
                     </div>
-					<div class="panel-body">
-	                    <div class="form-group">
-	                        <label for="certReq" class="col-md-4 control-label">본인확인 필수</label>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="certReq" class="col-md-4 control-label">본인확인 필수</label>
 
-	                        <div class="col-md-6">
-	                            회원가입 때 본인확인을 필수로 할지 설정합니다. 필수로 설정하시면 본인확인을 하지 않은 경우 회원가입이 안됩니다.<br />
-	                            <input type="checkbox" name="certReq" id="certReq" value="1" @if($configCert->certReq == 1) checked @endif>
-	                                <label for="certReq">예</label>
-	                        </div>
-	                    </div>
-	                </div>
+                            <div class="col-md-6">
+                                회원가입 때 본인확인을 필수로 할지 설정합니다. 필수로 설정하시면 본인확인을 하지 않은 경우 회원가입이 안됩니다.<br />
+                                <input type="checkbox" name="certReq" id="certReq" value="1" @if($configCert->certReq == 1) checked @endif>
+                                    <label for="certReq">예</label>
+                            </div>
+                        </div>
+                    </div>
                      <input type="submit" class="btn btn-sir" value="설정변경"/>
                 </form>
             </div>

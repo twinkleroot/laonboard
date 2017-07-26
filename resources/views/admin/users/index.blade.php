@@ -115,7 +115,7 @@
                             </div>
                         </td>
                         <td class="td_nick">
-							@component('admin.sideview', ['id' => $user->id, 'nick' => $user->nick, 'email' => $user->email])
+                            @component('admin.sideview', ['id' => $user->id, 'nick' => $user->nick, 'email' => $user->email])
                             @endcomponent
                         </td>
                         <td>

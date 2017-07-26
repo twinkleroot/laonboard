@@ -12,7 +12,7 @@
     <script src='https://www.google.com/recaptcha/api.js' async defer></script>
     <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
     <script src="{{ url('js/postcode.js') }}"></script>
-	<script src="{{ url('js/certify.js') }}"></script>
+    <script src="{{ url('js/certify.js') }}"></script>
 @endsection
 
 @section('content')
@@ -33,18 +33,18 @@
         </div>
         <div class="panel-body row">
             <form class="contents col-md-10 col-md-offset-1" role="form" id="userForm" name="userForm" method="POST" action="{{ route('user.update') }}" enctype="multipart/form-data" autocomplete="off">
-				@if(cache('config.cert')->certHp || cache('config.cert')->certIpin)
-				<input type="hidden" name="certType" value="">
-				@if(!$config->name)
-				<input type="hidden" name="name" value="">
-				@endif
-				@if(!$config->hp)
-				<input type="hidden" name="hp" value="">
-				@endif
-				<input type="hidden" name="certNo" value="">
-				@endif
-	            {{ csrf_field() }}
-	            {{ method_field('PUT') }}
+                @if(cache('config.cert')->certHp || cache('config.cert')->certIpin)
+                <input type="hidden" name="certType" value="">
+                @if(!$config->name)
+                <input type="hidden" name="name" value="">
+                @endif
+                @if(!$config->hp)
+                <input type="hidden" name="hp" value="">
+                @endif
+                <input type="hidden" name="certNo" value="">
+                @endif
+                {{ csrf_field() }}
+                {{ method_field('PUT') }}
 
                 <div class="panel-heading">
                     <p class="heading-p">
@@ -106,20 +106,20 @@
                     </div>
                 @endif
 
-                @if($config->name) <!-- 이름 -->
+                @if((cache('config.cert')->certUse && cache('config.cert')->certHp) || $config->name) <!-- 이름 -->
                     <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                         <label for="name" class="control-label">이름</label>
-						@if(cache('config.cert'))
-						<p>
+                        @if(cache('config.cert'))
+                        <p>
                             아이핀 본인확인 후에는 이름이 자동 입력되고 휴대폰 본인확인 후에는 이름과 휴대폰번호가 자동 입력되어 수동으로 입력할수 없게 됩니다.
                         </p>
-						@endif
+                        @endif
                         <input id="name" type="text" class="form-control" name="name" value="{{ $user->name }}" @if($user->certify) readonly @endif>
-						@if($user->certify)
-						<div class="helpbox bg-danger">
+                        @if($user->certify)
+                        <div class="helpbox bg-danger">
                             <p>휴대폰 본인확인 및 성인인증 완료</p>
                         </div>
-						@endif
+                        @endif
                         @if ($errors->has('name'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('name') }}</strong>
@@ -156,17 +156,20 @@
                     </div>
                 @endif
 
-                @if($config->hp) <!-- 휴대폰번호 -->
-                    <div class="form-group{{ $errors->has('hp') ? ' has-error' : '' }}">
+                @if( (cache('config.cert')->certUse && cache('config.cert')->certHp) || $config->hp) <!-- 휴대폰번호 -->
+                    <div class="form-group">
                         <label for="hp" class="control-label">휴대폰번호</label>
 
-                        <input id="hp" type="text" class="form-control" name="hp" value="{{ $user->hp }}">
-
-                            @if ($errors->has('hp'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('hp') }}</strong>
-                                </span>
+                        <div class="form-group row">
+                            <div class="col-xs-8">
+                                <input id="hp" type="text" class="form-control" name="hp" value="{{ $user->hp }}">
+                            </div>
+                            @if(cache('config.cert')->certHp)
+                            <div class="col-xs-4">
+                                <input type="button" class="btn btn-block btn-sir" id="win_hp_cert" style="height: 40px;" value="휴대폰 본인확인">
+                            </div>
                             @endif
+                        </div>
                     </div>
                 @endif
 
@@ -214,21 +217,26 @@
                     </div>
                 @endif
 
+<<<<<<< HEAD
 				@if(cache('config.join')->useMemberIcon)
 				<div class="form-group row {{ $errors->has('icon') ? ' has-error' : '' }}">
+=======
+                @if(cache('config.join')->useMemberIcon && $user->level >= cache('config.join')->iconLevel)
+                <div class="form-group row {{ $errors->has('icon') ? ' has-error' : '' }}">
+>>>>>>> 777f691d3e120f98834ce81e4f2693c87902fae3
                     <label for="icon" class="col-xs-12 control-label">회원아이콘</label>
 
                     <div class="col-xs-12">
-						<p>
-							이미지 크기는 가로 {{ cache('config.join')->memberIconWidth }}픽셀, 세로 {{ cache('config.join')->memberIconHeight }}픽셀 이하로 해주세요.<br>
-							gif만 가능하며 용량 {{ cache('config.join')->memberIconSize }}바이트 이하만 등록됩니다.
-						</p>
+                        <p>
+                            이미지 크기는 가로 {{ cache('config.join')->memberIconWidth }}픽셀, 세로 {{ cache('config.join')->memberIconHeight }}픽셀 이하로 해주세요.<br>
+                            gif만 가능하며 용량 {{ cache('config.join')->memberIconSize }}바이트 이하만 등록됩니다.
+                        </p>
                         <input id="icon" type="file" name="icon">
-						@if(File::exists($iconPath))
-						<img src="{{ $iconUrl }}" alt="회원아이콘">
-		                <input type="checkbox" name="delIcon" value="1" id="delIcon">
-		                <label for="delIcon">삭제</label>
-						@endif
+                        @if(File::exists($iconPath))
+                        <img src="{{ $iconUrl }}" alt="회원아이콘">
+                        <input type="checkbox" name="delIcon" value="1" id="delIcon">
+                        <label for="delIcon">삭제</label>
+                        @endif
                         @if ($errors->has('icon'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('icon') }}</strong>
@@ -236,7 +244,7 @@
                         @endif
                     </div>
                 </div>
-				@endif
+                @endif
 
                 <div class="form-group row {{ $errors->has('mailing') ? ' has-error' : '' }}">
                     <label for="mailing" class="col-xs-12 control-label">메일링서비스</label>
@@ -327,18 +335,12 @@
                 <div class="form-group">
                     <button type="button" class="btn btn-sir" onclick="validate();">변경하기</button>
                     <a href="{{ route('home') }}" class="btn btn-sir">취소</a>
-					@if(cache('config.cert')->certIpin)
-					<button type="button" class="btn btn-sir" id="win_ipin_cert">아이핀 본인확인</button>
-					@endif
-					@if(cache('config.cert')->certHp)
-					<button type="button" class="btn btn-sir" id="win_hp_cert">휴대폰 본인확인</button>
-					@endif
                 </div>
                 <div id='recaptcha' class="g-recaptcha"
-            		data-sitekey="{{ env('GOOGLE_INVISIBLE_RECAPTCHA_KEY') }}"
-            		data-callback="onSubmit"
-            		data-size="invisible" style="display:none">
-            	</div>
+                    data-sitekey="{{ env('GOOGLE_INVISIBLE_RECAPTCHA_KEY') }}"
+                    data-callback="onSubmit"
+                    data-size="invisible" style="display:none">
+                </div>
             </form>
         </div>
         </div>
@@ -347,32 +349,32 @@
 </div>
 <script>
 function onSubmit(token) {
-	$("#userForm").submit();
+    $("#userForm").submit();
 }
 function validate(event) {
-	grecaptcha.execute();
+    grecaptcha.execute();
 }
 $(function(){
 
-	// 아이핀인증
+    // 아이핀인증
     $("#win_ipin_cert").click(function() {
         if(!cert_confirm())
             return false;
 
         var url = "http://ahn13.gnutest.com/gnu5/plugin/okname/ipin1.php";
-		{{-- var url = "{{ route('cert.kcb.ipin') }}"; --}}
+        {{-- var url = "{{ route('cert.kcb.ipin') }}"; --}}
         certify_win_open('kcb-ipin', url);
         return;
     });
 
-	// 휴대폰인증
+    // 휴대폰인증
     $("#win_hp_cert").click(function() {
         if(!cert_confirm())
             return false;
 
-		@if(cache('config.cert')->certHp == 'kcb')
-			certify_win_open("kcb-hp", "{{ route('cert.kcb.hp1')}}");
-		@endif
+        @if(cache('config.cert')->certHp == 'kcb')
+            certify_win_open("kcb-hp", "{{ route('cert.kcb.hp1')}}");
+        @endif
 
         return;
     });

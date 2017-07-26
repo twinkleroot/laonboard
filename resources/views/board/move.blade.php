@@ -33,8 +33,8 @@
                         <thead>
                             <tr>
                                 <th> <!-- 전체선택 -->
-                					<input type="checkbox" name="chkAll" onclick="checkAll(this.form)">
-                				</th>
+                                    <input type="checkbox" name="chkAll" onclick="checkAll(this.form)">
+                                </th>
                                 <th>게시판</th>
                             </tr>
                         </thead>

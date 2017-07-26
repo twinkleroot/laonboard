@@ -84,7 +84,6 @@ class Board extends Model
             'order' => $order,
             'direction' => $direction == 'desc' ? 'asc' : 'desc',
             'queryString' => $queryString,
-            'queryStringWithOrderBy' => $queryString. "&order=$order&direction=$direction",
             'skins' => getSkins('board'),
             // 'mobileSkins' => count(getSkins('boardMobile')) == 1 ? getSkins('board') : getSkins('boardMobile'),
         ];

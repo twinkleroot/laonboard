@@ -43,11 +43,11 @@
                     <a class="btn btn-sir" href="{{ route('home') }}">취소</a>
                 </div>
                 <!-- 리캡챠 -->
-            	<div id='recaptcha' class="g-recaptcha"
-            		data-sitekey="{{ env('GOOGLE_INVISIBLE_RECAPTCHA_KEY') }}"
-            		data-callback="onSubmit"
-            		data-size="invisible" style="display:none">
-            	</div>
+                <div id='recaptcha' class="g-recaptcha"
+                    data-sitekey="{{ env('GOOGLE_INVISIBLE_RECAPTCHA_KEY') }}"
+                    data-callback="onSubmit"
+                    data-size="invisible" style="display:none">
+                </div>
             </form>
         </div>
     </div>
@@ -56,10 +56,10 @@
 </div>
 <script>
 function onSubmit(token) {
-	$("#emailForm").submit();
+    $("#emailForm").submit();
 }
 function validate(event) {
-	grecaptcha.execute();
+    grecaptcha.execute();
 }
 </script>
 @endsection

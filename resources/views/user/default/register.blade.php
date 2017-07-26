@@ -10,7 +10,7 @@
 
 @section('include_script')
     <script src='https://www.google.com/recaptcha/api.js' async defer></script>
-	<script src="{{ url('js/certify.js') }}"></script>
+    <script src="{{ url('js/certify.js') }}"></script>
 @endsection
 
 @section('content')
@@ -25,12 +25,12 @@
         </div>
         <div class="panel-body row">
             <form class="contents col-md-8 col-md-offset-2" id="userForm" name="userForm" role="form" method="POST" action="{{ route('user.register') }}">
-				@if(cache('config.cert')->certHp || cache('config.cert')->certIpin)
-				<input type="hidden" name="certType" value="">
-				<input type="hidden" name="name" value="">
-				<input type="hidden" name="hp" value="">
-				<input type="hidden" name="certNo" value="">
-				@endif
+                @if(cache('config.cert')->certHp || cache('config.cert')->certIpin)
+                <input type="hidden" name="certType" value="">
+                <input type="hidden" name="name" value="">
+                <input type="hidden" name="hp" value="">
+                <input type="hidden" name="certNo" value="">
+                @endif
 
                 {{ csrf_field() }}
                 <div class="form-group {{ $errors->has('email') ? ' has-error' : '' }}">
@@ -76,38 +76,38 @@
                     @endif
                 </div>
 
-				@if(cache('config.cert')->certIpin)
-				<div class="form-group">
+                @if(cache('config.cert')->certIpin)
+                <div class="form-group">
                     <button type="button" class="btn btn-lg btn-block btn-sir" id="win_ipin_cert">아이핀 본인확인</button>
 
-					@if ($errors->has('ipin'))
+                    @if ($errors->has('ipin'))
                         <span class="help-block">
                           <strong>{{ $errors->first('ipin') }}</strong>
                         </span>
                     @endif
                 </div>
-				@endif
-				@if(cache('config.cert')->certHp)
-				<div class="form-group">
+                @endif
+                @if(cache('config.cert')->certHp)
+                <div class="form-group">
                     <button type="button" class="btn btn-lg btn-block btn-sir" id="win_hp_cert">휴대폰 본인확인</button>
 
-					@if ($errors->has('hpCert'))
+                    @if ($errors->has('hpCert'))
                         <span class="help-block">
                           <strong>{{ $errors->first('hpCert') }}</strong>
                         </span>
                     @endif
                 </div>
-				@endif
+                @endif
 
                 <div class="form-group">
                     <button type="button" class="btn btn-lg btn-block btn-sir" onclick="validate();">회원가입</button>
                 </div>
                 <!-- 리캡챠 -->
-            	<div id='recaptcha' class="g-recaptcha"
-            		data-sitekey="{{ env('GOOGLE_INVISIBLE_RECAPTCHA_KEY') }}"
-            		data-callback="onSubmit"
-            		data-size="invisible" style="display:none">
-            	</div>
+                <div id='recaptcha' class="g-recaptcha"
+                    data-sitekey="{{ env('GOOGLE_INVISIBLE_RECAPTCHA_KEY') }}"
+                    data-callback="onSubmit"
+                    data-size="invisible" style="display:none">
+                </div>
             </form>
         </div>
     </div>
@@ -116,31 +116,31 @@
 </div>
 <script>
 function onSubmit(token) {
-	$("#registerForm").submit();
+    $("#registerForm").submit();
 }
 function validate(event) {
-	grecaptcha.execute();
+    grecaptcha.execute();
 }
 $(function() {
-	// 아이핀인증
+    // 아이핀인증
     $("#win_ipin_cert").click(function() {
         if(!cert_confirm())
             return false;
 
         var url = "http://ahn13.gnutest.com/gnu5/plugin/okname/ipin1.php";
-		{{-- var url = "{{ route('cert.kcb.ipin') }}"; --}}
+        {{-- var url = "{{ route('cert.kcb.ipin') }}"; --}}
         certify_win_open('kcb-ipin', url);
         return;
     });
 
-	// 휴대폰인증
+    // 휴대폰인증
     $("#win_hp_cert").click(function() {
         if(!cert_confirm())
             return false;
 
-		@if(cache('config.cert')->certHp == 'kcb')
-			certify_win_open("kcb-hp", "{{ route('cert.kcb.hp1')}}");
-		@endif
+        @if(cache('config.cert')->certHp == 'kcb')
+            certify_win_open("kcb-hp", "{{ route('cert.kcb.hp1')}}");
+        @endif
 
         return;
     });

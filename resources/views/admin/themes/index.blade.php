@@ -12,7 +12,6 @@
         function formSubmit() {
             $("#skinForm").submit();
         }
-
         $(document).ready(function(){
             $("#body_tab_type2 li").click(function () {
                 $('.adm_box').hide().eq($(this).index()).show();
@@ -193,7 +192,7 @@
                     </div>
                 </div>
             </div>
-        </form> 
+        </form>
     </section>
 </div>
 @endsection

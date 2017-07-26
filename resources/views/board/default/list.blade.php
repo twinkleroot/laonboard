@@ -9,77 +9,77 @@
     <input type="hidden" id='page' name='page' value='{{ $writes->currentPage() }}' />
     {{ csrf_field() }}
 
-	<div class="pull-left bd_head">
-		<span><a href="{{ route('board.index', $board->id) }}">{{ $board->subject }}</a> 전체 {{ $writes->total() }}건 {{ $writes->currentPage() }}페이지</span>
-	</div>
+    <div class="pull-left bd_head">
+        <span><a href="{{ route('board.index', $board->id) }}">{{ $board->subject }}</a> 전체 {{ $writes->total() }}건 {{ $writes->currentPage() }}페이지</span>
+    </div>
 
     <div class="bd_btn">
-		<ul id="bd_btn" class="pull-right">
+        <ul id="bd_btn" class="pull-right">
             @if(session()->get('admin'))
-    			<li class="dropdown">
-    				<a href="#" class="dropdown-toggle bd_rd_more" data-toggle="dropdown" role="button" aria-expanded="false">
-    					<button type="" class="btn btn-danger">
-    						<i class="fa fa-cog"></i> 관리
-    					</button>
-    				</a>
-    				<ul class="dropdown-menu bd_adm" role="menu">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle bd_rd_more" data-toggle="dropdown" role="button" aria-expanded="false">
+                        <button type="" class="btn btn-danger">
+                            <i class="fa fa-cog"></i> 관리
+                        </button>
+                    </a>
+                    <ul class="dropdown-menu bd_adm" role="menu">
                         <li><input type="submit" value="선택삭제" onclick="document.pressed=this.value"/></li>
-    	                <li><input type="submit" value="선택복사" onclick="document.pressed=this.value"/></li>
+                        <li><input type="submit" value="선택복사" onclick="document.pressed=this.value"/></li>
                         <li><input type="submit" value="선택이동" onclick="document.pressed=this.value"/></li>
-    	                <li><a href="{{ route('admin.boards.edit', $board->id) }}">게시판 설정</a></li>
-    	            </ul>
-    			</li>
+                        <li><a href="{{ route('admin.boards.edit', $board->id) }}">게시판 설정</a></li>
+                    </ul>
+                </li>
             @endif
 
-			<li class="mr0">
+            <li class="mr0">
                 @if($board->use_rss_view && $board->list_level == 1 && $board->read_level == 1)
                     <button type="button" class="btn btn-sir" onclick="location.href='{{ route('rss', $board->id) }}'">
-    					RSS
-    				</button>
+                        RSS
+                    </button>
                 @endif
-				<button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->id). '?'. $request->getQueryString() }}'">
-					<i class="fa fa-pencil"></i> 글쓰기
-				</button>
-			</li>
-		</ul>
-	</div>
+                <button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->id). '?'. $request->getQueryString() }}'">
+                    <i class="fa fa-pencil"></i> 글쓰기
+                </button>
+            </li>
+        </ul>
+    </div>
 
     @if($board->use_category == 1 )
     <div class="bd_category">
-    	<ul>
+        <ul>
             <!-- 선택된 카테고리의 class에 on 추가 -->
-    		<li class="btn" id="all"><a href="{{ route('board.index', $board->id) }}">전체</a></li>
+            <li class="btn" id="all"><a href="{{ route('board.index', $board->id) }}">전체</a></li>
             @foreach($categories as $category)
                 <li class="btn" id="{{ $category }}"><a href="{{ route('board.index', $board->id). '?category='. $category }}">{{ $category }}</a></li>
             @endforeach
-    	</ul>
-	</div>
+        </ul>
+    </div>
     @endif
 
-	<!-- 리스트형 게시판 -->
-	<table class="table box">
-		<thead>
-			<tr>
-				<th>번호</th>
+    <!-- 리스트형 게시판 -->
+    <table class="table box">
+        <thead>
+            <tr>
+                <th>번호</th>
                 @if(session()->get('admin'))
-    				<th> <!-- 전체선택 -->
-    					<input type="checkbox" name="chkAll" onclick="checkAll(this.form)">
-    				</th>
+                    <th> <!-- 전체선택 -->
+                        <input type="checkbox" name="chkAll" onclick="checkAll(this.form)">
+                    </th>
                 @endif
-				<th>제목</th>
-				<th>글쓴이</th>
-				<th>날짜</th>
-				<th>조회</th>
-				@if($board->use_good)
-				<th>추천</th>
-				@endif
-				@if($board->use_nogood)
-				<th>비추천</th>
-				@endif
-			</tr>
-		</thead>
-		<tbody>
-		@if(count($writes) > 0)
+                <th>제목</th>
+                <th>글쓴이</th>
+                <th>날짜</th>
+                <th>조회</th>
+                @if($board->use_good)
+                <th>추천</th>
+                @endif
+                @if($board->use_nogood)
+                <th>비추천</th>
+                @endif
+            </tr>
+        </thead>
+        <tbody>
+        @if(count($writes) > 0)
         @foreach($writes as $write)
             @if($kind != 'user_id' && in_array($write->id, $notices) && $search == 0 && $currenctCategory == '')
             <tr id="bd_notice">
@@ -97,11 +97,11 @@
                     @endif
                 </td>
                 @if(session()->get('admin'))
-    				<td class="bd_check"><input type="checkbox" name="chkId[]" class="writeId" value='{{ $write->id }}'></td>
+                    <td class="bd_check"><input type="checkbox" name="chkId[]" class="writeId" value='{{ $write->id }}'></td>
                 @endif
-				<td @if($write->reply != '') class="bd_reply" style="padding-left: calc(20px * {{ strlen($write->reply) }} @endif">
+                <td @if($write->reply != '') class="bd_reply" style="padding-left: calc(20px * {{ strlen($write->reply) }} @endif">
 
-					<span class="bd_subject">
+                    <span class="bd_subject">
                         @if($board->use_category == 1 )
                             <a href="{{ route('board.index', $board->id). '?category='. $write->ca_name }}" class="subject_cg">{{ $write->ca_name }}</a>
                         @endif
@@ -130,22 +130,22 @@
                         @if(str_contains($write->option, 'secret'))
                             <img src="/themes/default/images/icon_secret.gif"> <!-- 비밀 -->
                         @endif
-						@if($write->comment > 0)
-							<span class="bd_cmt">{{ $write->comment }}</span>
-						@endif
+                        @if($write->comment > 0)
+                            <span class="bd_cmt">{{ $write->comment }}</span>
+                        @endif
                     </span>
-				</td>
-				<td class="bd_name">
-				@if(auth()->user() && $board->use_sideview)
+                </td>
+                <td class="bd_name">
+                @if(auth()->user() && $board->use_sideview)
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
                     <ul class="dropdown-menu" role="menu">
                     @if($write->user_level)
-						@component('board.sideview', ['id' => $write->user_id, 'name' => $write->name, 'email' => $write->email])
+                        @component('board.sideview', ['id' => $write->user_id, 'name' => $write->name, 'email' => $write->email])
                         @endcomponent
-						<li><a href="/board/{{ $board->id }}?kind=user_id&amp;keyword={{ $write->user_id }}&amp;category={{ $currenctCategory }}">닉네임으로 검색</a></li>
-					@else
-						<li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
-					@endif
+                        <li><a href="/board/{{ $board->id }}?kind=user_id&amp;keyword={{ $write->user_id }}&amp;category={{ $currenctCategory }}">이 회원이 작성한 글</a></li>
+                    @else
+                        <li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
+                    @endif
                     @if($write->user_level)
                         <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>
                     @endif
@@ -154,12 +154,12 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
                     <ul class="dropdown-menu" role="menu">
                     @if($write->user_level)
-						@component('board.sideview', ['id' => $write->user_id, 'name' => $write->name, 'email' => $write->email])
+                        @component('board.sideview', ['id' => $write->user_id, 'name' => $write->name, 'email' => $write->email])
                         @endcomponent
-                        <li><a href="/board/{{ $board->id }}?kind=user_id&amp;keyword={{ $write->user_id }}&amp;category={{ $currenctCategory }}">닉네임으로 검색</a></li>
-					@else
-						<li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
-					@endif
+                        <li><a href="/board/{{ $board->id }}?kind=user_id&amp;keyword={{ $write->user_id }}&amp;category={{ $currenctCategory }}">이 회원이 작성한 글</a></li>
+                    @else
+                        <li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
+                    @endif
                     @if($write->user_level)
                         <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>
                     @endif
@@ -168,27 +168,27 @@
                     {{ $write->name }}
                 @endif
                 </td>
-				<td class="bd_date">@monthAndDay($write->created_at)</td>
-				<td class="bd_hits">{{ $write->hit }}</td>
-				@if($board->use_good)
-				<td class="bd_re"><span class="up">{{ $write->good }}</span></td>
-				@endif
-				@if($board->use_nogood)
-				<td class="bd_nre">{{ $write->nogood }}</td>
-				@endif
-			</tr>
+                <td class="bd_date">@monthAndDay($write->created_at)</td>
+                <td class="bd_hits">{{ $write->hit }}</td>
+                @if($board->use_good)
+                <td class="bd_re"><span class="up">{{ $write->good }}</span></td>
+                @endif
+                @if($board->use_nogood)
+                <td class="bd_nre">{{ $write->nogood }}</td>
+                @endif
+            </tr>
         @endforeach
-		@else
-			<tr>
-				<td colspan="6">
-					<span class="empty_table">
+        @else
+            <tr>
+                <td colspan="6">
+                    <span class="empty_table">
                         <i class="fa fa-exclamation-triangle"></i> 게시물이 없습니다.
                     </span>
-				</td>
-			</tr>
-		@endif
-		</tbody>
-	</table>
+                </td>
+            </tr>
+        @endif
+        </tbody>
+    </table>
 </form>
 
 <div class="bd_btn">
@@ -203,10 +203,8 @@
                     <option value="subject" @if($kind == 'subject') selected @endif>제목</option>
                     <option value="content" @if($kind == 'content') selected @endif>내용</option>
                     <option value="subject || content" @if($kind == 'subject || content') selected @endif>제목+내용</option>
-                    <option value="nick, 0" @if($kind == 'nick, 0') selected @endif>회원닉네임</option>
-                    <option value="nick, 1" @if($kind == 'nick, 1') selected @endif>회원닉네임(코)</option>
                     <option value="name, 0" @if($kind == 'name, 0') selected @endif>글쓴이</option>
-                    <option value="name, 1" @if($kind == 'name, 1') selected @endif>글쓴이(코)</option>
+                    <option value="name, 1" @if($kind == 'name, 1') selected @endif>글쓴이(코멘트 포함)</option>
                 </select>
 
                 <label for="keyword" class="sr-only">검색어</label>
@@ -221,31 +219,14 @@
     <ul id="bd_btn">
         <li class="mr0">
             <button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->id). '?'. $request->getQueryString() }}'">
-				<i class="fa fa-pencil"></i> 글쓰기
-			</button>
+                <i class="fa fa-pencil"></i> 글쓰기
+            </button>
         </li>
     </ul>
 </div>
 
 {{-- 페이지 처리 --}}
-@if($search == 1 && $currenctCategory != '')
-    {{ $writes->appends([
-        'category' => $currenctCategory,
-        'kind' => $kind,
-        'keyword' => $keyword,
-    ]) ->links() }}
-@elseif($search != 1 && $currenctCategory != '')
-    {{ $writes->appends([
-        'category' => $currenctCategory,
-    ]) ->links() }}
-@elseif($search == 1 && $currenctCategory == '')
-    {{ $writes->appends([
-        'kind' => $kind,
-        'keyword' => $keyword,
-    ]) ->links() }}
-@else
-    {{ $writes->links() }}
-@endif
+{{ $writes->appends(Request::except('page'))->links() }}
 
 <script>
 $(function(){

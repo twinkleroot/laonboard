@@ -22,10 +22,10 @@
             if(popup == 1) {
                 window.close();             // 팝업창을 닫는다.
             } else {
-				if(opener) {
-					window.close();             // 팝업창을 닫는다.
-				}
-			}
+                if(opener) {
+                    window.close();             // 팝업창을 닫는다.
+                }
+            }
 
             if(redirect != '') {
                 location.href = redirect;

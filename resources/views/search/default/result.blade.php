@@ -114,8 +114,8 @@
                                         <li><a href="{{ route('user.profile', $write->user_id_hashKey) }}" class="winProfile" target="_blank" onclick="winProfile(this.href); return false;">자기소개</a></li>
                                         <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>
                                         @if(session()->get('admin'))
-                    		                <li><a href="{{ route('admin.users.edit', $write->user_id_hashKey) }}" target="_blank">회원정보변경</a></li>
-                    		                <li><a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $write->email }}" target="_blank">포인트내역</a></li>
+                                            <li><a href="{{ route('admin.users.edit', $write->user_id_hashKey) }}" target="_blank">회원정보변경</a></li>
+                                            <li><a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $write->email }}" target="_blank">포인트내역</a></li>
                                         @endif
                                     @elseif(auth()->guest() && $write->user_id)
                                         <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>

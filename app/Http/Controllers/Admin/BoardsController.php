@@ -30,6 +30,10 @@ class BoardsController extends Controller
 
         $params = $this->boardModel->getBoardIndexParams($request);
 
+		// $boards = $params['boards'];
+		// $json = $boards->appends($request->except('page'))->jsonSerialize();
+		// dd($boards->appends($request->except('page'))->url($boards->currentPage()));
+
         return view('admin.boards.index', $params);
     }
 

@@ -33,7 +33,7 @@
                 cache()->forget($cache);
             }
         ?>
-    	<li>완료됨</li>
+        <li>완료됨</li>
     </ul>
 
     <div class="file_delete_txt">

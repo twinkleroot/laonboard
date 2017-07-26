@@ -223,17 +223,9 @@ class Write extends Model
             // 코멘트 검색이 select box에 있는 경우
             } else if(str_contains($kind, ',')) {
                 $kinds = explode(',', preg_replace("/\s+/", "", $kind));
-				if($kinds[0] == 'nick') {	// 닉네임 검색
-	                $user = User::where('nick', $keyword)->first();
-	                // 검색 쿼리 붙이기
-	                if($user) {
-	                    $query = $query->where(['user_id' => $user->id, 'is_comment'=> $kinds[1]])
-	                                   ->where('is_comment', $kinds[1]);
-	                } else {
-	                    abort(500, $keyword. ' 사용자가 존재하지 않습니다.');
-	                }
-				} else {	// 글쓴이 검색
-					$query = $query->where([$writeModel->table.'.name' => $keyword, 'is_comment'=> $kinds[1]]);
+				$query = $query->where($writeModel->table.'.name', $keyword);
+				if($kinds[1] == 0) {	// 글쓴이 원글만 검색
+					$query = $query->where('is_comment', $kinds[1]);
 				}
             // 단독 키워드 검색(제목, 내용)
             } else {
@@ -350,7 +342,6 @@ class Write extends Model
         } else if (strpos($write->option, 'html2') !== false) {
             $html = 2;
         }
-
          // 에디터를 사용하면서 html에 체크하지 않았을 때
         if($this->board->use_dhtml_editor && $html == 0) {
             $write->content = convertContent($write->content, 2);
@@ -405,8 +396,10 @@ class Write extends Model
             }
         }
 
-        // 에디터로 업로드한 이미지 경로를 추출해서 내용의 img 태그 부 분을 교체한다.
+		// dd($write->content);
+        // 에디터로 업로드한 이미지 경로를 추출해서 내용의 img 태그 부분을 교체한다.
         $write->content = $this->includeImagePathByEditor($write->content);
+
 
         return [
             'board' => $this->board,
@@ -740,8 +733,7 @@ class Write extends Model
     public function storeWrite($writeModel, $request)
     {
         $inputData = $request->all();
-        $inputData = array_except($inputData, ['_token', 'file_content', 'attach_file', 'html',
-                                                'secret', 'mail', 'notice', 'uid', 'type', 'writeId', 'g-recaptcha-response']);
+        $inputData = array_except($inputData, ['_token', 'file_content', 'attach_file', 'html', 'secret', 'mail', 'notice', 'uid', 'type', 'writeId', 'g-recaptcha-response']);
         $inputData = $this->convertSomeField($inputData);
 
         $options = [];
