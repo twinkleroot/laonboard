@@ -24,6 +24,7 @@ Route::get('/search', ['as' => 'search', 'uses' => 'Search\SearchController@resu
 // 관리자 그룹
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], function() {
     // 관리자 메인
+    Route::get('', ['as' => 'admin.index', 'uses' => 'Admin\IndexController@index']);
     Route::get('index', ['as' => 'admin.index', 'uses' => 'Admin\IndexController@index']);
 
     // 기본 환경 설정

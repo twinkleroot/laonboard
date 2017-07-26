@@ -4,7 +4,7 @@
     <script>
         $(document).ready(function(){
             alert("{{ $exception->getMessage() }}");
-            history.back();
+            location.href="/";
         });
     </script>
 </head>
