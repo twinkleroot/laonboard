@@ -9,124 +9,124 @@
     <input type="hidden" id='page' name='page' value='{{ $writes->currentPage() }}' />
     {{ csrf_field() }}
 
-	<div class="pull-left bd_head">
-		<span><a href="{{ route('board.index', $board->id) }}">{{ $board->subject }}</a> 전체 {{ $writes->total() }}건 {{ $writes->currentPage() }}페이지</span>
-	</div>
+    <div class="pull-left bd_head">
+        <span><a href="{{ route('board.index', $board->id) }}">{{ $board->subject }}</a> 전체 {{ $writes->total() }}건 {{ $writes->currentPage() }}페이지</span>
+    </div>
 
     <div class="bd_btn">
-		<ul id="bd_btn" class="pull-right">
+        <ul id="bd_btn" class="pull-right">
             @if(session()->get('admin'))
-			<li class="dropdown">
-				<a href="#" class="dropdown-toggle bd_rd_more" data-toggle="dropdown" role="button" aria-expanded="false">
-					<button type="" class="btn btn-danger">
-						<i class="fa fa-cog"></i> 관리
-					</button>
-				</a>
-				<ul class="dropdown-menu bd_adm" role="menu">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle bd_rd_more" data-toggle="dropdown" role="button" aria-expanded="false">
+                    <button type="" class="btn btn-danger">
+                        <i class="fa fa-cog"></i> 관리
+                    </button>
+                </a>
+                <ul class="dropdown-menu bd_adm" role="menu">
                     <li><input type="submit" value="선택삭제" onclick="document.pressed=this.value"/></li>
-	                <li><input type="submit" value="선택복사" onclick="document.pressed=this.value"/></li>
+                    <li><input type="submit" value="선택복사" onclick="document.pressed=this.value"/></li>
                     <li><input type="submit" value="선택이동" onclick="document.pressed=this.value"/></li>
-	                <li><a href="{{ route('admin.boards.edit', $board->id) }}">게시판 설정</a></li>
-	            </ul>
-			</li>
+                    <li><a href="{{ route('admin.boards.edit', $board->id) }}">게시판 설정</a></li>
+                </ul>
+            </li>
             @endif
 
-			<li class="mr0">
+            <li class="mr0">
                 @if($board->use_rss_view && $board->list_level == 1 && $board->read_level == 1)
                 <button type="button" class="btn btn-sir" onclick="location.href='{{ route('rss', $board->id) }}'">
-					RSS
-				</button>
+                    RSS
+                </button>
                 @endif
-				<button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->id). '?'. $request->getQueryString() }}'">
-					<i class="fa fa-pencil"></i> 글쓰기
-				</button>
-			</li>
-		</ul>
-	</div>
+                <button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->id). '?'. $request->getQueryString() }}'">
+                    <i class="fa fa-pencil"></i> 글쓰기
+                </button>
+            </li>
+        </ul>
+    </div>
 
-	@if($board->use_category == 1 )
-	<div class="bd_category">
-		<ul>
-			<!-- 선택된 카테고리의 class에 on 추가 -->
-			<li class="btn" id="all"><a href="{{ route('board.index', $board->id) }}">전체</a></li>
-			@foreach($categories as $category)
-			<li class="btn" id="{{ $category }}"><a href="{{ route('board.index', $board->id). '?category='. $category }}">{{ $category }}</a></li>
-			@endforeach
-		</ul>
-	</div>
-	@endif
+    @if($board->use_category == 1 )
+    <div class="bd_category">
+        <ul>
+            <!-- 선택된 카테고리의 class에 on 추가 -->
+            <li class="btn" id="all"><a href="{{ route('board.index', $board->id) }}">전체</a></li>
+            @foreach($categories as $category)
+            <li class="btn" id="{{ $category }}"><a href="{{ route('board.index', $board->id). '?category='. $category }}">{{ $category }}</a></li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
 
-	<!-- 갤러리형 게시판 -->
-	<input type="checkbox" name="chkAll" onclick="checkAll(this.form)"> <!-- 전체선택 -->
-	<div id="gry" class="row">
-		@if(count($writes) > 0)
-		@foreach($writes as $write)
-		<div class="col-md-3 col-sm-6 col-xs-12 gry"> <!-- 한줄에 4개 배치 -->
-			<input type="checkbox" name="chkId[]" class="writeId" value='{{ $write->id }}'>
-			<div>
-				<div class="gry_img" style="height:{{ $board->gallery_height }}px;"> <!-- height 기본값 150px로 css처리 해둠 -->
-					@if($viewParams == '')
+    <!-- 갤러리형 게시판 -->
+    <input type="checkbox" name="chkAll" onclick="checkAll(this.form)"> <!-- 전체선택 -->
+    <div id="gry" class="row">
+        @if(count($writes) > 0)
+        @foreach($writes as $write)
+        <div class="col-md-3 col-sm-6 col-xs-12 gry"> <!-- 한줄에 4개 배치 -->
+            <input type="checkbox" name="chkId[]" class="writeId" value='{{ $write->id }}'>
+            <div>
+                <div class="gry_img" style="height:{{ $board->gallery_height }}px;"> <!-- height 기본값 150px로 css처리 해둠 -->
+                    @if($viewParams == '')
                     <a href="/board/{{ $board->id }}/view/{{ $write->parent }}">
                     @else
                     <a href="/board/{{ $board->id }}/view/{{ $write->parent }}?{{ $viewParams }}">
-					@endif
-						@if($write->listThumbnailPath == '공지' || $write->listThumbnailPath == 'no image')
-							<span class="gry_txt" style="padding: calc( {{ $board->gallery_height }}px / 2 - 10px ) 0;">{{ $write->listThumbnailPath }}</span>
-						@else
-						<img src="{{ $write->listThumbnailPath }}" style="width:100%;min-height:{{ $board->gallery_height }}px;">
-						@endif
-					</a>
-				</div>
-				<div class="gry_info">
-					<p>
-						<span class="bd_subject">
-							@if($board->use_category == 1 )
-	                        <a href="{{ route('board.index', $board->id). '?category='. $write->ca_name }}" class="subject_cg">{{ $write->ca_name }}</a>
-	                        @endif
-							@if($viewParams == '')
-	                        <a href="/board/{{ $board->id }}/view/{{ $write->parent }}">
-								@if(isset($request->writeId) && $request->writeId == $write->id)
-								<span class="read">	{{-- 열람중 --}}
-									{!! $write->subject !!}
-								</span>
-								@else
-								{!! $write->subject !!}
-								@endif
-							</a>
-	                        @else
-	                        <a href="/board/{{ $board->id }}/view/{{ $write->parent }}?{{ $viewParams }}">
-								@if(isset($request->writeId) && $request->writeId == $write->id)
-								<span class="read">	{{-- 열람중 --}}
-									{!! $write->subject !!}
-								</span>
-								@else
-								{!! $write->subject !!}
-								@endif
-	                        @endif
-							{{-- 글올린시간 + 설정에 있는 신규 글 시간 > 현재 시간 --}}
-	                        @if(date($write->created_at->addHours(24)) > date("Y-m-d H:i:s", time()) && $board->new != 0 )
-	                        <img src="/themes/default/images/icon_new.gif"> <!-- 새글 -->
-							@endif
-							<!-- 인기글 -->
-	                        @if($write->hit >= $board->hot)
+                    @endif
+                        @if($write->listThumbnailPath == '공지' || $write->listThumbnailPath == 'no image')
+                            <span class="gry_txt" style="padding: calc( {{ $board->gallery_height }}px / 2 - 10px ) 0;">{{ $write->listThumbnailPath }}</span>
+                        @else
+                        <img src="{{ $write->listThumbnailPath }}" style="width:100%;min-height:{{ $board->gallery_height }}px;">
+                        @endif
+                    </a>
+                </div>
+                <div class="gry_info">
+                    <p>
+                        <span class="bd_subject">
+                            @if($board->use_category == 1 )
+                            <a href="{{ route('board.index', $board->id). '?category='. $write->ca_name }}" class="subject_cg">{{ $write->ca_name }}</a>
+                            @endif
+                            @if($viewParams == '')
+                            <a href="/board/{{ $board->id }}/view/{{ $write->parent }}">
+                                @if(isset($request->writeId) && $request->writeId == $write->id)
+                                <span class="read">    {{-- 열람중 --}}
+                                    {!! $write->subject !!}
+                                </span>
+                                @else
+                                {!! $write->subject !!}
+                                @endif
+                            </a>
+                            @else
+                            <a href="/board/{{ $board->id }}/view/{{ $write->parent }}?{{ $viewParams }}">
+                                @if(isset($request->writeId) && $request->writeId == $write->id)
+                                <span class="read">    {{-- 열람중 --}}
+                                    {!! $write->subject !!}
+                                </span>
+                                @else
+                                {!! $write->subject !!}
+                                @endif
+                            @endif
+                            {{-- 글올린시간 + 설정에 있는 신규 글 시간 > 현재 시간 --}}
+                            @if(date($write->created_at->addHours(24)) > date("Y-m-d H:i:s", time()) && $board->new != 0 )
+                            <img src="/themes/default/images/icon_new.gif"> <!-- 새글 -->
+                            @endif
+                            <!-- 인기글 -->
+                            @if($write->hit >= $board->hot)
                             <img src="/themes/default/images/icon_hot.gif"> <!-- 인기 -->
-	                        @endif
-							@if($write->comment > 0)
-	                        <span class="bd_cmt">{{ $write->comment }}</span>
-	                    	@endif
-						</span>
-					</p>
-					<span>
-					@if(auth()->user() && $board->use_sideview)
+                            @endif
+                            @if($write->comment > 0)
+                            <span class="bd_cmt">{{ $write->comment }}</span>
+                            @endif
+                        </span>
+                    </p>
+                    <span>
+                    @if(auth()->user() && $board->use_sideview)
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
                         <ul class="dropdown-menu" role="menu">
-						@if($write->user_level)
-							@component('board.sideview', ['id' => $write->user_id, 'name' => $write->name, 'email' => $write->email])
+                        @if($write->user_level)
+                            @component('board.sideview', ['id' => $write->user_id, 'name' => $write->name, 'email' => $write->email])
                             @endcomponent
-							<li><a href="/board/{{ $board->id }}?kind=user_id&amp;keyword={{ $write->user_id }}&amp;category={{ $currenctCategory }}">이 회원이 작성한 글</a></li>
-						@else
-							<li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
-						@endif
+                            <li><a href="/board/{{ $board->id }}?kind=user_id&amp;keyword={{ $write->user_id }}&amp;category={{ $currenctCategory }}">이 회원이 작성한 글</a></li>
+                        @else
+                            <li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
+                        @endif
                         @if($write->user_level)
                             <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>
                         @endif
@@ -134,13 +134,13 @@
                     @elseif(auth()->guest() && $board->use_sideview)
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
                         <ul class="dropdown-menu" role="menu">
-						@if($write->user_level)
-							@component('board.sideview', ['id' => $write->user_id, 'name' => $write->name, 'email' => $write->email])
+                        @if($write->user_level)
+                            @component('board.sideview', ['id' => $write->user_id, 'name' => $write->name, 'email' => $write->email])
                             @endcomponent
                             <li><a href="/board/{{ $board->id }}?kind=user_id&amp;keyword={{ $write->user_id }}&amp;category={{ $currenctCategory }}">이 회원이 작성한 글</a></li>
-						@else
-							<li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
-						@endif
+                        @else
+                            <li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
+                        @endif
                         @if($write->user_level)
                             <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>
                         @endif
@@ -148,27 +148,27 @@
                     @else
                         {{ $write->name }}
                     @endif
-					</span>
-					<span><i class="fa fa-clock-o"></i>@monthAndDay($write->created_at)</span>
-					<span><i class="fa fa-clock-o"></i>{{ $write->hit }}</span><br>
-					@if($board->use_good)
-					<span><i class="fa fa-thumbs-up"></i>{{ $write->good }}</span>
-					@endif
-					@if($board->use_nogood)
-					<span><i class="fa fa-thumbs-down"></i>{{ $write->nogood }}</span>
-					@endif
-				</div>
-			</div>
-		</div>
-		@endforeach
-		@else
-			<div class="gry_empty_table">
-				<span class="empty_table">
+                    </span>
+                    <span><i class="fa fa-clock-o"></i>@monthAndDay($write->created_at)</span>
+                    <span><i class="fa fa-clock-o"></i>{{ $write->hit }}</span><br>
+                    @if($board->use_good)
+                    <span><i class="fa fa-thumbs-up"></i>{{ $write->good }}</span>
+                    @endif
+                    @if($board->use_nogood)
+                    <span><i class="fa fa-thumbs-down"></i>{{ $write->nogood }}</span>
+                    @endif
+                </div>
+            </div>
+        </div>
+        @endforeach
+        @else
+            <div class="gry_empty_table">
+                <span class="empty_table">
                     <i class="fa fa-exclamation-triangle"></i> 게시물이 없습니다.
                 </span>
-			</div>
-		@endif
-	</div>
+            </div>
+        @endif
+    </div>
 </form>
 
 <div class="bd_btn">
@@ -197,38 +197,21 @@
     </ul>
 
     <ul id="bd_btn">
-		<li class="mr0">
+        <li class="mr0">
             @if($board->use_rss_view && $board->list_level == 1 && $board->read_level == 1)
             <button type="button" class="btn btn-sir" onclick="location.href='{{ route('rss', $board->id) }}'">
-				RSS
-			</button>
+                RSS
+            </button>
             @endif
-			<button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->id). '?'. $request->getQueryString() }}'">
-				<i class="fa fa-pencil"></i> 글쓰기
-			</button>
-		</li>
+            <button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->id). '?'. $request->getQueryString() }}'">
+                <i class="fa fa-pencil"></i> 글쓰기
+            </button>
+        </li>
     </ul>
 </div>
 
 {{-- 페이지 처리 --}}
-@if($search == 1 && $currenctCategory != '')
-    {{ $writes->appends([
-        'category' => $currenctCategory,
-        'kind' => $kind,
-        'keyword' => $keyword,
-    ]) ->links() }}
-@elseif($search != 1 && $currenctCategory != '')
-    {{ $writes->appends([
-        'category' => $currenctCategory,
-    ]) ->links() }}
-@elseif($search == 1 && $currenctCategory == '')
-    {{ $writes->appends([
-        'kind' => $kind,
-        'keyword' => $keyword,
-    ]) ->links() }}
-@else
-    {{ $writes->links() }}
-@endif
+{{ $writes->appends(Request::except('page'))->links() }}
 
 <script>
 $(function(){

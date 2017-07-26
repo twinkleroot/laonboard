@@ -24,13 +24,13 @@
 </div>
 <div class="body-contents">
     <div id="auth_list">
-    	<ul id="adm_btn">
-    		<li>
-    			<span>
+        <ul id="adm_btn">
+            <li>
+                <span>
                     전체 {{ count($popups) }}건
                 </span>
-    		</li>
-    	</ul>
+            </li>
+        </ul>
 
         <ul id="adm_btn" class="pull-right">
             <li>
@@ -38,13 +38,13 @@
             </li>
         </ul>
 
-    	<table class="table table-striped box">
-    		<thead>
-    			<tr>
-    				<th>번호</th>
-    				<th>제목</th>
-    				<th>접속기기</th>
-    				<th>시작일시</th>
+        <table class="table table-striped box">
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>제목</th>
+                    <th>접속기기</th>
+                    <th>시작일시</th>
                     <th>종료일시</th>
                     <th>시간</th>
                     <th>Left</th>
@@ -52,19 +52,19 @@
                     <th>Width</th>
                     <th>Height</th>
                     <th>관리</th>
-    			</tr>
-    		</thead>
-    		<tbody>
+                </tr>
+            </thead>
+            <tbody>
                 @if(count($popups) > 0)
                     @foreach($popups as $popup)
-        			<!-- 자료가 있을 경우 -->
-        			<tr>
+                    <!-- 자료가 있을 경우 -->
+                    <tr>
                         <td class="td_numsmall">{{ $popup->id }}</td>
                         <td class="td_subject">{{ $popup->subject }}</td>
-        				<td class="td_mngsmall">@if($popup->device == 'pc')PC @elseif($popup->device == 'mobile')모바일 @else 모두 @endif</td>
+                        <td class="td_mngsmall">@if($popup->device == 'pc')PC @elseif($popup->device == 'mobile')모바일 @else 모두 @endif</td>
                         <td class="td_email">{{ $popup->begin_time }}</td>
                         <td class="td_email">{{ $popup->end_time }}</td>
-        				<td class="td_mngsmall">{{ $popup->disable_hours }}</td>
+                        <td class="td_mngsmall">{{ $popup->disable_hours }}</td>
                         <td class="td_mngsmall">{{ $popup->left }}px</td>
                         <td class="td_mngsmall">{{ $popup->top }}px</td>
                         <td class="td_mngsmall">{{ $popup->width }}px</td>
@@ -73,21 +73,21 @@
                             <a href="{{ route('admin.popups.edit', $popup->id) }}">수정</a>
                             <a href="{{ route('admin.popups.destroy', $popup->id) }}" onclick="del(this.href); return false;">삭제</a>
                         </td>
-        			</tr>
+                    </tr>
                     @endforeach
                 @else
                 <!-- 자료가 없을 경우 -->
                     <tr>
-        				<td colspan="11">
-        					<span class="empty_table">
-        						<i class="fa fa-exclamation-triangle"></i> 자료가 없습니다.
-        					</span>
-        				</td>
-        			</tr>
+                        <td colspan="11">
+                            <span class="empty_table">
+                                <i class="fa fa-exclamation-triangle"></i> 자료가 없습니다.
+                            </span>
+                        </td>
+                    </tr>
                  <!-- 끝 -->
                 @endif
-    		</tbody>
-    	</table>
+            </tbody>
+        </table>
     </div>
 </div>
 @endsection

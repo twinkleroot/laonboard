@@ -591,13 +591,13 @@
                             <td>
                                 본인확인 여부에 따라 게시물을 조회 할 수 있도록 합니다.<br />
                                 <select name="use_cert">
-									<option value="not-use" @if($type == 'edit' && $board->use_cert == 'not-use') selected @elseif($type != 'edit') selected @endif>사용안함</option>
-									@if(cache('config.cert')->certUse)
-									<option value="cert" @if($type == 'edit' && $board->use_cert == 'cert') selected @endif>본인확인된 회원전체</option>
-									<option value="adult" @if($type == 'edit' && $board->use_cert == 'adult') selected @endif>본인확인된 성인회원만</option>
-									<option value="hp-cert" @if($type == 'edit' && $board->use_cert == 'hp-cert') selected @endif>휴대폰 본인확인된 회원전체</option>
-									<option value="hp-adult" @if($type == 'edit' && $board->use_cert == 'hp-adult') selected @endif>휴대폰 본인확인된 성인회원만</option>
-									@endif
+                                    <option value="not-use" @if($type == 'edit' && $board->use_cert == 'not-use') selected @elseif($type != 'edit') selected @endif>사용안함</option>
+                                    @if(cache('config.cert')->certUse)
+                                    <option value="cert" @if($type == 'edit' && $board->use_cert == 'cert') selected @endif>본인확인된 회원전체</option>
+                                    <option value="adult" @if($type == 'edit' && $board->use_cert == 'adult') selected @endif>본인확인된 성인회원만</option>
+                                    <option value="hp-cert" @if($type == 'edit' && $board->use_cert == 'hp-cert') selected @endif>휴대폰 본인확인된 회원전체</option>
+                                    <option value="hp-adult" @if($type == 'edit' && $board->use_cert == 'hp-adult') selected @endif>휴대폰 본인확인된 성인회원만</option>
+                                    @endif
                                 </select>
                             </td>
                             <td>

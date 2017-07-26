@@ -27,7 +27,7 @@
 </div>
 <div class="body-contents">
     <div id="auth_list">
-    	<ul id="adm_btn">
+        <ul id="adm_btn">
             <li>
                 <button type="button" class="btn btn-sir" onclick="location.href='{{ route('admin.populars.rank') }}?list=all';">
                      전체목록
@@ -52,34 +52,34 @@
             </form>
         </div>
 
-    	<table class="table table-striped box">
-    		<thead>
-    			<tr>
-    				<th>순위</th>
-    				<th>검색어</th>
-    				<th>검색회수</th>
-    			</tr>
-    		</thead>
-    		<tbody>
-    			@if(count($ranks) > 0)
+        <table class="table table-striped box">
+            <thead>
+                <tr>
+                    <th>순위</th>
+                    <th>검색어</th>
+                    <th>검색회수</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if(count($ranks) > 0)
                 @foreach($ranks as $rank)
-    			<tr>
+                <tr>
                     <td class="td_numsmall">{{ $loop->iteration }}</td>
-    				<td class="td_subject">{{ $rank->word }}</td>
+                    <td class="td_subject">{{ $rank->word }}</td>
                     <td class="td_mngsmall">{{ $rank->cnt }}</td>
-    			</tr>
+                </tr>
                 @endforeach
                 @else
                     <tr>
-        				<td colspan="11">
-        					<span class="empty_table">
-        						<i class="fa fa-exclamation-triangle"></i> 자료가 없습니다.
-        					</span>
-        				</td>
-        			</tr>
+                        <td colspan="11">
+                            <span class="empty_table">
+                                <i class="fa fa-exclamation-triangle"></i> 자료가 없습니다.
+                            </span>
+                        </td>
+                    </tr>
                 @endif
-    		</tbody>
-    	</table>
+            </tbody>
+        </table>
     </div>
 
     {{-- 페이지 처리 --}}

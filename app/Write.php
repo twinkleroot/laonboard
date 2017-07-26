@@ -342,7 +342,6 @@ class Write extends Model
         } else if (strpos($write->option, 'html2') !== false) {
             $html = 2;
         }
-
          // 에디터를 사용하면서 html에 체크하지 않았을 때
         if($this->board->use_dhtml_editor && $html == 0) {
             $write->content = convertContent($write->content, 2);
@@ -397,8 +396,10 @@ class Write extends Model
             }
         }
 
-        // 에디터로 업로드한 이미지 경로를 추출해서 내용의 img 태그 부 분을 교체한다.
+		// dd($write->content);
+        // 에디터로 업로드한 이미지 경로를 추출해서 내용의 img 태그 부분을 교체한다.
         $write->content = $this->includeImagePathByEditor($write->content);
+
 
         return [
             'board' => $this->board,
@@ -732,8 +733,7 @@ class Write extends Model
     public function storeWrite($writeModel, $request)
     {
         $inputData = $request->all();
-        $inputData = array_except($inputData, ['_token', 'file_content', 'attach_file', 'html',
-                                                'secret', 'mail', 'notice', 'uid', 'type', 'writeId', 'g-recaptcha-response']);
+        $inputData = array_except($inputData, ['_token', 'file_content', 'attach_file', 'html', 'secret', 'mail', 'notice', 'uid', 'type', 'writeId', 'g-recaptcha-response']);
         $inputData = $this->convertSomeField($inputData);
 
         $options = [];

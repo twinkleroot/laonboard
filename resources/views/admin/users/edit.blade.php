@@ -312,14 +312,14 @@
                                 <label for="icon" class="col-md-2 control-label">회원아이콘</label>
                                 <div class="col-md-5">
                                     <input type="file" name="icon" id="icon">
-									@if(File::exists($iconPath))
-									<img src="{{ $iconUrl }}" alt="회원아이콘">
-					                <input type="checkbox" name="delIcon" value="1" id="delIcon">
-					                <label for="delIcon">삭제</label>
-									@endif
+                                    @if(File::exists($iconPath))
+                                    <img src="{{ $iconUrl }}" alt="회원아이콘">
+                                    <input type="checkbox" name="delIcon" value="1" id="delIcon">
+                                    <label for="delIcon">삭제</label>
+                                    @endif
                                     <p class="help-block">이미지 크기는 넓이 {{ cache('config.join')->memberIconWidth }}픽셀 높이 {{ cache('config.join')->memberIconHeight }}픽셀로 해주세요.<br>
-									gif만 가능하며 용량 {{ cache('config.join')->memberIconSize }}바이트 이하만 등록됩니다.
-									</p>
+                                    gif만 가능하며 용량 {{ cache('config.join')->memberIconSize }}바이트 이하만 등록됩니다.
+                                    </p>
                                 </div>
                             </div>
                         </div>

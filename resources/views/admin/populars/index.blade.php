@@ -21,7 +21,7 @@
 </div>
 <div class="body-contents">
     <div id="auth_list">
-    	<ul id="adm_btn">
+        <ul id="adm_btn">
             <li>
                 <button type="button" class="btn btn-sir" onclick="location.href='{{ route('admin.populars.index') }}'">
                      전체목록
@@ -57,42 +57,42 @@
             {{ csrf_field() }}
             {{ method_field('delete') }}
             <input type="hidden" id="ids" value="" />
-        	<table class="table table-striped box">
-        		<thead>
-        			<tr>
-        				<th>
+            <table class="table table-striped box">
+                <thead>
+                    <tr>
+                        <th>
                             <input type="checkbox" name="chkAll" onclick="checkAll(this.form)">
                         </th>
-        				<th><a class="adm_sort" href="{{ route('admin.populars.index'). "?kind=$kind&keyword=$keyword&direction=$direction&order=word" }}">검색어</a></th>
-        				<th>등록일</th>
-        				<th>등록IP</th>
-        			</tr>
-        		</thead>
-        		<tbody>
+                        <th><a class="adm_sort" href="{{ route('admin.populars.index'). "?kind=$kind&keyword=$keyword&direction=$direction&order=word" }}">검색어</a></th>
+                        <th>등록일</th>
+                        <th>등록IP</th>
+                    </tr>
+                </thead>
+                <tbody>
                     @if(count($populars) > 0)
                     @foreach($populars as $popular)
-            			<tr>
+                        <tr>
                             <td class="td_chk">
                                 <input type="checkbox" name="chkId[]" class="popularId" value='{{ $popular->id }}' />
                             </td>
                             <td class="td_subject">
-								<a href="{{ route('admin.populars.index'). "?kind=word&keyword=". $popular->word }}">{{ $popular->word }}</a>
-							</td>
-            				<td class="td_mngsmall">{{ $popular->date }}</td>
+                                <a href="{{ route('admin.populars.index'). "?kind=word&keyword=". $popular->word }}">{{ $popular->word }}</a>
+                            </td>
+                            <td class="td_mngsmall">{{ $popular->date }}</td>
                             <td class="td_mngsmall">{{ $popular->ip }}</td>
-            			</tr>
+                        </tr>
                     @endforeach
                     @else
                         <tr>
-            				<td colspan="11">
-            					<span class="empty_table">
-            						<i class="fa fa-exclamation-triangle"></i> 자료가 없습니다.
-            					</span>
-            				</td>
-            			</tr>
+                            <td colspan="11">
+                                <span class="empty_table">
+                                    <i class="fa fa-exclamation-triangle"></i> 자료가 없습니다.
+                                </span>
+                            </td>
+                        </tr>
                     @endif
-        		</tbody>
-        	</table>
+                </tbody>
+            </table>
         </form>
     </div>
 </div>

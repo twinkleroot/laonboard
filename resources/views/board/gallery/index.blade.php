@@ -9,7 +9,7 @@
 @endsection
 
 @section('content')
-	<div id="board" class="container">
+    <div id="board" class="container">
         @if($board->content_head)
             {!! $board->content_head !!}
         @endif

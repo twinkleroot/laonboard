@@ -151,7 +151,7 @@ function addMenuList(name, link, code)
         menuLast = menuList.find("tr.menu_list:last");
     }
 
-	if(menuLast.length > 0) {
+    if(menuLast.length > 0) {
         menuLast.after(list);
     } else {
         if(menuList.find("#empty_menu_list").length > 0)

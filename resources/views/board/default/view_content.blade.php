@@ -70,12 +70,12 @@
             <i class="fa fa-paperclip"></i>
             <span class="bd_title">첨부된 파일 {{ count($boardFiles) }}개</span>
             @foreach($boardFiles as $file)
-			<ul class="bd_file_list" role="menu">
+            <ul class="bd_file_list" role="menu">
                 <li>
                     <i class="fa fa-download"></i><a href="/board/{{ $board->id }}/view/{{ $view->id }}/download/{{ $file->board_file_no }}">{{ $file->source }}</a>
                     <span class="downcount">(다운로드 횟수: {{ $file->download }}회 / DATE : {{ $file->created_at }}) </span>
                 </li>
-			</ul>
+            </ul>
             @endforeach
         </div>
 @endif
@@ -274,11 +274,11 @@ var saveBefore = '';
 var saveHtml = document.getElementById('commentWriteArea').innerHTML;
 
 function validate(event) {
-	grecaptcha.execute();
+    grecaptcha.execute();
 }
 
 function onSubmit(token) {
-	$("#commentForm").submit();
+    $("#commentForm").submit();
 }
 
 function commentSubmit(form) {

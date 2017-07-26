@@ -27,31 +27,31 @@
         @if( ($type == 'create' && is_null(auth()->user()) )
             || ($type == 'update' && session()->get('admin') && $write->user_id != auth()->user()->id) )
         <div class="nologin">
-    		<div class="form-group mb10 row">
-    			<div class="col-xs-3">
-    				<label for="name" class="sr-only">이름</label>
-    				<input type="text" class="form-control" id="name" name="name" placeholder="이름" @if($type=='update') value={{ $write->name }}@else required @endif>
-    			</div>
-    		</div>
-    		<div class="form-group mb10 row">
-    			<div class="col-xs-4">
-    				<label for="password" class="sr-only">비밀번호</label>
-    				<input type="password" class="form-control" id="password" name="password" placeholder="비밀번호" @if($type!='update') required @endif>
-    			</div>
-    		</div>
-    		<div class="form-group mb10 row">
-    			<div class="col-xs-5">
-    				<label for="email" class="sr-only">이메일</label>
-    				<input type="email" class="form-control" id="email" name="email" placeholder="이메일" @if($type=='update') value="{{ $write->email }}" @endif>
-    			</div>
-    		</div>
-    		<div class="form-group mb10 row">
-    			<div class="col-xs-5">
-    				<label for="homepage" class="sr-only">홈페이지</label>
-    				<input type="text" class="form-control" id="homepage" name="homepage" placeholder="홈페이지" @if($type=='update') value="{{ $write->homepage }}" @endif>
-    			</div>
-    		</div>
-    	</div>
+            <div class="form-group mb10 row">
+                <div class="col-xs-3">
+                    <label for="name" class="sr-only">이름</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="이름" @if($type=='update') value={{ $write->name }}@else required @endif>
+                </div>
+            </div>
+            <div class="form-group mb10 row">
+                <div class="col-xs-4">
+                    <label for="password" class="sr-only">비밀번호</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호" @if($type!='update') required @endif>
+                </div>
+            </div>
+            <div class="form-group mb10 row">
+                <div class="col-xs-5">
+                    <label for="email" class="sr-only">이메일</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="이메일" @if($type=='update') value="{{ $write->email }}" @endif>
+                </div>
+            </div>
+            <div class="form-group mb10 row">
+                <div class="col-xs-5">
+                    <label for="homepage" class="sr-only">홈페이지</label>
+                    <input type="text" class="form-control" id="homepage" name="homepage" placeholder="홈페이지" @if($type=='update') value="{{ $write->homepage }}" @endif>
+                </div>
+            </div>
+        </div>
         @endif
 
         @if($board->use_category == 1)
@@ -72,32 +72,32 @@
             </div>
         @endif
 
-    	<div class="row">
-    		<div class="form-group mb10 col-xs-8">
-    		    <label for="" class="sr-only">게시물 작성</label>
-    		    <input type="text" class="form-control" id="subject" name="subject" placeholder="게시물 제목" @if($type != 'create') value="{{ $write->subject}}" @endif required>
-    		</div>
+        <div class="row">
+            <div class="form-group mb10 col-xs-8">
+                <label for="" class="sr-only">게시물 작성</label>
+                <input type="text" class="form-control" id="subject" name="subject" placeholder="게시물 제목" @if($type != 'create') value="{{ $write->subject}}" @endif required>
+            </div>
             @if( !is_null(auth()->user()) )
                 <script src="{{ asset('js/autosave.js') }}"></script>
-        		<div class="bd-save col-xs-4 dropdown">
-        			<a href="#" id="autosaveBtn" class="dropdown-toggle btn btn-sir" data-toggle="dropdown" role="button" aria-expanded="false">
-        				<i class="fa fa-archive"></i>
-        				<span style="margin-left: 5px" id="autosaveCount">({{ $autosaveCount }})</span>
-        			</a>
-        			<ul class="dropdown-menu" role="menu" id="autosavePop"></ul>
-        		</div>
+                <div class="bd-save col-xs-4 dropdown">
+                    <a href="#" id="autosaveBtn" class="dropdown-toggle btn btn-sir" data-toggle="dropdown" role="button" aria-expanded="false">
+                        <i class="fa fa-archive"></i>
+                        <span style="margin-left: 5px" id="autosaveCount">({{ $autosaveCount }})</span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" id="autosavePop"></ul>
+                </div>
             @endif
-    	</div>
+        </div>
 
         @if($board->use_dhtml_editor == 1)
             {{-- 에디터 --}}
             <div style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px;">
-                <textarea name="content" id="editorArea">@if($type == 'update'){{ $write->content }}@endif</textarea>
+                <textarea name="content" id="editorArea">@if($type == 'update'){!! convertContent($write->content, 0) !!}@endif</textarea>
             </div>
         @else
-        	<div style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px; padding: 2px;">
-                <textarea name="content" maxlength="65536" style="width:100%; min-height:400px; border:0;" required>@if($type == 'update'){{ $write->content }}@endif</textarea>
-        	</div>
+            <div style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px; padding: 2px;">
+                <textarea name="content" maxlength="65536" style="width:100%; min-height:400px; border:0;" required>@if($type == 'update'){!! convertContent($write->content, 0) !!}@endif</textarea>
+            </div>
         @endif
 
         <div class="wt_more">
@@ -160,46 +160,46 @@
                 </div>
             </div>
         </div>
-    	<div class="clearfix">
-    		<div class="pull-left">
+        <div class="clearfix">
+            <div class="pull-left">
                 @if(session()->get('admin'))
-        			<label for="notice" class="checkbox-inline">
-        				<input type="checkbox" id="notice" name="notice" value="1" @if($type=='update' && strpos($board->notice, (string)$write->id) !== false) checked @endif> 공지
-        			</label>
+                    <label for="notice" class="checkbox-inline">
+                        <input type="checkbox" id="notice" name="notice" value="1" @if($type=='update' && strpos($board->notice, (string)$write->id) !== false) checked @endif> 공지
+                    </label>
                 @endif
                 @if(!$board->use_dhtml_editor)
-        			<label for="html" class="checkbox-inline">
-        				<input type="checkbox" id="html" name="html" onclick="htmlAutoBr(this);" value="" @if($type=='update' && strpos($write->option, 'html') !== false) checked @endif> html
-        			</label>
+                    <label for="html" class="checkbox-inline">
+                        <input type="checkbox" id="html" name="html" onclick="htmlAutoBr(this);" value="" @if($type=='update' && strpos($write->option, 'html') !== false) checked @endif> html
+                    </label>
                 @else
                     <input type="hidden" name="html" value="html1" />
                 @endif
                 @if($board->use_secret)
                     <label for="secret" class="checkbox-inline">
-        				<input type="checkbox" id="secret" name="secret" value="secret" @if($type=='update' && strpos($write->option, 'secret') !== false) checked @endif> 비밀글
-        			</label>
+                        <input type="checkbox" id="secret" name="secret" value="secret" @if($type=='update' && strpos($write->option, 'secret') !== false) checked @endif> 비밀글
+                    </label>
                 @endif
                 @if($board->use_email)
-        			<label for="mail" class="checkbox-inline">
-        				<input type="checkbox" id="mail" name="mail" value="mail"> 답변메일받기
-        			</label>
+                    <label for="mail" class="checkbox-inline">
+                        <input type="checkbox" id="mail" name="mail" value="mail"> 답변메일받기
+                    </label>
                 @endif
-    		</div>
+            </div>
             <div class="pull-right">
                 @if(session()->get('admin'))
                     <button type="submit" class="btn btn-sir">작성완료</button>
                 @elseif( ($type == 'create' && auth()->guest() ) || ($type == 'create' && $board->use_recaptcha) || ($type == 'update' && !session()->get('admin') && $write->user_id != auth()->user()->id) )
                     <!-- 리캡챠 -->
-                	<div id='recaptcha' class="g-recaptcha"
-                		data-sitekey="{{ env('GOOGLE_INVISIBLE_RECAPTCHA_KEY') }}"
-                		data-callback="onSubmit"
-                		data-size="invisible" style="display:none">
-                	</div>
+                    <div id='recaptcha' class="g-recaptcha"
+                        data-sitekey="{{ env('GOOGLE_INVISIBLE_RECAPTCHA_KEY') }}"
+                        data-callback="onSubmit"
+                        data-size="invisible" style="display:none">
+                    </div>
                     <button type="button" class="btn btn-sir" onclick="validate();">작성완료</button>
                 @endif
                 <button type="button" class="btn btn-default" onclick="history.back();">취소</button>
             </div>
-    	</div>
+        </div>
     </form>
     <iframe id="formTarget" name="formTarget" style="display:none"></iframe>
     <form id="imageForm" action="{{ route('image.upload') }}" target="formTarget" method="post" enctype="multipart/form-data" style="width:0px;height:0;overflow:hidden">
@@ -218,8 +218,8 @@ tinymce.init({
     min_height: 400,
     min_width: 400,
     selection_toolbar: 'bold italic | quicklink h2 h3 blockquote',
-    plugins: 'link,autolink,image,imagetools,textcolor,lists,pagebreak,table,save,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,code',
-    toolbar: "undo redo | styleselect | forecolor bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table link customImage media code",
+    plugins: 'link,autolink,image,imagetools,textcolor,lists,pagebreak,table,save,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking',
+    toolbar: "undo redo | styleselect | forecolor bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table link customImage media",
     relative_urls: false,
     setup: function(editor) {
         editor.addButton('customImage', {
@@ -243,10 +243,10 @@ function htmlAutoBr(obj) {
     }
 }
 function onSubmit(token) {
-	$("#fwrite").submit();
+    $("#fwrite").submit();
 }
 function validate(event) {
-	grecaptcha.execute();
+    grecaptcha.execute();
 }
 $(function() {
     $(".link").click(function(){

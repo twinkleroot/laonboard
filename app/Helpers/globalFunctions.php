@@ -113,7 +113,6 @@ function convertContent($content, $html)
         }
 
         $content = preg_replace($source, $target, $content);
-
     } else { // text 이면
         // & 처리 : &amp; &nbsp; 등의 코드를 정상 출력함
         $content = htmlSymbol($content);

@@ -153,7 +153,7 @@
                                     </select>
                                 </td>
                                 <td class="text-center">
-                                    <a href="{{ route('admin.boards.edit', $board->id). $queryStringWithOrderBy }}">수정</a>
+                                    <a href="{{ route('admin.boards.edit', $board->id). '?'. Request::getQueryString() }}">수정</a>
                                     <a href="{{ route('admin.boards.copyForm', $board->id) }}" class="board_copy" target="win_board_copy">
                                         복사
                                     </a>
@@ -179,7 +179,8 @@
 
         </div>
         {{-- 페이지 처리 --}}
-        {{ str_contains(url()->full(), 'kind')
+        {{ $boards->appends(Request::except('page'))->links() }}
+        {{-- {{ str_contains(url()->full(), 'kind')
             ? $boards->appends([
                 'kind' => $kind,
                 'keyword' => $keyword,
@@ -187,7 +188,7 @@
                 'direction' => $direction
                 ])->links()
                 : $boards->links()
-        }}
+        }} --}}
     </div>
 </div>
 <script>

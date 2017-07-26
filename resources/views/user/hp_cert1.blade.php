@@ -11,8 +11,8 @@ function request(){
 <!-- 인증 요청 정보 -->
 <!--// 필수 항목 -->
 <input type="hidden" name="tc" value="kcb.oknm.online.safehscert.popup.cmd.P901_CertChoiceCmd"> <!-- 변경불가-->
-<input type="hidden" name="rqst_data" value="{{ $e_rqstData }}">		    <!-- 요청데이터 -->
-<input type="hidden" name="target_id" value="{{ $targetId }}">		    <!-- 타겟ID -->
+<input type="hidden" name="rqst_data" value="{{ $e_rqstData }}">            <!-- 요청데이터 -->
+<input type="hidden" name="target_id" value="{{ $targetId }}">            <!-- 타겟ID -->
 <!-- 필수 항목 //-->
 </form>
 
