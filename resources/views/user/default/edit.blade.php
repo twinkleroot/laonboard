@@ -217,15 +217,9 @@
                     </div>
                 @endif
 
-<<<<<<< HEAD
-				@if(cache('config.join')->useMemberIcon)
-				<div class="form-group row {{ $errors->has('icon') ? ' has-error' : '' }}">
-=======
                 @if(cache('config.join')->useMemberIcon && $user->level >= cache('config.join')->iconLevel)
                 <div class="form-group row {{ $errors->has('icon') ? ' has-error' : '' }}">
->>>>>>> 777f691d3e120f98834ce81e4f2693c87902fae3
                     <label for="icon" class="col-xs-12 control-label">회원아이콘</label>
-
                     <div class="col-xs-12">
                         <p>
                             이미지 크기는 가로 {{ cache('config.join')->memberIconWidth }}픽셀, 세로 {{ cache('config.join')->memberIconHeight }}픽셀 이하로 해주세요.<br>
