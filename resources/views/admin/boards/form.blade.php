@@ -10,7 +10,30 @@
 @endsection
 
 @section('content')
-<div>
+<div class="body-head">
+    <div class="pull-left">
+        <h3>게시판 {{ $type == 'create' ? '생성' : '수정' }}</h3>
+        <ul class="fl">
+            <li class="admin">Admin</li>
+            <li class="depth">게시판관리</li>
+            <li class="depth">게시판추가</li>
+        </ul>
+    </div>
+</div>
+<div id="body_tab_type2">
+    <ul>
+        <li class="tab"><a href="#admin-header">기본설정</a></li>
+        <li class="tab"><a href="#admin-header">권한설정</a></li>
+        <li class="tab"><a href="#admin-header">기능설정</a></li>
+        <li class="tab"><a href="#admin-header">디자인/양식</a></li>
+        <li class="tab"><a href="#admin-header">포인트설정</a></li>
+        <li class="tab"><a href="#admin-header">여분필드</a></li>
+    </ul>
+
+    <div class="submit_btn" style="line-height: 42px; padding-right: 10px;">
+    </div>
+</div>
+<div class="body-contents"> 
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             @if ($errors->any())
@@ -590,14 +613,13 @@
                             <th>본인확인 사용</th>
                             <td>
                                 본인확인 여부에 따라 게시물을 조회 할 수 있도록 합니다.<br />
-                                <select name="use_cert">
-									<option value="not-use" @if($type == 'edit' && $board->use_cert == 'not-use') selected @elseif($type != 'edit') selected @endif>사용안함</option>
-									@if(cache('config.cert')->certUse)
-									<option value="cert" @if($type == 'edit' && $board->use_cert == 'cert') selected @endif>본인확인된 회원전체</option>
-									<option value="adult" @if($type == 'edit' && $board->use_cert == 'adult') selected @endif>본인확인된 성인회원만</option>
-									<option value="hp-cert" @if($type == 'edit' && $board->use_cert == 'hp-cert') selected @endif>휴대폰 본인확인된 회원전체</option>
-									<option value="hp-adult" @if($type == 'edit' && $board->use_cert == 'hp-adult') selected @endif>휴대폰 본인확인된 성인회원만</option>
-									@endif
+                                    <select name="use_cert">
+                                        <option value="not-use" selected>사용안함</option>
+                                        {{-- <option value="cert">본인확인된 회원전체</option>
+                                        <option value="adult">본인확인된 성인회원만</option>
+                                        <option value="hp-cert">휴대폰 본인확인된 회원전체</option>
+                                        <option value="hp-adult">휴대폰 본인확인된 성인회원만</option> --}}
+                                        <!-- 환경 설정의 본인확인 설정에 따라서 option이 변경됨. -->
                                 </select>
                             </td>
                             <td>
@@ -623,7 +645,7 @@
                         <tr>
                             <th>파일 업로드 용량</th>
                             <td>
-                                최대 {{ ini_get("upload_max_filesize") }} 이하 업로드 가능, 1 MB = 1,048,576 bytes<br />
+                                최대 1024M 이하 업로드 가능, 1 MB = 1,048,576 bytes<br />
                                 업로드 파일 한개당<input type="text" name="upload_size" value="{{ $board['upload_size'] }}" required />bytes 이하
                             </td>
                             <td>
