@@ -10,7 +10,30 @@
 @endsection
 
 @section('content')
-<div>
+<div class="body-head">
+    <div class="pull-left">
+        <h3>게시판 {{ $type == 'create' ? '생성' : '수정' }}</h3>
+        <ul class="fl">
+            <li class="admin">Admin</li>
+            <li class="depth">게시판관리</li>
+            <li class="depth">게시판추가</li>
+        </ul>
+    </div>
+</div>
+<div id="body_tab_type2">
+    <ul>
+        <li class="tab"><a href="#admin-header">기본설정</a></li>
+        <li class="tab"><a href="#admin-header">권한설정</a></li>
+        <li class="tab"><a href="#admin-header">기능설정</a></li>
+        <li class="tab"><a href="#admin-header">디자인/양식</a></li>
+        <li class="tab"><a href="#admin-header">포인트설정</a></li>
+        <li class="tab"><a href="#admin-header">여분필드</a></li>
+    </ul>
+
+    <div class="submit_btn" style="line-height: 42px; padding-right: 10px;">
+    </div>
+</div>
+<div class="body-contents"> 
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             @if ($errors->any())
@@ -623,7 +646,7 @@
                         <tr>
                             <th>파일 업로드 용량</th>
                             <td>
-                                최대 {{ ini_get("upload_max_filesize") }} 이하 업로드 가능, 1 MB = 1,048,576 bytes<br />
+                                최대 1024M 이하 업로드 가능, 1 MB = 1,048,576 bytes<br />
                                 업로드 파일 한개당<input type="text" name="upload_size" value="{{ $board['upload_size'] }}" required />bytes 이하
                             </td>
                             <td>

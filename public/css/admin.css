@@ -991,7 +991,8 @@ body {
 	width: 170px;
 	text-align: left;
 }
-.td_nick {
+.td_nick,
+.td_group {
 	width: 140px;
 	text-align: left;
 }

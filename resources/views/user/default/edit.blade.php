@@ -220,7 +220,6 @@
                 @if(cache('config.join')->useMemberIcon && $user->level >= cache('config.join')->iconLevel)
                 <div class="form-group row {{ $errors->has('icon') ? ' has-error' : '' }}">
                     <label for="icon" class="col-xs-12 control-label">회원아이콘</label>
-
                     <div class="col-xs-12">
                         <p>
                             이미지 크기는 가로 {{ cache('config.join')->memberIconWidth }}픽셀, 세로 {{ cache('config.join')->memberIconHeight }}픽셀 이하로 해주세요.<br>
@@ -307,7 +306,7 @@
                         <label for="recommend" class="col-xs-12 control-label">추천인 닉네임</label>
 
                         <div class="col-xs-12">
-                            <input type="text" class="form-control" name="recommend" value="{{ $recommend ? : old('recommend') }}">
+                            <input type="text" class="form-control" name="recommend" value="{{ $recommend!='' ? $recommend : old('recommend') }}">
                         </div>
 
                     </div>
