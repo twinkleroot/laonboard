@@ -21,7 +21,7 @@
 </div>
 <div id="body_tab_type2">
     <span class="txt">게시판 관리</span>
-    
+
     <div class="submit_btn" style="line-height: 42px; padding-right: 10px;">
         <ul class="mb_btn" style="margin-top:1px;">
             <li><input type="button" id="selected_update" class="btn btn-default" value="선택 수정"/></li>
@@ -31,7 +31,7 @@
     </div>
 </div>
 
-<div class="body-contents"> 
+<div class="body-contents">
 @if(Session::has('message'))
   <div class="alert alert-info">
     {{ Session::get('message') }}
@@ -179,7 +179,7 @@
                                 </select>
                             </td>
                             <td class="td_mngsmall">
-                                <a href="{{ route('admin.boards.edit', $board->id). $queryStringWithOrderBy }}">수정</a>
+                                <a href="{{ route('admin.boards.edit', $board->id). '?'. Request::getQueryString() }}">수정</a>
                                 <a href="{{ route('admin.boards.copyForm', $board->id) }}" class="board_copy" target="win_board_copy">복사</a>
                             </td>
                         </tr>
@@ -197,15 +197,7 @@
                 </table>
 
             {{-- 페이지 처리 --}}
-            {{ str_contains(url()->full(), 'kind')
-                ? $boards->appends([
-                    'kind' => $kind,
-                    'keyword' => $keyword,
-                    'order' => $order,
-                    'direction' => $direction
-                    ])->links()
-                    : $boards->links()
-            }}
+            {{ $boards->appends(Request::except('page'))->links() }}
         </form>
     </div>
 </div>
