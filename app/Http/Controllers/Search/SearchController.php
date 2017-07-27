@@ -26,6 +26,7 @@ class SearchController extends Controller
 
     public function result(Request $request)
     {
+        // dd($request->query());
         $keyword = $request->has('keyword') ? $request->keyword : '';   // 검색어
         $this->keyword = getSearchString($keyword);
         $this->kind = $request->has('kind') ? $request->kind : 'subject||content';    // 검색필드
@@ -94,11 +95,19 @@ class SearchController extends Controller
     private function rejectGroupAccess($boards)
     {
         $user = $this->user;
-        return $boards->reject(function ($board, $key) use ($user) {
-            if(!$user || !$user->isSuperAdmin()) {  // 비회원이거나 최고관리자가 아닐때
-                $group = $board->group;
+        $result = $boards->reject(function ($board, $key) use ($user) {
+            if(auth()->guest() || !$user->isSuperAdmin()) {  // 비회원이거나 최고관리자가 아닐때
+                $group = session()->get('all_search_group');
+                if(!$group || $group->id != $board->group_id) {
+                    $group = $board->group;
+                    session()->put('all_search_group', $group);
+                }
+
                 if($group->use_access) {    // 그룹 접근을 사용할 때
-                    if(!$user || ($group->admin && !$user->isGroupAdmin($group))) { // 비회원이거나 그룹관리자가 존재하고 그룹관리자가 아닐떄
+                    if(auth()->guest()) {
+                        return true;
+                    }
+                    if(($group->admin && !$user->isGroupAdmin($group))) { // 비회원이거나 그룹관리자가 존재하고 그룹관리자가 아닐떄
                         $userId = $user ? $user->id : 0;
                         $groupUser = GroupUser::
                             where([
@@ -113,6 +122,10 @@ class SearchController extends Controller
             }
             return false;
         });
+
+        session()->forget('all_search_group');
+
+        return $result;
     }
 
     // 게시판마다 해당 검색필드와 검색어로 검색해서 Write모델을 모은 컬렉션으로 리턴한다.
@@ -122,71 +135,73 @@ class SearchController extends Controller
         $popular = new Popular();
         // 게시판 마다 해당 검색필드와 검색어로 검색한다.
         $boardIndex = 0;
-        foreach($boards as $board) {
-            $writeModel = new Write($board->id);
-            $writeModel->setTableName($board->table_name);
-            $query = $writeModel
-                ->selectRaw($writeModel->getTable().'.*, users.id_hashKey as user_id_hashKey')
-                ->leftJoin('users', 'users.id', '=', $writeModel->getTable().'.user_id')
-                ->whereRaw('1=1');
+        if($this->keyword) {
+            foreach($boards as $board) {
+                $writeModel = new Write($board->id);
+                $writeModel->setTableName($board->table_name);
+                $query = $writeModel
+                    ->selectRaw($writeModel->getTable().'.*, users.id_hashKey as user_id_hashKey')
+                    ->leftJoin('users', 'users.id', '=', $writeModel->getTable().'.user_id')
+                    ->whereRaw('1=1');
 
-            // 검색어 만큼 루프를 돌린다.
-            foreach($keywords as $searchStr) {
-                if(trim($searchStr) == '') {
-                    continue;
-                }
+                // 검색어 만큼 루프를 돌린다.
+                foreach($keywords as $searchStr) {
+                    if(trim($searchStr) == '') {
+                        continue;
+                    }
 
-                // 인기 검색어 추가
-                if($boardIndex == 0) {
-                    $popular->addPopular($kinds, $searchStr, $request);
-                }
+                    // 인기 검색어 추가
+                    if($boardIndex == 0) {
+                        $popular->addPopular($kinds, $searchStr, $request);
+                    }
 
-                // 첫번째 검색필드 땐 operator에 따라 where 메소드 넣기, 나머진 orWhere()
-                for($i=0; $i<count($kinds); $i++) {
-                    $op = ($this->operator == 'or') ? 'or' : 'and';
-                    switch ($kinds[$i]) {
-                        case 'email':
-                        case 'name':
-                            if($i == 0 && $op == 'and') {
-                                $query = $query->where($writeModel->getTable(). '.'. $kinds[$i], $searchStr);
-                            } else {
-                                $query = $query->orWhere($writeModel->getTable(). '.'. $kinds[$i], $searchStr);
-                            }
-                            break;
-                        case 'subject':
-                        case 'content':
-                            if (preg_match("/[a-zA-Z]/", $searchStr)) {
-                                $whereStr = "INSTR(LOWER($kinds[$i]), LOWER('$searchStr'))";
-                            } else {
-                                $whereStr = "INSTR($kinds[$i], '$searchStr')";
-                            }
+                    // 첫번째 검색필드 땐 operator에 따라 where 메소드 넣기, 나머진 orWhere()
+                    for($i=0; $i<count($kinds); $i++) {
+                        $op = ($this->operator == 'or') ? 'or' : 'and';
+                        switch ($kinds[$i]) {
+                            case 'email':
+                            case 'name':
+                                if($i == 0 && $op == 'and') {
+                                    $query = $query->where($writeModel->getTable(). '.'. $kinds[$i], $searchStr);
+                                } else {
+                                    $query = $query->orWhere($writeModel->getTable(). '.'. $kinds[$i], $searchStr);
+                                }
+                                break;
+                            case 'subject':
+                            case 'content':
+                                if (preg_match("/[a-zA-Z]/", $searchStr)) {
+                                    $whereStr = "INSTR(LOWER($kinds[$i]), LOWER('$searchStr'))";
+                                } else {
+                                    $whereStr = "INSTR($kinds[$i], '$searchStr')";
+                                }
 
-                            if($i == 0 && $op == 'and') {
-                                $query = $query->whereRaw($whereStr);
-                            } else {
-                                $query = $query->orWhereRaw($whereStr);
-                            }
-                            break;
-                        default:
-                            if($i == 0 && $op == 'and') {
-                                $query = $query->whereRaw("1=0");
-                            } else {
-                                $query = $query->orWhereRaw("1=0");
-                            }
-                            break;
+                                if($i == 0 && $op == 'and') {
+                                    $query = $query->whereRaw($whereStr);
+                                } else {
+                                    $query = $query->orWhereRaw($whereStr);
+                                }
+                                break;
+                            default:
+                                if($i == 0 && $op == 'and') {
+                                    $query = $query->whereRaw("1=0");
+                                } else {
+                                    $query = $query->orWhereRaw("1=0");
+                                }
+                                break;
+                        }
                     }
                 }
-            }
-            $writes = $query->get();
-            // 검색 결과로 내보낼 게시물을 재가공 한다.
-            $writes = $this->recreateWrites($request, $writes, $board, $writeModel, $kinds, $keywords);
+                $writes = $query->get();
+                // 검색 결과로 내보낼 게시물을 재가공 한다.
+                $writes = $this->recreateWrites($request, $writes, $board, $writeModel, $kinds, $keywords);
 
-            // 검색된 게시물이 있는 게시판만 결과물에 포함한다.
-            if(count($writes) > 0) {
-                $result[$board->id] = $writes;
-            }
+                // 검색된 게시물이 있는 게시판만 결과물에 포함한다.
+                if(count($writes) > 0) {
+                    $result[$board->id] = $writes;
+                }
 
-            $boardIndex++;
+                $boardIndex++;
+            }
         }
 
         return $result;
