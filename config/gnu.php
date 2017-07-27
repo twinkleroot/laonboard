@@ -11,6 +11,9 @@
   'loginPoint' => 100,
   'memoSendPoint' => 0,
   'openDate' => 0,
+  'newDel' => 30,
+  'memoDel' => 180,
+  'popularDel' => 180,
   'newRows' => 15,
   'pageRows' => 10,
   'mobilePageRows' => 10,
@@ -18,6 +21,7 @@
   'mobilePages' => 5,
   'newSkin' => '',
   'searchSkin' => '',
+  'useCopyLog' => 1,
   'pointTerm' => 0,
 
   // 게시판 기본

@@ -45,6 +45,9 @@ class LoginSuccessful
             session()->put('admin', true);
         }
 
+        // 보낸 쪽지, 받은 쪽지가 기준 일이 지나면 자동 삭제
+        
+
         // 회원 가입인 경우($isUserJoin == true) 로그인 포인트를 부여하지 않음.
         if( !$this->isUserJoin($event->user) ) {
             // 당일 첫 로그인 포인트 부여

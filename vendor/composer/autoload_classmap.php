@@ -562,6 +562,7 @@ return array(
     'SebastianBergmann\\ResourceOperations\\ResourceOperations' => $vendorDir . '/sebastian/resource-operations/src/ResourceOperations.php',
     'SebastianBergmann\\Version' => $vendorDir . '/sebastian/version/src/Version.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/src/Template.php',
+    'UpdateHomepageConfig' => $baseDir . '/database/migrations/2017_07_27_115556_update_homepage_config.php',
     'UpdateJoinCertConfig' => $baseDir . '/database/migrations/2017_07_21_154804_update_join_cert_config.php',
     'UsersTableSeeder' => $baseDir . '/database/seeds/UsersTableSeeder.php',
 );

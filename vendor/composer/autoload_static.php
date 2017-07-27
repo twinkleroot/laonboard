@@ -961,6 +961,7 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         'SebastianBergmann\\ResourceOperations\\ResourceOperations' => __DIR__ . '/..' . '/sebastian/resource-operations/src/ResourceOperations.php',
         'SebastianBergmann\\Version' => __DIR__ . '/..' . '/sebastian/version/src/Version.php',
         'Text_Template' => __DIR__ . '/..' . '/phpunit/php-text-template/src/Template.php',
+        'UpdateHomepageConfig' => __DIR__ . '/../..' . '/database/migrations/2017_07_27_115556_update_homepage_config.php',
         'UpdateJoinCertConfig' => __DIR__ . '/../..' . '/database/migrations/2017_07_21_154804_update_join_cert_config.php',
         'UsersTableSeeder' => __DIR__ . '/../..' . '/database/seeds/UsersTableSeeder.php',
     );
