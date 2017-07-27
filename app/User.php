@@ -131,6 +131,7 @@ class User extends Authenticatable
         $socialLogins = SocialLogin::where('user_id', $user->id)->get();
         $socials = [
             'naver' => '',
+            'kakao' => '',
             'google' => '',
             'facebook' => '',
         ];
@@ -147,8 +148,8 @@ class User extends Authenticatable
             }
         }
 
-		$path = storage_path('app/public/user/'. substr($user->email,0,2). '/'). $user->email. '.gif';
-		$url = '/storage/user/'. substr($user->email,0,2). '/'. $user->email. '.gif';
+        $path = storage_path('app/public/user/'. substr($user->email,0,2). '/'). $user->email. '.gif';
+        $url = '/storage/user/'. substr($user->email,0,2). '/'. $user->email. '.gif';
 
         $editFormData = [
             'user' => $user,
@@ -159,8 +160,8 @@ class User extends Authenticatable
             'dueDate' => $openChangable[1],                                 // 정보공개 언제까지 변경 못하는지 날짜
             'recommend' => $this->recommendedPerson($user),                 // 추천인 닉네임 id로 가져오기
             'socials' => $socials,                                          // 소셜에 연결한 정보
-			'iconPath' => $path,
-			'iconUrl' => $url,
+            'iconPath' => $path,
+            'iconUrl' => $url,
         ];
 
         return $editFormData;
@@ -262,9 +263,9 @@ class User extends Authenticatable
             $userInfo = array_collapse([$userInfo, $addUserInfo]);
         }
 
-		// 본인확인 정보가 넘어온 경우
-		$addCertInfo = $this->getCertInfo($request);
-		$userInfo = array_collapse([$userInfo, $addCertInfo]);
+        // 본인확인 정보가 넘어온 경우
+        $addCertInfo = $this->getCertInfo($request);
+        $userInfo = array_collapse([$userInfo, $addCertInfo]);
 
         // 회원정보로 유저를 추가한다.
         $user = User::create($userInfo);
@@ -291,43 +292,43 @@ class User extends Authenticatable
         return $user;
     }
 
-	// 사용자에 저장할 본인 확인 정보 가져오기
-	private function getCertInfo($request)
-	{
-		$certType = session()->get('ss_cert_type');
-		$certNo = session()->get('ss_cert_no');
-		$name = $request->has('name') ? cleanXssTags(trim($request->name)) : '';
-		$hp = $request->has('hp') ? trim($request->hp) : '';
-		if(cache('config.cert')->certUse && $certType && $certNo) {
-			// 해시값이 같은 경우에만 본인확인 값을 저장한다.
-    		if( session()->get('ss_cert_hash') == md5($name.$certType.session()->get('ss_cert_birth').$certNo) ) {
-				$userInfo = [
-					'hp' => $hp,
-					'certify' => $certType,
-					'adult' => session()->get('ss_cert_adult'),
-					'birth' => session()->get('ss_cert_birth'),
-					'sex' => session()->get('ss_cert_sex'),
-					'dupinfo' => session()->get('ss_cert_dupinfo'),
-					'name' => $name,
-				];
+    // 사용자에 저장할 본인 확인 정보 가져오기
+    private function getCertInfo($request)
+    {
+        $certType = session()->get('ss_cert_type');
+        $certNo = session()->get('ss_cert_no');
+        $name = $request->has('name') ? cleanXssTags(trim($request->name)) : '';
+        $hp = $request->has('hp') ? trim($request->hp) : '';
+        if(cache('config.cert')->certUse && $certType && $certNo) {
+            // 해시값이 같은 경우에만 본인확인 값을 저장한다.
+            if( session()->get('ss_cert_hash') == md5($name.$certType.session()->get('ss_cert_birth').$certNo) ) {
+                $userInfo = [
+                    'hp' => $hp,
+                    'certify' => $certType,
+                    'adult' => session()->get('ss_cert_adult'),
+                    'birth' => session()->get('ss_cert_birth'),
+                    'sex' => session()->get('ss_cert_sex'),
+                    'dupinfo' => session()->get('ss_cert_dupinfo'),
+                    'name' => $name,
+                ];
 
-				return $userInfo;
-			}
-		} else {
-			$userInfo = [
-				'hp' => $hp,
-				'certify' => '',
-				'adult' => 0,
-				'birth' => '',
-				'sex' => '',
-				'name' => $name,
-			];
+                return $userInfo;
+            }
+        } else {
+            $userInfo = [
+                'hp' => $hp,
+                'certify' => '',
+                'adult' => 0,
+                'birth' => '',
+                'sex' => '',
+                'name' => $name,
+            ];
 
-			return $userInfo;
-		}
+            return $userInfo;
+        }
 
-		return [];
-	}
+        return [];
+    }
 
     // 회원 정보 수정
     public function updateUserInfo($request)
@@ -338,16 +339,16 @@ class User extends Authenticatable
         // 현재 시간 date type으로 받기
         $nowDate = Carbon::now()->toDateString();
 
-		// 추천인 입력
-		$recommendedId = $this->insertRecommend($request, $user);
+        // 추천인 입력
+        $recommendedId = $this->insertRecommend($request, $user);
 
-		$password = $user->password;
-		// 비밀번호 변경시
-		if($request->password && !Auth::validate(['email' => $user->email, 'password' => $request->password ])) {
-			$password = bcrypt($request->password);
-		}
+        $password = $user->password;
+        // 비밀번호 변경시
+        if($request->password && !Auth::validate(['email' => $user->email, 'password' => $request->password ])) {
+            $password = bcrypt($request->password);
+        }
 
-		$email = getEmailAddress(trim($request->email));
+        $email = getEmailAddress(trim($request->email));
         $toUpdateUserInfo = [
             'email' => $email,
             'password' => $password,
@@ -361,7 +362,7 @@ class User extends Authenticatable
             'addr1' => cleanXssTags($request->addr1),
             'addr2' => cleanXssTags($request->addr2),
             'zip' => preg_replace('/[^0-9]/', '', $request->zip),
-			'signature' => trim($request->signature),
+            'signature' => trim($request->signature),
             'profile' => trim($request->profile),
             'memo' => trim($request->memo),
             'mailing' => $request->has('mailing') ? $request->mailing : 0,
@@ -377,9 +378,9 @@ class User extends Authenticatable
             ] ]);
         }
 
-		// 본인확인에 포함된 정보
-		$addCertInfo = $this->getCertInfo($request);
-		$toUpdateUserInfo = array_collapse([$toUpdateUserInfo, $addCertInfo]);
+        // 본인확인에 포함된 정보
+        $addCertInfo = $this->getCertInfo($request);
+        $toUpdateUserInfo = array_collapse([$toUpdateUserInfo, $addCertInfo]);
 
         $isEmailChange = $request->get('email') != $user->email;
         // 이메일 인증을 사용하고 이메일이 변경될 경우 이메일 인증을 다시 해야한다.
@@ -396,19 +397,19 @@ class User extends Authenticatable
             $notification->sendEmailCertify($request->get('email'), $user, $toUpdateUserInfo['nick'], $isEmailChange);
         }
 
-		$path = storage_path('app/public/user/'. substr($email,0,2). '/'). $email. '.gif';
-		// 아이콘 삭제
-		$this->iconDelete($request, $path);
-		// 아이콘 업로드
-		$this->iconUpload($request, $email, $path);
+        $path = storage_path('app/public/user/'. substr($email,0,2). '/'). $email. '.gif';
+        // 아이콘 삭제
+        $this->iconDelete($request, $path);
+        // 아이콘 업로드
+        $this->iconUpload($request, $email, $path);
 
         return $user->update($toUpdateUserInfo);
     }
 
-	// 추천인 입력
-	public function insertRecommend($request, $user)
-	{
-		// 추천인 닉네임 받은 것을 해당 닉네임의 id로 조회
+    // 추천인 입력
+    public function insertRecommend($request, $user)
+    {
+        // 추천인 닉네임 받은 것을 해당 닉네임의 id로 조회
         $recommendedId = '';
         if($request->has('recommend')) {
             $recommendedUser = User::where([
@@ -418,9 +419,9 @@ class User extends Authenticatable
             if(is_null($recommendedUser)) {
                 throw new Exception('추천인이 존재하지 않습니다. 닉네임을 확인하고 다시 입력해 주세요.');
             }
-			if (!auth()->user()->isSuperAdmin() && auth()->user()->id == $recommendedUser->id) {
-	            throw new Exception('본인을 추천할 수 없습니다.');
-	        }
+            if (!auth()->user()->isSuperAdmin() && auth()->user()->id == $recommendedUser->id) {
+                throw new Exception('본인을 추천할 수 없습니다.');
+            }
             $recommendedId = $recommendedUser->id;
 
             // 추천인에게 포인트 부여
@@ -430,57 +431,57 @@ class User extends Authenticatable
             $recommendedUser->save();
         }
 
-		return $recommendedId;
-	}
+        return $recommendedId;
+    }
 
-	// 아이콘 삭제
-	public function iconDelete($request, $path)
-	{
-		if($request->has('delIcon') && $request->delIcon) {
-			File::delete($path);
-		}
-	}
+    // 아이콘 삭제
+    public function iconDelete($request, $path)
+    {
+        if($request->has('delIcon') && $request->delIcon) {
+            File::delete($path);
+        }
+    }
 
-	// 아이콘 업로드
-	public function iconUpload($request, $email, $path)
-	{
-		if(isset($request->icon)) {
-			if(auth()->user()->level < cache('config.join')->iconLevel) {
-				abort(500, '회원아이콘 업로드를 할 수 없는 등급입니다.');
-			}
-			$file = $request->icon;
-			$fileName = $file->getClientOriginalName();
-			if ( preg_match("/(\.gif)$/i", $fileName) ) {
-		        // 아이콘 용량이 설정값보다 이하만 업로드 가능
-		        if (filesize($file) <= cache('config.join')->memberIconSize) {
-					if(File::exists($path)) {
-						//=================================================================\
-		                // 090714
-		                // gif 파일에 악성코드를 심어 업로드 하는 경우를 방지
-		                // 에러메세지는 출력하지 않는다.
-		                //-----------------------------------------------------------------
-		                $size = getimagesize($path);
+    // 아이콘 업로드
+    public function iconUpload($request, $email, $path)
+    {
+        if(isset($request->icon)) {
+            if(auth()->user()->level < cache('config.join')->iconLevel) {
+                abort(500, '회원아이콘 업로드를 할 수 없는 등급입니다.');
+            }
+            $file = $request->icon;
+            $fileName = $file->getClientOriginalName();
+            if ( preg_match("/(\.gif)$/i", $fileName) ) {
+                // 아이콘 용량이 설정값보다 이하만 업로드 가능
+                if (filesize($file) <= cache('config.join')->memberIconSize) {
+                    if(File::exists($path)) {
+                        //=================================================================\
+                        // 090714
+                        // gif 파일에 악성코드를 심어 업로드 하는 경우를 방지
+                        // 에러메세지는 출력하지 않는다.
+                        //-----------------------------------------------------------------
+                        $size = getimagesize($path);
 
-						if ($size[2] != 1) { // gif 파일이 아니면 올라간 이미지를 삭제한다.
-							File::delete($path);
-						// 아이콘의 폭 또는 높이가 설정값 보다 크다면 이미 업로드 된 아이콘 삭제
-						} else if ($size[0] > cache('config.join')->memberIconWidth || $size[1] > cache('config.join')->memberIconHeight) {
-		                    File::delete($path);
-						}
-		                //=================================================================\
-					} else {
-						$dir = '/user/'. substr($email,0,2);
-						$storeFileName = $email. '.gif';
-						$file->storeAs($dir, $storeFileName);
-					}
-		        } else {
-		            abort(500, '회원아이콘을 '.number_format(cache('config.join')->memberIconSize).'바이트 이하로 업로드 해주십시오.');
-		        }
-		    } else {
-		        abort(500, $fileName.'은(는) gif 파일이 아닙니다. 아이콘은 gif 파일만 가능합니다.');
-		    }
-		}
-	}
+                        if ($size[2] != 1) { // gif 파일이 아니면 올라간 이미지를 삭제한다.
+                            File::delete($path);
+                        // 아이콘의 폭 또는 높이가 설정값 보다 크다면 이미 업로드 된 아이콘 삭제
+                        } else if ($size[0] > cache('config.join')->memberIconWidth || $size[1] > cache('config.join')->memberIconHeight) {
+                            File::delete($path);
+                        }
+                        //=================================================================\
+                    } else {
+                        $dir = '/user/'. substr($email,0,2);
+                        $storeFileName = $email. '.gif';
+                        $file->storeAs($dir, $storeFileName);
+                    }
+                } else {
+                    abort(500, '회원아이콘을 '.number_format(cache('config.join')->memberIconSize).'바이트 이하로 업로드 해주십시오.');
+                }
+            } else {
+                abort(500, $fileName.'은(는) gif 파일이 아닙니다. 아이콘은 gif 파일만 가능합니다.');
+            }
+        }
+    }
 
     // 회원 정보 수정에서 소셜 연결 해제
     public function disconnectSocialAccount($request)
@@ -541,9 +542,9 @@ class User extends Authenticatable
     public function getProfileParams($id)
     {
         $user = getUser($id);
-		if(auth()->guest()) {
-			abort(500, '회원만 이용할 수 있습니다.');
-		}
+        if(auth()->guest()) {
+            abort(500, '회원만 이용할 수 있습니다.');
+        }
         if(is_null($user)) {
             abort(500, '회원정보가 존재하지 않습니다.\\n\\n탈퇴하였을 수 있습니다.');
         }
@@ -583,49 +584,49 @@ class User extends Authenticatable
         return $user->nick. '님께서는 '. Carbon::now()->format('Y년 m월 d일'). '에 회원에서 탈퇴하셨습니다.';
     }
 
-	// 툴팁 : 메일 보내기 양식
-	public function getFormMailParams($request)
-	{
-		$user = getUser($request->to);
-		$email = $request->has('email') ? $request->email : '';
-		$decEmail;
-		if($email) {
-			$decEmail = decrypt($email);
-			if( getEmailAddress($decEmail) == '' ) {
-				abort(500, '이메일이 올바르지 않습니다.');
-			}
-		} else {
-			abort(500, '이메일이 올바르지 않습니다.');
-		}
-		$name = $request->has('name') ? convertText(stripslashes($request->name), true) : $email;
+    // 툴팁 : 메일 보내기 양식
+    public function getFormMailParams($request)
+    {
+        $user = getUser($request->to);
+        $email = $request->has('email') ? $request->email : '';
+        $decEmail;
+        if($email) {
+            $decEmail = decrypt($email);
+            if( getEmailAddress($decEmail) == '' ) {
+                abort(500, '이메일이 올바르지 않습니다.');
+            }
+        } else {
+            abort(500, '이메일이 올바르지 않습니다.');
+        }
+        $name = $request->has('name') ? convertText(stripslashes($request->name), true) : $email;
 
-		return [
-			'user' => $user,
-			'name' => $name,
-			'email' => $email,
-		];
-	}
+        return [
+            'user' => $user,
+            'name' => $name,
+            'email' => $email,
+        ];
+    }
 
-	// 툴팁 : 메일 보내기 실행
-	public function sendFormMail($request)
-	{
-		$to = decrypt($request->to);
-		if (substr_count($to, "@") > 1) {
-    		abort(500, '한번에 한사람에게만 메일을 발송할 수 있습니다.');
-		}
-		$name = $request->name;
-		$email = $request->email;
-		$subject = $request->subject;
-		$content = $request->content;
-		$type = $request->type;
-		$files = $request->file;
-		$content = stripslashes($content);
-		if ($type == 2) {
-		    $type = 1;
-		    $content = str_replace("\n", "<br>", $content);
-		}
+    // 툴팁 : 메일 보내기 실행
+    public function sendFormMail($request)
+    {
+        $to = decrypt($request->to);
+        if (substr_count($to, "@") > 1) {
+            abort(500, '한번에 한사람에게만 메일을 발송할 수 있습니다.');
+        }
+        $name = $request->name;
+        $email = $request->email;
+        $subject = $request->subject;
+        $content = $request->content;
+        $type = $request->type;
+        $files = $request->file;
+        $content = stripslashes($content);
+        if ($type == 2) {
+            $type = 1;
+            $content = str_replace("\n", "<br>", $content);
+        }
 
-		Mail::to($to)->send(new FormMailSend($name, $email, $subject, $content, $type, $files));
-	}
+        Mail::to($to)->send(new FormMailSend($name, $email, $subject, $content, $type, $files));
+    }
 
 }

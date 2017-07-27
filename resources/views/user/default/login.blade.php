@@ -80,6 +80,11 @@
                         <div class="icon icon-naver"></div>
                         <span class="text-left">네이버로 로그인</span>
                     </a>
+                    <!-- 카카오톡으로 로그인 -->
+                    <a href="" class="btn btn-block btn-kakao">
+                        <div class="icon icon-kakao"></div>
+                        <span class="text-left">카카오톡으로 로그인</span>
+                    </a>
                     <!-- 페이스북으로 로그인 -->
                     <a href="" class="btn btn-block btn-facebook">
                         <div class="icon icon-facebook"></div>
