@@ -23,7 +23,7 @@
 @endif
 <div class="container">
 <div class="row">
-<div class="col-md-6 col-md-offset-3 col-xs-12">
+<div class="col-md-6 col-md-offset-3 col-xs-8 col-xs-offset-2">
 
 <!-- user edit -->
     <div class="panel panel-default">
@@ -80,8 +80,6 @@
                 @if($nickChangable)
                     <div class="form-group{{ $errors->has('nick') ? ' has-error' : '' }}">
                         <label for="nick" class="control-label">닉네임</label>
-
-                        {{-- <div class="col-md-6"> --}}
                             <p>
                                 공백없이 한글, 영문, 숫자만 입력 가능 <br />
                                 (한글2자, 영문4자 이상)<br />
@@ -94,7 +92,6 @@
                                     <strong>{{ $errors->first('nick') }}</strong>
                                 </span>
                             @endif
-                        {{-- </div> --}}
                     </div>
                 @endif
 
@@ -106,20 +103,20 @@
                     </div>
                 @endif
 
+                @if($user->certify)
+                    <div class="help bg-info mb10">
+                        <span class="cert">휴대폰 본인확인 및 성인인증 완료</span>
+                    </div>
+                @endif
+                @if(cache('config.cert'))
+                    <div class="help bg-danger mb10">
+                        <span class="warning">아이핀 본인확인 후에는 이름이 자동 입력되고 휴대폰 본인확인 후에는 이름과 휴대폰번호가 자동 입력되어 수동으로 입력할 수 없게 됩니다.</span>
+                    </div>
+                @endif 
                 @if((cache('config.cert')->certUse && cache('config.cert')->certHp) || $config->name) <!-- 이름 -->
                     <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                         <label for="name" class="control-label">이름</label>
-                        @if(cache('config.cert'))
-                        <p>
-                            아이핀 본인확인 후에는 이름이 자동 입력되고 휴대폰 본인확인 후에는 이름과 휴대폰번호가 자동 입력되어 수동으로 입력할수 없게 됩니다.
-                        </p>
-                        @endif
                         <input id="name" type="text" class="form-control" name="name" value="{{ $user->name }}" @if($user->certify) readonly @endif>
-                        @if($user->certify)
-                        <div class="helpbox bg-danger">
-                            <p>휴대폰 본인확인 및 성인인증 완료</p>
-                        </div>
-                        @endif
                         @if ($errors->has('name'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('name') }}</strong>
@@ -127,18 +124,21 @@
                         @endif
                     </div>
                 @endif
+                @if(cache('config.cert')->certHp)
+                    <div class="form-group row">
+                        <div class="col-md-12 mb10">
+                            <input type="button" class="btn btn-block btn-default btn_frmline" id="win_hp_cert" value="휴대폰 본인확인">
+                        </div>
+                        <div class="col-md-12">
+                            <input type="button" class="btn btn-block btn-default btn_frmline" id="" value="아이핀 본인확인">
+                        </div>
+                    </div>
+                @endif
 
-                @if($config->homepage) <!-- 홈페이지 -->
-                    <div class="form-group{{ $errors->has('homepage') ? ' has-error' : '' }}">
-                        <label for="homepage" class="control-label">홈페이지</label>
-
-                        <input id="homepage" type="text" class="form-control" name="homepage" value="{{ $user->homepage }}">
-
-                            @if ($errors->has('homepage'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('homepage') }}</strong>
-                                </span>
-                            @endif
+                @if( (cache('config.cert')->certUse && cache('config.cert')->certHp) || $config->hp) <!-- 휴대폰번호 -->
+                    <div class="form-group">
+                        <label for="hp" class="control-label">휴대폰번호</label>
+                        <input id="hp" type="text" class="form-control" name="hp" value="{{ $user->hp }}">
                     </div>
                 @endif
 
@@ -156,20 +156,17 @@
                     </div>
                 @endif
 
-                @if( (cache('config.cert')->certUse && cache('config.cert')->certHp) || $config->hp) <!-- 휴대폰번호 -->
-                    <div class="form-group">
-                        <label for="hp" class="control-label">휴대폰번호</label>
+                @if($config->homepage) <!-- 홈페이지 -->
+                    <div class="form-group{{ $errors->has('homepage') ? ' has-error' : '' }}">
+                        <label for="homepage" class="control-label">홈페이지</label>
 
-                        <div class="form-group row">
-                            <div class="col-xs-8">
-                                <input id="hp" type="text" class="form-control" name="hp" value="{{ $user->hp }}">
-                            </div>
-                            @if(cache('config.cert')->certHp)
-                            <div class="col-xs-4">
-                                <input type="button" class="btn btn-block btn-sir" id="win_hp_cert" style="height: 40px;" value="휴대폰 본인확인">
-                            </div>
+                        <input id="homepage" type="text" class="form-control" name="homepage" value="{{ $user->homepage }}">
+
+                            @if ($errors->has('homepage'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('homepage') }}</strong>
+                                </span>
                             @endif
-                        </div>
                     </div>
                 @endif
 
@@ -178,20 +175,20 @@
                         <label for="addr1" class="control-label">주소</label>
 
                         <div class="form-group row">
-                            <div class="col-xs-8">
+                            <div class="col-xs-8" style="padding-right: 0;">
                                 <input type="text" id="zip" name="zip" class="form-control" value="{{ $user->zip }}" placeholder="우편번호">
                             </div>
                             <div class="col-xs-4">
-                            <input type="button" class="btn btn-block btn-sir" style="height: 40px;" onclick="execDaumPostcode()" value="주소 검색">
+                                <input type="button" class="btn btn-block btn-sir btn_frmline" onclick="execDaumPostcode()" value="주소검색">
                             </div>
                         </div>
 
-                        <div id="wrap" style="display:none;border:1px solid;width:500px;height:300px;margin:5px 0;position:relative">
+                        <div id="wrap" class="formaddr">
                             <img src="//t1.daumcdn.net/localimg/localimages/07/postcode/320/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" id="btnFoldWrap" onclick="foldDaumPostcode()" alt="접기 버튼">
                         </div>
 
                         <div class="form-group">
-                            <input type="text" id="addr1" name="addr1" class="form-control" value="{{ $user->addr1 }}" placeholder="기본 주소">
+                            <input type="text" id="addr1" name="addr1" class="form-control mb15" value="{{ $user->addr1 }}" placeholder="기본 주소">
                             <input type="text" id="addr2" name="addr2" class="form-control" value="{{ $user->addr2 }}" placeholder="나머지 주소">
                         </div>
                     </div>
@@ -221,16 +218,20 @@
                 <div class="form-group row {{ $errors->has('icon') ? ' has-error' : '' }}">
                     <label for="icon" class="col-xs-12 control-label">회원아이콘</label>
                     <div class="col-xs-12">
-                        <p>
+                        <div class="mb10">
+                            <span class="usericon">
+                                <img src="{{ $iconUrl }}" alt="회원아이콘">
+                            </span>
+                            <input type="checkbox" name="delIcon" value="1" id="delIcon" class="chk_align">
+                            <label for="delIcon">삭제</label>
+                        </div>
+                        <input id="icon" type="file" name="icon" class="frm_file">
+                        {{-- @if(File::exists($iconPath)) --}}
+                        <span class="help-block">
                             이미지 크기는 가로 {{ cache('config.join')->memberIconWidth }}픽셀, 세로 {{ cache('config.join')->memberIconHeight }}픽셀 이하로 해주세요.<br>
                             gif만 가능하며 용량 {{ cache('config.join')->memberIconSize }}바이트 이하만 등록됩니다.
-                        </p>
-                        <input id="icon" type="file" name="icon">
-                        @if(File::exists($iconPath))
-                        <img src="{{ $iconUrl }}" alt="회원아이콘">
-                        <input type="checkbox" name="delIcon" value="1" id="delIcon">
-                        <label for="delIcon">삭제</label>
-                        @endif
+                        </span>
+                        {{-- @endif --}}
                         @if ($errors->has('icon'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('icon') }}</strong>
@@ -274,12 +275,11 @@
 
                     <div class="col-xs-12">
                         @if($openChangable) <!-- 정보공개 여부 -->
+                            <div class="help bg-danger mb5">
+                                <span class="warning">정보공개를 바꾸시면 {{ $openDate }}일 이내에는 변경이 안됩니다.</span>
+                            </div>
                             <input id="open" type="checkbox" name="open" value="1" @if($user->open == 1) checked @endif>
                                 다른분들이 나의 정보를 볼 수 있도록 합니다.
-
-                            <div class="helpbox bg-danger">
-                                <p>정보공개를 바꾸시면 {{ $openDate }}일 이내에는 변경이 안됩니다.</p>
-                            </div>
 
                             @if ($errors->has('open'))
                                 <span class="help-block">
