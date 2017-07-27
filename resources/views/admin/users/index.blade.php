@@ -82,24 +82,24 @@
                 <thead>
                     <th class="td_chk"><input type="checkbox" name="chkAll" onclick="checkAll(this.form)"/></th>
                     <th>
-                        <a class="adm_sort" href="{{ route('admin.users.index') }}?order=email&amp;direction={{$order=='email' ? $direction : 'asc'}}">회원이메일</a>
+                        <a class="adm_sort" href="{{ route('admin.users.index'). $queryString }}&amp;order=email&amp;direction={{$order=='email' ? $direction : 'asc'}}">회원이메일</a>
                     </th>
                     <th>
-                        <a class="adm_sort" href="{{ route('admin.users.index') }}?order=nick&amp;direction={{$order=='nick' ? $direction : 'asc'}}">닉네임</a>
+                        <a class="adm_sort" href="{{ route('admin.users.index'). $queryString }}&amp;order=nick&amp;direction={{$order=='nick' ? $direction : 'asc'}}">닉네임</a>
                         <ul class="dropdown-menu" role="menu">
                         </ul>
                     </th>
                     <th>
-                        상태/<a class="adm_sort" href="{{ route('admin.users.index') }}?order=level&amp;direction={{$order=='level' ? $direction : 'desc'}}">권한</a>
+                        상태/<a class="adm_sort" href="{{ route('admin.users.index'). $queryString }}&amp;order=level&amp;direction={{$order=='level' ? $direction : 'desc'}}">권한</a>
                     </th>
                     <th>
-                        <a class="adm_sort" href="{{ route('admin.users.index') }}?order=point&amp;direction={{$order=='point' ? $direction : 'desc'}}">포인트</a>
+                        <a class="adm_sort" href="{{ route('admin.users.index'). $queryString }}&amp;order=point&amp;direction={{$order=='point' ? $direction : 'desc'}}">포인트</a>
                     </th>
                     <th>
-                        <a class="adm_sort" href="{{ route('admin.users.index') }}?order=created_at&amp;direction={{$order=='created_at' ? $direction : 'desc'}}">가입일</a>
+                        <a class="adm_sort" href="{{ route('admin.users.index'). $queryString }}&amp;order=created_at&amp;direction={{$order=='created_at' ? $direction : 'desc'}}">가입일</a>
                     </th>
                     <th>
-                        <a class="adm_sort" href="{{ route('admin.users.index') }}?order=today_login&amp;direction={{$order=='today_login' ? $direction : 'desc'}}">최근접속</a>
+                        <a class="adm_sort" href="{{ route('admin.users.index'). $queryString }}&amp;order=today_login&amp;direction={{$order=='today_login' ? $direction : 'desc'}}">최근접속</a>
                     </th>
                     <th>접근그룹</th>
                     <th>관리</th>
@@ -153,8 +153,8 @@
                             @endif
                         </td>
                         <td>
-                            <a href="{{ route('admin.users.edit', $user->id) }}">수정</a>
-                            <a href="{{ route('admin.accessGroups.show', $user->id) }}">그룹</a>
+                            <a href="{{ route('admin.users.edit', $user->id). '?'. Request::getQueryString() }}">수정</a>
+                            <a href="{{ route('admin.accessGroups.show', $user->id). '?'. Request::getQueryString() }}">그룹</a>
                         </td>
                     </tr>
                 @endforeach
@@ -162,15 +162,8 @@
             </table>
             </form>
 
-            {{-- 페이지 처리 --}}
-            {{ str_contains(url()->current(), 'search')
-                ? $users->appends([
-                    'admin_page' => 'user',
-                    'kind' => $kind,
-                    'keyword' => $keyword,
-                ])->links()
-                : $users->links()
-            }}
+        {{-- 페이지 처리 --}}
+        {{ $users->appends(Request::except('page'))->links() }}
     </div>
 </div>
 

@@ -81,6 +81,8 @@ class Point extends Model
             }
         }
 
+        $queryString = "?kind=$kind&keyword=$keyword&page=". $points->currentPage();
+
         return [
             'points' => $points,
             'sum' => $sum,   // 모든 유저의 포인트합을 구한다.
@@ -89,6 +91,7 @@ class Point extends Model
             'order' => $order,
             'direction' => $direction == 'desc' ? 'asc' : 'desc',
             'searchEmail' => $searchEmail,
+            'queryString' => $queryString,
         ];
     }
 

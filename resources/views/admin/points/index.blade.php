@@ -74,17 +74,17 @@
                             <input type="checkbox" name="chkAll" onclick="checkAll(this.form)" />
                         </th>
                         <th>
-                            <a class="adm_sort" href="{{ route('admin.points.index') }}?order=email&amp;direction={{$order=='email' ? $direction : 'asc'}}">회원이메일</a>
+                            <a class="adm_sort" href="{{ route('admin.points.index'). $queryString }}&amp;order=email&amp;direction={{$order=='email' ? $direction : 'asc'}}">회원이메일</a>
                         </th>
                         <th>닉네임</th>
                         <th>
-                            <a class="adm_sort" href="{{ route('admin.points.index') }}?order=content&amp;direction={{$order=='content' ? $direction : 'asc'}}">포인트 내용</a>
+                            <a class="adm_sort" href="{{ route('admin.points.index'). $queryString }}&amp;order=content&amp;direction={{$order=='content' ? $direction : 'asc'}}">포인트 내용</a>
                         </th>
                         <th>
-                            <a class="adm_sort" href="{{ route('admin.points.index') }}?order=point&amp;direction={{$order=='point' ? $direction : 'asc'}}">포인트</a>
+                            <a class="adm_sort" href="{{ route('admin.points.index'). $queryString }}&amp;order=point&amp;direction={{$order=='point' ? $direction : 'asc'}}">포인트</a>
                         </th>
                         <th>
-                            <a class="adm_sort" href="{{ route('admin.points.index') }}?order=datetime&amp;direction={{$order=='datetime' ? $direction : 'asc'}}">일시</a>
+                            <a class="adm_sort" href="{{ route('admin.points.index'). $queryString }}&amp;order=datetime&amp;direction={{$order=='datetime' ? $direction : 'asc'}}">일시</a>
                         </th>
                         <th>만료일</th>
                         <th>포인트합</th>
@@ -132,13 +132,7 @@
         </form>
 
         {{-- 페이지 처리 --}}
-        {{ str_contains(url()->full(), 'kind')
-            ? $points->appends([
-                'kind' => $kind,
-                'keyword' => $keyword,
-            ])->links()
-            : $points->links()
-        }}
+        {{ $points->appends(Request::except('page'))->links() }}
 
         <div id="pt_change" class="panel panel-default">
             <div class="panel-heading">

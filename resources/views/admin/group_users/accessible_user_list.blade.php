@@ -37,19 +37,16 @@
                             <th class="text-center"><input type="checkbox" name="chkAll" onclick="checkAll(this.form)"/></th>
                             <th class="text-center">그룹</th>
                             <th class="text-center">
-                                <a class="mb_tooltip" href="{{ route('admin.accessUsers.show', $group->id) }}?order=email&amp;direction={{$order=='email' ? $direction : 'asc'}}">회원이메일</a>
+                                <a class="mb_tooltip" href="{{ route('admin.accessUsers.show', $group->id). $queryString }}&amp;order=email&amp;direction={{$order=='email' ? $direction : 'asc'}}">회원이메일</a>
                             </th>
                             <th class="text-center">
-                                <a class="mb_tooltip" href="{{ route('admin.accessUsers.show', $group->id) }}?order=name&amp;direction={{$order=='name' ? $direction : 'asc'}}">이름</a>
+                                <a class="mb_tooltip" href="{{ route('admin.accessUsers.show', $group->id). $queryString }}&amp;order=nick&amp;direction={{$order=='nick' ? $direction : 'asc'}}">닉네임</a>
                             </th>
                             <th class="text-center">
-                                <a class="mb_tooltip" href="{{ route('admin.accessUsers.show', $group->id) }}?order=nick&amp;direction={{$order=='nick' ? $direction : 'asc'}}">닉네임</a>
+                                <a class="mb_tooltip" href="{{ route('admin.accessUsers.show', $group->id). $queryString }}&amp;order=today_login&amp;direction={{$order=='today_login' ? $direction : 'asc'}}">최근접속</a>
                             </th>
                             <th class="text-center">
-                                <a class="mb_tooltip" href="{{ route('admin.accessUsers.show', $group->id) }}?order=today_login&amp;direction={{$order=='today_login' ? $direction : 'asc'}}">최근접속</a>
-                            </th>
-                            <th class="text-center">
-                                <a class="mb_tooltip" href="{{ route('admin.accessUsers.show', $group->id) }}?order=created_at&amp;direction={{$order=='created_at' ? $direction : 'asc'}}">처리일시</a>
+                                <a class="mb_tooltip" href="{{ route('admin.accessUsers.show', $group->id). $queryString }}&amp;order=created_at&amp;direction={{$order=='created_at' ? $direction : 'asc'}}">처리일시</a>
                             </th>
                         </thead>
 
@@ -62,7 +59,6 @@
                                     <a href="{{ route('admin.accessGroups.show', $user->id) }}">{{ $user->count_groups }}</a>
                                 </td>
                                 <td class="text-center">{{ $user->email }}</td>
-                                <td class="text-center">{{ $user->name }}</td>
                                 <td class="text-center">{{ $user->nick }}</td>
                                 <td class="text-center">@date($user->today_login)</td>
                                 <td class="text-center">{{ $user->pivot->created_at }}</td>
@@ -77,13 +73,7 @@
             </form>
 
             {{-- 페이지 처리 --}}
-            {{ str_contains(url()->full(), 'keyword')
-                ? $users->appends([
-                    'groupId' => $group->id,
-                    'keyword' => $keyword,
-                ])->links()
-                : $users->links()
-            }}
+            {{ $users->appends(Request::except('page'))->links() }}
 
         </div>
     </div>

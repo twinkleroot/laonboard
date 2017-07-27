@@ -1,7 +1,7 @@
 @extends('admin.admin')
 
 @section('title')
-    게시판 그룹 {{ $title }} | {{ $config->title }}
+    게시판 그룹 {{ $type == 'edit' ? '수정' : '생성' }} | {{ cache("config.homepage")->title }}
 @endsection
 
 @section('content')
@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading"><h2>게시판 그룹 {{ $title }}</h2></div>
+                <div class="panel-heading"><h2>게시판 그룹 {{ $type == 'edit' ? '수정' : '생성' }}</h2></div>
                 <form class="form-horizontal" role="form" method="POST" action="{{ $action }}">
                     {{ csrf_field() }}
                     @if($type == 'edit')
@@ -27,7 +27,7 @@
                                 <input type="text" class="form-control" name="group_id" maxlength="10" @if($type == 'edit') value="{{ $group->group_id }}" readonly @endif />
                                 @if($type == 'edit')
                                     영문자, 숫자, _ 만 가능 (공백없이)
-                                    <a href="">게시판그룹 바로가기</a>
+                                    <a class="btn btn-primary" href="{{ route('group', $group->id) }}">게시판그룹 바로가기</a>
                                 @endif
                                 @foreach ($errors->get('group_id') as $message)
                                     <span class="help-block">
@@ -41,7 +41,7 @@
                             <td @if($errors->get('subject')) class="has-error" @endif>
                                 <input type="text" class="form-control" name="subject" @if($type == 'edit') value="{{ $group->subject }}" @endif required/>
                                 @if($type == 'edit')
-                                    <a href="/admin/boards/create?group_id={{ $group->id }}">게시판생성</a>
+                                    <a class="btn btn-primary" href="/admin/boards/create?group_id={{ $group->id }}">게시판생성</a>
                                 @endif
                                 @foreach ($errors->get('subject') as $message)
                                     <span class="help-block">
@@ -83,7 +83,13 @@
                         </tr>
                         <tr>
                             <th>접근회원수</th>
-                            <td><a href="">0</a></td>
+                            <td>
+                                @if($type == 'edit')
+                                <a href="{{ route('admin.accessUsers.show', $group->id)}}">{{ $group->count_users }}</a>
+                                @else
+                                0
+                                @endif
+                            </td>
                         </tr>
                         @for($i=1; $i<=10; $i++)
                             <tr>
@@ -100,7 +106,7 @@
                             <button type="submit" class="btn btn-primary">
                                 확인
                             </button>
-                            <a class="btn btn-primary" href="{{ route('admin.groups.index') }}">목록</a>
+                            <a class="btn btn-primary" href="{{ route('admin.groups.index'). '?'. Request::getQueryString() }}">목록</a>
                         </div>
                     </div>
                 </form>

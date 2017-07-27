@@ -77,7 +77,9 @@ class Group extends Model
             $query = $query->orderBy('g.group_id');
         }
 
-        $groups = $query->paginate(Cache::get('config.homepage')->pageRows);
+        $groups = $query->paginate(cache('config.homepage')->pageRows);
+
+        $queryString = "?kind=$kind&keyword=$keyword&page=". $groups->currentPage();
 
         return [
             'groups' => $groups,
@@ -85,6 +87,7 @@ class Group extends Model
             'keyword' => $keyword,
             'order' => $order,
             'direction' => $direction == 'desc' ? 'asc' : 'desc',
+            'queryString' => $queryString,
         ];
 
     }
@@ -99,6 +102,15 @@ class Group extends Model
         return false;
     }
 
+    // create 페이지에서 필요한 파라미터 가져오기
+    public function getGroupCreateParams()
+    {
+        return [
+            'action' => route('admin.groups.store'),
+            'type' => 'create',
+        ];
+    }
+
     // 추가한 게시판 그룹 저장
     public function storeGroup($data)
     {
@@ -110,16 +122,31 @@ class Group extends Model
 
     }
 
-    // 그룹 선택 삭제
-    public function deleteGroups($ids)
+    // edit 페이지에서 필요한 파라미터 가져오기
+    public function getGroupEditParams($id)
     {
-        $deleteIdArr = explode(',', $ids);
-        foreach($deleteIdArr as $id) {
-            if(!Board::where('group_id', $id)->first()) {
-                Group::destroy($id);
-            } else {
-                return '이 그룹에 속한 게시판이 존재하여 게시판 그룹을 삭제할 수 없습니다. 이 그룹에 속한 게시판을 먼저 삭제하여 주십시오.';
-            }
+        $group = Group::find($id);
+        $group->count_users = GroupUser::where('group_id', $group->id)->count();
+
+        return [
+            'group' => $group,
+            'action' => route('admin.groups.update', $id),
+            'type' => 'edit',
+        ];
+    }
+
+    // 수정
+    public function updateGroup($data, $id)
+    {
+        $data = array_except($data, ['_token']);
+        $data = exceptNullData($data);
+
+        $group = Group::findOrFail($id);
+
+        if($group->update($data)) {
+            return $group->subject;
+        } else {
+            return false;
         }
     }
 
@@ -152,42 +179,16 @@ class Group extends Model
         }
     }
 
-    // create 페이지에서 필요한 파라미터 가져오기
-    public function getGroupCreateParams()
+    // 그룹 선택 삭제
+    public function deleteGroups($ids)
     {
-        return [
-            'config' => Cache::get("config.homepage"),
-            'title' => '생성',
-            'action' => route('admin.groups.store'),
-            'type' => 'create',
-        ];
-    }
-
-    // edit 페이지에서 필요한 파라미터 가져오기
-    public function getGroupEditParams($id)
-    {
-        return [
-            'config' => Cache::get("config.homepage"),
-            'group' => Group::findOrFail($id),
-            'title' => '수정',
-            'action' => route('admin.groups.update', $id),
-            'type' => 'edit',
-        ];
-    }
-
-    // 수정
-    public function updateGroup($data, $id)
-    {
-        $data = array_except($data, ['_token']);
-        $data = exceptNullData($data);
-
-        $group = Group::findOrFail($id);
-
-        if($group->update($data)) {
-            return $group->subject;
-        } else {
-            return false;
+        $deleteIdArr = explode(',', $ids);
+        foreach($deleteIdArr as $id) {
+            if(!Board::where('group_id', $id)->first()) {
+                Group::destroy($id);
+            } else {
+                return '이 그룹에 속한 게시판이 존재하여 게시판 그룹을 삭제할 수 없습니다. 이 그룹에 속한 게시판을 먼저 삭제하여 주십시오.';
+            }
         }
     }
-
 }

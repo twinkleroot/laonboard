@@ -117,6 +117,8 @@ class AdminUser extends Model
         $interceptUsers = $query->whereNotNull('intercept_date')->count();
         $leaveUsers = $query->whereNotNull('leave_date')->count();
 
+        $queryString = "?kind=$kind&keyword=$keyword&page=". $users->currentPage();
+
         return [
             'users' => $users,
             'interceptUsers' => $interceptUsers,
@@ -125,6 +127,7 @@ class AdminUser extends Model
             'keyword' => $keyword,
             'order' => $order,
             'direction' => $direction == 'desc' ? 'asc' : 'desc',
+            'queryString' => $queryString,
         ];
     }
 
@@ -139,9 +142,9 @@ class AdminUser extends Model
 
         $user = AdminUser::create($data);
 
-		if(is_null($user)) {
-			abort(500, '회원추가에 실패하였습니다.');
-		}
+        if(is_null($user)) {
+            abort(500, '회원추가에 실패하였습니다.');
+        }
 
         $user->id_hashkey = str_replace("/", "-", bcrypt($user->id));   // id 암호화
         $user->save();
@@ -149,45 +152,45 @@ class AdminUser extends Model
         return $user->id;
     }
 
-	public function editParams($user, $id)
-	{
-		// 회원아이콘 경로
-		$path = storage_path('app/public/user/'. substr($user->email,0,2). '/'). $user->email. '.gif';
-		$url = '/storage/user/'. substr($user->email,0,2). '/'. $user->email. '.gif';
+    public function editParams($user, $id)
+    {
+        // 회원아이콘 경로
+        $path = storage_path('app/public/user/'. substr($user->email,0,2). '/'). $user->email. '.gif';
+        $url = '/storage/user/'. substr($user->email,0,2). '/'. $user->email. '.gif';
 
-		$appUser = new AppUser();
-		$recommend = $appUser->recommendedPerson(getUser($id));
+        $appUser = new AppUser();
+        $recommend = $appUser->recommendedPerson(getUser($id));
 
         return [
             'user' => $user,
             'id' => $id,
-			'iconUrl' => $url,
-			'iconPath' => $path,
-			'recommend' => $recommend,
+            'iconUrl' => $url,
+            'iconPath' => $path,
+            'recommend' => $recommend,
         ];
-	}
+    }
 
-	// 회원 정보 수정
-	public function updateUserInfo($request, $id)
-	{
-		$user = getUser($id);
+    // 회원 정보 수정
+    public function updateUserInfo($request, $id)
+    {
+        $user = getUser($id);
 
-		$password = $user->password;
+        $password = $user->password;
         if($request->get('change_password') !== '') {
             $password = bcrypt($request->get('change_password'));
         }
 
         $nowDate = Carbon::now()->toDateString();
 
-		$appUser = new AppUser();
-		// 추천인 입력
-		$recommendedId = $appUser->insertRecommend($request, $user);
+        $appUser = new AppUser();
+        // 추천인 입력
+        $recommendedId = $appUser->insertRecommend($request, $user);
 
-		$toUpdateUserInfo = [
+        $toUpdateUserInfo = [
             'name' => cleanXssTags($request->name),
             'password' => $password,
             'nick' => $request->has('nick') ? trim($request->nick) : $user->nick,
-			'nick_date' => $request->has('nick') != $user->nick ? $nowDate : $user->nick_date,
+            'nick_date' => $request->has('nick') != $user->nick ? $nowDate : $user->nick_date,
             'level' => $request->level,
             // 'point' => $request->get('point'),	// 포인트 부여 및 차감은 [회원관리 - 포인트관리]에서
             'homepage' => cleanXssTags($request->homepage),
@@ -195,7 +198,7 @@ class AdminUser extends Model
             'tel' => cleanXssTags($request->tel),
             'certify' => !$request->certify_signal ? '' : $request->certify,
             'adult' => $request->adult,
-			'addr1' => cleanXssTags($request->addr1),
+            'addr1' => cleanXssTags($request->addr1),
             'addr2' => cleanXssTags($request->addr2),
             'zip' => preg_replace('/[^0-9]/', '', $request->zip),
             'mailing' => $request->mailing,
@@ -206,25 +209,25 @@ class AdminUser extends Model
             'memo' => trim($request->memo),
             'leave_date' => $request->leave_date,
             'intercept_date' => $request->intercept_date,
-			'recommend' => $request->has('recommend') ? $recommendedId : $user->recommend,
+            'recommend' => $request->has('recommend') ? $recommendedId : $user->recommend,
         ];
 
-		// 정보공개 체크박스에 체크를 했거나 기존에 open값과 open입력값이 다르다면 기존 open 값에 open 입력값을 넣는다.
-		if($request->has('open') || $user->open != $request->open) {
-			$toUpdateUserInfo = array_collapse([ $toUpdateUserInfo, [
-				'open' => $request->open,
-				'open_date' => $nowDate
-			] ]);
-		}
+        // 정보공개 체크박스에 체크를 했거나 기존에 open값과 open입력값이 다르다면 기존 open 값에 open 입력값을 넣는다.
+        if($request->has('open') || $user->open != $request->open) {
+            $toUpdateUserInfo = array_collapse([ $toUpdateUserInfo, [
+                'open' => $request->open,
+                'open_date' => $nowDate
+            ] ]);
+        }
 
-		$path = storage_path('app/public/user/'. substr($user->email,0,2). '/'). $user->email. '.gif';
-		// 아이콘 삭제
-		$appUser->iconDelete($request, $path);
-		// 아이콘 업로드
-		$appUser->iconUpload($request, $user->email, $path);
+        $path = storage_path('app/public/user/'. substr($user->email,0,2). '/'). $user->email. '.gif';
+        // 아이콘 삭제
+        $appUser->iconDelete($request, $path);
+        // 아이콘 업로드
+        $appUser->iconUpload($request, $user->email, $path);
 
         $user->update($toUpdateUserInfo);
-	}
+    }
 
     // 선택 수정
     public function selectedUpdate($request)
@@ -257,44 +260,44 @@ class AdminUser extends Model
         }
     }
 
-	// 선택 삭제
-	public function deleteUser($request)
-	{
-		// 회원자료는 정보만 없앤 후 아이디는 보관하여 다른 사람이 사용하지 못하도록 함
-		foreach(explode(',', $request->ids) as $id) {
-			AdminUser::find($id)
-			->update([
-				'password' => '',
-				'level' => 1,
-				'homepage' => '',
-				'tel' => '',
-				'hp' => '',
-				'zip' => '',
-				'addr1' => '',
-				'addr2' => '',
-				'birth' => '',
-				'sex' => '',
-				'signature' => '',
-				'memo' => Carbon::now()->format("Ymd"). ' 삭제함',
-			]);
-		// 포인트 테이블에서 삭제
-		Point::where('user_id', $id)->delete($id);
-	    // 그룹접근가능 삭제
-		GroupUser::where('user_id', $id)->delete($id);
-	    // 쪽지 삭제
-		Memo::where('send_user_id', $id)->orWhere('recv_user_id', $id)->delete($id);
-	    // 스크랩 삭제
-		Scrap::where('user_id', $id)->delete($id);
-	    // 관리권한 삭제
-		ManageAuth::where('user_id', $id)->delete($id);
-	    // 그룹관리자인 경우 그룹관리자를 공백으로
-		$user = getUser($id);
-		Group::where('admin', $user->email)->update([ 'admin' => '' ]);
-	    // 게시판관리자인 경우 게시판관리자를 공백으로
-		Board::where('admin', $user->email)->update([ 'admin' => '' ]);
-	    // 아이콘 삭제
-		$path = storage_path('app/public/user/'. substr($user->email,0,2). '/'). $user->email. '.gif';
-		File::delete($path);
-		}
-	}
+    // 선택 삭제
+    public function deleteUser($request)
+    {
+        // 회원자료는 정보만 없앤 후 아이디는 보관하여 다른 사람이 사용하지 못하도록 함
+        foreach(explode(',', $request->ids) as $id) {
+            AdminUser::find($id)
+            ->update([
+                'password' => '',
+                'level' => 1,
+                'homepage' => '',
+                'tel' => '',
+                'hp' => '',
+                'zip' => '',
+                'addr1' => '',
+                'addr2' => '',
+                'birth' => '',
+                'sex' => '',
+                'signature' => '',
+                'memo' => Carbon::now()->format("Ymd"). ' 삭제함',
+            ]);
+        // 포인트 테이블에서 삭제
+        Point::where('user_id', $id)->delete($id);
+        // 그룹접근가능 삭제
+        GroupUser::where('user_id', $id)->delete($id);
+        // 쪽지 삭제
+        Memo::where('send_user_id', $id)->orWhere('recv_user_id', $id)->delete($id);
+        // 스크랩 삭제
+        Scrap::where('user_id', $id)->delete($id);
+        // 관리권한 삭제
+        ManageAuth::where('user_id', $id)->delete($id);
+        // 그룹관리자인 경우 그룹관리자를 공백으로
+        $user = getUser($id);
+        Group::where('admin', $user->email)->update([ 'admin' => '' ]);
+        // 게시판관리자인 경우 게시판관리자를 공백으로
+        Board::where('admin', $user->email)->update([ 'admin' => '' ]);
+        // 아이콘 삭제
+        $path = storage_path('app/public/user/'. substr($user->email,0,2). '/'). $user->email. '.gif';
+        File::delete($path);
+        }
+    }
 }

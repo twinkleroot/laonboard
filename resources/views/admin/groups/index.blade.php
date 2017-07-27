@@ -19,7 +19,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">게시판 그룹 설정</div>
             <div class="panel-heading">
-                <a href="{{ route('admin.groups.index') }}" >처음</a> | 전체그룹 {{ $groups->total() }}개
+                <a href="{{ route('admin.groups.index') }}" >전체목록</a> | 전체그룹 {{ $groups->total() }}개
             </div>
             <form method="GET" id="searchForm" action="{{ route('admin.groups.index') }}">
                 <div class="panel-heading">
@@ -47,19 +47,19 @@
                     <thead>
                         <th class="text-center"><input type="checkbox" name="chkAll" onclick="checkAll(this.form)"/></th>
                         <th class="text-center">
-                            <a class="mb_tooltip" href="{{ route('admin.groups.index') }}?order=group_id&amp;direction={{$order=='group_id' ? $direction : 'asc'}}">그룹 ID</a>
+                            <a class="mb_tooltip" href="{{ route('admin.groups.index'). $queryString }}&amp;order=group_id&amp;direction={{$order=='group_id' ? $direction : 'asc'}}">그룹 ID</a>
                         </th>
                         <th class="text-center">
-                            <a class="mb_tooltip" href="{{ route('admin.groups.index') }}?order=subject&amp;direction={{$order=='subject' ? $direction : 'asc'}}">제목</a>
+                            <a class="mb_tooltip" href="{{ route('admin.groups.index'). $queryString }}&amp;order=subject&amp;direction={{$order=='subject' ? $direction : 'asc'}}">제목</a>
                         </th>
                         <th class="text-center">
-                            <a class="mb_tooltip" href="{{ route('admin.groups.index') }}?order=admin&amp;direction={{$order=='admin' ? $direction : 'asc'}}">그룹관리자</a>
+                            <a class="mb_tooltip" href="{{ route('admin.groups.index'). $queryString }}&amp;order=admin&amp;direction={{$order=='admin' ? $direction : 'asc'}}">그룹관리자</a>
                         </th>
                         <th class="text-center">게시판</th>
                         <th class="text-center">접근<br />사용</th>
                         <th class="text-center">접근<br />회원수</th>
                         <th class="text-center">
-                            <a class="mb_tooltip" href="{{ route('admin.groups.index') }}?order=order&amp;direction={{$order=='order' ? $direction : 'asc'}}">출력순서</a>
+                            <a class="mb_tooltip" href="{{ route('admin.groups.index'). $queryString }}&amp;order=order&amp;direction={{$order=='order' ? $direction : 'asc'}}">출력순서</a>
                         </th>
                         <th class="text-center">접속기기</th>
                         <th class="text-center">관리</th>
@@ -102,7 +102,7 @@
                                 </select>
                             </td>
                             <td class="text-center">
-                                <a class="btn btn-primary" href="{{ route('admin.groups.edit', $group->id) }}">수정</a>
+                                <a class="btn btn-primary" href="{{ route('admin.groups.edit', $group->id). '?'. Request::getQueryString() }}">수정</a>
                             </td>
                         </tr>
                     @endforeach
@@ -124,13 +124,7 @@
             </form>
 
             {{-- 페이지 처리 --}}
-            {{ str_contains(url()->full(), 'kind')
-                ? $groups->appends([
-                    'kind' => $kind,
-                    'keyword' => $keyword,
-                ])->links()
-                : $groups->links()
-            }}
+            {{ $groups->appends(Request::except('page'))->links() }}
 
         </div>
     </div>

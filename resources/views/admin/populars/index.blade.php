@@ -4,8 +4,14 @@
     인기검색어관리 | {{ Cache::get("config.homepage")->title }}
 @endsection
 
+@section('include_css')
+    <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap-datepicker/css/bootstrap-datepicker.min.css') }}">
+@endsection
+
 @section('include_script')
     <script src="{{ asset('js/common.js') }}"></script>
+    <script src="{{ asset('bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"></script>
+    <script src="{{ asset('bootstrap-datepicker/js/locales/bootstrap-datepicker.kr.min.js') }}" charset="UTF-8"></script>
 @endsection
 
 @section('content')
@@ -38,15 +44,16 @@
         </ul>
 
         <div id="adm_sch" class="mb10 pull-right">
-            <form class="form-horizontal" role="form" method="GET" action="{{ route('admin.populars.index') }}">
+            <form class="form-horizontal" role="form" method="GET" action="{{ route('admin.populars.index') }}" onsubmit="return onSearchSubmit(this);">
                 <label for="" class="sr-only">검색대상</label>
-                <select name="kind">
+                <select name="kind" onchange="changeInput(this.value)">
                     <option value="word" @if($kind == 'word') selected @endif>검색어</option>
                     <option value="date" @if($kind == 'date') selected @endif>등록일</option>
                 </select>
 
                 <label for="keyword" class="sr-only">검색어</label>
-                <input type="text" name="keyword" value="{{ $keyword }}" class="search" required>
+                <input type="text" id="keyword" name="keyword" value="{{ $keyword }}" @if(!$kind || $kind == 'word') class="search" @else class="search datepicker" data-provide="datepicker" data-date-end-date="0d" @endif required>
+
                 <button type="submit" class="search-icon">
                     <i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">검색</span>
                 </button>
@@ -97,17 +104,25 @@
     </div>
 </div>
 
-    {{ str_contains(url()->full(), 'kind')
-        ? $populars->appends([
-            'kind' => $kind,
-            'keyword' => $keyword,
-            'order' => $order,
-            'direction' => $direction == 'desc' ? 'asc' : 'desc',
-        ])->links()
-        : $populars->links()
-    }}
+{{-- 페이지 처리 --}}
+{{ $populars->appends(Request::except('page'))->links() }}
+
 <script>
 $(function(){
+    $.fn.datepicker.dates['en'] = {
+        today: "오늘",
+        clear: "닫기",
+        titleFormat: "yyyy년 MM"
+    };
+    $('.datepicker').datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        language: 'kr',
+        clearBtn: true,
+        todayBtn: true,
+        todayHighlight: true,
+        disableTouchKeyboard: true
+    });
     // 선택 삭제 버튼 클릭
     $('#selected_delete').click(function(){
         var selected_id_array = selectIdsByCheckBox(".popularId");
@@ -122,6 +137,39 @@ $(function(){
         $('#selectForm').submit();
     });
 });
+
+// 검색 기준 변경에 따라서 input 박스의 설정을 바꾼다.
+function changeInput(value) {
+    if(value == 'word') {
+        $(".datepicker").datepicker('destroy');
+        $('#keyword').removeClass('datepicker');
+        $('#keyword').attr('data-provide', '');
+        $('#keyword').attr('data-date-end-date', '');
+        $('#keyword').val('');
+    } else {
+        $('#keyword').addClass('datepicker');
+        $('#keyword').attr('data-provide', 'datepicker');
+        $('#keyword').attr('data-date-end-date', '0d');
+        $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            language: 'kr',
+            clearBtn: true,
+            todayBtn: true,
+            todayHighlight: true,
+            disableTouchKeyboard: true
+        });
+        $('#keyword').val('');
+    }
+}
+
+function onSearchSubmit(form) {
+    form.keyword.value = document.getElementById(form.kind.value).value;
+
+    alert(form.keyword.value);
+
+    return true;
+}
 
 function onSubmit(form) {
     if(!confirm("선택한 항목을 정말 삭제하시겠습니까?")) {

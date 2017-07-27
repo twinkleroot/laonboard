@@ -91,10 +91,10 @@ class GroupUser extends Model
             ->leftJoin(DB::raw(
                 '(select users.id as id,
                 count(group_user.id) as count_groups
-            	from group_user
-            	left join users
-            	on group_user.user_id = users.id
-            	group by users.id) as count'),
+                from group_user
+                left join users
+                on group_user.user_id = users.id
+                group by users.id) as count'),
                 'users.id', '=', 'count.id'
             );
         // 검색 추가
@@ -114,12 +114,15 @@ class GroupUser extends Model
 
         $users = $query->paginate(Cache::get("config.homepage")->pageRows);
 
+        $queryString = "?keyword=$keyword&page=". $users->currentPage();
+
         return [
             'group' => $group,
             'users' => $users,
             'keyword' => $keyword,
             'order' => $order,
             'direction' => $direction == 'desc' ? 'asc' : 'desc',
+            'queryString' => $queryString,
         ];
     }
 }

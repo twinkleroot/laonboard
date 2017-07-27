@@ -62,7 +62,7 @@
                     <button type="submit" class="btn btn-default">{{ method_field('PUT') }}변경</button>
                 </li>
                 <li>
-                    <a href="{{ route('admin.users.index') }}" class="btn btn-default" role="button">목록</a>
+                    <a href="{{ route('admin.users.index'). '?'. Request::getQueryString() }}" class="btn btn-default" role="button">목록</a>
                 </li>
             </ul>
         </div>
@@ -80,7 +80,7 @@
                                     <input type="email" class="form-control" name="email" value="{{ $user->email }}" readonly>
                                 </div>
                                 <div class="col-md-5" style="padding-left: 0;">
-                                    <a href="#" class="btn btn-default form_btn" role="button">접근가능그룹보기</a>
+                                    <a href="{{ route('admin.accessGroups.show', $user->id). '?'. Request::getQueryString() }}" class="btn btn-default form_btn" role="button">접근가능그룹보기</a>
                                 </div>
                             </div>
                             <div class="form-group">
