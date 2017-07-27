@@ -110,9 +110,9 @@
                 @endif
                 @if(cache('config.cert'))
                     <div class="help bg-danger mb10">
-                        <span class="warning">아이핀 본인확인 후에는 이름이 자동 입력되고 휴대폰 본인확인 후에는 이름과 휴대폰번호가 자동 입력되어 수동으로 입력할 수 없게 됩니다.</span>
+                        <span class="warning"><!--아이핀 본인확인 후에는 이름이 자동 입력되고 -->휴대폰 본인확인 후에는 이름과 휴대폰번호가 자동 입력되어 수동으로 입력할 수 없게 됩니다.</span>
                     </div>
-                @endif 
+                @endif
                 @if((cache('config.cert')->certUse && cache('config.cert')->certHp) || $config->name) <!-- 이름 -->
                     <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                         <label for="name" class="control-label">이름</label>
@@ -129,9 +129,9 @@
                         <div class="col-md-12 mb10">
                             <input type="button" class="btn btn-block btn-default btn_frmline" id="win_hp_cert" value="휴대폰 본인확인">
                         </div>
-                        <div class="col-md-12">
+                        {{-- <div class="col-md-12">
                             <input type="button" class="btn btn-block btn-default btn_frmline" id="" value="아이핀 본인확인">
-                        </div>
+                        </div> --}}
                     </div>
                 @endif
 
@@ -218,6 +218,7 @@
                 <div class="form-group row {{ $errors->has('icon') ? ' has-error' : '' }}">
                     <label for="icon" class="col-xs-12 control-label">회원아이콘</label>
                     <div class="col-xs-12">
+                        @if(File::exists($iconPath))
                         <div class="mb10">
                             <span class="usericon">
                                 <img src="{{ $iconUrl }}" alt="회원아이콘">
@@ -225,13 +226,12 @@
                             <input type="checkbox" name="delIcon" value="1" id="delIcon" class="chk_align">
                             <label for="delIcon">삭제</label>
                         </div>
+                        @endif
                         <input id="icon" type="file" name="icon" class="frm_file">
-                        {{-- @if(File::exists($iconPath)) --}}
                         <span class="help-block">
                             이미지 크기는 가로 {{ cache('config.join')->memberIconWidth }}픽셀, 세로 {{ cache('config.join')->memberIconHeight }}픽셀 이하로 해주세요.<br>
                             gif만 가능하며 용량 {{ cache('config.join')->memberIconSize }}바이트 이하만 등록됩니다.
                         </span>
-                        {{-- @endif --}}
                         @if ($errors->has('icon'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('icon') }}</strong>

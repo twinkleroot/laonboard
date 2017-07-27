@@ -109,7 +109,7 @@
                             <a href="{{ route('scrap.index') }}" class="winScrap" target="_blank" onclick="winScrap(this.href); return false;">스크랩</a>
                         </li>
                         <li><a href="{{ route('user.point', Auth::user()->id) }}" class="point">포인트 내역</a></li>
-                        <li><a href="{{ route('memo.index') }}?kind=recv" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지</a></li>
+                        <li><a href="{{ route('memo.index') }}?kind=recv" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지 {{ App\Memo::where('recv_user_id', Auth::user()->id)->where('read_timestamp', null)->count() }}</a></li>
                         <li>
                             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 로그 아웃
