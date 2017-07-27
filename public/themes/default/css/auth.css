@@ -34,6 +34,15 @@
 	background-color: #09a137;
 	border-color: #09a137;
 }
+.btn-kakao {
+	color: #3b1e1e !important;
+	background-color: #f9e000;
+	border-color: #f9e000;
+}
+.btn-kakao:hover {
+	background-color: #d4c009;
+	border-color: #d4c009;
+}
 .btn-facebook {
 	color: #fff !important;
 	background-color: #3c5b9b;
@@ -58,6 +67,12 @@
 	height: 31px;
 	background: url('../images/sns_logo.png') -36px 0 no-repeat;
 }
+.icon-kakao {
+	display: block;
+	width: 31px;
+	height: 31px;
+	background: url('../images/sns_logo.png') -108px 0 no-repeat;
+}
 .icon-facebook {
 	display: block;
 	width: 31px;
@@ -68,5 +83,5 @@
 	display: block;
 	width: 31px;
 	height: 31px;
-	background: url('../images/sns_logo.png') -71px 0 no-repeat;
+	background: url('../images/sns_logo.png') -72px 0 no-repeat;
 }

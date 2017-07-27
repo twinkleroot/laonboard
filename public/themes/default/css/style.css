@@ -1791,7 +1791,7 @@ div {
 .btn_frmline {
 	height: 40px;
 }
-.chk_align input[type=checkbox],
-.chk_align input[type=radio] {
+input[type=checkbox],
+input[type=radio] {
 	vertical-align: middle; margin: 0 0 0 5px;
 }

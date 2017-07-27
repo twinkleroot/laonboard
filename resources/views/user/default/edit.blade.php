@@ -246,7 +246,7 @@
 
                     <div class="col-xs-12">
                         <input id="mailing" type="checkbox" name="mailing" value="1" @if($user->mailing == 1) checked @endif>
-                        정보 메일을 받겠습니다.
+                        <label for="mailing">정보 메일을 받겠습니다.</label>
                         @if ($errors->has('mailing')) <!-- 메일링 동의 -->
                             <span class="help-block">
                                 <strong>{{ $errors->first('mailing') }}</strong>
@@ -260,7 +260,7 @@
 
                     <div class="col-xs-12">
                         <input id="sms" type="checkbox" name="sms" value="1" @if($user->sms == 1) checked @endif>
-                            휴대폰 문자메세지를 받겠습니다.
+                        <label for="sms">휴대폰 문자메세지를 받겠습니다.</label>
 
                         @if ($errors->has('sms')) <!-- 문자수신 동의 -->
                             <span class="help-block">
@@ -279,7 +279,7 @@
                                 <span class="warning">정보공개를 바꾸시면 {{ $openDate }}일 이내에는 변경이 안됩니다.</span>
                             </div>
                             <input id="open" type="checkbox" name="open" value="1" @if($user->open == 1) checked @endif>
-                                다른분들이 나의 정보를 볼 수 있도록 합니다.
+                            <label for="open">다른분들이 나의 정보를 볼 수 있도록 합니다.</label>
 
                             @if ($errors->has('open'))
                                 <span class="help-block">
