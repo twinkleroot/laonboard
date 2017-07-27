@@ -78,7 +78,7 @@
     </form>
 
     <div class="help bg-info">
-        쪽지 보관일수는 최장 <strong>180일</strong> 입니다.
+        쪽지 보관일수는 최장 <strong>{{ cache('config.homepage')->memoDel }}일</strong> 입니다.
     </div>
 </div>
 <!-- Placed at the end of the document so the pages load faster -->

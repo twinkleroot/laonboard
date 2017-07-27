@@ -20,7 +20,7 @@ class Config extends Model
 
     // 비밀번호 정책 설정에 따라 비밀번호 정규식 조합
     public function getPasswordRuleByConfigPolicy() {
-        $config = Cache::get('config.join');
+        $config = cache('config.join');
         $rulePieces = array();
         $ruleString = array();
         $ruleArr = [
@@ -59,13 +59,13 @@ class Config extends Model
         $admins = User::where('level', 10)->get();
 
         return [
-            'configHomepage' => Cache::get("config.homepage"),
-            'configJoin' => Cache::get("config.join"),
-            'configBoard' => Cache::get("config.board"),
-            'configEmailDefault' => Cache::get("config.email.default"),
-            'configEmailBoard' => Cache::get("config.email.board"),
-            'configEmailJoin' => Cache::get("config.email.join"),
-            'configCert' => Cache::get("config.cert"),
+            'configHomepage' => cache("config.homepage"),
+            'configJoin' => cache("config.join"),
+            'configBoard' => cache("config.board"),
+            'configEmailDefault' => cache("config.email.default"),
+            'configEmailBoard' => cache("config.email.board"),
+            'configEmailJoin' => cache("config.email.join"),
+            'configCert' => cache("config.cert"),
             'admins' => $admins,
             'latestSkins' => getSkins('latest'),
             'searchSkins' => getSkins('search'),
@@ -111,6 +111,9 @@ class Config extends Model
             'loginPoint' => config('gnu.loginPoint'),
             'memoSendPoint' => config('gnu.memoSendPoint'),
             'openDate' => config('gnu.openDate'),
+            'newDel' => config('gnu.newDel'),
+            'memoDel' => config('gnu.memoDel'),
+            'popularDel' => config('gnu.popularDel'),
             'newRows' => config('gnu.newRows'),
             'pageRows' => config('gnu.pageRows'),
             'mobilePageRows' => config('gnu.mobilePageRows'),
@@ -118,13 +121,14 @@ class Config extends Model
             'mobilePages' => config('gnu.mobilePages'),
             'newSkin' => config('gnu.newSkin'),
             'searchSkin' => config('gnu.searchSkin'),
+            'useCopyLog' => config('gnu.useCopyLog'),
             'pointTerm' => config('gnu.pointTerm'),
         );
 
         return $this->createConfig('config.homepage', $configArr);
     }
 
-	// 게시판 기본 설정을 config 테이블에 추가한다.
+    // 게시판 기본 설정을 config 테이블에 추가한다.
     public function createConfigBoard()
     {
         $configArr = array (
@@ -164,7 +168,7 @@ class Config extends Model
             'memberIconSize' => config('gnu.memberIconSize'),
             'memberIconWidth' => config('gnu.memberIconWidth'),
             'memberIconHeight' => config('gnu.memberIconHeight'),
-			'recommend' => config('gnu.recommend'),
+            'recommend' => config('gnu.recommend'),
             'recommendPoint' => config('gnu.recommendPoint'),
             'banId' => config('gnu.banId'),
             'stipulation' => config('gnu.stipulation'),
@@ -178,7 +182,7 @@ class Config extends Model
         return $this->createConfig('config.join', $configArr);
     }
 
-	// 개별 스킨 설정 가져오기
+    // 개별 스킨 설정 가져오기
     public function createConfigCert()
     {
         $configArr = array (
@@ -274,6 +278,7 @@ class Config extends Model
             Cache::forget("config.homepage");   // 설정이 변경될 때 캐시를 지운다.
             if( !$theme ) {
                 $data = array_add($data, 'usePoint', isset($data['usePoint']) ? $data['usePoint'] : 0);
+                $data = array_add($data, 'useCopyLog', isset($data['useCopyLog']) ? $data['useCopyLog'] : 0);
             }
         } else if($name == 'join') {    // 회원 가입 설정 일 때
             Cache::forget("config.join");   // 설정이 변경될 때 캐시를 지운다.
@@ -308,8 +313,8 @@ class Config extends Model
             Cache::forget("config.skin");
         } else if($name == 'cert') {
             Cache::forget("config.cert");
-			$data = array_add($data, 'certLimit', isset($data['certLimit']) ? $data['certLimit'] : 0);
-			$data = array_add($data, 'certReq', isset($data['certReq']) ? $data['certReq'] : 0);
+            $data = array_add($data, 'certLimit', isset($data['certLimit']) ? $data['certLimit'] : 0);
+            $data = array_add($data, 'certReq', isset($data['certReq']) ? $data['certReq'] : 0);
         }
 
         // json 형식으로 되어 있는 설정값을 배열로 바꾼다.

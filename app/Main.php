@@ -17,7 +17,7 @@ class Main
         $boards =
             Board::selectRaw('boards.*, groups.id as group_id, groups.subject as group_subject, groups.order as group_order')
             ->leftJoin('groups', 'groups.id', '=', 'boards.group_id')
-            ->where('boards.device', '<>', 'mobile')
+            // ->where('boards.device', '<>', 'mobile')
             ->where('boards.use_cert', 'not-use')
             ->orderBy('groups.order')
             ->orderBy('boards.order')
@@ -40,7 +40,7 @@ class Main
                 'group_id' => $groupId,
                 'use_cert' => 'not-use',
             ])
-            ->where('device', '<>', 'mobile')
+            // ->where('device', '<>', 'mobile')
             ->where('list_level', '<=' , auth()->guest() ? 1 : auth()->user()->level)   // guest는 회원 레벨 1
             ->orderBy('order')
             ->get();

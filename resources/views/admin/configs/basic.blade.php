@@ -127,6 +127,36 @@
                     </div>
                     <div class="panel-body">
                         <div class="form-group">
+                            <label for="newDel" class="col-md-4 control-label">최근게시물 삭제</label>
+
+                            <div class="col-md-6">
+                                설정일이 지난 최근게시물 자동 삭제<br>
+                                <input type="text" name="newDel" value="{{ $configHomepage->newDel }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="memoDel" class="col-md-4 control-label">쪽지 삭제</label>
+
+                            <div class="col-md-6">
+                                설정일이 지난 쪽지 자동 삭제<br>
+                                <input type="text" name="memoDel" value="{{ $configHomepage->memoDel }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="popularDel" class="col-md-4 control-label">인기검색어 삭제</label>
+
+                            <div class="col-md-6">
+                                설정일이 지난 인기검색어 자동 삭제<br>
+                                <input type="text" name="popularDel" value="{{ $configHomepage->popularDel }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
                             <label for="newRows" class="col-md-4 control-label">최근게시물 라인수</label>
 
                             <div class="col-md-6">
@@ -202,6 +232,14 @@
                                     @endforeach
                                 </select>
                             </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="useCopyLog" class="col-md-2 control-label">복사, 이동시 로그</label>
+                        <div class="col-md-3">
+                            게시물 아래에 누구로 부터 복사, 이동됨 표시<br>
+                            <input type="checkbox" name="useCopyLog" id="useCopyLog" value="1" @if($configHomepage->useCopyLog == 1) checked @endif>
+                            <label for="useCopyLog">남김</label>
                         </div>
                     </div>
                     <div class="panel-body">
