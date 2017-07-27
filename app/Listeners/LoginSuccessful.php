@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Point;
+use App\Memo;
 
 class LoginSuccessful
 {
@@ -40,13 +41,17 @@ class LoginSuccessful
 
         $event->user->save();
 
-        // 관리자 임을 세션에 등록
+        // 관리자로 세션에 등록
         if($event->user->isAdmin()) {
             session()->put('admin', true);
         }
 
         // 보낸 쪽지, 받은 쪽지가 기준 일이 지나면 자동 삭제
-        
+        $memoDel = cache('config.homepage')->memoDel;
+        $memo = Memo::where('recv_user_id', $event->user->id)
+        ->orWhere('send_user_id', $event->user->id)
+        ->where('send_timestamp', '<', Carbon::now()->subDays($memoDel)->toDatetimeString())
+        ->delete();
 
         // 회원 가입인 경우($isUserJoin == true) 로그인 포인트를 부여하지 않음.
         if( !$this->isUserJoin($event->user) ) {
