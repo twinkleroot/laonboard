@@ -33,7 +33,7 @@
     <div class="submit_btn" style="line-height: 42px; padding-right: 10px;">
     </div>
 </div>
-<div class="body-contents"> 
+<div class="body-contents">
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             @if ($errors->any())
@@ -94,6 +94,9 @@
                                         </option>
                                     @endforeach
                                 </select>
+                                @if($type == 'edit')
+                                    <a class="btn btn-primary" href="{{ route('admin.boards.index'). '?kind=group_id&keyword='. $board->group->group_id }}">동일그룹 게시판목록</a>
+                                @endif
                             </td>
                         </tr>
                         <tr>
@@ -147,6 +150,16 @@
                                 <label for="chk_all_category_list">전체적용</label>
                             </td>
                         </tr>
+                        @if($type == 'edit')
+                        <tr>
+                            <th>카운트 조정</th>
+                            <td>
+                                현재 원글수 : {{ $board->count_write }}, 현재 댓글수 : {{ $board->count_comment }}<br>
+                                게시판 목록에서 글의 번호가 맞지 않을 경우에 체크하십시오.
+                                <input type="checkbox" name="procCount" value="1"/>
+                            </td>
+                        </tr>
+                        @endif
                     </table>
                     <div class="form-group">
                         <div class="col-md-8 col-md-offset-5">

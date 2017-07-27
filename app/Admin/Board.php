@@ -195,7 +195,21 @@ class Board extends Model
     public function updateBoard($data, $id)
     {
         $board = Board::findOrFail($id);
-        $data = array_except($data, ['_token', '_method', 'id', 'queryString']);
+
+        if(isset($data['procCount'])) {
+            $write = new Write($board->id);
+            $write->setTableName($board->table_name);
+            // 원글 수
+            $countWrite = $write->where('is_comment', 0)->count();
+            $countComment = $write->where('is_comment', 1)->count();
+
+            $board->count_write = $countWrite;
+            $board->count_comment = $countComment;
+
+            $board->save();
+        }
+
+        $data = array_except($data, ['_token', '_method', 'id', 'queryString', 'procCount']);
         foreach($board->attributes as $key => $value) {
             // 체크박스 체크가되었었다가 안된 필드는 0으로 업데이트 해야한다.
             if($value == 1 && !isset($data[$key])) {
