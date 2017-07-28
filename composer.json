@@ -17,6 +17,7 @@
         "laravel/socialite": "^3.0",
         "laravel/tinker": "~1.0",
         "predis/predis": "^1.1",
+        "socialiteproviders/kakao": "^3.0",
         "socialiteproviders/naver": "^3.0",
         "suin/php-rss-writer": "^1.5"
     },

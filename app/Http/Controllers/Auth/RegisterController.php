@@ -47,10 +47,10 @@ class RegisterController extends Controller
     // 회원 가입 페이지
     public function join()
     {
-		// 본인확인 관련 세션 초기화
-		session()->put("ss_cert_no", "");
-		session()->put("ss_cert_hash", "");
-		session()->put("ss_cert_type", "");
+        // 본인확인 관련 세션 초기화
+        session()->put("ss_cert_no", "");
+        session()->put("ss_cert_hash", "");
+        session()->put("ss_cert_type", "");
 
         $skin = cache("config.join")->skin ? : 'default';
 
@@ -60,25 +60,25 @@ class RegisterController extends Controller
     // 회원 가입 수행
     public function register(Request $request)
     {
-		ReCaptcha::reCaptcha($request);
+        ReCaptcha::reCaptcha($request);
         $adminConfig = new Config();
         $rulePassword = $adminConfig->getPasswordRuleByConfigPolicy();
         $rule = array_add($this->userModel->rulesRegister, 'password', $rulePassword);
         $this->validate($request, $rule);
 
-		if(cache('config.cert')->certUse && cache('config.cert')->certReq) {
-			if( trim($request->certNo) != session()->get('ss_cert_no') || !session()->get('ss_cert_no') ) {
-				return alertErrorWithInput('회원가입을 위해서는 본인확인을 해주셔야 합니다.', 'hpCert');
-			}
-		}
+        if(cache('config.cert')->certUse && cache('config.cert')->certReq) {
+            if( trim($request->certNo) != session()->get('ss_cert_no') || !session()->get('ss_cert_no') ) {
+                return alertErrorWithInput('회원가입을 위해서는 본인확인을 해주셔야 합니다.', 'hpCert');
+            }
+        }
 
-		if(cache('config.cert')->certUse && session()->get('ss_cert_type') && session()->get('ss_cert_dupinfo')) {
-			$cert = new Cert();
-			$checkUser = $cert->checkExistDupInfo($request->email, session()->get('ss_cert_dupinfo'));
-			if($checkUser) {
-				return alertErrorWithInput("입력하신 본인확인 정보로 가입된 내역이 존재합니다.\\n회원이메일 : ". $checkUser->email);
-			}
-		}
+        if(cache('config.cert')->certUse && session()->get('ss_cert_type') && session()->get('ss_cert_dupinfo')) {
+            $cert = new Cert();
+            $checkUser = $cert->checkExistDupInfo($request->email, session()->get('ss_cert_dupinfo'));
+            if($checkUser) {
+                return alertErrorWithInput("입력하신 본인확인 정보로 가입된 내역이 존재합니다.\\n회원이메일 : ". $checkUser->email);
+            }
+        }
 
         $user = $this->userModel->joinUser($request);
         if(!cache('config.email.default')->emailCertify) {

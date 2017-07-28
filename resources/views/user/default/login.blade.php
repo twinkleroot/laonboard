@@ -81,17 +81,17 @@
                         <span class="text-left">네이버로 로그인</span>
                     </a>
                     <!-- 카카오톡으로 로그인 -->
-                    <a href="" class="btn btn-block btn-kakao">
+                    <a href="{{ route('social', 'kakao') }}" class="btn btn-block btn-kakao">
                         <div class="icon icon-kakao"></div>
                         <span class="text-left">카카오톡으로 로그인</span>
                     </a>
                     <!-- 페이스북으로 로그인 -->
-                    <a href="" class="btn btn-block btn-facebook">
+                    <a href="{{ route('social', 'facebook') }}" class="btn btn-block btn-facebook">
                         <div class="icon icon-facebook"></div>
                         <span class="text-left">페이스북으로 로그인</span>
                     </a>
                     <!-- 구글로 로그인 -->
-                    <a href="" class="btn btn-block btn-google">
+                    <a href="{{ route('social', 'google') }}" class="btn btn-block btn-google">
                         <div class="icon icon-google"></div>
                         <span class="text-left">구글로 로그인</span>
                     </a>

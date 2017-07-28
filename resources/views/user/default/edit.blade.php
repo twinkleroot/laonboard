@@ -316,8 +316,7 @@
                     <label for="recommend" class="col-xs-12 control-label">소셜 계정 연결</label>
                     <div class="col-xs-12 social-login social_login_container">
                         @foreach($socials as $key => $value)
-                            <a href="{{ $value == '' ? route('social', $key) : route('user.disconnectSocialAccount') }}"
-                                id="{{ $key }}_social_link" class="btn btn-block btn-{{ $key }} social_link" data-provider="{{ $key }}">
+                            <a href="{{ $value == '' ? route('social', $key) : route('user.disconnectSocialAccount') }}" id="{{ $key }}_social_link" class="btn btn-block btn-{{ $key }} social_link" data-provider="{{ $key }}">
                                 <input type="hidden" data-key="{{ $key }}" name="social_id[]" class="social_id" value="{{ $value }}" />
                                 <div class="icon icon-{{ $key }} @if($value != '') unlink @endif"></div>
                                 <span class="text-left">{{ title_case($key) }} 연결 {{ $value == '' ? '' : '해제' }}</span>

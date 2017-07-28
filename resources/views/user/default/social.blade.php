@@ -86,8 +86,7 @@ function loginValidation(form) {
                     </div>
 
                     <div class="panel-body">
-                    <form method="POST" action="{{ route('social.socialUserJoin') }}"
-                        onsubmit="return joinValidation(this);" autocomplete="off">
+                    <form method="POST" action="{{ route('social.socialUserJoin') }}" onsubmit="return joinValidation(this);" autocomplete="off">
                         {{ csrf_field() }}
                         <input type="hidden" name="provider" value="{{ $provider }}" />
                         <p>

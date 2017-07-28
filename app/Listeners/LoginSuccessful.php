@@ -60,6 +60,8 @@ class LoginSuccessful
             $point->insertPoint($event->user->id, cache("config.homepage")->loginPoint, $nowDate . ' 첫 로그인', '@login', $event->user->email, $nowDate);
         }
 
+        // 소셜 로그인으로 로그인할 때 생기는 세션 해제
+        session()->forget('userFromSocial');
     }
 
     // 회원 가입 후 로그인 시키는 상태인지 검사
