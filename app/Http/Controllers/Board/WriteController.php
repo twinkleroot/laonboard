@@ -77,6 +77,9 @@ class WriteController extends Controller
         // 요청 URI 추가
         $params = array_add($params, 'requestUri', $request->getRequestUri());
 
+        // 현재 사용자 추가
+        $params = array_add($params, 'user', auth()->user());
+
         $skin = $this->writeModel->board->skin ? : 'default';
 
         return viewDefault("board.$skin.view", $params);
@@ -120,8 +123,8 @@ class WriteController extends Controller
     public function store(Request $request, $boardId)
     {
         if(auth()->guest() || (!auth()->user()->isSuperAdmin() && $this->writeModel->board->use_recaptcha)) {
-			ReCaptcha::reCaptcha($request);
-		}
+            ReCaptcha::reCaptcha($request);
+        }
         $writeId = $this->writeModel->storeWrite($this->writeModel, $request);
 
         if(count($request->attach_file) > 0) {
@@ -195,15 +198,15 @@ class WriteController extends Controller
         $message = $redirect = '';
         $board = Board::find($boardId);
 
-		$this->writeModel->checkReply($this->writeModel, $writeId);
-		$this->writeModel->checkComment($this->writeModel, $writeId);
+        $this->writeModel->checkReply($this->writeModel, $writeId);
+        $this->writeModel->checkComment($this->writeModel, $writeId);
 
-		try {
-			$this->deleteWriteCascade($boardId, $writeId);
-		} catch (Exception $e) {
-			$redirect = route('board.index', $boardId);
-			alertRedirect($e->getMessage(), $redirect);
-		}
+        try {
+            $this->deleteWriteCascade($boardId, $writeId);
+        } catch (Exception $e) {
+            $redirect = route('board.index', $boardId);
+            alertRedirect($e->getMessage(), $redirect);
+        }
 
         $returnUrl = route('board.index', $boardId). ($request->page == 1 ? '' : '?page='. $request->page);
         return redirect($returnUrl);
@@ -243,20 +246,20 @@ class WriteController extends Controller
     {
         $ids = explode(',', $writeId);
         foreach($ids as $id) {
-			try {
-				$this->deleteWriteCascade($boardId, $writeId);
-			} catch (Exception $e) {
-				$redirect = route('board.index', $boardId);
-				alertRedirect("($id번 글) ". $e->getMessage(), $redirect);
-			}
+            try {
+                $this->deleteWriteCascade($boardId, $writeId);
+            } catch (Exception $e) {
+                $redirect = route('board.index', $boardId);
+                alertRedirect("($id번 글) ". $e->getMessage(), $redirect);
+            }
         }
 
         $returnUrl = route('board.index', $boardId). ($request->page == 1 ? '' : '?page='. $request->page);
         return redirect($returnUrl);
     }
 
-	// 제목과 내용에 금지단어가 있는지 검사
-	public function filter(Request $request)
+    // 제목과 내용에 금지단어가 있는지 검사
+    public function filter(Request $request)
     {
         return $this->writeModel->banWordFilter($request);
     }

@@ -173,10 +173,10 @@ class Write extends Model
                 $parentWrite = $writeModel->where('id', $write->parent)->first();
                 $write->subject = $parentWrite->subject;
             }
-			$board = $writeModel->board;
-			if($board->skin == 'gallery') {
-				$write->listThumbnailPath = $this->getListThumbnail($write);
-			}
+            $board = $writeModel->board;
+            if($board->skin == 'gallery') {
+                $write->listThumbnailPath = $this->getListThumbnail($write);
+            }
         }
         // 페이징 버튼의 경로 지정 (항상 목록으로 이동하도록 하기)
         $writes->withPath('/board/'.$this->board->id);
@@ -189,8 +189,8 @@ class Write extends Model
     {
         // 기본 ( 공지는 기본만 가져간다. )
         $query = $writeModel
-                ->selectRaw($writeModel->table.'.*, users.level as user_level, users.id_hashkey as user_id_hashkey')
-                ->leftJoin('users', 'users.id', '=', $writeModel->table.'.user_id');
+                ->selectRaw($writeModel->getTable().'.*, users.level as user_level, users.id_hashkey as user_id_hashkey')
+                ->leftJoin('users', 'users.id', '=', $writeModel->getTable().'.user_id');
 
         // + 카테고리
         if($currenctCategory != '') {
@@ -202,7 +202,7 @@ class Write extends Model
             if($kind == 'user_id') {
                 // 암호화된 user_id를 복호화해서 검색한다.
                 // $userId = decrypt($keyword);    // 라라벨 기본 지원 decrypt
-				$userId = User::where('id_hashkey', $keyword)->first()->id;
+                $userId = User::where('id_hashkey', $keyword)->first()->id;
                 $query = $query->where('user_id', $userId);
             } else if(str_contains($kind, '||')) { // 제목 + 내용으로 검색
                 $kinds = explode('||', preg_replace("/\s+/", "", $kind));
@@ -223,10 +223,10 @@ class Write extends Model
             // 코멘트 검색이 select box에 있는 경우
             } else if(str_contains($kind, ',')) {
                 $kinds = explode(',', preg_replace("/\s+/", "", $kind));
-				$query = $query->where($writeModel->table.'.name', $keyword);
-				if($kinds[1] == 0) {	// 글쓴이 원글만 검색
-					$query = $query->where('is_comment', $kinds[1]);
-				}
+                $query = $query->where($writeModel->table.'.name', $keyword);
+                if($kinds[1] == 0) {	// 글쓴이 원글만 검색
+                    $query = $query->where('is_comment', $kinds[1]);
+                }
             // 단독 키워드 검색(제목, 내용)
             } else {
                 $query = $query->whereRaw("INSTR($kind, '$keyword')");
@@ -244,14 +244,14 @@ class Write extends Model
         return is_null($this->board->sort_field) ? 'num, reply' : $this->board->sort_field;
     }
 
-	// 글 목록 결과물에 공지사항이 있는지 검사한다.
-	private function hasNotice($writeModel, $kind, $keyword, $currenctCategory)
-	{
-		$notices = explode(',', trim($this->board->notice));
-		$notices = array_filter($notices);
+    // 글 목록 결과물에 공지사항이 있는지 검사한다.
+    private function hasNotice($writeModel, $kind, $keyword, $currenctCategory)
+    {
+        $notices = explode(',', trim($this->board->notice));
+        $notices = array_filter($notices);
 
-		return count($notices) > 0 ? true : false;
-	}
+        return count($notices) > 0 ? true : false;
+    }
 
     // 수동 페이징
     public function customPaging($request, $query, $sortField)
@@ -286,17 +286,17 @@ class Write extends Model
         return $writes;
     }
 
-	private function getListThumbnail($write)
-	{
-		$notices = explode(',', trim($this->board->notice));
-		if(in_array($write->id, $notices)) {
-			return '공지';
-		}
+    private function getListThumbnail($write)
+    {
+        $notices = explode(',', trim($this->board->notice));
+        if(in_array($write->id, $notices)) {
+            return '공지';
+        }
 
-		$imgExtension = cache("config.board")->imageExtension;
+        $imgExtension = cache("config.board")->imageExtension;
         $boardFiles = [];
         $imgFiles = [];
-		$imageFileInfo = '';
+        $imageFileInfo = '';
         if($write->file > 0) {	// 첨부파일에 이미지가 있는지 검사해서 있으면 하나만 썸네일로 만들어서 가져온다.
             $boardFiles = BoardFile::where(['board_id' => $this->board->id, 'write_id' => $write->id])->get();
 
@@ -307,25 +307,25 @@ class Write extends Model
                 }
                 // 이미지 경로를 가져와서 썸네일만든 후 서버에 저장
                 $imageFileInfo = getViewThumbnail($this->board, $boardFile->file, $this->board->table_name, 'list');
-				$imageFileInfo = array_add($imageFileInfo, 'path', '/storage/'. $this->board->table_name. '/'. $imageFileInfo['name']);
-				break;
+                $imageFileInfo = array_add($imageFileInfo, 'path', '/storage/'. $this->board->table_name. '/'. $imageFileInfo['name']);
+                break;
             }
         } else {	// 에디터로 작성한 내용에 이미지가 있는지 검사해서 있으면 하나만 썸네일로 만들어서 가져온다.
-	        preg_match_all("/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i", $write->content, $matches);
+            preg_match_all("/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i", $write->content, $matches);
 
-	        for($i=0; $i<count($matches[1]); $i++) {
-	            $imageFileInfo = getViewThumbnail($this->board, basename($matches[1][$i]), 'editor', 'list');
-				$imageFileInfo = array_add($imageFileInfo, 'path', '/storage/editor/'. $imageFileInfo['name']);
-				break;
-			}
-		}
+            for($i=0; $i<count($matches[1]); $i++) {
+                $imageFileInfo = getViewThumbnail($this->board, basename($matches[1][$i]), 'editor', 'list');
+                $imageFileInfo = array_add($imageFileInfo, 'path', '/storage/editor/'. $imageFileInfo['name']);
+                break;
+            }
+        }
 
-		if($imageFileInfo) {
-			return $imageFileInfo['path'];
-		} else {
-			return 'no image';
-		}
-	}
+        if($imageFileInfo) {
+            return $imageFileInfo['path'];
+        } else {
+            return 'no image';
+        }
+    }
 
     public function getViewParams($writeModel, $boardId, $writeId, $request)
     {
@@ -396,7 +396,7 @@ class Write extends Model
             }
         }
 
-		// dd($write->content);
+        // dd($write->content);
         // 에디터로 업로드한 이미지 경로를 추출해서 내용의 img 태그 부분을 교체한다.
         $write->content = $this->includeImagePathByEditor($write->content);
 
@@ -411,7 +411,7 @@ class Write extends Model
         ];
     }
 
-	// 글 읽기 전 프로세스
+    // 글 읽기 전 프로세스
     public function beforeRead($write, $request)
     {
         $hit = $write->hit;
@@ -479,7 +479,7 @@ class Write extends Model
             if (Cache::get("config.homepage")->usePoint && $boardPoint && $userPoint + $boardPoint < 0) {
                 $message = '보유하신 포인트('.number_format($userPoint).')가 없거나 모자라서'. $contentPiece. '('.number_format($boardPoint).')가 불가합니다.\\n\\n포인트를 적립하신 후 다시'.$contentPiece.' 해 주십시오.';
 
-				abort(500, $message);
+                abort(500, $message);
             }
             // 포인트 부여(글 읽기, 파일 다운로드)
             $this->point->insertPoint($userId, $boardPoint, $this->board->subject . ' ' . $write->id . $contentPiece, $this->board->table_name, $write->id, $action);
@@ -898,8 +898,7 @@ class Write extends Model
         $write = $writeModel->find($writeId);
         $user = Auth::user();
         $inputData = $request->all();
-        $inputData = array_except($inputData, ['_method', '_token', 'file_del', 'file_content', 'attach_file',
-                                                'html', 'secret', 'mail', 'notice', 'uid', 'type', 'writeId']);
+        $inputData = array_except($inputData, ['_method', '_token', 'file_del', 'file_content', 'attach_file', 'g-recaptcha-response', 'html', 'secret', 'mail', 'notice', 'uid', 'type', 'writeId']);
         $inputData = $this->convertSomeField($inputData);
 
         $options = [];
@@ -1131,8 +1130,8 @@ class Write extends Model
         return $inputData;
     }
 
-	// 제목과 내용에 금지단어가 있는지 검사
-	public function banWordFilter(Request $request)
+    // 제목과 내용에 금지단어가 있는지 검사
+    public function banWordFilter(Request $request)
     {
         $subject = $request->subject;
         $content = $request->content;

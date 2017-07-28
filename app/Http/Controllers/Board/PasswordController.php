@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Board;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Board;
 use App\Write;
 use App\User;
 use Auth;
@@ -43,6 +44,7 @@ class PasswordController extends Controller
         $params = [
             'subject' => $subject,
             'boardId' => $boardId,
+            'board' => Board::find($boardId),
             'writeId' => $writeId,
             'commentId' => $commentId,
             'type' => $type,

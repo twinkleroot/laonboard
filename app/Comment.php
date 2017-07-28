@@ -19,8 +19,13 @@ class Comment
     // 댓글 데이터
     public function getCommentsParams($writeModel, $boardId, $writeId, $request)
     {
-        $comments = $writeModel->where(['parent' => $writeId, 'is_comment' => 1])
-                ->orderBy('comment')->orderBy('comment_reply')->get();
+        $comments = $writeModel
+                ->selectRaw($writeModel->getTable().'.*, users.level as user_level, users.id_hashkey as user_id_hashkey')
+                ->leftJoin('users', 'users.id', '=', $writeModel->getTable().'.user_id')
+                ->where(['parent' => $writeId, 'is_comment' => 1])
+                ->orderBy('comment')
+                ->orderBy('comment_reply')
+                ->get();
 
         foreach($comments as $comment) {
             // 답변, 수정, 삭제 가능여부 기록
@@ -28,14 +33,12 @@ class Comment
             $comment->isReply = $editable['isReply'];
             $comment->isEdit = $editable['isEdit'];
             $comment->isDelete = $editable['isDelete'];
-            $comment->user_id = encrypt($comment->user_id);     // 라라벨 기본 지원 encrypt
 
             // 검색어 색깔 다르게 표시
             if($request->has('keyword')) {
                 $comment->content = searchKeyword($request->keyword, $comment->content);
             }
         }
-
 
         return [
             'comments' => $comments,

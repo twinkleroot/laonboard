@@ -102,36 +102,32 @@
                 <td @if($write->reply != '') class="bd_reply" style="padding-left: calc(20px * {{ strlen($write->reply) }} @endif">
 
                     <span class="bd_subject">
-                        @if($board->use_category == 1 )
-                            <a href="{{ route('board.index', $board->id). '?category='. $write->ca_name }}" class="subject_cg">{{ $write->ca_name }}</a>
+                        @if($board->use_category)
+                        <a href="{{ route('board.index', $board->id). '?category='. $write->ca_name }}" class="subject_cg">{{ $write->ca_name }}</a>
                         @endif
-                        @if($viewParams == '')
-                            <a href="/board/{{ $board->id }}/view/{{ $write->parent }}">{{ $write->subject }}</a>
-                        @else
-                            <a href="/board/{{ $board->id }}/view/{{ $write->parent }}?{{ $viewParams }}">
-                                {!! $write->subject !!}
-                            </a>
-                        @endif
+                        <a href="/board/{{ $board->id }}/view/{{ $write->parent }}?{{ Request::getQueryString() }}">
+                            {!! $write->subject !!}
+                        </a>
                         {{-- 글올린시간 + 설정에 있는 신규 글 시간 > 현재 시간 --}}
                         @if(date($write->created_at->addHours(24)) > date("Y-m-d H:i:s", time()) && $board->new != 0 )
-                            <img src="/themes/default/images/icon_new.gif"> <!-- 새글 -->
+                        <img src="/themes/default/images/icon_new.gif"> <!-- 새글 -->
                         @endif
                         @if($write->file > 0)
-                            <img src="/themes/default/images/icon_file.gif"> <!-- 파일 -->
+                        <img src="/themes/default/images/icon_file.gif"> <!-- 파일 -->
                         @endif
                         @if($write->link1 || $write->link2)
-                            <img src="/themes/default/images/icon_link.gif"> <!-- 링크 -->
+                        <img src="/themes/default/images/icon_link.gif"> <!-- 링크 -->
                         @endif
                         <!-- 인기글 -->
                         @if($write->hit >= $board->hot)
-                            <img src="/themes/default/images/icon_hot.gif"> <!-- 인기 -->
+                        <img src="/themes/default/images/icon_hot.gif"> <!-- 인기 -->
                         @endif
                         <!-- 비밀글 -->
                         @if(str_contains($write->option, 'secret'))
-                            <img src="/themes/default/images/icon_secret.gif"> <!-- 비밀 -->
+                        <img src="/themes/default/images/icon_secret.gif"> <!-- 비밀 -->
                         @endif
                         @if($write->comment > 0)
-                            <span class="bd_cmt">{{ $write->comment }}</span>
+                        <span class="bd_cmt">{{ $write->comment }}</span>
                         @endif
                     </span>
                 </td>

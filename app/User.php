@@ -98,7 +98,7 @@ class User extends Authenticatable
 
     public function isSuperAdmin()
     {
-        if(auth()->user()->email === cache('config.homepage')->superAdmin) {
+        if($this->email === cache('config.homepage')->superAdmin) {
             return true;
         }
         return false;
@@ -106,7 +106,7 @@ class User extends Authenticatable
 
     public function isGroupAdmin($group)
     {
-        if(auth()->user()->email === $group->admin) {
+        if($this->email === $group->admin) {
             return true;
         }
         return false;
@@ -114,7 +114,7 @@ class User extends Authenticatable
 
     public function isBoardAdmin($board)
     {
-        if(auth()->user()->email === $board->admin) {
+        if($this->email === $board->admin) {
             return true;
         }
         return false;

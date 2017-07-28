@@ -12,7 +12,7 @@
                 <i class="fa fa-ellipsis-v"></i>
             </a>
             <ul class="dropdown-menu" role="menu">
-                @if(!$view->user_id || session()->get('admin') || ( auth()->user() && auth()->user()->id == $view->user_id ) )
+                @if(!$view->user_id || session()->get('admin') || ( $user && $user->id == $view->user_id ) )
                     <li><a href="/board/{{ $board->id }}/edit/{{ $view->id }}">수정</a></li>
                     <li><a href="/board/{{ $board->id }}/delete/{{ $view->id }}" onclick="del(this.href); return false;">삭제</a></li>
                 @endif
@@ -88,7 +88,7 @@
 
 <!-- 스크랩/추천/비추천 -->
 <div class="bd_rd_count">
-    @if( !is_null(auth()->user()) )
+    @if($user)
         <a href="{{ route('scrap.create') }}?boardId={{ $board->id }}&amp;writeId={{ $view->id }}" target="_blank" onclick="winScrap(this.href); return false;">
             <span>
                 <i class="fa fa-star"></i>스크랩
@@ -153,37 +153,80 @@
     <p class="bd_rd_cmthd">댓글 {{ count($comments) }}개</p>
 </div>
 
+<form class="cmt_write" id="commentForm" method="post" action="" autocomplete="off">
+    {{ csrf_field() }}
+    <input type="hidden" name="writeId" value="{{ $view->id }}" />
+    <input type="hidden" name="commentId" id="commentId" />
+    @if(isset($requestUri))
+    <input type="hidden" name="requestUri" id="requestUri" value="{{ $requestUri }}"/>
+    @endif
+    <input type="hidden" name="_method" id="_method" />
 @if(count($comments) > 0)
 <section id="bd_rd_cmt">
     @foreach($comments as $comment)
     <article class="cmt" id="comment{{ $comment->id }}">
         <div class="cmt_box @if(strlen($comment->comment_reply)>0) cmt_reply" style="padding-left: calc(25px * {{ strlen($comment->comment_reply) }}); @endif">
             <ul class="bd_rd_cmt_info">
-                <li><i class="fa fa-user"></i>
-                    @if($board->use_sideview == 1)
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $comment->name }}</a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="#">자기소개</a></li>
-                            <li><a href="#">전체게시물</a></li>
-                            <li>
-                                <a href="/board/{{ $board->id }}?kind=user_id&amp;keyword={{ $comment->user_id }}">
-                                    닉네임으로 검색
-                                </a>
-                            </li>
-                        </ul>
+                <li>
+                    <i class="fa fa-user"></i>
+                @if($user && $board->use_sideview)
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $comment->name }}</a>
+                    <ul class="dropdown-menu" role="menu">
+                    @if($comment->user_level)
+                        @component('board.sideview', ['id' => $comment->user_id_hashkey, 'name' => $comment->name, 'email' => $comment->email])
+                        @endcomponent
+                        <li><a href="/board/{{ $board->id }}?kind=user_id&amp;keyword={{ $comment->user_id_hashkey }}&amp;category={{ $currenctCategory }}">이 회원이 작성한 글</a></li>
                     @else
-                        {{ $comment->name }}
+                        <li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $comment->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
                     @endif
-                    @if($board->use_ip) ({{ $comment->ip }}) @endif</li>
+                    @if($comment->user_level)
+                        <li><a href="{{ route('new.index') }}?nick={{ $comment->name }}">전체게시물</a></li>
+                    @endif
+                    </ul>
+                @elseif(auth()->guest() && $board->use_sideview)
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $comment->name }}</a>
+                    <ul class="dropdown-menu" role="menu">
+                    @if($comment->user_level)
+                        @component('board.sideview', ['id' => $comment->user_id_hashkey, 'name' => $comment->name, 'email' => $comment->email])
+                        @endcomponent
+                        <li><a href="/board/{{ $board->id }}?kind=user_id&amp;keyword={{ $comment->user_id_hashkey }}&amp;category={{ $currenctCategory }}">이 회원이 작성한 글</a></li>
+                    @else
+                        <li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $comment->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
+                    @endif
+                    @if($comment->user_level)
+                        <li><a href="{{ route('new.index') }}?nick={{ $comment->name }}">전체게시물</a></li>
+                    @endif
+                    </ul>
+                @else
+                    {{ $comment->name }}
+                @endif
+                @if($board->use_ip) {{ "({$comment->ip})" }} @endif
+                </li>
                 <li><i class="fa fa-clock-o"></i>@datetime($comment->created_at)</li>
             </ul>
             <ul class="bd_rd_cmt_ctr">
-                @if($comment->isReply == 1) <li><a href="#" onclick="commentBox({{ $comment->id }}, 'c'); return false;">답변</a></li> @endif
-                @if($comment->isEdit == 1) <li><a href="#" onclick="commentBox({{ $comment->id }}, 'cu'); return false;">수정</a></li> @endif
-                @if($comment->isDelete == 1) <li><a href="{{ route('board.comment.destroy', ['boardId' => $board->id, 'writeId' => $view->id, 'commentId' => $comment->id])}}" onclick="return commentDelete();">삭제</a></li> @endif
+                @if($comment->isReply == 1)
+                <li><a href="#" onclick="commentBox({{ $comment->id }}, 'c'); return false;">답변</a></li> @endif
+                @if($comment->isEdit == 1)
+                <li><a href="#" onclick="commentBox({{ $comment->id }}, 'cu'); return false;">수정</a></li> @endif
+                @if($comment->isDelete == 1)
+                <li><a href="{{ route('board.comment.destroy', ['boardId' => $board->id, 'writeId' => $view->id, 'commentId' => $comment->id])}}" onclick="return commentDelete();">삭제</a></li> @endif
             </ul>
             <div class="bd_rd_cmt_view">
+                @if(str_contains($comment->option, 'secret'))
+                <img src="/themes/default/images/icon_secret.gif"> <!-- 비밀 -->
+                    @if($user && ($user->isSuperAdmin() || $user->isBoardAdmin($board) || $user->isGroupAdmin($board->group)))
+                    {!! $comment->content !!}
+                    @elseif(!$user && session()->get(session()->getId(). 'secret_board_'. $board->id. '_write_'. $comment->id))
+                    {!! $comment->content !!}
+                    @elseif($user && $user->id == $comment->user_id)
+                    {!! $comment->content !!}
+                    @else
+                    <a href="/password/type/secret?boardId={{ $board->id }}&writeId={{ $comment->id }}&nextUrl={{ route('board.view', [ 'boardId' => $board->id, 'writeId' => $comment->parent ]). '#comment'. $comment->id }}">댓글내용확인</a>
+                    @endif
+                @else
                 {!! $comment->content !!}
+                @endif
                 <input type="hidden" id="secretComment_{{ $comment->id }}" value="{{ $comment->option }}">
                 <textarea id="saveComment_{{ $comment->id }}" style="display:none">{!! $comment->content !!}</textarea>
             </div>
@@ -203,15 +246,6 @@
 @endif
 
 <aside id="commentWriteArea">
-<form class="cmt_write" id="commentForm" method="post" action="" onsubmit="return commentSubmit(this);" autocomplete="off">
-    {{ csrf_field() }}
-    <input type="hidden" name="writeId" value="{{ $view->id }}" />
-    <input type="hidden" name="commentId" id="commentId" />
-    @if(isset($requestUri))
-        <input type="hidden" name="requestUri" id="requestUri" value="{{ $requestUri }}"/>
-    @endif
-    <input type="hidden" name="_method" id="_method" />
-
     <article id="comment_box">
         <div class="form-inline info_user">
             @if( auth()->guest() )  <!-- 비회원일경우 노출 -->
@@ -250,38 +284,37 @@
 
     <div class="row clearfix">
         <div class="pull-right col-md-3">
-            @if(auth()->user() && auth()->user()->isAdmin())
-                <button type="submit" id="btnSubmit" class="btn btn-sir btn-block btn-lg">댓글등록</button>
-            @elseif( (auth()->user() && $board->use_recaptcha) || auth()->guest())
-                <!-- 리캡챠 -->
-                <div id='recaptcha' class="g-recaptcha"
-                    data-sitekey="{{ env('GOOGLE_INVISIBLE_RECAPTCHA_KEY') }}"
-                    data-callback="onSubmit"
-                    data-size="invisible" style="display:none">
-                </div>
-                <button type="button" class="btn btn-sir btn-block btn-lg" onclick="validate();">댓글등록</button>
+            @if( ($user && !$user->isAdmin() && $board->use_recaptcha) || auth()->guest())
+            <button type="button" class="btn btn-sir btn-block btn-lg" onclick="validate();">댓글등록</button>
             @else
-                <button type="submit" id="btnSubmit" class="btn btn-sir btn-block btn-lg">댓글등록</button>
+            <button type="submit" id="btnSubmit" class="btn btn-sir btn-block btn-lg">댓글등록</button>
             @endif
         </div>
     </div>
-
-</form>
 </aside>
+<!-- 리캡챠 -->
+<div id='recaptcha' class="g-recaptcha"
+    data-sitekey="{{ env('GOOGLE_INVISIBLE_RECAPTCHA_KEY') }}"
+    data-callback="onSubmit"
+    data-size="invisible" style="display:none">
+</div>
+</form>
 
 <script>
 var saveBefore = '';
 var saveHtml = document.getElementById('commentWriteArea').innerHTML;
 
 function validate(event) {
-    grecaptcha.execute();
+    if(commentSubmit()) {
+        grecaptcha.execute();
+    }
 }
 
 function onSubmit(token) {
     $("#commentForm").submit();
 }
 
-function commentSubmit(form) {
+function commentSubmit() {
     var subject = "";
     var content = "";
 
@@ -291,7 +324,7 @@ function commentSubmit(form) {
         data: {
             '_token' : '{{ csrf_token() }}',
             'subject' : '',
-            'content' : form.content.value
+            'content' : $('#content').val()
         },
         dataType: 'json',
         async: false,
@@ -306,7 +339,7 @@ function commentSubmit(form) {
 
     if(content) {
         alert("내용에 금지단어 (" + content + ") 가 포함되어 있습니다.");
-        form.content.focus();
+        $('#content').focus();
         return false;
     }
 
@@ -331,23 +364,22 @@ function commentSubmit(form) {
         return false;
     }
 
-    if (typeof(form.userName) != 'undefined') {
-        console.log(form.userName);
-        console.log(typeof(form.userName));
-        console.log(form.userName.value);
-        form.userName.value = form.userName.value.replace(pattern, "");
-        if (form.userName.value == '') {
+    if ($.type($('#userName').val()) != 'undefined') {
+        var replaceStr = $('#userName').val().replace(pattern, "");
+        $('#userName').val(replaceStr);
+        if ($('#userName').val() == '') {
             alert('이름이 입력되지 않았습니다.');
-            form.userName.focus();
+            $('#userName').focus();
             return false;
         }
     }
 
-    if (typeof(form.password) != 'undefined') {
-        form.password.value = form.password.value.replace(pattern, "");
-        if (form.password.value == '') {
+    if ($.type($('#password').val()) != 'undefined') {
+        var replaceStr = $('#password').val().replace(pattern, "");
+        $('#password').val(replaceStr);
+        if ($('#password').val() == '') {
             alert('비밀번호가 입력되지 않았습니다.');
-            form.password.focus();
+            $('#password').focus();
             return false;
         }
     }
@@ -396,12 +428,6 @@ function commentBox(commentId, work) {
         }
 
         document.getElementById('commentId').value = commentId;
-
-        if(saveBefore) {
-            grecaptcha.reset(grecaptcha.render(document.getElementById('recaptcha_zone'), {
-              'sitekey' : '6LcKohkUAAAAANcgIst0HFMMT81Wq5HIxpiHhXGZ'
-            }));
-        }
 
         saveBefore = el;
     }
