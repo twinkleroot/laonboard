@@ -518,10 +518,10 @@ input[type=radio] {
 	border-bottom: 0;
 }
 .adm_box_table tr th {
-	width: 200px; text-align: left; padding: 10px 15px; vertical-align: top;
+	width: 230px; text-align: left; padding: 12px 30px; vertical-align: top;
 }
 .adm_box_table tr .table_body {
-	padding: 10px 15px;border-left: 1px solid #d8d8d8;border-right: 1px solid #d8d8d8;
+	padding: 12px 15px;border-left: 1px solid #d8d8d8;border-right: 1px solid #d8d8d8;
 }
 .adm_box_table tr .table_body:after {
 	content: "";
