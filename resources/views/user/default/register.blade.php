@@ -1,11 +1,11 @@
 @extends('layout.'. cache('config.skin')->layout. '.basic')
 
 @section('title')
-    회원가입 | {{ Cache::get("config.homepage")->title }}
+    회원가입 | {{ cache("config.homepage")->title }}
 @endsection
 
 @section('include_css')
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/auth.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('themes/'. cache('config.skin')->layout. '/css/auth.css') }}">
 @endsection
 
 @section('include_script')

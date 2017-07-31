@@ -1,6 +1,6 @@
 @section('include_css')
     <!-- 팝업레이어용 CSS파일 -->
-    <link rel="stylesheet" type="text/css" href="../css/popuplayer.css">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/popuplayer.css') }}">
 @endsection
 
 @section('include_script')

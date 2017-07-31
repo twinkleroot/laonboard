@@ -1,11 +1,11 @@
 @extends('layout.'. cache('config.skin')->layout. '.basic')
 
 @section('title')
-    최초 비밀번호 설정 | {{ Cache::get("config.homepage")->title }}
+    최초 비밀번호 설정 | {{ cache("config.homepage")->title }}
 @endsection
 
 @section('include_css')
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/auth.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('themes/'. cache('config.skin')->layout. '/css/auth.css') }}">
 @endsection
 
 @section('content')

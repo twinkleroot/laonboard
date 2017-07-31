@@ -4,10 +4,6 @@
     {{ $content->subject }} | {{ Cache::get("config.homepage")->title }}
 @endsection
 
-@section('fisrt_include_css')
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/'. $content->skin. '/css/style.css') }}">
-@endsection
-
 @section('content')
 <div class="container">
     <div class="row">
