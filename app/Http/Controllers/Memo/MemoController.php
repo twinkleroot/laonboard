@@ -37,14 +37,12 @@ class MemoController extends Controller
     public function create(Request $request)
     {
         $skin = cache('config.skin')->memo ? : 'default';
-		$params = [];
-		try {
-			$params = $this->memo->getCreateParams($request);
-		} catch (Exception $e) {
-			return alertClose($e->getMessage());
-		}
-
-		// dd($params);
+        $params = [];
+        try {
+            $params = $this->memo->getCreateParams($request);
+        } catch (Exception $e) {
+            return alertClose($e->getMessage());
+        }
 
         return viewDefault("memo.$skin.form", $params);
     }
@@ -57,12 +55,12 @@ class MemoController extends Controller
      */
     public function store(Request $request)
     {
-		ReCaptcha::reCaptcha($request);	// 구글 리캡챠 체크
-		try {
-			$this->memo->storeMemo($request);
-		} catch (Exception $e) {
-			return alertRedirect($e->getMessage(), route('memo.index'). '?kind=send');
-		}
+        ReCaptcha::reCaptcha($request);	// 구글 리캡챠 체크
+        try {
+            $this->memo->storeMemo($request);
+        } catch (Exception $e) {
+            return alertRedirect($e->getMessage(), route('memo.index'). '?kind=send');
+        }
     }
 
     /**
@@ -74,12 +72,12 @@ class MemoController extends Controller
     public function show($id, Request $request)
     {
         $skin = cache('config.skin')->memo ? : 'default';
-		$params = [];
-		try {
-			$params = $this->memo->getShowParams($id, $request);
-		} catch (Exception $e) {
-			return alert($e->getMessage());
-		}
+        $params = [];
+        try {
+            $params = $this->memo->getShowParams($id, $request);
+        } catch (Exception $e) {
+            return alert($e->getMessage());
+        }
 
         return viewDefault("memo.$skin.show", $params);
     }

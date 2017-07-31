@@ -21,6 +21,14 @@ class BoardNew extends Model
     protected $guarded = [];
     public $timestamps = false;
 
+    public function deleteOldWrites()
+    {
+         $newDel = cache('config.homepage')->newDel;
+         BoardNew::where('created_at', '<', Carbon::
+         now()->subDays($newDel)->toDatetimeString())
+         ->delete();
+    }
+
     public function getIndexParams($request)
     {
         $groups = Group::orderBy('group_id')->get();
