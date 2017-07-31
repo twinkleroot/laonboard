@@ -44,9 +44,9 @@
             <form class="form-horizontal" role="form" method="GET" action="{{ route('admin.populars.rank') }}">
                 <label for="fromDate" class="control-label">기간별검색</label>
                 <input type="text" id="fromDate" name="fromDate" value="{{ $fromDate }}" data-provide="datepicker" data-date-end-date="0d" class="period datepicker" required>
-                <span>~</span>
+                <span style="font-size: 13px;">~</span>
                 <input type="text" name="toDate" id="toDate" value="{{ $toDate }}" data-provide="datepicker" data-date-end-date="0d" class="period datepicker" required>
-                <button type="submit" class="search2">
+                <button type="submit" class="btn search-icon">
                     <i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">검색</span>
                 </button>
             </form>

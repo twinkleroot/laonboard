@@ -24,7 +24,7 @@
 @endsection
 
 @section('content')
-<form role="form" method="POST" action="{{ route('admin.users.update', $id) }}" enctype="multipart/form-data" autocomplete="off">
+<form role="form" method="POST" action="{{ route('admin.users.update', $id) }}">
 {{ csrf_field() }}
 <div class="body-head">
     <div class="pull-left">
@@ -62,7 +62,7 @@
                     <button type="submit" class="btn btn-default">{{ method_field('PUT') }}변경</button>
                 </li>
                 <li>
-                    <a href="{{ route('admin.users.index'). '?'. Request::getQueryString() }}" class="btn btn-default" role="button">목록</a>
+                    <a href="{{ route('admin.users.index') }}" class="btn btn-default" role="button">목록</a>
                 </li>
             </ul>
         </div>
@@ -80,7 +80,7 @@
                                     <input type="email" class="form-control" name="email" value="{{ $user->email }}" readonly>
                                 </div>
                                 <div class="col-md-5" style="padding-left: 0;">
-                                    <a href="{{ route('admin.accessGroups.show', $user->id). '?'. Request::getQueryString() }}" class="btn btn-default form_btn" role="button">접근가능그룹보기</a>
+                                    <a href="#" class="btn btn-default form_btn" role="button">접근가능그룹보기</a>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -232,16 +232,14 @@
                                         <input type="text" class="form-control" id="zip" name="zip" value="{{ $user->zip }}" placeholder="우편 번호">
                                     </div>
                                     <div class="col-sm-7" style="padding-left: 0;">
-                                        <input type="button" class="btn btn-default form_btn" onclick="execDaumPostcode()" value="주소 검색">
+                                        <input type="button" class="btn btn-default form_btn" onclick="execDaumPostcode()" value="주소검색">
                                     </div>
-
-                                    <!-- 우편번호검색 -->
-                                    <div id="wrap" style="display:none;border:1px solid;width:500px;height:300px;margin:5px 0;position:relative">
-                                        <img src="//t1.daumcdn.net/localimg/localimages/07/postcode/320/close.png"
-                                        style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1"
-                                         id="btnFoldWrap" onclick="foldDaumPostcode()" alt="접기 버튼">
+                                </div>
+                                <!-- 우편번호검색 -->
+                                <div class="col-sm-5 col-sm-offset-2">
+                                    <div id="wrap" class=" formaddr">
+                                        <img src="//t1.daumcdn.net/localimg/localimages/07/postcode/320/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" id="btnFoldWrap" onclick="foldDaumPostcode()" alt="접기 버튼">
                                     </div>
-
                                 </div>
                                 <div class="col-md-5 col-md-offset-2 mb10">
                                     <label for="" class="sr-only">기본주소</label>
@@ -271,9 +269,9 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="recommend" class="col-md-2 control-label">추천인</label>
+                                <label for="" class="col-md-2 control-label">추천인</label>
                                 <div class="col-md-3">
-                                    <input type="text" class="form-control" name="recommend" id="recommend" placeholder="닉네임" value="{{ $recommend }}">
+                                    <input type="text" class="form-control" id="?">
                                 </div>
                             </div>
                         </div>
@@ -309,17 +307,10 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="icon" class="col-md-2 control-label">회원아이콘</label>
+                                <label for="" class="col-md-2 control-label">회원아이콘</label>
                                 <div class="col-md-5">
-                                    <input type="file" name="icon" id="icon">
-                                    @if(File::exists($iconPath))
-                                    <img src="{{ $iconUrl }}" alt="회원아이콘">
-                                    <input type="checkbox" name="delIcon" value="1" id="delIcon">
-                                    <label for="delIcon">삭제</label>
-                                    @endif
-                                    <p class="help-block">이미지 크기는 넓이 {{ cache('config.join')->memberIconWidth }}픽셀 높이 {{ cache('config.join')->memberIconHeight }}픽셀로 해주세요.<br>
-                                    gif만 가능하며 용량 {{ cache('config.join')->memberIconSize }}바이트 이하만 등록됩니다.
-                                    </p>
+                                    <input type="file" name="icon" value="">
+                                    <p class="help-block">이미지 크기는 넓이 22픽셀 높이 22픽셀로 해주세요.</p>
                                 </div>
                             </div>
                         </div>
@@ -330,18 +321,18 @@
                             <div class="form-group">
                                 <label for="certify_case" class="col-md-2 control-label">본인확인방법</label>
                                 <div class="col-md-5">
-                                    <input type="radio" name="certify" id="certify_case_ipin" value="ipin" @if($user->certify == 'ipin') checked @endif />
+                                    <input type="radio" name="certify_case" id="certify_case_ipin" value="0" @if($user->certify == 'ipin') checked @endif />
                                         <label for="certify_case_ipin">아이핀</label>
-                                    <input type="radio" name="certify" id="certify_case_hp" value="hp" @if($user->certify == 'hp') checked @endif />
+                                    <input type="radio" name="certify_case" id="certify_case_hp" value="1" @if($user->certify == 'hp') checked @endif />
                                         <label for="certify_case_hp">휴대폰</label>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="certify" class="col-md-2 control-label">본인확인</label>
                                 <div class="col-md-5">
-                                    <input type="radio" name="certify_signal" id="certify_yes" @if($user->certify) checked @endif value="1" />
+                                    <input type="radio" name="certify" id="certify_yes" @if($user->certify) checked @endif value="1" />
                                         <label for="certify_yes">예</label>
-                                    <input type="radio" name="certify_signal" id="certify_no" @if(!$user->certify || empty($user->certify)) checked @endif value="0" />
+                                    <input type="radio" name="certify" id="certify_no" @if(!$user->certify || empty($user->certify)) checked @endif value="0" />
                                         <label for="certify_no">아니오</label>
                                 </div>
                             </div>

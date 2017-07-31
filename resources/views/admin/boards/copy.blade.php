@@ -10,6 +10,12 @@
 
     <title>게시판 복사 | {{ Cache::get("config.homepage")->title }} </title>
 
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/admin.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('font-awesome/css/font-awesome.css') }}">
+
     <!-- Scripts -->
     <script>
         window.Laravel = {!! json_encode([
@@ -18,54 +24,60 @@
     </script>
 
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-
 </head>
 
-@if(Session::has('message'))
-<div class="alert alert-info">
-    {{ Session::get('message') }}
-</div>
-@endif
-<div class="row">
-    <div class="col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">게시판 복사</div>
-            <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.boards.copy') }}">
-                <input type="hidden" name="id" value="{{ $board->id }}" />
-                <div class="panel-body">
-                    {{ csrf_field() }}
-                    <table class="table table-hover">
-                        <tr>
-                            <th class="text-center">원본 테이블명</th>
-                            <td>{{ $board->table_name }}</td>
-                        </tr>
-                        <tr>
-                            <th class="text-center">복사 테이블명</th>
-                            <td><input type="text" name="table_name" value="" required/>영문자, 숫자, _만 가능(공백없이)</td>
-                        </tr>
-                        <tr>
-                            <th class="text-center">게시판 제목</th>
-                            <td><input type="text" name="subject" value="{{ '[복사본] ' . $board->subject }}" required/></td>
-                        </tr>
-                        <tr>
-                            <th class="text-center">복사유형</th>
-                            <td>
-                                <input type="radio" name="copy_case" value="schema_only" id="copy_case" checked>
-                                <label for="copy_case">구조만</label>
-                                <input type="radio" name="copy_case" value="schema_data_both" id="copy_case2">
-                                <label for="copy_case2">구조와 데이터</label>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="panel-heading">
-                    <input type="submit" class="btn btn-primary" value="복사"/>
-                    <input type="button" class="btn btn-primary" onclick="window.close();" value="창닫기"/>
-                </div>
-            </form>
+<body>
+<form method="POST" action="{{ route('admin.boards.copy') }}">
+    {{ csrf_field() }}
+    <div id="header" class="container">
+        <div class="title">
+            <span>게시판 복사</span>
+        </div>
+        <div class="cbtn">
+            <input type="submit" class="btn btn-sir" value="복사">
+            <input type="button" class="btn btn-default" onclick="window.close();" value="창닫기">
         </div>
     </div>
-</div>
+
+    @if(Session::has('message'))
+        <div class="alert alert-info">
+            {{ Session::get('message') }}
+        </div>
+    @endif
+
+    <div id="board_copy" class="container">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label for="" class="col-sm-2 col-xs-3 control-label">원본 테이블명</label>
+                <div class="col-sm-3 col-xs-4">
+                    {{ $board->table_name }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-sm-2 col-xs-3 control-label">복사 테이블명</label>
+                <div class="col-sm-10 col-xs-9">
+                    <input type="text" name="table_name" class="form-control" value="" required/>
+                    <span class="help-block">영문자, 숫자, _만 가능(공백없이)</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-sm-2 col-xs-3 control-label">게시판 제목</label>
+                <div class="col-sm-10 col-xs-9">
+                    <input type="text" name="subject" class="form-control" value="{{ '[복사본] ' . $board->subject }}" required/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-sm-2 col-xs-3 control-label">복사유형</label>
+                <div class="col-sm-10 col-xs-9">
+                    <input type="radio" name="copy_case" value="schema_only" id="copy_case" checked>
+                    <label for="copy_case">구조만</label>
+                    <input type="radio" name="copy_case" value="schema_data_both" id="copy_case2">
+                    <label for="copy_case2">구조와 데이터</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
 <script>
 $(function(){
     @if($errors->has('table_name'))
@@ -73,3 +85,4 @@ $(function(){
     @endif
 });
 </script>
+</body>

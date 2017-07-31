@@ -50,10 +50,9 @@
         <li class="tab"><a href="#admin-header">회원가입시 메일</a></li>
     </ul>
 
-    <div class="submit_btn" style="line-height: 42px; padding-right: 10px;">
+    <div class="submit_btn">
     </div>
 </div>
-
 <div class="body-contents">
     @if(Session::has('message'))
         <div id="adm_save">
