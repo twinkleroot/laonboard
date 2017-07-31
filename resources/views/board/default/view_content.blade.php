@@ -173,9 +173,8 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $comment->name }}</a>
                     <ul class="dropdown-menu" role="menu">
                     @if($comment->user_level)
-                        @component('board.sideview', ['id' => $comment->user_id_hashkey, 'name' => $comment->name, 'email' => $comment->email])
+                        @component('board.sideview', ['boardId' => $board->id, 'id' => $comment->user_id_hashkey, 'name' => $comment->name, 'email' => $comment->email, 'category' => $currenctCategory])
                         @endcomponent
-                        <li><a href="/board/{{ $board->id }}?kind=user_id&amp;keyword={{ $comment->user_id_hashkey }}&amp;category={{ $currenctCategory }}">이 회원이 작성한 글</a></li>
                     @else
                         <li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $comment->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
                     @endif
@@ -187,9 +186,8 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $comment->name }}</a>
                     <ul class="dropdown-menu" role="menu">
                     @if($comment->user_level)
-                        @component('board.sideview', ['id' => $comment->user_id_hashkey, 'name' => $comment->name, 'email' => $comment->email])
+                        @component('board.sideview', ['boardId' => $board->id, 'id' => $comment->user_id_hashkey, 'name' => $comment->name, 'email' => $comment->email, 'category' => $currenctCategory])
                         @endcomponent
-                        <li><a href="/board/{{ $board->id }}?kind=user_id&amp;keyword={{ $comment->user_id_hashkey }}&amp;category={{ $currenctCategory }}">이 회원이 작성한 글</a></li>
                     @else
                         <li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $comment->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
                     @endif

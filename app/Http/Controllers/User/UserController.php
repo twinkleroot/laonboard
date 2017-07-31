@@ -35,14 +35,14 @@ class UserController extends Controller
     // 회원 정보 수정 폼
     public function edit()
     {
-		if(session()->get('admin')) {
-			return alertRedirect('관리자의 회원정보는 관리자 화면에서 수정해 주십시오.');
-		}
+        if(session()->get('admin')) {
+            return alertRedirect('관리자의 회원정보는 관리자 화면에서 수정해 주십시오.');
+        }
 
-		// 본인확인 관련 세션 초기화
-		session()->put("ss_cert_no", "");
-		session()->put("ss_cert_hash", "");
-		session()->put("ss_cert_type", "");
+        // 본인확인 관련 세션 초기화
+        session()->put("ss_cert_no", "");
+        session()->put("ss_cert_hash", "");
+        session()->put("ss_cert_type", "");
 
         $params = $this->userModel->editParams();
         $skin = $this->skin;
@@ -95,17 +95,17 @@ class UserController extends Controller
     // 회원 정보 수정
     public function update(Request $request)
     {
-		ReCaptcha::reCaptcha($request);
+        ReCaptcha::reCaptcha($request);
         $params = $this->userModel->editParams();
         $skin = $this->skin;
         $user = auth()->user();
-		$rule = [];
+        $rule = [];
         // 비밀번호를 변경할 경우 validation에 password 조건을 추가한다.
-		if($request->password && !Auth::validate(['email' => $user->email, 'password' => $request->password ])) {
+        if($request->password && !Auth::validate(['email' => $user->email, 'password' => $request->password ])) {
             $rule = array_add($this->userModel->rulesPassword, 'password', $this->rulePassword);
         }
         // 이메일을 변경할 경우 validation에 email 조건을 추가한다.
-		$email = getEmailAddress($request->email);
+        $email = getEmailAddress($request->email);
         $changeEmail = ($email != $user->email);
         if($changeEmail) {
             $rule = array_add($rule, 'email', 'required|email|max:255|unique:users');
@@ -113,13 +113,13 @@ class UserController extends Controller
 
         $this->validate($request, $rule);
 
-		$this->userModel->updateUserInfo($request);
+        $this->userModel->updateUserInfo($request);
 
-		if($changeEmail) {
-			Auth::logout();
-		}
+        if($changeEmail) {
+            Auth::logout();
+        }
 
-		return redirect(route('user.edit'));
+        return redirect(route('user.edit'));
     }
 
     // 회원 가입 결과, 웰컴 페이지
@@ -149,11 +149,11 @@ class UserController extends Controller
     // 메일인증 메일주소 변경 실행
     public function updateEmail(Request $request)
     {
-		ReCaptcha::reCaptcha($request);
+        ReCaptcha::reCaptcha($request);
         // 메일인증 메일주소 변경
         $result = $this->userModel->changeCertifyEmail($request);
 
-	    return alertRedirect('인증메일을 '. $result. ' 메일로 다시 보내드렸습니다.\\n\\잠시후 '. $result. ' 메일을 확인하여 주십시오.');
+        return alertRedirect('인증메일을 '. $result. ' 메일로 다시 보내드렸습니다.\\n\\잠시후 '. $result. ' 메일을 확인하여 주십시오.');
     }
 
     // 개인 별 포인트 목록
@@ -170,12 +170,12 @@ class UserController extends Controller
     public function profile($id)
     {
         $skin = $this->skin;
-		$params = [];
-		try {
-			$params = $this->userModel->getProfileParams($id);
-		} catch (Exception $e) {
-			return alertClose($e->getMessage());
-		}
+        $params = [];
+        try {
+            $params = $this->userModel->getProfileParams($id);
+        } catch (Exception $e) {
+            return alertClose($e->getMessage());
+        }
 
         return viewDefault("user.$skin.profile", $params);
     }
@@ -188,7 +188,7 @@ class UserController extends Controller
         return alertRedirect($message);
     }
 
-	// 인증 메일 클릭했을 때 처리하기
+    // 인증 메일 클릭했을 때 처리하기
     public function emailCertify(Request $request, $id, $crypt)
     {
         $user = getUser($id);
@@ -206,30 +206,40 @@ class UserController extends Controller
         return alertClose($message);
     }
 
-	// 툴팁 : 메일 보내기 양식
-	public function form(Request $request)
+    // 툴팁 : 메일 보내기 양식
+    public function form(Request $request)
     {
-		$skin = $this->skin;
-		$params = [];
-		try {
-			$params = $this->userModel->getFormMailParams($request);
-		} catch (Exception $e) {
-			return alertClose($e->getMessage());
-		}
+        $skin = $this->skin;
+        $params = [];
+        try {
+            $params = $this->userModel->getFormMailParams($request);
+        } catch (Exception $e) {
+            return alertClose($e->getMessage());
+        }
 
         return viewDefault("user.$skin.formmail", $params);
     }
 
-	// 메일 보내기 실행
-	public function send(Request $request)
+    // 메일 보내기 실행
+    public function send(Request $request)
     {
-		try {
-			$this->userModel->sendFormMail($request);
-		} catch (Exception $e) {
-			return alertClose($e->getMessage());
-		}
+        try {
+            $this->userModel->sendFormMail($request);
+        } catch (Exception $e) {
+            return alertClose($e->getMessage());
+        }
 
         return alertClose('메일을 정상적으로 발송하였습니다.');
+    }
+
+    // ajax form validation
+    public function existData(Request $request)
+    {
+        // 해당 키와 값에 해당하는 사용자가 있는지 검사
+        if(User::where($request->key, $request->value)->first()) {
+            return ['result' => true];
+        }
+        return ['result' => false];
     }
 
 }

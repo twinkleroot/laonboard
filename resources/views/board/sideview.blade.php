@@ -5,3 +5,6 @@
 <li><a href="{{ route('admin.users.edit', $id) }}" target="_blank">회원정보변경</a></li>
 <li><a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $email }}" target="_blank">포인트내역</a></li>
 @endif
+@if($boardId)
+<li><a href="/board/{{ $boardId }}?kind=user_id&amp;keyword={{ $id }}&amp;category={{ $category }}">이 회원이 작성한 글</a></li>
+@endif

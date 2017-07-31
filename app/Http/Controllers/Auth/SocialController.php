@@ -70,15 +70,6 @@ class SocialController extends Controller
     // 소셜 로그인 -> 회원가입
     public function socialUserJoin(Request $request)
     {
-        // 존재하는 닉네임인지 검사
-        if(!is_null(User::where('nick', $request->get('nick'))->first())) {
-            return alert('이미 존재하는 닉네임입니다.');
-        }
-        // 존재하는 이메일인지 검사
-        if(!is_null(User::where('email', $request->get('email'))->first())) {
-            return alert('이미 존재하는 이메일입니다.');
-        }
-
         // 회원가입
         $user = $this->userModel->joinUser($request);
         // 소셜로그인 정보 등록
@@ -92,11 +83,6 @@ class SocialController extends Controller
     // 소셜 로그인 -> 기존 계정과 연결
     public function connectExistAccount(Request $request)
     {
-        // 해당 이메일로 가입한 회원이 존재하는지 검사
-        $user = User::where('email', $request->get('email'))->first();
-        if(is_null($user)) {
-            return alert('가입된 이메일이 아닙니다.');
-        }
         // 입력한 비밀번호와 인증된 사용자의 비밀번호를 비교한다.
         if(Auth::attempt(['email' => $request->get('email'), 'password' => $request->get('password') ], false, false)) {
             // 소셜로그인 정보 등록
