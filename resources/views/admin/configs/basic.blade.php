@@ -249,6 +249,14 @@
                 </tr>
                 <tr>
                     <th>
+                        <label for="writePoint">글쓰기 포인트</label>
+                    </th>
+                    <td class="table_body chknone">
+                        <input type="text" name="writePoint" class="form-control form_num" value="{{ $configBoard->writePoint }}">점
+                    </td>
+                </tr>
+                <tr>
+                    <th>
                         <label for="commentPoint">댓글쓰기 포인트</label>
                     </th>
                     <td class="table_body chknone">
@@ -585,7 +593,7 @@
                         </select>
                     </td>
                 </tr>
-                <tr>
+                {{-- <tr>
                     <th>
                         <label for="certIpin">아이핀 본인확인</label>
                     </th>
@@ -595,7 +603,7 @@
                             <option value='kcb' @if($configCert->certIpin == 'kcb') selected @endif>코리아크레딧뷰로(KCB) 아이핀</option>
                         </select>
                     </td>
-                </tr>
+                </tr> --}}
                 <tr>
                     <th>
                         <label for="certHp">휴대폰 본인확인</label>
@@ -632,7 +640,7 @@
                     </th>
                     <td class="table_body chknone">
                         <input type="text" name="certLimit" class="form-control form_num" value="{{ $configCert->certLimit }}">회
-                        
+
                         <span class="help-block">
                             하루동안 아이핀과 휴대폰 본인확인 인증 이용회수를 제한할 수 있습니다.<br />
                             회수제한은 실서비스에서 아이핀과 휴대폰 본인확인 인증에 개별 적용됩니다.<br />
@@ -647,7 +655,7 @@
                     <td class="table_body chknone">
                         <input type="checkbox" name="certReq" id="certReq" value="1" @if($configCert->certReq == 1) checked @endif>
                                     <label for="certReq">예</label>
-                        
+
                         <span class="help-block">
                             회원가입 때 본인확인을 필수로 할지 설정합니다. 필수로 설정하시면 본인확인을 하지 않은 경우 회원가입이 안됩니다.
                         </span>
