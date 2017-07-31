@@ -84,9 +84,12 @@ class SocialController extends Controller
     public function connectExistAccount(Request $request)
     {
         // 입력한 비밀번호와 인증된 사용자의 비밀번호를 비교한다.
-        if(Auth::attempt(['email' => $request->get('email'), 'password' => $request->get('password') ], false, false)) {
+        if(Auth::validate(['email' => $request->email, 'password' => $request->password ])) {
+            $user = User::where('email', $request->get('email'))->first();
             // 소셜로그인 정보 등록
             $this->socialModel->register($request, $user);
+            // 회원 정보 업데이트 (회원 등급, 이메일 인증 정보)
+            $this->userModel->updateUserBySocial($user);
             // 가입한 유저 로그인
             Auth::login($user);
 

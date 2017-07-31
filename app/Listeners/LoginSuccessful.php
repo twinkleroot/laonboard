@@ -48,7 +48,7 @@ class LoginSuccessful
 
         // 보낸 쪽지, 받은 쪽지가 기준 일이 지나면 자동 삭제
         $memoDel = cache('config.homepage')->memoDel;
-        $memo = Memo::where('recv_user_id', $event->user->id)
+        Memo::where('recv_user_id', $event->user->id)
         ->orWhere('send_user_id', $event->user->id)
         ->where('send_timestamp', '<', Carbon::now()->subDays($memoDel)->toDatetimeString())
         ->delete();

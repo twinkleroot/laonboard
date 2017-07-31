@@ -1,24 +1,22 @@
 @extends('layout.'. cache('config.skin')->layout. '.basic')
 
 @section('title')
-    회원 비밀번호 확인 | {{ Cache::get("config.homepage")->title }}
+    회원 비밀번호 확인 | {{ cache("config.homepage")->title }}
 @endsection
 
 @section('include_css')
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/auth.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('themes/'. cache('config.skin')->layout. '/css/auth.css') }}">
 @endsection
 
 @section('content')
 @if(Session::has('message'))
-  <div class="alert alert-info">
+<div class="alert alert-info">
     {{Session::get('message') }}
-  </div>
+</div>
 @endif
 <div class="container">
 <div class="row">
 <div class="col-md-6 col-md-offset-3 col-xs-10 col-xs-offset-1">
-
-<!-- user confirm password -->
     <div class="panel panel-default">
         <div class="panel-heading bg-sir">
             <h3 class="panel-title">회원 비밀번호 확인</h3>

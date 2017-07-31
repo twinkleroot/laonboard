@@ -69,12 +69,11 @@ class UserController extends Controller
     // 비밀번호 비교
     public function confirmPassword(Request $request)
     {
-        $user = auth()->user();
-        $email = $user->email;
-        $work = $request->work;
+        $email = auth()->user()->email;
+        $work = $request->work;	// 비밀번호 비교 후 맞으면 수행할 작업
 
         // 입력한 비밀번호와 인증된 사용자의 비밀번호를 비교한다.
-        if(Auth::validate(['email' => $email, 'password' => $request->get('password') ])) {
+        if(Auth::validate(['email' => $email, 'password' => $request->password ])) {
             return redirect(route('user.'. $work));
         } else {
             return redirect(route('user.checkPassword'))->with('message', '비밀번호가 틀립니다.')->with('work', $work);

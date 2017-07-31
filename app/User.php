@@ -398,6 +398,20 @@ class User extends Authenticatable
         return $user->update($toUpdateUserInfo);
     }
 
+    // 소셜 로그인 > 기존 회원 연결 할 때 이메일 인증 통과하도록 함.
+    public function updateUserBySocial($user)
+    {
+        if(cache('config.email.default')->emailCertify && $user->email_certify2) {
+            $data = [
+                'email_certify' => Carbon::now(),
+                'email_certify2' => null,
+                'level' => cache('config.join')->joinLevel,
+            ];
+
+            $user->update($data);
+        }
+    }
+
     // 추천인 입력
     public function insertRecommend($request, $user)
     {
