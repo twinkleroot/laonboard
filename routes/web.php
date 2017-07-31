@@ -308,9 +308,9 @@ Route::group(['prefix' => 'board/{boardId}'], function () {
         ->middleware('level.board:write_level', 'valid.board', 'cert:write', 'store.write', 'writable.reply');
     // 글 수정
     Route::get('edit/{writeId}', ['as' => 'board.edit', 'uses' => 'Board\WriteController@edit'])
-        ->middleware('level.board:update_level', 'valid.board', 'valid.write', 'cert:write', 'can.action.write.immediately:edit');
+        ->middleware('level.board:update_level', 'valid.board', 'valid.write', 'cert:write', 'can.action.write.immediately:edit', 'updatable.deletable.write');
     Route::put('update/{writeId}', ['as' => 'board.update', 'uses' => 'Board\WriteController@update'])
-        ->middleware('level.board:update_level', 'valid.board', 'valid.write', 'cert:write', 'updatable.deletable.write', 'store.write');
+        ->middleware('level.board:update_level', 'valid.board', 'valid.write', 'cert:write', 'store.write');
     // 글 삭제
     Route::get('delete/{writeId}', ['as' => 'board.destroy', 'uses' => 'Board\WriteController@destroy'])
         ->middleware('valid.board', 'valid.write', 'can.action.write.immediately:delete', 'updatable.deletable.write');

@@ -52,7 +52,7 @@
             <a class="btn btn-default" href="{{ route('admin.boards.index'). $queryString }}">목록</a>
         </div>
     </div>
-<div class="body-contents"> 
+<div class="body-contents">
     <div class="adm_panel">
         @if ($errors->any())
             <script>
@@ -526,7 +526,7 @@
                         <label for="chk_all_use_ip_view">전체적용</label>
                     </td>
                 </tr>
-                <tr>
+                {{-- <tr>
                     <th>목록에서 내용 사용</th>
                     <td class="table_body">
                         <input type="checkbox" id="use_list_content" name="use_list_content" value="1"
@@ -555,7 +555,7 @@
                         <input type="checkbox" id="chk_all_use_list_file" name="chk_all_use_list_file" value="1" />
                         <label for="chk_all_use_list_file">전체적용</label>
                     </td>
-                </tr>
+                </tr> --}}
                 <tr>
                     <th>전체목록보이기 사용</th>
                     <td class="table_body">
@@ -697,7 +697,7 @@
                         <label for="chk_all_comment_max">전체적용</label>
                     </td>
                 </tr>
-                <tr>
+                {{-- <tr>
                     <th>SNS 사용</th>
                     <td class="table_body">
                         <input type="checkbox" id="use_sns" name="use_sns" value="1"
@@ -712,7 +712,7 @@
                         <input type="checkbox" id="chk_all_use_sns" name="chk_all_use_sns" value="1" />
                         <label for="chk_all_use_sns">전체적용</label>
                     </td>
-                </tr>
+                </tr> --}}
                 <tr>
                     <th>전체 검색 사용</th>
                     <td class="table_body">
@@ -1060,7 +1060,7 @@
                         <button type="button" class="btn btn-sir" onclick="getThemeGalleryConfig()">가져오기</button>
                     </td>
                 </tr>
-                
+
             </table>
         </section>
         <section id="anc_point" class="adm_box">

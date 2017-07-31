@@ -60,6 +60,13 @@ class UpdatableAndDeletableWrite
                 if ($user->id != $write->user_id) {
                     $message = '자신의 '. $target. '이 아니므로 '. $action. '할 수 없습니다.';
                 }
+
+                if(!$isDelete && $board->count_modify) {
+                    $message = '이 글과 관련된 댓글이 존재하므로 수정할 수 없습니다.\\n\\n댓글이 '.$board->count_modify.'건 이상 달린 원글은 수정할 수 없습니다.';
+                }
+                if($isDelete && $board->count_delete) {
+                    $message = '이 글과 관련된 댓글이 존재하므로 삭제할 수 없습니다.\\n\\n댓글이 '.$board->count_delete.'건 이상 달린 원글은 삭제할 수 없습니다.';
+                }
             }
         } else {    // 비회원일 경우
             if($isComment) {

@@ -215,7 +215,7 @@
                 <img src="/themes/default/images/icon_secret.gif"> <!-- 비밀 -->
                     @if($user && ($user->isSuperAdmin() || $user->isBoardAdmin($board) || $user->isGroupAdmin($board->group)))
                     {!! $comment->content !!}
-                    @elseif(!$user && session()->get(session()->getId(). 'secret_board_'. $board->id. '_write_'. $comment->id))
+                    @elseif(session()->get(session()->getId(). 'secret_board_'. $board->id. '_write_'. $comment->id))
                     {!! $comment->content !!}
                     @elseif($user && $user->id == $comment->user_id)
                     {!! $comment->content !!}

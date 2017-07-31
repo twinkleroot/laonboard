@@ -30,7 +30,7 @@ function alertErrorWithInput($message, $key)
 
 function confirm($message, $redirect)
 {
-	return redirect(route('confirm'))->with('message', $message)->with('redirect', $redirect);
+    return redirect(route('confirm'))->with('message', $message)->with('redirect', $redirect);
 }
 
 // 스킨 목록을 가져온다.
@@ -118,8 +118,8 @@ function convertContent($content, $html)
         $content = htmlSymbol($content);
 
         // 공백 처리
-		$content = str_replace("  ", "&nbsp; ", $content);
-		$content = str_replace("\n ", "\n&nbsp;", $content);
+        $content = str_replace("  ", "&nbsp; ", $content);
+        $content = str_replace("\n ", "\n&nbsp;", $content);
 
         $content = convertText($content, 1);
         $content = urlAutoLink($content);
@@ -228,7 +228,7 @@ function checkPostMaxSize($request)
 function checkAdminAboutNotice($request)
 {
     if ( !session()->get('admin') && $request->has('notice') ) {
-		return false;
+        return false;
     }
     return true;
 }
@@ -279,22 +279,22 @@ function utf8Strcut($str, $size, $suffix='...' )
 // 관리 권한 설정 데이터를 가져온다.
 function getManageAuthModel($menuCode)
 {
-	$manageAuth = \App\Admin\ManageAuth::
-		where([
-			'user_id' => auth()->user()->id,
-			'menu' => $menuCode[0],
-		])
-		->where('auth', 'like', '%'. $menuCode[1]. '%')
-		->first();
+    $manageAuth = \App\Admin\ManageAuth::
+        where([
+            'user_id' => auth()->user()->id,
+            'menu' => $menuCode[0],
+        ])
+        ->where('auth', 'like', '%'. $menuCode[1]. '%')
+        ->first();
 
-	return $manageAuth;
+    return $manageAuth;
 }
 
 // 게시판 캐시 삭제
 function deleteCache($base, $boardTableName)
 {
     $cacheName = $base. '-'. $boardTableName;
-    cache($cacheName);
+    cache()->forget($cacheName);
 }
 
 function getViewThumbnail($board, $imageName, $folder, $type="view")
@@ -321,15 +321,15 @@ function getViewThumbnail($board, $imageName, $folder, $type="view")
     if($size[0] <= $thumbWidth) {
         return $size;
     }
-	$height = round(($thumbWidth * $size[1]) / $size[0]);
-	$files = explode('.', $imageName);
-	$postfix;
-	if($type == 'list') {	// 글 목록에서 썸네일을 필요로 할 때 (ex - 갤러리 게시판)
-		$postfix = $board->gallery_height. '.'. $files[1];
-	} else {
-		$postfix = $thumbWidth. 'X'. $height. '.'. $files[1];
-	}
-	$thumbFilePath = $imgPath. '/thumb-'. $files[0]. '_'. $postfix;
+    $height = round(($thumbWidth * $size[1]) / $size[0]);
+    $files = explode('.', $imageName);
+    $postfix;
+    if($type == 'list') {	// 글 목록에서 썸네일을 필요로 할 때 (ex - 갤러리 게시판)
+        $postfix = $board->gallery_height. '.'. $files[1];
+    } else {
+        $postfix = $thumbWidth. 'X'. $height. '.'. $files[1];
+    }
+    $thumbFilePath = $imgPath. '/thumb-'. $files[0]. '_'. $postfix;
 
     if( !file_exists($thumbFilePath) ) {
         if($size[2] == 2 && function_exists('exif_read_data')) {
@@ -360,10 +360,10 @@ function getViewThumbnail($board, $imageName, $folder, $type="view")
         // 썸네일 높이
         $thumbHeight = round(($thumbWidth * $size[1]) / $size[0]) > $board->gallery_height ? round(($thumbWidth * $size[1]) / $size[0]) : $board->gallery_height;
         $img = $img
-			->resize($thumbWidth, $thumbHeight, function ($constraint) {
+            ->resize($thumbWidth, $thumbHeight, function ($constraint) {
                     $constraint->aspectRatio();
                 })
-			->save($thumbFilePath);
+            ->save($thumbFilePath);
     }
 
     $thumbSize = getimagesize($thumbFilePath);

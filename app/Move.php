@@ -17,7 +17,7 @@ class Move
     {
         // 세션에 해당 게시물 아이디들을 보관
         $moveId = $request->has('chkId') ? $request->chkId : $request->writeId;
-        session()->put('writeIds', $moveId);
+        session()->put('move_writeIds', $moveId);
 
         return [
             'boards' => Board::orderBy('group_id', 'desc')->orderBy('subject', 'desc')->get(),

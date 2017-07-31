@@ -247,7 +247,7 @@ class WriteController extends Controller
         $ids = explode(',', $writeId);
         foreach($ids as $id) {
             try {
-                $this->deleteWriteCascade($boardId, $writeId);
+                $this->deleteWriteCascade($boardId, $id);
             } catch (Exception $e) {
                 $redirect = route('board.index', $boardId);
                 alertRedirect("($id번 글) ". $e->getMessage(), $redirect);

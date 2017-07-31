@@ -35,6 +35,7 @@
                 @if($commentId)
                     <input type="hidden" name="commentId" value="{{ $commentId }}">
                 @endif
+
                 <input type="hidden" name="nextUrl" value="{{ $nextUrl }}">
                 <div class="form-group">
                     <label for="password" class="control-label">비밀번호</label>

@@ -33,16 +33,16 @@ class MoveController extends Controller
     // 게시물 복사 및 이동 수행
     public function moveUpdate(Request $request, $boardId)
     {
-        $writeIds = session()->get('writeIds');
+        $writeIds = session()->get('move_writeIds');
         // 복사 및 이동
-		try {
-			$this->move->copyWrites($this->writeModel, $writeIds, $request);
-			if($request->type == 'move') {
-	            $this->move->moveWrites($this->writeModel, $writeIds, $request);
-	        }
-		} catch (Exception $e) {
-			return alertClose($e->getMessage());
-		}
+        try {
+            $this->move->copyWrites($this->writeModel, $writeIds, $request);
+            if($request->type == 'move') {
+                $this->move->moveWrites($this->writeModel, $writeIds, $request);
+            }
+        } catch (Exception $e) {
+            return alertClose($e->getMessage());
+        }
 
     }
 }
