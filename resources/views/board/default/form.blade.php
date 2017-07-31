@@ -188,7 +188,7 @@
             <div class="pull-right">
                 @if(session()->get('admin'))
                     <button type="submit" class="btn btn-sir">작성완료</button>
-                @elseif( ($type == 'create' && auth()->guest() ) || ($type == 'create' && $board->use_recaptcha) || ($type == 'update' && !session()->get('admin') && $write->user_id != auth()->user()->id) )
+                @elseif( ($type == 'create' && auth()->guest() ) || ($type == 'create' && $board->use_recaptcha) || ($type == 'update' && !session()->get('admin') && $write->user_id == auth()->user()->id) )
                     <!-- 리캡챠 -->
                     <div id='recaptcha' class="g-recaptcha"
                         data-sitekey="{{ env('GOOGLE_INVISIBLE_RECAPTCHA_KEY') }}"

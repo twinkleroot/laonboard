@@ -98,7 +98,7 @@ class User extends Authenticatable
 
     public function isSuperAdmin()
     {
-        if(auth()->user()->email === cache('config.homepage')->superAdmin) {
+        if($this->email === cache('config.homepage')->superAdmin) {
             return true;
         }
         return false;
@@ -106,7 +106,7 @@ class User extends Authenticatable
 
     public function isGroupAdmin($group)
     {
-        if(auth()->user()->email === $group->admin) {
+        if($this->email === $group->admin) {
             return true;
         }
         return false;
@@ -114,7 +114,7 @@ class User extends Authenticatable
 
     public function isBoardAdmin($board)
     {
-        if(auth()->user()->email === $board->admin) {
+        if($this->email === $board->admin) {
             return true;
         }
         return false;
@@ -137,15 +137,7 @@ class User extends Authenticatable
         ];
 
         foreach($socialLogins as $sociallogin) {
-            if($sociallogin['provider'] == 'naver') {
-                $socials['naver'] = $sociallogin['social_id'];
-            }
-            if($sociallogin['provider'] == 'google') {
-                $socials['google'] = $sociallogin['social_id'];
-            }
-            if($sociallogin['provider'] == 'facebook') {
-                $socials['facebook'] = $sociallogin['social_id'];
-            }
+            $socials[$sociallogin['provider']] = $sociallogin['social_id'];
         }
 
         $path = storage_path('app/public/user/'. substr($user->email,0,2). '/'). $user->email. '.gif';
@@ -245,8 +237,8 @@ class User extends Authenticatable
             'ip' => $request->ip(),
         ];
 
-        // 이메일 인증을 사용할 경우
-        if(cache('config.email.default')->emailCertify) {
+        // 이메일 인증을 사용할 경우 + 소셜 가입이 아닌 경우
+        if(cache('config.email.default')->emailCertify && !session()->get('userFromSocial')) {
             $addUserInfo = [
                 'email_certify' => null,
                 // 라우트 경로 구분을 위해 /는 제거해 줌.
@@ -254,7 +246,7 @@ class User extends Authenticatable
                 'level' => 1,   // 인증하기 전 회원 레벨은 1
             ];
             $userInfo = array_collapse([$userInfo, $addUserInfo]);
-        } else {    // 이메일 인증을 사용하지 않을 경우
+        } else {    // 이메일 인증을 사용하지 않을 경우 || 소셜 가입인 경우
             $addUserInfo = [
                 'email_certify' => Carbon::now(),
                 'level' => cache('config.join')->joinLevel,
@@ -297,8 +289,8 @@ class User extends Authenticatable
     {
         $certType = session()->get('ss_cert_type');
         $certNo = session()->get('ss_cert_no');
-        $name = $request->has('name') ? cleanXssTags(trim($request->name)) : '';
-        $hp = $request->has('hp') ? trim($request->hp) : '';
+        $name = $request->has('name') ? cleanXssTags(trim($request->name)) : null;
+        $hp = $request->has('hp') ? trim($request->hp) : null;
         if(cache('config.cert')->certUse && $certType && $certNo) {
             // 해시값이 같은 경우에만 본인확인 값을 저장한다.
             if( session()->get('ss_cert_hash') == md5($name.$certType.session()->get('ss_cert_birth').$certNo) ) {
@@ -317,10 +309,10 @@ class User extends Authenticatable
         } else {
             $userInfo = [
                 'hp' => $hp,
-                'certify' => '',
+                'certify' => null,
                 'adult' => 0,
-                'birth' => '',
-                'sex' => '',
+                'birth' => null,
+                'sex' => null,
                 'name' => $name,
             ];
 
@@ -501,7 +493,6 @@ class User extends Authenticatable
         $socialLogin = SocialLogin::where([
             'provider' => $provider,
             'social_id' => $userFromSocial->getId(),
-            'user_id' => $user->id,
         ])->first();
 
         if(is_null($socialLogin)) {

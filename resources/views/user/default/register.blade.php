@@ -116,7 +116,7 @@
 </div>
 <script>
 function onSubmit(token) {
-    $("#registerForm").submit();
+    $("#userForm").submit();
 }
 function validate(event) {
     grecaptcha.execute();

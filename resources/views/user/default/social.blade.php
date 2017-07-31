@@ -35,8 +35,8 @@ function joinValidation(form) {
         return false;
     }
 
-    if(form.nick.value == '{{ $userFromSocial->nickname }}') {
-        alert('다른 닉네임을 입력해 주세요.');
+    if(checkExistData('nick', form.nick.value)) {
+        alert('이미 가입된 닉네임입니다. 다른 닉네임을 입력해 주세요.');
         form.nick.focus();
         return false;
     }
@@ -47,13 +47,35 @@ function joinValidation(form) {
         return false;
     }
 
-    if(form.email.value == '{{ $userFromSocial->email }}') {
-        alert('다른 이메일을 입력해 주세요.');
+    if(checkExistData('email', form.email.value)) {
+        alert('이미 가입된 이메일입니다. 다른 이메일을 입력해 주세요.');
         form.email.focus();
         return false;
     }
 
     return true;
+}
+
+function checkExistData(key, value) {
+    var data = {
+        'key' : key,
+        'value' : value,
+        '_token' : '{{ csrf_token() }}'
+    };
+    var result = false;
+    $.ajax({
+        url: '/user/existData',
+        type: 'POST',
+        data: data,
+        dataType: 'json',
+        async: false,
+        cache: false,
+        success: function(data) {
+            result = data.result;
+        }
+    });
+
+    return result;
 }
 
 function loginValidation(form) {
@@ -66,6 +88,12 @@ function loginValidation(form) {
     if(form.password.value == '') {
         alert('비밀번호 : 필수 입력입니다.');
         form.password.focus();
+        return false;
+    }
+
+    if(checkExistData('email', form.email.value) != true) {
+        alert('가입되지 않은 이메일입니다. 확인 후 다시 입력해 주세요.');
+        form.email.focus();
         return false;
     }
 
@@ -86,8 +114,7 @@ function loginValidation(form) {
                     </div>
 
                     <div class="panel-body">
-                    <form method="POST" action="{{ route('social.socialUserJoin') }}"
-                        onsubmit="return joinValidation(this);" autocomplete="off">
+                    <form method="POST" action="{{ route('social.socialUserJoin') }}" onsubmit="return joinValidation(this);" autocomplete="off">
                         {{ csrf_field() }}
                         <input type="hidden" name="provider" value="{{ $provider }}" />
                         <p>
@@ -129,7 +156,7 @@ function loginValidation(form) {
                     </div>
                     <div class="panel-body">
                     <form method="POST" action="{{ route('social.connectExistAccount') }}"
-                        onsubmit="return loginValidation(form);" autocomplete="off">
+                        onsubmit="return loginValidation(this);" autocomplete="off">
                         {{ csrf_field() }}
                         <p>
                             <input type="hidden" name="provider" value="{{ $provider }}" />

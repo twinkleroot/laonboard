@@ -5040,5 +5040,44 @@
             "bootstrap",
             "datepicker"
         ]
+    },
+    {
+        "name": "socialiteproviders/kakao",
+        "version": "v3.0.0",
+        "version_normalized": "3.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/SocialiteProviders/Kakao.git",
+            "reference": "18ddc8071333dfda648da8c27972029b1516916e"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/SocialiteProviders/Kakao/zipball/18ddc8071333dfda648da8c27972029b1516916e",
+            "reference": "18ddc8071333dfda648da8c27972029b1516916e",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^5.6 || ^7.0",
+            "socialiteproviders/manager": "~3.0"
+        },
+        "time": "2017-01-25T09:48:29+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "SocialiteProviders\\Kakao\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Doojin So",
+                "email": "sodoojin@gmail.com"
+            }
+        ],
+        "description": "Kakao OAuth2 Provider for Laravel Socialite"
     }
 ]

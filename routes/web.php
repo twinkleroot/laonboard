@@ -276,6 +276,8 @@ Route::get('user/email/edit/{email}', ['as' => 'user.email.edit', 'uses' => 'Use
 Route::put('user/email/update', ['as' => 'user.email.update', 'uses' => 'User\UserController@updateEmail']);
 // 이메일 인증 라우트
 Route::get('user/emailCertify/id/{id}/crypt/{crypt}', ['as' => 'user.email.certify', 'uses' => 'User\UserController@emailCertify']);
+// 닉네임, 이메일 사용이 가능한지 검사
+Route::post('user/existData', ['as' => 'user.existData', 'uses' => 'User\UserController@existData']);
 // 처리 결과 메세지를 alert창으로 알려주는 페이지
 Route::get('message', ['as' => 'message', 'uses' => 'Message\MessageController@message']);
 // 처리 결과 메세지를 confirm창으로 알려주는 페이지

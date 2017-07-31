@@ -233,14 +233,16 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="useCopyLog" class="col-md-2 control-label">복사, 이동시 로그</label>
-                        <div class="col-md-3">
-                            게시물 아래에 누구로 부터 복사, 이동됨 표시<br>
-                            <input type="checkbox" name="useCopyLog" id="useCopyLog" value="1" @if($configHomepage->useCopyLog == 1) checked @endif>
-                            <label for="useCopyLog">남김</label>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="useCopyLog" class="col-md-2 control-label">복사, 이동시 로그</label>
+                            <div class="col-md-3">
+                                게시물 아래에 누구로 부터 복사, 이동됨 표시<br>
+                                <input type="checkbox" name="useCopyLog" id="useCopyLog" value="1" @if($configHomepage->useCopyLog == 1) checked @endif>
+                                <label for="useCopyLog">남김</label>
+                            </div>
                         </div>
-                    </div>
+                    </div>	
                     <div class="panel-body">
                         <div class="form-group">
                             <label for="pointTerm" class="col-md-4 control-label">포인트 유효기간</label>

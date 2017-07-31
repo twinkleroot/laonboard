@@ -27,6 +27,7 @@ return array(
     'SocialiteProviders\\Naver\\' => array($vendorDir . '/socialiteproviders/naver'),
     'SocialiteProviders\\Manager\\Test\\' => array($vendorDir . '/socialiteproviders/manager/tests'),
     'SocialiteProviders\\Manager\\' => array($vendorDir . '/socialiteproviders/manager/src'),
+    'SocialiteProviders\\Kakao\\' => array($vendorDir . '/socialiteproviders/kakao'),
     'Ramsey\\Uuid\\' => array($vendorDir . '/ramsey/uuid/src'),
     'Psy\\' => array($vendorDir . '/psy/psysh/src/Psy'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
