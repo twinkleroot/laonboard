@@ -50,7 +50,7 @@
             <form class="form-horizontal" role="form" method="GET" action="{{ route('admin.manageAuth.index') }}">
                 <label for="keyword" class="sr-only">검색어</label>
                 <input type="text" name="keyword" value="{{ $keyword }}" class="search" required>
-                <button type="submit" class="search-icon">
+                <button type="submit" class="btn search-icon">
                     <i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">검색</span>
                 </button>
             </form>

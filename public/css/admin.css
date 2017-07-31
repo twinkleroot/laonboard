@@ -9,6 +9,14 @@ body {
   background:#232323;
   font-family:'Nanum Gothic','돋움',sans-serif;
 }
+input[type=checkbox],
+input[type=radio] {
+	vertical-align: middle; margin: 0;
+}
+.help-block {
+	font-size: 13px;
+	line-height: 1.7;
+}
 .upbtn {
 	position: fixed;
 	width: 50px;
@@ -100,6 +108,9 @@ body {
 #admin-header .header-title i {
 	font-size: 25px;
 	margin-right: 12px;
+}
+#admin-header .header-title a {
+	text-decoration: none ;
 }
 #admin-header .header-title h1 {
 	margin: 0;
@@ -442,12 +453,20 @@ body {
 }
 #body_tab_type2 .submit_btn {
 	float: right;
+	line-height: 42px; padding-right: 10px;
 }
 #admin_box1 {
 	display: block;
 }
 .adm_box {
-	display: none;
+	margin: 30px 0px;
+}
+.adm_box:last-child {
+	margin-bottom: 0;
+}
+#anc_basic,
+#cfs_basic {
+	margin-top: 0;
 }
 .adm_panel {
 	margin-bottom: 20px;
@@ -477,8 +496,86 @@ body {
 	background: #fff;
 	border-radius: 4px;
 }
+.adm_box_bd .form_btn a {
+	margin: 0 4px;
+}
+.adm_box_bd .form_btn a:first-child {
+	margin-left: 0;
+}
 .adm_box_hd + div {
 	border-radius: 0 0 4px 4px;
+}
+.adm_box_table {
+	width: 100%; font-size: 12px;background: #fff;
+}
+.chknone {
+	border-right: 0 !important;
+}
+.adm_box_table tr {
+	border-bottom: 1px solid #d8d8d8;
+}
+.adm_box_table tr:last-child {
+	border-bottom: 0;
+}
+.adm_box_table tr th {
+	width: 200px; text-align: left; padding: 10px 15px; vertical-align: top;
+}
+.adm_box_table tr .table_body {
+	padding: 10px 15px;border-left: 1px solid #d8d8d8;border-right: 1px solid #d8d8d8;
+}
+.adm_box_table tr .table_body:after {
+	content: "";
+	display: block;
+	clear: both;
+}
+.adm_box_table tr .table_chk {
+	width: 175px; text-align: center; padding: 10px 15px; vertical-align: middle;
+}
+.adm_box_table .form_input {
+	float: left; margin-right: 6px;
+	width: 170px;
+}
+.adm_box_table .form_btn {
+	font-size: 0;
+}
+.adm_box_table .form_btn a {
+	margin: 0 3px;
+}
+.adm_box_table .help-block {
+	font-size: 12px;
+	margin-bottom: 0;
+}
+.adm_box_table .help-block:before {
+	content: "\f05a";
+	font-family: "FontAwesome";
+	margin-right: 6px;
+}
+.form_num {
+	width: 55px;
+	display: inline-block;
+	margin: 0 5px;
+}
+.form_small {
+	width: 100px;
+	display: inline-block;
+}
+.form_middle {
+	width: 150px;
+	display: inline-block;
+}
+.form_large {
+	width: 250px;
+}
+.form_w50 {
+	width: 50%;
+}
+.form_w90 {
+	width: 90%;
+}
+.form_subject {
+	width: 250px;
+	display: inline-block;
+	margin-right: 3px;
 }
 .required {
 	background: url('../images/required.jpg') top right repeat-y;
@@ -505,6 +602,12 @@ body {
 	border: 0;
 	background: none;
 	color: #587ef6;
+}
+#adm_tip {
+	padding: 15px;
+	background: #fff;
+	border-radius: 4px;
+	margin-bottom: 10px;
 }
 /* body-tab이 fixed 되었을 때 추가될 클래스 */
 .f-tab {
@@ -753,6 +856,7 @@ body {
 #adm_sch {
 	margin-bottom: 10px;
 	float: right;
+	font-size: 0;
 }
 #adm_sch:after {
 	content: '';
@@ -760,19 +864,17 @@ body {
 	clear: both;
 }
 #adm_sch select {
-	height:34px; padding:6px; border: 1px solid #ccc;
+	height:34px; padding:6px; border: 1px solid #ccc; 
+	font-size: 13px; margin-right: 5px;
 }
 #adm_sch .search {
-	height:34px; padding:6px; border: 1px solid #d8d8d8; margin-right: -4px;
+	height:34px; padding:6px; border: 1px solid #ccc; font-size: 13px; margin-right: 5px;
 }
 #adm_sch .search-icon {
-	border: 0; background: #fff; margin-left: -30px; outline: none;
+	border: 0; background: #587ef6; padding: 6px; color: #fff; width: 34px; height: 34px; border-radius: 4px; margin-top: -8px;
 }
 #adm_sch .period {
-	width:83px; height:33px; padding:6px; border: 1px solid #d8d8d8; font-size: 12px; margin: 0 5px;
-}
-#adm_sch .search2 {
-	width: 33px; height: 33px; border: 0; background: #587ef6; color: #fff; font-size: 12px;
+	width:83px; height:34px; border-radius: 0; padding:6px; border: 1px solid #d8d8d8; font-size: 12px; margin: 0 5px;
 }
 #pt_change {
 	margin: 40px 0;
@@ -968,10 +1070,9 @@ body {
 .form-inline p,
 .form-inline input,
 .form-inline label {
-	font-size: 13px;
+	font-size: 12px;
 }
 .filebox input[type="file"] { /* 파일 필드 숨기기 */ position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip:rect(0,0,0,0); border: 0; }
-
 
 .td_numsmall,
 .td_chk {
@@ -1298,4 +1399,14 @@ body {
 }
 .sch_res_list_bd table {
 	margin: 0;
+}
+.formaddr {
+	display:none;
+	border:1px solid;
+	width:100%;
+	height:450px;
+	margin-bottom: 10px;
+	position:relative;
+
+	clear: both;
 }

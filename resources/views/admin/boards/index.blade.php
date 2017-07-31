@@ -33,16 +33,19 @@
 
 <div class="body-contents">
 @if(Session::has('message'))
-  <div class="alert alert-info">
-    {{ Session::get('message') }}
-  </div>
+    <div id="adm_save">
+        <span class="adm_save_txt">{{ Session::get('message') }}</span>
+        <button onclick="alertclose()" class="adm_alert_close">
+            <i class="fa fa-times"></i>
+        </button>
+    </div>
 @endif
     <div id="board">
-        <ul class="mb_btn mb10 pull-left">
+        <ul id="adm_btn">
             <li><a href="{{ route('admin.boards.index') }}" class="btn btn-sir" role="button">전체목록</a></li>
             <li><span class="total">생성된 게시판수 {{ $boards->total() }}개</span></li>
         </ul>
-        <div class="mb_sch">
+        <div id="adm_sch">
              <form role="form" method="GET" action="{{ route('admin.boards.index') }}">
                 <label for="kind" class="sr-only">검색대상</label>
                 <select name="kind">
@@ -52,7 +55,7 @@
                 </select>
                 <label for="keyword" class="sr-only">검색어</label>
                 <input type="text" name="keyword" class="search" value="{{ $keyword }}" />
-                <button type="submit" id="" class="search-icon">
+                <button type="submit" id="" class="btn search-icon">
                     <i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">검색</span>
                 </button>
             </form>

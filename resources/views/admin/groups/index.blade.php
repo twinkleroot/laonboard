@@ -9,124 +9,145 @@
 @endsection
 
 @section('content')
+<div class="body-head">
+    <div class="pull-left">
+        <h3>게시판그룹관리</h3>
+        <ul class="fl">
+            <li class="admin">Admin</li>
+            <li class="depth">게시판관리</li>
+            <li class="depth">게시판그룹관리</li>
+        </ul>
+    </div>
+</div>
+<div id="body_tab_type2">
+    <span class="txt">게시판 그룹을 설정합니다.</span>
+
+    <div class="submit_btn" style="line-height: 42px; padding-right: 10px;">
+        <ul class="mb_btn" style="margin-top:1px;">
+            <li><input type="button" id="selected_update" class="btn btn-default" value="선택 수정"/></li>
+            <li><input type="button" id="selected_delete" class="btn btn-default" value="선택 삭제"/></li>
+            <li><a class="btn btn-default" href="{{ route('admin.groups.create') }}" role="button">게시판그룹 추가</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="body-contents">
 @if(Session::has('message'))
-  <div class="alert alert-info">
-    {{ Session::get('message') }}
-  </div>
+    <div id="adm_save">
+        <span class="adm_save_txt">{{ Session::get('message') }}</span>
+        <button onclick="alertclose()" class="adm_alert_close">
+            <i class="fa fa-times"></i>
+        </button>
+    </div>
 @endif
-<div class="row">
-    <div class="col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">게시판 그룹 설정</div>
-            <div class="panel-heading">
-                <a href="{{ route('admin.groups.index') }}" >전체목록</a> | 전체그룹 {{ $groups->total() }}개
-            </div>
-            <form method="GET" id="searchForm" action="{{ route('admin.groups.index') }}">
-                <div class="panel-heading">
-                    <select name="kind" id="kind">
-                        <option value="subject" @if($kind == 'subject') selected @endif>제목</option>
-                        <option value="group_id" @if($kind == 'group_id') selected @endif>그룹 ID</option>
-                        <option value="admin" @if($kind == 'admin') selected @endif>그룹관리자</option>
-                    </select>
-                    <input type="text" id="keyword" name="keyword" @if($keyword != '') value="{{ $keyword }}" @endif />
-                    <input type="submit" id="search" value="검색" />
-                </div>
+    <div id="board">
+        <ul id="adm_btn">
+            <li><a href="{{ route('admin.groups.index') }}" class="btn btn-sir" role="button">전체목록</a></li>
+            <li><span class="total">전체그룹 {{ $groups->total() }}개</span></li>
+        </ul>
+        <div id="adm_sch">
+             <form role="form" method="GET" action="{{ route('admin.groups.index') }}">
+                <label for="kind" class="sr-only">검색대상</label>
+                <select name="kind" id="kind">
+                    <option value="subject" @if($kind == 'subject') selected @endif>제목</option>
+                    <option value="group_id" @if($kind == 'group_id') selected @endif>그룹 ID</option>
+                    <option value="admin" @if($kind == 'admin') selected @endif>그룹관리자</option>
+                </select>
+                <label for="keyword" class="sr-only">검색어</label>
+                <input type="text" name="keyword" class="search" value="{{ $keyword }}" />
+                <button type="submit" id="search" class="btn search-icon">
+                    <i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">검색</span>
+                </button>
             </form>
-            <div class="panel-heading"><a class="btn btn-primary" href={{ route('admin.groups.create')}}>게시판 그룹 추가</a></div>
-            <form class="form-horizontal" role="form" method="POST" id="selectForm" action="">
-                <input type="hidden" id='ids' name='ids' value='' />
-                <input type="hidden" id='subjects' name='subjects' value='' />
-                <input type="hidden" id='admins' name='admins' value='' />
-                <input type="hidden" id='use_accesss' name='use_accesss' value='' />
-                <input type="hidden" id='orders' name='orders' value='' />
-                <input type="hidden" id='devices' name='devices' value='' />
-                <input type="hidden" id='_method' name='_method' value='' />
-                {{ csrf_field() }}
-                <div class="panel-body">
-                    <table class="table table-hover">
+        </div>
+
+        <form class="form-horizontal" role="form" method="POST" id="selectForm" action="">
+            <input type="hidden" id='ids' name='ids' value='' />
+            <input type="hidden" id='subjects' name='subjects' value='' />
+            <input type="hidden" id='admins' name='admins' value='' />
+            <input type="hidden" id='use_accesss' name='use_accesss' value='' />
+            <input type="hidden" id='orders' name='orders' value='' />
+            <input type="hidden" id='devices' name='devices' value='' />
+            <input type="hidden" id='_method' name='_method' value='' />
+            {{ csrf_field() }}
+                <table class="table table-striped box">
                     <thead>
-                        <th class="text-center"><input type="checkbox" name="chkAll" onclick="checkAll(this.form)"/></th>
-                        <th class="text-center">
-                            <a class="mb_tooltip" href="{{ route('admin.groups.index'). $queryString }}&amp;order=group_id&amp;direction={{$order=='group_id' ? $direction : 'asc'}}">그룹 ID</a>
+                        <th><input type="checkbox" name="chkAll" onclick="checkAll(this.form)"/></th>
+                        <th>
+                            <a class="adm_sort" href="{{ route('admin.groups.index'). $queryString }}&amp;order=group_id&amp;direction={{$order=='group_id' ? $direction : 'asc'}}">그룹 ID</a>
                         </th>
-                        <th class="text-center">
-                            <a class="mb_tooltip" href="{{ route('admin.groups.index'). $queryString }}&amp;order=subject&amp;direction={{$order=='subject' ? $direction : 'asc'}}">제목</a>
+                        <th>
+                            <a class="adm_sort" href="{{ route('admin.groups.index'). $queryString }}&amp;order=subject&amp;direction={{$order=='subject' ? $direction : 'asc'}}">제목</a>
                         </th>
-                        <th class="text-center">
-                            <a class="mb_tooltip" href="{{ route('admin.groups.index'). $queryString }}&amp;order=admin&amp;direction={{$order=='admin' ? $direction : 'asc'}}">그룹관리자</a>
+                        <th>
+                            <a class="adm_sort" href="{{ route('admin.groups.index'). $queryString }}&amp;order=admin&amp;direction={{$order=='admin' ? $direction : 'asc'}}">그룹관리자</a>
                         </th>
-                        <th class="text-center">게시판</th>
-                        <th class="text-center">접근<br />사용</th>
-                        <th class="text-center">접근<br />회원수</th>
-                        <th class="text-center">
-                            <a class="mb_tooltip" href="{{ route('admin.groups.index'). $queryString }}&amp;order=order&amp;direction={{$order=='order' ? $direction : 'asc'}}">출력순서</a>
+                        <th>게시판</th>
+                        <th>접근<br>사용</th>
+                        <th>접근<br>회원수</th>
+                        <th>
+                            <a class="adm_sort" href="{{ route('admin.groups.index'). $queryString }}&amp;order=order&amp;direction={{$order=='order' ? $direction : 'asc'}}">출력순서</a>
                         </th>
-                        <th class="text-center">접속기기</th>
-                        <th class="text-center">관리</th>
+                        <th>접속기기</th>
+                        <th>관리</th>
                     </thead>
 
                     <tbody>
                     @if(count($groups) > 0)
                     @foreach ($groups as $group)
                         <tr>
-                            <td class="text-center">
+                            <td class="td_chk">
                                 <input type="checkbox" name="chkId[]" class="groupId" value='{{ $group->id }}' />
                             </td>
-                            <td class="text-center">
+                            <td class="td_group">
                                 <a href="{{ route('group', $group->id) }}">{{ $group->group_id }}</a>
                             </td>
-                            <td class="text-center">
-                                <input type="text" id='subject_{{ $group->id }}' value='{{ $group->subject }}' />
+                            <td>
+                                <input type="text" id="subject_{{ $group->id }}" class="form-control" value="{{ $group->subject }}" />
                             </td>
-                            <td class="text-center">
-                                <input type="text" id='admin_{{ $group->id }}' value='{{ $group->admin }}' />
+                            <td class="td_email">
+                                <input type="text" id="admin_{{ $group->id }}" class="form-control" value='{{ $group->admin }}' />
                             </td>
-                            <td class="text-center">
+                            <td class="td_numsmall">
                                 <a href="{{ route('admin.boards.index'). "?kind=group_id&keyword=". $group->group_id  }}">{{ $group->count_board }}</a>
                             </td>
-                            <td class="text-center">
+                            <td class="td_chk">
                                 <input type='checkbox' id='use_access_{{ $group->id }}' value='1'
                                     {{ ($group->use_access == '1' ? 'checked' : '') }}/>
                                 </td>
-                            <td class="text-center">
+                            <td class="td_numsmall">
                                 <a href="{{ route('admin.accessUsers.show', $group->id)}}">{{ $group->count_users }}</a>
                             </td>
-                            <td class="text-center">
-                                <input type="text" id='order_{{ $group->id }}' value='{{ $group->order }}' />
+                            <td class="td_mngsmall">
+                                <input type="text" id='order_{{ $group->id }}' class="form-control" value='{{ $group->order }}' />
                             </td>
-                            <td class="text-center">
-                                <select id='device_{{ $group->id }}'>
+                            <td class="td_mngsmall">
+                                <select id='device_{{ $group->id }}' class="form-control">
                                     <option value='both' {{ $group->device == 'both' ? 'selected' : '' }}>both</option>
                                     <option value='pc' {{ $group->device == 'pc' ? 'selected' : '' }}>pc</option>
                                     <option value='mobile' {{ $group->device == 'mobile' ? 'selected' : '' }}>mobile</option>
                                 </select>
                             </td>
-                            <td class="text-center">
-                                <a class="btn btn-primary" href="{{ route('admin.groups.edit', $group->id). '?'. Request::getQueryString() }}">수정</a>
+                            <td class="td_mngsmall">
+                                <a href="{{ route('admin.groups.edit', $group->id). '?'. Request::getQueryString() }}">수정</a>
                             </td>
                         </tr>
                     @endforeach
                     @else
                     <tr>
-                        <td class="text-center" colspan="15">
-                            자료가 없습니다.
+                        <td colspan="10">
+                            <span class="empty_table">
+                                <i class="fa fa-exclamation-triangle"></i> 자료가 없습니다.
+                            </span>
                         </td>
                     </tr>
                     @endif
                     </tbody>
-                    </table>
-                </div>
-                <div class="panel-heading">
-                    <input type="button" id="selected_update" class="btn btn-primary" value="선택 수정"/>
-                    <input type="button" id="selected_delete" class="btn btn-primary" value="선택 삭제"/>
-                    <a class="btn btn-primary" href={{ route('admin.groups.create') }}>게시판 그룹 추가</a>
-                </div>
-            </form>
+                </table>
+        </form>
 
-            {{-- 페이지 처리 --}}
-            {{ $groups->appends(Request::except('page'))->links() }}
-
-        </div>
+        {{-- 페이지 처리 --}}
+        {{ $groups->appends(Request::except('page'))->links() }}
     </div>
 </div>
 <script>

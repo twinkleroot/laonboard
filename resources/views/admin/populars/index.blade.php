@@ -43,7 +43,7 @@
             </li>
         </ul>
 
-        <div id="adm_sch" class="mb10 pull-right">
+        <div id="adm_sch">
             <form class="form-horizontal" role="form" method="GET" action="{{ route('admin.populars.index') }}" onsubmit="return onSearchSubmit(this);">
                 <label for="" class="sr-only">검색대상</label>
                 <select name="kind" onchange="changeInput(this.value)">
@@ -54,7 +54,7 @@
                 <label for="keyword" class="sr-only">검색어</label>
                 <input type="text" id="keyword" name="keyword" value="{{ $keyword }}" @if(!$kind || $kind == 'word') class="search" @else class="search datepicker" data-provide="datepicker" data-date-end-date="0d" @endif required>
 
-                <button type="submit" class="search-icon">
+                <button type="submit" class="btn search-icon">
                     <i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">검색</span>
                 </button>
             </form>
