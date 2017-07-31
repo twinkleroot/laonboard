@@ -14,19 +14,18 @@
 @section('content')
 <div class="body-head">
     <div class="pull-left">
-        <h3>내용관리</h3>
+        <h3>내용관리목록</h3>
         <ul class="fl">
             <li class="admin">Admin</li>
             <li class="depth">내용관리</li>
             <li class="depth">내용목록</li>
         </ul>
     </div>
-    <div class="pull-right">
-        <ul class="mb_btn" style="margin-top:8px;">
-            <li>
-                <a class="btn btn-default" href="{{ route('admin.contents.create')}}" role="button">내용 추가</a>
-            </li>
-        </ul>
+</div>
+<div id="body_tab_type2">
+    <span class="txt">내용관리 목록을 보여줍니다.</span>
+    <div class="submit_btn">
+        <a class="btn btn-default" href="{{ route('admin.contents.create')}}" role="button">내용 추가</a>
     </div>
 </div>
 <div class="body-contents">

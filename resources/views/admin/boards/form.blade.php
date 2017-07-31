@@ -829,7 +829,7 @@
                     <th>글쓰기 기본 내용</th>
                     <td class="table_body">
                         <div style="background: #fff; border-radius: 4px; box-sizing: border-box;">
-                        <textarea name="insert_content" rows="10" style="border: 1px solid rgba(0,0,0,0.2);width: 100%; height: 100%;">{{ $board['insert_content'] }}</textarea>
+                        <textarea name="insert_content" rows="10" class="form-control">{{ $board['insert_content'] }}</textarea>
                         </div>
                     </td>
                     <td class="table_chk">
