@@ -8,18 +8,19 @@
     <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
     <script src="{{ url('js/postcode.js') }}"></script>
     <script type="text/javascript">
-        var menuVal = 200100;
+        var menuVal = 100100;
         jQuery("document").ready(function($){
-            var nav = $('.body-tab');
+            var nav = $('#body_tab_type2');
 
             $(window).scroll(function () {
-                if ($(this).scrollTop() > 205) {
+                if ($(this).scrollTop() > 175) {
                     nav.addClass("f-tab");
                 } else {
                     nav.removeClass("f-tab");
                 }
             });
         });
+
     </script>
 @endsection
 
@@ -37,36 +38,22 @@
     </div>
 </div>
 
-<div class="body-contents">
-    <div class="body-tab">
-        <ul class="mb_menu">
-            <li class="tab">
-                <a href="#mb_basic">기본정보</a>
-            </li>
-            <li class="tab">
-                <a href="#mb_add">추가정보</a>
-            </li>
-            <li class="tab">
-                <a href="#B">부가설정</a>
-            </li>
-            <li class="tab">
-                <a href="#C">본인인증</a>
-            </li>
-            <li class="tab">
-                <a href="#more">여분필드</a>
-            </li>
-        </ul>
-        <div class="pull-right">
-            <ul class="mb_btn">
-                <li>
-                    <button type="submit" class="btn btn-default">확인</button>
-                </li>
-                <li>
-                    <a href="{{ route('admin.users.index') }}" class="btn btn-default" role="button">목록</a>
-                </li>
-            </ul>
-        </div>
+<div id="body_tab_type2">
+    <ul>
+        <li class="tab"><a href="#mb_basic">기본정보</a></li>
+        <li class="tab"><a href="#mb_add">추가정보</a></li>
+        <li class="tab"><a href="#B">부가설정</a></li>
+        <li class="tab"><a href="#C">본인인증</a></li>
+        <li class="tab"><a href="#more">여분필드</a></li>
+    </ul>
+
+    <div class="submit_btn">
+        <button type="submit" class="btn btn-sir">확인</button>
+        <a href="{{ route('admin.users.index') }}" class="btn btn-default" role="button">목록</a>
     </div>
+</div>
+
+<div class="body-contents">
 
     <div class="panel panel-default">
         <div class="panel-body">

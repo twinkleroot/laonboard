@@ -7,12 +7,12 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-body">
                     @if(session()->get('admin'))
                     <div class="ctt_admin">
-                        <a href="{{ route('admin.contents.edit', $content->content_id)}}" class="btn_admin">내용 수정</a>
+                        <a href="{{ route('admin.contents.edit', $content->content_id)}}" class="btn btn-sir">내용 수정</a>
                     </div>
                     @endif
                     <!-- 상단 이미지 -->

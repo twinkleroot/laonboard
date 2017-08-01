@@ -109,7 +109,7 @@
                             <a href="{{ route('scrap.index') }}" class="winScrap" target="_blank" onclick="winScrap(this.href); return false;">스크랩</a>
                         </li>
                         <li><a href="{{ route('user.point', Auth::user()->id) }}" class="point">포인트 내역</a></li>
-                        <li><a href="{{ route('memo.index') }}?kind=recv" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지 {{ App\Memo::where('recv_user_id', Auth::user()->id)->where('read_timestamp', null)->count() }}</a></li>
+                        <li><a href="{{ route('memo.index') }}?kind=recv" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지 <span class="memocount">{{ App\Memo::where('recv_user_id', Auth::user()->id)->where('read_timestamp', null)->count() }}</span></a></li>
                         <li>
                             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 로그 아웃
@@ -137,8 +137,48 @@
 </div>
 
 <footer id="footer">
-    <div class="container">
-        Copyright 2017 SIR. All Rights Reserved.
+    <section id="popular">
+        <div class="container">
+            <h2>인기검색어</h2>
+            <ul>
+                <li>검색1</li>
+                <li>검색2</li>
+                <li>검색3</li>
+                <li>검색4</li>
+                <li>검색5</li>
+                <li>검색6</li>
+                <li>검색7</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="visit">
+        <div class="container">
+            <h2>접속자집계</h2>
+            <dl>
+                <dt>오늘</dt>
+                <dd>2</dd>
+                <dt>어제</dt>
+                <dd>3</dd>
+                <dt>최대</dt>
+                <dd>3</dd>
+                <dt>전체</dt>
+                <dd>28</dd>
+            </dl>
+                </div>
+    </section>
+    <div id="ft_copy">
+        <div class="container">
+            <div class="link">
+                <a href="http://jeeevely.gnutest.com/g5/bbs/content.php?co_id=company">회사소개</a>
+                <a href="http://jeeevely.gnutest.com/g5/bbs/content.php?co_id=privacy">개인정보처리방침</a>
+                <a href="http://jeeevely.gnutest.com/g5/bbs/content.php?co_id=provision">서비스이용약관</a>
+            </div>
+            <div class="copy">
+            대표 홍길동 | 전화 000-0000-0000 | 사업자 000-00-00000<br>
+            Copyright © <b>소유하신 도메인.</b> All rights reserved.<br>
+            </div>
+        </div>
     </div>
 </footer>
 

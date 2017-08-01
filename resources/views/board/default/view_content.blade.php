@@ -167,7 +167,7 @@
     <article class="cmt" id="comment{{ $comment->id }}">
         <div class="cmt_box @if(strlen($comment->comment_reply)>0) cmt_reply" style="padding-left: calc(25px * {{ strlen($comment->comment_reply) }}); @endif">
             <ul class="bd_rd_cmt_info">
-                <li>
+                <li class="td_nick">
                     <i class="fa fa-user"></i>
                 @if($user && $board->use_sideview)
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $comment->name }}</a>

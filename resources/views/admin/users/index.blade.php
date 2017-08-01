@@ -21,15 +21,18 @@
     <div class="pull-right">
         <ul class="mb_btn" style="margin-top:8px;">
             <li>
-                <a class="btn btn-default" href="{{ route('admin.users.create')}}" role="button">회원추가</a>
-            </li>
-            <li>
-                <input type="button" id="selected_update" class="btn btn-default" value="선택수정">
-            </li>
-            <li>
-                <input type="button" id="selected_delete" class="btn btn-default" value="선택삭제">
+                
             </li>
         </ul>
+    </div>
+</div>
+<div id="body_tab_type2">
+    <span class="txt">가입되어 있는 회원 리스트를 보여줍니다.</span>
+
+    <div class="submit_btn">
+        <a class="btn btn-default" href="{{ route('admin.users.create')}}" role="button">회원추가</a>
+        <input type="button" id="selected_update" class="btn btn-default" value="선택수정">
+        <input type="button" id="selected_delete" class="btn btn-default" value="선택삭제">
     </div>
 </div>
 

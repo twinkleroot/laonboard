@@ -132,6 +132,17 @@ div {
 #header .gnb .gnb-li:last-child {
 	border: 0;
 }
+.memocount {
+	background: #587ef6;
+	padding: 0 7px;
+	height: 20px;
+	border-radius: 10px;
+	display: block;
+	text-align: center;
+	color: #fff;
+	float: right;
+	font-size: 11px;
+}
 #header .user {
 	font-size: 2em;
 	vertical-align: middle;
@@ -316,11 +327,79 @@ div {
 /* footer */
 #footer {
 	width: 100%;
-	padding: 30px 0;
 	margin-top: 40px;
-	font-size: 1em;
-	color: #aaa;
-	text-align: center;
+	border-top: 1px solid #d8d8d8;
+	color: #999;
+	background-color: #fff;
+}
+#popular,
+#visit {
+	padding: 10px 0;
+}
+#ft_copy {
+	padding: 20px 0;
+	background: #333;
+	color: #fff
+	font-size: 13px;
+	margin-left: -5px;
+}
+#ft_copy a {
+	font-size: 13px;
+	color: #fff;
+	margin: 0 5px;
+}
+#ft_copy .copy {
+	margin: 25px 5px 0;
+	line-height: 1.7;
+}
+#popular:after,
+#visit:after {
+	content: "";
+	display: block;
+	clear: both;
+}
+#visit {
+	border-top: 1px solid #d8d8d8;
+}
+#popular h2,
+#visit h2 {
+	float: left;
+    margin: 0;
+    font-size: 13px;
+    line-height: 20px;
+    color: #333;
+    font-weight: bold;
+    margin-right: 40px;
+}
+#popular ul {
+	padding: 0;
+	margin: 0;
+	float: left;
+	font-size: 13px;
+    line-height: 20px;
+}
+#popular ul li {
+	float: left;
+	list-style: none;
+	margin: 0 20px;
+}
+#visit dl,
+#visit dl dt,
+#visit dl dd {
+	float: left;
+}
+#visit dl {
+	padding: 0;
+	margin: 0;
+	font-size: 13px;
+    line-height: 20px;
+    margin-left: 20px;
+}
+#visit dl dt {
+	margin-right: 10px;
+}
+#visit dl dd {
+	margin-right: 30px;
 }
 
 /* table */
@@ -1427,6 +1506,14 @@ div {
 	width:80px;
 	text-align: center;
 }
+.td_nick.open {
+	position: relative;
+}
+.td_nick .dropdown-menu {
+	top: 33px;
+	left: 10px;
+	font-size: 12px;
+}
 #bd_move label {
 	font-weight: normal;
 	margin: 0;
@@ -1794,4 +1881,27 @@ div {
 input[type=checkbox],
 input[type=radio] {
 	vertical-align: middle; margin: 0 0 0 5px;
+}
+.ctt_admin {
+	float: right;
+}
+#ctt header {
+	padding-bottom: 10px;
+	border-bottom: 1px solid #d8d8d8;
+}
+#ctt header:after {
+	content: "";
+	display: block;
+	clear: both;
+}
+#ctt h1 {
+	font-size: 18px;
+	float: left;
+	margin: 0;
+	padding: 0 5px;
+	line-height: 34px;
+	font-weight: bold;
+}
+#ctt_con {
+	margin: 30px 0;
 }
