@@ -71,7 +71,7 @@ class PasswordController extends Controller
                 session()->put(session()->getId(). 'edit_board_'. $request->boardId. '_write_'. $writeId, true);
             } else {
                 session()->put(session()->getId(). 'secret_board_'. $request->boardId. '_write_'. $writeId, true);
-            }
+            } 
 
             return redirect($request->nextUrl);
          } else {

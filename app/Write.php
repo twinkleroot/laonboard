@@ -848,6 +848,11 @@ class Write extends Model
         // 메인 최신글 캐시 삭제
         deleteCache('main', $this->board->table_name);
 
+        // 비회원 글쓰기 + 비밀글일 경우 세션에 등록하기
+        if(auth()->guest() && $request->has('secret') && $request->secret) {
+            session()->put(session()->getId(). 'secret_board_'. $this->board->id. '_write_'. $lastInsertId, true);
+        }
+
         return $lastInsertId;
     }
 

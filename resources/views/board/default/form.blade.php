@@ -18,7 +18,7 @@
         <form role="form" id="fwrite" method="post" action={{ route('board.update', ['boardId'=>$board->id, 'writeId'=>$write->id])}} enctype="multipart/form-data">
             {{ method_field('put') }}
     @else
-        <form role="form" id="fwrite" method="post" action={{ route('board.store', $board->id) }} enctype="multipart/form-data">
+        <form role="form" id="fwrite" method="post" action={{ route('board.store', $board->id) }} enctype="multipart/form-data" @if(session()->get('admin')) onsubmit="return writeSubmit();" @endif>
     @endif
         <input type="hidden" name="type" id="type" value="{{ $type }}" />
         <input type="hidden" name="writeId" id="writeId" @if($type != 'create') value="{{ $write->id }}" @endif/>
@@ -77,7 +77,7 @@
                 <label for="" class="sr-only">게시물 작성</label>
                 <input type="text" class="form-control" id="subject" name="subject" placeholder="게시물 제목" @if($type != 'create') value="{{ $write->subject}}" @endif required>
             </div>
-            @if( !is_null(auth()->user()) )
+            @if(auth()->user())
                 <script src="{{ asset('js/autosave.js') }}"></script>
                 <div class="bd-save col-xs-4 dropdown">
                     <a href="#" id="autosaveBtn" class="dropdown-toggle btn btn-sir" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -89,16 +89,26 @@
             @endif
         </div>
 
-        @if($board->use_dhtml_editor == 1)
-            {{-- 에디터 --}}
-            <div style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px;">
-                <textarea name="content" id="editorArea">@if($type == 'update'){!! convertContent($write->content, 0) !!}@endif</textarea>
-            </div>
-        @else
-            <div style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px; padding: 2px;">
-                <textarea name="content" maxlength="65536" style="width:100%; min-height:400px; border:0;" required>@if($type == 'update'){!! convertContent($write->content, 0) !!}@endif</textarea>
-            </div>
+@if($board->use_dhtml_editor == 1)
+        {{-- 에디터 --}}
+        <div style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px;">
+            <textarea class="editorArea" name="content" id="content">@if($type == 'update'){!! convertContent($write->content, 0) !!}@endif</textarea>
+        </div>
+@else
+    @if(auth()->guest() || !auth()->user()->isSuperAdmin())
+        @if($board->write_min || $board->write_max)
+            <p id="charCountDesc">이 게시판은 최소 <strong>{{ $board->write_min }}</strong>글자 이상, 최대 <strong>{{ $board->write_max }}</strong>글자 이하까지 글을 쓰실 수 있습니다.</p>
         @endif
+    @endif
+        <div style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px; padding: 2px;">
+            <textarea name="content" id="content" maxlength="65536" style="width:100%; min-height:400px; border:0;" required>@if($type == 'update'){!! convertContent($write->content, 0) !!}@endif</textarea>
+        </div>
+    @if(auth()->guest() || !auth()->user()->isSuperAdmin())
+        @if($board->write_min || $board->write_max)
+        <div id="charCountWrap"><span id="charCount"></span>글자</div>
+        @endif
+    @endif
+@endif
 
         <div class="wt_more">
             <div class="add">
@@ -163,26 +173,28 @@
         <div class="clearfix">
             <div class="pull-left">
                 @if(session()->get('admin'))
-                    <label for="notice" class="checkbox-inline">
-                        <input type="checkbox" id="notice" name="notice" value="1" @if($type=='update' && strpos($board->notice, (string)$write->id) !== false) checked @endif> 공지
-                    </label>
+                <label for="notice" class="checkbox-inline">
+                    <input type="checkbox" id="notice" name="notice" value="1" @if($type=='update' && strpos($board->notice, (string)$write->id) !== false) checked @endif> 공지
+                </label>
                 @endif
                 @if(!$board->use_dhtml_editor)
-                    <label for="html" class="checkbox-inline">
-                        <input type="checkbox" id="html" name="html" onclick="htmlAutoBr(this);" value="" @if($type=='update' && strpos($write->option, 'html') !== false) checked @endif> html
-                    </label>
+                <label for="html" class="checkbox-inline">
+                    <input type="checkbox" id="html" name="html" onclick="htmlAutoBr(this);" value="" @if($type=='update' && strpos($write->option, 'html') !== false) checked @endif> html
+                </label>
                 @else
-                    <input type="hidden" name="html" value="html1" />
+                <input type="hidden" name="html" value="html1" />
                 @endif
-                @if($board->use_secret)
-                    <label for="secret" class="checkbox-inline">
-                        <input type="checkbox" id="secret" name="secret" value="secret" @if($type=='update' && strpos($write->option, 'secret') !== false) checked @endif> 비밀글
-                    </label>
+                @if($board->use_secret == 1 || session()->get('admin'))
+                <label for="secret" class="checkbox-inline">
+                    <input type="checkbox" id="secret" name="secret" value="secret" @if($type=='update' && strpos($write->option, 'secret') !== false) checked @endif> 비밀글
+                </label>
+                @elseif($board->use_secret == 2)
+                <input type="hidden" name="secret" value="secret" />
                 @endif
                 @if($board->use_email)
-                    <label for="mail" class="checkbox-inline">
-                        <input type="checkbox" id="mail" name="mail" value="mail"> 답변메일받기
-                    </label>
+                <label for="mail" class="checkbox-inline">
+                    <input type="checkbox" id="mail" name="mail" value="mail"> 답변메일받기
+                </label>
                 @endif
             </div>
             <div class="pull-right">
@@ -209,7 +221,7 @@
 </div>
 <script>
 tinymce.init({
-    selector: '#editorArea',
+    selector: '.editorArea',
     language: 'ko_KR',
     branding: false,
     theme: "modern",
@@ -247,8 +259,73 @@ function onSubmit(token) {
     $("#fwrite").submit();
 }
 function validate(event) {
-    grecaptcha.execute();
+    if(writeSubmit()) {
+        grecaptcha.execute();
+    }
 }
+function writeSubmit() {
+    var subject = "";
+    var content = "";
+    var contentData = "";
+    var useEditor = {{ $board->use_dhtml_editor }};
+    if(useEditor == 1) {
+        contentData = tinymce.get('content').getContent();
+    } else {
+        contentData = $('#content').val();
+    }
+
+    $.ajax({
+        url: '/ajax/filter',
+        type: 'post',
+        data: {
+            '_token' : '{{ csrf_token() }}',
+            'subject' : $('#subject').val(),
+            'content' : contentData
+        },
+        dataType: 'json',
+        async: false,
+        cache: false,
+        success: function(data) {
+            subject = data.subject;
+            content = data.content;
+        }, error: function(error) {
+            alert(error);
+        }
+    });
+
+    if(subject) {
+        alert("제목에 금지단어 (" + subject + ") 가 포함되어 있습니다.");
+        $('#subject').focus();
+        return false;
+    }
+
+    if(content) {
+        alert("내용에 금지단어 (" + content + ") 가 포함되어 있습니다.");
+        tinymce.get('content').focus();
+        return false;
+    }
+
+    @if(!$board->use_dhtml_editor)
+    @if(auth()->guest() || !auth()->user()->isSuperAdmin())
+    @if($board->write_min || $board->write_max)
+       var charMin = {{ $board->write_min }};
+       var charMax = {{ $board->write_max }};
+       var cnt = parseInt(check_byte("content", "charCount"));
+       if (charMin > 0 && charMin > cnt) {
+           alert("내용은 "+charMin+"글자 이상 쓰셔야 합니다.");
+           return false;
+       }
+       else if (charMax > 0 && charMax < cnt) {
+           alert("내용은 "+charMax+"글자 이하로 쓰셔야 합니다.");
+           return false;
+       }
+     @endif
+     @endif
+     @endif
+
+    return true;
+}
+
 $(function() {
     $(".link").click(function(){
         $(".link_list").toggle();
@@ -258,4 +335,18 @@ $(function() {
     });
 });
 </script>
+{{-- 글자수 제한 --}}
+@if(!$board->use_dhtml_editor)
+@if(auth()->guest() || !auth()->user()->isSuperAdmin())
+@if($board->write_min || $board->write_max)
+<script>
+    $(function() {
+        $("#content").on("keyup", function() {
+            check_byte("content", "charCount");
+        });
+    });
+</script>
+@endif
+@endif
+@endif
 @endsection

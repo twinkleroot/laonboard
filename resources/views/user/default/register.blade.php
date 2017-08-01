@@ -63,17 +63,16 @@
                 <div class="form-group {{ $errors->has('nick') ? ' has-error' : '' }}">
                     <label for="nick">닉네임</label>
                     <input id="nick" type="text" name="nick" class="form-control" value="{{ old('nick') }}" placeholder="닉네임을 입력하세요" required>
-                    <p class="help-block">
-                        공백없이 한글, 영문, 숫자만 입력 가능<br>
-                        (한글2자, 영문4자 이상)<br>
-                        닉네임을 바꾸시면 0일 이내에는 변경할 수 없습니다
-                    </p>
-
                     @if ($errors->has('nick'))
                         <span class="help-block">
                             <strong>{{ $errors->first('nick') }}</strong>
                         </span>
                     @endif
+                    <p class="help-block">
+                        공백없이 한글, 영문, 숫자만 입력 가능<br>
+                        (한글2자, 영문4자 이상)<br>
+                        닉네임을 바꾸시면 0일 이내에는 변경할 수 없습니다
+                    </p>
                 </div>
 
                 @if(cache('config.cert')->certIpin)

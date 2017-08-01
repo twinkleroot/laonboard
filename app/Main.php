@@ -14,14 +14,17 @@ class Main
     {
         $skin = view()->exists("latest.$skin.index") ? $skin : $default;
 
-        $boards =
+        $query =
             Board::selectRaw('boards.*, groups.id as group_id, groups.subject as group_subject, groups.order as group_order')
             ->leftJoin('groups', 'groups.id', '=', 'boards.group_id')
             // ->where('boards.device', '<>', 'mobile')
-            ->where('boards.use_cert', 'not-use')
             ->orderBy('groups.order')
-            ->orderBy('boards.order')
-            ->get();
+            ->orderBy('boards.order');
+
+        if(!session()->get('admin')) {
+            $query = $query->where('boards.use_cert', 'not-use');
+        }
+        $boards = $query->get();
 
         $latestList = $this->getLatestWrites($boards, 5, 25);
 

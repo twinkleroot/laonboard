@@ -19,6 +19,15 @@ class ImageController extends Controller
     public function viewOriginal(Request $request)
     {
         $imageName = $request->imageName;
+        $divImageNamesForExtension = explode('.', $imageName);
+        $extension = $divImageNamesForExtension[count($divImageNamesForExtension) - 1];
+        $divImageNames = explode('_', $imageName);
+        if(count($divImageNames) <= 2) {
+            $imageName = $divImageNames[0]. '.'. $extension;
+        } else {
+            array_pop($divImageNames);
+            $imageName = implode('', $divImageNames). '.'. $extension;
+        }
         $type = $request->type;
 
         if($type == 'editor') {
