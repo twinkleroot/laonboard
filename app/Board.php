@@ -21,4 +21,15 @@ class Board extends Model
         return $this->belongsTo(Group::class);
     }
 
+    public $board;
+    
+    public static function getBoard()
+    {
+        return $this->board;
+    }
+
+    private function setBoard($boardId)
+    {
+        $this->board = Board::find($boardId);
+    }
 }

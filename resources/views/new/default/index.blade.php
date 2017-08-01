@@ -88,7 +88,7 @@
                     @else
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $boardNew->name }}</a>
                     <ul class="dropdown-menu" role="menu">
-                        @component('board.sideview', ['boardId' => '', 'id' => $boardNew->user_id_hashkey, 'name' => $boardNew->name, 'email' => $boardNew->user_email, 'category' => ''])
+                        @component('board.sideview', ['board' => '', 'id' => $boardNew->user_id_hashkey, 'name' => $boardNew->name, 'email' => $boardNew->user_email, 'category' => ''])
                         @endcomponent
                         <li><a href="{{ route('new.index') }}?nick={{ $boardNew->name }}">전체게시물</a></li>
                     </ul>

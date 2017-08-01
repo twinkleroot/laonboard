@@ -15,7 +15,7 @@
 
     <div class="bd_btn">
         <ul id="bd_btn" class="pull-right">
-            @if(session()->get('admin'))
+            @if(auth()->user() && auth()->user()->isBoardAdmin($board))
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle bd_rd_more" data-toggle="dropdown" role="button" aria-expanded="false">
                         <button type="" class="btn btn-danger">
@@ -61,7 +61,7 @@
         <thead>
             <tr>
                 <th>번호</th>
-                @if(session()->get('admin'))
+                @if(auth()->user() && auth()->user()->isBoardAdmin($board))
                     <th> <!-- 전체선택 -->
                         <input type="checkbox" name="chkAll" onclick="checkAll(this.form)">
                     </th>
@@ -96,7 +96,7 @@
                         {{ $writes->total() - ($writes->currentPage() - 1) * $board->page_rows - $loop->index }}
                     @endif
                 </td>
-                @if(session()->get('admin'))
+                @if(auth()->user() && auth()->user()->isBoardAdmin($board))
                     <td class="bd_check"><input type="checkbox" name="chkId[]" class="writeId" value='{{ $write->id }}'></td>
                 @endif
                 <td @if($write->reply != '') class="bd_reply" style="padding-left: calc(20px * {{ strlen($write->reply) }} @endif">
@@ -136,7 +136,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
                     <ul class="dropdown-menu" role="menu">
                     @if($write->user_level)
-                        @component('board.sideview', ['boardId' => $board->id, 'id' => $write->user_id, 'name' => $write->name, 'email' => $write->email, 'category' => $currenctCategory])
+                        @component('board.sideview', ['board' => $board, 'id' => $write->user_id, 'name' => $write->name, 'email' => $write->email, 'category' => $currenctCategory])
                         @endcomponent
                     @else
                         <li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
@@ -149,7 +149,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
                     <ul class="dropdown-menu" role="menu">
                     @if($write->user_level)
-                        @component('board.sideview', ['boardId' => $board->id, 'id' => $write->user_id, 'name' => $write->name, 'email' => $write->email, 'category' => $currenctCategory])
+                        @component('board.sideview', ['board' => $board, 'id' => $write->user_id, 'name' => $write->name, 'email' => $write->email, 'category' => $currenctCategory])
                         @endcomponent
                     @else
                         <li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
@@ -222,10 +222,11 @@
 {{-- 페이지 처리 --}}
 {{ $writes->appends(Request::except('page'))->links() }}
 
+@if($board->use_category == 1 )
 <script>
 $(function(){
     var category = "{{ $currenctCategory }}";
-    if(category != '') {
+    if(category != "") {
         // document.getElementById(category).addClass
         // $("div[id='" + category + "']'").addClass('on');
         document.getElementById(category).className += ' on'
@@ -233,7 +234,9 @@ $(function(){
         document.getElementById('all').className += ' on'
     }
 });
-
+</script>
+@endif
+<script>
 function searchFormSubmit(f) {
     if(f.keyword.value.trim() == '') {
         alert('검색어 : 필수 입력입니다.');

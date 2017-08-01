@@ -57,7 +57,7 @@ class BoardFile extends Model
                     // 삭제할 파일정보를 선택한다.
                     $delFile = $this->selectBoardFile($boardId, $writeId, $i)->first();
                     // 기존 파일과 썸네일을 삭제한다.
-                    if( !$this->deleteFileOnServer($board->table_name, $delFile->file) ) {
+                    if( !$this->deleteFileOnServer($board, $board->table_name, $delFile->file) ) {
                         abort(500, '업로드한 파일을 삭제하는데 실패하였습니다.');
                     }
                     // 파일 테이블의 해당 행을(board_file_no) 삭제한다.
@@ -74,7 +74,7 @@ class BoardFile extends Model
                     // 기존에 파일이 존재하는 번호(board_file_no)라면
                     if( !is_null($delFile) ) {
                         // 기존 파일과 썸네일을 삭제한다.
-                        if( !$this->deleteFileOnServer($board->table_name, $delFile->file) ) {
+                        if( !$this->deleteFileOnServer($board, $board->table_name, $delFile->file) ) {
                             abort(500, '기존 파일을 삭제하는데 실패하였습니다.');
                         }
                         // 선택한 파일을 업로드 한다.
@@ -103,10 +103,10 @@ class BoardFile extends Model
             $index = 0;
             foreach($updateAllFiles as $updateAllFile) {
                 $this
-				->selectBoardFile($boardId, $writeId, $updateAllFile->board_file_no)
+                ->selectBoardFile($boardId, $writeId, $updateAllFile->board_file_no)
                 ->update(['board_file_no' => $index]);
 
-				$index++;
+                $index++;
             }
 
         }
@@ -164,7 +164,7 @@ class BoardFile extends Model
     // 서버에 파일 업로드 (단수)
     public function uploadFile($file, $folderName)
     {
-        return $file->storeAs($folderName, $file->hashName());
+        return $this->storePrivatly($file, $folderName, $file->hashName());
     }
 
     // 서버에 파일 업로드 (복수)
@@ -173,10 +173,35 @@ class BoardFile extends Model
         $uploadFiles = $request->attach_file;
         $result;
         foreach($uploadFiles as $uploadFile) {
-            $result = $uploadFile->storeAs($folderName, $uploadFile->hashName());
+            $result = $this->storePrivatly($uploadFile, $folderName, $uploadFile->hashName());
         }
 
         return $result;
+    }
+
+    // 파일권한을 private(600)으로 업로드한다.
+    public function storePrivatly($file, $folderName, $fileName, $options = [])
+    {
+        $options = $this->parseOptions($options);
+
+        $options['visibility'] = 'private';	// private : 600, public : 644
+
+        return $file->storeAs($folderName, $fileName, $options);
+    }
+
+    /**
+     * Parse and format the given options. by SymfonyUploadedFile
+     *
+     * @param  array|string  $options
+     * @return array
+     */
+    protected function parseOptions($options)
+    {
+        if (is_string($options)) {
+            $options = ['disk' => $options];
+        }
+
+        return $options;
     }
 
     // 파일 업로드 및 파일테이블에 저장 (복수)
@@ -188,82 +213,65 @@ class BoardFile extends Model
     }
 
     // 기존 파일과 썸네일을 삭제한다.
-    public function deleteFileOnServer($tableName, $delFileName)
+    public function deleteFileOnServer($board, $tableName, $delFileName)
     {
         // 기존 파일을 삭제한다.
         $dir = storage_path('app/public/'. $tableName);
-        $path = $dir. '/'. $delFileName;
-        // 기존 썸네일을 삭제한다.
-        $thumbnailPath =  $dir. '/thumb-'. $delFileName;
-
-        $returnVal = File::delete($path);
-        if(File::exists($thumbnailPath)) {
+        $path = "$dir/$delFileName";
+        if(getimagesize($path)) {
+            // 기존 썸네일을 삭제한다.
+            $thumbSize = getViewThumbnail($board, $delFileName, $tableName);
+            $thumbName = $thumbSize['name'];
+            $thumbnailPath =  "$dir/$thumbName";
             $returnVal = File::delete($thumbnailPath);
         }
+        $returnVal = File::delete($path);
 
         return $returnVal;
     }
 
-    // 게시물 삭제 할 때 첨부 파일, 에디터 첨부파일도 함께 삭제
+    // 게시물 삭제 할 때 첨부 파일 삭제
     public function deleteWriteAndAttachFile($boardId, $writeId, $type='')
     {
         $board = Board::find($boardId);
         $writeModel = new Write($boardId);
         $writeModel->setTableName($board->table_name);
         $write = $writeModel->find($writeId);
-        $content = $write->content;
         $delFiles = BoardFile::where([
-                        'board_id' => $boardId,
-                        'write_id' => $writeId,
-                ])->get();
+            'board_id' => $boardId,
+            'write_id' => $writeId,
+        ])->get();
+
+        if(count($delFiles) < 1) {
+            return true;
+        }
 
         $result = array();
         // 첨부 파일 삭제
         $index = 0;
-        $result[$index++] = $this->deleteAttachFile($board->table_name, $delFiles);
-        // 에디터에 첨부된 이미지와 썸네일 삭제
-        if($type != 'move') {
-            $result[$index++] = $this->deleteEditorImage($content);
-        }
-        // 파일 테이블 삭제
-        $result[$index] =
-			BoardFile::where([
-                'board_id' => $boardId,
-                'write_id' => $writeId,
-            ])
-            ->delete() > 0 ? true : false;
+        $result[$index++] = $this->deleteAttachFile($board, $board->table_name, $delFiles);
+
+        // 첨부 파일 정보 삭제
+        $result[$index] = BoardFile::where([
+            'board_id' => $boardId,
+            'write_id' => $writeId,
+        ])->delete() > 0 ? true : false;
 
         return $result;
     }
 
     // 첨부 파일 삭제
-    private function deleteAttachFile($tableName, $delFiles)
+    private function deleteAttachFile($board, $tableName, $delFiles)
     {
         $result = true;
         // 첨부 파일 삭제
         if(count($delFiles) > 0) {
             foreach ($delFiles as $delFile) {
-                $result = $this->deleteFileOnServer($tableName, $delFile->file);
+                $result = $this->deleteFileOnServer($board, $tableName, $delFile->file) > 0 ? true : false;
             }
         }
 
         return $result;
-    }
-
-    // 에디터에 첨부된 이미지와 썸네일 삭제
-    private function deleteEditorImage($content)
-    {
-        // 에디터로 업로드한 이미지 경로를 추출한다.
-        $pattern = "/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i";
-        preg_match_all($pattern, $content, $matches);
-        // 에디터에 첨부된 이미지와 썸네일 삭제
-        foreach ($matches[1] as $match) {
-            $basename = basename($match);
-            if(strpos($basename, "thumb") !== false) {
-                $basename = substr($basename, 6);
-            }
-            $result = $this->deleteFileOnServer('editor', $basename);
-        }
     }
 
     // 에디터로 첨부한 이미지 파일 서버에 저장
@@ -273,7 +281,7 @@ class BoardFile extends Model
         $imgUrl = [];
 
         foreach($files as $file) {
-            $file->storeAs('editor', $file->hashName());
+            $this->storePrivatly($file, 'editor', $file->hashName());
 
             array_push($imgUrl, '/storage/editor/'.$file->hashName());
         }

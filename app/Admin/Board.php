@@ -68,7 +68,7 @@ class Board extends Model
         if($order) {
             $query = $query->orderBy('boards.'. $order, $direction);
         } else {
-            $query = $query->orderByRaw('boards.group_id, boards.table_name asc');
+            $query = $query->orderByRaw('boards.order, boards.group_id, boards.table_name asc');
         }
 
         $boards = $query->paginate(Cache::get("config.homepage")->pageRows);

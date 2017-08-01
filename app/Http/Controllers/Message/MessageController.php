@@ -14,6 +14,7 @@ class MessageController extends Controller
             'message' => Session::has('message') ? Session::get('message') : '',
             'redirect' => Session::has('redirect') ? Session::get('redirect') : '',
             'popup' => Session::has('popup') ? Session::get('popup') : '',
+            'openerRedirect' => Session::has('openerRedirect') ? Session::get('openerRedirect') : '',
         ]);
     }
 

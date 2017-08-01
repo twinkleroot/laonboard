@@ -30,10 +30,6 @@ class BoardsController extends Controller
 
         $params = $this->boardModel->getBoardIndexParams($request);
 
-		// $boards = $params['boards'];
-		// $json = $boards->appends($request->except('page'))->jsonSerialize();
-		// dd($boards->appends($request->except('page'))->url($boards->currentPage()));
-
         return view('admin.boards.index', $params);
     }
 
@@ -97,7 +93,7 @@ class BoardsController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        if (auth()->user()->cant('update', $this->boardModel)) {
+        if (!auth()->user()->isBoardAdmin(Board::find($id)) && auth()->user()->cant('update', $this->boardModel)) {
             abort(403, '게시판 수정에 대한 권한이 없습니다.');
         }
 
@@ -115,7 +111,7 @@ class BoardsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (auth()->user()->cant('update', $this->boardModel)) {
+        if (!auth()->user()->isBoardAdmin(Board::find($id)) && auth()->user()->cant('update', $this->boardModel)) {
             abort(403, '게시판 수정에 대한 권한이 없습니다.');
         }
 

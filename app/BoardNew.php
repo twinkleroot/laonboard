@@ -125,15 +125,15 @@ class BoardNew extends Model
             // 원글 삭제
             if($writeId == $boardNew->write_parent) {
                 $point->deleteWritePoint($write, $boardId, $writeId);
-                // 서버에서 파일 삭제, 썸네일 삭제, 에디터 첨부 이미지 파일, 썸네일 삭제, 파일 테이블 삭제
-                $delFileResult = $boardFile->deleteWriteAndAttachFile($boardId, $writeId);
-                if( array_search(false, $delFileResult) === false ) {
-                    abort(500, '정상적으로 게시글을 삭제하는데 실패하였습니다.(첨부 파일 삭제)');
+                // 서버에서 파일 삭제 첨부파일의 썸네일 삭제, 파일 테이블에서 파일 정보 삭제
+                $result = $boardFile->deleteWriteAndAttachFile($boardId, $writeId);
+                if( array_search(false, $result) != false ) {
+                    abort(500, '정상적으로 게시글을 삭제하는데 실패하였습니다.\\n('. $boardId. '게시판 '. $writeId. '번 글의 첨부 파일 삭제)');
                 }
                 // 게시글 삭제
-                $delWriteResult = $write->deleteWrite($write, $writeId);
-                if($delWriteResult <= 0) {
-                    abort(500, '정상적으로 게시글을 삭제하는데 실패하였습니다.(글 삭제)');
+                $result = $write->deleteWrite($write, $writeId);
+                if($result <= 0) {
+                    abort(500, '정상적으로 게시글을 삭제하는데 실패하였습니다.\\n('. $boardId. '게시판 '. $writeId. '번 글의 삭제)');
                 }
             } else {    // 댓글 삭제
                 $comment->deleteComment($write, $boardId, $writeId);

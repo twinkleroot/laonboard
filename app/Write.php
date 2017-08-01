@@ -396,10 +396,8 @@ class Write extends Model
             }
         }
 
-        // dd($write->content);
         // 에디터로 업로드한 이미지 경로를 추출해서 내용의 img 태그 부분을 교체한다.
         $write->content = $this->includeImagePathByEditor($write->content);
-
 
         return [
             'board' => $this->board,
@@ -839,7 +837,7 @@ class Write extends Model
             'user_id' => $userId
         ]);
 
-        // 댓글 1 증가
+        // 원글 1 증가
         $this->board->update(['count_write' => $this->board->count_write + 1]);
 
         // 저장한 글이 임시저장을 사용한 것이라면 삭제한다.
@@ -947,7 +945,7 @@ class Write extends Model
         Autosave::where('unique_id', $request->uid)->delete();
 
         // 기존 content의 img 태그의 파일을 추출하고 수정된 content의 content를 비교해서 없어진 파일은 서버에서 삭제한다.
-        $this->deleteEditorImage($write->content, $inputData['content']);
+        $this->updateEditorImage($write->content, $inputData['content']);
 
         // 글 수정 실행
         $writeModel->where('id', $writeId)->update($inputData);
@@ -959,17 +957,16 @@ class Write extends Model
     }
 
     // 에디터 첨부 이미지를 수정 전과 후를 비교해서 지운 이미지 파일 서버에서 삭제
-    private function deleteEditorImage($originalContent, $editContent)
+    private function updateEditorImage($originalContent, $editContent)
     {
         $originalContentImages = $this->getImageNameByContent($originalContent);
         $EditContentImages = $this->getImageNameByContent($editContent);
 
         foreach($originalContentImages as $originalContentImage) {
-            $img = str_replace("thumb-", "", $originalContentImage);
-            if( array_search($img, $EditContentImages) === false) {
+            if(array_search($originalContentImage, $EditContentImages) === false) {	// 수정된 내용 안에 기존 업로드한 이미지가 없으면
                 // 서버에서 파일 삭제
                 $boardFile = new BoardFile();
-                $boardFile->deleteFileOnServer('editor', $img);
+                $boardFile->deleteFileOnServer($this->board, 'editor', $originalContentImage);
             }
         }
     }
@@ -1037,36 +1034,31 @@ class Write extends Model
        }
     }
 
-    // 해당 글에 답변글이 달려 있는지 확인한다.
-    public function checkReply($writeModel, $writeId)
+    // 게시글 삭제하면서 게시글에 종속된 것들도 함께 삭제
+    public function deleteWriteCascade($writeModel, $boardId, $writeId)
     {
+        // 부여되었던 포인트 삭제 및 조정 반영
         $write = $writeModel->find($writeId);
-        $replyCount = $writeModel->where('reply', 'like', $write->reply.'%')
-                        ->where('id', '<>', $writeId)
-                        ->where(['num' => $write->num, 'is_comment' => 0])
-                        ->count('id');
-        if($replyCount > 0 && !session()->get('admin')) {
-            abort(500, '이 글과 관련된 답변글이 존재하므로 삭제 할 수 없습니다.\\n\\n우선 답변글부터 삭제하여 주십시오.');
+        if($write->user_id)  {
+            $point = new Point();
+            $point->deleteWritePoint($writeModel, $boardId, $writeId);
         }
-    }
-
-    // 해당 글에 댓글이 달려 있는지 확인한다.
-    public function checkComment($writeModel, $writeId)
-    {
-        $user = auth()->user();
-        $userId = is_null($user) ? 0 : $user->id;
-        $commentCount = $writeModel->where('user_id', '<>', $userId)
-                        ->where(['parent' => $writeId, 'is_comment' => 1])
-                        ->count('id');
-        if($commentCount >= $this->board->count_delete && !session()->get('admin')) {
-            abort(500, '이 글과 관련된 코멘트가 존재하므로 삭제 할 수 없습니다.\\n\\n코멘트가 '. $board->count_delete. '건 이상 달린 원글은 삭제할 수 없습니다.');
+        // 서버에서 첨부파일+첨부파일의 썸네일 삭제, 파일 테이블 삭제
+        $boardFile = new BoardFile();
+        $result = $boardFile->deleteWriteAndAttachFile($boardId, $writeId);
+        if(!is_bool($result) && array_search(false, $result) != false) {
+            abort(500, '정상적으로 게시글을 삭제하는데 실패하였습니다.(첨부 파일 삭제)');
+        }
+        // 게시글 삭제
+        $result = $writeModel->deleteWrite($writeModel, $writeId);
+        if($result <= 0) {
+            abort(500, '정상적으로 게시글을 삭제하는데 실패하였습니다.(게시글 삭제)');
         }
     }
 
     // 글 삭제 - 게시글 삭제
     public function deleteWrite($writeModel, $writeId)
     {
-
        $write = $writeModel->find($writeId);
        // 원글에 달린 댓글
        $comments = $writeModel->select('id')->where([

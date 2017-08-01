@@ -106,6 +106,9 @@ class User extends Authenticatable
 
     public function isGroupAdmin($group)
     {
+        if($this->isSuperAdmin()) {
+            return true;
+        }
         if($this->email === $group->admin) {
             return true;
         }
@@ -114,6 +117,12 @@ class User extends Authenticatable
 
     public function isBoardAdmin($board)
     {
+        if($this->isSuperAdmin()) {
+            return true;
+        }
+        if($this->isGroupAdmin($board->group)) {
+            return true;
+        }
         if($this->email === $board->admin) {
             return true;
         }

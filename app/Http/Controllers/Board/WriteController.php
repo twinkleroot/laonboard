@@ -198,42 +198,15 @@ class WriteController extends Controller
         $message = $redirect = '';
         $board = Board::find($boardId);
 
-        $this->writeModel->checkReply($this->writeModel, $writeId);
-        $this->writeModel->checkComment($this->writeModel, $writeId);
-
         try {
-            $this->deleteWriteCascade($boardId, $writeId);
+            $this->writeModel->deleteWriteCascade($this->writeModel, $boardId, $writeId);
         } catch (Exception $e) {
             $redirect = route('board.index', $boardId);
-            alertRedirect($e->getMessage(), $redirect);
+            return alertRedirect($e->getMessage(), $redirect);
         }
 
         $returnUrl = route('board.index', $boardId). ($request->page == 1 ? '' : '?page='. $request->page);
         return redirect($returnUrl);
-    }
-
-    // 게시글 삭제하면서 게시글에 종속된 것들도 함께 삭제
-    private function deleteWriteCascade($boardId, $writeId)
-    {
-        $message = '';
-        // 부여되었던 포인트 삭제 및 조정 반영
-        $write = $this->writeModel->find($writeId);
-        if($write->user_id)  {
-            $point = new Point();
-            $point->deleteWritePoint($this->writeModel, $boardId, $writeId);
-        }
-        // 서버에서 파일 삭제, 썸네일 삭제, 에디터 첨부 이미지 파일, 썸네일 삭제, 파일 테이블 삭제
-        $delFileResult = $this->boardFileModel->deleteWriteAndAttachFile($boardId, $writeId);
-        if( array_search(false, $delFileResult) === false ) {
-            abort(500, '정상적으로 게시글을 삭제하는데 실패하였습니다.(첨부 파일 삭제)');
-        }
-        // 게시글 삭제
-        $delWriteResult = $this->writeModel->deleteWrite($this->writeModel, $writeId);
-        if($delWriteResult <= 0) {
-            abort(500, '정상적으로 게시글을 삭제하는데 실패하였습니다.(게시글 삭제)');
-        }
-
-        return $message;
     }
 
     /**
@@ -247,10 +220,10 @@ class WriteController extends Controller
         $ids = explode(',', $writeId);
         foreach($ids as $id) {
             try {
-                $this->deleteWriteCascade($boardId, $id);
+                $this->writeModel->deleteWriteCascade($boardId, $id);
             } catch (Exception $e) {
                 $redirect = route('board.index', $boardId);
-                alertRedirect("($id번 글) ". $e->getMessage(), $redirect);
+                return alertRedirect("($id번 글) ". $e->getMessage(), $redirect);
             }
         }
 

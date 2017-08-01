@@ -6,7 +6,11 @@
 <div class="col-md-4 col-sm-6 col-xs-12">
     <div class="lt">
         <div class="lt_head">
-            <div class="lt_board pull-left">{{ $writes->board_subject }}</div>
+            <div class="lt_board pull-left">
+                <a href="{{ route('board.index', $writes->board_id) }}">
+                    {{ $writes->board_subject }}
+                </a>
+            </div>
             <a href="{{ route('board.index', $writes->board_id) }}">
                 <span class="lt_more pull-right"></span>
             </a>

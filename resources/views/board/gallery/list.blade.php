@@ -15,7 +15,7 @@
 
     <div class="bd_btn">
         <ul id="bd_btn" class="pull-right">
-            @if(session()->get('admin'))
+            @if(auth()->user() && auth()->user()->isBoardAdmin($board))
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle bd_rd_more" data-toggle="dropdown" role="button" aria-expanded="false">
                     <button type="" class="btn btn-danger">
@@ -57,7 +57,9 @@
     @endif
 
     <!-- 갤러리형 게시판 -->
+    @if(auth()->user() && auth()->user()->isBoardAdmin($board))
     <input type="checkbox" name="chkAll" onclick="checkAll(this.form)"> <!-- 전체선택 -->
+    @endif
     <div id="gry" class="row">
         @if(count($writes) > 0)
         @foreach($writes as $write)
@@ -121,7 +123,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
                         <ul class="dropdown-menu" role="menu">
                         @if($write->user_level)
-                            @component('board.sideview', ['boardId' => $board->id, 'id' => $write->user_id, 'name' => $write->name, 'email' => $write->email, 'category' => $currenctCategory])
+                            @component('board.sideview', ['board' => $board, 'id' => $write->user_id, 'name' => $write->name, 'email' => $write->email, 'category' => $currenctCategory])
                             @endcomponent
                         @else
                             <li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
@@ -134,7 +136,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
                         <ul class="dropdown-menu" role="menu">
                         @if($write->user_level)
-                            @component('board.sideview', ['boardId' => $board->id, 'id' => $write->user_id, 'name' => $write->name, 'email' => $write->email, 'category' => $currenctCategory])
+                            @component('board.sideview', ['board' => $board, 'id' => $write->user_id, 'name' => $write->name, 'email' => $write->email, 'category' => $currenctCategory])
                             @endcomponent
                         @else
                             <li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
