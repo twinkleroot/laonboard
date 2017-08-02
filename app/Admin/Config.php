@@ -137,7 +137,7 @@ class Config extends Model
             'writePoint' => config('gnu.writePoint'),
             'commentPoint' => config('gnu.commentPoint'),
             'downloadPoint' => config('gnu.downloadPoint'),
-            'searchPart' => config('gnu.searchPart'),
+            // 'searchPart' => config('gnu.searchPart'),
             'imageExtension' => config('gnu.imageExtension'),
             'flashExtension' => config('gnu.flashExtension'),
             'movieExtension' => config('gnu.movieExtension'),

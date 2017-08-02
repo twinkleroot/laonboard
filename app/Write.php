@@ -110,14 +110,7 @@ class Write extends Model
 
         // 인기 검색어 추가
         if($kind && $keyword) {
-            $kinds = [];
-            if(strpos($kind, '||')) {
-                $kinds = explode('||', $kind);
-            } else {
-                $kinds = explode(',', $kind);
-            }
-            $popular = new Popular();
-            $popular->addPopular($kinds, $keyword, $request);
+            $this->addPopular($kind, $keyword, $request);
         }
 
         $userLevel = is_null(Auth::user()) ? 1 : Auth::user()->level;
@@ -142,6 +135,19 @@ class Write extends Model
             'search' => $request->has('keyword') ? 1 : 0,
             'viewParams' => implode('&', $viewParams),
         ];
+    }
+
+    // 인기 검색어 추가
+    private function addPopular($kind, $keyword, $request)
+    {
+        $kinds = [];
+        if(strpos($kind, '||')) {
+            $kinds = explode('||', $kind);
+        } else {
+            $kinds = explode(',', $kind);
+        }
+        $popular = new Popular();
+        $popular->addPopular($kinds, $keyword, $request);
     }
 
     // (게시판 리스트) 해당 커뮤니티 게시판 모델을 가져온다. (검색 포함)

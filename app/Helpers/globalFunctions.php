@@ -315,6 +315,7 @@ function deleteCache($base, $boardTableName)
     cache()->forget($cacheName);
 }
 
+// 썸네일 만들기 (list, view 용도는 $type 파라미터로 구분)
 function getViewThumbnail($board, $imageName, $folder, $type="view")
 {
     $imgPath = storage_path('app/public/'. $folder);
@@ -379,8 +380,8 @@ function getViewThumbnail($board, $imageName, $folder, $type="view")
         $thumbHeight = round(($thumbWidth * $size[1]) / $size[0]) > $board->gallery_height ? round(($thumbWidth * $size[1]) / $size[0]) : $board->gallery_height;
         $img = $img
             ->resize($thumbWidth, $thumbHeight, function ($constraint) {
-                    $constraint->aspectRatio();
-                })
+                $constraint->aspectRatio();
+            })
             ->save($thumbFilePath);
     }
 
