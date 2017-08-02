@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Cache;
 use App\Board;
-use DB;
+use App\Write;
 
 class WritableReply
 {
@@ -25,19 +25,20 @@ class WritableReply
             $board = Board::getBoard($boardId);
             $notices = explode(',', $board->notice);
 
-            $write = DB::table('write_'.$board->table_name)->where('id', $writeId)->first();
-            $message = '';
+            $write = Write::getWrite($boardId, $writeId);
+            if(str_contains($write->option, 'secret')) {
+                if(!$user && ($user && !$user->isBoardAdmin($board)) && ($user && $user->id != $write->user_id)) {
+                    return alert('비밀글에는 자신 또는 관리자만 답변이 가능합니다.');
+                }
+            }
             if (in_array((int)$writeId, $notices)) {
-               $message = '공지에는 답변 할 수 없습니다.';
+               return alert('공지에는 답변 할 수 없습니다.');
             } else if ($user->level < $board->reply_level) {
-               $message = '글을 답변할 권한이 없습니다.';
+               return alert('글을 답변할 권한이 없습니다.');
             } else if (!is_null($write) && strlen($write->reply) == 10) { // 최대 답변은 테이블에 잡아놓은 wr_reply 사이즈만큼만 가능합니다.
-               $message = "더 이상 답변하실 수 없습니다.\\n답변은 10단계 까지만 가능합니다.";
+               return alert('더 이상 답변하실 수 없습니다.\\n답변은 10단계 까지만 가능합니다.');
             }
 
-            if( $message != '' ) {
-                return alert($message);
-            }
         }
         return $next($request);
     }

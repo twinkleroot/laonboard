@@ -130,7 +130,7 @@
                     <i class="fa fa-download"></i>
                     <span class="bd_title">파일추가</span>
                 </div>
-                <div class="file_list" @if($type=='create' || count($boardFiles) == 0) style="display: none;" @endif>
+                <div class="file_list" @if($type=='create' || !isset($boardFiles) || !$boardFiles) style="display: none;" @endif>
                     <div class="item">
                         <label for="attach_file" class="sr-only">파일첨부</label>
                 @if($type=='update')
