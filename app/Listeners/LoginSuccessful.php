@@ -44,6 +44,8 @@ class LoginSuccessful
         // 관리자로 세션에 등록
         if($event->user->isAdmin()) {
             session()->put('admin', true);
+        } else {
+            session()->put('admin', false);
         }
 
         // 보낸 쪽지, 받은 쪽지가 기준 일이 지나면 자동 삭제

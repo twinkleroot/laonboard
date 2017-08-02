@@ -49,6 +49,24 @@ function getSkins($type)
     return $result;
 }
 
+// 인기검색어 출력
+// $dateCnt : 몇일 동안
+// $popCnt : 검색어 몇개
+function getPopularWords($dateCnt=3, $popCnt=7)
+{
+    $from = \Carbon\Carbon::now()->subDays($dateCnt)->format("Y-m-d");
+    $to = \Carbon\Carbon::now()->toDateString();
+    $populars = App\Admin\Popular::selectRaw('word, count(*) as cnt')
+    ->whereBetween('date', [$from, $to])
+    ->groupBy('word')
+    ->orderBy('cnt', 'desc')
+    ->orderBy('word')
+    ->limit($popCnt)
+    ->get();
+
+    return $populars;
+}
+
 // 관리자에선 id, 커뮤니티에선 id_hashkey가 넘어오기 때문에 구별해서 user를 구해준다.
 function getUser($id)
 {

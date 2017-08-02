@@ -89,7 +89,12 @@ class User extends Authenticatable
             return true;
         }
 
-        if(ManageAuth::where('user_id', auth()->user()->id)->first()) {
+        if(session()->get('admin') != true) {
+            if(ManageAuth::where('user_id', auth()->user()->id)->first()) {
+                session()->put('admin', true);
+                return true;
+            }
+        } else {
             return true;
         }
 

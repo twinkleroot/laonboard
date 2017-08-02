@@ -68,30 +68,33 @@
     <div id="navbar" class="navbar-collapse collapse">
         <!-- menu -->
         <ul class="gnb navbar-nav">
-            @for($i=0; $i<count(Cache::get('menuList')); $i++)
-                @if(count(Cache::get('subMenuList')[$i]) > 0)
-                    <li class="gnb-li dropdown">
-                        <a href="{{ Cache::get('menuList')[$i]['link'] }}" role="button" aria-expanded="false">
-                            {{ Cache::get('menuList')[$i]['name'] }}<span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                        @for($j=0; $j<count(Cache::get('subMenuList')[$i]); $j++)
-                            <li><a href="{{ Cache::get('subMenuList')[$i][$j]['link'] }}">{{ Cache::get('subMenuList')[$i][$j]['name'] }}</a></li>
-                        @endfor
-                        </ul>
-                @else
-                    <li class="gnb-li">
-                        <a href="{{ Cache::get('menuList')[$i]['link'] }}">{{ Cache::get('menuList')[$i]['name'] }}</a>
-                @endif
-                    </li>
-            @endfor
+        @for($i=0; $i<count(Cache::get('menuList')); $i++)
+        @if(count(Cache::get('subMenuList')[$i]) > 0)
+            <li class="gnb-li dropdown">
+                <a href="{{ Cache::get('menuList')[$i]['link'] }}" role="button" aria-expanded="false">
+                    {{ Cache::get('menuList')[$i]['name'] }}<span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                @for($j=0; $j<count(Cache::get('subMenuList')[$i]); $j++)
+                    <li><a href="{{ Cache::get('subMenuList')[$i][$j]['link'] }}">{{ Cache::get('subMenuList')[$i][$j]['name'] }}</a></li>
+                @endfor
+                </ul>
+        @else
+            <li class="gnb-li">
+                <a href="{{ Cache::get('menuList')[$i]['link'] }}">{{ Cache::get('menuList')[$i]['name'] }}</a>
+        @endif
+            </li>
+        @endfor
 
             <li class="gnb-li"><a href="{{ route('new.index') }}">새글</a></li>
             @if (Auth::guest()) <!-- 공개권한: 게스트 -->
             <li class="gnb-li"><a href="{{ route('login'). '?nextUrl='. Request::getRequestUri() }}">로그인</a></li>
             <li class="gnb-li"><a href="{{ route('user.join') }}">회원가입</a></li>
             @else <!-- else -->
-                @if(Auth::user()->isAdmin()) <!-- 공개권한: 관리자 -->
+                @php
+                    $isAdmin = auth()->user()->isAdmin();
+                @endphp
+                @if($isAdmin) <!-- 공개권한: 관리자 -->
                     <li class="gnb-li"><a href="{{ route('admin.index') }}">관리자 모드</a></li>
                 @endif <!-- 공개권한: 관리자 end -->
                 <!-- 공개권한: 회원 -->
@@ -119,7 +122,7 @@
                                 {{ csrf_field() }}
                             </form>
                         </li>
-                        @if(!Auth::user()->isAdmin())
+                        @if(!$isAdmin)
                             <li><a href="{{ route('user.checkPassword') }}?work=leave">회원 탈퇴</a></li>
                         @endif
                     </ul>
@@ -137,22 +140,12 @@
 </div>
 
 <footer id="footer">
-    <section id="popular">
-        <div class="container">
-            <h2>인기검색어</h2>
-            <ul>
-                <li>검색1</li>
-                <li>검색2</li>
-                <li>검색3</li>
-                <li>검색4</li>
-                <li>검색5</li>
-                <li>검색6</li>
-                <li>검색7</li>
-            </ul>
-        </div>
-    </section>
+    @component("popular.default.list")
+    @endcomponent
 
-    <section id="visit">
+    {{-- @component("visit.default.list")
+    @endcomponent --}}
+    {{-- <section id="visit">
         <div class="container">
             <h2>접속자집계</h2>
             <dl>
@@ -166,13 +159,13 @@
                 <dd>28</dd>
             </dl>
                 </div>
-    </section>
+    </section> --}}
     <div id="ft_copy">
         <div class="container">
             <div class="link">
-                <a href="http://jeeevely.gnutest.com/g5/bbs/content.php?co_id=company">회사소개</a>
-                <a href="http://jeeevely.gnutest.com/g5/bbs/content.php?co_id=privacy">개인정보처리방침</a>
-                <a href="http://jeeevely.gnutest.com/g5/bbs/content.php?co_id=provision">서비스이용약관</a>
+                @foreach(App\Content::all() as $content)
+                    <a href="{{ route('contents.show', $content->content_id) }}">{{ $content->subject }}</a>
+                @endforeach
             </div>
             <div class="copy">
             대표 홍길동 | 전화 000-0000-0000 | 사업자 000-00-00000<br>

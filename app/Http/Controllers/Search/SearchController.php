@@ -152,7 +152,7 @@ class SearchController extends Controller
                     }
 
                     // 인기 검색어 추가
-                    if($boardIndex == 0) {
+                    if($boardIndex == 0 && array_search('email', $kinds) === false) {
                         $popular->addPopular($kinds, $searchStr, $request);
                     }
 
