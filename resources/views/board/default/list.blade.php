@@ -272,7 +272,7 @@ function formBoardListSubmit(f) {
 
         f.removeAttribute("target");
         f.action = '/board/{{ $board->id }}/delete/ids/' + selected_id_array;
-        $('#_method').val('DELETE');
+        f._method.value = 'DELETE';
     }
 
     return true;

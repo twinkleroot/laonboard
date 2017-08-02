@@ -128,10 +128,9 @@ class BoardFile extends Model
     {
         $file = $request->attach_file[$index];
         $uploadFileInfo = array();
-            // 서버에 설정된 값보다 큰파일을 업로드 한다면
-            $this->checkServerUploadError($file);
+            // 업로드할 파일과 서버의 설정을 비교 검사하고 업로드 가능한 이미지 가져옴
+            $image = $this->checkServerUploadError($file);
 
-            $image = getimagesize($file);
             $uploadFileInfo = [
                 'board_id' => $request->boardId,
                 'write_id' => $writeId,
@@ -159,6 +158,19 @@ class BoardFile extends Model
         } else if($error != 0) {
             abort(500, '\"'.$fileName.'\" 파일이 정상적으로 업로드 되지 않았습니다.\\n');
         }
+
+        $image = @getimagesize($file);
+        $imageExtension = cache('config.board')->imageExtension;
+        $flashExtension = cache('config.board')->flashExtension;
+        if ( preg_match("/\.({$imageExtension})$/i", $fileName) || preg_match("/\.({$flashExtension})$/i", $fileName) ) {
+            if ($image[2] < 1 || $image[2] > 16) {
+                // 이미지나 플래시 파일에 악성코드를 심어 업로드 하는 경우를 방지
+                // 에러메세지는 출력하지 않는다.
+                throw new Exception('');
+            }
+        }
+
+        return $image;
     }
 
     // 서버에 파일 업로드 (단수)

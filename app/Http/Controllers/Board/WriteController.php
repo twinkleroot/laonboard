@@ -124,7 +124,10 @@ class WriteController extends Controller
         $writeId = $this->writeModel->storeWrite($this->writeModel, $request);
 
         if(count($request->attach_file) > 0) {
-            $this->boardFileModel->createBoardFiles($request, $boardId, $writeId);
+            try {
+                $this->boardFileModel->createBoardFiles($request, $boardId, $writeId);
+            } catch(Exception $e) {
+            }
         }
 
         if(cache('config.email.default')->emailUse && $this->writeModel->board->use_email) {

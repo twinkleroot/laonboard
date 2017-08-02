@@ -30,7 +30,7 @@
   'writePoint' => 0,
   'commentPoint' => 0,
   'downloadPoint' => 0,
-  'searchPart' => 10000,
+  // 'searchPart' => 10000,
   'imageExtension' => 'gif|jpg|jpeg|png',
   'flashExtension' => 'swf',
   'movieExtension' => 'asx|asf|wmv|wma|mpg|mpeg|mov|avi|mp3',

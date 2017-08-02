@@ -401,6 +401,7 @@ Route::group(['middleware' => 'valid.user'], function () {
 
 // ajax api
 Route::post('ajax/filter/board', ['as' => 'ajax.filter.board', 'uses' => 'Board\FilterController@boardFilter']);
+Route::post('ajax/filter/user', ['as' => 'ajax.filter.user', 'uses' => 'Board\FilterController@userFilter']);
 
 // KCB 본인 확인 서비스
 Route::get('cert/kcb/hpcert1', ['as' => 'cert.kcb.hp1', 'uses' => 'User\CertController@kcbHpCert1']);

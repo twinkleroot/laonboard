@@ -5,9 +5,9 @@
 @endsection
 
 @section('include_script')
-    <script src="{{ asset('tinymce/tinymce.min.js') }}"></script>
-    <script src="{{ asset('js/common.js') }}"></script>
-    <script type="text/javascript">
+<script src="{{ asset('tinymce/tinymce.min.js') }}"></script>
+<script src="{{ asset('js/common.js') }}"></script>
+<script type="text/javascript">
     var menuVal = 100100;
     jQuery("document").ready(function($){
         var nav = $('#body_tab_type2');
@@ -18,6 +18,11 @@
             } else {
                 nav.removeClass("f-tab");
             }
+        });
+
+        $(".tab").click(function () {
+            $(".tab").removeClass("active");
+            $(this).addClass("active");
         });
     });
 </script>

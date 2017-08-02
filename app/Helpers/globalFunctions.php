@@ -49,6 +49,24 @@ function getSkins($type)
     return $result;
 }
 
+// 인기검색어 출력
+// $dateCnt : 몇일 동안
+// $popCnt : 검색어 몇개
+function getPopularWords($dateCnt=3, $popCnt=7)
+{
+    $from = \Carbon\Carbon::now()->subDays($dateCnt)->format("Y-m-d");
+    $to = \Carbon\Carbon::now()->toDateString();
+    $populars = App\Admin\Popular::selectRaw('word, count(*) as cnt')
+    ->whereBetween('date', [$from, $to])
+    ->groupBy('word')
+    ->orderBy('cnt', 'desc')
+    ->orderBy('word')
+    ->limit($popCnt)
+    ->get();
+
+    return $populars;
+}
+
 // 관리자에선 id, 커뮤니티에선 id_hashkey가 넘어오기 때문에 구별해서 user를 구해준다.
 function getUser($id)
 {
@@ -297,6 +315,7 @@ function deleteCache($base, $boardTableName)
     cache()->forget($cacheName);
 }
 
+// 썸네일 만들기 (list, view 용도는 $type 파라미터로 구분)
 function getViewThumbnail($board, $imageName, $folder, $type="view")
 {
     $imgPath = storage_path('app/public/'. $folder);
@@ -361,8 +380,8 @@ function getViewThumbnail($board, $imageName, $folder, $type="view")
         $thumbHeight = round(($thumbWidth * $size[1]) / $size[0]) > $board->gallery_height ? round(($thumbWidth * $size[1]) / $size[0]) : $board->gallery_height;
         $img = $img
             ->resize($thumbWidth, $thumbHeight, function ($constraint) {
-                    $constraint->aspectRatio();
-                })
+                $constraint->aspectRatio();
+            })
             ->save($thumbFilePath);
     }
 

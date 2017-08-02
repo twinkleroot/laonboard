@@ -15,7 +15,7 @@
 
     <!-- 게시글 작성 -->
     @if($type=='update')
-        <form role="form" id="fwrite" method="post" action={{ route('board.update', ['boardId'=>$board->id, 'writeId'=>$write->id])}} enctype="multipart/form-data">
+        <form role="form" id="fwrite" method="post" action={{ route('board.update', ['boardId'=>$board->id, 'writeId'=>$write->id])}} enctype="multipart/form-data" @if(auth()->user() && auth()->user()->isBoardAdmin($board)) onsubmit="return writeSubmit();" @endif>
             {{ method_field('put') }}
     @else
         <form role="form" id="fwrite" method="post" action={{ route('board.store', $board->id) }} enctype="multipart/form-data" @if(auth()->user() && auth()->user()->isBoardAdmin($board)) onsubmit="return writeSubmit();" @endif>
@@ -130,7 +130,7 @@
                     <i class="fa fa-download"></i>
                     <span class="bd_title">파일추가</span>
                 </div>
-                <div class="file_list" @if($type=='create' || count($boardFiles) == 0) style="display: none;" @endif>
+                <div class="file_list" @if($type=='create' || !isset($boardFiles) || !$boardFiles) style="display: none;" @endif>
                     <div class="item">
                         <label for="attach_file" class="sr-only">파일첨부</label>
                 @if($type=='update')
@@ -188,7 +188,7 @@
                 @endif
             </div>
             <div class="pull-right">
-                @if(session()->get('admin') || !$board->use_recaptcha)
+                @if((auth()->user() && auth()->user()->isBoardAdmin($board)) || !$board->use_recaptcha)
                     <button type="submit" class="btn btn-sir">작성완료</button>
                 @elseif($board->use_recaptcha)
                     <!-- 리캡챠 -->
@@ -265,7 +265,7 @@ function writeSubmit() {
     }
 
     $.ajax({
-        url: '/ajax/filter',
+        url: '/ajax/filter/board',
         type: 'post',
         data: {
             '_token' : '{{ csrf_token() }}',

@@ -32,7 +32,7 @@
             <h3 class="panel-title">회원 정보 수정</h3>
         </div>
         <div class="panel-body row">
-            <form class="contents col-md-10 col-md-offset-1" role="form" id="userForm" name="userForm" method="POST" action="{{ route('user.update') }}" enctype="multipart/form-data" autocomplete="off">
+            <form class="contents col-md-10 col-md-offset-1" role="form" id="userForm" name="userForm" method="POST" action="{{ route('user.update') }}" enctype="multipart/form-data" autocomplete="off" onsubmit="return userSubmit();">
                 @if(cache('config.cert')->certHp || cache('config.cert')->certIpin)
                 <input type="hidden" name="certType" value="">
                 @if(!$config->name)
@@ -345,8 +345,40 @@ function onSubmit(token) {
     $("#userForm").submit();
 }
 function validate(event) {
-    grecaptcha.execute();
+    if(userSubmit()) {
+        grecaptcha.execute();
+    }
 }
+
+function userSubmit() {
+    @if($nickChangable)
+    var nick = "";
+
+    $.ajax({
+        url: '/ajax/filter/user',
+        type: 'post',
+        data: {
+            '_token' : '{{ csrf_token() }}',
+            'nick' : $('#nick').val()
+        },
+        dataType: 'json',
+        async: false,
+        cache: false,
+        success: function(data) {
+            nick = data.nick;
+        }
+    });
+
+    if(nick) {
+        alert("닉네임에 금지단어 (" + nick + ") 가 포함되어 있습니다.");
+        $('#nick').focus();
+        return false;
+    }
+    @endif
+
+    return true;
+}
+
 $(function(){
 
     // 아이핀인증

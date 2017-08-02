@@ -117,9 +117,40 @@
 function onSubmit(token) {
     $("#userForm").submit();
 }
+
 function validate(event) {
-    grecaptcha.execute();
+    if(userSubmit()) {
+        grecaptcha.execute();
+    }
 }
+
+function userSubmit() {
+    var nick = "";
+
+    $.ajax({
+        url: '/ajax/filter/user',
+        type: 'post',
+        data: {
+            '_token' : '{{ csrf_token() }}',
+            'nick' : $('#nick').val()
+        },
+        dataType: 'json',
+        async: false,
+        cache: false,
+        success: function(data) {
+            nick = data.nick;
+        }
+    });
+
+    if(nick) {
+        alert("닉네임에 금지단어 (" + nick + ") 가 포함되어 있습니다.");
+        $('#nick').focus();
+        return false;
+    }
+
+    return true;
+}
+
 $(function() {
     // 아이핀인증
     $("#win_ipin_cert").click(function() {

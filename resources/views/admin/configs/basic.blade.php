@@ -17,8 +17,12 @@
                 nav.removeClass("f-tab");
             }
         });
-    });
 
+        $(".tab").click(function () {
+            $(".tab").removeClass("active");
+            $(this).addClass("active");
+        });
+    });
 </script>
 @endsection
 
@@ -271,14 +275,14 @@
                         <input type="text" name="downloadPoint" class="form-control form_num" value="{{ $configBoard->downloadPoint }}">점
                     </td>
                 </tr>
-                <tr>
+                {{-- <tr>
                     <th>
                         <label for="searchPart">검색 단위</label>
                     </th>
                     <td class="table_body chknone">
                         <input type="text" name="searchPart" class="form-control form_small" value="{{ $configBoard->searchPart }}"> 건 단위로 검색
                     </td>
-                </tr>
+                </tr> --}}
                 <tr>
                     <th>
                         <label for="imageExtension">이미지 업로드 확장자</label>
