@@ -17,8 +17,12 @@
                 nav.removeClass("f-tab");
             }
         });
-    });
 
+        $(".tab").click(function () {
+            $(".tab").removeClass("active");
+            $(this).addClass("active");
+        });
+    });
 </script>
 @endsection
 

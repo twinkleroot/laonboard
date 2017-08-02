@@ -5,23 +5,27 @@
 @endsection
 
 @section('include_script')
-    <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
-    <script src="{{ url('js/postcode.js') }}"></script>
-    <script type="text/javascript">
-        var menuVal = 100100;
-        jQuery("document").ready(function($){
-            var nav = $('#body_tab_type2');
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+<script src="{{ url('js/postcode.js') }}"></script>
+<script type="text/javascript">
+    var menuVal = 100100;
+    jQuery("document").ready(function($){
+        var nav = $('#body_tab_type2');
 
-            $(window).scroll(function () {
-                if ($(this).scrollTop() > 175) {
-                    nav.addClass("f-tab");
-                } else {
-                    nav.removeClass("f-tab");
-                }
-            });
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 175) {
+                nav.addClass("f-tab");
+            } else {
+                nav.removeClass("f-tab");
+            }
         });
 
-    </script>
+        $(".tab").click(function () {
+            $(".tab").removeClass("active");
+            $(this).addClass("active");
+        });
+    });
+</script>
 @endsection
 
 @section('content')
