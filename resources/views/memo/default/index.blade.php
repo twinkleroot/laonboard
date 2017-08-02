@@ -56,7 +56,7 @@
                 <td class="bd_name">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $memo->nick }}</a>
                     <ul class="dropdown-menu" role="menu">
-                        @component('board.sideview', ['boardId' => '', 'id' => $memo->user_id_hashkey, 'name' => $memo->nick, 'email' => $memo->email, 'category' => ''])
+                        @component('board.sideview', ['board' => '', 'id' => $memo->user_id_hashkey, 'name' => $memo->nick, 'email' => $memo->email, 'category' => ''])
                         @endcomponent
                         <li><a href="{{ route('new.index') }}?nick={{ $memo->nick }}">전체게시물</a></li>
                     </ul>

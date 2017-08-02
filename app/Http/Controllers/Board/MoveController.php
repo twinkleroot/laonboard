@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Board;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Write;
+use App\Board;
 use App\Move;
 use Exception;
 
@@ -13,12 +14,11 @@ class MoveController extends Controller
     public $writeModel;
     public $move;
 
-    public function __construct(Request $request, Move $move)
+    public function __construct(Request $request, Move $move, Write $write)
     {
-        $this->writeModel = new Write($request->boardId);
-        if( !is_null($this->writeModel->board) ) {
-            $this->writeModel->setTableName($this->writeModel->board->table_name);
-        }
+        $this->writeModel = $write;
+        $this->writeModel->board = Board::getBoard($request->boardId);
+        $this->writeModel->setTableName($this->writeModel->board->table_name);
         $this->move = $move;
     }
 
@@ -39,6 +39,12 @@ class MoveController extends Controller
             $this->move->copyWrites($this->writeModel, $writeIds, $request);
             if($request->type == 'move') {
                 $this->move->moveWrites($this->writeModel, $writeIds, $request);
+                return redirect(route('message'))->with([
+                    'message' => '게시물 이동이 완료되었습니다.',
+                    'openerRedirect' => route('board.index', $boardId),
+                ]);
+            } else {
+                abort(200, '게시물 복사가 완료되었습니다.');
             }
         } catch (Exception $e) {
             return alertClose($e->getMessage());

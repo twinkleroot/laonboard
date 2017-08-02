@@ -30,10 +30,6 @@ class BoardsController extends Controller
 
         $params = $this->boardModel->getBoardIndexParams($request);
 
-		// $boards = $params['boards'];
-		// $json = $boards->appends($request->except('page'))->jsonSerialize();
-		// dd($boards->appends($request->except('page'))->url($boards->currentPage()));
-
         return view('admin.boards.index', $params);
     }
 
@@ -97,7 +93,7 @@ class BoardsController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        if (auth()->user()->cant('update', $this->boardModel)) {
+        if (!auth()->user()->isBoardAdmin(Board::find($id)) && auth()->user()->cant('update', $this->boardModel)) {
             abort(403, '게시판 수정에 대한 권한이 없습니다.');
         }
 
@@ -115,7 +111,7 @@ class BoardsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (auth()->user()->cant('update', $this->boardModel)) {
+        if (!auth()->user()->isBoardAdmin(Board::find($id)) && auth()->user()->cant('update', $this->boardModel)) {
             abort(403, '게시판 수정에 대한 권한이 없습니다.');
         }
 
@@ -197,11 +193,11 @@ class BoardsController extends Controller
         // 구조와 데이터를 함께 복사하는 경우
         if($request->get('copy_case') == 'schema_data_both') {  // Write instance를 새로 만들어야 해서 여기에 구현함.
             // 원본 테이블의 모델을 지정한다.
-            $originalWrite = new Write($originalBoard->id);
+            $originalWrite = new Write();
             $originalWrite->setTableName($originalBoard->table_name);
 
             // 대상 테이블의 모델을 지정하고 데이터를 넣는다.
-            $destinationWrite = new Write($board->id);
+            $destinationWrite = new Write();
             $destinationWrite->setTableName($board->table_name);
             if($destinationWrite->insert($originalWrite->get()->toArray())) {
                 $message = $originalBoard->subject . ' 게시판과 데이터가 복사되었습니다.';

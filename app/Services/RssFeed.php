@@ -34,9 +34,9 @@ class RssFeed
     */
     protected function buildRssData($boardId)
     {
-        $board = Board::find($boardId);
+        $board = Board::getBoard($boardId);
         $group = $board->group;
-        $writeModel = new Write($boardId);
+        $writeModel = new Write();
         $writeModel->setTableName($board->table_name);
         $title1 = $this->specialcharsReplace($group->subject, 255);
         $title2 = $this->specialcharsReplace($board->subject);

@@ -17,10 +17,9 @@ class CheckValidWrite
      */
     public function handle($request, Closure $next)
     {
-        $write = new Write($request->boardId);
-        $write->setTableName($write->board->table_name);
+        $write = Write::getWrite($request->boardId, $request->writeId);
 
-        if( is_null($write->find($request->writeId)) ) {
+        if( is_null($write) ) {
             return alert('글이 존재하지 않습니다.\\n글이 삭제되었거나 이동하였을 수 있습니다.');
         }
 

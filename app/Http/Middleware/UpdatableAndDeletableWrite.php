@@ -22,8 +22,9 @@ class UpdatableAndDeletableWrite
     public function handle($request, Closure $next)
     {
         $user = auth()->user();
-        $board = Board::find($request->boardId);
-        $writeModel = new Write($request->boardId);
+        $board = Board::getBoard($request->boardId);
+        $writeModel = new Write();
+        $writeModel->board = $board;
         $writeModel->setTableName($board->table_name);
 
         $message = '';
@@ -43,7 +44,7 @@ class UpdatableAndDeletableWrite
         } else {
             $id = $request->writeId;
         }
-        $write = $writeModel->find($id);
+        $write = Write::getWrite($board->id, $id);
         $writeUser = ( !is_null($write) && $write->user_id == 0) ? '' : User::find($write->user_id);
         if( !is_null($user) ) {
             if ($user->isSuperAdmin()) {// 최고관리자 통과
@@ -61,12 +62,10 @@ class UpdatableAndDeletableWrite
                     $message = '자신의 '. $target. '이 아니므로 '. $action. '할 수 없습니다.';
                 }
 
-                if(!$isDelete && $board->count_modify) {
-                    $message = '이 글과 관련된 댓글이 존재하므로 수정할 수 없습니다.\\n\\n댓글이 '.$board->count_modify.'건 이상 달린 원글은 수정할 수 없습니다.';
+                if($isDelete) {
+                    $this->checkReply($writeModel, $write);
                 }
-                if($isDelete && $board->count_delete) {
-                    $message = '이 글과 관련된 댓글이 존재하므로 삭제할 수 없습니다.\\n\\n댓글이 '.$board->count_delete.'건 이상 달린 원글은 삭제할 수 없습니다.';
-                }
+                $this->checkComment($writeModel, $write, $isDelete);
             }
         } else {    // 비회원일 경우
             if($isComment) {
@@ -104,4 +103,32 @@ class UpdatableAndDeletableWrite
 
         return $next($request);
     }
+
+    // 해당 글에 답변글이 달려 있는지 확인한다.
+    public function checkReply($writeModel, $write)
+    {
+        $replyCount = $writeModel->where('reply', 'like', $write->reply.'%')
+                        ->where('id', '<>', $write->id)
+                        ->where(['num' => $write->num, 'is_comment' => 0])
+                        ->count('id');
+        if($replyCount > 0 && !session()->get('admin')) {
+            abort(500, '이 글과 관련된 답변글이 존재하므로 삭제 할 수 없습니다.\\n\\n우선 답변글부터 삭제하여 주십시오.');
+        }
+    }
+
+    // 해당 글에 댓글이 달려 있는지 확인한다.
+    public function checkComment($writeModel, $write, $isDelete)
+    {
+        $board = $writeModel->board;
+        $commentCount = $writeModel->where('user_id', '<>', $write->user_id)
+                        ->where(['parent' => $write->id, 'is_comment' => 1])
+                        ->count('id');
+        if($isDelete && $commentCount >= $board->count_delete) {
+            abort(500, '이 글과 관련된 댓글이 존재하므로 삭제할 수 없습니다.\\n\\댓글이 '. $board->count_delete. '건 이상 달린 원글은 삭제할 수 없습니다.');
+        }
+        if(!$isDelete && $commentCount >= $board->count_modify) {
+            abort(500, '이 글과 관련된 댓글이 존재하므로 수정할 수 없습니다.\\n\\댓글이 '. $board->count_modify. '건 이상 달린 원글은 수정할 수 없습니다.');
+        }
+    }
+
 }

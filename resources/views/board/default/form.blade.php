@@ -18,14 +18,14 @@
         <form role="form" id="fwrite" method="post" action={{ route('board.update', ['boardId'=>$board->id, 'writeId'=>$write->id])}} enctype="multipart/form-data">
             {{ method_field('put') }}
     @else
-        <form role="form" id="fwrite" method="post" action={{ route('board.store', $board->id) }} enctype="multipart/form-data" @if(session()->get('admin')) onsubmit="return writeSubmit();" @endif>
+        <form role="form" id="fwrite" method="post" action={{ route('board.store', $board->id) }} enctype="multipart/form-data" @if(auth()->user() && auth()->user()->isBoardAdmin($board)) onsubmit="return writeSubmit();" @endif>
     @endif
         <input type="hidden" name="type" id="type" value="{{ $type }}" />
         <input type="hidden" name="writeId" id="writeId" @if($type != 'create') value="{{ $write->id }}" @endif/>
         <input type="hidden" name="uid" id="uid" value="{{ str_replace("/", "-", substr(bcrypt(date('ymdHis', time())), 10, 60)) }}" />
         {{ csrf_field() }}
         @if( ($type == 'create' && is_null(auth()->user()) )
-            || ($type == 'update' && session()->get('admin') && $write->user_id != auth()->user()->id) )
+            || ($type == 'update' && auth()->user() && auth()->user()->isBoardAdmin($board) && $write->user_id != auth()->user()->id) )
         <div class="nologin">
             <div class="form-group mb10 row">
                 <div class="col-xs-3">
@@ -54,7 +54,7 @@
         </div>
         @endif
 
-        @if($board->use_category == 1)
+        @if($board->use_category)
             <div class="form-group mb10 row">
                 <div class="col-xs-3">
                     <select class="form-control" name="ca_name" required>
@@ -64,7 +64,7 @@
                                 {{ $category }}
                             </option>
                         @endforeach
-                        @if(session()->get('admin'))
+                        @if(auth()->user() && auth()->user()->isBoardAdmin($board))
                             <option value="공지">공지</option>
                         @endif
                     </select>
@@ -89,7 +89,7 @@
             @endif
         </div>
 
-@if($board->use_dhtml_editor == 1)
+@if($board->use_dhtml_editor)
         {{-- 에디터 --}}
         <div style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px;">
             <textarea class="editorArea" name="content" id="content">@if($type == 'update'){!! convertContent($write->content, 0) !!}@endif</textarea>
@@ -130,49 +130,39 @@
                     <i class="fa fa-download"></i>
                     <span class="bd_title">파일추가</span>
                 </div>
-                <div class="file_list" style="display: none;">
-                    @if($type=='update')
-                        @foreach($boardFiles as $boardFile)
-                        <div class="item">
-                            <label for="attach_file" class="sr-only">파일첨부</label>
-                            <input type="file" id="attach_file" name="attach_file[]" placeholder="파일첨부" title="파일첨부 {{ $loop->index + 1 }} : 용량 {{ $board->upload_size }} 바이트 이하만 업로드 가능">
-                            @if($board->use_file_content)
-                                <input type="text" class="form-control" id="file_content" name="file_content[]"
-                                value="{{ $boardFile->content }}" title="파일 설명을 입력해 주세요." size="50" placeholder="파일 설명">
-                            @endif
-                            <input type="checkbox" id="{{ 'file_del'. $loop->index }}" name="file_del[{{ $loop->index }}]" value=1 />
-                            <label for="{{ 'file_del'. $loop->index }}">{{ $boardFile->source.'('.$boardFile->filesize.') 파일 삭제' }}</label>
-                        </div>
-                        @endforeach
-                        @for($i=0; $i<$board->upload_count-count($boardFiles); $i++)
-                        <div class="item">
-                            <label for="attach_file" class="sr-only">파일첨부</label>
-                            <input type="file" id="attach_file" name="attach_file[]" placeholder="파일첨부"
-                            title="파일첨부 {{ $i + 1 }} : 용량 {{ $board->upload_size }} 바이트 이하만 업로드 가능">
-                            @if($board->use_file_content)
-                                <input type="text" class="form-control" id="file_content" name="file_content[]" title="파일 설명을 입력해 주세요." size="50" placeholder="파일 설명">
-                            @endif
-                        </div>
-                        @endfor
-                        @else
-                            @for($i=0; $i<$board->upload_count; $i++)
-                            <div class="item">
-                                <label for="attach_file" class="sr-only">파일첨부</label>
-                                <input type="file" id="attach_file" name="attach_file[]" placeholder="파일첨부"
-                                title="파일첨부 {{ $i + 1 }} : 용량 {{ $board->upload_size }} 바이트 이하만 업로드 가능">
-                                @if($board->use_file_content)
-                                    <input type="text" class="form-control" id="file_content" name="file_content[]"
-                                    title="파일 설명을 입력해 주세요." size="50" placeholder="파일 설명">
-                                @endif
-                            </div>
-                        @endfor
-                    @endif
+                <div class="file_list" @if($type=='create' || count($boardFiles) == 0) style="display: none;" @endif>
+                    <div class="item">
+                        <label for="attach_file" class="sr-only">파일첨부</label>
+                @if($type=='update')
+                    @foreach($boardFiles as $boardFile)
+                        <input type="file" id="attach_file{{ $loop->index }}" name="attach_file[]" placeholder="파일첨부" title="파일첨부 {{ $loop->index + 1 }} : 용량 {{ $board->upload_size }} 바이트 이하만 업로드 가능">
+                        @if($board->use_file_content)
+                        <input type="text" class="form-control" id="file_content" name="file_content[]" value="{{ $boardFile->content }}" title="파일 설명을 입력해 주세요." size="50" placeholder="파일 설명">
+                        @endif
+                        <input type="checkbox" id="{{ 'file_del'. $loop->index }}" name="file_del[{{ $loop->index }}]" value=1 />
+                        <label for="{{ 'file_del'. $loop->index }}">{{ $boardFile->source.'('.$boardFile->filesize.') 파일 삭제' }}</label>
+                    @endforeach
+                    @for($i=count($boardFiles); $i<$board->upload_count; $i++)
+                        <input type="file" id="attach_file{{ $i }}" name="attach_file[]" placeholder="파일첨부" title="파일첨부 {{ $i + 1 }} : 용량 {{ $board->upload_size }} 바이트 이하만 업로드 가능">
+                        @if($board->use_file_content)
+                        <input type="text" class="form-control" id="file_content" name="file_content[]" title="파일 설명을 입력해 주세요." size="50" placeholder="파일 설명">
+                        @endif
+                    @endfor
+                @else
+                    @for($i=0; $i<$board->upload_count; $i++)
+                        <input type="file" id="attach_file{{ $i }}" name="attach_file[]" placeholder="파일첨부" title="파일첨부 {{ $i + 1 }} : 용량 {{ $board->upload_size }} 바이트 이하만 업로드 가능">
+                        @if($board->use_file_content)
+                        <input type="text" class="form-control" id="file_content" name="file_content[]" title="파일 설명을 입력해 주세요." size="50" placeholder="파일 설명">
+                        @endif
+                    @endfor
+                @endif
+                    </div>
                 </div>
             </div>
         </div>
         <div class="clearfix">
             <div class="pull-left">
-                @if(session()->get('admin'))
+                @if(auth()->user() && auth()->user()->isBoardAdmin($board))
                 <label for="notice" class="checkbox-inline">
                     <input type="checkbox" id="notice" name="notice" value="1" @if($type=='update' && strpos($board->notice, (string)$write->id) !== false) checked @endif> 공지
                 </label>
@@ -184,23 +174,23 @@
                 @else
                 <input type="hidden" name="html" value="html1" />
                 @endif
-                @if($board->use_secret == 1 || session()->get('admin'))
+                @if($board->use_secret == 1 || auth()->user() && auth()->user()->isBoardAdmin($board))
                 <label for="secret" class="checkbox-inline">
                     <input type="checkbox" id="secret" name="secret" value="secret" @if($type=='update' && strpos($write->option, 'secret') !== false) checked @endif> 비밀글
                 </label>
                 @elseif($board->use_secret == 2)
                 <input type="hidden" name="secret" value="secret" />
                 @endif
-                @if($board->use_email)
+                @if(auth()->user() && $board->use_email)
                 <label for="mail" class="checkbox-inline">
-                    <input type="checkbox" id="mail" name="mail" value="mail"> 답변메일받기
+                    <input type="checkbox" id="mail" name="mail" value="mail" checked> 답변메일받기
                 </label>
                 @endif
             </div>
             <div class="pull-right">
-                @if(session()->get('admin'))
+                @if(session()->get('admin') || !$board->use_recaptcha)
                     <button type="submit" class="btn btn-sir">작성완료</button>
-                @elseif( ($type == 'create' && auth()->guest() ) || ($type == 'create' && $board->use_recaptcha) || ($type == 'update' && !session()->get('admin') && $write->user_id == auth()->user()->id) )
+                @elseif($board->use_recaptcha)
                     <!-- 리캡챠 -->
                     <div id='recaptcha' class="g-recaptcha"
                         data-sitekey="{{ env('GOOGLE_INVISIBLE_RECAPTCHA_KEY') }}"
@@ -288,8 +278,6 @@ function writeSubmit() {
         success: function(data) {
             subject = data.subject;
             content = data.content;
-        }, error: function(error) {
-            alert(error);
         }
     });
 

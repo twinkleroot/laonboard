@@ -173,10 +173,10 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $comment->name }}</a>
                     <ul class="dropdown-menu" role="menu">
                     @if($comment->user_level)
-                        @component('board.sideview', ['boardId' => $board->id, 'id' => $comment->user_id_hashkey, 'name' => $comment->name, 'email' => $comment->email, 'category' => $currenctCategory])
+                        @component('board.sideview', ['board' => $board, 'id' => $comment->user_id_hashkey, 'name' => $comment->name, 'email' => $comment->email, 'category' => isset($currenctCategory) ? $currenctCategory : ''])
                         @endcomponent
                     @else
-                        <li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $comment->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
+                        <li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $comment->name }}&amp;category={{ isset($currenctCategory) ? $currenctCategory : '' }}">이름으로 검색</a></li>
                     @endif
                     @if($comment->user_level)
                         <li><a href="{{ route('new.index') }}?nick={{ $comment->name }}">전체게시물</a></li>
@@ -186,10 +186,10 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $comment->name }}</a>
                     <ul class="dropdown-menu" role="menu">
                     @if($comment->user_level)
-                        @component('board.sideview', ['boardId' => $board->id, 'id' => $comment->user_id_hashkey, 'name' => $comment->name, 'email' => $comment->email, 'category' => $currenctCategory])
+                        @component('board.sideview', ['board' => $board, 'id' => $comment->user_id_hashkey, 'name' => $comment->name, 'email' => $comment->email, 'category' => isset($currenctCategory) ? $currenctCategory : ''])
                         @endcomponent
                     @else
-                        <li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $comment->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
+                        <li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $comment->name }}&amp;category={{ isset($currenctCategory) ? $currenctCategory : '' }}">이름으로 검색</a></li>
                     @endif
                     @if($comment->user_level)
                         <li><a href="{{ route('new.index') }}?nick={{ $comment->name }}">전체게시물</a></li>

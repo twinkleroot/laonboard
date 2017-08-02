@@ -51,9 +51,9 @@ class Handler extends ExceptionHandler
             return response()->view('errors.tokenMismatch');
         }
 
-        if ($exception instanceof QueryException) {
-            return response()->view('errors.query');
-        }
+        // if ($exception instanceof QueryException) {
+        //     return response()->view('errors.query');
+        // }
 
         if ($exception instanceof MethodNotAllowedHttpException) {
             return response()->view('errors.methodNotAllowed');

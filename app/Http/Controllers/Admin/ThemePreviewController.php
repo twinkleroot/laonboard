@@ -17,17 +17,15 @@ class ThemePreviewController extends Controller
     public $writeModel;
     public $comment;
 
-    public function __construct(Theme $theme, Main $main, Comment $comment)
+    public function __construct(Theme $theme, Main $main, Comment $comment, Write $write)
     {
         $this->middleware('super');
         $this->theme = $theme;
         $this->main = $main;
         $this->comment = $comment;
-        $boardId = Board::first()->id;
-        $this->writeModel = new Write($boardId);
-        if( !is_null($this->writeModel->board) ) {
-            $this->writeModel->setTableName($this->writeModel->board->table_name);
-        }
+        $this->writeModel = $write;
+        $this->writeModel->board = Board::getBoard($request->boardId);
+        $this->writeModel->setTableName($this->writeModel->board->table_name);
     }
 
     // 커뮤니티 메인 미리 보기

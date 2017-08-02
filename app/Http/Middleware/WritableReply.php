@@ -22,7 +22,7 @@ class WritableReply
         $writeId = $request->segment(4);    // uri의 4번째 항목
         if(strpos($request->getRequestUri(), 'reply')) {
             $user = auth()->user();
-            $board = Board::find($boardId);
+            $board = Board::getBoard($boardId);
             $notices = explode(',', $board->notice);
 
             $write = DB::table('write_'.$board->table_name)->where('id', $writeId)->first();

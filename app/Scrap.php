@@ -8,6 +8,7 @@ use Cache;
 use Exception;
 use Carbon\Carbon;
 use App\Comment;
+use App\Board;
 use App\Notification;
 
 class Scrap extends Model
@@ -57,7 +58,8 @@ class Scrap extends Model
             } else {
                 // 각 게시판은 테이블명이 각각 다르므로 테이블명을 셋팅해줘야 한다.
                 if( !session()->get('write_table_num_'. $scrap->board_id)) {
-                    $writeModel = new Write($scrap->board_id);
+                    $writeModel = new Write();
+                    $writeModel->board = Board::getBoard($scrap->board_id);
                     $writeModel->setTableName($writeModel->board->table_name);
                     session()->put('write_table_num_'. $scrap->board_id, $writeModel);
                 }
@@ -97,7 +99,8 @@ class Scrap extends Model
 
     private function getWriteModel($request)
     {
-        $writeModel = new Write($request->boardId);
+        $writeModel = new Write();
+        $writeModel->board = Board::getBoard($request->boardId);
         $writeModel->setTableName($writeModel->board->table_name);
 
         return $writeModel;

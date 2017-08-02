@@ -330,7 +330,7 @@ Route::group(['prefix' => 'board/{boardId}'], function () {
     // 커뮤니티에서의 관리자 기능
     // 글 목록 : 선택 삭제, 선택 복사, 선택 이동,
     // 글 보기 : 복사, 이동, 삭제, 수정
-    Route::group(['middleware' => ['auth', 'super', 'valid.board']], function() {
+    Route::group(['middleware' => ['auth', 'admin.board', 'valid.board']], function() {
         // 복사, 이동 폼
         Route::get('move', ['as' => 'board.view.move', 'uses' => 'Board\MoveController@move']);
         // 선택 복사, 이동 폼
@@ -400,7 +400,7 @@ Route::group(['middleware' => 'valid.user'], function () {
 });
 
 // ajax api
-Route::post('ajax/filter', ['as' => 'ajax.filter', 'uses' => 'Board\WriteController@filter']);
+Route::post('ajax/filter/board', ['as' => 'ajax.filter.board', 'uses' => 'Board\FilterController@boardFilter']);
 
 // KCB 본인 확인 서비스
 Route::get('cert/kcb/hpcert1', ['as' => 'cert.kcb.hp1', 'uses' => 'User\CertController@kcbHpCert1']);

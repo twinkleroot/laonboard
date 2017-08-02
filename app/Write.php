@@ -15,6 +15,7 @@ use App\Board;
 use App\Point;
 use App\Scrap;
 use App\Services\CustomPaginator;
+use App\Services\WriteSingleton;
 use App\Autosave;
 use App\BoardNew;
 use App\BoardFile;
@@ -33,7 +34,6 @@ class Write extends Model
     protected $appends = ['isReply', 'isEdit', 'isDelete'];
 
     protected $table;
-    public $board;
     public $point;
 
     public $isReply;
@@ -52,12 +52,14 @@ class Write extends Model
         return $this->isDelete;
     }
 
-    public function __construct($boardId, $attributes = [])
+    public static function getWrite($boardId, $writeId)
     {
-        $this->board = Board::find($boardId);
-        $this->point = new Point();
+        return WriteSingleton::getInstance($boardId, $writeId);
+    }
 
-        parent::__construct($attributes);
+    public function __construct()
+    {
+        $this->point = new Point();
     }
 
     // write 모델의 테이블 이름을 지정
@@ -151,7 +153,7 @@ class Write extends Model
         $sortField = $this->getSortField();
 
         // 결과물에 공지사항이 있는지 검사한다.
-        $hasNotice = $this->hasNotice($writeModel, $kind, $keyword, $currenctCategory);
+        $hasNotice = $this->hasNotice();
 
         // 최종 리스트 컬렉션을 가져온다.
         $writes;
@@ -173,8 +175,8 @@ class Write extends Model
                 $parentWrite = $writeModel->where('id', $write->parent)->first();
                 $write->subject = $parentWrite->subject;
             }
-            $board = $writeModel->board;
-            if($board->skin == 'gallery') {
+
+            if($this->board->skin == 'gallery') {
                 $write->listThumbnailPath = $this->getListThumbnail($write);
             }
         }
@@ -245,7 +247,7 @@ class Write extends Model
     }
 
     // 글 목록 결과물에 공지사항이 있는지 검사한다.
-    private function hasNotice($writeModel, $kind, $keyword, $currenctCategory)
+    private function hasNotice()
     {
         $notices = explode(',', trim($this->board->notice));
         $notices = array_filter($notices);
@@ -327,12 +329,12 @@ class Write extends Model
         }
     }
 
-    public function getViewParams($writeModel, $boardId, $writeId, $request)
+    public function getViewParams($writeModel, $writeId, $request)
     {
-        $write = $writeModel->find($writeId);
+        $write = Write::getWrite($this->board->id, $writeId);
 
         // 조회수 증가, 포인트 부여
-        $write->hit = $this->beforeRead($write, $request);
+        $write->hit = $this->beforeRead($writeModel, $write, $request);
 
         // 글쓰기 할때 html 체크에 따라 글 내용 보여주는 방식을 다르게 한다.
         // html = 0 - 체크안함, 1 - 체크 후 취소, 2 - 체크 후 확인
@@ -375,7 +377,7 @@ class Write extends Model
         $boardFiles = [];
         $imgFiles = [];
         if($write->file > 0) {
-            $boardFiles = BoardFile::where(['board_id' => $boardId, 'write_id' => $writeId])->get();
+            $boardFiles = BoardFile::where(['board_id' => $this->board->id, 'write_id' => $writeId])->get();
 
             foreach($boardFiles as $boardFile) {
                 // 첨부파일이 이미지라면 업로드된 파일의 확장자를 가져와서
@@ -396,10 +398,8 @@ class Write extends Model
             }
         }
 
-        // dd($write->content);
         // 에디터로 업로드한 이미지 경로를 추출해서 내용의 img 태그 부분을 교체한다.
         $write->content = $this->includeImagePathByEditor($write->content);
-
 
         return [
             'board' => $this->board,
@@ -412,7 +412,7 @@ class Write extends Model
     }
 
     // 글 읽기 전 프로세스
-    public function beforeRead($write, $request)
+    public function beforeRead($writeModel, $write, $request)
     {
         $hit = $write->hit;
         $user = auth()->user();
@@ -421,7 +421,7 @@ class Write extends Model
         $sessionName = "session_view_". $this->board->table_name. '_'. $write->id. '_'. $userHash;
         if(!session()->get($sessionName) && $userId != $write->user_id) {
             // 조회수 증가
-            $hit = $this->increaseHit($write);
+            $hit = $this->increaseHit($writeModel, $write);
             // 포인트 계산(차감)
             $this->calculatePoint($write, $request, 'read');
 
@@ -432,14 +432,12 @@ class Write extends Model
     }
 
     // 조회수 증가
-    public function increaseHit($write)
+    public function increaseHit($writeModel, $write)
     {
         $hit = $write->hit + 1;
-        DB::table('write_'. $this->board->table_name)
-            ->where('id', $write->id)
-            ->update(['hit' => $hit]);
+        $writeModel->where('id', $write->id)->update(['hit' => $hit]);
 
-        return $hit;
+        return $write->hit;
     }
 
     // 소비성 포인트 계산(글 읽기, 파일 다운로드)
@@ -508,9 +506,9 @@ class Write extends Model
     }
 
     // 이전 글, 다음 글 경로, 제목 가져오기
-    public function getPrevNextView($writeModel, $boardId, $writeId, $request)
+    public function getPrevNextView($writeModel, $writeId, $request)
     {
-        $write = $writeModel->find($writeId);
+        $write = Write::getWrite($this->board->id, $writeId);
         // 파라미터 구하기
         $params = $request->query();
 
@@ -552,7 +550,7 @@ class Write extends Model
             $prevUrl = '';
             $prevSubject = '';
         } else {
-            $prevUrl = $this->getPrevNextUrl($boardId, $request, $prevWrite);
+            $prevUrl = $this->getPrevNextUrl($request, $prevWrite);
             $prevSubject = $prevWrite['subject'];
         }
 
@@ -561,7 +559,7 @@ class Write extends Model
             $nextUrl = '';
             $nextSubject = '';
         } else {
-            $nextUrl = $this->getPrevNextUrl($boardId, $request, $nextWrite);
+            $nextUrl = $this->getPrevNextUrl($request, $nextWrite);
             $nextSubject = $nextWrite['subject'];
         }
 
@@ -574,9 +572,9 @@ class Write extends Model
     }
 
     // 이전 or 다음 글 url을 만든다.
-    public function getPrevNextUrl($boardId, $request, $write)
+    public function getPrevNextUrl($request, $write)
     {
-        $url = route('board.view', ['boardId' => $boardId, 'writeId' => $write->id ]);
+        $url = route('board.view', ['boardId' => $this->board->id, 'writeId' => $write->id ]);
 
         if($request->server('QUERY_STRING') != '') {
            $url .= '?'. $request->server('QUERY_STRING');
@@ -588,7 +586,7 @@ class Write extends Model
     // 글 읽기 중 링크 연결
     public function beforeLink($writeModel, $writeId, $linkNo)
     {
-        $write = $writeModel->find($writeId);
+        $write = Write::getWrite($this->board->id, $writeId);
         $linkUrl = '';
         if(!$write['link'.$linkNo]) {
             abort(500, '링크가 없습니다.');
@@ -619,15 +617,15 @@ class Write extends Model
     }
 
     // 다운로드시 처리할 내용
-    public function beforeDownload($request, $writeModel, $boardId, $writeId, $fileNo)
+    public function beforeDownload($request, $writeModel, $writeId, $fileNo)
     {
         $file = BoardFile::where([
-            'board_id' => $boardId,
+            'board_id' => $this->board->id,
             'write_id' => $writeId,
             'board_file_no' => $fileNo,
             ])->first();
 
-        $write = $writeModel->find($writeId);
+        $write = Write::getWrite($this->board->id, $writeId);
         $user = auth()->user();
         $userId = is_null($user) ? 0 : $user->id;
         $sessionName = 'session_download_'. $this->board->table_name. '_'. $write->id. '_'. $fileNo;
@@ -639,7 +637,7 @@ class Write extends Model
 
             // 다운로드 횟수 증가
             $file->where([
-                'board_id' => $boardId,
+                'board_id' => $this->board->id,
                 'write_id' => $writeId,
                 'board_file_no' => $fileNo,
             ])->update(['download' => $file->download + 1]);
@@ -652,12 +650,11 @@ class Write extends Model
     }
 
     // (게시판) 글 쓰기 폼
-    public function getCreateParams($writeModel, $request)
+    public function getCreateParams($request)
     {
-        $board = $this->board;
         $categories = [];
-        if( !is_null($board->category_list) ) {
-            $categories = explode('|', $board->category_list);
+        if( !is_null($this->board->category_list) ) {
+            $categories = explode('|', $this->board->category_list);
             $categories = array_map('trim', $categories);
         }
 
@@ -668,7 +665,7 @@ class Write extends Model
 
         return [
             'type' => 'create',
-            'board' => $board,
+            'board' => $this->board,
             'currenctCategory' => $request->category ? : '',
             'categories' => $categories,
             'autosaveCount' => $autosaveCount,
@@ -676,14 +673,14 @@ class Write extends Model
     }
 
     // 글 수정 폼
-    public function getEditParams($boardId, $writeId, $writeModel, $request)
+    public function getEditParams($writeId, $writeModel, $request)
     {
-        $write = $writeModel->find($writeId);
+        $write = Write::getWrite($this->board->id, $writeId);
 
         $boardFiles = [];
         if($write->file > 0) {
             $boardFiles = BoardFile::where([
-                'board_id' => $boardId,
+                'board_id' => $this->board->id,
                 'write_id' => $writeId,
             ])->get();
         }
@@ -711,9 +708,9 @@ class Write extends Model
     }
 
     // 답변 글 폼
-    public function getReplyParams($boardId, $writeId, $writeModel, $request)
+    public function getReplyParams($writeId, $writeModel, $request)
     {
-        $write = $writeModel->find($writeId);
+        $write = Write::getWrite($this->board->id, $writeId);
         // 글쓰기와 같은 폼을 쓰기때문에 글 쓰기할 때 가져왔던 파라미터를 가져온다.
         $createParams = $this->getCreateParams($writeModel, $request);
         $createParams['type'] = 'reply';
@@ -760,7 +757,7 @@ class Write extends Model
         // 글 답변일 때 num과 reply 값 변경
         if($request->type == 'reply') {
 
-            $write = $writeModel->find($request->writeId);
+            $write = Write::getWrite($this->board->id, $request->writeId);
 
             if($request->has('secret')) {
                 $password = $write->password;
@@ -808,7 +805,7 @@ class Write extends Model
 
         $writeModel->insert($insertData);
         $lastInsertId = DB::getPdo()->lastInsertId();   // 마지막에 삽입한 행의 id 값 가져오기
-        $newWrite = $writeModel->where('id', $lastInsertId)->first();
+        $newWrite = Write::getWrite($this->board->id, $lastInsertId);
 
         // 포인트 부여(글쓰기, 댓글)
         $pointType = 0;
@@ -839,7 +836,7 @@ class Write extends Model
             'user_id' => $userId
         ]);
 
-        // 댓글 1 증가
+        // 원글 1 증가
         $this->board->update(['count_write' => $this->board->count_write + 1]);
 
         // 저장한 글이 임시저장을 사용한 것이라면 삭제한다.
@@ -900,7 +897,7 @@ class Write extends Model
     // 글 수정
     public function updateWrite($writeModel, $request, $writeId, $file)
     {
-        $write = $writeModel->find($writeId);
+        $write = Write::getWrite($this->board->id, $writeId);
         $user = Auth::user();
         $inputData = $request->all();
         $inputData = array_except($inputData, ['_method', '_token', 'file_del', 'file_content', 'attach_file', 'g-recaptcha-response', 'html', 'secret', 'mail', 'notice', 'uid', 'type', 'writeId']);
@@ -947,7 +944,7 @@ class Write extends Model
         Autosave::where('unique_id', $request->uid)->delete();
 
         // 기존 content의 img 태그의 파일을 추출하고 수정된 content의 content를 비교해서 없어진 파일은 서버에서 삭제한다.
-        $this->deleteEditorImage($write->content, $inputData['content']);
+        $this->updateEditorImage($write->content, $inputData['content']);
 
         // 글 수정 실행
         $writeModel->where('id', $writeId)->update($inputData);
@@ -955,21 +952,20 @@ class Write extends Model
         // 메인 최신글 캐시 삭제
         deleteCache('main', $this->board->table_name);
 
-        return $writeModel->find($writeId);
+        return Write::getWrite($this->board->id, $writeId);
     }
 
     // 에디터 첨부 이미지를 수정 전과 후를 비교해서 지운 이미지 파일 서버에서 삭제
-    private function deleteEditorImage($originalContent, $editContent)
+    private function updateEditorImage($originalContent, $editContent)
     {
         $originalContentImages = $this->getImageNameByContent($originalContent);
         $EditContentImages = $this->getImageNameByContent($editContent);
 
         foreach($originalContentImages as $originalContentImage) {
-            $img = str_replace("thumb-", "", $originalContentImage);
-            if( array_search($img, $EditContentImages) === false) {
+            if(array_search($originalContentImage, $EditContentImages) === false) {	// 수정된 내용 안에 기존 업로드한 이미지가 없으면
                 // 서버에서 파일 삭제
                 $boardFile = new BoardFile();
-                $boardFile->deleteFileOnServer('editor', $img);
+                $boardFile->deleteFileOnServer($this->board, 'editor', $originalContentImage);
             }
         }
     }
@@ -1037,37 +1033,32 @@ class Write extends Model
        }
     }
 
-    // 해당 글에 답변글이 달려 있는지 확인한다.
-    public function checkReply($writeModel, $writeId)
+    // 게시글 삭제하면서 게시글에 종속된 것들도 함께 삭제
+    public function deleteWriteCascade($writeModel, $writeId)
     {
-        $write = $writeModel->find($writeId);
-        $replyCount = $writeModel->where('reply', 'like', $write->reply.'%')
-                        ->where('id', '<>', $writeId)
-                        ->where(['num' => $write->num, 'is_comment' => 0])
-                        ->count('id');
-        if($replyCount > 0 && !session()->get('admin')) {
-            abort(500, '이 글과 관련된 답변글이 존재하므로 삭제 할 수 없습니다.\\n\\n우선 답변글부터 삭제하여 주십시오.');
+        // 부여되었던 포인트 삭제 및 조정 반영
+        $write = Write::getWrite($this->board->id, $writeId);
+        if($write->user_id)  {
+            $point = new Point();
+            $point->deleteWritePoint($writeModel, $this->board->id, $writeId);
         }
-    }
-
-    // 해당 글에 댓글이 달려 있는지 확인한다.
-    public function checkComment($writeModel, $writeId)
-    {
-        $user = auth()->user();
-        $userId = is_null($user) ? 0 : $user->id;
-        $commentCount = $writeModel->where('user_id', '<>', $userId)
-                        ->where(['parent' => $writeId, 'is_comment' => 1])
-                        ->count('id');
-        if($commentCount >= $this->board->count_delete && !session()->get('admin')) {
-            abort(500, '이 글과 관련된 코멘트가 존재하므로 삭제 할 수 없습니다.\\n\\n코멘트가 '. $board->count_delete. '건 이상 달린 원글은 삭제할 수 없습니다.');
+        // 서버에서 첨부파일+첨부파일의 썸네일 삭제, 파일 테이블 삭제
+        $boardFile = new BoardFile();
+        $result = $boardFile->deleteWriteAndAttachFile($this->board->id, $writeId);
+        if(!is_bool($result) && array_search(false, $result) != false) {
+            abort(500, '정상적으로 게시글을 삭제하는데 실패하였습니다.(첨부 파일 삭제)');
+        }
+        // 게시글 삭제
+        $result = $writeModel->deleteWrite($writeModel, $writeId);
+        if($result <= 0) {
+            abort(500, '정상적으로 게시글을 삭제하는데 실패하였습니다.(게시글 삭제)');
         }
     }
 
     // 글 삭제 - 게시글 삭제
     public function deleteWrite($writeModel, $writeId)
     {
-
-       $write = $writeModel->find($writeId);
+       $write = Write::getWrite($this->board->id, $writeId);
        // 원글에 달린 댓글
        $comments = $writeModel->select('id')->where([
            'is_comment' => 1,
@@ -1076,7 +1067,7 @@ class Write extends Model
        // 댓글쓰기에 부여된 포인트 삭제
        foreach($comments as $comment) {
            // 포인트 삭제 및 사용 포인트 다시 부여
-           $comment = $writeModel->find($comment['id']);
+           $comment = Write::getWrite($this->board->id, $comment['id']);
            $deleteResult = $this->point->deletePoint($comment->user_id, $this->board->table_name, $comment->id, '댓글');
            if($deleteResult == 0) {
                $insertResult = $this->point->insertPoint($comment->user_id, $this->board->write_point * (-1), $this->board->subject. ' '. $comment->parent. '-'. $comment->id. ' 댓글삭제');
@@ -1133,34 +1124,6 @@ class Write extends Model
         }
 
         return $inputData;
-    }
-
-    // 제목과 내용에 금지단어가 있는지 검사
-    public function banWordFilter(Request $request)
-    {
-        $subject = $request->subject;
-        $content = $request->content;
-
-        $filterStrs = explode(',', trim(implode(',', cache("config.board")->filter)));
-        $returnArr['subject'] = '';
-        $returnArr['content'] = '';
-        foreach($filterStrs as $str) {
-            // 제목 필터링 (찾으면 중지)
-            $pos = stripos($subject, $str);
-            if ($pos !== false) {
-                $returnArr['subject'] = $str;
-                break;
-            }
-
-            // 내용 필터링 (찾으면 중지)
-            $pos = stripos($content, $str);
-            if ($pos !== false) {
-                $returnArr['content'] = $str;
-                break;
-            }
-        }
-
-        return $returnArr;
     }
 
 }

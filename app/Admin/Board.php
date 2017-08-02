@@ -9,6 +9,7 @@ use App\Write;
 use DB;
 use Cache;
 use File;
+use App\Services\BoardSingleton;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 
@@ -27,6 +28,11 @@ class Board extends Model
     public function group()
     {
         return $this->belongsTo(Group::class);
+    }
+
+    public static function getBoard($boardId)
+    {
+        return BoardSingleton::getInstance($boardId);
     }
 
     // (게시판 관리) index 페이지에서 필요한 파라미터 가져오기
@@ -68,7 +74,7 @@ class Board extends Model
         if($order) {
             $query = $query->orderBy('boards.'. $order, $direction);
         } else {
-            $query = $query->orderByRaw('boards.group_id, boards.table_name asc');
+            $query = $query->orderByRaw('boards.order, boards.group_id, boards.table_name asc');
         }
 
         $boards = $query->paginate(Cache::get("config.homepage")->pageRows);
@@ -167,7 +173,7 @@ class Board extends Model
     // (게시판 관리) edit 페이지에서 필요한 파라미터 가져오기
     public function getBoardEditParams($request, $id)
     {
-        $board = Board::findOrFail($id);
+        $board = Board::getBoard($id);
         $groups = Group::get();
         $kind = $request->has('kind') ? $request->kind : '';
         $keyword = $request->has('keyword') ? $request->keyword : '';
@@ -194,10 +200,10 @@ class Board extends Model
     // (게시판 관리) 정보 수정
     public function updateBoard($data, $id)
     {
-        $board = Board::findOrFail($id);
+        $board = Board::getBoard($id);
 
         if(isset($data['procCount'])) {
-            $write = new Write($board->id);
+            $write = new Write();
             $write->setTableName($board->table_name);
             // 원글 수
             $countWrite = $write->where('is_comment', 0)->count();
@@ -284,7 +290,7 @@ class Board extends Model
     {
         $data = array_except($data, ['_token']);
 
-        $originalData = Board::findOrFail($data['id'])->toArray();
+        $originalData = Board::getBoard($data['id'])->toArray();
 
         $originalData['table_name'] = $data['table_name'];
         $originalData['subject'] = $data['subject'];
@@ -303,7 +309,7 @@ class Board extends Model
     {
         $idArr = explode(',', $ids);
         foreach($idArr as $id) {
-            Schema::dropIfExists('write_'. Board::find($id)->table_name);
+            Schema::dropIfExists('write_'. Board::getBoard($id)->table_name);
         }
         $result = Board::whereRaw('id in (' . $ids . ') ')->delete();
 
@@ -333,7 +339,7 @@ class Board extends Model
 
         $index = 0;
         foreach($idArr as $id) {
-            $board = Board::find($id);
+            $board = Board::getBoard($id);
 
             if(!is_null($board)) {
                 $board->update([
@@ -432,7 +438,7 @@ class Board extends Model
         }
 
         return [
-            'board' => Board::find($id),
+            'board' => Board::getBoard($id),
             'files' => $results
         ];
     }

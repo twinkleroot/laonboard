@@ -3,6 +3,7 @@
 namespace App;
 
 use App\BoardFile;
+use App\Write;
 
 class Download
 {
@@ -17,7 +18,7 @@ class Download
 
         $user = auth()->user();
         $board = $writeModel->board;
-        $write = $writeModel->find($writeId);
+        $write = Write::getWrite($boardId, $writeId);
         $sessionName = 'session_download_'. $board->table_name. '_'. $write->id. '_'. $fileNo;
         if(session()->get('admin') || $user->id == $write->user_id) {   // 관리자나 작성자 본인이면 패스
             ;

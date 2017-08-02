@@ -137,7 +137,8 @@ class SearchController extends Controller
         $boardIndex = 0;
         if($this->keyword) {
             foreach($boards as $board) {
-                $writeModel = new Write($board->id);
+                $writeModel = new Write();
+                $writeModel->board = $board;
                 $writeModel->setTableName($board->table_name);
                 $query = $writeModel
                     ->selectRaw($writeModel->getTable().'.*, users.id_hashKey as user_id_hashKey')

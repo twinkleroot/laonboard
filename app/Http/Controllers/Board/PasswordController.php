@@ -14,12 +14,11 @@ class PasswordController extends Controller
 {
     public $writeModel;
 
-    public function __construct(Request $request)
+    public function __construct(Request $request, Write $write)
     {
-        $this->writeModel = new Write($request->boardId);
-        if( !is_null($this->writeModel->board) ) {
-            $this->writeModel->setTableName($this->writeModel->board->table_name);
-        }
+        $this->writeModel = $write;
+        $this->writeModel->board = Board::getBoard($request->boardId);
+        $this->writeModel->setTableName($this->writeModel->board->table_name);
 
     }
     // 비밀번호 입력 폼 연결
@@ -37,14 +36,14 @@ class PasswordController extends Controller
         } else if($type == 'writeEdit'){    // 글 수정
             $subject = '글 수정';
         } else if($type == 'secret'){       // 비밀 글
-            $subject = $this->writeModel->find($writeId)->subject;
+            $subject = Write::getWrite($boardId, $writeId)->subject;
         }
 
         $skin = $this->writeModel->board->skin ? : 'default';
         $params = [
             'subject' => $subject,
             'boardId' => $boardId,
-            'board' => Board::find($boardId),
+            'board' => Board::getBoard($boardId),
             'writeId' => $writeId,
             'commentId' => $commentId,
             'type' => $type,
@@ -57,21 +56,22 @@ class PasswordController extends Controller
     // 비밀번호 비교
     public function comparePassword(Request $request)
     {
+        $boardId = $request->boardId;
         $writeId = $request->writeId;
         if($request->commentId) {
             $writeId = $request->commentId;
         }
-        $write = $this->writeModel->find($writeId);
+        $write = Write::getWrite($boardId, $writeId);
 
         // 입력한 비밀번호와 작성자의 글 비밀번호를 비교한다.
         if( Hash::check($request->password, $write->password) ) {
             if(strpos(strtolower($request->type), 'delete')) {
-                session()->put(session()->getId(). 'delete_board_'. $request->boardId. '_write_'. $writeId, true);
+                session()->put(session()->getId(). 'delete_board_'. $boardId. '_write_'. $writeId, true);
             } else if(strpos(strtolower($request->type), 'edit')) {
-                session()->put(session()->getId(). 'edit_board_'. $request->boardId. '_write_'. $writeId, true);
+                session()->put(session()->getId(). 'edit_board_'. $boardId. '_write_'. $writeId, true);
             } else {
-                session()->put(session()->getId(). 'secret_board_'. $request->boardId. '_write_'. $writeId, true);
-            } 
+                session()->put(session()->getId(). 'secret_board_'. $boardId. '_write_'. $writeId, true);
+            }
 
             return redirect($request->nextUrl);
          } else {

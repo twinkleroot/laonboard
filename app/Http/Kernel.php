@@ -63,6 +63,8 @@ class Kernel extends HttpKernel
         'admin' => \App\Http\Middleware\IsAdmin::class,
         // 최고관리자만 접근가능할 때 사용
         'super' => \App\Http\Middleware\IsSuperAdmin::class,
+        // 최고관리자만 접근가능할 때 사용
+        'admin.board' => \App\Http\Middleware\IsBoardAdmin::class,
         // 유저의 레벨과 게시판 마다의 레벨 기준을 비교해서 접근 가능 여부 판단
         'level.board' => \App\Http\Middleware\CheckBoardLevel::class,
         // 본인확인과 성인인증 여부로 글 목록보기, 읽기, 쓰기, 수정, 답변이 가능한지 검사

@@ -26,7 +26,7 @@ class CheckBoardLevel
         }
 
         $boardId = $request->segments()[1];
-        $board = Board::find($boardId);
+        $board = Board::getBoard($boardId);
 
         if($baseLevel < $board[$type]) {
             if(str_contains($type, 'list')) {
