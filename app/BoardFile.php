@@ -24,7 +24,7 @@ class BoardFile extends Model
     // 글쓰기 할때 파일 업로드 갯수 검사 후 업로드 기능 호출
     public function createBoardFiles($request, $boardId, $writeId)
     {
-        $board = Board::find($boardId);
+        $board = Board::getBoard($boardId);
         $files = $request->attach_file;
         $fileCount = count($files);
         if($fileCount > $board->upload_count) {
@@ -45,7 +45,7 @@ class BoardFile extends Model
     // 글수정 할때 파일 업로드 갯수 검사 후 업로드 기능 호출
     public function updateBoardFiles($request, $boardId, $writeId)
     {
-        $board = Board::find($boardId);
+        $board = Board::getBoard($boardId);
         $files = $request->attach_file;
         $fileCount = count($files);
         if($fileCount && $fileCount > $board->upload_count) {
@@ -233,10 +233,7 @@ class BoardFile extends Model
     // 게시물 삭제 할 때 첨부 파일 삭제
     public function deleteWriteAndAttachFile($boardId, $writeId, $type='')
     {
-        $board = Board::find($boardId);
-        $writeModel = new Write($boardId);
-        $writeModel->setTableName($board->table_name);
-        $write = $writeModel->find($writeId);
+        $board = Board::getBoard($boardId);
         $delFiles = BoardFile::where([
             'board_id' => $boardId,
             'write_id' => $writeId,

@@ -1,4 +1,4 @@
-auth()->user() && auth()->user()->isBoardAdmin($board)@extends( 'layout.'. ($board->layout ? : cache('config.skin')->layout. '.basic') )
+@extends( 'layout.'. ($board->layout ? : cache('config.skin')->layout. '.basic') )
 
 @section('title')
     {{ $board->subject }} 게시글 작성 | {{ Cache::get("config.homepage")->title }}
@@ -181,7 +181,7 @@ auth()->user() && auth()->user()->isBoardAdmin($board)@extends( 'layout.'. ($boa
                 @elseif($board->use_secret == 2)
                 <input type="hidden" name="secret" value="secret" />
                 @endif
-                @if($board->use_email)
+                @if(auth()->user() && $board->use_email)
                 <label for="mail" class="checkbox-inline">
                     <input type="checkbox" id="mail" name="mail" value="mail" checked> 답변메일받기
                 </label>
@@ -278,8 +278,6 @@ function writeSubmit() {
         success: function(data) {
             subject = data.subject;
             content = data.content;
-        }, error: function(error) {
-            alert(error);
         }
     });
 

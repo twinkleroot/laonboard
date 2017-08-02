@@ -9,6 +9,7 @@ use File;
 use App\BoardFile;
 use Carbon\Carbon;
 use App\Board;
+use App\Write;
 
 class Move
 {
@@ -21,7 +22,7 @@ class Move
 
         return [
             'boards' => Board::orderBy('group_id', 'desc')->orderBy('subject', 'desc')->get(),
-            'currentBoard' => Board::find($boardId),
+            'currentBoard' => Board::getBoard($boardId),
             'type' => $request->type,
         ];
     }
@@ -47,7 +48,7 @@ class Move
             foreach($boards as $board) {
                 // 게시판 테이블 셋팅
                 // $destinationWrite : 복사되서 게시물이 추가되는 게시판
-                $destinationWrite = new Write($board->table_name);
+                $destinationWrite = new Write();
                 $destinationWrite->setTableName($board->table_name);
                 // num의 최소값
                 $minNum = is_null($destinationWrite->min('num')) ? 0 : $destinationWrite->min('num');
@@ -62,7 +63,7 @@ class Move
                     $destinationWrite->insert($insertArray);  // 새로 insert하기 때문에 auto increment 되는 id값은 제거
                     // 복사할 글을 복사한 테이블에 맞춰서 parent 재설정
                     $lastInsertId = DB::getPdo()->lastInsertId();   // 마지막에 삽입한 행의 id 값 가져오기
-                    $newWrite = $destinationWrite->find($lastInsertId);
+                    $newWrite = Write::getWrite($board->id, $lastInsertId);
                     if(!$originalWrite->is_comment && !$originalWrite->reply) {
                         $parent = $lastInsertId;
                     }
@@ -124,7 +125,7 @@ class Move
         $writeId = $write->id;
         $boardFiles = BoardFile::where(['board_id' => $boardId, 'write_id' => $writeId])->get();
 
-        $board = Board::find($boardId);
+        $board = Board::getBoard($boardId);
 
         foreach($boardFiles as $boardFile) {
             $copyBoardFile = $boardFile->toArray();

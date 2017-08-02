@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use App\Write;
 use DB;
 
 class BoardGood extends Model
@@ -18,8 +19,8 @@ class BoardGood extends Model
     // 추천, 비추천 처리 로직
     public function good($writeModel, $writeId, $good)
     {
-        $write = $writeModel->find($writeId);
         $board = $writeModel->board;
+        $write = Write::getWrite($board->id, $writeId);
         $user = auth()->user();
 
         if(is_null($user)) {

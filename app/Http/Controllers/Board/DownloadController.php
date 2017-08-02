@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Board;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Write;
+use App\Board;
 use App\Download;
 
 class DownloadController extends Controller
@@ -12,13 +13,12 @@ class DownloadController extends Controller
     public $download;
     public $writeModel;
 
-    public function __construct(Download $download, Request $request)
+    public function __construct(Download $download, Request $request, Write $write)
     {
         $this->download = $download;
-        $this->writeModel = new Write($request->boardId);
-        if( !is_null($this->writeModel->board) ) {
-            $this->writeModel->setTableName($this->writeModel->board->table_name);
-        }
+        $this->writeModel = $write;
+        $this->writeModel->board = Board::getBoard($request->boardId);
+        $this->writeModel->setTableName($this->writeModel->board->table_name);
     }
 
     // 글 보기 중 첨부파일 다운로드

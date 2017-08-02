@@ -19,7 +19,7 @@ class CanActionWriteImmediately
     {
         $writeId = $request->writeId;
         $boardId = $request->boardId;
-        $board = Board::find($boardId);
+        $board = Board::getBoard($boardId);
         $write = DB::table('write_'.$board->table_name)->where('id', $writeId)->first();
 
         if(session()->get(session()->getId(). $action. '_board_'. $boardId. '_write_'. $writeId)) {

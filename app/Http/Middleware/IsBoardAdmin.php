@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use App\Board;
 
-class isBoardAdmin
+class IsBoardAdmin
 {
     /**
      * Handle an incoming request.
@@ -17,7 +17,7 @@ class isBoardAdmin
     public function handle($request, Closure $next)
     {
         $user = auth()->user();
-        $board = Board::find($request->boardId);
+        $board = Board::getBoard($request->boardId);
         if($user->isBoardAdmin($board)) {
             return $next($request);
         }

@@ -12,12 +12,13 @@ use App\User;
 use App\Board;
 use App\Point;
 use App\Group;
+use App\Write;
 use App\BoardNew;
 
 class Comment
 {
     // 댓글 데이터
-    public function getCommentsParams($writeModel, $boardId, $writeId, $request)
+    public function getCommentsParams($writeModel, $writeId, $request)
     {
         $comments = $writeModel
                 ->selectRaw($writeModel->getTable().'.*, users.level as user_level, users.id_hashkey as user_id_hashkey')
@@ -29,7 +30,7 @@ class Comment
 
         foreach($comments as $comment) {
             // 답변, 수정, 삭제 가능여부 기록
-            $editable = $this->getCommentAuth($comment, $writeModel, $boardId, $writeId);
+            $editable = $this->getCommentAuth($comment, $writeModel, $writeId);
             $comment->isReply = $editable['isReply'];
             $comment->isEdit = $editable['isEdit'];
             $comment->isDelete = $editable['isDelete'];
@@ -46,23 +47,22 @@ class Comment
     }
 
     // 댓글의 답변, 수정, 삭제 권한 검사
-    public function getCommentAuth($comment, $writeModel, $boardId, $writeId)
+    public function getCommentAuth($comment, $writeModel, $writeId)
     {
         $isEdit = 1;
         $isDelete = 1;
 
-        $board = Board::find($boardId);
         $user = auth()->user();
         $commentUser = $comment->user_id == 0 ? '' : User::find($comment->user_id);
         if( !is_null($user) ) {
             if ($user->isSuperAdmin()) {// 최고관리자 통과
                 ;
-            } else if ($user->isGroupAdmin(Group::find($board->group_id))) { // 그룹관리자
+            } else if ($user->isGroupAdmin(Group::find($writeModel->board->group_id))) { // 그룹관리자
                 if ($user->level < $commentUser->level)  { // 자신의 레벨이 글쓴이의 레벨보다 작다면
                     $isEdit = 0;
                     $isDelete = 0;
                 }
-            } else if ($user->isBoardAdmin($board)) { // 게시판관리자이면
+            } else if ($user->isBoardAdmin($writeModel->board)) { // 게시판관리자이면
                 if ($user->level < $commentUser->level) { // 자신의 레벨이 글쓴이의 레벨보다 작다면
                     $isEdit = 0;
                     $isDelete = 0;
@@ -109,9 +109,9 @@ class Comment
     // 댓글 생성
     public function storeComment($writeModel, $request)
     {
-        $board = Board::find($request->boardId);
+        $board = Board::getBoard($request->boardId);
         $point = new Point();
-        $write = $writeModel->find($request->writeId);  // 원 글
+        $write = Write::getWrite($board->id, $request->writeId);  // 원 글
         $writeId = $write->id;
 
         $tmpComment = 0;
@@ -265,9 +265,9 @@ class Comment
     // 댓글 수정
     public function updateComment($writeModel, $request)
     {
-        $board = Board::find($request->boardId);
+        $board = Board::getBoard($request->boardId);
         $commentId = $request->commentId;
-        $comment = $writeModel->find($commentId);
+        $comment = Write::getWrite($board->id, $commentId);
         $writeId = $comment->parent;
         $option = $request->has('secret') ? $request->secret : null;
         $ip = !session()->get('admin') ? $request->ip() : $comment->ip;
@@ -287,11 +287,11 @@ class Comment
     // 댓글 삭제
     public function deleteComment($writeModel, $boardId, $commentId)
     {
-        $board = Board::find($boardId);
+        $board = Board::getBoard($boardId);
         $point = new Point();
         $writeModel->setTableName($board->table_name);
-        $comment = $writeModel->find($commentId);
-        $write = $writeModel->find($comment->parent);
+        $comment = Write::getWrite($board->id, $commentId);
+        $write = Write::getWrite($board->id, $comment->parent);
 
         // 댓글 포인트 삭제, 부여되었던 포인트 삭제 및 조정 반영
         if($comment->user_id) {

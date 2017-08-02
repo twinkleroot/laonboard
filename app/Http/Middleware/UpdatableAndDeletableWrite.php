@@ -22,8 +22,9 @@ class UpdatableAndDeletableWrite
     public function handle($request, Closure $next)
     {
         $user = auth()->user();
-        $board = Board::find($request->boardId);
-        $writeModel = new Write($request->boardId);
+        $board = Board::getBoard($request->boardId);
+        $writeModel = new Write();
+        $writeModel->board = $board;
         $writeModel->setTableName($board->table_name);
 
         $message = '';
@@ -43,7 +44,7 @@ class UpdatableAndDeletableWrite
         } else {
             $id = $request->writeId;
         }
-        $write = $writeModel->find($id);
+        $write = Write::getWrite($board->id, $id);
         $writeUser = ( !is_null($write) && $write->user_id == 0) ? '' : User::find($write->user_id);
         if( !is_null($user) ) {
             if ($user->isSuperAdmin()) {// 최고관리자 통과
@@ -64,7 +65,7 @@ class UpdatableAndDeletableWrite
                 if($isDelete) {
                     $this->checkReply($writeModel, $write);
                 }
-                $this->checkComment($writeModel, $write, $board, $isDelete);
+                $this->checkComment($writeModel, $write, $isDelete);
             }
         } else {    // 비회원일 경우
             if($isComment) {
@@ -116,8 +117,9 @@ class UpdatableAndDeletableWrite
     }
 
     // 해당 글에 댓글이 달려 있는지 확인한다.
-    public function checkComment($writeModel, $write, $board, $isDelete)
+    public function checkComment($writeModel, $write, $isDelete)
     {
+        $board = $writeModel->board;
         $commentCount = $writeModel->where('user_id', '<>', $write->user_id)
                         ->where(['parent' => $write->id, 'is_comment' => 1])
                         ->count('id');

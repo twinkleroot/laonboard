@@ -9,6 +9,7 @@ use Redirect;
 use URL;
 use App\Notification;
 use App\Write;
+use App\Board;
 use App\Comment;
 use App\ReCaptcha;
 
@@ -18,28 +19,26 @@ class CommentController extends Controller
     public $comment;
     public $notification;
 
-    public function __construct(Request $request, Comment $comment, Notification $notification)
+    public function __construct(Request $request, Comment $comment, Write $write)
     {
-        $this->writeModel = new Write($request->boardId);
-        if( !is_null($this->writeModel->board) ) {
-            $this->writeModel->setTableName($this->writeModel->board->table_name);
-        }
-
+        $this->writeModel = $write;
+        $this->writeModel->board = Board::getBoard($request->boardId);
+        $this->writeModel->setTableName($this->writeModel->board->table_name);
         $this->comment = $comment;
-        $this->notification = $notification;
     }
 
     // 댓글 저장
     public function store(Request $request)
     {
-		if(auth()->guest() || (!auth()->user()->isSuperAdmin() && $this->writeModel->board->use_recaptcha)) {
-			ReCaptcha::reCaptcha($request);
-			// return Redirect::to(URL::previous() . "#comment_box")->withInput();
-		}
+        if(auth()->guest() || (!auth()->user()->isSuperAdmin() && $this->writeModel->board->use_recaptcha)) {
+            ReCaptcha::reCaptcha($request);
+            // return Redirect::to(URL::previous() . "#comment_box")->withInput();
+        }
         $result = $this->comment->storeComment($this->writeModel, $request);
 
         if(cache('config.email.default')->emailUse && $this->writeModel->board->use_email) {
-            $this->notification->sendWriteNotification($this->writeModel, $result);
+            $notification = new Notification;
+            $notification->sendWriteNotification($this->writeModel, $result);
         }
 
         return redirect($request->requestUri. '#comment'. $result);

@@ -2,9 +2,7 @@
 
 namespace App;
 
-use App\Write;
 use App\User;
-use App\Group;
 use Cache;
 use Mail;
 use App\Mail\WriteNotification;
@@ -19,9 +17,7 @@ class Notification
     {
         $board = $writeModel->board;
         $boardAdmin = $board->admin;    // 게시판 관리자
-        $groupAdmin = Cache::remember("group.{$board->group_id}.admin", config('gnu.CACHE_EXPIRE_MINUTE'), function() use($board) {
-            return Group::find($board->group_id)->admin;
-        });     // 그룹 관리자
+        $groupAdmin = $board->group->admin;		// 그룹 관리자
         $superAdmin = Cache::get('config.homepage')->superAdmin;    // 최고 관리자
         $write = $writeModel->find($writeId);   // 작성한 글
         $parentWrite = $writeModel->find($write->parent);   // 원글

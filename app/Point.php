@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use App\User;
+use App\Write;
 use Cache;
 use Exception;
 
@@ -329,8 +330,8 @@ class Point extends Model
     // 글 삭제 - 포인트 삭제
     public function deleteWritePoint($writeModel, $boardId, $writeId)
     {
-       $write = $writeModel->find($writeId);
-       $board = Board::find($boardId);
+       $write = Write::getWrite($boardId, $writeId);
+       $board = Board::getBoard($boardId);
        // 원글에서의 처리
        $deleteResult = 0;
        $insertResult = 0;

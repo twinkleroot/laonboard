@@ -9,6 +9,7 @@ use Cache;
 use App\Write;
 use App\Comment;
 use App\Point;
+use App\Board;
 use App\BoardFile;
 
 class BoardNew extends Model
@@ -118,10 +119,12 @@ class BoardNew extends Model
         $point = new Point();
         $boardFile = new BoardFile();
         foreach($boardNews as $boardNew) {
-            $write = new Write($boardNew->board_id);
-            $write->setTableName($boardNew->table_name);
             $boardId = $boardNew->board_id;
             $writeId = $boardNew->write_id;
+
+            $write = new Write();
+            $write->board = Board::getBoard($boardId);
+            $write->setTableName($boardNew->table_name);
             // 원글 삭제
             if($writeId == $boardNew->write_parent) {
                 $point->deleteWritePoint($write, $boardId, $writeId);

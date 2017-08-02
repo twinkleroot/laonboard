@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Group;
+use App\Services\BoardSingleton;
 
 class Board extends Model
 {
@@ -21,15 +22,9 @@ class Board extends Model
         return $this->belongsTo(Group::class);
     }
 
-    public $board;
-    
-    public static function getBoard()
+    public static function getBoard($boardId)
     {
-        return $this->board;
+        return BoardSingleton::getInstance($boardId);
     }
 
-    private function setBoard($boardId)
-    {
-        $this->board = Board::find($boardId);
-    }
 }
