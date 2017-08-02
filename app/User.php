@@ -350,13 +350,19 @@ class User extends Authenticatable
         }
 
         $email = getEmailAddress(trim($request->email));
+        $nick = $user->nick;
+        $nickDate = $user->nick_date;
+        if($request->has('nick') && $request->nick != $nick) {
+            $nick = trim($request->nick);
+            $nickDate = $nowDate;
+        }
         $toUpdateUserInfo = [
             'email' => $email,
             'password' => $password,
             'id_hashkey' => str_replace("/", "-", bcrypt($user->id)),  // 회원정보수정때마다 id_hashkey를 변경한다.
             // 'name' => $request->get('name'),
-            'nick' => $request->has('nick') ? trim($request->nick) : $user->nick,
-            'nick_date' => $request->has('nick') != $user->nick ? $nowDate : $user->nick_date,
+            'nick' => $nick,
+            'nick_date' => $nickDate,
             'homepage' => cleanXssTags($request->homepage),
             // 'hp' => $request->get('hp'),
             'tel' => cleanXssTags($request->tel),

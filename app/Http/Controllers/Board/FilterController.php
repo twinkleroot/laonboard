@@ -34,4 +34,25 @@ class FilterController extends Controller
 
         return $returnArr;
     }
+
+    // 닉네임이 금지단어와 같은지 검사
+    public function userFilter(Request $request)
+    {
+        $nick = $request->nick;
+
+        $filterStrs = explode(',', trim(implode(',', cache("config.join")->banId)));
+        $returnArr['nick'] = '';
+
+        foreach($filterStrs as $str) {
+            // 제목 필터링 (찾으면 중지)
+            $pos = stripos($nick, $str);
+            if ($pos !== false) {
+                $returnArr['nick'] = $str;
+                break;
+            }
+
+        }
+
+        return $returnArr;
+    }
 }
