@@ -1415,3 +1415,54 @@ input[type=radio] {
 
 	clear: both;
 }
+.sevice_1 {
+	border: 1px solid #d8d8d8; text-align: center; background: #fff;
+	width: 335px;
+	float: left;
+	margin: 0 5px;
+}
+.sevice_1 .circle_icon {
+	background: #a2cacc; width: 138px; height: 138px; border-radius: 69px; display: block; margin: 25px auto 0;
+}
+.sevice_1 .circle_icon i.fa-mobile {
+	font-size: 90px; margin: 24px 0; color: #fff; vertical-align: middle;
+}
+.sevice_1 .circle_icon i.fa-envelope {
+	font-size: 50px; margin: 44px 0; color: #fff; vertical-align: middle;
+}
+.sevice_1 .circle_icon img {
+	width: 65px; height: 65px; margin: 35px 0;
+}
+.sevice_1 h3 {
+	font-size: 16px; font-weight: bold; padding: 20px 0; margin: 0;
+}
+.sevice_1 .sevice_info {
+	margin: 0; text-align: left; font-size: 12px; padding: 20px; background: #f8f8f8; color: #898989; line-height: 1.7;
+	height: 140px;
+}
+.sevice_1 ul {
+	padding: 0;
+	margin: 0 auto;
+	border-top: 1px solid #d8d8d8;
+	height: 85px;
+}
+.sevice_1 ul:after {
+	content: "";
+	display: block;
+	clear: both;
+}
+.sevice_1 ul li {
+	list-style: none;
+	height: 100%;
+	float: left;
+	padding: 15px 0;
+	border-right: 1px solid #d8d8d8;
+	text-align: center;
+	width: 111px;
+}
+.sevice_1 ul li:last-child {
+	border: 0;
+}
+.sevice_1 .item_1 {
+	width: 100%;
+}
