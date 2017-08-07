@@ -34,7 +34,7 @@ class BoardNew extends Model
     {
         $groups = Group::orderBy('group_id')->get();
         $query = $this->getNewWritesThroughSearch($request, $groups);
-        $pageRows = Cache::get('config.homepage')->pageRows;
+        $pageRows = cache('config.homepage')->pageRows;
         $boardNewList = $query->paginate($pageRows);
         $boardNewList = $this->processBoardNewList($boardNewList);
 
@@ -86,9 +86,8 @@ class BoardNew extends Model
     public function processBoardNewList($boardNewList)
     {
         foreach($boardNewList as $boardNew) {
-            $writeTable = 'write_'.$boardNew->table_name;
-            $write = DB::table($writeTable)->where('id', $boardNew->write_parent)->first(); // 원글
-            $user = $boardNew->user_id ? User::find($boardNew->user_id) : new User();
+            $write = Write::getWrite($boardNew->board_id, $boardNew->write_parent);	 // 원글
+            $user = $boardNew->user_id ? User::getUser($boardNew->user_id) : new User();
             // 원글, 댓글 공통 추가 데이터
             $boardNew->write = $write;
             $boardNew->user_email = $user->email;
@@ -97,7 +96,7 @@ class BoardNew extends Model
             $boardNew->name = $write->name;
             // 댓글은 데이터 따로 추가
             if($boardNew->write_id != $boardNew->write_parent) {
-                $comment = DB::table($writeTable)->where('id', $boardNew->write_id)->first(); // 댓글
+                $comment = Write::getWrite($boardNew->board_id, $boardNew->write_id);	 // 댓글
                 $boardNew->write->subject = '[코] '. $write->subject;    // [코] + 원글의 제목
                 $boardNew->commentTag = '#comment'.$comment->id;
                 $boardNew->write->created_at = $comment->created_at;

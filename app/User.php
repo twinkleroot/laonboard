@@ -18,6 +18,7 @@ use App\Notification;
 use App\GroupUser;
 use App\Mail\FormMailSend;
 use App\Cert;
+use App\Services\UserSingleton;
 use Carbon\Carbon;
 
 
@@ -132,6 +133,11 @@ class User extends Authenticatable
             return true;
         }
         return false;
+    }
+
+    public static function getUser($id)
+    {
+        return UserSingleton::getInstance($id);
     }
 
     // 회원 정보 수정 페이지에 전달할 데이터

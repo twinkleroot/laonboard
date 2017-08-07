@@ -871,29 +871,10 @@
             </div>
             <table class="adm_box_table">
                 <tr>
-                    <th>카카오 Key</th>
-                    <td class="table_body chknone">
-                        <input type="text" class="form-control form_large" name="kakaoKey" value="{{ $configSns->kakaoKey }}" style="display: inline-block;">
-                        <a href="" class="btn btn-sir">앱 등록하기</a>
-                    </td>
-                </tr>
-                <tr>
-                    <th>카카오 Secret</th>
-                    <td class="table_body chknone">
-                        <input type="text" class="form-control form_large" name="kakaoSecret" value="{{ $configSns->kakaoSecret }}">
-                    </td>
-                </tr>
-                <tr>
-                    <th>카카오 Redirect URI</th>
-                    <td class="table_body chknone">
-                        <input type="text" class="form-control form_large" name="kakaoRedirect" value="{{ $configSns->kakaoRedirect }}">
-                    </td>
-                </tr>
-                <tr>
                     <th>네이버 Key</th>
                     <td class="table_body chknone">
                         <input type="text" class="form-control form_large" name="naverKey" value="{{ $configSns->naverKey }}" style="display: inline-block;">
-                        <a href="" class="btn btn-sir">앱 등록하기</a>
+                        <a href="https://developers.naver.com/apps/#/register" class="btn btn-sir">앱 등록하기</a>
                     </td>
                 </tr>
                 <tr>
@@ -909,10 +890,29 @@
                     </td>
                 </tr>
                 <tr>
+                    <th>카카오 Key</th>
+                    <td class="table_body chknone">
+                        <input type="text" class="form-control form_large" name="kakaoKey" value="{{ $configSns->kakaoKey }}" style="display: inline-block;">
+                        <a href="https://developers.kakao.com/" class="btn btn-sir">앱 등록하기</a>
+                    </td>
+                </tr>
+                <tr>
+                    <th>카카오 Secret</th>
+                    <td class="table_body chknone">
+                        <input type="text" class="form-control form_large" name="kakaoSecret" value="{{ $configSns->kakaoSecret }}">
+                    </td>
+                </tr>
+                <tr>
+                    <th>카카오 Redirect URI</th>
+                    <td class="table_body chknone">
+                        <input type="text" class="form-control form_large" name="kakaoRedirect" value="{{ $configSns->kakaoRedirect }}">
+                    </td>
+                </tr>
+                <tr>
                     <th>페이스북 Key</th>
                     <td class="table_body chknone">
                         <input type="text" class="form-control form_large" name="facebookKey" value="{{ $configSns->facebookKey }}" style="display: inline-block;">
-                        <a href="" class="btn btn-sir">앱 등록하기</a>
+                        <a href="https://developers.facebook.com/" class="btn btn-sir">앱 등록하기</a>
                     </td>
                 </tr>
                 <tr>
@@ -931,7 +931,7 @@
                     <th>구글 Key</th>
                     <td class="table_body chknone">
                         <input type="text" class="form-control form_large" name="googleKey" value="{{ $configSns->googleKey }}" style="display: inline-block;">
-                        <a href="" class="btn btn-sir">앱 등록하기</a>
+                        <a href="https://console.developers.google.com" class="btn btn-sir">앱 등록하기</a>
                     </td>
                 </tr>
                 <tr>
