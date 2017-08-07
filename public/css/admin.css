@@ -98,8 +98,7 @@ input[type=radio] {
 	border-bottom: 1px solid #ddd;
 }
 #admin-header .header-title {
-	/*background: #4b4b4b;*/
-	background: linear-gradient( to right, #6587f7, #884bf1 );
+	background: #587ef6;
 	width: 230px;
 	float: left;
 	font-size: 0;

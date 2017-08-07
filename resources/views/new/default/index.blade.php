@@ -9,9 +9,6 @@
 @endsection
 
 @section('content')
-<div id="header">
-</div>
-
 <div id="board" class="container">
 
     <div class="pull-left bd_head">

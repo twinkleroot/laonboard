@@ -44,7 +44,7 @@
     @endif
 
     <div id="mb" class="">
-        <ul class="mb_btn mb10 pull-left">
+        <ul class="mb_btn">
             <li>
                 <a href="{{ route('admin.users.index') }}" class="btn btn-sir pull-left">전체보기</a>
             </li>
@@ -52,10 +52,11 @@
                 <span class="total">총회원수 {{ $users->total() }}명 중, <a href="{{ route('admin.users.index') }}?kind=intercept">차단 {{ $interceptUsers }}명</a>, <a href="{{ route('admin.users.index') }}?kind=leave">탈퇴 {{ $leaveUsers }}명</a></span>
             </li>
         </ul>
-        <div class="mb_sch mb10 pull-right">
-            <form class="form-horizontal" role="form" method="GET" action="{{ route('admin.users.index') }}">
-                <label for="" class="sr-only">검색대상</label>
-                <select name="kind" id="">
+
+        <div id="adm_sch">
+            <form role="form" method="GET" action="{{ route('admin.users.index') }}">
+                <label for="kind" class="sr-only">검색대상</label>
+                <select name="kind">
                     <option value="email" @if($kind == 'email') selected @endif>회원이메일</option>
                     <option value="nick" @if($kind == 'nick') selected @endif>회원닉네임</option>
                     <option value="level" @if($kind == 'level') selected @endif>권한(회원 레벨)</option>
@@ -64,9 +65,10 @@
                     <option value="ip" @if($kind == 'ip') selected @endif>IP</option>
                     <option value="recommend" @if($kind == 'recommend') selected @endif>추천인</option>
                 </select>
-                <label for="" class="sr-only">검색어</label>
+
+                <label for="keyword" class="sr-only">검색어</label>
                 <input type="text" name="keyword" @if($keyword != '') value="{{ $keyword }}" @endif class="search" required>
-                <button type="submit" id="" class="search-icon">
+                <button type="submit" id="" class="btn search-icon">
                     <i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">검색</span>
                 </button>
             </form>
@@ -108,20 +110,21 @@
                     <th>관리</th>
                 </thead>
                 <tbody>
-                @foreach ($users as $user)
+                    @if(count($users) > 0)
+                    @foreach ($users as $user)
                     <tr>
-                        <td><input type="checkbox" name="chkId[]" class="userId" value='{{ $user->id }}' /></td>
-                        <td class="text-left">
+                        <td class="td_chk"><input type="checkbox" name="chkId[]" class="userId" value='{{ $user->id }}' /></td>
+                        <td class="td_subject">
                             <div class="mb_tooltip">
                                 {{ $user->email }}
                                 <span class="tooltiptext">{{ $user->ip }}</span>
                             </div>
                         </td>
-                        <td class="td_nick">
+                        <td class="td_subject">
                             @component('admin.sideview', ['id' => $user->id, 'nick' => $user->nick, 'email' => $user->email])
                             @endcomponent
                         </td>
-                        <td>
+                        <td class="td_date">
                         @if(!is_null($user->leave_date))
                             <span class="mb_msg withdraw">탈퇴</span>
                         @elseif (!is_null($user->intercept_date))
@@ -135,32 +138,41 @@
                                 @endfor
                             </select>
                         </td>
-                        <td>{{ $user->point }}</td>
-                        <td>
+                        <td class="td_mngsmall">{{ $user->point }}</td>
+                        <td class="td_date">
                             <div class="mb_tooltip">
                                 @date($user->created_at)
                                 <span class="tooltiptext">{{ $user->created_at }}</span>
                             </div>
                         </td>
-                        <td>
+                        <td class="td_date">
                             <div class="mb_tooltip">
                                 @date($user->today_login)
                                 <span class="tooltiptext">{{ $user->today_login }}</span>
                             </div>
                         </td>
-                        <td>
+                        <td class="td_mngsmall">
                             @if($user->count_groups > 0)
                                 <a href="{{ route('admin.accessGroups.show', $user->id) }}">
                                     {{ $user->count_groups }}
                                 </a>
                             @endif
                         </td>
-                        <td>
+                        <td class="td_mngsmall">
                             <a href="{{ route('admin.users.edit', $user->id). '?'. Request::getQueryString() }}">수정</a>
                             <a href="{{ route('admin.accessGroups.show', $user->id). '?'. Request::getQueryString() }}">그룹</a>
                         </td>
                     </tr>
-                @endforeach
+                    @endforeach
+                    @else
+                    <tr>
+                        <td colspan="9">
+                            <span class="empty_table">
+                                <i class="fa fa-exclamation-triangle"></i> 자료가 없습니다.
+                            </span>
+                        </td>
+                    </tr>
+                    @endif
                 </tbody>
             </table>
             </form>

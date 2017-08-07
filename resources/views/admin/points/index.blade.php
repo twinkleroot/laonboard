@@ -24,6 +24,16 @@
     {{ Session::get('message') }}
   </div>
 @endif
+<div id="body_tab_type2">
+    <span class="txt">회원의 포인트 리스트를 보여줍니다.</span>
+
+    <div class="submit_btn">
+        <a class="btn btn-default" href="{{ route('admin.users.create')}}" role="button">회원추가</a>
+        <input type="button" id="selected_update" class="btn btn-default" value="선택수정">
+        <input type="button" id="selected_delete" class="btn btn-default" value="선택삭제">
+    </div>
+</div>
+
 <div class="body-contents">
     <div id="pt">
         <ul id="adm_btn">
@@ -47,22 +57,23 @@
             </li>
         </ul>
 
-        <div id="adm_sch" class="mb10 pull-right">
-            <form class="form-horizontal" role="form" method="GET" action="{{ route('admin.points.index') }}">
-                <label for="" class="sr-only">검색대상</label>
+        <div id="adm_sch">
+            <form role="form" method="GET" action="{{ route('admin.points.index') }}">
+                <label for="kind" class="sr-only">검색대상</label>
                 <select name="kind">
                     <option value="email" @if($kind == 'email') selected @endif>회원이메일</option>
                     <option value="nick" @if($kind == 'nick') selected @endif>회원닉네임</option>
                     <option value="content" @if($kind == 'content') selected @endif>포인트내용</option>
                 </select>
 
-                <label for="" class="sr-only">검색어</label>
+                <label for="keyword" class="sr-only">검색어</label>
                 <input type="text" name="keyword" value="{{ $keyword }}" class="search" required>
-                <button type="submit" id="" class="search-icon">
+                <button type="submit" id="" class="btn search-icon">
                     <i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">검색</span>
                 </button>
             </form>
         </div>
+
         <form class="form-horizontal" role="form" method="POST" id="selectForm" action="">
             <input type="hidden" id='ids' name='ids' value='' />
             {{ csrf_field() }}
@@ -95,27 +106,27 @@
                     @foreach ($points as $point)
                     <!-- 하단 tr이 출력될 목록갯수에 따라 반복 -->
                     <tr>
-                        <td>
+                        <td class="td_chk">
                             <input type="checkbox" name="chkId[]" class="pointId" value='{{ $point->id }}' />
                         </td>
-                        <td class="text-left">
+                        <td class="td_email">
                             <a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $point->user->email }}">{{ $point->user->email }}</a>
                         </td>
                         <td class="td_nick">
                             @component('admin.sideview', ['id' => $point->user->id, 'nick' => $point->user->nick, 'email' => $point->user->email])
                             @endcomponent
                         </td>
-                        <td>
+                        <td class="td_subject">
                             @if(!preg_match("/^\@/", $point->rel_table) && $point->rel_table)
                                 <a href="/board/{{ $point->rel_table }}/view/{{ $point->rel_email }}" target="_blank">{{ $point->content }}</a>
                             @else
                                 {{ $point->content }}
                             @endif
                         </td>
-                        <td>{{ number_format($point->point) }}</td>
-                        <td>{{ $point->datetime }}</td>
-                        <td>{{ $point->expire_date == '9999-12-31' ? '' : $point->expire_date }}</td>
-                        <td>{{ number_format($point->user_point) }}</td>
+                        <td class="td_mngsmall">{{ number_format($point->point) }}</td>
+                        <td class="td_date">{{ $point->datetime }}</td>
+                        <td class="td_date">{{ $point->expire_date == '9999-12-31' ? '' : $point->expire_date }}</td>
+                        <td class="td_mngsmall">{{ number_format($point->user_point) }}</td>
                     </tr>
                     @endforeach
                     @else
