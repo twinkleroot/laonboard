@@ -10,6 +10,10 @@ body {
 body.white {
 	background: #fff;
 }
+.pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover {
+	background-color: #587ef6;
+	border-color: #587ef6;
+}
 .empty_table {
     line-height: 150px;
     color: #587ef6;
@@ -26,6 +30,9 @@ body.white {
 }
 div {
 	word-wrap:break-word
+}
+#contents {
+	min-height: 707px;
 }
 .hd_sch {
 	float: left;
@@ -327,7 +334,7 @@ div {
 /* footer */
 #footer {
 	width: 100%;
-	margin-top: 40px;
+	margin-top: 70px;
 	border-top: 1px solid #d8d8d8;
 	color: #999;
 	background-color: #fff;
@@ -382,6 +389,9 @@ div {
 	float: left;
 	list-style: none;
 	margin: 0 20px;
+}
+#popular ul li a {
+	color: #333;
 }
 #visit dl,
 #visit dl dt,
@@ -1205,6 +1215,9 @@ div {
 .wt_more .add .link_list .item,
 .wt_more .add .file_list .item {
 	padding: 2px 0;
+}
+.wt_more .add .file_list .item input {
+	margin: 8px 0;
 }
 .wt_more .add .link i,
 .wt_more .add .link span,
