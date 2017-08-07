@@ -24,7 +24,7 @@ class ThemePreviewController extends Controller
         $this->main = $main;
         $this->comment = $comment;
         $this->writeModel = $write;
-        $this->writeModel->board = Board::getBoard($request->boardId);
+        $this->writeModel->board = Board::first();
         $this->writeModel->setTableName($this->writeModel->board->table_name);
     }
 
@@ -64,11 +64,11 @@ class ThemePreviewController extends Controller
         // 미리 보기 데이터
         $preview = $this->theme->getPreview('boardView', $themeName);
         // 게시글 데이터
-        $view = $this->writeModel->getViewParams($this->writeModel, $boardId, $writeId, $request);
+        $view = $this->writeModel->getViewParams($this->writeModel, $writeId, $request);
         // 댓글 데이터
-        $comments = $this->comment->getCommentsParams($this->writeModel, $boardId, $writeId, $request);
+        $comments = $this->comment->getCommentsParams($this->writeModel, $writeId, $request);
         // 이전글, 다음글 데이터 추가
-        $prevAndNext = $this->writeModel->getPrevNextView($this->writeModel, $boardId, $writeId, $request);
+        $prevAndNext = $this->writeModel->getPrevNextView($this->writeModel, $writeId, $request);
         // 테마명 : 테마명에 해당하는 스킨이 존재하지 않으면 기본으로 설정
         $themeName = view()->exists("board.$themeName.view") ? $themeName : 'default';
         // 파라미터 배열 결합

@@ -21,7 +21,7 @@
     <div class="pull-right">
         <ul class="mb_btn" style="margin-top:8px;">
             <li>
-                
+
             </li>
         </ul>
     </div>
@@ -170,6 +170,9 @@
     </div>
 </div>
 
+@php
+    $ids = '';
+@endphp
 <script>
 var menuVal = 200100;
 $(function(){
@@ -188,7 +191,7 @@ $(function(){
 
         $('#ids').val(selected_id_array);
         $('#_method').val('DELETE');
-        <?php $ids=''; ?>
+
         $('#selectForm').attr('action', '{!! route('admin.users.destroy', $ids) !!}' + '/' + selected_id_array);
         $('#selectForm').submit();
     });

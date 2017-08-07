@@ -22,18 +22,18 @@ class ConfigRegister
         if(!Cache::has('config.homepage')) {
             Cache::forever('config.homepage', $this->registerConfigCache('homepage'));
         }
-		// 게시판 기본 설정
-		if(!Cache::has('config.board')) {
-			Cache::forever('config.board', $this->registerConfigCache('board'));
-		}
+        // 게시판 기본 설정
+        if(!Cache::has('config.board')) {
+            Cache::forever('config.board', $this->registerConfigCache('board'));
+        }
         // 회원 가입 설정
         if(!Cache::has('config.join')) {
             Cache::forever('config.join', $this->registerConfigCache('join'));
         }
-		// 본인 확인 설정
-		if(!Cache::has('config.cert')) {
-			Cache::forever('config.cert', $this->registerConfigCache('cert'));
-		}
+        // 본인 확인 설정
+        if(!Cache::has('config.cert')) {
+            Cache::forever('config.cert', $this->registerConfigCache('cert'));
+        }
         // 기본 메일 환경 설정
         if(!Cache::has('config.email.default')) {
             Cache::forever('config.email.default', $this->registerConfigCache('email.default'));
@@ -53,6 +53,14 @@ class ConfigRegister
         // 개별 스킨 설정
         if(!Cache::has('config.skin')) {
             Cache::forever('config.skin', $this->registerConfigCache('skin'));
+        }
+        // SNS 설정
+        if(!Cache::has('config.sns')) {
+            Cache::forever('config.sns', $this->registerConfigCache('sns'));
+        }
+        // 여분 필드 설정
+        if(!Cache::has('config.extra')) {
+            Cache::forever('config.extra', $this->registerConfigCache('extra'));
         }
 
         // 메뉴바 설정 가져오기

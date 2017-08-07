@@ -60,12 +60,14 @@ class Config extends Model
 
         return [
             'configHomepage' => cache("config.homepage"),
-            'configJoin' => cache("config.join"),
             'configBoard' => cache("config.board"),
+            'configJoin' => cache("config.join"),
+            'configCert' => cache("config.cert"),
             'configEmailDefault' => cache("config.email.default"),
             'configEmailBoard' => cache("config.email.board"),
             'configEmailJoin' => cache("config.email.join"),
-            'configCert' => cache("config.cert"),
+            'configSns' => cache("config.sns"),
+            'configExtra' => get_object_vars(cache("config.extra")),
             'admins' => $admins,
             'latestSkins' => getSkins('latest'),
             'searchSkins' => getSkins('search'),
@@ -83,6 +85,8 @@ class Config extends Model
                 return $this->createConfigBoard();
             case 'join':
                 return $this->createConfigJoin();
+            case 'cert':
+                return $this->createConfigCert();
             case 'email.default':
                 return $this->createConfigEmailDefault();
             case 'email.join':
@@ -93,8 +97,10 @@ class Config extends Model
                 return $this->createConfigTheme();
             case 'skin':
                 return $this->createConfigSkin();
-            case 'cert':
-                return $this->createConfigCert();
+            case 'sns':
+                return $this->createConfigSns();
+            case 'extra':
+                return $this->createConfigExtra();
             default:
                 # code...
                 break;
@@ -257,13 +263,64 @@ class Config extends Model
         return $this->createConfig('config.skin', $configArr);
     }
 
+    // SNS 설정 가져오기
+    public function createConfigSns()
+    {
+        $configArr = array (
+            'kakaoKey' => '',
+            'kakaoSecret' => '',
+            'kakaoRedirect' => '',
+            'naverKey' => '',
+            'naverSecret' => '',
+            'naverRedirect' => '',
+            'facebookKey' => '',
+            'facebookSecret' => '',
+            'facebookRedirect' => '',
+            'googleKey' => '',
+            'googleSecret' => '',
+            'googleRedirect' => '',
+        );
+
+        return $this->createConfig('config.sns', $configArr);
+    }
+
+    // 여분필드 설정 가져오기
+    public function createConfigExtra()
+    {
+        $configArr = array (
+            'subj_1' => '',
+            'value_1' => '',
+            'subj_2' => '',
+            'value_2' => '',
+            'subj_3' => '',
+            'value_3' => '',
+            'subj_4' => '',
+            'value_4' => '',
+            'subj_5' => '',
+            'value_5' => '',
+            'subj_6' => '',
+            'value_6' => '',
+            'subj_7' => '',
+            'value_7' => '',
+            'subj_8' => '',
+            'value_8' => '',
+            'subj_9' => '',
+            'value_9' => '',
+            'subj_10' => '',
+            'value_10' => '',
+        );
+
+        return $this->createConfig('config.extra', $configArr);
+    }
+
     // configs 테이블에 해당 row를 추가한다.
     public function createConfig($name, $configArr)
     {
-        return Config::create([
-            'name' => $name,
-            'vars' => json_encode($configArr)
-        ]);
+        $config = new Config();
+        $config->name = $name;
+        $config->vars = json_encode($configArr);
+        $config->save();
+        return $config;
     }
 
     // 설정을 변경한다.
@@ -315,6 +372,10 @@ class Config extends Model
             Cache::forget("config.cert");
             $data = array_add($data, 'certLimit', isset($data['certLimit']) ? $data['certLimit'] : 0);
             $data = array_add($data, 'certReq', isset($data['certReq']) ? $data['certReq'] : 0);
+        } else if($name == 'sns') {
+            Cache::forget("config.sns");
+        } else if($name == 'extra') {
+            Cache::forget("config.extra");
         }
 
         // json 형식으로 되어 있는 설정값을 배열로 바꾼다.

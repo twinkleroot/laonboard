@@ -114,7 +114,7 @@ class Menu extends Model
             $code = $menus['code'][$i];
             $subCode = '';
             if($groupCode == $code) {
-                $row = Menu::select(DB::raw('max(substring(code,3,2)) as max_code'))
+                $row = Menu::selectRaw('max(substring(code,3,2)) as max_code')
                     ->whereRaw('SUBSTRING(code,1,2) ='. $primaryCode)->first();
 
                 $subCode = base_convert($row['max_code'], 36, 10);
@@ -123,7 +123,7 @@ class Menu extends Model
 
                 $finalCode = $primaryCode . $subCode;
             } else {
-                $row = Menu::select(DB::raw('max(substring(code,1,2)) as max_code'))
+                $row = Menu::selectRaw('max(substring(code,1,2)) as max_code')
                     ->whereRaw('length(code) = 2')->first();
 
                 $finalCode = base_convert($row['max_code'], 36, 10);
@@ -139,7 +139,7 @@ class Menu extends Model
             Menu::create([
                 'code' => $menus['code'][$i],
                 'name' => $menus['name'][$i],
-                'link' => $menus['link'][$i],
+                'link' => is_null($menus['link'][$i]) ? "#" : $menus['link'][$i],
                 'target' => $menus['target'][$i],
                 'order' => $menus['order'][$i],
                 'use' => $menus['use'][$i],

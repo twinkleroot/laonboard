@@ -7,7 +7,7 @@
 @section('include_script')
 <script type="text/javascript">
     var menuVal = 100100;
-    jQuery("document").ready(function($){
+    $(document).ready(function(){
         var nav = $('#body_tab_type2');
 
         $(window).scroll(function () {
@@ -40,13 +40,15 @@
 
 <div id="body_tab_type2">
     <ul>
-        <li class="tab"><a href="#admin-header">기본환경설정</a></li>
+        <li class="tab"><a href="#cfs_basic">기본환경설정</a></li>
         <li class="tab"><a href="#cfs_board">게시판기본</a></li>
         <li class="tab"><a href="#cfs_join">회원가입</a></li>
         <li class="tab"><a href="#cfs_cert">본인확인</a></li>
         <li class="tab"><a href="#cfs_mail">메일환경</a></li>
         <li class="tab"><a href="#cfs_mail_board">글작성시 메일</a></li>
         <li class="tab"><a href="#cfs_mail_join">회원가입시 메일</a></li>
+        <li class="tab"><a href="#cfs_sns">SNS</a></li>
+        <li class="tab"><a href="#cfs_extra">여분필드</a></li>
     </ul>
 
     <div class="submit_btn">
@@ -212,9 +214,11 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>설정저장</th>
+                    <th>
+                        <label for="basicUpdate">설정변경</label>
+                    </th>
                     <td class="table_body chknone">
-                        <input type="submit" class="btn btn-sir" value="설정변경"/>
+                        <input type="submit" id="basicUpdate" class="btn btn-sir" value="기본 환경 설정 변경하기"/>
                     </td>
                 </tr>
             </table>
@@ -229,6 +233,11 @@
                 <span class="adm_box_title">게시판 기본 설정</span>
             </div>
             <table class="adm_box_table">
+                <tr>
+                    <td class="table_body" colspan="2">
+                        각 게시판 관리에서 개별적으로 설정 가능합니다.
+                    </td>
+                </tr>
                 <tr>
                     <th>
                         <label for="linkTarget">새창 링크</label>
@@ -320,8 +329,12 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>설정저장</th>
-                    <td class="table_body chknone"><input type="submit" class="btn btn-sir" value="게시판 기본 설정 변경하기"/></td>
+                    <th>
+                        <label for="boardUpdate">설정변경</label>
+                    </th>
+                    <td class="table_body chknone">
+                        <input type="submit" id="boardUpdate" class="btn btn-sir" value="게시판 기본 설정 변경하기"/>
+                    </td>
                 </tr>
             </table>
         </form>
@@ -335,6 +348,11 @@
                 <span class="adm_box_title">회원가입</span>
             </div>
             <table class="adm_box_table">
+                <tr>
+                    <td class="table_body" colspan="2">
+                        회원가입 시 사용할 스킨과 입력 받을 정보 등을 설정할 수 있습니다.
+                    </td>
+                </tr>
                 <tr>
                     <th>
                         <label for="newSkin">회원 스킨</label>
@@ -557,20 +575,22 @@
                     </th>
                     <td class="table_body chknone">
                         최소<input type="text" id="digits" name="passwordPolicyDigits" class="form-control form_num" value="{{ $configJoin->passwordPolicyDigits }}" placeholder="비밀 번호 최소 자릿수를 입력해 주세요." /> 자릿수 이상
-                    <p>
-                    <input type="checkbox" id="special" name="passwordPolicySpecial" value="1" @if($configJoin->passwordPolicySpecial == 1) checked @endif/>
-                        <label for="special">특수문자 하나 이상</label>
-                    <input type="checkbox" id="upper" name="passwordPolicyUpper" value="1" @if($configJoin->passwordPolicyUpper == 1) checked @endif/>
-                        <label for="upper">대문자 하나 이상</label>
-                    <input type="checkbox" id="number" name="passwordPolicyNumber" value="1" @if($configJoin->passwordPolicyNumber == 1) checked @endif/>
-                        <label for="number">숫자 하나 이상</label>
-                    </p>
+                        <p>
+                        <input type="checkbox" id="special" name="passwordPolicySpecial" value="1" @if($configJoin->passwordPolicySpecial == 1) checked @endif/>
+                            <label for="special">특수문자 하나 이상</label>
+                        <input type="checkbox" id="upper" name="passwordPolicyUpper" value="1" @if($configJoin->passwordPolicyUpper == 1) checked @endif/>
+                            <label for="upper">대문자 하나 이상</label>
+                        <input type="checkbox" id="number" name="passwordPolicyNumber" value="1" @if($configJoin->passwordPolicyNumber == 1) checked @endif/>
+                            <label for="number">숫자 하나 이상</label>
+                        </p>
                     </td>
                 </tr>
                 <tr>
-                    <th>설정변경</th>
+                    <th>
+                        <label for="joinUpdate">설정변경</label>
+                    </th>
                     <td class="table_body chknone">
-                        <input type="submit" class="btn btn-sir" value="설정변경"/>
+                        <input type="submit" id="joinUpdate" class="btn btn-sir" value="설정변경"/>
                     </td>
                 </tr>
             </table>
@@ -585,6 +605,13 @@
                 <span class="adm_box_title">본인확인 설정</span>
             </div>
             <table class="adm_box_table">
+                <tr>
+                    <td class="table_body" colspan="2">
+                        회원가입 시 본인확인 수단을 설정합니다.<br>
+                        실명과 휴대폰 번호 그리고 본인확인 당시에 성인인지의 여부를 저장합니다.<br>
+                        게시판의 경우 본인확인 또는 성인여부를 따져 게시물 조회 및 쓰기 권한을 줄 수 있습니다.<br>
+                    </td>
+                </tr>
                 <tr>
                     <th>
                         <label for="certUse">본인확인</label>
@@ -633,7 +660,7 @@
                         아이핀 본인확인 테스트의 경우에는 KCB 회원사ID가 필요 없으나,<br />
                         휴대폰 본인확인 테스트의 경우 KCB 에서 따로 발급 받으셔야 합니다.</span>
                         <div style="margin-top: 8px;">
-                            <a href="http://sir.kr/main/service/b_ipin.php" class="btn btn-sir" target="_blank">KCB 아이핀 서비스 신청페이지</a>
+                            {{-- <a href="http://sir.kr/main/service/b_ipin.php" class="btn btn-sir" target="_blank">KCB 아이핀 서비스 신청페이지</a> --}}
                             <a href="http://sir.kr/main/service/b_cert.php" class="btn btn-sir" target="_blank">KCB 휴대폰 본인확인 서비스 신청페이지</a>
                         </div>
                     </td>
@@ -667,10 +694,10 @@
                 </tr>
                 <tr>
                     <th>
-                        <label for="certReq">설정변경</label>
+                        <label for="certUpdate">설정변경</label>
                     </th>
                     <td class="table_body chknone">
-                        <input type="submit" class="btn btn-sir" value="설정변경"/>
+                        <input type="submit" id="certUpdate" class="btn btn-sir" value="본인확인 설정 변경하기"/>
                     </td>
                 </tr>
             </table>
@@ -717,10 +744,10 @@
                 </tr>
                 <tr>
                     <th>
-                        <label for="formmailIsMember">설정변경</label>
+                        <label for="emailBasicUpdate">설정변경</label>
                     </th>
                     <td class="table_body chknone">
-                        <input type="submit" class="btn btn-sir" value="기본 메일 환경 설정 변경하기"/>
+                        <input type="submit" id="emailBasicUpdate" class="btn btn-sir" value="기본 메일 환경 설정 변경하기"/>
                     </td>
                 </tr>
             </table>
@@ -787,10 +814,10 @@
                 </tr>
                 <tr>
                     <th>
-                        <label for="emailAllCommenter">설정변경</label>
+                        <label for="emailBoardUpdate">설정변경</label>
                     </th>
                     <td class="table_body chknone">
-                        <input type="submit" class="btn btn-sir" value="게시판 글 작성시 메일 설정 변경하기"/>
+                        <input type="submit" id="emailBoardUpdate" class="btn btn-sir" value="게시판 글 작성시 메일 설정 변경하기"/>
                     </td>
                 </tr>
             </table>
@@ -826,10 +853,138 @@
                 </tr>
                 <tr>
                     <th>
-                        <label for="emailJoinUser">설정변경</label>
+                        <label for="emailJoinUpdate">설정변경</label>
                     </th>
                     <td class="table_body chknone">
-                        <input type="submit" class="btn btn-sir" value="회원가입 시 메일 설정 변경하기"/>
+                        <input type="submit" id="emailJoinUpdate" class="btn btn-sir" value="회원가입 시 메일 설정 변경하기"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </section>
+    <section id="cfs_sns" class="adm_box">
+        <form role="form" method="POST" action="{{ route('admin.config.update', ['name' => 'sns']) }}">
+            {{ method_field('PUT') }}
+            {{ csrf_field() }}
+            <div class="adm_box_hd">
+                <span class="adm_box_title">SNS</span>
+            </div>
+            <table class="adm_box_table">
+                <tr>
+                    <th>카카오 Key</th>
+                    <td class="table_body chknone">
+                        <input type="text" class="form-control form_large" name="kakaoKey" value="{{ $configSns->kakaoKey }}" style="display: inline-block;">
+                        <a href="" class="btn btn-sir">앱 등록하기</a>
+                    </td>
+                </tr>
+                <tr>
+                    <th>카카오 Secret</th>
+                    <td class="table_body chknone">
+                        <input type="text" class="form-control form_large" name="kakaoSecret" value="{{ $configSns->kakaoSecret }}">
+                    </td>
+                </tr>
+                <tr>
+                    <th>카카오 Redirect URI</th>
+                    <td class="table_body chknone">
+                        <input type="text" class="form-control form_large" name="kakaoRedirect" value="{{ $configSns->kakaoRedirect }}">
+                    </td>
+                </tr>
+                <tr>
+                    <th>네이버 Key</th>
+                    <td class="table_body chknone">
+                        <input type="text" class="form-control form_large" name="naverKey" value="{{ $configSns->naverKey }}" style="display: inline-block;">
+                        <a href="" class="btn btn-sir">앱 등록하기</a>
+                    </td>
+                </tr>
+                <tr>
+                    <th>네이버 Secret</th>
+                    <td class="table_body chknone">
+                        <input type="text" class="form-control form_large" name="naverSecret" value="{{ $configSns->naverSecret }}">
+                    </td>
+                </tr>
+                <tr>
+                    <th>네이버 Redirect URI</th>
+                    <td class="table_body chknone">
+                        <input type="text" class="form-control form_large" name="naverRedirect" value="{{ $configSns->naverRedirect }}">
+                    </td>
+                </tr>
+                <tr>
+                    <th>페이스북 Key</th>
+                    <td class="table_body chknone">
+                        <input type="text" class="form-control form_large" name="facebookKey" value="{{ $configSns->facebookKey }}" style="display: inline-block;">
+                        <a href="" class="btn btn-sir">앱 등록하기</a>
+                    </td>
+                </tr>
+                <tr>
+                    <th>페이스북 Secret</th>
+                    <td class="table_body chknone">
+                        <input type="text" class="form-control form_large" name="facebookSecret" value="{{ $configSns->facebookSecret }}">
+                    </td>
+                </tr>
+                <tr>
+                    <th>페이스북 Redirect URI</th>
+                    <td class="table_body chknone">
+                        <input type="text" class="form-control form_large" name="facebookRedirect" value="{{ $configSns->facebookRedirect }}">
+                    </td>
+                </tr>
+                <tr>
+                    <th>구글 Key</th>
+                    <td class="table_body chknone">
+                        <input type="text" class="form-control form_large" name="googleKey" value="{{ $configSns->googleKey }}" style="display: inline-block;">
+                        <a href="" class="btn btn-sir">앱 등록하기</a>
+                    </td>
+                </tr>
+                <tr>
+                    <th>구글 Secret</th>
+                    <td class="table_body chknone">
+                        <input type="text" class="form-control form_large" name="googleSecret" value="{{ $configSns->googleSecret }}">
+                    </td>
+                </tr>
+                <tr>
+                    <th>구글 Redirect URI</th>
+                    <td class="table_body chknone">
+                        <input type="text" class="form-control form_large" name="googleRedirect" value="{{ $configSns->googleRedirect }}">
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <label for="snsUpdate">설정변경</label>
+                    </th>
+                    <td class="table_body chknone">
+                        <input type="submit" id="snsUpdate" class="btn btn-sir" value="SNS 설정 변경하기"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </section>
+    <section id="cfs_extra" class="adm_box">
+        <form role="form" method="POST" action="{{ route('admin.config.update', ['name' => 'extra']) }}">
+            {{ method_field('PUT') }}
+            {{ csrf_field() }}
+            <div class="adm_box_hd">
+                <span class="adm_box_title">여분필드</span>
+            </div>
+            <table class="adm_box_table">
+                <tr>
+                    <td class="table_body" colspan="2">
+                        각 게시판 관리에서 개별적으로 설정 가능합니다.
+                    </td>
+                </tr>
+                @for($i=1; $i<=10; $i++)
+                <tr>
+                    <th>여분필드{{ $i }}</th>
+                    <td class="table_body chknone">
+                        제목 <input type="text" class="form-control form_small" name="subj_{{ $i}}" value="{{ $configExtra["subj_$i"] }}">
+                        값 <input type="text" class="form-control form_small" name="value_{{ $i}}" value="{{ $configExtra["value_$i"] }}">
+                    </td>
+                </tr>
+                @endfor
+                <tr>
+                    <th>
+                        <label for="extraUpdate">설정변경</label>
+                    </th>
+                    <td class="table_body chknone">
+                        <input type="submit" id="extraUpdate" class="btn btn-sir" value="여분필드 설정 변경하기"/>
                     </td>
                 </tr>
             </table>

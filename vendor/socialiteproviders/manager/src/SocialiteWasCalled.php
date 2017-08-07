@@ -51,6 +51,7 @@ class SocialiteWasCalled
         /** @var SocialiteManager $socialite */
         $socialite = $this->app->make(\Laravel\Socialite\Contracts\Factory::class);
         $provider = $this->buildProvider($socialite, $providerName, $providerClass, $oauth1Server);
+
         $socialite->extend(
             $providerName,
             function () use ($provider) {
@@ -148,7 +149,6 @@ class SocialiteWasCalled
         $exceptionMessages = [];
         try {
             $config = $this->configRetriever->fromEnv($providerClass::IDENTIFIER, $additionalConfigKeys);
-
             // We will use the $spoofedConfig variable for now as a way to find out if there was no
             // configuration in the .env file which means we should not return anything and jump
             // to the service config check to check if something can be found there.

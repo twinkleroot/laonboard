@@ -8,13 +8,22 @@
     <script src="{{ asset('js/common.js') }}"></script>
     <script src="{{ asset('js/theme.js') }}"></script>
     <script>
-        var menuVal = 100300
+        var menuVal = 100300;
+
         function formSubmit() {
             $("#skinForm").submit();
         }
+
         $(document).ready(function(){
+            $('.adm_box').hide().eq(0).show();
+
             $("#body_tab_type2 li").click(function () {
                 $('.adm_box').hide().eq($(this).index()).show();
+            });
+
+            $(".tab").click(function () {
+                $(".tab").removeClass("active");
+                $(this).addClass("active");
             });
         });
     </script>
@@ -33,15 +42,15 @@
 </div>
 <div id="body_tab_type2">
     <ul>
-        <li class="tab"><a href="#admin-header">테마설정</a></li>
-        <li class="tab"><a href="#admin-header">개별스킨설정</a></li>
+        <li class="tab"><a href="#theme">테마설정</a></li>
+        <li class="tab"><a href="#skin">개별스킨설정</a></li>
     </ul>
     <div class="submit_btn">
         <button type="button" class="btn btn-default" onclick="formSubmit();">개별 스킨 저장</button>
     </div>
 </div>
 <div class="body-contents">
-    <section id="admin_box1" class="adm_box">
+    <section id="theme" class="adm_box">
         <p>설치된 테마 : {{ count($layoutSkins) }}</p>
         <ul class="theme_list">
             @if(count($layoutSkins) > 0)
@@ -70,12 +79,12 @@
         </ul>
     </section>
 
-    <section id="admin_box2" class="adm_box">
+    <section id="skin" class="adm_box">
         <form method="post" role="form" id="skinForm" action="{{ route('admin.themes.update.skin')}}">
             {{ csrf_field() }}
             <div class="adm_panel">
                 <div class="adm_box_hd">
-                    <span class="adm_box_title">기본 환경설정</span>
+                    <span class="adm_box_title">개별 스킨 설정</span>
             </div>
                 <div class="adm_box_bd">
                     <div class="form-horizontal">

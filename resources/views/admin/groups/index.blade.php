@@ -150,6 +150,10 @@
         {{ $groups->appends(Request::except('page'))->links() }}
     </div>
 </div>
+
+@php
+    $ids = '';
+@endphp
 <script>
 var menuVal = 300200;
 $(function(){
@@ -168,7 +172,7 @@ $(function(){
 
         $('#ids').val(selected_id_array);
         $('#_method').val('DELETE');
-        <?php $ids=''; ?>
+        
         $('#selectForm').attr('action', '{!! route('admin.groups.destroy', $ids) !!}' + '/' + selected_id_array);
         $('#selectForm').submit();
     });

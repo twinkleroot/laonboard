@@ -30,14 +30,28 @@ class SocialController extends Controller
     // 소셜 연결(provider에 해당 provider로 연결 요청)
     public function redirectToProvider($provider)
     {
-        return Socialite::with($provider)->redirect();
+        $config = $this->getConfig($provider);
+        return Socialite::with($provider)->setConfig($config)->redirect();
+    }
+
+    // .env가 아닌 DB에서 소셜 키 정보를 가져온다.
+    public function getConfig($provider)
+    {
+        $config = cache('config.sns');
+        $configArr = get_object_vars($config);
+        $configArr = array_where($configArr, function ($value, $key) use($provider) {
+            return str_contains($key, $provider);
+        });
+
+        return new \SocialiteProviders\Manager\Config($configArr[$provider.'Key'], $configArr[$provider.'Secret'], $configArr[$provider.'Redirect'], []);
     }
 
     // 소셜인증 후 데이터를 받아서 처리하는 콜백 메서드(config/services.php에서 지정)
     public function handleProviderCallback($provider)
     {
         try {
-            $userFromSocial = Socialite::with($provider)->user();
+            $config = $this->getConfig($provider);
+            $userFromSocial = Socialite::with($provider)->setConfig($config)->user();
         } catch (InvalidStateException $e) {
             return alert('잘못된 접근입니다.');
         } catch (ClientException $e) {

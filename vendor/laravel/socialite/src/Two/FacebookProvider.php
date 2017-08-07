@@ -49,6 +49,19 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
      */
     protected $reRequest = false;
 
+    // .env가 아닌 외부에서 앱 키 정보 가져와서 저장하는 로직
+    public function setConfig($config)
+    {
+        $config = $config->get();
+
+        $this->config = $config;
+        $this->clientId = $config['client_id'];
+        $this->clientSecret = $config['client_secret'];
+        $this->redirectUrl = $config['redirect'];
+
+        return $this;
+    }
+
     /**
      * {@inheritdoc}
      */

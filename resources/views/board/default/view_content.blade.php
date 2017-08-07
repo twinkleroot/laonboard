@@ -1,3 +1,6 @@
+@php
+    $user = isset($user) ? $user : auth()->user();
+@endphp
 <!-- 게시글 조회 -->
 <div class="bd_rd_head">
     <h1>{{ $view->subject }}</h1>
