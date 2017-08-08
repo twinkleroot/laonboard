@@ -33,56 +33,51 @@
         </div>
     @endif
     <div id="board">
-        
-                
-                <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.accessGroups.store') }}">
-                    <input type="hidden" name="user_id" value="{{ $user->id }}" />
-                    {{ csrf_field() }}
-                    <span class="total">
-                        이메일 <b>{{ $user->email }}</b>, 닉네임 <b>{{ $user->nick }}</b>@if(!is_null($user->name)), 이름 <b>{{ $user->name }}</b> @endif
-                    </span>
-                    <p style="clear: both;">
-                        그룹지정
-                        <select name="group_id">
-                            <option>접근가능 그룹을 선택하세요.</option>
-                            @foreach($accessible_groups as $accessible_group)
-                                <option value="{{ $accessible_group->id }}">{{ $accessible_group->subject }}</option>
-                            @endforeach
-                        </select>
-                        <input type="submit" class="btn btn-primary" value="선택" />
-                    </p>
-                </form>
-                <form class="form-horizontal" role="form" method="POST" id="selectForm" action="">
-                    <input type="hidden" id='ids' name='ids' value='' />
-                    <input type="hidden" id='_method' name='_method' value='' />
-                    <div class="panel-body">
-                        {{ csrf_field() }}
-                        <table class="table table-striped box">
-                            <thead>
-                                <th class="text-center"><input type="checkbox" name="chkAll" onclick="checkAll(this.form)"/></th>
-                                <th class="text-center">그룹아이디</th>
-                                <th class="text-center">그룹</th>
-                                <th class="text-center">처리일시</th>
-                            </thead>
+        <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.accessGroups.store') }}">
+            <input type="hidden" name="user_id" value="{{ $user->id }}" />
+            {{ csrf_field() }}
+            <span class="total">
+                이메일 <b>{{ $user->email }}</b>, 닉네임 <b>{{ $user->nick }}</b>@if(!is_null($user->name)), 이름 <b>{{ $user->name }}</b> @endif
+            </span>
+            <p>
+                그룹지정
+                <select name="group_id" class="form-control" style="width:auto; display: inline-block;">
+                    <option>접근가능 그룹을 선택하세요.</option>
+                    @foreach($accessible_groups as $accessible_group)
+                        <option value="{{ $accessible_group->id }}">{{ $accessible_group->subject }}</option>
+                    @endforeach
+                </select>
+                <input type="submit" class="btn btn-sir" value="선택" />
+            </p>
+        </form>
+        <form class="form-horizontal" role="form" method="POST" id="selectForm" action="">
+            <input type="hidden" id='ids' name='ids' value='' />
+            <input type="hidden" id='_method' name='_method' value='' />
+                {{ csrf_field() }}
+                <table class="table table-striped box">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" name="chkAll" onclick="checkAll(this.form)"/></th>
+                            <th>그룹아이디</th>
+                            <th>그룹</th>
+                            <th>처리일시</th>
+                        </tr>
+                    </thead>
 
-                            <tbody>
-                            @foreach ($groups as $group)
-                                <tr>
-                                    <td class="text-center">
-                                        <input type="checkbox" name="chkId[]" class="groupId" value='{{ $group->pivot->id }}' /></td>
-                                    <td class="text-center">{{ $group->group_id }}</td>
-                                    <td class="text-center">{{ $group->subject }}</td>
-                                    <td class="text-center">{{ $group->pivot->created_at }}</td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="panel-heading">
-                        <input type="button" id="selected_delete" class="btn btn-primary" value="선택 삭제"/>
-                    </div>
-                </form>
-
+                    <tbody>
+                    @foreach ($groups as $group)
+                        <tr>
+                            <td class="td_chk">
+                                <input type="checkbox" name="chkId[]" class="groupId" value='{{ $group->pivot->id }}' /></td>
+                            <td class="td_id">{{ $group->group_id }}</td>
+                            <td class="td_subject">{{ $group->subject }}</td>
+                            <td class="td_date">{{ $group->pivot->created_at }}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            <input type="button" id="selected_delete" class="btn btn-sir" value="선택삭제"/>
+        </form>
     </div>
 </div>
 <script>

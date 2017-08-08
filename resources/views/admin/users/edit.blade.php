@@ -68,7 +68,7 @@
                                     <input type="email" class="form-control" name="email" value="{{ $user->email }}" readonly>
                                 </div>
                                 <div class="col-md-5" style="padding-left: 0;">
-                                    <a href="{{ route('admin.accessGroups.show', $user->id). '?'. Request::getQueryString() }}" class="btn btn-default form_btn" role="button">접근가능그룹보기</a>
+                                    <a href="{{ route('admin.accessGroups.show', $user->id). '?'. Request::getQueryString() }}" class="btn btn-sir form_btn" role="button">접근가능그룹보기</a>
                                 </div>
                             </div>
                             <div class="form-group">
