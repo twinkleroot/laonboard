@@ -168,7 +168,7 @@
                 @endforeach
             </div>
             <div class="copy">
-            대표 홍길동 | 전화 000-0000-0000 | 사업자 000-00-00000<br>
+            {{-- 대표 홍길동 | 전화 000-0000-0000 | 사업자 000-00-00000<br> --}}
             Copyright © <b>소유하신 도메인.</b> All rights reserved.<br>
             </div>
         </div>

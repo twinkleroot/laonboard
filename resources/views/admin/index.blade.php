@@ -150,10 +150,10 @@
                     @foreach($points as $point)
                     <tr>
                         <td class="td_email">
-                            <a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $point->user->email }}">{{ $point->user->email }}</a>
+                            <a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ App\User::getUser($point->user_id)->email }}">{{ App\User::getUser($point->user_id)->email }}</a>
                         </td>
                         <td class="td_nick">
-                            @component('admin.sideview', ['id' => $point->user->id, 'nick' => $point->user->nick, 'email' => $point->user->email])
+                            @component('admin.sideview', ['id' => App\User::getUser($point->user_id)->id, 'nick' => App\User::getUser($point->user_id)->nick, 'email' => App\User::getUser($point->user_id)->email])
                             @endcomponent
                         </td>
                         <td class="td_date">{{ $point->datetime }}</td>

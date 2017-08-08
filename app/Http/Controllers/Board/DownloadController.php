@@ -18,7 +18,8 @@ class DownloadController extends Controller
         $this->download = $download;
         $this->writeModel = $write;
         $this->writeModel->board = Board::getBoard($request->boardId);
-        $this->writeModel->setTableName($this->writeModel->board->table_name);
+        $table = is_null($this->writeModel->board) ? '' : $this->writeModel->board->table_name;
+        $this->writeModel->setTableName($table);
     }
 
     // 글 보기 중 첨부파일 다운로드

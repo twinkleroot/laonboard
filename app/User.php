@@ -249,7 +249,6 @@ class User extends Authenticatable
             'nick' => $request->get('nick'),
             'nick_date' => $nowDate,
             'mailing' => 0,
-            'sms' => 0,
             'open' => 1,
             'open_date' => $nowDate,
             'today_login' => Carbon::now(),
@@ -371,11 +370,9 @@ class User extends Authenticatable
             'email' => $email,
             'password' => $password,
             'id_hashkey' => str_replace("/", "-", bcrypt($user->id)),  // 회원정보수정때마다 id_hashkey를 변경한다.
-            // 'name' => $request->get('name'),
             'nick' => $nick,
             'nick_date' => $nickDate,
             'homepage' => cleanXssTags($request->homepage),
-            // 'hp' => $request->get('hp'),
             'tel' => cleanXssTags($request->tel),
             'addr1' => cleanXssTags($request->addr1),
             'addr2' => cleanXssTags($request->addr2),
@@ -384,7 +381,6 @@ class User extends Authenticatable
             'profile' => trim($request->profile),
             'memo' => trim($request->memo),
             'mailing' => $request->has('mailing') ? $request->mailing : 0,
-            'sms' => $request->has('sms') ? $request->sms : 0,
             'recommend' => $request->has('recommend') ? $recommendedId : $user->recommend,
         ];
 
