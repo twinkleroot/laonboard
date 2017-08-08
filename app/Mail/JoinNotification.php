@@ -33,8 +33,12 @@ class JoinNotification extends Mailable
      */
     public function build()
     {
-        return $this->subject($this->subject)
-                    ->view('mail.default.join_notification')
-                    ->with('user', $this->user);
+        $address = cache('config.email.default')->adminEmail;
+        $name = cache('config.email.default')->adminEmailName;
+        return $this
+            ->from($address, $name)
+            ->subject($this->subject)
+            ->view('mail.default.join_notification')
+            ->with('user', $this->user);
     }
 }

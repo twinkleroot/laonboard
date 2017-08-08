@@ -723,6 +723,20 @@
                     </td>
                 </tr>
                 <tr>
+                    <th>관리자 메일 주소</th>
+                    <td class="table_body chknone">
+                        <input type="text" class="form-control form_large" name="adminEmail" value="{{ $configEmailDefault->adminEmail }}">
+                        <span class="help-block">관리자가 보내고 받는 용도로 사용하는 메일 주소를 입력합니다. (회원가입, 인증메일, 테스트, 회원메일발송 등에서 사용)</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>관리자 메일 발송이름</th>
+                    <td class="table_body chknone">
+                        <input type="text" class="form-control form_large" name="adminEmailName" value="{{ $configEmailDefault->adminEmailName }}">
+                        <span class="help-block">관리자가 보내고 받는 용도로 사용하는 메일의 발송이름을 입력합니다. (회원가입, 인증메일, 테스트, 회원메일발송 등에서 사용)</span>
+                    </td>
+                </tr>
+                <tr>
                     <th>
                         <label for="emailCertify">이메일 인증 사용</label>
                     </th>
@@ -944,6 +958,12 @@
                     <th>구글 Redirect URI</th>
                     <td class="table_body chknone">
                         <input type="text" class="form-control form_large" name="googleRedirect" value="{{ $configSns->googleRedirect }}">
+                    </td>
+                </tr>
+                <tr>
+                    <th>구글 Invisible Recaptcha Key</th>
+                    <td class="table_body chknone">
+                        <input type="text" class="form-control form_large" name="googleRecaptcha" value="{{ $configSns->googleRecaptcha }}">
                     </td>
                 </tr>
                 <tr>

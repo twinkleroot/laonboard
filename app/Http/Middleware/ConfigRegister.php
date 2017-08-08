@@ -18,49 +18,12 @@ class ConfigRegister
      */
     public function handle($request, Closure $next)
     {
-        // 홈페이지 기본환경 설정
-        if(!Cache::has('config.homepage')) {
-            Cache::forever('config.homepage', $this->registerConfigCache('homepage'));
-        }
-        // 게시판 기본 설정
-        if(!Cache::has('config.board')) {
-            Cache::forever('config.board', $this->registerConfigCache('board'));
-        }
-        // 회원 가입 설정
-        if(!Cache::has('config.join')) {
-            Cache::forever('config.join', $this->registerConfigCache('join'));
-        }
-        // 본인 확인 설정
-        if(!Cache::has('config.cert')) {
-            Cache::forever('config.cert', $this->registerConfigCache('cert'));
-        }
-        // 기본 메일 환경 설정
-        if(!Cache::has('config.email.default')) {
-            Cache::forever('config.email.default', $this->registerConfigCache('email.default'));
-        }
-        // 게시판 글 작성시 메일 설정
-        if(!Cache::has('config.email.board')) {
-            Cache::forever('config.email.board', $this->registerConfigCache('email.board'));
-        }
-        // 회원가입 시 메일 설정
-        if(!Cache::has('config.email.join')) {
-            Cache::forever('config.email.join', $this->registerConfigCache('email.join'));
-        }
-        // 테마 설정
-        if(!Cache::has('config.theme')) {
-            Cache::forever('config.theme', $this->registerConfigCache('theme'));
-        }
-        // 개별 스킨 설정
-        if(!Cache::has('config.skin')) {
-            Cache::forever('config.skin', $this->registerConfigCache('skin'));
-        }
-        // SNS 설정
-        if(!Cache::has('config.sns')) {
-            Cache::forever('config.sns', $this->registerConfigCache('sns'));
-        }
-        // 여분 필드 설정
-        if(!Cache::has('config.extra')) {
-            Cache::forever('config.extra', $this->registerConfigCache('extra'));
+        // 설정 캐시 등록
+        $configNames = [
+            'homepage', 'board', 'join', 'cert', 'email.default', 'email.board', 'email.join', 'theme', 'skin', 'sns', 'extra'
+        ];
+        foreach($configNames as $configName) {
+            $this->registerConfigCache($configName);
         }
 
         // 메뉴바 설정 가져오기
@@ -77,6 +40,13 @@ class ConfigRegister
     }
 
     private function registerConfigCache($configName)
+    {
+        if(!Cache::has("config.$configName")) {
+            Cache::forever("config.$configName", $this->getConfig($configName));
+        }
+    }
+
+    private function getConfig($configName)
     {
         $configModel = new Config(); // 캐시에 저장할 때만 객체 생성
         $config = Config::where('name', 'config.'. $configName)->first();
