@@ -208,6 +208,8 @@ class Config extends Model
     {
         $configArr = array (
             'emailUse' => config('gnu.emailUse'),
+            'adminEmail' => config('gnu.adminEmail'),
+            'adminEmailName' => config('gnu.adminEmailName'),
             'emailCertify' => config('gnu.emailCertify'),
             'formmailIsMember' => config('gnu.formmailIsMember'),
         );
@@ -279,6 +281,7 @@ class Config extends Model
             'googleKey' => '',
             'googleSecret' => '',
             'googleRedirect' => '',
+            'googleRecaptcha' => '',
         );
 
         return $this->createConfig('config.sns', $configArr);

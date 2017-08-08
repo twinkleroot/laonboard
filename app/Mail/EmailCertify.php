@@ -36,11 +36,15 @@ class EmailCertify extends Mailable
     public function build()
     {
         $url = route('user.email.certify', [
-                'id' => $this->user->id_hashkey,
-                'crypt' => $this->user->email_certify2
-            ]);
+            'id' => $this->user->id_hashkey,
+            'crypt' => $this->user->email_certify2
+        ]);
+
+        $address = cache('config.email.default')->adminEmail;
+        $name = cache('config.email.default')->adminEmailName;
 
         return $this
+            ->from($address, $name)
             ->subject('['. cache('config.homepage')->title. '] 인증확인 메일입니다.')
             ->view('mail.default.email_certify')
             ->with([

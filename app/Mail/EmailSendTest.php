@@ -29,7 +29,10 @@ class EmailSendTest extends Mailable
      */
     public function build()
     {
-        return $this->subject('[메일검사] 제목')
+        $address = cache('config.email.default')->adminEmail;
+        $name = cache('config.email.default')->adminEmailName;
+        return $this->from($address, $name)
+                    ->subject('[메일검사] 제목')
                     ->view('mail.default.email_send_test')
                     ->with('now', Carbon::now());
     }

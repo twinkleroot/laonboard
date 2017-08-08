@@ -28,7 +28,8 @@ class WriteController extends Controller
     {
         $this->writeModel = $write;
         $this->writeModel->board = Board::getBoard($request->boardId);
-        $this->writeModel->setTableName($this->writeModel->board->table_name);
+        $table = is_null($this->writeModel->board) ? '' : $this->writeModel->board->table_name;
+        $this->writeModel->setTableName($table);
         $this->boardFileModel = $boardFile;
         $this->boardGoodModel = $boardGood;
     }

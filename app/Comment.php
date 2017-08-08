@@ -53,7 +53,7 @@ class Comment
         $isDelete = 1;
 
         $user = auth()->user();
-        $commentUser = $comment->user_id == 0 ? '' : User::find($comment->user_id);
+        $commentUser = $comment->user_id == 0 ? '' : User::getUser($comment->user_id);
         if( !is_null($user) ) {
             if ($user->isSuperAdmin()) {// 최고관리자 통과
                 ;

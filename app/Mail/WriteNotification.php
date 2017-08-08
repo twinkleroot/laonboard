@@ -38,13 +38,17 @@ class WriteNotification extends Mailable
      */
     public function build()
     {
-        return $this->subject($this->mailSubject)
-                    ->view('mail.default.write_notification')
-                    ->with([
-                        'subject' => $this->writeSubject,
-                        'name' => $this->name,
-                        'content' => $this->content,
-                        'linkUrl' => $this->linkUrl,
-                    ]);
+        $address = cache('config.email.default')->adminEmail;
+        $name = cache('config.email.default')->adminEmailName;
+        return $this
+            ->from($address, $name)
+            ->subject($this->mailSubject)
+            ->view('mail.default.write_notification')
+            ->with([
+                'subject' => $this->writeSubject,
+                'name' => $this->name,
+                'content' => $this->content,
+                'linkUrl' => $this->linkUrl,
+            ]);
     }
 }

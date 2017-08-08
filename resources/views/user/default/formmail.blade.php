@@ -96,7 +96,7 @@
 
     <!-- 리캡챠 -->
     <div id='recaptcha' class="g-recaptcha"
-        data-sitekey="{{ env('GOOGLE_INVISIBLE_RECAPTCHA_KEY') }}"
+        data-sitekey="{{ cache('config.sns')->googleRecaptcha }}"
         data-callback="onSubmit"
         data-size="invisible" style="display:none">
     </div>

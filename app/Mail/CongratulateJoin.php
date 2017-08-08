@@ -34,14 +34,19 @@ class CongratulateJoin extends Mailable
     public function build()
     {
         $url = route('user.email.certify', [
-                'id' => $this->user->id_hashkey,
-                'crypt' => $this->user->email_certify2
+            'id' => $this->user->id_hashkey,
+            'crypt' => $this->user->email_certify2
+        ]);
+
+        $address = cache('config.email.default')->adminEmail;
+        $name = cache('config.email.default')->adminEmailName;
+        return $this
+            ->from($address, $name)
+            ->subject($this->subject)
+            ->view('mail.default.congratulate_join')
+            ->with([
+                'user' => $this->user,
+                'url' => $url
             ]);
-        return $this->subject($this->subject)
-                    ->view('mail.default.congratulate_join')
-                    ->with([
-                        'user' => $this->user,
-                        'url' => $url
-                    ]);
     }
 }

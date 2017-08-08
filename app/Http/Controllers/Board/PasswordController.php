@@ -18,9 +18,10 @@ class PasswordController extends Controller
     {
         $this->writeModel = $write;
         $this->writeModel->board = Board::getBoard($request->boardId);
-        $this->writeModel->setTableName($this->writeModel->board->table_name);
-
+        $table = is_null($this->writeModel->board) ? '' : $this->writeModel->board->table_name;
+        $this->writeModel->setTableName($table);
     }
+    
     // 비밀번호 입력 폼 연결
     public function checkPassword(Request $request, $type)
     {
