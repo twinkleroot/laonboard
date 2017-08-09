@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\User;
 use Carbon\Carbon;
+use DB;
 
 class UsersTableSeeder extends Seeder
 {
@@ -16,22 +17,22 @@ class UsersTableSeeder extends Seeder
         $nowDate = Carbon::now()->toDateString();
 
         $admin = [
-                'name' => '관리자',
-                'nick' => '관리자',
-                'nick_date' => $nowDate,
-                'email' => config('gnu.superAdmin'),
-                'password' => bcrypt('admin'),
-                'level' => 10,
-                'point' => 9999999,
-                'mailing' => 1,
-                'sms' => 1,
-                'open' => 1,
-                'open_date' => $nowDate,
-                'today_login' => Carbon::now(),
-                'email_certify' => Carbon::now(),
+            'name' => '관리자',
+            'nick' => '관리자',
+            'nick_date' => $nowDate,
+            'email' => config('gnu.superAdmin'),
+            'password' => bcrypt('admin'),
+            'level' => 10,
+            'point' => 9999999,
+            'mailing' => 1,
+            'open' => 1,
+            'open_date' => $nowDate,
+            'today_login' => Carbon::now(),
+            'email_certify' => Carbon::now(),
         ];
 
-        $user = User::create($admin);
+        User::insert($admin);
+        $user = User::find(DB::getPdo()->lastInsertId());
         $user->id_hashkey = str_replace("/", "-", bcrypt($user->id));
         $user->save();
     }

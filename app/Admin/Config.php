@@ -192,7 +192,7 @@ class Config extends Model
         return $this->createConfig('config.join', $configArr);
     }
 
-    // 개별 스킨 설정 가져오기
+    // 본인 확인 설정 가져오기
     public function createConfigCert()
     {
         $configArr = array (

@@ -39,7 +39,7 @@ class CreateContentsTable extends Migration
                 '<p align=center><b>서비스 이용약관에 대한 내용을 입력하십시오.</b></p>'
             ];
             for($i=0; $i<3; $i++) {
-                Content::create([
+                Content::insert([
                     'content_id' => $ids[$i],
                     'html' => 1,
                     'subject' => $subjects[$i],
