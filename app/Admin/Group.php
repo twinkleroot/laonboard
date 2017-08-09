@@ -5,6 +5,7 @@ namespace App\Admin;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 use Cache;
+use Carbon\Carbon;
 use App\User;
 use App\Admin\Board;
 
@@ -17,12 +18,15 @@ class Group extends Model
      */
     protected $guarded = [];
 
-    protected $table = 'groups';
+    public function __construct()
+    {
+        $this->table = 'groups';
+    }
 
     // 회원 모델과의 관계 설정
     public function users()
     {
-        return $this->belongsToMany(User::class)->withPivot('id', 'created_at');
+        return $this->belongsToMany(User::class, 'group_user')->withPivot('id', 'created_at');
     }
 
     // 게시판 모델과의 관계 설정
@@ -40,24 +44,17 @@ class Group extends Model
         $direction = isset($request->direction) ? $request->direction : '';
 
         $query =
-            DB::table('groups as g')
-            ->selectRaw('
-                        g.id,
-                        g.group_id,
-                        g.subject,
-                        g.admin,
-                        g.use_access,
-                        g.order,
-                        g.device,
-                        g.created_at,
-                        (   select count(gu.id)
-                            from group_user as gu
-                            where gu.group_id = g.id
+            Group::select('groups.*',
+                    DB::raw('
+                        ( select count(gu.id)
+                          from '. env('DB_PREFIX'). 'group_user as gu
+                          where gu.group_id = '. env('DB_PREFIX'). 'groups.id
                         ) as count_users,
-                        (   select count(b.id)
-                            from boards as b
-                            where b.group_id = g.id
+                        ( select count(b.id)
+                          from '. env('DB_PREFIX'). 'boards as b
+                          where b.group_id = '. env('DB_PREFIX'). 'groups.id
                         ) as count_board'
+                    )
             );
 
         // 최고 관리자가 아닐때
@@ -74,7 +71,7 @@ class Group extends Model
         if($order) {
             $query = $query->orderBy($order, $direction);
         } else {
-            $query = $query->orderBy('g.group_id');
+            $query = $query->orderBy('group_id');
         }
 
         $groups = $query->paginate(cache('config.homepage')->pageRows);
@@ -117,8 +114,10 @@ class Group extends Model
         $data = array_except($data, ['_token']);
 
         $data = exceptNullData($data);
+        $data['created_at'] = Carbon::now();
+        $data['updated_at'] = Carbon::now();
 
-        return Group::create($data);
+        return Group::insert($data);
 
     }
 

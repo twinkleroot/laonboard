@@ -73,7 +73,7 @@ class BoardsController extends Controller
         ];
         $messages = array_collapse($messages, [$messages, $tableNameMessage]);
 
-        $this->validate($request, $this->rules(), $this->messages());
+        $this->validate($request, $rules, $messages);
 
         $write = $this->boardModel->createWriteTable($request->table_name);
         $board = $this->boardModel->storeBoard($request->all());
@@ -120,11 +120,11 @@ class BoardsController extends Controller
         $subject = $this->boardModel->updateBoard($request->all(), $id);
 
         if(!$subject) {
-            abort(500, '게시판 설정의 수정에 실패하였습니다.');
+            abort(500, '게시판 수정에 실패하였습니다.');
         }
 
         return redirect(route('admin.boards.edit', $id). $request->queryString)
-            ->with('message', $subject . ' 게시판의 설정이 수정되었습니다.');
+            ->with('message', $subject . ' 게시판이 수정되었습니다.');
     }
 
     // 선택 수정 수행
@@ -183,7 +183,7 @@ class BoardsController extends Controller
 
         $this->validate($request, $rule);
 
-        $originalBoard = Board::findOrFail($request->id);
+        $originalBoard = Board::find($request->id);
 
         $board = $this->boardModel->copyBoard($request->all());
         // 게시판 테이블 생성
@@ -191,15 +191,19 @@ class BoardsController extends Controller
 
         $message = $originalBoard->subject . ' 게시판이 복사되었습니다.';
         // 구조와 데이터를 함께 복사하는 경우
-        if($request->get('copy_case') == 'schema_data_both') {  // Write instance를 새로 만들어야 해서 여기에 구현함.
-            // 원본 테이블의 모델을 지정한다.
+        if($request->get('copy_case') == 'schema_data_both') {
+            // 원본 테이블의 데이터를 가져온다.
             $originalWrite = new Write();
             $originalWrite->setTableName($originalBoard->table_name);
+            $orginalDatas = $originalWrite->get()->toArray();
+            foreach($orginalDatas as $key => $value) {
+                $orginalDatas[$key] = array_except($value, ['isDelete', 'isEdit', 'isReply']);
+            }
 
             // 대상 테이블의 모델을 지정하고 데이터를 넣는다.
             $destinationWrite = new Write();
             $destinationWrite->setTableName($board->table_name);
-            if($destinationWrite->insert($originalWrite->get()->toArray())) {
+            if($destinationWrite->insert($orginalDatas)) {
                 $message = $originalBoard->subject . ' 게시판과 데이터가 복사되었습니다.';
             } else {
                 $message = $originalBoard->subject . ' 게시판과 데이터 복사에 실패하였습니다.';

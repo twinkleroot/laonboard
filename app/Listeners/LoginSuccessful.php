@@ -50,9 +50,10 @@ class LoginSuccessful
 
         // 보낸 쪽지, 받은 쪽지가 기준 일이 지나면 자동 삭제
         $memoDel = cache('config.homepage')->memoDel;
-        Memo::where('recv_user_id', $event->user->id)
-        ->orWhere('send_user_id', $event->user->id)
-        ->where('send_timestamp', '<', Carbon::now()->subDays($memoDel)->toDatetimeString())
+
+        Memo::orWhere('recv_user_id', $event->user->id)
+        ->where('send_user_id', $event->user->id)
+        ->where('send_timestamp', '<', Carbon::now()->subDays($memoDel))
         ->delete();
 
         // 회원 가입인 경우($isUserJoin == true) 로그인 포인트를 부여하지 않음.

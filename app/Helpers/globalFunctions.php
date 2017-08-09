@@ -56,7 +56,7 @@ function getPopularWords($dateCnt=3, $popCnt=7)
 {
     $from = \Carbon\Carbon::now()->subDays($dateCnt)->format("Y-m-d");
     $to = \Carbon\Carbon::now()->toDateString();
-    $populars = App\Admin\Popular::selectRaw('word, count(*) as cnt')
+    $populars = App\Admin\Popular::select('word', DB::raw('count(*) as cnt'))
     ->whereBetween('date', [$from, $to])
     ->groupBy('word')
     ->orderBy('cnt', 'desc')

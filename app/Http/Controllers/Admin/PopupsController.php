@@ -58,9 +58,9 @@ class PopupsController extends Controller
             abort(403, '팝업 레이어 생성에 대한 권한이 없습니다.');
         }
 
-        $result = $this->popup->storePopup($request);
+        $id = $this->popup->storePopup($request);
 
-        return redirect(route('admin.popups.edit', $result->id));
+        return redirect(route('admin.popups.edit', $id));
     }
 
     /**

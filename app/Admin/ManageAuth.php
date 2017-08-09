@@ -5,6 +5,7 @@ namespace App\Admin;
 use Illuminate\Database\Eloquent\Model;
 use App\User;
 use Cache;
+use DB;
 
 class ManageAuth extends Model
 {
@@ -14,8 +15,13 @@ class ManageAuth extends Model
      * @var array
      */
     protected $guarded = [];
-    protected $table = 'manage_auth';
+
     public $timestamps = false;
+
+    public function __construct()
+    {
+        $this->table = 'manage_auth';
+    }
 
     public function getIndexParams($request) {
         $authList = ManageAuth::all();
@@ -32,7 +38,8 @@ class ManageAuth extends Model
         $keyword = isset($request->keyword) ? $request->keyword : '';
         $order = isset($request->order) ? $request->order : '';
         $direction = isset($request->direction) ? $request->direction : '';
-        $query = ManageAuth::selectRaw('manage_auth.*, users.email as user_email, users.nick as user_nick')
+        $query =
+            ManageAuth::select('manage_auth.*', 'users.email as user_email', 'users.nick as user_nick')
             ->leftJoin('users', 'manage_auth.user_id', '=', 'users.id');
 
         // 검색
@@ -44,7 +51,7 @@ class ManageAuth extends Model
         if($order) {
             $query = $query->orderBy('user_'. $order, $direction);
         } else {
-            $query = $query->orderByRaw('manage_auth.user_id, manage_auth.menu');
+            $query = $query->orderBy('user_id')->orderBy('menu');
         }
 
         $manageAuthList = $query->paginate(Cache::get('config.homepage')->pageRows);
@@ -97,7 +104,7 @@ class ManageAuth extends Model
                 return $user->email. '회원님의 권한을 변경하였습니다.';
             }
         } else {    // 관리 권한 추가
-            $result = ManageAuth::create([
+            $result = ManageAuth::insert([
                 'user_id' => $user->id,
                 'menu' => $request->menu,
                 'auth' => implode(',', $authData)

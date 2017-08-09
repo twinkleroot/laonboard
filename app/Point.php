@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\User;
 use App\Write;
 use Cache;
+use DB;
 use Exception;
 
 class Point extends Model
@@ -20,7 +21,12 @@ class Point extends Model
 
     public $timestamps = false;
 
-    protected $dates = [ 'datetime', ];
+    protected $dates = [ 'datetime' ];
+
+    public function __construct()
+    {
+        $this->table = 'points';
+    }
 
     // 유저 모델과의 관계 설정
     public function user()
@@ -137,7 +143,7 @@ class Point extends Model
             $expireDate = Carbon::now()->toDateString();
         }
 
-        Point::create([
+        Point::insert([
                     'user_id' => $userId,
                     'datetime' => Carbon::now(),
                     'content' => addslashes($content),
@@ -178,7 +184,7 @@ class Point extends Model
                 $user = User::find($userId);
                 $point = $expirePoint * (-1);
                 $pointUserPoint = $user->point + $point;
-                Point::create([
+                Point::insert([
                     'user_id' => $userId,
                     'datetime' => Carbon::now(),
                     'content' => addslashes($content),
@@ -216,11 +222,12 @@ class Point extends Model
             return 0;
         }
 
-        $point = Point::selectRaw('sum(point - use_point) as sum_point')
-        ->where([ 'user_id' => $userId, 'expired' => 0 ])
-        ->where('expire_date', '<>', '9999-12-31')
-        ->where('expire_date', '<', Carbon::now()->toDateString())
-        ->first();
+        $point =
+            Point::selectRaw('sum(point - use_point) as sum_point')
+            ->where([ 'user_id' => $userId, 'expired' => 0 ])
+            ->where('expire_date', '<>', '9999-12-31')
+            ->where('expire_date', '<', Carbon::now()->toDateString())
+            ->first();
 
         return $point->sum_point;
     }

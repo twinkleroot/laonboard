@@ -3,6 +3,7 @@
 namespace App\Admin;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class Popup extends Model
 {
@@ -13,7 +14,11 @@ class Popup extends Model
      */
     protected $guarded = [];
     public $timestamps = false;
-    protected $table = 'popups';
+
+    public function __construct()
+    {
+        $this->table = 'popups';
+    }
 
     public function getIndexParams()
     {
@@ -49,7 +54,9 @@ class Popup extends Model
         $data = $request->all();
         $data = array_except($data, ['begin_chk', 'end_chk', '_token', '_method']);
 
-        return Popup::create($data);
+        Popup::insert($data);
+
+        return DB::getPdo()->lastInsertId();
     }
 
     public function getEditParams($id)

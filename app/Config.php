@@ -15,4 +15,9 @@ class Config extends Model
 
     public $timestamps = false;
 
+    public function __construct()
+    {
+        $this->table = 'configs';
+    }
+
 }

@@ -21,6 +21,11 @@ class BoardFile extends Model
 
     public $timestamps = false;
 
+    public function __construct()
+    {
+        $this->table = 'board_files';
+    }
+
     // 글쓰기 할때 파일 업로드 갯수 검사 후 업로드 기능 호출
     public function createBoardFiles($request, $boardId, $writeId)
     {
@@ -220,7 +225,8 @@ class BoardFile extends Model
     public function insertBoardFiles($uploadFileInfos)
     {
         foreach($uploadFileInfos as $uploadFileInfo) {
-            $boardFile = BoardFile::create($uploadFileInfo);
+            $uploadFileInfo['created_at'] = Carbon::now();
+            BoardFile::insert($uploadFileInfo);
         }
     }
 

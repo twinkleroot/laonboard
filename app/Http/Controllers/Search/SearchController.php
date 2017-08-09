@@ -85,8 +85,7 @@ class SearchController extends Controller
             $boardQuery = $boardQuery->where('id', $this->boardId);
         }
 
-        $orderColumn = 'boards.order';  // table prefix를 붙일 수 있어서 변수로 뺌.
-        $boards = $boardQuery->orderByRaw($orderColumn. ', group_id, table_name')->get();
+        $boards = $boardQuery->orderBy('order', 'group_id', 'table_name')->get();
 
         return $boards;
     }
@@ -141,7 +140,7 @@ class SearchController extends Controller
                 $writeModel->board = $board;
                 $writeModel->setTableName($board->table_name);
                 $query = $writeModel
-                    ->selectRaw($writeModel->getTable().'.*, users.id_hashKey as user_id_hashKey')
+                    ->select($writeModel->getTable().'.*', 'users.id_hashKey as user_id_hashKey')
                     ->leftJoin('users', 'users.id', '=', $writeModel->getTable().'.user_id')
                     ->whereRaw('1=1');
 

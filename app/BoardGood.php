@@ -16,6 +16,11 @@ class BoardGood extends Model
      */
     protected $guarded = [];
 
+    public function __construct()
+    {
+        $this->table = 'board_goods';
+    }
+
     // 추천, 비추천 처리 로직
     public function good($writeModel, $writeId, $good)
     {
@@ -56,6 +61,7 @@ class BoardGood extends Model
             ->update([
                 $good => $count
             ]);
+
         // 내역 기록
         BoardGood::insert([
             'board_id' => $board->id,

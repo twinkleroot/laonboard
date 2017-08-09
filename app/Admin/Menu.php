@@ -19,6 +19,11 @@ class Menu extends Model
 
     public $timestamps = false;
 
+    public function __construct()
+    {
+        $this->table = 'menus';
+    }
+
     // 메뉴 리스트 페이지에서 필요한 파라미터
     public function getMenuIndexParams()
     {
@@ -136,7 +141,7 @@ class Menu extends Model
 
             $menus['code'][$i] = $finalCode;
 
-            Menu::create([
+            Menu::insert([
                 'code' => $menus['code'][$i],
                 'name' => $menus['name'][$i],
                 'link' => is_null($menus['link'][$i]) ? "#" : $menus['link'][$i],

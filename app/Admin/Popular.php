@@ -3,6 +3,7 @@
 namespace App\Admin;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
 use Cache;
 use Carbon\Carbon;
 
@@ -15,7 +16,11 @@ class Popular extends Model
      */
     protected $guarded = [];
     public $timestamps = false;
-    protected $table = 'populars';
+
+    public function __construct()
+    {
+        $this->table = 'populars';
+    }
 
     // 인기 검색어 목록
     public function getIndexParams($request)
@@ -26,7 +31,7 @@ class Popular extends Model
         $direction = isset($request->direction) ? $request->direction : '';
         $pageRows = Cache::get('config.homepage')->pageRows;
 
-        $query = Popular::selectRaw('*');
+        $query = Popular::select('*');
         switch ($kind) {
             case 'word':
                 $query = $query->whereRaw("INSTR($kind, '$keyword')");
@@ -67,7 +72,7 @@ class Popular extends Model
     public function addPopular($kinds, $keyword, $request)
     {
          if(!in_array('user_id', $kinds)) {
-             Popular::firstOrCreate([
+             Popular::insert([
                  'word' => $keyword,
                  'date' => Carbon::now()->toDateString(),
                  'ip' => $request->ip(),
@@ -82,7 +87,8 @@ class Popular extends Model
         $toDate = isset($request->toDate) ? $request->toDate : Carbon::now()->toDateString();
         $listType = isset($request->list) ? $request->list : 0; // 전체목록인지 기간검색인지
         $pageRows = Cache::get('config.homepage')->pageRows;
-        $query = Popular::selectRaw('word, count(*) as cnt')
+        $query =
+            Popular::select('word', DB::raw('count(*) as cnt'))
             ->whereRaw("trim(word) <> ''");
         if( !$listType ) {
             $query = $query->whereBetween('date', [$fromDate, $toDate]);

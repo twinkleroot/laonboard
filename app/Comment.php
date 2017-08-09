@@ -21,7 +21,7 @@ class Comment
     public function getCommentsParams($writeModel, $writeId, $request)
     {
         $comments = $writeModel
-                ->selectRaw($writeModel->getTable().'.*, users.level as user_level, users.id_hashkey as user_id_hashkey')
+                ->select($writeModel->getTable().'.*', 'users.level as user_level', 'users.id_hashkey as user_id_hashkey')
                 ->leftJoin('users', 'users.id', '=', $writeModel->getTable().'.user_id')
                 ->where(['parent' => $writeId, 'is_comment' => 1])
                 ->orderBy('comment')
@@ -207,7 +207,7 @@ class Comment
         ]);
 
         // 새글 Insert
-        BoardNew::Create([
+        BoardNew::insert([
             'board_id' => $board->id,
             'write_id' => $newCommentId,
             'write_parent' => $writeId,

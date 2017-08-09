@@ -68,7 +68,7 @@ class ContentsController extends Controller
 
         $result = $this->content->storeContent($request);
 
-        return redirect(route('contents.edit', $result));
+        return redirect(route('admin.contents.edit', $result));
     }
 
     /**

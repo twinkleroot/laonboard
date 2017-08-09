@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Cache;
+use DB;
 use Carbon\Carbon;
 use App\User;
 use App\Point;
@@ -18,6 +19,11 @@ class Memo extends Model
     protected $guarded = [];
     public $timestamps = false;
 
+    public function __construct()
+    {
+        $this->table = 'memos';
+    }
+
     // 메모 목록 뷰에 필요한 파라미터
     public function getIndexParams($request)
     {
@@ -25,7 +31,8 @@ class Memo extends Model
         $unkind = $kind == 'recv' ? 'send' : 'recv';
         $countMemo = Memo::where($kind.'_user_id', auth()->user()->id)->count();
 
-        $memos = Memo::selectRaw('memos.*, users.id_hashkey as user_id_hashkey, users.nick, users.email')
+        $memos =
+            Memo::select('memos.*', 'users.id_hashkey as user_id_hashkey', 'users.nick', 'users.email')
             ->leftJoin('users', 'users.id', '=', 'memos.'.$unkind.'_user_id')
             ->where('memos.'.$kind.'_user_id', auth()->user()->id)
             ->orderBy('memos.id', 'desc')
@@ -42,16 +49,16 @@ class Memo extends Model
     public function getCreateParams($request)
     {
         $user = auth()->user();
-		if( !$user ) {
-			abort(500, '회원만 이용할 수 있습니다.');
-		}
+        if( !$user ) {
+            abort(500, '회원만 이용할 수 있습니다.');
+        }
         if( !$user->open && !$user->isSuperAdmin() && $user->id_hashkey != $request->to) {
             abort(500, "자신의 정보를 공개하지 않으면 다른분에게 쪽지를 보낼 수 없습니다. 정보공개 설정은 회원정보수정에서 하실 수 있습니다.");
         }
-		$content = '';
-		$to = '';
+        $content = '';
+        $to = '';
         if( isset($request->to) ) {
-			$toUser = getUser($request->to);
+            $toUser = getUser($request->to);
 
             if( is_null($toUser)) {
                 abort(500, "회원정보가 존재하지 않습니다.\\n\\n탈퇴하였을 수 있습니다.");
@@ -72,13 +79,13 @@ class Memo extends Model
                 $content = '';
             }
 
-			$to = $toUser->nick;
+            $to = $toUser->nick;
         }
 
-		return [
-			'content' => $content,
-			'to' => $to
-		];
+        return [
+            'content' => $content,
+            'to' => $to
+        ];
     }
 
     // 쪽지 전송 모든 과정
@@ -103,12 +110,12 @@ class Memo extends Model
             }
         }
 
-		// 탈퇴, 차단 회원, 정보공개 안한 회원 등에게는 쪽지를 전송하지 않는다.
-		$this->checkErrorList($errorList);
-		// 쪽지보낼 때 차감되는 포인트 만큼 보유하고 있는지 확인한다.
-		$this->checkPoint($currentUser, $toList);
-		// 쪽지 전송
-		$this->sendMemo($currentUser, $toList, $request);
+        // 탈퇴, 차단 회원, 정보공개 안한 회원 등에게는 쪽지를 전송하지 않는다.
+        $this->checkErrorList($errorList);
+        // 쪽지보낼 때 차감되는 포인트 만큼 보유하고 있는지 확인한다.
+        $this->checkPoint($currentUser, $toList);
+        // 쪽지 전송
+        $this->sendMemo($currentUser, $toList, $request);
     }
 
     // 탈퇴, 차단 회원, 정보공개 안한 회원 등에게는 쪽지를 전송하지 않는다.
@@ -139,7 +146,7 @@ class Memo extends Model
         $nickList = [];
         foreach($toList as $to) {
             // 쪽지 insert
-            Memo::Create([
+            Memo::insert([
                 'recv_user_id' => $to->id,
                 'send_user_id' => $currentUser->id,
                 'send_timestamp' => Carbon::now(),
@@ -179,7 +186,7 @@ class Memo extends Model
         }
         $unkind = ($kind == 'recv') ? 'send' : 'recv';
 
-        $memo = Memo::selectRaw('memos.*, users.id_hashkey as user_id_hashkey, users.nick, users.email')
+        $memo = Memo::select('memos.*', 'users.id_hashkey as user_id_hashkey', 'users.nick', 'users.email')
             ->leftJoin('users', 'users.id', '=', 'memos.'.$unkind.'_user_id')
             ->where([
                 'memos.id' => $id,

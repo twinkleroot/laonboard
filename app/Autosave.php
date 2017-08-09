@@ -17,6 +17,11 @@ class Autosave extends Model
 
     public $timestamps = false;
 
+    public function __construct()
+    {
+        $this->table = 'autosaves';
+    }
+
     // 임시 저장 - 저장
     public function autosave($request)
     {

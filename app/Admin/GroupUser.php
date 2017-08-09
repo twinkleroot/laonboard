@@ -19,9 +19,13 @@ class GroupUser extends Model
      */
     protected $guarded = [];
 
-    public $table = 'group_user';
-
     public $timestamps = false;
+
+    public function __construct()
+    {
+        $this->table = 'group_user';
+    }
+
 
     // 접근 가능 그룹 목록을 표시한다.
     public function getAccessibleGroups($id)
@@ -49,12 +53,12 @@ class GroupUser extends Model
             'user_id' => $data['user_id']
         ])->first();
         if(!$groupUser) {
-            $addedGroupUser = GroupUser::create([
+            $result = GroupUser::insert([
                 'group_id' => $data['group_id'],
                 'user_id' => $data['user_id'],
                 'created_at' => Carbon::now(),
             ]);
-            if($addedGroupUser) {
+            if($result) {
                 return '접근 가능 그룹이 추가되었습니다.';
             } else {
                 return '접근 가능 그룹을 추가하는데 실패하였습니다.';
@@ -85,18 +89,22 @@ class GroupUser extends Model
         $direction = isset($request->direction) ? $request->direction : '';
         $group = Group::find($id);
 
-        $query = $group
-            ->users()
-            ->selectRaw('users.*, count.count_groups')
+        $query = $group->users()
+            ->select('users.*', DB::raw('count.count_groups'))
             ->leftJoin(DB::raw(
-                '(select users.id as id,
-                count(group_user.id) as count_groups
-                from group_user
-                left join users
-                on group_user.user_id = users.id
-                group by users.id) as count'),
-                'users.id', '=', 'count.id'
+                '(
+                    select users.id as id, count(group_user.id) as count_groups
+                    from '. env('DB_PREFIX'). 'group_user as group_user
+                    left join '. env('DB_PREFIX'). 'users as users
+                    on group_user.user_id = users.id
+                    group by users.id
+                 ) as count'
+                 ),
+                DB::raw('count.id'),
+                '=',
+                'users.id'
             );
+
         // 검색 추가
         if($keyword) {
             $query = $query->where('users.nick', 'like', '%'. $keyword. '%');

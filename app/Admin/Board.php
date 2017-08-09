@@ -9,6 +9,7 @@ use App\Write;
 use DB;
 use Cache;
 use File;
+use Carbon\Carbon;
 use App\Services\BoardSingleton;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -22,7 +23,11 @@ class Board extends Model
      */
     protected $guarded = [];
 
-    protected $table = 'boards';
+    public function __construct()
+    {
+        $this->table = 'boards';
+    }
+
 
     // 게시판 그룹 모델과의 관계 설정
     public function group()
@@ -46,7 +51,7 @@ class Board extends Model
         // 최고 관리자가 아닌 관리자의 경우
         if( !auth()->user()->isSuperAdmin() ) {
             $query =
-                Board::selectRaw('boards.*, groups.subject')
+                Board::select('boards.*')
                 ->leftJoin('groups', 'boards.group_id', '=', 'groups.id')
                 ->where('groups.admin', auth()->user()->email);
             if($kind) {
@@ -60,7 +65,7 @@ class Board extends Model
             if($kind) {
                 if($kind == 'group_id') {
                     $query =
-                        Board::selectRaw('boards.*, groups.subject')
+                        Board::select('boards.*')
                         ->leftJoin('groups', 'boards.group_id', '=', 'groups.id')
                         ->where('groups.group_id', 'like', '%'. $keyword. '%');
                 } else {
@@ -70,14 +75,15 @@ class Board extends Model
                 $query = Board::select('*');
             }
         }
+
         // 정렬
         if($order) {
             $query = $query->orderBy('boards.'. $order, $direction);
         } else {
-            $query = $query->orderByRaw('boards.order, boards.group_id, boards.table_name asc');
+            $query = $query->orderBy('order', 'group_id', 'table_name');
         }
 
-        $boards = $query->paginate(Cache::get("config.homepage")->pageRows);
+        $boards = $query->paginate(cache("config.homepage")->pageRows);
         $groups = Group::get();
 
         $queryString = "?kind=$kind&keyword=$keyword&page=". $boards->currentPage();
@@ -106,7 +112,7 @@ class Board extends Model
             $selectedGroup = Group::findOrFail($inputGroupId)->id;
         }
 
-        $config = Cache::get("config.board");
+        $config = cache("config.board");
 
         $board = [
             'read_point' => $config->readPoint,
@@ -116,8 +122,8 @@ class Board extends Model
             'use_secret' => 0,
             'count_modify' => 1,
             'count_delete' => 1,
-            'page_rows' => Cache::get("config.homepage")->pageRows,
-            'mobile_page_rows' => Cache::get("config.homepage")->mobilePageRows,
+            'page_rows' => cache("config.homepage")->pageRows,
+            'mobile_page_rows' => cache("config.homepage")->mobilePageRows,
             'skin' => 'default',
             'mobile_skin' => 'default',
             'layout' => 'default.basic',
@@ -142,7 +148,7 @@ class Board extends Model
         ];
 
         return [
-            'homePageConfig' => Cache::get("config.homepage"),
+            'homePageConfig' => cache("config.homepage"),
             'boardConfig' => $config,
             'board' => $board,      // 배열
             'groups' => $groups,
@@ -166,8 +172,14 @@ class Board extends Model
         $data = $this->applyBoard($data, 'chk_group');
         $data = $this->applyBoard($data, 'chk_all');
 
+        $data['created_at'] = Carbon::now();
+        $data['updated_at'] = Carbon::now();
         // board 테이블에 새 게시판 행 추가
-        return Board::create($data);
+        if(Board::insert($data)) {
+            return Board::getBoard(DB::getPdo()->lastInsertId());
+        }
+
+        abort(500, '게시판 생성에 실패하였습니다.');
     }
 
     // (게시판 관리) edit 페이지에서 필요한 파라미터 가져오기
@@ -180,15 +192,13 @@ class Board extends Model
         $order = $request->has('order') ? $request->order : '';
         $direction = $request->has('direction') ? $request->direction : '';
         $page = $request->has('page') ? $request->page : '';
-        // $keyword = Group::find($board->group_id)->group_id;
 
         $queryString = "?kind=$kind&keyword=$keyword&order=$order&direction=$direction&page=$page";
 
         return [
-            'boardConfig' => Cache::get("config.board"),
+            'boardConfig' => cache("config.board"),
             'board' => $board,      // 객체
             'groups' => $groups,
-            // 'keyword' => $keyword,
             'action' => route('admin.boards.update', $id),
             'type' => 'edit',
             'skins' => getSkins('board'),
@@ -301,7 +311,9 @@ class Board extends Model
         $originalData = exceptNullData($originalData);
         $originalData = array_except($originalData, ['id']);
 
-        return Board::create($originalData);
+        Board::insert($originalData);
+
+        return Board::find(DB::getPdo()->lastInsertId());
     }
 
     // (게시판 관리) 선택 삭제
@@ -366,7 +378,7 @@ class Board extends Model
     // (게시판 관리 -> 게시판 추가) 새 게시판 테이블 생성
     public function createWriteTable($tableName)
     {
-        $tableNameAddPrefix = 'write_' . $tableName;
+        $tableNameAddPrefix = "write_$tableName";
         if(!Schema::hasTable($tableNameAddPrefix)) {
             Schema::create($tableNameAddPrefix, function (Blueprint $table) {
                 $table->increments('id');
@@ -416,7 +428,7 @@ class Board extends Model
 
             // 라라벨 기본 API에서 mysql의 set type을 지원하지 않으므로 enum으로 생성하고 set으로 변경한다.
             // $table_prefix = DB::getTablePrefix();
-            DB::statement("ALTER TABLE " . $tableNameAddPrefix . " CHANGE `option` `option` SET('html1', 'html2', 'secret', 'mail');");
+            DB::statement("ALTER TABLE " . DB::getTablePrefix(). $tableNameAddPrefix . " CHANGE `option` `option` SET('html1', 'html2', 'secret', 'mail');");
 
             return true;
         } else {

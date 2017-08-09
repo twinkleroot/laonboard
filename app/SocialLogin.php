@@ -24,6 +24,11 @@ class SocialLogin extends Model
         'social_id', 'social_token',
     ];
 
+    public function __construct()
+    {
+        $this->table = 'social_logins';
+    }
+
     // SocialLogin 테이블과 Users 테이블과의 관계는 N:1
     public function user()
     {

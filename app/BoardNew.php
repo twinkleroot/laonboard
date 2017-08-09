@@ -22,12 +22,18 @@ class BoardNew extends Model
     protected $guarded = [];
     public $timestamps = false;
 
+    public function __construct()
+    {
+        $this->table = 'board_news';
+    }
+
     public function deleteOldWrites()
     {
-         $newDel = cache('config.homepage')->newDel;
-         BoardNew::where('created_at', '<', Carbon::
-         now()->subDays($newDel)->toDatetimeString())
-         ->delete();
+        $newDel = cache('config.homepage')->newDel;
+
+        BoardNew::
+            where('created_at', '<', Carbon::now()->subDays($newDel)->toDatetimeString())
+            ->delete();
     }
 
     public function getIndexParams($request)
@@ -52,7 +58,7 @@ class BoardNew extends Model
     private function getNewWritesThroughSearch($request, $groups)
     {
         $query =
-            BoardNew::selectRaw('board_news.*, boards.table_name, boards.subject, boards.mobile_subject, groups.subject as group_subject, groups.id as group_id')
+            BoardNew::select('board_news.*', 'boards.table_name', 'boards.subject', 'boards.mobile_subject', 'groups.subject as group_subject', 'groups.id as group_id')
             ->leftJoin('boards', 'boards.id', '=', 'board_news.board_id')
             ->leftJoin('groups', 'groups.id', '=', 'boards.group_id')
             ->where('boards.use_search', 1);
@@ -110,7 +116,7 @@ class BoardNew extends Model
     // 새글 선택 삭제
     public function deleteWrites($ids)
     {
-        $boardNews = BoardNew::selectRaw('board_news.*, boards.table_name')
+        $boardNews = BoardNew::select('board_news.*', 'boards.table_name')
                     ->leftJoin('boards', 'boards.id', '=', 'board_news.board_id')
                     ->whereIn('board_news.id', $ids)
                     ->get();
@@ -121,24 +127,28 @@ class BoardNew extends Model
             $boardId = $boardNew->board_id;
             $writeId = $boardNew->write_id;
 
-            $write = new Write();
-            $write->board = Board::getBoard($boardId);
-            $write->setTableName($boardNew->table_name);
+            $writeModel = new Write();
+            $writeModel->board = Board::getBoard($boardId);
+            $writeModel->setTableName($boardNew->table_name);
             // 원글 삭제
             if($writeId == $boardNew->write_parent) {
-                $point->deleteWritePoint($write, $boardId, $writeId);
-                // 서버에서 파일 삭제 첨부파일의 썸네일 삭제, 파일 테이블에서 파일 정보 삭제
-                $result = $boardFile->deleteWriteAndAttachFile($boardId, $writeId);
-                if( array_search(false, $result) != false ) {
-                    abort(500, '정상적으로 게시글을 삭제하는데 실패하였습니다.\\n('. $boardId. '게시판 '. $writeId. '번 글의 첨부 파일 삭제)');
+                // 글쓰기에 부여된 포인트 삭제
+                $point->deleteWritePoint($writeModel, $boardId, $writeId);
+                $write = Write::getWrite($boardId, $writeId);
+                if($write->file > 0) {
+                    // 서버에서 파일 삭제 첨부파일의 썸네일 삭제, 파일 테이블에서 파일 정보 삭제
+                    $result = $boardFile->deleteWriteAndAttachFile($boardId, $writeId);
+                    if( array_search(false, $result) != false ) {
+                        abort(500, '정상적으로 게시글을 삭제하는데 실패하였습니다.\\n('. $boardId. '게시판 '. $writeId. '번 글의 첨부 파일 삭제)');
+                    }
                 }
                 // 게시글 삭제
-                $result = $write->deleteWrite($write, $writeId);
+                $result = $writeModel->deleteWrite($writeModel, $writeId);
                 if($result <= 0) {
                     abort(500, '정상적으로 게시글을 삭제하는데 실패하였습니다.\\n('. $boardId. '게시판 '. $writeId. '번 글의 삭제)');
                 }
             } else {    // 댓글 삭제
-                $comment->deleteComment($write, $boardId, $writeId);
+                $comment->deleteComment($writeModel, $boardId, $writeId);
             }
         }
 

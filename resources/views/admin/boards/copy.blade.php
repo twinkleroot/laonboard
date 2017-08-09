@@ -29,6 +29,7 @@
 <body>
 <form method="POST" action="{{ route('admin.boards.copy') }}">
     {{ csrf_field() }}
+    <input type="hidden" name="id" value="{{ $board->id }}" />
     <div id="header" class="container">
         <div class="title">
             <span>게시판 복사</span>

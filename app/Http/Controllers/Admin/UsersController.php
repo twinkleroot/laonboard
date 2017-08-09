@@ -88,10 +88,10 @@ class UsersController extends Controller
 
         $user = getUser($id);
         if(!$user) {
-			return alertRedirect('존재하지 않는 회원입니다.', '/admin/index');
+            return alertRedirect('존재하지 않는 회원입니다.', '/admin/index');
         }
 
-		$params = $this->userModel->editParams($user, $id);
+        $params = $this->userModel->editParams($user, $id);
 
         return view('admin.users.edit', $params);
     }
@@ -109,7 +109,7 @@ class UsersController extends Controller
             abort(403, '회원 정보 수정에 대한 권한이 없습니다.');
         }
 
-		$this->userModel->updateUserInfo($request, $id);
+        $this->userModel->updateUserInfo($request, $id);
 
         return redirect()->back();
     }
@@ -140,7 +140,7 @@ class UsersController extends Controller
             abort(403, '회원 삭제에 대한 권한이 없습니다.');
         }
 
-		$this->userModel->deleteUser($request);
+        $this->userModel->deleteUser($request);
 
         return redirect(route('admin.users.index'))->with('message', '선택한 회원이 삭제되었습니다.');
     }

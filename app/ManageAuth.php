@@ -12,7 +12,12 @@ class ManageAuth extends Model
      * @var array
      */
     protected $guarded = [];
-    protected $table = 'manage_auth';
+
     public $timestamps = false;
+
+    public function __construct()
+    {
+        $this->table = 'manage_auth';
+    }
 
 }

@@ -20,7 +20,12 @@ class Point extends Model
     protected $guarded = [];
     public $timestamps = false;
     protected $table = 'points';
-    protected $dates = [ 'datetime', ];
+    protected $dates = [ 'datetime' ];
+
+    public function __construct()
+    {
+        $this->table = 'points';
+    }
 
     // 유저 모델과의 관계 설정
     public function user()
@@ -62,7 +67,7 @@ class Point extends Model
         if($order) {
             if($order == 'email') {
                 $query = $query
-                    ->selectRaw('points.*, users.email as email')
+                    ->select('points.*', 'users.email as email')
                     ->leftJoin('users', 'points.user_id', '=', 'users.id')
                     ->orderBy('email', $direction);
             } else {

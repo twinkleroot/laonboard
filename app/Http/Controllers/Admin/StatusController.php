@@ -121,8 +121,10 @@ class StatusController extends Controller
         // between에 들어가는 from, to를 가져온다.
         $range = $this->getRange($period);
         // 기간별로 통계 데이터를 가져온다.
-        $baseDatas = BoardNew::selectRaw($query. ' as at, sum(if(write_id = write_parent, 1, 0)) as write_count, sum(if(write_id = write_parent, 0, 1)) as comment_count')
-                ->whereBetween('created_at', [ $range['from'], $range['to'] ]);
+        $baseDatas =
+            BoardNew::
+            selectRaw($query. ' as at, sum(if(write_id = write_parent, 1, 0)) as write_count, sum(if(write_id = write_parent, 0, 1)) as comment_count')
+            ->whereBetween('created_at', [ $range['from'], $range['to'] ]);
         if($boardId > 0) {
             $baseDatas = $baseDatas->where('board_id', $boardId);
         }

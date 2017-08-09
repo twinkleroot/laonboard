@@ -20,8 +20,6 @@ use Carbon\Carbon;
 
 class AdminUser extends Model
 {
-    protected $table = 'users';
-
     protected $dates = ['today_login', 'email_certify', 'nick_date', 'open_date', ];
 
     /**
@@ -33,8 +31,8 @@ class AdminUser extends Model
 
     public $rulesRegister = [
         'email' => 'required|email|max:255|unique:users',
-        'password_confirmation' => 'required',
         'nick' => 'required|nick_length:2,4|unique:users|alpha_num',
+        'password_confirmation' => 'required',
     ];
 
     public $rulesPassword = [
@@ -50,6 +48,11 @@ class AdminUser extends Model
         'password', 'remember_token',
     ];
 
+    public function __construct()
+    {
+        $this->table = 'users';
+    }
+
     // SocialLogin 모델과의 관계 설정
     public function socialLogins()
     {
@@ -59,7 +62,7 @@ class AdminUser extends Model
     // BoardGroup 모델과의 관계 설정
     public function groups()
     {
-        return $this->belongsToMany(Group::class)->withPivot('id', 'created_at');
+        return $this->belongsToMany(Group::class, 'group_user')->withPivot('id', 'created_at');
     }
 
     // Point 모델과의 관계설정
@@ -85,20 +88,20 @@ class AdminUser extends Model
         $leaveUsers = 0;
 
         $query =
-            DB::table('users as u')
-            ->select(DB::raw('
-                u.*,
-                (   select count(gu.id)
-                    from group_user as gu
-                    where gu.user_id = u.id
+            AdminUser::select('users.*',
+                DB::raw('
+                ( select count(gu.id)
+                    from '. env('DB_PREFIX'). 'group_user as gu
+                    where gu.user_id = '. env('DB_PREFIX'). 'users.id
                 ) as count_groups'
-            ));
+                )
+            );
 
         // 정렬
         if($order) {
             $query = $query->orderBy($order, $direction);
         } else {
-            $query = $query->orderBy('u.created_at', 'desc');
+            $query = $query->orderBy('created_at', 'desc');
         }
         // 최고 관리자가 아니면 관리자보다 등급이 같거나 낮은 사람만 조회가능.
         if( !auth()->user()->isSuperAdmin() ) {
@@ -139,12 +142,14 @@ class AdminUser extends Model
         $data = exceptNullData($data);
         $data = array_add($data, 'ip', $request->ip());
         $data['password'] = bcrypt($data['password']);  // 비밀번호 암호화
+        $data['created_at'] = Carbon::now();
+        $data['updated_at'] = Carbon::now();
 
-        $user = AdminUser::create($data);
-
-        if(is_null($user)) {
+        if(!AdminUser::insert($data)) {
             abort(500, '회원추가에 실패하였습니다.');
         }
+
+        $user = AdminUser::find(DB::getPdo()->lastInsertId());
 
         $user->id_hashkey = str_replace("/", "-", bcrypt($user->id));   // id 암호화
         $user->save();

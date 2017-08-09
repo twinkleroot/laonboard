@@ -24,8 +24,8 @@ Route::get('/search', ['as' => 'search', 'uses' => 'Search\SearchController@resu
 // 관리자 그룹
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], function() {
     // 관리자 메인
-    Route::get('', ['as' => 'admin.index', 'uses' => 'Admin\IndexController@index']);
-    Route::get('index', ['as' => 'admin.index', 'uses' => 'Admin\IndexController@index']);
+    Route::get('', ['as' => 'admin.index', 'uses' => 'Admin\MainController@index']);
+    Route::get('index', ['as' => 'admin.index', 'uses' => 'Admin\MainController@index']);
 
     // 기본 환경 설정
     Route::get('config', ['as' => 'admin.config', 'uses' => 'Admin\ConfigController@index']);
@@ -131,10 +131,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
     ]);
 
     // 게시판 관리 리소스 컨트롤러에 추가적으로 라우팅을 구성(리소스 라우트보다 앞에 와야 함)
-    Route::put('boards/selected_update', ['as' => 'admin.boards.selectedUpdate', 'uses' => 'Admin\BoardsController@selectedUpdate']);
     Route::get('boards/copy/{boardId}', ['as' => 'admin.boards.copyForm', 'uses' => 'Admin\BoardsController@copyForm']);
-    Route::get('boards/{boardId}/thumbnail/delete', ['as' => 'admin.boards.thumbnail.delete', 'uses' => 'Admin\BoardsController@deleteThumbnail']);
     Route::post('boards/copy', ['as' => 'admin.boards.copy', 'uses' => 'Admin\BoardsController@copy']);
+    Route::get('boards/{boardId}/thumbnail/delete', ['as' => 'admin.boards.thumbnail.delete', 'uses' => 'Admin\BoardsController@deleteThumbnail']);
+    Route::put('boards/selected_update', ['as' => 'admin.boards.selectedUpdate', 'uses' => 'Admin\BoardsController@selectedUpdate']);
     // 게시판 관리 리소스 컨트롤러
     Route::resource('boards', 'Admin\BoardsController', [
         'except' => [

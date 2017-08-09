@@ -14,7 +14,11 @@ class Popup extends Model
      */
     protected $guarded = [];
     public $timestamps = false;
-    protected $table = 'popups';
+
+    public function __construct()
+    {
+        $this->table = 'popups';
+    }
 
     public function getPopupData()
     {

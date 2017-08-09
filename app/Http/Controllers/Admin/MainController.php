@@ -9,8 +9,9 @@ use App\BoardNew;
 use App\Board;
 use App\Point;
 use Cache;
+use DB;
 
-class IndexController extends Controller
+class MainController extends Controller
 {
     public function __construct()
     {
@@ -38,11 +39,13 @@ class IndexController extends Controller
         $leaveUsers = 0;
 
         $query =
-            User::selectRaw('users.*,
+            User::select('users.*',
+                DB::raw('
                 ( select count(group_user.id)
-                    from group_user
-                    where group_user.user_id = users.id
+                    from '. env('DB_PREFIX'). 'group_user as group_user
+                    where group_user.user_id = '. env('DB_PREFIX'). 'users.id
                 ) as count_groups'
+                )
             );
 
         // 최고 관리자가 아니면 관리자보다 등급이 같거나 낮은 사람만 조회가능.
@@ -64,7 +67,7 @@ class IndexController extends Controller
     private function getNewList($pageRows)
     {
         $boardNewList =
-            BoardNew::selectRaw('board_news.*, boards.table_name, boards.subject, boards.mobile_subject, groups.subject as group_subject, groups.id as group_id')
+            BoardNew::select('board_news.*', 'boards.table_name', 'boards.subject', 'boards.mobile_subject', 'groups.subject as group_subject', 'groups.id as group_id')
             ->leftJoin('boards', 'boards.id', '=', 'board_news.board_id')
             ->leftJoin('groups', 'groups.id', '=', 'boards.group_id')
             ->where('boards.use_search', 1)

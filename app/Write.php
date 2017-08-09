@@ -65,7 +65,7 @@ class Write extends Model
     // write 모델의 테이블 이름을 지정
     public function setTableName($tableName)
     {
-        $this->table = 'write_' . $tableName;
+        $this->table = 'write_'. $tableName;
     }
 
     public function user()
@@ -197,7 +197,7 @@ class Write extends Model
     {
         // 기본 ( 공지는 기본만 가져간다. )
         $query = $writeModel
-                ->selectRaw($writeModel->getTable().'.*, users.level as user_level, users.id_hashkey as user_id_hashkey')
+                ->select($writeModel->getTable().'.*', 'users.level as user_level', 'users.id_hashkey as user_id_hashkey')
                 ->leftJoin('users', 'users.id', '=', $writeModel->getTable().'.user_id');
 
         // + 카테고리
@@ -834,7 +834,7 @@ class Write extends Model
         $writeModel->where('id', $lastInsertId)->update(['parent' => $newWrite->id]);
 
         // 새글 Insert
-        BoardNew::Create([
+        BoardNew::insert([
             'board_id' => $this->board->id,
             'write_id' => $lastInsertId,
             'write_parent' => $lastInsertId,

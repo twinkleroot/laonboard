@@ -14,7 +14,11 @@ class Content extends Model
      */
     protected $guarded = [];
     public $timestamps = false;
-    protected $table = 'contents';
+
+    public function __construct()
+    {
+        $this->table = 'contents';
+    }
 
     // 내용 상세 데이터 가져오기
     public function getContentView($id)

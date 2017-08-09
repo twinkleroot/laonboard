@@ -15,10 +15,15 @@ class Group extends Model
      */
     protected $guarded = [];
 
+    public function __construct()
+    {
+        $this->table = 'groups';
+    }
+
     // 회원 모델과의 관계 설정
     public function users()
     {
-        return $this->belongsToMany(User::class)->withPivot('id', 'created_at');
+        return $this->belongsToMany(User::class, 'group_user')->withPivot('id', 'created_at');
     }
 
     // 게시판 모델과의 관계 설정

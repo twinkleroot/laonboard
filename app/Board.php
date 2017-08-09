@@ -16,6 +16,11 @@ class Board extends Model
      */
     protected $guarded = [];
 
+    public function __construct()
+    {
+        $this->table = 'boards';
+    }
+
     // 게시판 그룹 모델과의 관계 설정
     public function group()
     {

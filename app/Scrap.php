@@ -19,20 +19,20 @@ class Scrap extends Model
      * @var array
      */
     protected $guarded = [];
+
     public $timestamps = false;
+
+    public function __construct()
+    {
+        $this->table = 'scraps';
+    }
 
     // 스크랩 목록 가져오기
     public function getIndexParams()
     {
         $user = auth()->user();
-        $scraps = DB::table("scraps as s")
-            ->select(DB::raw("
-            s.*,
-            (   select subject
-                from boards as b
-                where b.id = s.board_id
-            ) as board_subject
-            "))
+        $scraps = Scrap::select('scraps.*', 'boards.subject as board_subject')
+            ->leftJoin('boards', 'boards.id', '=', 'scraps.board_id')
             ->where('user_id', $user->id)
             ->orderBy('id', 'desc')
             ->paginate(Cache::get('config.homepage')->pageRows);
@@ -122,7 +122,7 @@ class Scrap extends Model
         $comment = new Comment();
         $comment->storeComment($writeModel, $request);
 
-        return Scrap::Create([
+        return Scrap::insert([
             'user_id' => auth()->user()->id,
             'board_id' => $request->boardId,
             'write_id' => $request->writeId,

@@ -25,7 +25,7 @@ class SimpleController extends Controller
 
     // 최신글 캐시파일 일괄삭제
     public function deleteCache() {
-        $boards = Board::selectRaw('boards.*, groups.id as group_id, groups.subject as group_subject, groups.order as group_order')
+        $boards = Board::select('boards.*', 'groups.id as group_id', 'groups.subject as group_subject', 'groups.order as group_order')
             ->leftJoin('groups', 'groups.id', '=', 'boards.group_id')
             ->where('boards.device', '<>', 'mobile')
             ->where('boards.use_cert', 'not-use')

@@ -37,8 +37,8 @@ class User extends Authenticatable
 
     public $rulesRegister = [
         'email' => 'required|email|max:255|unique:users',
-        'password_confirmation' => 'required',
         'nick' => 'required|nick_length:2,4|unique:users|alpha_num',
+        'password_confirmation' => 'required',
     ];
 
     public $rulesPassword = [
@@ -54,6 +54,11 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function __construct()
+    {
+        $this->table = 'users';
+    }
+
     // SocialLogin 모델과의 관계 설정
     public function socialLogins()
     {
@@ -63,7 +68,7 @@ class User extends Authenticatable
     // BoardGroup 모델과의 관계 설정
     public function groups()
     {
-        return $this->belongsToMany(Group::class)->withPivot('id', 'created_at');
+        return $this->belongsToMany(Group::class, 'group_user')->withPivot('id', 'created_at');
     }
 
     // Point 모델과의 관계설정
@@ -254,6 +259,8 @@ class User extends Authenticatable
             'today_login' => Carbon::now(),
             'login_ip' => $request->ip(),
             'ip' => $request->ip(),
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ];
 
         // 이메일 인증을 사용할 경우 + 소셜 가입이 아닌 경우
@@ -279,7 +286,8 @@ class User extends Authenticatable
         $userInfo = array_collapse([$userInfo, $addCertInfo]);
 
         // 회원정보로 유저를 추가한다.
-        $user = User::create($userInfo);
+        User::insert($userInfo);
+        $user = User::find(DB::getPdo()->lastInsertId());
 
         // 회원 가입 축하 포인트 부여
         $point = new Point();

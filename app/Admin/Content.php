@@ -5,6 +5,7 @@ namespace App\Admin;
 use Illuminate\Database\Eloquent\Model;
 use File;
 use Cache;
+use DB;
 
 class Content extends Model
 {
@@ -15,6 +16,11 @@ class Content extends Model
      */
     protected $guarded = [];
     public $timestamps = false;
+
+    public function __construct()
+    {
+        $this->table = 'contents';
+    }
 
     // 관리자 - 내용관리 목록 가져오기
     public function getContentList()
@@ -80,11 +86,11 @@ class Content extends Model
         $toInsert = $request->all();
         $toInsert = array_except($toInsert, ['_token', '_method', 'type', 'himg', 'timg']);
 
-        $content = Content::create($toInsert);
+        Content::insert($toInsert);
 
         $this->uploadContentImage($request);
 
-        return $content->content_id;
+        return Content::find(DB::getPdo()->lastInsertId())->content_id;
     }
 
     public function updateContent($request, $id)
@@ -105,10 +111,10 @@ class Content extends Model
         $this->uploadContentImage($request);
 
         if(!$result) {
-			abort(500, '내용변경에 실패하였습니다.');
-		}
-		
-		return $content->content_id;
+            abort(500, '내용변경에 실패하였습니다.');
+        }
+
+        return $content->content_id;
     }
 
     // 상단, 하단이미지 업로드

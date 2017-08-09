@@ -15,8 +15,11 @@ class GroupUser extends Model
      */
     protected $guarded = [];
 
-    public $table = 'group_user';
-
     public $timestamps = false;
+
+    public function __construct()
+    {
+        $this->table = 'group_user';
+    }
 
 }

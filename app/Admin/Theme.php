@@ -2,12 +2,10 @@
 
 namespace App\Admin;
 
-use App\Common\Util;
 use App\Admin\Config;
 use App\Board;
 use App\Content;
 use File;
-
 
 class Theme
 {
