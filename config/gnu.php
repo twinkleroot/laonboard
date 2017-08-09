@@ -79,8 +79,8 @@
 
     // 기본 메일 환경 설정
     'emailUse' => 1,
-    'adminEmail' => 'admin@admin.com',
-    'adminEmailName' => '관리자',
+    'adminEmail' => 'admin@laonboard.com',
+    'adminEmailName' => '라온보드',
     'emailCertify' => 0,
     'formmailIsMember' => 1,
 
