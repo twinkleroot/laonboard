@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Cache;
 use App\Admin\Config;
+use App\Admin\Menu;
 
 class ConfigsTableSeeder extends Seeder
 {
@@ -12,12 +14,54 @@ class ConfigsTableSeeder extends Seeder
      */
     public function run()
     {
-        $config = new Config();
-        // 홈페이지 기본환경 설정
-        $config->createConfigHomepage();
-        // 회원 가입 설정
-        $config->createConfigJoin();
-        // 게시판 기본 설정
-        $config->createConfigBoard();
+        // $config = new Config();
+        //
+        // $config->createConfigHomepage();
+        // $config->createConfigJoin();
+        // $config->createConfigBoard();
+        // $config->createConfigCert();
+        // $config->createConfigEmailDefault();
+        // $config->createConfigEmailJoin();
+        // $config->createConfigEmailBoard();
+        // $config->createConfigTheme();
+        // $config->createConfigSkin();
+        // $config->createConfigSns();
+        // $config->createConfigExtra();
+
+        // 설정 캐시 등록
+        $configNames = [
+            'homepage', 'board', 'join', 'cert', 'email.default', 'email.board', 'email.join', 'theme', 'skin', 'sns', 'extra'
+        ];
+        foreach($configNames as $configName) {
+            $this->registerConfigCache($configName);
+        }
+
+        // 메뉴바 설정 가져오기
+        $menuList = Cache::rememberForever("menuList", function() {
+            $menu = new Menu(); // 캐시에 저장할 때만 객체 생성
+            return $menu->getMainMenu();
+        });
+        Cache::rememberForever("subMenuList", function() use($menuList){
+            $menu = new Menu(); // 캐시에 저장할 때만 객체 생성
+            return $menu->getSubMenuList($menuList);
+        });
+
+    }
+
+    private function registerConfigCache($configName)
+    {
+        if(!Cache::has("config.$configName")) {
+            Cache::forever("config.$configName", $this->getConfig($configName));
+        }
+    }
+
+    private function getConfig($configName)
+    {
+        $configModel = new Config(); // 캐시에 저장할 때만 객체 생성
+        $config = Config::where('name', 'config.'. $configName)->first();
+        if(is_null($config)) {
+            $config = $configModel->createConfigController($configName);
+        }
+        return $configModel->pullConfig($config);
     }
 }

@@ -1,7 +1,7 @@
 @extends('layout.'. cache('config.skin')->layout. '.basic')
 
 @section('title')
-    메인 | {{ Cache::get("config.homepage")->title }}
+    메인 | {{ cache("config.homepage")->title }}
 @endsection
 
 {{-- 팝업 레이어 --}}
