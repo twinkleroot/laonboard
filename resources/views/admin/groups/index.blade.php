@@ -22,12 +22,10 @@
 <div id="body_tab_type2">
     <span class="txt">게시판 그룹을 설정합니다.</span>
 
-    <div class="submit_btn" style="line-height: 42px; padding-right: 10px;">
-        <ul class="mb_btn" style="margin-top:1px;">
-            <li><input type="button" id="selected_update" class="btn btn-default" value="선택 수정"/></li>
-            <li><input type="button" id="selected_delete" class="btn btn-default" value="선택 삭제"/></li>
-            <li><a class="btn btn-default" href="{{ route('admin.groups.create') }}" role="button">게시판그룹 추가</a></li>
-        </ul>
+    <div class="submit_btn">
+        <input type="button" id="selected_update" class="btn btn-default" value="선택 수정"/>
+        <input type="button" id="selected_delete" class="btn btn-default" value="선택 삭제"/>
+        <a class="btn btn-default" href="{{ route('admin.groups.create') }}" role="button">게시판그룹 추가</a>
     </div>
 </div>
 
@@ -150,10 +148,6 @@
         {{ $groups->appends(Request::except('page'))->links() }}
     </div>
 </div>
-
-@php
-    $ids = '';
-@endphp
 <script>
 var menuVal = 300200;
 $(function(){
@@ -172,7 +166,7 @@ $(function(){
 
         $('#ids').val(selected_id_array);
         $('#_method').val('DELETE');
-        
+        <?php $ids=''; ?>
         $('#selectForm').attr('action', '{!! route('admin.groups.destroy', $ids) !!}' + '/' + selected_id_array);
         $('#selectForm').submit();
     });

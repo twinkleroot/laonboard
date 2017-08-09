@@ -5,8 +5,22 @@
 @endsection
 
 @section('content')
-<div id="mb" class="">
-    <div class="mb_sch mb10">
+<div class="body-head">
+    <div class="pull-left">
+        <h3>글,댓글현황</h3>
+        <ul class="fl">
+            <li class="admin">Admin</li>
+            <li class="depth">게시판관리</li>
+            <li class="depth">글,댓글현황</li>
+        </ul>
+    </div>
+</div>
+<div id="body_tab_type2">
+    <span class="txt">지정한 기간동안의 글,댓글현황을 그래프로 보여줍니다.</span>
+</div>
+
+<div class="body-contents">
+    <div id="adm_sch">
         <form method="get" action="{{ route('admin.status') }}">
             {{ csrf_field() }}
             <label for="boardId" class="sr-only">게시판종류</label>
@@ -27,13 +41,13 @@
                 <option value="line" @if($selectType == 'line') selected @endif>선 그래프</option>
                 <option value="bar" @if($selectType == 'bar') selected @endif>막대 그래프</option>
             </select>
-            <button type="submit" id="" class="search-icon">
+            <button type="submit" id="search" class="btn search-icon">
                 <i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">검색</span>
             </button>
         </form>
     </div>
-</div>
 
+    <div class="box" style="margin-top: 40px;">
 @if( $chart )
     <div id="chart"></div>
     @if($selectType == 'line' || !$selectType)
@@ -48,7 +62,8 @@
         {{ $message }}
     </div>
 @endif
-
+    </div>
+</div>
 @endsection
 
 <script>

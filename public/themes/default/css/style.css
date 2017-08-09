@@ -1356,6 +1356,10 @@ div {
 .bd_rd_cmt_ctr li:first-child {
 	margin-left: 0;
 }
+.bd_rd_cmt_info .td_nick ul li {
+	width: 100%;
+	margin: 0;
+}
 .bd_rd_cmt_info li i,
 .bd_rd_cmt_ctr li i {
 	margin-right: 7px;

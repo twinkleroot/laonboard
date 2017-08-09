@@ -20,7 +20,11 @@
     </div>
 </div>
 <div id="body_tab_type2">
-    <span class="txt">{{ $user->nick }} 님의 접근 가능 그룹을 지정합니다.</span>
+    <span class="txt">이메일 <b>{{ $user->email }}</b>, 닉네임 <b>{{ $user->nick }}</b>@if(!is_null($user->name)), 이름 <b>{{ $user->name }}</b> @endif</span>
+
+    <div class="submit_btn">
+        
+    </div>
 </div>
 
 <div class="body-contents">
@@ -32,24 +36,26 @@
             </button>
         </div>
     @endif
-    <div id="board">
-        <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.accessGroups.store') }}">
+    <div id="adm_btn">
+        <input type="button" id="selected_delete" class="btn btn-sir" value="선택삭제"/>
+    </div>
+    <div id="adm_sch">
+        <form role="form" method="POST" action="{{ route('admin.accessGroups.store') }}">
             <input type="hidden" name="user_id" value="{{ $user->id }}" />
             {{ csrf_field() }}
-            <span class="total">
-                이메일 <b>{{ $user->email }}</b>, 닉네임 <b>{{ $user->nick }}</b>@if(!is_null($user->name)), 이름 <b>{{ $user->name }}</b> @endif
-            </span>
-            <p>
-                그룹지정
-                <select name="group_id" class="form-control" style="width:auto; display: inline-block;">
-                    <option>접근가능 그룹을 선택하세요.</option>
-                    @foreach($accessible_groups as $accessible_group)
-                        <option value="{{ $accessible_group->id }}">{{ $accessible_group->subject }}</option>
-                    @endforeach
-                </select>
-                <input type="submit" class="btn btn-sir" value="선택" />
-            </p>
+            <label for="group_id" class="sr-only">그룹지정</label>
+            <select name="group_id">
+                <option>접근가능 그룹을 선택하세요.</option>
+                @foreach($accessible_groups as $accessible_group)
+                    <option value="{{ $accessible_group->id }}">{{ $accessible_group->subject }}</option>
+                @endforeach
+            </select>
+            <button type="submit" id="search" class="btn btn-sir" style="margin-top: -8px;">
+                추가
+            </button>
         </form>
+    </div>
+    <div id="board">
         <form class="form-horizontal" role="form" method="POST" id="selectForm" action="">
             <input type="hidden" id='ids' name='ids' value='' />
             <input type="hidden" id='_method' name='_method' value='' />
@@ -76,7 +82,6 @@
                     @endforeach
                     </tbody>
                 </table>
-            <input type="button" id="selected_delete" class="btn btn-sir" value="선택삭제"/>
         </form>
     </div>
 </div>
