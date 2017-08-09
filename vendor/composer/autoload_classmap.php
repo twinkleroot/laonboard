@@ -6,10 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'AddColumnPopupsTable' => $baseDir . '/database/migrations/2017_07_04_160428_add_column_popups_table.php',
-    'AddPopupButtonColorColumnPopupsTable' => $baseDir . '/database/migrations/2017_07_04_164331_add_popup_button_color_column_popups_table.php',
-    'AddPopupFontColorColumnPopupsTable' => $baseDir . '/database/migrations/2017_07_11_114750_add_popup_font_color_column_popups_table.php',
-    'AddSomeColumnBoardsTable' => $baseDir . '/database/migrations/2017_07_04_121959_add_some_column_boards_table.php',
     'ConfigsTableSeeder' => $baseDir . '/database/seeds/ConfigsTableSeeder.php',
     'CreateAuthTable' => $baseDir . '/database/migrations/2017_06_29_110439_create_auth_table.php',
     'CreateAutosavesTable' => $baseDir . '/database/migrations/2017_05_16_183110_create_autosaves_table.php',
@@ -562,7 +558,6 @@ return array(
     'SebastianBergmann\\ResourceOperations\\ResourceOperations' => $vendorDir . '/sebastian/resource-operations/src/ResourceOperations.php',
     'SebastianBergmann\\Version' => $vendorDir . '/sebastian/version/src/Version.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/src/Template.php',
-    'UpdateHomepageConfig' => $baseDir . '/database/migrations/2017_07_27_115556_update_homepage_config.php',
-    'UpdateJoinCertConfig' => $baseDir . '/database/migrations/2017_07_21_154804_update_join_cert_config.php',
+    'UpdateConfigTable' => $baseDir . '/database/migrations/2017_08_09_141745_update_config_table.php',
     'UsersTableSeeder' => $baseDir . '/database/seeds/UsersTableSeeder.php',
 );
