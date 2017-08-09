@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Cache;
+use Illuminate\Support\Facades\Cache;
 use App\Admin\Config;
 use App\Admin\Menu;
 
