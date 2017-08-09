@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use DB;
 
 class CreateAuthTable extends Migration
 {
@@ -22,7 +23,7 @@ class CreateAuthTable extends Migration
         });
 
         // 라라벨 기본 API에서 mysql의 set type을 지원하지 않으므로 enum으로 생성하고 set으로 변경한다.
-        DB::statement("ALTER TABLE ". env('DB_PREFIX'). "manage_auth CHANGE `auth` `auth` SET('r', 'w', 'd');");
+        DB::statement("ALTER TABLE ". DB::getTablePrefix(). "manage_auth CHANGE `auth` `auth` SET('r', 'w', 'd');");
     }
 
     /**
