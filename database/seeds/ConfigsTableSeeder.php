@@ -14,20 +14,6 @@ class ConfigsTableSeeder extends Seeder
      */
     public function run()
     {
-        // $config = new Config();
-        //
-        // $config->createConfigHomepage();
-        // $config->createConfigJoin();
-        // $config->createConfigBoard();
-        // $config->createConfigCert();
-        // $config->createConfigEmailDefault();
-        // $config->createConfigEmailJoin();
-        // $config->createConfigEmailBoard();
-        // $config->createConfigTheme();
-        // $config->createConfigSkin();
-        // $config->createConfigSns();
-        // $config->createConfigExtra();
-
         // 설정 캐시 등록
         $configNames = [
             'homepage', 'board', 'join', 'cert', 'email.default', 'email.board', 'email.join', 'theme', 'skin', 'sns', 'extra'

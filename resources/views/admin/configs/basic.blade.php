@@ -963,7 +963,8 @@
                 <tr>
                     <th>구글 Invisible Recaptcha Key</th>
                     <td class="table_body chknone">
-                        <input type="text" class="form-control form_large" name="googleRecaptcha" value="{{ $configSns->googleRecaptcha }}">
+                        <input type="text" class="form-control form_large" name="googleRecaptcha" value="{{ $configSns->googleRecaptcha }}" style="display: inline-block;">
+                        <a href="https://www.google.com/recaptcha/admin" class="btn btn-sir">키 얻기</a>
                     </td>
                 </tr>
                 <tr>
