@@ -57,6 +57,7 @@ class InstallController extends Controller
 
     private function setEnv($request)
     {
+        dd($request->all());
         Artisan::call('env:set', [
             'APP_URL' => $request->appUrl,
             'DB_HOST' => $request->mysqlHost,
