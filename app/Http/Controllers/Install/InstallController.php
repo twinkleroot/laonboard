@@ -36,10 +36,10 @@ class InstallController extends Controller
         // $path = base_path('.env.example');
         // File::copy($path, base_path('.env'));
         $this->setEnv($request);
-        // DB 연결 확인
-        DB::getPdo();
         // 4. 모든 설정파일을 하나로 캐시한다.
         Artisan::call('config:cache');
+        // DB 연결 확인
+        DB::getPdo();
         // 2. key 생성
         Artisan::call('key:generate');
         // 3. DB 구성
