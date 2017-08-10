@@ -52,12 +52,7 @@ class Handler extends ExceptionHandler
         }
 
         if ($exception instanceof QueryException) {
-            // DB Access denied 이면
-            if(str_contains($exception->getMessage(), 'HY000') && str_contains($exception->getMessage(), '1044')) {
-                return response()->view('install.setup_result', ['dbError' => 1, 'message' => $exception->getMessage()]);
-            } else {
-                return response()->view('errors.query');
-            }
+            return response()->view('errors.query');
         }
 
         if ($exception instanceof MethodNotAllowedHttpException) {

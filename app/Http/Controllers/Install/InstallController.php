@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use File;
 use Artisan;
 use DB;
+use Exception;
+use Doctrine\DBAL\Driver\PDOException;
 use Carbon\Carbon;
 use App\User;
 
@@ -39,7 +41,12 @@ class InstallController extends Controller
         Artisan::call('cache:clear');
         Artisan::call('config:clear');
         // DB 연결 확인
-        DB::getPdo();
+        try {
+            DB::getPdo();
+        } catch (Exception $e) {
+            return view('install.setup_result', ['dbError' => 1, 'message' => $e->getMessage()]);
+        }
+
         // 2. key 생성
         // Artisan::call('key:generate');
         // 3. DB 구성

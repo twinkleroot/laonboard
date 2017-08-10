@@ -37,7 +37,7 @@
     </ol>
 
     <div class="inner_btn">
-        <a href="{{ route('/') }}">새로운 {{ config('app.name') }}로 이동</a>
+        <a href="{{ route('home') }}">새로운 {{ config('app.name') }}로 이동</a>
     </div>
 
 </div>
