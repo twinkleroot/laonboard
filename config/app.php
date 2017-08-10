@@ -38,7 +38,7 @@ return [
     |
     */
 
-    'debug' => env('APP_DEBUG', true),
+    'debug' => env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -183,6 +183,7 @@ return [
         SocialiteProviders\Manager\ServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Khill\Lavacharts\Laravel\LavachartsServiceProvider::class,
+        Sven\FlexEnv\FlexEnvServiceProvider::class,
     ],
 
     /*

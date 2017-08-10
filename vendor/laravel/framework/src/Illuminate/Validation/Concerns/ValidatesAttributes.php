@@ -375,9 +375,15 @@ trait ValidatesAttributes
     {
         $this->requireParameterCount(1, $parameters, 'different');
 
-        $other = Arr::get($this->data, $parameters[0]);
+        foreach ($parameters as $parameter) {
+            $other = Arr::get($this->data, $parameter);
 
-        return isset($other) && $value !== $other;
+            if (is_null($other) || $value === $other) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -911,6 +917,10 @@ trait ValidatesAttributes
             return false;
         }
 
+        if ($this->shouldBlockPhpUpload($value, $parameters)) {
+            return false;
+        }
+
         return $value->getPath() != '' && in_array($value->guessExtension(), $parameters);
     }
 
@@ -928,9 +938,31 @@ trait ValidatesAttributes
             return false;
         }
 
+        if ($this->shouldBlockPhpUpload($value, $parameters)) {
+            return false;
+        }
+
         return $value->getPath() != '' &&
                 (in_array($value->getMimeType(), $parameters) ||
                  in_array(explode('/', $value->getMimeType())[0].'/*', $parameters));
+    }
+
+    /**
+     * Check if PHP uploads are explicitly allowed.
+     *
+     * @param  mixed  $value
+     * @param  array  $parameters
+     * @return bool
+     */
+    protected function shouldBlockPhpUpload($value, $parameters)
+    {
+        if (in_array('php', $parameters)) {
+            return false;
+        }
+
+        return ($value instanceof UploadedFile)
+           ? strtolower($value->getClientOriginalExtension()) === 'php'
+           : strtolower($value->getExtension()) === 'php';
     }
 
     /**
