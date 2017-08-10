@@ -126,9 +126,13 @@
 <script>
 function frm_install_submit(f)
 {
-    if (f.mysqlHost.value == '')
+    if (f.appUrl.value == '')
     {
-        alert('MySQL Host 를 입력하십시오.'); f.mysqlHost.focus(); return false;
+        alert('App URL 을 입력하십시오.'); f.appUrl.focus(); return false;
+    }
+    else if (f.mysqlPort.value == '')
+    {
+        alert('MySQL Port 를 입력하십시오.'); f.mysqlPort.focus(); return false;
     }
     else if (f.mysqlPort.value == '')
     {
