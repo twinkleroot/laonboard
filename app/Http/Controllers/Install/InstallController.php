@@ -36,14 +36,16 @@ class InstallController extends Controller
         // $path = base_path('.env.example');
         // File::copy($path, base_path('.env'));
         $this->setEnv($request);
-        // 4. 모든 설정파일을 하나로 캐시한다.
-        Artisan::call('config:cache');
+        Artisan::call('cache:clear');
+        Artisan::call('config:clear');
         // DB 연결 확인
         DB::getPdo();
         // 2. key 생성
         Artisan::call('key:generate');
         // 3. DB 구성
         Artisan::call('migrate');
+        // 4. 모든 설정파일을 하나로 캐시한다.
+        Artisan::call('config:cache');
         // 5. 입력받은 관리자 데이터로 관리자 회원 추가
         $this->addAdmin($request);
         // 6. public 폴더에 접근할 수 있도록 심볼릭 링크 추가
