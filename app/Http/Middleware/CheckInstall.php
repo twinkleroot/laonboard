@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Artisan;
 
 class CheckInstall
 {

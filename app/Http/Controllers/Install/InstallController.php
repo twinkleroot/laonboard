@@ -58,13 +58,25 @@ class InstallController extends Controller
     private function setEnv($request)
     {
         Artisan::call('env:set', [
-            'APP_URL' => $request->appUrl,
-            'DB_HOST' => $request->mysqlHost,
-            'DB_PORT' => $request->mysqlPort,
-            'DB_DATABASE' => $request->mysqlDb,
-            'DB_USERNAME' => $request->mysqlUser,
-            'DB_PASSWORD' => $request->mysqlPass,
-            'DB_PREFIX' => $request->tablePrefix,
+            'key' => 'APP_URL', 'value' => $request->appUrl
+        ]);
+        Artisan::call('env:set', [
+            'key' => 'DB_HOST', 'value' => $request->mysqlHost
+        ]);
+        Artisan::call('env:set', [
+            'key' => 'DB_PORT', 'value' => $request->mysqlPort
+        ]);
+        Artisan::call('env:set', [
+            'key' => 'DB_DATABASE', 'value' => $request->mysqlDb
+        ]);
+        Artisan::call('env:set', [
+            'key' => 'DB_USERNAME', 'value' => $request->mysqlUser
+        ]);
+        Artisan::call('env:set', [
+            'key' => 'DB_PASSWORD', 'value' => $request->mysqlPass
+        ]);
+        Artisan::call('env:set', [
+            'key' => 'DB_PREFIX', 'value' => $request->tablePrefix
         ]);
     }
 
