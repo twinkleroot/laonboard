@@ -41,17 +41,17 @@ class InstallController extends Controller
         // DB 연결 확인
         DB::getPdo();
         // 2. key 생성
-        Artisan::call('key:generate');
+        // Artisan::call('key:generate');
         // 3. DB 구성
-        Artisan::call('migrate');
+        // Artisan::call('migrate');
         // 4. 모든 설정파일을 하나로 캐시한다.
-        Artisan::call('config:cache');
+        // Artisan::call('config:cache');
         // 5. 입력받은 관리자 데이터로 관리자 회원 추가
-        $this->addAdmin($request);
+        // $this->addAdmin($request);
         // 6. public 폴더에 접근할 수 있도록 심볼릭 링크 추가
-        File::link(base_path('/public'), base_path('../'). 'public');
+        // File::link(base_path('/public'), base_path('../'). 'public');
         // 7. 파일 업로드를 위해 public폴더 아래로 storage 심볼릭 링크 추가
-        Artisan::call('storage:link');
+        // Artisan::call('storage:link');
         // File::link(base_path('/storage/app/public'), public_path('storage'));
 
         return view('install.setup_result');
@@ -59,27 +59,20 @@ class InstallController extends Controller
 
     private function setEnv($request)
     {
-        Artisan::call('env:set', [
-            'key' => 'APP_URL', 'value' => $request->appUrl
-        ]);
-        Artisan::call('env:set', [
-            'key' => 'DB_HOST', 'value' => $request->mysqlHost
-        ]);
-        Artisan::call('env:set', [
-            'key' => 'DB_PORT', 'value' => $request->mysqlPort
-        ]);
-        Artisan::call('env:set', [
-            'key' => 'DB_DATABASE', 'value' => $request->mysqlDb
-        ]);
-        Artisan::call('env:set', [
-            'key' => 'DB_USERNAME', 'value' => $request->mysqlUser
-        ]);
-        Artisan::call('env:set', [
-            'key' => 'DB_PASSWORD', 'value' => $request->mysqlPass
-        ]);
-        Artisan::call('env:set', [
-            'key' => 'DB_PREFIX', 'value' => $request->tablePrefix
-        ]);
+        Artisan::call('env:set', ['key' => 'APP_URL', 'value' => $request->appUrl]);
+        Artisan::call('env:set', ['key' => 'DB_HOST', 'value' => $request->mysqlHost]);
+        Artisan::call('env:set', ['key' => 'DB_PORT', 'value' => $request->mysqlPort]);
+        Artisan::call('env:set', ['key' => 'DB_DATABASE', 'value' => $request->mysqlDb]);
+        Artisan::call('env:set', ['key' => 'DB_USERNAME', 'value' => $request->mysqlUser]);
+        Artisan::call('env:set', ['key' => 'DB_PASSWORD', 'value' => $request->mysqlPass]);
+        Artisan::call('env:set', ['key' => 'DB_PREFIX', 'value' => $request->tablePrefix]);
+
+        config(['database.connections.mysql.host' => $request->mysqlHost]);
+        config(['database.connections.mysql.port' => $request->mysqlPort]);
+        config(['database.connections.mysql.database' => $request->mysqlDb]);
+        config(['database.connections.mysql.username' => $request->mysqlUser]);
+        config(['database.connections.mysql.password' => $request->mysqlPass]);
+        config(['database.connections.mysql.prefix' => $request->tablePrefix]);
     }
 
     private function addAdmin($request)
