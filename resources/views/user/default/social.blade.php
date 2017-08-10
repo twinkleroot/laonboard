@@ -104,70 +104,78 @@ function loginValidation(form) {
 
 @section('content')
 <div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading"><h3>{{ $userFromSocial->getNickname() }}님 환영합니다.</h3></div>
+<div class="row">
 
-                    <div class="panel-body">
-                        <h4>새로운 회원 가입</h4>
+<!-- auth login -->
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading bg-sir">
+                <h3 class="panel-title">{{ $userFromSocial->getNickname() }}님, 새로 가입하시겠습니까?</h3>
+            </div>
+            <div class="panel-body">
+                <form class="contents col-md-12" method="POST" action="{{ route('social.socialUserJoin') }}" onsubmit="return joinValidation(this);" autocomplete="off">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="provider" value="{{ $provider }}" />
+                    <div class="form-group">
+                        <label for="password">비밀번호</label>
+                        <input type="password" name="password" class="form-control" minlength="3" maxlength="20" placeholder="비밀번호를 입력하세요" required />
+                        <p class="help-block">
+                            {{ $message['password'] }}
+                        </p>
                     </div>
-
-                    <div class="panel-body">
-                    <form method="POST" action="{{ route('social.socialUserJoin') }}" onsubmit="return joinValidation(this);" autocomplete="off">
-                        {{ csrf_field() }}
-                        <input type="hidden" name="provider" value="{{ $provider }}" />
-                        <p>
-                            <span class="help-block">
-                                <strong>{{ $message['password'] }}</strong>
-                            </span>
-                            비밀번호 <input type="password" name="password" minlength="3" maxlength="20" required />
-                        </p>
-                        <p>
-                            비밀번호 확인 <input type="password" name="password_confirmation"
-                                            minlength="3" maxlength="20" required />
-                        </p>
-                        <p>
-                            @if(array_has($message, 'nick'))
-                            <span class="help-block">
-                                <strong>{{ $message['nick'] }}</strong>
-                            </span>
-                            @endif
-                            닉네임 <input type="text" name="nick" value="{{ $userFromSocial->nickname }}" required />
-                        </p>
-                        <p>
-                            @if(array_has($message, 'email'))
+                    <div class="form-group">
+                        <label for="password_confirmation">비밀번호 확인</label>
+                        <input type="password" name="password_confirmation" class="form-control" minlength="3" maxlength="20" placeholder="비밀번호를 한번 더 입력하세요" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="email">이메일</label>
+                        <input type="email" name="email" class="form-control" value="{{ $userFromSocial->email }}" required />
+                        @if(array_has($message, 'email'))
                             <span class="help-block">
                                 <strong>{{ $message['email'] }}</strong>
                             </span>
-                            @endif
-                            이메일 <input type="email" name="email" value="{{ $userFromSocial->email }}" required />
-                        </p>
-                        <input type="submit" id="userJoin" value="회원가입"/>
-                    </form>
+                        @endif
                     </div>
-
-                    <div class="panel-body">
-                        <hr />
+                    <div class="form-group" class="sr-only">
+                        <label for="nick">닉네임</label>
+                        <input type="text" name="nick" class="form-control" value="{{ $userFromSocial->nickname }}" placeholder="이메일 주소를 입력하세요" required />
+                        @if(array_has($message, 'nick'))
+                            <span class="help-block">
+                                <strong>{{ $message['nick'] }}</strong>
+                            </span>
+                        @endif
                     </div>
-
-                    <div class="panel-body">
-                        <h4>기존 계정과 연결</h4>
+                    <div class="form-group">
+                        <input type="submit" id="userJoin" class="btn btn-lg btn-block btn-sir" placeholder="닉네임을 입력하세요" value="회원가입"/>
                     </div>
-                    <div class="panel-body">
-                    <form method="POST" action="{{ route('social.connectExistAccount') }}"
-                        onsubmit="return loginValidation(this);" autocomplete="off">
-                        {{ csrf_field() }}
-                        <p>
-                            <input type="hidden" name="provider" value="{{ $provider }}" />
-                            기존 이메일 <input type="text" name="email" maxlength="20" required />
-                            비밀번호 <input type="password" name="password" maxlength="20" required />
-                        </p>
-                        <input type="submit" id="connectExistAccount" value="연결하고 로그인하기"/>
-                    </form>
-                    </div>
+                </form>
             </div>
         </div>
     </div>
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading bg-sir">
+                <h3 class="panel-title">기존 계정과 연결하시겠습니까?</h3>
+            </div>
+            <div class="panel-body">
+                <form method="POST" action="{{ route('social.connectExistAccount') }}" onsubmit="return loginValidation(this);" autocomplete="off">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="provider" value="{{ $provider }}" />
+                    <div class="form-group">
+                        <label for="email">기존 이메일</label>
+                        <input type="text" name="email" class="form-control" maxlength="20" placeholder="기존에 가입된 이메일 주소를 입력하세요" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="password">비밀번호</label>
+                        <input type="password" name="password" class="form-control" maxlength="20" placeholder="비밀번호를 입력하세요" required />
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" id="connectExistAccount" class="btn btn-lg btn-block btn-sir" value="연결하고 로그인하기"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 </div>
 @endsection
