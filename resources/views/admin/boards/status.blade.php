@@ -47,7 +47,7 @@
         </form>
     </div>
 
-    <div class="box" style="margin-top: 40px;">
+    <div class="box" style="clear:both;">
 @if( $chart )
     <div id="chart"></div>
     @if($selectType == 'line' || !$selectType)
