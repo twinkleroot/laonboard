@@ -33,8 +33,8 @@ class InstallController extends Controller
     public function setup(Request $request)
     {
         // 1. .env.example 파일로 .env 파일을 생성한다.
-        $path = base_path('.env.example');
-        File::copy($path, base_path('.env'));
+        // $path = base_path('.env.example');
+        // File::copy($path, base_path('.env'));
         $this->setEnv($request);
         // DB 연결 확인
         DB::getPdo();
