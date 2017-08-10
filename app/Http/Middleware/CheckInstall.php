@@ -16,7 +16,7 @@ class CheckInstall
      */
     public function handle($request, Closure $next)
     {
-        $file = '.env.testing';
+        $file = '.env';
         $path = base_path($file);
         if(File::exists($path)) {
             return $next($request);
