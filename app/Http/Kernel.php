@@ -47,12 +47,6 @@ class Kernel extends HttpKernel
         ],
 
         'install' => [
-            \App\Http\Middleware\EncryptCookies::class,
-            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-            \Illuminate\Session\Middleware\StartSession::class,
-            // \Illuminate\Session\Middleware\AuthenticateSession::class,
-            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
             // 설치 과정에서 필요한 폴더 읽고 쓰기 가능한지 검사
             \App\Http\Middleware\CheckInstallAlready::class,
             \App\Http\Middleware\CheckAccessFolder::class,
