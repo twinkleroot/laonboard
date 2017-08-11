@@ -27,6 +27,9 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups = [
         'web' => [
+            // 설치가 되었는지 검사
+            \App\Http\Middleware\CheckInstall::class,
+
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
@@ -34,6 +37,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            // 설정 등록
             \App\Http\Middleware\ConfigRegister::class,
         ],
 
@@ -41,6 +45,14 @@ class Kernel extends HttpKernel
             'throttle:60,1',
             'bindings',
         ],
+
+        'install' => [
+            // \Illuminate\Session\Middleware\AuthenticateSession::class,
+            // 설치 과정에서 필요한 폴더 읽고 쓰기 가능한지 검사
+            \App\Http\Middleware\CheckInstallAlready::class,
+            \App\Http\Middleware\CheckAccessFolder::class,
+        ]
+
     ];
 
     /**
@@ -93,6 +105,5 @@ class Kernel extends HttpKernel
         // 메일 보내기가 가능한지 검사
         'form.mail' => \App\Http\Middleware\CheckFormMail::class,
         'send.mail' => \App\Http\Middleware\CheckSendMail::class,
-
     ];
 }

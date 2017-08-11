@@ -6,7 +6,7 @@
 
     // 홈페이지 기본 환경 설정
     'title' => '라온보드',
-    'superAdmin' => 'admin@admin.com',
+    'superAdmin' => '',
     'usePoint' => 1,
     'loginPoint' => 100,
     'memoSendPoint' => 0,

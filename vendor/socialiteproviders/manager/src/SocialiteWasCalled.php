@@ -2,11 +2,11 @@
 
 namespace SocialiteProviders\Manager;
 
-use Illuminate\Container\Container as Application;
 use Laravel\Socialite\SocialiteManager;
-use SocialiteProviders\Manager\Contracts\Helpers\ConfigRetrieverInterface;
-use SocialiteProviders\Manager\Exception\InvalidArgumentException;
+use Illuminate\Container\Container as Application;
 use SocialiteProviders\Manager\Exception\MissingConfigException;
+use SocialiteProviders\Manager\Exception\InvalidArgumentException;
+use SocialiteProviders\Manager\Contracts\Helpers\ConfigRetrieverInterface;
 
 class SocialiteWasCalled
 {
@@ -50,11 +50,17 @@ class SocialiteWasCalled
     {
         /** @var SocialiteManager $socialite */
         $socialite = $this->app->make(\Laravel\Socialite\Contracts\Factory::class);
-        $provider = $this->buildProvider($socialite, $providerName, $providerClass, $oauth1Server);
+
+        $this->classExists($providerClass);
+        if ($this->isOAuth1($oauth1Server)) {
+            $this->classExists($oauth1Server);
+            $this->classExtends($providerClass, \Laravel\Socialite\One\AbstractProvider::class);
+        }
 
         $socialite->extend(
             $providerName,
-            function () use ($provider) {
+            function () use ($socialite, $providerName, $providerClass, $oauth1Server) {
+                $provider = $this->buildProvider($socialite, $providerName, $providerClass, $oauth1Server);
                 if (defined('SOCIALITEPROVIDERS_STATELESS') && SOCIALITEPROVIDERS_STATELESS) {
                     return $provider->stateless();
                 }
@@ -74,11 +80,7 @@ class SocialiteWasCalled
      */
     protected function buildProvider(SocialiteManager $socialite, $providerName, $providerClass, $oauth1Server)
     {
-        $this->classExists($providerClass);
-
         if ($this->isOAuth1($oauth1Server)) {
-            $this->classExists($oauth1Server);
-
             return $this->buildOAuth1Provider($socialite, $providerClass, $providerName, $oauth1Server);
         }
 
@@ -96,7 +98,6 @@ class SocialiteWasCalled
      */
     protected function buildOAuth1Provider(SocialiteManager $socialite, $providerClass, $providerName, $oauth1Server)
     {
-        $this->classExtends($providerClass, \Laravel\Socialite\One\AbstractProvider::class);
         $this->classExtends($oauth1Server, \League\OAuth1\Client\Server\Server::class);
 
         $config = $this->getConfig($providerClass, $providerName);
@@ -149,10 +150,11 @@ class SocialiteWasCalled
         $exceptionMessages = [];
         try {
             $config = $this->configRetriever->fromEnv($providerClass::IDENTIFIER, $additionalConfigKeys);
+
             // We will use the $spoofedConfig variable for now as a way to find out if there was no
             // configuration in the .env file which means we should not return anything and jump
             // to the service config check to check if something can be found there.
-            if (!static::$spoofedConfig) {
+            if (! static::$spoofedConfig) {
                 return $config;
             }
         } catch (MissingConfigException $e) {
@@ -183,7 +185,7 @@ class SocialiteWasCalled
      */
     private function isOAuth1($oauth1Server)
     {
-        return !empty($oauth1Server);
+        return ! empty($oauth1Server);
     }
 
     /**
@@ -202,7 +204,7 @@ class SocialiteWasCalled
 
     private function classExists($providerClass)
     {
-        if (!class_exists($providerClass)) {
+        if (! class_exists($providerClass)) {
             throw new InvalidArgumentException("$providerClass doesn't exist");
         }
     }

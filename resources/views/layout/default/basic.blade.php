@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', '라온보드')</title>
+    <title>@yield('title', config('app.name'))</title>
 
     <!-- CSS -->
     @yield('fisrt_include_css')

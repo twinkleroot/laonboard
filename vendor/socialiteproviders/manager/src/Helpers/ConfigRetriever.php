@@ -3,10 +3,10 @@
 namespace SocialiteProviders\Manager\Helpers;
 
 use SocialiteProviders\Manager\Config;
-use SocialiteProviders\Manager\Contracts\ConfigInterface;
-use SocialiteProviders\Manager\Contracts\Helpers\ConfigRetrieverInterface;
-use SocialiteProviders\Manager\Exception\MissingConfigException;
 use SocialiteProviders\Manager\SocialiteWasCalled;
+use SocialiteProviders\Manager\Contracts\ConfigInterface;
+use SocialiteProviders\Manager\Exception\MissingConfigException;
+use SocialiteProviders\Manager\Contracts\Helpers\ConfigRetrieverInterface;
 
 class ConfigRetriever implements ConfigRetrieverInterface
 {
@@ -120,12 +120,12 @@ class ConfigRetriever implements ConfigRetrieverInterface
         $keyExists = array_key_exists($key, $this->servicesArray);
 
         // ADDITIONAL value is empty
-        if (!$keyExists && $this->isAdditionalConfig($key)) {
+        if (! $keyExists && $this->isAdditionalConfig($key)) {
             return;
         }
 
         // REQUIRED value is empty
-        if (!$keyExists) {
+        if (! $keyExists) {
             throw new MissingConfigException("Missing services entry for {$this->providerName}.$key");
         }
 
@@ -152,13 +152,12 @@ class ConfigRetriever implements ConfigRetrieverInterface
         // REQUIRED value is empty
         if (empty($item)) {
             // If we are running in console we should spoof values to make Socialite happy...
-            if (app()->runningInConsole()) {
-                $item = $providerKey;
-
-                SocialiteWasCalled::$spoofedConfig = true;
-            } else {
+            if (! app()->runningInConsole()) {
                 throw new MissingConfigException("Configuration for $providerKey is missing.");
             }
+            $item = $providerKey;
+
+            SocialiteWasCalled::$spoofedConfig = true;
         }
 
         return $item;
@@ -189,7 +188,6 @@ class ConfigRetriever implements ConfigRetrieverInterface
             } else {
                 throw new MissingConfigException("There is no services entry for $providerName");
             }
-
         }
 
         $this->servicesArray = $configArray;

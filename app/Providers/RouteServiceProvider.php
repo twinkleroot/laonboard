@@ -39,6 +39,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
+        $this->mapInstallRoutes();
         //
     }
 
@@ -69,5 +70,12 @@ class RouteServiceProvider extends ServiceProvider
              ->middleware('api')
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
+    }
+
+    public function mapInstallRoutes()
+    {
+        Route::middleware('install')
+             ->namespace($this->namespace)
+             ->group(base_path('routes/install.php'));
     }
 }
