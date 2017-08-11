@@ -55,8 +55,8 @@ class InstallController extends Controller
         $this->addAdmin($request);
         // 6. 환경 설정 기본값 데이터 추가
         $this->addBasicConfig($request);
-        // 7. 모든 설정파일을 하나로 캐시한다.
-        Artisan::call('config:cache');
+        // 7. 모든 설정 캐시를 초기화.
+        Artisan::call('config:clear');
 
         return view('install.setup_result');
     }
@@ -140,9 +140,7 @@ class InstallController extends Controller
     // 설정 캐시 등록
     private function registerConfigCache($configName)
     {
-        if(!Cache::has("config.$configName")) {
-            Cache::forever("config.$configName", $this->getConfig($configName));
-        }
+        Cache::forever("config.$configName", $this->getConfig($configName));
     }
 
     // 설정 get || ( create && get )
