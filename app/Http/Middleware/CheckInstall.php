@@ -22,7 +22,12 @@ class CheckInstall
         $path = base_path($file);
         try {
             if(File::exists($path) && env('DB_DATABASE') && env('DB_USERNAME') && env('DB_PASSWORD') && env('DB_PREFIX')) {
+                // DB 연결 확인
                 DB::getPdo();
+                // 기본 설정 테이블 존재 확인
+                if(!Schema::hasTable('configs')) {
+                    return view('install.index');
+                }
                 return $next($request);
             } else {
                 return view('install.index');
