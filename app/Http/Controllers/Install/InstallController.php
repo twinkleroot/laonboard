@@ -12,6 +12,7 @@ use Exception;
 use Doctrine\DBAL\Driver\PDOException;
 use Carbon\Carbon;
 use App\User;
+use App\Admin\Config;
 
 class InstallController extends Controller
 {
