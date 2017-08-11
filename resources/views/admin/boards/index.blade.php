@@ -20,14 +20,9 @@
     </div>
 </div>
 <div id="body_tab_type2">
-    <span class="txt">게시판 관리</span>
-
-    <div class="submit_btn" style="line-height: 42px; padding-right: 10px;">
-        <ul class="mb_btn" style="margin-top:1px;">
-            <li><input type="button" id="selected_update" class="btn btn-default" value="선택 수정"/></li>
-            <li><input type="button" id="selected_delete" class="btn btn-default" value="선택 삭제"/></li>
-            <li><a class="btn btn-default" href="{{ route('admin.boards.create')}}" role="button">게시판 추가</a></li>
-        </ul>
+    <span class="txt">생성된 게시판수 {{ $boards->total() }}개</span>
+    <div class="submit_btn">
+        <a class="btn btn-default" href="{s{ route('admin.boards.create')}}" role="button">게시판추가</a>
     </div>
 </div>
 
@@ -43,7 +38,8 @@
     <div id="board">
         <ul id="adm_btn">
             <li><a href="{{ route('admin.boards.index') }}" class="btn btn-sir" role="button">전체목록</a></li>
-            <li><span class="total">생성된 게시판수 {{ $boards->total() }}개</span></li>
+            <li><input type="button" id="selected_update" class="btn btn-sir" value="선택수정"/></li>
+            <li><input type="button" id="selected_delete" class="btn btn-sir" value="선택삭제"/></li>
         </ul>
         <div id="adm_sch">
              <form role="form" method="GET" action="{{ route('admin.boards.index') }}">

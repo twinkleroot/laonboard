@@ -14,18 +14,6 @@
             $("#skinForm").submit();
         }
 
-        $(document).ready(function(){
-            $('.adm_box').hide().eq(0).show();
-
-            $("#body_tab_type2 li").click(function () {
-                $('.adm_box').hide().eq($(this).index()).show();
-            });
-
-            $(".tab").click(function () {
-                $(".tab").removeClass("active");
-                $(this).addClass("active");
-            });
-        });
     </script>
 @endsection
 
@@ -110,7 +98,7 @@
                                         </option>
                                     @endforeach
                                 </select>
-                                <p class="help-block">개별 게시판 스킨 설정은 게시판 관리에서 할 수 있습니다.</p>
+                                <span class="help-block">개별 게시판 스킨 설정은 게시판 관리에서 할 수 있습니다.</span>
                             </div>
                         </div>
                         <div class="form-group">
