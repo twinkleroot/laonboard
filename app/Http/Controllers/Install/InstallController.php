@@ -37,8 +37,8 @@ class InstallController extends Controller
     public function setup(Request $request)
     {
         // 1. .env파일에 App 정보, DB 정보를 셋팅한다.
-        File::copy(base_path('.env.example'), base_path('.env'));
-        @chmod(base_path('.env'), 646);
+        // File::copy(base_path('.env.example'), base_path('.env'));
+        // @chmod(base_path('.env'), 646);
         // File::chmod(base_path('.env'), 646);
         $this->setEnv($request);
         // 2. DB 연결 확인
@@ -84,6 +84,7 @@ class InstallController extends Controller
         Artisan::call('env:set', ['key' => 'SESSION_DRIVER', 'value' => 'file']);
         Artisan::call('env:set', ['key' => 'QUEUE_DRIVER', 'value' => 'sync']);
         Artisan::call('env:set', ['key' => 'MAIL_DRIVER', 'value' => 'mail']);
+        Artisan::call('env:set', ['key' => '', 'value' => '']);
 
         config(['app.env' => 'local']);
         config(['app.debug' => 'true']);
