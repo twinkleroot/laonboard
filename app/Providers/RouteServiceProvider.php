@@ -74,7 +74,8 @@ class RouteServiceProvider extends ServiceProvider
 
     public function mapInstallRoutes()
     {
-        Route::namespace($this->namespace)
+        Route::middleware('install')
+             ->namespace($this->namespace)
              ->group(base_path('routes/install.php'));
     }
 }

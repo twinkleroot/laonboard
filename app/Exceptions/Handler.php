@@ -52,7 +52,7 @@ class Handler extends ExceptionHandler
         }
 
         if ($exception instanceof QueryException) {
-            return response()->view('errors.query');
+            return response()->view('errors.query', ['message' => $exception->getCode()]);
         }
 
         if ($exception instanceof MethodNotAllowedHttpException) {
