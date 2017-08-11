@@ -22,7 +22,7 @@ class CheckInstall
         $file = '.env';
         $path = base_path($file);
         try {
-            if(File::exists($path) && env('DB_DATABASE') && env('DB_USERNAME') && env('DB_PASSWORD') && env('DB_PREFIX')) {
+            if(File::exists($path) && config('database.connections.mysql.database') && config('database.connections.mysql.username') && config('database.connections.mysql.password') && config('database.connections.mysql.prefix') ) {
                 // DB 연결 확인
                 DB::connection()->getPdo();
                 // // 기본 설정 테이블 존재 확인
