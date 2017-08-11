@@ -31,7 +31,7 @@ class CheckInstall
                 // }
                 return $next($request);
             } else {
-                return view('install.index');
+                return redirect(route('install.index'));
             }
         } catch (PDOException $e) {
             dd('Database Connect Error!!!');
