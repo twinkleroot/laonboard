@@ -24,7 +24,7 @@ class CheckAccessFolder
                 }
             }
             if(count($results) > 0) {
-                return view('install.error', [ 'results' => $results]);
+                return view('install.error', [ 'results' => $results ]);
             }
         }
 

@@ -42,8 +42,8 @@ class InstallController extends Controller
         } catch (PDOException $e) {
             return view('install.setup_result', ['dbError' => 1, 'message' => $e->getMessage()]);
         }
-        // 3. key 생성
-        Artisan::call('key:generate');
+        // 3. 파일 쓰기를 위한 폴더 public/storage로 링크 걸기
+        Artisan::call('storage:link');
         // 4. DB 구성
         Artisan::call('migrate');
         // 5. 입력받은 관리자 데이터로 관리자 회원 추가

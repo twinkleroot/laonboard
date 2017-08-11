@@ -20,10 +20,15 @@ class CheckInstall
     {
         $file = '.env';
         $path = base_path($file);
-        if(File::exists($path)) {
-            return $next($request);
-        } else {
-            return redirect('/install/index');
+        try {
+            if(File::exists($path) && env('DB_DATABASE') && env('DB_USERNAME') && env('DB_PASSWORD') && env('DB_PREFIX')) {
+                DB::getPdo();
+                return $next($request);
+            } else {
+                return view('install.index');
+            }
+        } catch (PDOException $e) {
+            dd('Database Connect Error!!!');
         }
 
     }

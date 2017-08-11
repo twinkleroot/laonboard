@@ -10,6 +10,14 @@
 
 @section('content')
 
+@if($type == 'already')
+<div class="ins_inner">
+    <p>프로그램이 이미 설치 되어 있습니다.</p>
+    <div class="inner_btn">
+        <a onclick="history.back();">뒤로가기</a>
+    </div>
+</div>
+@else
 @foreach($results as $key => $value)
 <div class="ins_inner">
     <p>
@@ -19,4 +27,6 @@
     </p>
 </div>
 @endforeach
+@endif
+
 @endsection
