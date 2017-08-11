@@ -16,7 +16,7 @@
     @if (isset($message))
     <p>{{ $message }}</p>
     @endif
-    <div class="inner_btn"><a href="{{ route('install.form') }}">뒤로가기</a></div>
+    <div class="inner_btn"><a onclick="history.back();">뒤로가기</a></div>
 </div>
 @else
 <div class="ins_inner">
