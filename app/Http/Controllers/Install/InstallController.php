@@ -84,7 +84,7 @@ class InstallController extends Controller
         Artisan::call('env:set', ['key' => 'SESSION_DRIVER', 'value' => 'file']);
         Artisan::call('env:set', ['key' => 'QUEUE_DRIVER', 'value' => 'sync']);
         Artisan::call('env:set', ['key' => 'MAIL_DRIVER', 'value' => 'mail']);
-        Artisan::call('env:set', ['key' => '', 'value' => '']);
+        Artisan::call('env:delete', ['key' => '', 'value' => '']);
 
         config(['app.env' => 'local']);
         config(['app.debug' => 'true']);
