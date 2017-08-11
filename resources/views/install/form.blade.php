@@ -31,7 +31,7 @@
     <tr>
         <th scope="row"><label for="appUrl">App Url</label></th>
         <td>
-            <input name="appUrl" type="text" value="{{ env('APP_URL', 'http://laonboard.com/') }}" id="appUrl">
+            <input name="appUrl" type="text" value="{{ env('APP_URL', Request::root()) }}" id="appUrl">
         </td>
     </tr>
     </tbody>
