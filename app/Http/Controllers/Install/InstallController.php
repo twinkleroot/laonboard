@@ -37,6 +37,7 @@ class InstallController extends Controller
     public function setup(Request $request)
     {
         // 1. .env파일에 App 정보, DB 정보를 셋팅한다.
+        File::copy(base_path('.env.example'), base_path('.env'));
         $this->setEnv($request);
         // 2. DB 연결 확인
         try {
