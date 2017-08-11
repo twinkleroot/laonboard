@@ -63,14 +63,29 @@ class InstallController extends Controller
     // .env 와 config/database 설정
     private function setEnv($request)
     {
+        Artisan::call('env:set', ['key' => 'APP_ENV', 'value' => 'local']);
+        Artisan::call('env:set', ['key' => 'APP_DEBUG', 'value' => 'true']);
+        Artisan::call('env:set', ['key' => 'APP_LOG', 'value' => 'daily']);
+        Artisan::call('env:set', ['key' => 'APP_LOG_LEVEL', 'value' => 'debug']);
         Artisan::call('env:set', ['key' => 'APP_URL', 'value' => $request->appUrl]);
+        Artisan::call('env:set', ['key' => 'DB_CONNECTION', 'value' => 'mysql']);
         Artisan::call('env:set', ['key' => 'DB_HOST', 'value' => $request->mysqlHost]);
         Artisan::call('env:set', ['key' => 'DB_PORT', 'value' => $request->mysqlPort]);
         Artisan::call('env:set', ['key' => 'DB_DATABASE', 'value' => $request->mysqlDb]);
         Artisan::call('env:set', ['key' => 'DB_USERNAME', 'value' => $request->mysqlUser]);
         Artisan::call('env:set', ['key' => 'DB_PASSWORD', 'value' => $request->mysqlPass]);
         Artisan::call('env:set', ['key' => 'DB_PREFIX', 'value' => $request->tablePrefix]);
+        Artisan::call('env:set', ['key' => 'BROADCAST_DRIVER', 'value' => 'log']);
+        Artisan::call('env:set', ['key' => 'CACHE_DRIVER', 'value' => 'file']);
+        Artisan::call('env:set', ['key' => 'SESSION_DRIVER', 'value' => 'file']);
+        Artisan::call('env:set', ['key' => 'QUEUE_DRIVER', 'value' => 'sync']);
+        Artisan::call('env:set', ['key' => 'MAIL_DRIVER', 'value' => 'mail']);
 
+        config(['app.env' => 'local']);
+        config(['app.debug' => 'true']);
+        config(['app.log' => 'daily']);
+        config(['app.log_level' => 'debug']);
+        config(['app.url' => $request->appUrl]);
         config(['database.connections.mysql.host' => $request->mysqlHost]);
         config(['database.connections.mysql.port' => $request->mysqlPort]);
         config(['database.connections.mysql.database' => $request->mysqlDb]);

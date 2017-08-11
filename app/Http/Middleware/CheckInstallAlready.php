@@ -22,16 +22,6 @@ class CheckInstallAlready
         $file = '.env';
         $path = base_path($file);
         if(File::exists($path) && env('DB_DATABASE') && env('DB_USERNAME') && env('DB_PASSWORD') && env('DB_PREFIX')) {
-            try {
-                DB::getPdo();
-            } catch (PDOException $e) {
-                return $next($request);
-            }
-
-            if(DB::table('migrations') && DB::table('migrations')->count() == 0) {
-                return $next($request);
-            }
-
             return view('install.error', ['type' => 'already']);
         } else {
             return $next($request);
