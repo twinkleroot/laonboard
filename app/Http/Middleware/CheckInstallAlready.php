@@ -28,7 +28,7 @@ class CheckInstallAlready
                 return $next($request);
             }
 
-            if(!Schema::hasTable('configs')) {
+            if(DB::table('migrations') && DB::table('migrations')->count() == 0) {
                 return $next($request);
             }
 

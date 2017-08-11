@@ -31,7 +31,7 @@
     <tr>
         <th scope="row"><label for="appUrl">App Url</label></th>
         <td>
-            <input name="appUrl" type="text" value="http://laonboard.com/" id="appUrl">
+            <input name="appUrl" type="text" value="{{ env('APP_URL', 'http://laonboard.com/') }}" id="appUrl">
         </td>
     </tr>
     </tbody>
@@ -47,37 +47,37 @@
     <tr>
         <th scope="row"><label for="mysqlHost">Host</label></th>
         <td>
-            <input name="mysqlHost" type="text" value="127.0.0.1" id="mysqlHost">
+            <input name="mysqlHost" type="text" value="{{ env('DB_HOST', '127.0.0.1') }}" id="mysqlHost">
         </td>
     </tr>
     <tr>
         <th scope="row"><label for="mysqlPort">Port</label></th>
         <td>
-            <input name="mysqlPort" type="text" value="3306" id="mysqlPort">
+            <input name="mysqlPort" type="text" value="{{ env('DB_PORT', '3306') }}" id="mysqlPort">
         </td>
     </tr>
     <tr>
         <th scope="row"><label for="mysqlDb">Database</label></th>
         <td>
-            <input name="mysqlDb" type="text" id="mysqlDb">
+            <input name="mysqlDb" type="text" id="mysqlDb" value="{{ env('DB_DATABASE', '') }}">
         </td>
     </tr>
     <tr>
         <th scope="row"><label for="mysqlUser">User Name</label></th>
         <td>
-            <input name="mysqlUser" type="text" id="mysqlUser">
+            <input name="mysqlUser" type="text" id="mysqlUser" value="{{ env('DB_USERNAME', '') }}">
         </td>
     </tr>
     <tr>
         <th scope="row"><label for="mysqlPass">Password</label></th>
         <td>
-            <input name="mysqlPass" type="text" id="mysqlPass">
+            <input name="mysqlPass" type="text" id="mysqlPass" value="{{ env('DB_PASSWORD', '') }}">
         </td>
     </tr>
     <tr>
         <th scope="row"><label for="tablePrefix">Table 접두사</label></th>
         <td>
-            <input name="tablePrefix" type="text" value="laon_" id="tablePrefix">
+            <input name="tablePrefix" type="text" value="{{ env('DB_PREFIX', 'laon_') }}" id="tablePrefix">
             <span>가능한 변경하지 마십시오.</span>
         </td>
     </tr>

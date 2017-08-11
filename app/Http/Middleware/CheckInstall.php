@@ -26,7 +26,7 @@ class CheckInstall
                 // DB 연결 확인
                 DB::getPdo();
                 // 기본 설정 테이블 존재 확인
-                if(!Schema::hasTable('configs')) {
+                if(DB::table('migrations') && DB::table('migrations')->count() == 0) {
                     return view('install.index');
                 }
                 return $next($request);
