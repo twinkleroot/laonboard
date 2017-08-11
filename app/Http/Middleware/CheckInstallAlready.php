@@ -6,6 +6,7 @@ use Closure;
 use Doctrine\DBAL\Driver\PDOException;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class CheckInstallAlready
 {
@@ -24,6 +25,10 @@ class CheckInstallAlready
             try {
                 DB::getPdo();
             } catch (PDOException $e) {
+                return $next($request);
+            }
+
+            if(!Schema::hasTable('configs')) {
                 return $next($request);
             }
 
