@@ -79,6 +79,8 @@ input[type=radio] {
 
 .mr5  {margin-right: 5px;}
 
+.ml15 {margin-left: 15px;}
+
 .pagination>.active>a,
 .pagination>.active>a:focus,
 .pagination>.active>a:hover,
@@ -173,11 +175,36 @@ input[type=radio] {
 	color: #fff;
 	-webkit-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
+    position: relative;
 }
 #admin-header .bt-user:hover {
 	background: #395ac1;
 	-webkit-transition: all 0.2s ease-in-out;
     transition: all 0.2s ease-in-out;
+}
+#admin-header .bt-user a.dropdown-toggle {
+	color: #fff;
+	text-decoration: none;
+}
+#admin-header .bt-user ul.dropdown-menu {
+	font-size: 13px;
+	margin: 3px 5px 0;
+	border-radius: 0;
+	left: auto;
+	right: 0;
+	border-color: #d8d8d8;
+}
+#admin-header .bt-user ul.dropdown-menu:before {
+	content: "";
+	display: block;
+	background: #fff;
+	width: 13px;
+	height: 11px;
+	background: url(../images/dropdown.png) no-repeat;
+
+	position: absolute;
+	right: 20px;
+	top: -10px;
 }
 #admin-header .hdtx {
 	font-size: 0;
@@ -507,6 +534,10 @@ input[type=radio] {
 .adm_box_table {
 	width: 100%; font-size: 12px;background: #fff;
 }
+.border_none {
+	border: 0 !important;
+	padding: 20px 30px !important;
+}
 .chknone {
 	border-right: 0 !important;
 }
@@ -596,6 +627,21 @@ input[type=radio] {
 .adm_save_txt {
 	color: #587ef6;
 	font-size: 13px;
+	font-weight: bold;
+}
+#adm_alert {
+	padding: 15px;
+	background: #fff;
+	border: 1px solid #d8d8d8;
+	border-radius: 4px;
+	margin-bottom: 20px;
+}
+.adm_alert_txt {
+	color: #333;
+	font-size: 13px;
+}
+.adm_alert_txt strong {
+	color: #ff6699;
 	font-weight: bold;
 }
 .adm_alert_close {
@@ -1116,6 +1162,9 @@ input[type=radio] {
 #board select {
 	padding: 5px;
 }
+#board input[type="button"] {
+	padding: 6px 12px;
+}
 .form-inline:after {
 	display: block;
 	content: '';
@@ -1464,4 +1513,18 @@ input[type=radio] {
 }
 .sevice_1 .item_1 {
 	width: 100%;
+}
+#menulist tr.menu_list .depth2 input {
+ 	float: right;
+ 	width: calc( 100% - 25px );
+}
+#menulist tr.menu_list .depth2:before {
+	display: block;
+	float: left;
+	content: "\f105";
+	font-family: "FontAwesome";
+	line-height: 34px;
+	width: 25px;
+	padding: 0 8px;
+	text-align: left;
 }

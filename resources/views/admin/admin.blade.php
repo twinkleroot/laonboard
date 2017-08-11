@@ -57,10 +57,29 @@
                 </li>
             </ul>
         </div>
-        <div class="hdbt bt-user">
-            <i class="fa fa-user"></i>
-            <span class="sign">{{ Auth::user()->nick }}</span>
-        </div>
+        <li class="gnb-li dropdown" style="font-size: 12px; display: inline">
+            <div class="hdbt bt-user">
+                <i class="fa fa-user"></i>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                    <span class="sign">
+                            {{ Auth::user()->nick }} <i class="caret"></i>
+                    </span>
+                </a>
+                <!-- 2depth -->
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="{{ route('user.point', Auth::user()->id) }}" class="point">포인트 내역</a></li>
+                    <li>
+                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            로그 아웃
+                        </a>
+                        <!-- 로그아웃 토큰 -->
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            {{ csrf_field() }}
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </li>
     </div>
 </div>
 

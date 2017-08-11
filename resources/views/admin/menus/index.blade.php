@@ -16,11 +16,13 @@
                 <li class="depth">메뉴설정</li>
             </ul>
         </div>
-        <div class="pull-right">
-            <ul class="mb_btn" style="margin-top:8px;">
-                <li><button type="button" class="btn btn-sir" onclick="add_menu();">메뉴 추가</button></li>
-                <li><input type="submit" class="btn btn-default" value="확인"></li>
-            </ul>
+    </div>
+
+    <div id="body_tab_type2">
+        <span class="txt">웹사이트 메뉴를 설정합니다.</span>
+        <div class="submit_btn">
+            <button type="button" class="btn btn-sir" onclick="add_menu();">메뉴 추가</button>
+            <input type="submit" class="btn btn-default" value="확인">
         </div>
     </div>
 
@@ -31,8 +33,10 @@
           </div>
         @endif
 
-        <div class="alert alert-danger">
-            주의! 메뉴설정 작업 후 반드시 확인을 누르셔야 저장됩니다.
+        <div id="adm_alert">
+            <span class="adm_alert_txt">
+                <strong>주의!</strong> 메뉴설정 작업 후 반드시 <strong>확인</strong>을 누르셔야 저장됩니다.
+            </span>
         </div>
 
         <div id="menulist">
@@ -55,11 +59,8 @@
                         <td class="text-center @if(strlen($menu['code']) == 4) sub_menu_class @endif">
                             <input type="hidden" name="code[]" value="{{ substr($menu['code'], 0, 2) }}">
                             @if(strlen($menu['code']) == 4)
-                                <div class="row">
-                                    <div class="col-md-2">ㄴ</div>
-                                    <div class="col-md-10">
-                                        <input type="text" class="form-control" name="name[]" value="{{ $menu['name']}}" />
-                                    </div>
+                                <div class="depth2">
+                                    <input type="text" class="form-control" name="name[]" value="{{ $menu['name']}}" />
                                 </div>
                             @else
                                 <input type="text" class="form-control" name="name[]" value="{{ $menu['name']}}" />

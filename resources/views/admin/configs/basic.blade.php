@@ -103,14 +103,14 @@
                 <tr>
                     <th>로그인시 포인트</th>
                     <td class="table_body chknone">
-                        <input type="text" class="form-control form_small" name="loginPoint" value="{{ $configHomepage->loginPoint }}">
+                        <input type="text" class="form-control form_small required" name="loginPoint" value="{{ $configHomepage->loginPoint }}">
                         <span class="help-block">회원이 로그인시 하루에 한번만 적립</span>
                     </td>
                 </tr>
                 <tr>
                     <th>쪽지보낼시 차감 포인트</th>
                     <td class="table_body chknone">
-                        <input type="text" class="form-control form_small" name="memoSendPoint" value="{{ $configHomepage->memoSendPoint }}">
+                        <input type="text" class="form-control form_small required" name="memoSendPoint" value="{{ $configHomepage->memoSendPoint }}">
                         <span class="help-block">양수로 입력하십시오. 0점은 쪽지 보낼시 포인트를 차감하지 않습니다.</span>
                     </td>
                 </tr>
@@ -165,13 +165,13 @@
                 <tr>
                     <th>페이지 표시 수</th>
                     <td class="table_body chknone">
-                        <input type="text" name="writePages" class="form-control form_num" value="{{ $configHomepage->writePages }}">페이지씩 표시
+                        <input type="text" name="writePages" class="form-control form_num required" value="{{ $configHomepage->writePages }}">페이지씩 표시
                     </td>
                 </tr>
                 <tr>
                     <th>모바일 페이지 표시 수</th>
                     <td class="table_body chknone">
-                        <input type="text" name="mobilePages" class="form-control form_num" value="{{ $configHomepage->mobilePages }}">페이지씩 표시
+                        <input type="text" name="mobilePages" class="form-control form_num required" value="{{ $configHomepage->mobilePages }}">페이지씩 표시
                     </td>
                 </tr>
                 <tr>
@@ -209,7 +209,7 @@
                 <tr>
                     <th>포인트 유효기간</th>
                     <td class="table_body chknone">
-                        <input type="text" name="pointTerm" class="form-control form_num" value="{{ $configHomepage->pointTerm }}">일
+                        <input type="text" name="pointTerm" class="form-control form_num required" value="{{ $configHomepage->pointTerm }}">일
                         <span class="help-block">기간을 0으로 설정시 포인트 유효기간이 적용되지 않습니다.</span>
                     </td>
                 </tr>
@@ -234,7 +234,7 @@
             </div>
             <table class="adm_box_table">
                 <tr>
-                    <td class="table_body" colspan="2">
+                    <td class="table_body border_none" colspan="2">
                         각 게시판 관리에서 개별적으로 설정 가능합니다.
                     </td>
                 </tr>
@@ -257,7 +257,7 @@
                         <label for="readPoint">글읽기 포인트</label>
                     </th>
                     <td class="table_body chknone">
-                        <input type="text" name="readPoint" class="form-control form_num" value="{{ $configBoard->readPoint }}">점
+                        <input type="text" name="readPoint" class="form-control form_num required" value="{{ $configBoard->readPoint }}">점
                     </td>
                 </tr>
                 <tr>
@@ -265,7 +265,7 @@
                         <label for="writePoint">글쓰기 포인트</label>
                     </th>
                     <td class="table_body chknone">
-                        <input type="text" name="writePoint" class="form-control form_num" value="{{ $configBoard->writePoint }}">점
+                        <input type="text" name="writePoint" class="form-control form_num required" value="{{ $configBoard->writePoint }}">점
                     </td>
                 </tr>
                 <tr>
@@ -273,7 +273,7 @@
                         <label for="commentPoint">댓글쓰기 포인트</label>
                     </th>
                     <td class="table_body chknone">
-                        <input type="text" name="commentPoint" class="form-control form_num" value="{{ $configBoard->commentPoint }}">점
+                        <input type="text" name="commentPoint" class="form-control form_num required" value="{{ $configBoard->commentPoint }}">점
                     </td>
                 </tr>
                 <tr>
@@ -281,7 +281,7 @@
                         <label for="downloadPoint">다운로드 포인트</label>
                     </th>
                     <td class="table_body chknone">
-                        <input type="text" name="downloadPoint" class="form-control form_num" value="{{ $configBoard->downloadPoint }}">점
+                        <input type="text" name="downloadPoint" class="form-control form_num required" value="{{ $configBoard->downloadPoint }}">점
                     </td>
                 </tr>
                 {{-- <tr>
@@ -888,7 +888,7 @@
                     <th>네이버 Key</th>
                     <td class="table_body chknone">
                         <input type="text" class="form-control form_large" name="naverKey" value="{{ $configSns->naverKey }}" style="display: inline-block;">
-                        <a href="https://developers.naver.com/apps/#/register" class="btn btn-sir">앱 등록하기</a>
+                        <a href="https://developers.naver.com/apps/#/register" class="btn btn-sir ml15">앱 등록하기</a>
                     </td>
                 </tr>
                 <tr>
@@ -907,7 +907,7 @@
                     <th>카카오 Key</th>
                     <td class="table_body chknone">
                         <input type="text" class="form-control form_large" name="kakaoKey" value="{{ $configSns->kakaoKey }}" style="display: inline-block;">
-                        <a href="https://developers.kakao.com/" class="btn btn-sir">앱 등록하기</a>
+                        <a href="https://developers.kakao.com/" class="btn btn-sir ml15">앱 등록하기</a>
                     </td>
                 </tr>
                 <tr>
@@ -926,7 +926,7 @@
                     <th>페이스북 Key</th>
                     <td class="table_body chknone">
                         <input type="text" class="form-control form_large" name="facebookKey" value="{{ $configSns->facebookKey }}" style="display: inline-block;">
-                        <a href="https://developers.facebook.com/" class="btn btn-sir">앱 등록하기</a>
+                        <a href="https://developers.facebook.com/" class="btn btn-sir ml15">앱 등록하기</a>
                     </td>
                 </tr>
                 <tr>
@@ -945,7 +945,7 @@
                     <th>구글 Key</th>
                     <td class="table_body chknone">
                         <input type="text" class="form-control form_large" name="googleKey" value="{{ $configSns->googleKey }}" style="display: inline-block;">
-                        <a href="https://console.developers.google.com" class="btn btn-sir">앱 등록하기</a>
+                        <a href="https://console.developers.google.com" class="btn btn-sir ml15">앱 등록하기</a>
                     </td>
                 </tr>
                 <tr>
@@ -964,7 +964,7 @@
                     <th>구글 Invisible Recaptcha Key</th>
                     <td class="table_body chknone">
                         <input type="text" class="form-control form_large" name="googleRecaptcha" value="{{ $configSns->googleRecaptcha }}" style="display: inline-block;">
-                        <a href="https://www.google.com/recaptcha/admin" class="btn btn-sir">키 얻기</a>
+                        <a href="https://www.google.com/recaptcha/admin" class="btn btn-sir ml15">키 얻기</a>
                     </td>
                 </tr>
                 <tr>
@@ -995,8 +995,8 @@
                 <tr>
                     <th>여분필드{{ $i }}</th>
                     <td class="table_body chknone">
-                        제목 <input type="text" class="form-control form_small" name="subj_{{ $i}}" value="{{ $configExtra["subj_$i"] }}">
-                        값 <input type="text" class="form-control form_small" name="value_{{ $i}}" value="{{ $configExtra["value_$i"] }}">
+                        제목 <input type="text" class="form-control form_middle" name="subj_{{ $i}}" value="{{ $configExtra["subj_$i"] }}">
+                        값 <input type="text" class="form-control form_middle" name="value_{{ $i}}" value="{{ $configExtra["value_$i"] }}">
                     </td>
                 </tr>
                 @endfor

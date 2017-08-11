@@ -19,6 +19,9 @@
         </ul>
     </div>
 </div>
+<div id="body_tab_type2">
+    <span class="txt">접근가능메뉴의 관리권한을 설정합니다.</span>
+</div>
 <div class="body-contents">
     @if(Session::has('message'))
     <div id="adm_save">
@@ -113,13 +116,13 @@
             : $manageAuthList->links()
         }}
 
-        <div class="alert alert-info">
-            다음 양식에서 회원에게 관리권한을 부여하실 수 있습니다.<br>
-            권한 r은 읽기권한, w는 쓰기권한, d는 삭제권한입니다.
+        <div id="adm_alert">
+            <span class="adm_alert_txt">다음 양식에서 회원에게 관리권한을 부여하실 수 있습니다.<br>
+            권한 <strong>r</strong>은 읽기권한, <strong>w</strong>는 쓰기권한, <strong>d</strong>는 삭제권한입니다.</span>
         </div>
 
         <div id="authlist_add" class="panel panel-default">
-            <div class="panel-heading">
+            <div class="panel-heading bg-sir">
                 관리권한 추가
             </div>
 
