@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use File;
 use Artisan;
 use DB;
+use Cache;
 use Exception;
 use Doctrine\DBAL\Driver\PDOException;
 use Carbon\Carbon;
@@ -77,6 +78,32 @@ class InstallController extends Controller
         config(['database.connections.mysql.prefix' => $request->tablePrefix]);
     }
 
+    private function addAdmin($request)
+    {
+        $nowDate = Carbon::now()->toDateString();
+
+        $admin = [
+            'name' => $request->adminNick,
+            'nick' => $request->adminNick,
+            'nick_date' => $nowDate,
+            'email' => $request->adminEmail,
+            'password' => bcrypt($request->adminPass),
+            'level' => 10,
+            'point' => 9999999,
+            'mailing' => 1,
+            'open' => 1,
+            'open_date' => $nowDate,
+            'today_login' => Carbon::now(),
+            'email_certify' => Carbon::now(),
+        ];
+
+        User::insert($admin);
+        $user = User::find(DB::getPdo()->lastInsertId());
+        $user->id_hashkey = str_replace("/", "-", bcrypt($user->id));
+        $user->save();
+
+    }
+
     private function addBasicConfig($request)
     {
 
@@ -111,29 +138,4 @@ class InstallController extends Controller
         return $configModel->pullConfig($config);
     }
 
-    private function addAdmin($request)
-    {
-        $nowDate = Carbon::now()->toDateString();
-
-        $admin = [
-            'name' => $request->adminNick,
-            'nick' => $request->adminNick,
-            'nick_date' => $nowDate,
-            'email' => $request->adminEmail,
-            'password' => bcrypt($request->adminPass),
-            'level' => 10,
-            'point' => 9999999,
-            'mailing' => 1,
-            'open' => 1,
-            'open_date' => $nowDate,
-            'today_login' => Carbon::now(),
-            'email_certify' => Carbon::now(),
-        ];
-
-        User::insert($admin);
-        $user = User::find(DB::getPdo()->lastInsertId());
-        $user->id_hashkey = str_replace("/", "-", bcrypt($user->id));
-        $user->save();
-
-    }
 }
