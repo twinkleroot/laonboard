@@ -18,11 +18,31 @@
             }
         });
 
-        $(".tab").click(function () {
-            $(".tab").removeClass("active");
-            $(this).addClass("active");
+        $(window).on('scroll', function() {
+            $('.adm_box').each(function() {
+                if($(window).scrollTop() >= $(this).offset().top - 100) {
+                    var id = $(this).attr('id');
+                    $('#body_tab_type2 ul li').removeClass('active');
+                    $("#body_tab_type2 ul li a[href='#" + id + "']").parent().addClass('active');
+                    var txt = $("#body_tab_type2 ul li a[href='#" + id + "']").text();
+                    $("#formSubmit").text(txt + ' 설정 변경');
+                    $("#formSubmit").attr('data', id);
+                } else if($(window).scrollTop() >= $('#bottom').position().top - $(window).outerHeight(true)) {	// 제일 밑으로 스크롤을 내렸을 때
+                    $('#body_tab_type2 ul li').removeClass('active');
+                    $("#body_tab_type2 ul li a[href='#cfs_extra']").parent().addClass('active');
+                    var txt = $("#body_tab_type2 ul li a[href='#cfs_extra']").text();
+                    $("#formSubmit").text(txt + ' 설정 변경');
+                    $("#formSubmit").attr('data', 'cfs_extra');
+                }
+            });
         });
+
     });
+
+    function formSubmit(submit) {
+        var id = $(submit).attr('data');
+        $("section[id='" + id + "'] form").submit();
+    };
 </script>
 @endsection
 
@@ -52,6 +72,7 @@
     </ul>
 
     <div class="submit_btn">
+        <button type="button" class="btn btn-default" id="formSubmit" onclick="formSubmit(this);">설정 변경</button>
     </div>
 </div>
 <div class="body-contents">
@@ -213,14 +234,6 @@
                         <span class="help-block">기간을 0으로 설정시 포인트 유효기간이 적용되지 않습니다.</span>
                     </td>
                 </tr>
-                <tr>
-                    <th>
-                        <label for="basicUpdate">설정변경</label>
-                    </th>
-                    <td class="table_body chknone">
-                        <input type="submit" id="basicUpdate" class="btn btn-sir" value="기본 환경 설정 변경하기"/>
-                    </td>
-                </tr>
             </table>
         </form>
     </section>
@@ -326,14 +339,6 @@
                     <td class="table_body chknone">
                         <textarea cols="80" rows="10" name="filter" class="form-control">{{ $configBoard->filter[0] }}</textarea>
                         <span class="help-block">입력된 단어가 포함된 내용은 게시할 수 없습니다. 단어와 단어 사이는 ,로 구분합니다.</span>
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        <label for="boardUpdate">설정변경</label>
-                    </th>
-                    <td class="table_body chknone">
-                        <input type="submit" id="boardUpdate" class="btn btn-sir" value="게시판 기본 설정 변경하기"/>
                     </td>
                 </tr>
             </table>
@@ -585,14 +590,6 @@
                         </p>
                     </td>
                 </tr>
-                <tr>
-                    <th>
-                        <label for="joinUpdate">설정변경</label>
-                    </th>
-                    <td class="table_body chknone">
-                        <input type="submit" id="joinUpdate" class="btn btn-sir" value="설정변경"/>
-                    </td>
-                </tr>
             </table>
         </form>
     </section>
@@ -692,14 +689,6 @@
                         </span>
                     </td>
                 </tr>
-                <tr>
-                    <th>
-                        <label for="certUpdate">설정변경</label>
-                    </th>
-                    <td class="table_body chknone">
-                        <input type="submit" id="certUpdate" class="btn btn-sir" value="본인확인 설정 변경하기"/>
-                    </td>
-                </tr>
             </table>
         </form>
     </section>
@@ -754,14 +743,6 @@
                         <input type="checkbox" name="formmailIsMember" id="formmailIsMember" value="1" @if($configEmailDefault->formmailIsMember == 1) checked @endif>
                         <label for="formmailIsMember">회원만 사용</label>
                         <span class="help-block">체크하지 않으면 비회원도 사용 할 수 있습니다.</span>
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        <label for="emailBasicUpdate">설정변경</label>
-                    </th>
-                    <td class="table_body chknone">
-                        <input type="submit" id="emailBasicUpdate" class="btn btn-sir" value="기본 메일 환경 설정 변경하기"/>
                     </td>
                 </tr>
             </table>
@@ -826,14 +807,6 @@
                         <span class="help-block">원글에 댓글이 올라오는 경우 댓글 쓴 모든 분들께 메일을 발송합니다.</span>
                     </td>
                 </tr>
-                <tr>
-                    <th>
-                        <label for="emailBoardUpdate">설정변경</label>
-                    </th>
-                    <td class="table_body chknone">
-                        <input type="submit" id="emailBoardUpdate" class="btn btn-sir" value="게시판 글 작성시 메일 설정 변경하기"/>
-                    </td>
-                </tr>
             </table>
         </form>
     </section>
@@ -863,14 +836,6 @@
                         <input type="checkbox" name="emailJoinUser" id="emailJoinUser" value="1" @if($configEmailJoin->emailJoinUser == 1) checked @endif>
                             <label for="emailJoinUser">사용</label>
                         <span class="help-block">회원가입한 회원님께 메일을 발송합니다.</span>
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        <label for="emailJoinUpdate">설정변경</label>
-                    </th>
-                    <td class="table_body chknone">
-                        <input type="submit" id="emailJoinUpdate" class="btn btn-sir" value="회원가입 시 메일 설정 변경하기"/>
                     </td>
                 </tr>
             </table>
@@ -974,14 +939,6 @@
                         <a href="https://www.google.com/recaptcha/admin" class="btn btn-sir ml15" target="_blank">키 얻기</a>
                     </td>
                 </tr>
-                <tr>
-                    <th>
-                        <label for="snsUpdate">설정변경</label>
-                    </th>
-                    <td class="table_body chknone">
-                        <input type="submit" id="snsUpdate" class="btn btn-sir" value="SNS 설정 변경하기"/>
-                    </td>
-                </tr>
             </table>
         </form>
     </section>
@@ -1007,16 +964,9 @@
                     </td>
                 </tr>
                 @endfor
-                <tr>
-                    <th>
-                        <label for="extraUpdate">설정변경</label>
-                    </th>
-                    <td class="table_body chknone">
-                        <input type="submit" id="extraUpdate" class="btn btn-sir" value="여분필드 설정 변경하기"/>
-                    </td>
-                </tr>
             </table>
         </form>
     </section>
+    <section id="bottom"></section>
 </div>
 @endsection
