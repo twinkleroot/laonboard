@@ -523,9 +523,9 @@ class User extends Authenticatable
     public function disconnectSocialAccount($request)
     {
         return SocialLogin::where([
-            'provider' => $request->get('provider'),
-            'social_id' => $request->get('social_id'),
-            'user_id' => $request->get('user_id'),
+            'provider' => $request->provider,
+            'social_id' => $request->social_id,
+            'user_id' => $request->user_id,
         ])->delete();
     }
 
@@ -541,12 +541,9 @@ class User extends Authenticatable
 
         if(is_null($socialLogin)) {
             // 소셜로그인 정보 등록
-            $socialLogin = new SocialLogin([
-                'provider' => $provider,
-                'social_id' => $userFromSocial->getId(),
-                'social_token' => $userFromSocial->token,
-                'ip' => $request->ip(),
-            ]);
+            session()->put('userFromSocial', $userFromSocial);
+            $social = new SocialLogin();
+            $socialLogin = $social->insertSocialLogins($request->ip(), $provider);
 
             // User 모델과 SocialLogin 모델의 관계를 이용해서 social_logins 테이블에 가입한 user_id와 소셜 데이터 저장.
             $user->socialLogins()->save($socialLogin);
