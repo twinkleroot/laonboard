@@ -5,6 +5,8 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\User;
 use Auth;
+use DB;
+use Carbon\Carbon;
 
 class SocialLogin extends Model
 {
@@ -40,12 +42,16 @@ class SocialLogin extends Model
     {
         $userFromSocial = session()->get('userFromSocial');
 
-        $socialLogin = new SocialLogin([
-            'provider' => $request->get('provider'),
-            'social_id' => $userFromSocial->getId(),
+        SocialLogin::insert([
+            'provider' => $request->provider,
+            'social_id' => $userFromSocial->id,
             'social_token' => $userFromSocial->token,
             'ip' => $request->ip(),
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ]);
+
+        $socialLogin = SocialLogin::find(DB::getPdo()->lastInsertId());
 
         // User 모델과 SocialLogin 모델의 관계를 이용해서 social_logins 테이블에 가입한 user_id와 소셜 데이터 저장.
         $user->socialLogins()->save($socialLogin);

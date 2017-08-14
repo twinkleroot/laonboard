@@ -52,6 +52,7 @@ class SocialController extends Controller
         try {
             $config = $this->getConfig($provider);
             $userFromSocial = Socialite::with($provider)->setConfig($config)->user();
+            // dd($userFromSocial);
         } catch (InvalidStateException $e) {
             return alert('잘못된 접근입니다.');
         } catch (ClientException $e) {
