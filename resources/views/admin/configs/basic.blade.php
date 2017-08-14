@@ -28,11 +28,12 @@
                     $("#formSubmit").text(txt + ' 설정 변경');
                     $("#formSubmit").attr('data', id);
                 } else if($(window).scrollTop() >= $('#bottom').position().top - $(window).outerHeight(true)) {	// 제일 밑으로 스크롤을 내렸을 때
+                    var id = 'cfs_extra';
                     $('#body_tab_type2 ul li').removeClass('active');
-                    $("#body_tab_type2 ul li a[href='#cfs_extra']").parent().addClass('active');
-                    var txt = $("#body_tab_type2 ul li a[href='#cfs_extra']").text();
+                    $("#body_tab_type2 ul li a[href='#" + id + "']").parent().addClass('active');
+                    var txt = $("#body_tab_type2 ul li a[href='#" + id + "']").text();
                     $("#formSubmit").text(txt + ' 설정 변경');
-                    $("#formSubmit").attr('data', 'cfs_extra');
+                    $("#formSubmit").attr('data', id);
                 }
             });
         });
