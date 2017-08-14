@@ -888,7 +888,7 @@
                     <th>네이버 Key</th>
                     <td class="table_body chknone">
                         <input type="text" class="form-control form_large" name="naverKey" value="{{ $configSns->naverKey }}" style="display: inline-block;">
-                        <a href="https://developers.naver.com/apps/#/register" class="btn btn-sir ml15">앱 등록하기</a>
+                        <a href="https://developers.naver.com/apps/#/register" class="btn btn-sir ml15" target="_blank">앱 등록하기</a>
                     </td>
                 </tr>
                 <tr>
@@ -907,7 +907,7 @@
                     <th>카카오 Key</th>
                     <td class="table_body chknone">
                         <input type="text" class="form-control form_large" name="kakaoKey" value="{{ $configSns->kakaoKey }}" style="display: inline-block;">
-                        <a href="https://developers.kakao.com/" class="btn btn-sir ml15">앱 등록하기</a>
+                        <a href="https://developers.kakao.com/" class="btn btn-sir ml15" target="_blank">앱 등록하기</a>
                     </td>
                 </tr>
                 <tr>
@@ -926,7 +926,7 @@
                     <th>페이스북 Key</th>
                     <td class="table_body chknone">
                         <input type="text" class="form-control form_large" name="facebookKey" value="{{ $configSns->facebookKey }}" style="display: inline-block;">
-                        <a href="https://developers.facebook.com/" class="btn btn-sir ml15">앱 등록하기</a>
+                        <a href="https://developers.facebook.com/" class="btn btn-sir ml15" target="_blank">앱 등록하기</a>
                     </td>
                 </tr>
                 <tr>
@@ -945,7 +945,7 @@
                     <th>구글 Key</th>
                     <td class="table_body chknone">
                         <input type="text" class="form-control form_large" name="googleKey" value="{{ $configSns->googleKey }}" style="display: inline-block;">
-                        <a href="https://console.developers.google.com" class="btn btn-sir ml15">앱 등록하기</a>
+                        <a href="https://console.developers.google.com" class="btn btn-sir ml15" target="_blank">앱 등록하기</a>
                     </td>
                 </tr>
                 <tr>
@@ -961,10 +961,17 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>구글 Invisible Recaptcha Key</th>
+                    <th>구글 Invisible Recaptcha Key 클라이언트</th>
                     <td class="table_body chknone">
-                        <input type="text" class="form-control form_large" name="googleRecaptcha" value="{{ $configSns->googleRecaptcha }}" style="display: inline-block;">
-                        <a href="https://www.google.com/recaptcha/admin" class="btn btn-sir ml15">키 얻기</a>
+                        <input type="text" class="form-control form_large" name="googleRecaptchaClient" value="{{ $configSns->googleRecaptchaClient }}" style="display: inline-block;">
+                        <a href="https://www.google.com/recaptcha/admin" class="btn btn-sir ml15" target="_blank">키 얻기</a>
+                    </td>
+                </tr>
+                <tr>
+                    <th>구글 Invisible Recaptcha Key 서버</th>
+                    <td class="table_body chknone">
+                        <input type="text" class="form-control form_large" name="googleRecaptchaServer" value="{{ $configSns->googleRecaptchaServer }}" style="display: inline-block;">
+                        <a href="https://www.google.com/recaptcha/admin" class="btn btn-sir ml15" target="_blank">키 얻기</a>
                     </td>
                 </tr>
                 <tr>

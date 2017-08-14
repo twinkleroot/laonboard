@@ -312,7 +312,7 @@
                     <a href="{{ route('home') }}" class="btn btn-sir">취소</a>
                 </div>
                 <div id='recaptcha' class="g-recaptcha"
-                    data-sitekey="{{ cache('config.sns')->googleRecaptcha }}"
+                    data-sitekey="{{ cache('config.sns')->googleRecaptchaClient }}"
                     data-callback="onSubmit"
                     data-size="invisible" style="display:none">
                 </div>

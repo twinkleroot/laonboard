@@ -4,9 +4,11 @@ namespace Laravel\Socialite\Two;
 
 use Illuminate\Support\Arr;
 use GuzzleHttp\ClientInterface;
+use SocialiteProviders\Manager\ConfigTrait;
 
 class FacebookProvider extends AbstractProvider implements ProviderInterface
 {
+    use ConfigTrait;
     /**
      * The base Facebook Graph URL.
      *
@@ -19,7 +21,7 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
      *
      * @var string
      */
-    protected $version = 'v2.10';
+    protected $version = 'v2.9';
 
     /**
      * The user fields being requested.

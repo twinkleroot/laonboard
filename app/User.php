@@ -157,8 +157,8 @@ class User extends Authenticatable
         $socials = [
             'naver' => '',
             'kakao' => '',
-            'google' => '',
             'facebook' => '',
+            'google' => '',
         ];
 
         foreach($socialLogins as $sociallogin) {
