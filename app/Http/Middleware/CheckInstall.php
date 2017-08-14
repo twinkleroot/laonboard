@@ -22,13 +22,9 @@ class CheckInstall
         $file = '.env';
         $path = base_path($file);
         try {
-            if(File::exists($path) && config('database.connections.mysql.database') && config('database.connections.mysql.username') && config('database.connections.mysql.password') && config('database.connections.mysql.prefix') ) {
+            if(File::exists($path) && config('database.connections.mysql.database') && config('database.connections.mysql.username') && config('database.connections.mysql.password') ) {
                 // DB 연결 확인
                 DB::connection()->getPdo();
-                // // 기본 설정 테이블 존재 확인
-                // if(DB::table('migrations') && DB::table('migrations')->count() == 0) {
-                //     return view('install.index');
-                // }
                 return $next($request);
             } else {
                 return redirect(route('install.index'));

@@ -37,9 +37,6 @@ class InstallController extends Controller
     public function setup(Request $request)
     {
         // 1. .env파일에 App 정보, DB 정보를 셋팅한다.
-        // File::copy(base_path('.env.example'), base_path('.env'));
-        // @chmod(base_path('.env'), 646);
-        // File::chmod(base_path('.env'), 646);
         $this->setEnv($request);
         // 2. DB 연결 확인
         try {
@@ -98,6 +95,7 @@ class InstallController extends Controller
         config(['database.connections.mysql.prefix' => $request->tablePrefix]);
     }
 
+    // 관리자 정보 회원 등록
     private function addAdmin($request)
     {
         $nowDate = Carbon::now()->toDateString();
@@ -124,6 +122,7 @@ class InstallController extends Controller
 
     }
 
+    // 기본환경설정 기본값 셋팅
     private function addBasicConfig($request)
     {
 
@@ -139,13 +138,13 @@ class InstallController extends Controller
         }
     }
 
-    // 설정 캐시 등록
+    // 기본환경설정 캐시 등록
     private function registerConfigCache($configName)
     {
         Cache::forever("config.$configName", $this->getConfig($configName));
     }
 
-    // 설정 get || ( create && get )
+    // 기본환경설정 get || ( create && get )
     private function getConfig($configName)
     {
         $configModel = new Config(); // 캐시에 저장할 때만 객체 생성
