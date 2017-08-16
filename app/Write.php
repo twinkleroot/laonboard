@@ -52,9 +52,9 @@ class Write extends Model
         return $this->isDelete;
     }
 
-    public static function getWrite($boardId, $writeId)
+    public static function getWrite($boardId, $writeId, $id='id')
     {
-        return WriteSingleton::getInstance($boardId, $writeId);
+        return WriteSingleton::getInstance($boardId, $writeId, $id);
     }
 
     public function __construct()

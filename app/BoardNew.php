@@ -92,7 +92,7 @@ class BoardNew extends Model
     public function processBoardNewList($boardNewList)
     {
         foreach($boardNewList as $boardNew) {
-            $write = Write::getWrite($boardNew->board_id, $boardNew->write_parent);	 // 원글
+            $write = Write::getWrite($boardNew->board_id, $boardNew->write_parent, 'parent');	 // 원글
             $user = $boardNew->user_id ? User::getUser($boardNew->user_id) : new User();
             // 원글, 댓글 공통 추가 데이터
             $boardNew->write = $write;

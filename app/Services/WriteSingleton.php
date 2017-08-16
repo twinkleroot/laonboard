@@ -7,13 +7,14 @@ use App\Board;
 
 class WriteSingleton
 {
-    public static function getInstance($boardId, $writeId)
+    public static function getInstance($boardId, $writeId, $id)
     {
         static $write;
-        if (is_null($write) || $write->id != $writeId) {
+        if (is_null($write) || $write[$id] != $writeId || $write->board_id != $boardId) {
             $writeModel = new Write();
             $writeModel->setTableName(Board::getBoard($boardId)->table_name);
             $write = $writeModel->find($writeId);
+            $write->board_id = $boardId;
         }
 
         return $write;
