@@ -25,6 +25,9 @@
         </ul>
     </div>
 </div>
+<div id="body_tab_type2">
+    <span class="txt">건수 {{ $populars->total() }}개</span>
+</div>
 <div class="body-contents">
     <div id="auth_list">
         <ul id="adm_btn">
@@ -35,11 +38,6 @@
             </li>
             <li>
                 <button type="button" class="btn btn-sir pull-left" id="selected_delete">선택삭제</button>
-            </li>
-            <li>
-                <span>
-                    건수 {{ $populars->total() }}개
-                </span>
             </li>
         </ul>
 

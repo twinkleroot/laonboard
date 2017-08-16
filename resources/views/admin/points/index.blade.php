@@ -25,38 +25,20 @@
   </div>
 @endif
 <div id="body_tab_type2">
-    <span class="txt">회원의 포인트 리스트를 보여줍니다.</span>
-
-    <div class="submit_btn">
-        <a class="btn btn-default" href="{{ route('admin.users.create')}}" role="button">회원추가</a>
-        <input type="button" id="selected_update" class="btn btn-default" value="선택수정">
-        <input type="button" id="selected_delete" class="btn btn-default" value="선택삭제">
-    </div>
+    <span class="txt">전체 {{ $points->total() }} 건 (
+                    @if($kind == 'email' && $points->total() > 0)
+                        {{ $keyword }} 님 포인트
+                    @else 전체
+                    @endif
+                    합계 {{ number_format($sum) }}점)</span>
 </div>
 
 <div class="body-contents">
     <div id="pt">
         <ul id="adm_btn">
-            <li>
-                <button type="button" class="btn btn-sir pull-left" onclick="location.href='{{ route('admin.points.index') }}'">
-                     전체보기
-                </button>
-            </li>
-            <li>
-                <button type="button" class="btn btn-sir pull-left" id="selected_delete">선택삭제</button>
-            </li>
-            <li>
-                <span>
-                    전체 {{ $points->total() }} 건 (
-                    @if($kind == 'email' && $points->total() > 0)
-                        {{ $keyword }} 님 포인트
-                    @else 전체
-                    @endif
-                    합계 {{ number_format($sum) }}점)
-                </span>
-            </li>
+            <li><button type="button" class="btn btn-sir pull-left" onclick="location.href='{{ route('admin.points.index') }}'">전체보기</button></li>
+            <li><input type="button" id="selected_delete" class="btn btn-sir" value="선택삭제"></li>
         </ul>
-
         <div id="adm_sch">
             <form role="form" method="GET" action="{{ route('admin.points.index') }}">
                 <label for="kind" class="sr-only">검색대상</label>

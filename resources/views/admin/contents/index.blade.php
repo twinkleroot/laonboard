@@ -23,7 +23,7 @@
     </div>
 </div>
 <div id="body_tab_type2">
-    <span class="txt">내용관리 목록을 보여줍니다.</span>
+    <span class="txt">전체 내용 {{ $contents->total() }}건</span>
     <div class="submit_btn">
         <a class="btn btn-default" href="{{ route('admin.contents.create')}}" role="button">내용 추가</a>
     </div>
@@ -36,12 +36,6 @@
     @endif
 
     <div id="mb" class="">
-        <ul class="mb_btn mb10 pull-left">
-            <li>
-                <span class="total">전체 내용 {{ $contents->total() }}건</span>
-            </li>
-        </ul>
-
         <table class="table table-striped box">
             <thead>
                 <th>ID</th>

@@ -20,11 +20,9 @@
     </div>
 </div>
 <div id="body_tab_type2">
-    <span class="txt">게시판 그룹을 설정합니다.</span>
+    <span class="txt">전체그룹 {{ $groups->total() }}개</span>
 
     <div class="submit_btn">
-        <input type="button" id="selected_update" class="btn btn-default" value="선택 수정"/>
-        <input type="button" id="selected_delete" class="btn btn-default" value="선택 삭제"/>
         <a class="btn btn-default" href="{{ route('admin.groups.create') }}" role="button">게시판그룹 추가</a>
     </div>
 </div>
@@ -41,7 +39,8 @@
     <div id="board">
         <ul id="adm_btn">
             <li><a href="{{ route('admin.groups.index') }}" class="btn btn-sir" role="button">전체목록</a></li>
-            <li><span class="total">전체그룹 {{ $groups->total() }}개</span></li>
+            <li><input type="button" id="selected_update" class="btn btn-sir" value="선택수정"/></li>
+            <li><input type="button" id="selected_delete" class="btn btn-sir" value="선택삭제"/></li>
         </ul>
         <div id="adm_sch">
              <form role="form" method="GET" action="{{ route('admin.groups.index') }}">

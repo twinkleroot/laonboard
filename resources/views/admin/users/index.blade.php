@@ -27,30 +27,27 @@
     </div>
 </div>
 <div id="body_tab_type2">
-    <span class="txt">가입되어 있는 회원 리스트를 보여줍니다.</span>
+    <span class="txt">총회원수 {{ $users->total() }}명 중, <a href="{{ route('admin.users.index') }}?kind=intercept">차단 {{ $interceptUsers }}명</a>, <a href="{{ route('admin.users.index') }}?kind=leave">탈퇴 {{ $leaveUsers }}명</a></span>
 
     <div class="submit_btn">
-        <a class="btn btn-default" href="{{ route('admin.users.create')}}" role="button">회원추가</a>
-        <input type="button" id="selected_update" class="btn btn-default" value="선택수정">
-        <input type="button" id="selected_delete" class="btn btn-default" value="선택삭제">
+        <a class="btn btn-default" href="{{ route('admin.users.create')}}" role="button">회원 추가</a>
     </div>
 </div>
 
 <div class="body-contents">
-    @if(Session::has('message'))
-        <div class="alert alert-info">
-            {{ Session::get('message') }}
-        </div>
-    @endif
-
+@if(Session::has('message'))
+    <div id="adm_save">
+        <span class="adm_save_txt">{{ Session::get('message') }}</span>
+        <button onclick="alertclose()" class="adm_alert_close">
+            <i class="fa fa-times"></i>
+        </button>
+    </div>
+@endif
     <div id="mb" class="">
-        <ul class="mb_btn">
-            <li>
-                <a href="{{ route('admin.users.index') }}" class="btn btn-sir pull-left">전체보기</a>
-            </li>
-            <li>
-                <span class="total">총회원수 {{ $users->total() }}명 중, <a href="{{ route('admin.users.index') }}?kind=intercept">차단 {{ $interceptUsers }}명</a>, <a href="{{ route('admin.users.index') }}?kind=leave">탈퇴 {{ $leaveUsers }}명</a></span>
-            </li>
+        <ul id="adm_btn">
+            <li><a href="{{ route('admin.users.index') }}" class="btn btn-sir pull-left">전체목록</a></li>
+            <li><input type="button" id="selected_update" class="btn btn-sir" value="선택수정"></li>
+            <li><input type="button" id="selected_delete" class="btn btn-sir" value="선택삭제"></li>
         </ul>
 
         <div id="adm_sch">

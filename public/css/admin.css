@@ -203,7 +203,7 @@ input[type=radio] {
 	background: url(../images/dropdown.png) no-repeat;
 
 	position: absolute;
-	right: 20px;
+	right: 24px;
 	top: -10px;
 }
 #admin-header .hdtx {
@@ -485,14 +485,10 @@ input[type=radio] {
 	display: block;
 }
 .adm_box {
-	margin: 30px 0px;
+	margin-bottom: 30px;
 }
 .adm_box:last-child {
 	margin-bottom: 0;
-}
-#anc_basic,
-#cfs_basic {
-	margin-top: 0;
 }
 .adm_panel {
 	margin-bottom: 20px;
@@ -566,7 +562,11 @@ input[type=radio] {
 	width: 170px;
 }
 .adm_box_table .form_btn {
-	font-size: 0;
+	font-size: 12px;
+	line-height: 20px;
+	padding: 6px 12px;
+	margin-left: 5px;
+	margin-top: -2px;
 }
 .adm_box_table .form_btn a {
 	margin: 0 3px;
@@ -580,8 +580,11 @@ input[type=radio] {
 	font-family: "FontAwesome";
 	margin-right: 6px;
 }
+.adm_box_table .help-block a {
+	font-weight: 600; color: #587ef6;
+}
 .form_num {
-	width: 55px;
+	width: 70px;
 	display: inline-block;
 	margin-right: 5px;
 }
@@ -595,6 +598,9 @@ input[type=radio] {
 }
 .form_large {
 	width: 280px;
+}
+.form_half {
+	width: 550px;
 }
 .form_w50 {
 	width: 50%;
@@ -1096,6 +1102,7 @@ input[type=radio] {
 	padding: 2px 6px;
 	border-radius: 4px;
 	margin-right: 5px;
+	text-align: center;
 }
 .intercept {
 	background: #ed3c3c;

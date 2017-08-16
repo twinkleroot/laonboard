@@ -25,6 +25,9 @@
         </ul>
     </div>
 </div>
+<div id="body_tab_type2">
+    <span class="txt">건수 {{ $ranks->total() }}개</span>
+</div>
 <div class="body-contents">
     <div id="auth_list">
         <ul id="adm_btn">
@@ -35,7 +38,7 @@
             </li>
             <li>
                 <span>
-                    건수 {{ $ranks->total() }}개
+                    
                 </span>
             </li>
         </ul>

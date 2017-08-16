@@ -64,7 +64,7 @@
         </div>
     @endif
 
-    <section id="cfs_basic" class="adm_box">
+    <section id="cfs_basic" class="adm_box first">
         <form role="form" method="POST" action="{{ route('admin.config.update', ['name' => 'homepage']) }}">
             {{ method_field('PUT') }}
             {{ csrf_field() }}
