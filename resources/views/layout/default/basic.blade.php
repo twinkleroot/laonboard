@@ -81,7 +81,7 @@
                 </ul>
         @else
             <li class="gnb-li">
-                <a href="{{ Cache::get('menuList')[$i]['link'] }}">{{ Cache::get('menuList')[$i]['name'] }}</a>
+                <a href="{{ Cache::get('menuList')[$i]['link'] }}" target="_{{ Cache::get('menuList')[$i]['target'] }}">{{ Cache::get('menuList')[$i]['name'] }}</a>
         @endif
             </li>
         @endfor
