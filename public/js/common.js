@@ -2,6 +2,17 @@
 var errmsg = "";
 var errfld = null;
 
+// 문자열에 특수문자가 들어가 있는지 검사
+function checkStringFormat(string) {
+    var stringRegx = /[~!@\#$%<>^&*\()\-=+_\’]/gi;
+    var isValid = true;
+    if(stringRegx.test(string)) {
+        isValid = false;
+    }
+
+    return isValid;
+}
+
 // 체크박스로 업데이트할 값 배열에 담기
 function toUpdateByCheckBox(id, selected_id_array) {
     var send_array = Array();
