@@ -737,6 +737,7 @@ class Write extends Model
     {
         $inputData = $request->all();
         $inputData = array_except($inputData, ['_token', 'file_content', 'attach_file', 'html', 'secret', 'mail', 'notice', 'uid', 'type', 'writeId', 'g-recaptcha-response']);
+        $inputData = exceptNullData($inputData);
         $inputData = $this->convertSomeField($inputData);
 
         $options = [];
