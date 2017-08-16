@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Http\Request;
+use Ixudra\Curl\Facades\Curl;
 
 class ReCaptcha
 {
@@ -12,12 +13,11 @@ class ReCaptcha
     * @return boolean
     */
     public static function reCaptcha(Request $request) {
-        $url = 'https://www.google.com/recaptcha/api/siteverify'
-                . '?secret='. cache('config.sns')->googleRecaptchaServer. '&response='
-                . $request['g-recaptcha-response'];
-        $flag = json_decode(file_get_contents($url));
+        $url =
+            'https://www.google.com/recaptcha/api/siteverify'. '?secret='. cache('config.sns')->googleRecaptchaServer. '&response='. $request['g-recaptcha-response'];
+        $flag = json_decode(Curl::to($url)->get());
 
-        if(!$flag->success) {
+        if(!$flag || !$flag->success) {
             abort(500, '자동등록방지 입력이 틀렸습니다. 다시 입력해 주십시오.');
         }
 

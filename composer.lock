@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "f47425bffe15f8dbaaf194e074cec32b",
+    "content-hash": "ca5a5aa28128f65c208fc6805b2ced5f",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -1046,6 +1046,49 @@
             ],
             "description": "Fancy and customizable colorpicker plugin for Twitter Bootstrap",
             "time": "2017-02-05T18:59:49+00:00"
+        },
+        {
+            "name": "ixudra/curl",
+            "version": "6.12.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ixudra/curl.git",
+                "reference": "adedf5c9dd7e8e31061cf4ac756f20cec62966cf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ixudra/curl/zipball/adedf5c9dd7e8e31061cf4ac756f20cec62966cf",
+                "reference": "adedf5c9dd7e8e31061cf4ac756f20cec62966cf",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": ">=4.0",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ixudra\\Curl\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jan Oris",
+                    "email": "jan.oris@ixudra.be"
+                }
+            ],
+            "description": "Custom PHP Curl library for the Laravel 5 framework - developed by Ixudra",
+            "homepage": "http://ixudra.be",
+            "keywords": [
+                "Ixudra",
+                "curl",
+                "laravel"
+            ],
+            "time": "2017-08-07T01:37:48+00:00"
         },
         {
             "name": "jakub-onderka/php-console-color",

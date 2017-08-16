@@ -12,6 +12,7 @@
         "guzzlehttp/guzzle": "^6.2",
         "intervention/image": "^2.3",
         "itsjavi/bootstrap-colorpicker": "^2.5",
+        "ixudra/curl": "^6.12",
         "khill/lavacharts": "3.0.*",
         "laravel/framework": "5.4.*",
         "laravel/socialite": "^3.0",

@@ -42,6 +42,9 @@
 
     function formSubmit(submit) {
         var id = $(submit).attr('data');
+        if(typeof(id) == 'undefined') {
+            id = 'cfs_basic';
+        }
         $("section[id='" + id + "'] form").submit();
     };
 </script>

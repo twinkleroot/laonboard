@@ -14,6 +14,18 @@
             $("#skinForm").submit();
         }
 
+        $(document).ready(function(){
+            $('.adm_box').hide().eq(0).show();
+
+            $("#body_tab_type2 li").click(function () {
+                $('.adm_box').hide().eq($(this).index()).show();
+            });
+
+            $(".tab").click(function () {
+                $(".tab").removeClass("active");
+                $(this).addClass("active");
+            });
+        });
     </script>
 @endsection
 

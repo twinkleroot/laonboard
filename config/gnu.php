@@ -5,7 +5,7 @@
     'IP_DISPLAY' => '\\1.♡.\\3.\\4',
 
     // 홈페이지 기본 환경 설정
-    'title' => '라온보드',
+    'title' => '라라벨게시판',
     'superAdmin' => '',
     'usePoint' => 1,
     'loginPoint' => 100,
