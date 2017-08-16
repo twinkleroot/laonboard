@@ -193,7 +193,7 @@
                 @elseif($board->use_recaptcha)
                     <!-- 리캡챠 -->
                     <div id='recaptcha' class="g-recaptcha"
-                        data-sitekey="{{ cache('config.sns')->googleRecaptcha }}"
+                        data-sitekey="{{ cache('config.sns')->googleRecaptchaClient }}"
                         data-callback="onSubmit"
                         data-size="invisible" style="display:none">
                     </div>

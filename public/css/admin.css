@@ -484,7 +484,8 @@ input[type=radio] {
 #admin_box1 {
 	display: block;
 }
-.adm_box {
+.adm_box,
+.adm_section {
 	margin-bottom: 30px;
 }
 .adm_box:last-child {

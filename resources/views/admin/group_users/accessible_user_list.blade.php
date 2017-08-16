@@ -80,7 +80,11 @@
                             <a href="{{ route('admin.accessGroups.show', $user->id) }}">{{ $user->count_groups }}</a>
                         </td>
                         <td class="td_subject">{{ $user->email }}</td>
-                        <td class="td_nick">{{ $user->nick }}</td>
+                        <td class="td_nick">
+                            {{-- {{ $user->nick }} --}}
+                            @component('admin.sideview', ['id' => $user->id, 'nick' => $user->nick, 'email' => $user->email])
+                            @endcomponent
+                        </td>
                         <td class="td_date">@date($user->today_login)</td>
                         <td class="td_date">{{ $user->pivot->created_at }}</td>
                     </tr>
@@ -89,7 +93,7 @@
             </table>
         </div>
         <div class="panel-heading">
-            
+
         </div>
     </form>
     {{-- 페이지 처리 --}}

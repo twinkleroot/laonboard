@@ -20,10 +20,20 @@
             }
         });
 
-        $(".tab").click(function () {
-            $(".tab").removeClass("active");
-            $(this).addClass("active");
+        $(window).on('scroll', function() {
+            $('.adm_box').each(function() {
+                if($(window).scrollTop() >= $(this).offset().top - 100) {
+                    var id = $(this).attr('id');
+                    $('#body_tab_type2 ul li').removeClass('active');
+                    $("#body_tab_type2 ul li a[href='#" + id + "']").parent().addClass('active');
+                } else if($(window).scrollTop() >= $('#bottom').position().top - $(window).outerHeight(true) + 100) {	// 제일 밑으로 스크롤을 내렸을 때
+                    var id = 'anc_extra';
+                    $('#body_tab_type2 ul li').removeClass('active');
+                    $("#body_tab_type2 ul li a[href='#" + id + "']").parent().addClass('active');
+                }
+            });
         });
+
     });
 </script>
 @endsection
@@ -49,7 +59,7 @@
             <li class="tab"><a href="#anc_function">기능설정</a></li>
             <li class="tab"><a href="#anc_design">디자인/양식</a></li>
             <li class="tab"><a href="#anc_point">포인트설정</a></li>
-            <li class="tab"><a href="#anc_point">여분필드</a></li>
+            <li class="tab"><a href="#anc_extra">여분필드</a></li>
         </ul>
 
         <div class="submit_btn">
@@ -748,7 +758,7 @@
         </section>
         <section id="anc_design" class="adm_box">
             <div class="adm_box_hd">
-                <span class="adm_box_title">게시판 기능설정</span>
+                <span class="adm_box_title">게시판 디자인/양식</span>
             </div>
             <table class="adm_box_table">
                 <tr>
@@ -1152,6 +1162,7 @@
                 @endfor
             </table>
         </section>
+        <section id="bottom"></section>
     </div>
 </div>
 </form>

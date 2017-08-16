@@ -71,17 +71,17 @@
         @for($i=0; $i<count(Cache::get('menuList')); $i++)
         @if(count(Cache::get('subMenuList')[$i]) > 0)
             <li class="gnb-li dropdown">
-                <a href="{{ Cache::get('menuList')[$i]['link'] }}" role="button" aria-expanded="false">
+                <a href="{{ Cache::get('menuList')[$i]['link'] }}" role="button" aria-expanded="false" target="_{{ Cache::get('menuList')[$i]['target'] }}">
                     {{ Cache::get('menuList')[$i]['name'] }}<span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
                 @for($j=0; $j<count(Cache::get('subMenuList')[$i]); $j++)
-                    <li><a href="{{ Cache::get('subMenuList')[$i][$j]['link'] }}">{{ Cache::get('subMenuList')[$i][$j]['name'] }}</a></li>
+                    <li><a href="{{ Cache::get('subMenuList')[$i][$j]['link'] }}" target="_{{ Cache::get('menuList')[$i]['target'] }}">{{ Cache::get('subMenuList')[$i][$j]['name'] }}</a></li>
                 @endfor
                 </ul>
         @else
             <li class="gnb-li">
-                <a href="{{ Cache::get('menuList')[$i]['link'] }}">{{ Cache::get('menuList')[$i]['name'] }}</a>
+                <a href="{{ Cache::get('menuList')[$i]['link'] }}" target="_{{ Cache::get('menuList')[$i]['target'] }}">{{ Cache::get('menuList')[$i]['name'] }}</a>
         @endif
             </li>
         @endfor

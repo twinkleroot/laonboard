@@ -285,7 +285,8 @@ class Config extends Model
             'googleKey' => '',
             'googleSecret' => '',
             'googleRedirect' => '',
-            'googleRecaptcha' => '',
+            'googleRecaptchaClient' => '',
+            'googleRecaptchaServer' => '',
         );
 
         return $this->createConfig('config.sns', $configArr);

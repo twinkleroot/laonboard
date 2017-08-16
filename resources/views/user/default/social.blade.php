@@ -35,6 +35,12 @@ function joinValidation(form) {
         return false;
     }
 
+    if( !checkStringFormat(form.nick.value) ) {
+        alert('닉네임엔 특수문자를 사용할 수 없습니다.');
+        form.nick.focus();
+        return false;
+    }
+
     if(checkExistData('nick', form.nick.value)) {
         alert('이미 가입된 닉네임입니다. 다른 닉네임을 입력해 주세요.');
         form.nick.focus();
@@ -110,7 +116,7 @@ function loginValidation(form) {
     <div class="col-md-6">
         <div class="panel panel-default">
             <div class="panel-heading bg-sir">
-                <h3 class="panel-title">{{ $userFromSocial->getNickname() }}님, 새로 가입하시겠습니까?</h3>
+                <h3 class="panel-title">{{ $userFromSocial->getNickname() ? : '손' }}님, 새로 가입하시겠습니까?</h3>
             </div>
             <div class="panel-body">
                 <form class="contents col-md-12" method="POST" action="{{ route('social.socialUserJoin') }}" onsubmit="return joinValidation(this);" autocomplete="off">

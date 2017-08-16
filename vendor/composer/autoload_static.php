@@ -91,6 +91,7 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         ),
         'I' => 
         array (
+            'Ixudra\\Curl\\' => 12,
             'Intervention\\Image\\' => 19,
             'Illuminate\\' => 11,
         ),
@@ -271,6 +272,10 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         'Khill\\Lavacharts\\' => 
         array (
             0 => __DIR__ . '/..' . '/khill/lavacharts/src',
+        ),
+        'Ixudra\\Curl\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/ixudra/curl/src',
         ),
         'Intervention\\Image\\' => 
         array (
@@ -487,10 +492,12 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         'App\\Http\\Middleware\\AdminMenu' => __DIR__ . '/../..' . '/app/Http/Middleware/AdminMenu.php',
         'App\\Http\\Middleware\\CanActionWriteImmediately' => __DIR__ . '/../..' . '/app/Http/Middleware/CanActionWriteImmediately.php',
         'App\\Http\\Middleware\\CanDeleteCommentImmediately' => __DIR__ . '/../..' . '/app/Http/Middleware/CanDeleteCommentImmediately.php',
+        'App\\Http\\Middleware\\CheckAccessFolder' => __DIR__ . '/../..' . '/app/Http/Middleware/CheckAccessFolder.php',
         'App\\Http\\Middleware\\CheckBoardLevel' => __DIR__ . '/../..' . '/app/Http/Middleware/CheckBoardLevel.php',
         'App\\Http\\Middleware\\CheckCert' => __DIR__ . '/../..' . '/app/Http/Middleware/CheckCert.php',
         'App\\Http\\Middleware\\CheckFormMail' => __DIR__ . '/../..' . '/app/Http/Middleware/CheckFormMail.php',
         'App\\Http\\Middleware\\CheckInstall' => __DIR__ . '/../..' . '/app/Http/Middleware/CheckInstall.php',
+        'App\\Http\\Middleware\\CheckInstallAlready' => __DIR__ . '/../..' . '/app/Http/Middleware/CheckInstallAlready.php',
         'App\\Http\\Middleware\\CheckRss' => __DIR__ . '/../..' . '/app/Http/Middleware/CheckRss.php',
         'App\\Http\\Middleware\\CheckSecretView' => __DIR__ . '/../..' . '/app/Http/Middleware/CheckSecretView.php',
         'App\\Http\\Middleware\\CheckSendMail' => __DIR__ . '/../..' . '/app/Http/Middleware/CheckSendMail.php',
@@ -2524,6 +2531,10 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         'Intervention\\Image\\Point' => __DIR__ . '/..' . '/intervention/image/src/Intervention/Image/Point.php',
         'Intervention\\Image\\Response' => __DIR__ . '/..' . '/intervention/image/src/Intervention/Image/Response.php',
         'Intervention\\Image\\Size' => __DIR__ . '/..' . '/intervention/image/src/Intervention/Image/Size.php',
+        'Ixudra\\Curl\\Builder' => __DIR__ . '/..' . '/ixudra/curl/src/Builder.php',
+        'Ixudra\\Curl\\CurlService' => __DIR__ . '/..' . '/ixudra/curl/src/CurlService.php',
+        'Ixudra\\Curl\\CurlServiceProvider' => __DIR__ . '/..' . '/ixudra/curl/src/CurlServiceProvider.php',
+        'Ixudra\\Curl\\Facades\\Curl' => __DIR__ . '/..' . '/ixudra/curl/src/Facades/Curl.php',
         'JakubOnderka\\PhpConsoleColor\\ConsoleColor' => __DIR__ . '/..' . '/jakub-onderka/php-console-color/src/JakubOnderka/PhpConsoleColor/ConsoleColor.php',
         'JakubOnderka\\PhpConsoleColor\\InvalidStyleException' => __DIR__ . '/..' . '/jakub-onderka/php-console-color/src/JakubOnderka/PhpConsoleColor/InvalidStyleException.php',
         'JakubOnderka\\PhpConsoleHighlighter\\Highlighter' => __DIR__ . '/..' . '/jakub-onderka/php-console-highlighter/src/JakubOnderka/PhpConsoleHighlighter/Highlighter.php',
@@ -4716,7 +4727,7 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         'TijsVerkoyen\\CssToInlineStyles\\Css\\Property\\Property' => __DIR__ . '/..' . '/tijsverkoyen/css-to-inline-styles/src/Css/Property/Property.php',
         'TijsVerkoyen\\CssToInlineStyles\\Css\\Rule\\Processor' => __DIR__ . '/..' . '/tijsverkoyen/css-to-inline-styles/src/Css/Rule/Processor.php',
         'TijsVerkoyen\\CssToInlineStyles\\Css\\Rule\\Rule' => __DIR__ . '/..' . '/tijsverkoyen/css-to-inline-styles/src/Css/Rule/Rule.php',
-        'UpdateConfigTable' => __DIR__ . '/../..' . '/database/migrations/2017_08_09_141745_update_config_table.php',
+        'UpdateConfigRecaptcha' => __DIR__ . '/../..' . '/database/migrations/2017_08_14_122742_update_config_recaptcha.php',
         'UsersTableSeeder' => __DIR__ . '/../..' . '/database/seeds/UsersTableSeeder.php',
         'Webmozart\\Assert\\Assert' => __DIR__ . '/..' . '/webmozart/assert/src/Assert.php',
         'XdgBaseDir\\Xdg' => __DIR__ . '/..' . '/dnoegel/php-xdg-base-dir/src/Xdg.php',

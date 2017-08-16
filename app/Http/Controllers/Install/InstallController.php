@@ -65,7 +65,7 @@ class InstallController extends Controller
     {
         Artisan::call('env:set', ['key' => 'APP_ENV', 'value' => 'local']);
         Artisan::call('env:set', ['key' => 'APP_KEY', 'value' => '']);
-        Artisan::call('env:set', ['key' => 'APP_DEBUG', 'value' => 'true']);
+        Artisan::call('env:set', ['key' => 'APP_DEBUG', 'value' => 'false']);
         Artisan::call('env:set', ['key' => 'APP_LOG', 'value' => 'daily']);
         Artisan::call('env:set', ['key' => 'APP_LOG_LEVEL', 'value' => 'debug']);
         Artisan::call('env:set', ['key' => 'APP_URL', 'value' => $request->appUrl]);

@@ -227,7 +227,10 @@ class Board extends Model
 
         $data = array_except($data, ['_token', '_method', 'id', 'queryString', 'procCount']);
         foreach($board->attributes as $key => $value) {
-            // 체크박스 체크가되었었다가 안된 필드는 0으로 업데이트 해야한다.
+            // 체크박스 체크가 되었었다가 안된 필드는 0으로 업데이트 해야한다.
+            if($key == 'id') {
+                continue;
+            }
             if($value == 1 && !isset($data[$key])) {
                 $data = array_add($data, $key, 0);
             } else if(in_array($key, ['write_min', 'write_max', 'comment_min', 'comment_max', 'order']) && !isset($data[$key])) {

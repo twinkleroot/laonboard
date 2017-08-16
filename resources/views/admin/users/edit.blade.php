@@ -11,7 +11,6 @@
     var menuVal = 100100;
     jQuery("document").ready(function($){
         var nav = $('#body_tab_type2');
-
         $(window).scroll(function () {
             if ($(this).scrollTop() > 175) {
                 nav.addClass("f-tab");
@@ -19,10 +18,18 @@
                 nav.removeClass("f-tab");
             }
         });
-
-        $(".tab").click(function () {
-            $(".tab").removeClass("active");
-            $(this).addClass("active");
+        $(window).on('scroll', function() {
+            $('.adm_section').each(function() {
+                if($(window).scrollTop() >= $(this).offset().top - 100) {
+                    var id = $(this).attr('id');
+                    $('#body_tab_type2 ul li').removeClass('active');
+                    $("#body_tab_type2 ul li a[href='#" + id + "']").parent().addClass('active');
+                } else if($(window).scrollTop() >= $('#bottom').position().top - $(window).outerHeight(true) + 100) {   // 제일 밑으로 스크롤을 내렸을 때
+                    var id = 'more';
+                    $('#body_tab_type2 ul li').removeClass('active');
+                    $("#body_tab_type2 ul li a[href='#" + id + "']").parent().addClass('active');
+                }
+            });
         });
     });
 </script>
@@ -45,9 +52,9 @@
     <ul>
         <li class="tab"><a href="#mb_basic">기본정보</a></li>
         <li class="tab"><a href="#mb_add">추가정보</a></li>
-        <li class="tab"><a href="#B">부가설정</a></li>
-        <li class="tab"><a href="#C">본인인증</a></li>
-        <li class="tab"><a href="#more">여분필드</a></li>
+        <li class="tab"><a href="#mb_and">부가설정</a></li>
+        <li class="tab"><a href="#mb_cert">본인인증</a></li>
+        <li class="tab"><a href="#mb_more">여분필드</a></li>
     </ul>
 
     <div class="submit_btn">
@@ -56,7 +63,7 @@
     </div>
 </div>
 <div class="body-contents">
-    <section id="mb_basic" class="adm_box">
+    <section id="mb_basic" class="adm_section">
         <div class="adm_box_hd">
             <span class="adm_box_title">기본 회원정보</span>
         </div>
@@ -171,7 +178,7 @@
             </tr>
         </table>
     </section>
-    <section id="mb_add" class="adm_box">
+    <section id="mb_add" class="adm_section">
         <div class="adm_box_hd">
             <span class="adm_box_title">추가 회원정보</span>
         </div>
@@ -253,7 +260,7 @@
             </tr>
         </table>
     </section>
-    <section id="B" class="adm_box">
+    <section id="mb_and" class="adm_section">
         <div class="adm_box_hd">
             <span class="adm_box_title">부가설정</span>
         </div>
@@ -294,7 +301,7 @@
             </tr>
         </table>
     </section>
-    <section id="C" class="adm_box">
+    <section id="mb_cert" class="adm_section">
         <div class="adm_box_hd">
             <span class="adm_box_title">본인인증</span>
         </div>
@@ -337,7 +344,7 @@
             </tr>
         </table>
     </section>
-    <section id="more" class="adm_box">
+    <section id="mb_more" class="adm_section">
         <div class="adm_box_hd">
             <span class="adm_box_title">여분필드</span>
         </div>
