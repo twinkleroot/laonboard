@@ -132,14 +132,14 @@
                     <div class="form-group">
                         <label for="" class="col-sm-2 control-label">회원 이메일</label>
                         <div class="col-sm-3">
-                            <input type="email" class="form-control" name="email" value="{{ $keyword }}" placeholder="Email">
+                            <input type="email" class="form-control required" name="email" value="{{ $keyword }}" placeholder="Email">
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="" class="col-sm-2 control-label">접근가능메뉴</label>
                         <div class="col-sm-3">
-                            <select class="form-control" name="menu" placeholder="접근가능메뉴">
+                            <select class="form-control required" name="menu" placeholder="접근가능메뉴">
                                 @foreach($menus as $key=>$value)
                                     @if( !(substr($key, -3) == '000')  && !$value[2] )
                                         <option value="{{ $key }}">{{ $key. ' '. $value[0] }}</option>

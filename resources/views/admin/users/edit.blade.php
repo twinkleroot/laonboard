@@ -71,7 +71,7 @@
             <tr>
                 <th><label for="email">이메일</label></th>
                 <td class="table_body chknone">
-                    <input type="email" class="form-control form_large" name="email" value="{{ $user->email }}" style="display: inline-block;" readonly>
+                    <input type="email" class="form-control form_large required" name="email" value="{{ $user->email }}" style="display: inline-block;" readonly>
                     <a href="{{ route('admin.accessGroups.show', $user->id). '?'. Request::getQueryString() }}" class="btn btn-sir form_btn">접근가능그룹보기</a>
                 </td>
             </tr>
@@ -100,7 +100,7 @@
             <tr>
                 <th><label for="nick">닉네임</label></th>
                 <td class="table_body chknone @if($errors->get('nick')) has-error @endif">
-                    <input type="text" class="form-control form_middle" name="nick" value="{{ $user->nick }}">
+                    <input type="text" class="form-control form_middle required" name="nick" value="{{ $user->nick }}">
                     @foreach ($errors->get('nick') as $message)
                         <span class="help-block">
                             <strong>{{ $message }}</strong>

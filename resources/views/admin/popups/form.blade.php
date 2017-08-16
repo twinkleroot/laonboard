@@ -67,7 +67,7 @@
                     <div class="col-md-10">
                         <div class="row">
                             <div class="col-md-1">
-                                <input type="text" class="form-control" name="disable_hours" id="disable_hours" required value="{{ $type == 'update' ? $popup->disable_hours : $default['disable_hours'] }}" size="5">
+                                <input type="text" class="form-control required" name="disable_hours" id="disable_hours" required value="{{ $type == 'update' ? $popup->disable_hours : $default['disable_hours'] }}" size="5">
                             </div>
                             시간
                         </div>
@@ -77,7 +77,7 @@
                 <div class="form-group">
                     <label for="begin_time" class="col-md-2 control-label">시작일시</label>
                     <div class="col-md-3">
-                        <input type="text" class="form-control" name="begin_time" id="begin_time" value="{{ $type == 'update' ? $popup->begin_time : '' }}" required>
+                        <input type="text" class="form-control required" name="begin_time" id="begin_time" value="{{ $type == 'update' ? $popup->begin_time : '' }}" required>
                     </div>
                     <div class="col-md-3">
                         <input type="checkbox" name="begin_chk" id="begin_chk" value="{{ Carbon\Carbon::today() }}" onclick="if (this.checked == true) this.form.begin_time.value=this.form.begin_chk.value; else this.form.begin_time.value = this.form.begin_time.defaultValue;">
@@ -87,7 +87,7 @@
                 <div class="form-group">
                     <label for="end_time" class="col-md-2 control-label">종료일시</label>
                     <div class="col-md-3">
-                        <input type="text" class="form-control" name="end_time" id="end_time" value="{{ $type == 'update' ? $popup->end_time : '' }}" required>
+                        <input type="text" class="form-control required" name="end_time" id="end_time" value="{{ $type == 'update' ? $popup->end_time : '' }}" required>
                     </div>
                     <div class="col-md-3">
                         <input type="checkbox" name="end_chk" id="end_chk" value="{{ Carbon\Carbon::now()->addDays(7)->setTime(23, 59, 59) }}" onclick="if (this.checked == true) this.form.end_time.value=this.form.end_chk.value; else this.form.end_time.value = this.form.end_time.defaultValue;">
@@ -99,7 +99,7 @@
                     <div class="col-md-10">
                         <div class="row">
                             <div class="col-md-1">
-                                <input type="text" class="form-control" name="left" id="left" value="{{ $type == 'update' ? $popup->left : $default['left'] }}" required size="5">
+                                <input type="text" class="form-control required" name="left" id="left" value="{{ $type == 'update' ? $popup->left : $default['left'] }}" required size="5">
                             </div>
                             px
                         </div>
@@ -110,7 +110,7 @@
                     <div class="col-md-10">
                         <div class="row">
                             <div class="col-md-1">
-                                <input type="text" class="form-control" name="top" id="top" value="{{ $type == 'update' ? $popup->top : $default['top'] }}" required size="5">
+                                <input type="text" class="form-control required" name="top" id="top" value="{{ $type == 'update' ? $popup->top : $default['top'] }}" required size="5">
                             </div>
                             px
                         </div>
@@ -121,7 +121,7 @@
                     <div class="col-md-10">
                         <div class="row">
                             <div class="col-md-1">
-                                <input type="text" class="form-control" name="width" id="width" value="{{ $type == 'update' ? $popup->width : $default['width'] }}" required size="5">
+                                <input type="text" class="form-control required" name="width" id="width" value="{{ $type == 'update' ? $popup->width : $default['width'] }}" required size="5">
                             </div>
                             px
                         </div>
@@ -132,7 +132,7 @@
                     <div class="col-md-10">
                         <div class="row">
                             <div class="col-md-1">
-                                <input type="text" class="form-control" name="height" id="height" value="{{ $type == 'update' ? $popup->height : $default['height'] }}" required size="5">
+                                <input type="text" class="form-control required" name="height" id="height" value="{{ $type == 'update' ? $popup->height : $default['height'] }}" required size="5">
                             </div>
                             px
                         </div>
@@ -168,7 +168,7 @@
                 <div class="form-group">
                     <label for="subject" class="col-md-2 control-label">팝업 제목</label>
                     <div class="col-md-7">
-                        <input type="text" class="form-control" name="subject" id="subject" value="{{ $type == 'update' ? $popup->subject : '' }}" required size="80">
+                        <input type="text" class="form-control required" name="subject" id="subject" value="{{ $type == 'update' ? $popup->subject : '' }}" required size="80">
                     </div>
                 </div>
                 <div class="form-group">

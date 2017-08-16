@@ -138,21 +138,21 @@
                   <div class="form-group">
                     <label for="" class="col-sm-2 control-label">회원 이메일</label>
                     <div class="col-sm-3">
-                      <input type="email" class="form-control" name="email" id="" value="{{ $searchEmail }}" placeholder="Email">
+                      <input type="email" class="form-control required" name="email" id="" value="{{ $searchEmail }}" placeholder="Email">
                     </div>
                   </div>
 
                   <div class="form-group">
                     <label for="" class="col-sm-2 control-label">포인트내용</label>
                     <div class="col-sm-6">
-                      <input type="text" class="form-control" name="content" id="" placeholder="포인트내용">
+                      <input type="text" class="form-control required" name="content" id="" placeholder="포인트내용">
                     </div>
                   </div>
 
                   <div class="form-group">
                     <label for="" class="col-sm-2 control-label">포인트</label>
                     <div class="col-sm-3">
-                      <input type="text" class="form-control" name="point" id="" placeholder="point">
+                      <input type="text" class="form-control required" name="point" id="" placeholder="point">
                     </div>
                   </div>
 

@@ -64,7 +64,7 @@
             <tr>
                 <th><label for="email">이메일</label></th>
                 <td class="table_body chknone @if($errors->get('email')) has-error @endif">
-                    <input type="email" class="form-control form_large" name="email" value="{{ $user->email }}" required>
+                    <input type="email" class="form-control form_large required" name="email" value="{{ $user->email }}" required>
                     @foreach ($errors->get('email') as $message)
                         <span class="help-block">
                             <strong>{{ $message }}</strong>
@@ -75,7 +75,7 @@
             <tr>
                 <th><label for="password">비밀번호</label></th>
                 <td class="table_body chknone @if($errors->get('password')) has-error @endif">
-                    <input type="password" class="form-control form_large" name="password" value="">
+                    <input type="password" class="form-control form_large required" name="password" value="">
                     @foreach ($errors->get('password') as $message)
                         <span class="help-block">
                             <strong>{{ $message }}</strong>
@@ -97,7 +97,7 @@
             <tr>
                 <th><label for="nick" >닉네임</label></th>
                 <td class="table_body chknone @if($errors->get('nick')) has-error @endif">
-                    <input type="text" class="form-control form_middle" name="nick" value="{{ old('nick') }}">
+                    <input type="text" class="form-control form_middle required" name="nick" value="{{ old('nick') }}">
                     @foreach ($errors->get('nick') as $message)
                         <span class="help-block">
                             <strong>{{ $message }}</strong>

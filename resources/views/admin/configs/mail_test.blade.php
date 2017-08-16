@@ -51,7 +51,7 @@
 
             <div class="panel-body row">
                 <div class="col-md-8">
-                    <input type="text" class="form-control" name="email" id="email" value="{{ Cache::get("config.homepage")->superAdmin }}" />
+                    <input type="text" class="form-control required" name="email" id="email" value="{{ Cache::get("config.homepage")->superAdmin }}" />
                 </div>
                 <input type="submit" class="btn btn-sir" value="발송" />
             </div>

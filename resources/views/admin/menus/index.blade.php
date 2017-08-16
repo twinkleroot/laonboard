@@ -60,14 +60,14 @@
                             <input type="hidden" name="code[]" value="{{ substr($menu['code'], 0, 2) }}">
                             @if(strlen($menu['code']) == 4)
                                 <div class="depth2">
-                                    <input type="text" class="form-control" name="name[]" value="{{ $menu['name']}}" />
+                                    <input type="text" class="form-control required" name="name[]" value="{{ $menu['name']}}" />
                                 </div>
                             @else
-                                <input type="text" class="form-control" name="name[]" value="{{ $menu['name']}}" />
+                                <input type="text" class="form-control required" name="name[]" value="{{ $menu['name']}}" />
                             @endif
                         </td>
                         <td class="text-center">
-                            <input type="text" class="form-control" name="link[]" value="{{ $menu['link']}}" />
+                            <input type="text" class="form-control required" name="link[]" value="{{ $menu['link']}}" />
                         </td>
                         <td class="text-center">
                             <select name="target[]" class="form-control">
@@ -76,7 +76,7 @@
                             </select>
                         </td>
                         <td class="text-center">
-                            <input type="text" class="form-control" name="order[]" value="{{ $menu['order']}}" size="5"/>
+                            <input type="text" class="form-control required" name="order[]" value="{{ $menu['order']}}" size="5"/>
                         </td>
                         <td class="text-center">
                             <select name="use[]" class="form-control">

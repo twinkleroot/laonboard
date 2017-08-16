@@ -20,20 +20,10 @@
             }
         });
 
-        $(window).on('scroll', function() {
-            $('.adm_box').each(function() {
-                if($(window).scrollTop() >= $(this).offset().top - 100) {
-                    var id = $(this).attr('id');
-                    $('#body_tab_type2 ul li').removeClass('active');
-                    $("#body_tab_type2 ul li a[href='#" + id + "']").parent().addClass('active');
-                } else if($(window).scrollTop() >= $('#bottom').position().top - $(window).outerHeight(true) + 100) {	// 제일 밑으로 스크롤을 내렸을 때
-                    var id = 'anc_extra';
-                    $('#body_tab_type2 ul li').removeClass('active');
-                    $("#body_tab_type2 ul li a[href='#" + id + "']").parent().addClass('active');
-                }
-            });
+        $(".tab").click(function () {
+            $(".tab").removeClass("active");
+            $(this).addClass("active");
         });
-
     });
 </script>
 @endsection
@@ -59,7 +49,7 @@
             <li class="tab"><a href="#anc_function">기능설정</a></li>
             <li class="tab"><a href="#anc_design">디자인/양식</a></li>
             <li class="tab"><a href="#anc_point">포인트설정</a></li>
-            <li class="tab"><a href="#anc_extra">여분필드</a></li>
+            <li class="tab"><a href="#anc_point">여분필드</a></li>
         </ul>
 
         <div class="submit_btn">
@@ -87,16 +77,14 @@
                     <td class="table_body chknone" colspan="2">
                         <div class="@if($errors->get('table_name')) has-error @endif">
                             @if($type == 'edit')
-                                <input type="text" name="table_name" class="form-control form_input" value="{{ $board->table_name }}" maxlength="20" readonly>
-                                <div class="form_btn">
-                                    <a href="{{ route('admin.boards.copyForm', $board->id) }}" class="btn btn-sir board_copy" target="win_board_copy">
-                                        게시판 복사
-                                    </a>
-                                    <a class="btn btn-sir" href="{{ route('board.index', $board->id) }}">게시판 바로가기</a>
-                                    <a class="btn btn-sir" href="{{ route('admin.boards.thumbnail.delete', $board->id). $queryString }}?dir={{ $board->table_name }}" onclick="return del2(this.href, '게시판 썸네일 파일을 삭제하시겠습니까?');">게시판 썸네일 삭제</a>
-                                </div>
+                                <input type="text" name="table_name" class="form-control form_input required" value="{{ $board->table_name }}" maxlength="20" readonly>
+                                <a href="{{ route('admin.boards.copyForm', $board->id) }}" class="btn btn-sir board_copy" target="win_board_copy">
+                                    게시판 복사
+                                </a>
+                                <a class="btn btn-sir" href="{{ route('board.index', $board->id) }}">게시판 바로가기</a>
+                                <a class="btn btn-sir" href="{{ route('admin.boards.thumbnail.delete', $board->id). $queryString }}?dir={{ $board->table_name }}" onclick="return del2(this.href, '게시판 썸네일 파일을 삭제하시겠습니까?');">게시판 썸네일 삭제</a>
                             @else
-                                <input type="text" name="table_name" class="form-control form_middle" class="form-control" required/>
+                                <input type="text" name="table_name" class="form-control form_middle required" class="form-control" required/>
                                 <span class="help-block">영문자, 숫자, _ 만 가능(공백없이 20자 이내)</span>
                             @endif
                             @foreach ($errors->get('table_name') as $message)
@@ -127,7 +115,7 @@
                     <th>게시판 제목</th>
                     <td class="table_body chknone" colspan="2">
                         <div class="@if($errors->get('subject')) has-error @endif">
-                            <input type="text" name="subject" class="form-control form_w50" @if($type == 'edit') value="{{ $board->subject }}" @endif required/>
+                            <input type="text" name="subject" class="form-control form_half required" @if($type == 'edit') value="{{ $board->subject }}" @endif required/>
                             @foreach ($errors->get('subject') as $message)
                                 <span class="help-block">
                                     <strong>{{ $message }}</strong>
@@ -139,14 +127,14 @@
                 {{-- <tr>
                     <th>모바일 게시판 제목</th>
                     <td class="table_body chknone" colspan="2">
-                        <input type="text" name="mobile_subject" class="form-control form_w50" @if($type == 'edit') value="{{ $board->mobile_subject }}" @endif />
+                        <input type="text" name="mobile_subject" class="form-control form_half" @if($type == 'edit') value="{{ $board->mobile_subject }}" @endif />
                             <span class="help-block">모바일에서 보여지는 게시판 제목이 다른 경우에 입력합니다. 입력이 없으면 기본 게시판 제목이 출력됩니다.</span>
                     </td>
                 </tr> --}}
                 <tr>
                     <th>접속기기</th>
                     <td class="table_body">
-                        <select name="device" class="form-control form_w50">
+                        <select name="device" class="form-control form_half">
                             <option value="both" @if($type == 'edit' && $board->device == 'both') selected @endif>PC와 모바일에서 모두 사용</option>
                             <option value="pc" @if($type == 'edit' && $board->device == 'pc') selected @endif>PC 전용</option>
                             <option value="mobile" @if($type == 'edit' && $board->device == 'mobile') selected @endif>모바일 전용</option>
@@ -186,7 +174,7 @@
                 <tr>
                     <th>게시판 관리자</th>
                     <td class="table_body">
-                        <input type="text" name="admin" class="form-control form_w50" @if($type == 'edit') value="{{ $board->admin }}" @endif />
+                        <input type="text" name="admin" class="form-control form_half" @if($type == 'edit') value="{{ $board->admin }}" @endif />
                     </td>
                     <td class="table_chk">
                         <input type="checkbox" id="chk_group_admin" name="chk_group_admin" value="1" />
@@ -367,7 +355,7 @@
                 <tr>
                     <th>원글 수정 불가</th>
                     <td class="table_body">
-                        댓글<input type="text" name="count_modify" class="form-control form_num" value="{{ $board['count_modify'] }}" required />개 이상 달리면 수정불가
+                        댓글<input type="text" name="count_modify" class="form-control form_num required" value="{{ $board['count_modify'] }}" required />개 이상 달리면 수정불가
                         <span class="help-block">댓글의 수가 설정 수 이상이면 원글을 수정할 수 없습니다. 0으로 설정하시면 댓글 수에 관계없이 수정할 수 있습니다.</span>
                     </td>
                     <td class="table_chk">
@@ -380,7 +368,7 @@
                 <tr>
                     <th>원글 삭제 불가</th>
                     <td class="table_body">
-                        댓글<input type="text" name="count_delete" class="form-control form_num" value="{{ $board['count_delete'] }}" required />개 이상 달리면 삭제불가
+                        댓글<input type="text" name="count_delete" class="form-control form_num required" value="{{ $board['count_delete'] }}" required />개 이상 달리면 삭제불가
                     </td>
                     <td class="table_chk">
                         <input type="checkbox" id="chk_group_count_delete" name="chk_group_count_delete" value="1" />
@@ -623,7 +611,7 @@
                 <tr>
                     <th>파일 업로드 개수</th>
                     <td class="table_body">
-                        <input type="text" name="upload_count" class="form-control form_middle" value="{{ $board['upload_count'] }}" required/>
+                        <input type="text" name="upload_count" class="form-control form_middle required" value="{{ $board['upload_count'] }}" required/>
                         <span class="help-block">게시물 한건당 업로드 할 수 있는 파일의 최대 개수 (0 은 파일첨부 사용하지 않음)</span>
                     </td>
                     <td class="table_chk">
@@ -636,7 +624,7 @@
                 <tr>
                     <th>파일 업로드 용량</th>
                     <td class="table_body">
-                        업로드 파일 한개당 <input type="text" name="upload_size" class="form-control form_small" value="{{ $board['upload_size'] }}" required />bytes 이하
+                        업로드 파일 한개당 <input type="text" name="upload_size" class="form-control form_small required" value="{{ $board['upload_size'] }}" required />bytes 이하
                         <span class="help-block">최대 1024M 이하 업로드 가능, 1 MB = 1,048,576 bytes</span>
                     </td>
                     <td class="table_chk">
@@ -758,7 +746,7 @@
         </section>
         <section id="anc_design" class="adm_box">
             <div class="adm_box_hd">
-                <span class="adm_box_title">게시판 디자인/양식</span>
+                <span class="adm_box_title">게시판 기능설정</span>
             </div>
             <table class="adm_box_table">
                 <tr>
@@ -857,7 +845,7 @@
                 <tr>
                     <th>제목 길이</th>
                     <td class="table_body">
-                        <input type="text" name="subject_len" class="form-control form_middle" value="{{ $board['subject_len'] }}" required/>
+                        <input type="text" name="subject_len" class="form-control form_middle required" value="{{ $board['subject_len'] }}" required/>
                         <span class="help-block">목록에서의 제목 글자수. 잘리는 글은 … 로 표시</span>
                     </td>
                     <td class="table_chk">
@@ -870,7 +858,7 @@
                 {{-- <tr>
                     <th>모바일 제목 길이</th>
                     <td class="table_body">
-                        <input type="text" name="mobile_subject_len" class="form-control form_middle" value="{{ $board['mobile_subject_len'] }}" required/>
+                        <input type="text" name="mobile_subject_len" class="form-control form_middle required" value="{{ $board['mobile_subject_len'] }}" required/>
                         <span class="help-block">목록에서의 제목 글자수. 잘리는 글은 … 로 표시</span>
                     </td>
                     <td class="table_chk">
@@ -883,7 +871,7 @@
                 <tr>
                     <th>페이지당 목록 수</th>
                     <td class="table_body">
-                        <input type="text" name="page_rows" class="form-control form_middle" value="{{ $board['page_rows'] }}" required/>
+                        <input type="text" name="page_rows" class="form-control form_middle required" value="{{ $board['page_rows'] }}" required/>
                     </td>
                     <td class="table_chk">
                         <input type="checkbox" id="chk_group_page_rows" name="chk_group_page_rows" value="1" />
@@ -895,7 +883,7 @@
                 {{-- <tr>
                     <th>모바일 페이지당 목록 수</th>
                     <td class="table_body">
-                        <input type="text" name="mobile_page_rows" class="form-control form_middle" value="{{ $board['mobile_page_rows'] }}" required/>
+                        <input type="text" name="mobile_page_rows" class="form-control form_middle required" value="{{ $board['mobile_page_rows'] }}" required/>
                     </td>
                     <td class="table_chk">
                         <input type="checkbox" id="chk_group_mobile_page_rows" name="chk_group_mobile_page_rows" value="1" />
@@ -907,7 +895,7 @@
                 {{-- <tr>
                     <th>갤러리 이미지 수</th>
                     <td class="table_body">
-                        <input type="text" name="gallery_cols" class="form-control form_middle" value="{{ $board['gallery_cols'] }}" required/>
+                        <input type="text" name="gallery_cols" class="form-control form_middle required" value="{{ $board['gallery_cols'] }}" required/>
                         <span class="help-block">갤러리 형식의 게시판 목록에서 이미지를 한줄에 몇장씩 보여 줄 것인지를 설정하는 값</span>
                     </td>
                     <td class="table_chk">
@@ -920,7 +908,7 @@
                 {{-- <tr>
                     <th>갤러리 이미지 폭</th>
                     <td class="table_body">
-                        <input type="text" name="gallery_width" class="form-control form_middle" value="{{ $board['gallery_width'] }}" required/>
+                        <input type="text" name="gallery_width" class="form-control form_middle required" value="{{ $board['gallery_width'] }}" required/>
                         <span class="help-block">갤러리 형식의 게시판 목록에서 썸네일 이미지의 폭을 설정하는 값</span>
                     </td>
                     <td class="table_chk">
@@ -933,7 +921,7 @@
                 <tr>
                     <th>갤러리 이미지 높이</th>
                     <td class="table_body">
-                        <input type="text" name="gallery_height" class="form-control form_middle" value="{{ $board['gallery_height'] }}" required/>
+                        <input type="text" name="gallery_height" class="form-control form_middle required" value="{{ $board['gallery_height'] }}" required/>
                         <span class="help-block">갤러리 형식의 게시판 목록에서 썸네일 이미지의 높이를 설정하는 값</span>
                     </td>
                     <td class="table_chk">
@@ -946,7 +934,7 @@
                 {{-- <tr>
                     <th>모바일 갤러리 이미지 폭</th>
                     <td class="table_body">
-                        <input type="text" name="mobile_gallery_width" class="form-control form_middle" value="{{ $board['mobile_gallery_width'] }}" required/>
+                        <input type="text" name="mobile_gallery_width" class="form-control form_middle required" value="{{ $board['mobile_gallery_width'] }}" required/>
                         <span class="help-block">모바일로 접속시 갤러리 형식의 게시판 목록에서 썸네일 이미지의 폭을 설정하는 값</span>
                     </td>
                     <td class="table_chk">
@@ -959,7 +947,7 @@
                 <tr>
                     <th>모바일 갤러리 이미지 높이</th>
                     <td class="table_body">
-                        <input type="text" name="mobile_gallery_height" class="form-control form_middle" value="{{ $board['mobile_gallery_height'] }}" required/>
+                        <input type="text" name="mobile_gallery_height" class="form-control form_middle required" value="{{ $board['mobile_gallery_height'] }}" required/>
                         <span class="help-block">모바일로 접속시 갤러리 형식의 게시판 목록에서 썸네일 이미지의 높이를 설정하는 값</span>
                     </td>
                     <td class="table_chk">
@@ -972,7 +960,7 @@
                 {{-- <tr>
                     <th>게시판 폭</th>
                     <td class="table_body">
-                        <input type="text" name="table_width" class="form-control form_middle" value="{{ $board['table_width'] }}" required/>
+                        <input type="text" name="table_width" class="form-control form_middle required" value="{{ $board['table_width'] }}" required/>
                         <span class="help-block">100 이하는 %</span>
                     </td>
                     <td class="table_chk">
@@ -985,7 +973,7 @@
                 <tr>
                     <th>이미지 폭 크기</th>
                     <td class="table_body">
-                        <input type="text" name="image_width" class="form-control form_middle" value="{{ $board['image_width'] }}" required/>
+                        <input type="text" name="image_width" class="form-control form_middle required" value="{{ $board['image_width'] }}" required/>
                         <span class="help-block">게시판에서 출력되는 이미지의 폭 크기</span>
                     </td>
                     <td class="table_chk">
@@ -998,7 +986,7 @@
                 <tr>
                     <th>새글 아이콘</th>
                     <td class="table_body">
-                        <input type="text" name="new" class="form-control form_middle" value="{{ $board['new'] }}" required/>
+                        <input type="text" name="new" class="form-control form_middle required" value="{{ $board['new'] }}" required/>
                         <span class="help-block">글 입력후 new 이미지를 출력하는 시간. 0을 입력하시면 아이콘을 출력하지 않습니다.</span>
                     </td>
                     <td class="table_chk">
@@ -1011,7 +999,7 @@
                 <tr>
                     <th>인기글 아이콘</th>
                     <td class="table_body">
-                        <input type="text" name="hot" class="form-control form_middle" value="{{ $board['hot'] }}" required/>
+                        <input type="text" name="hot" class="form-control form_middle required" value="{{ $board['hot'] }}" required/>
                         <span class="help-block">조회수가 설정값 이상이면 hot 이미지 출력. 0을 입력하시면 아이콘을 출력하지 않습니다.</span>
                     </td>
                     <td class="table_chk">
@@ -1093,7 +1081,7 @@
                 <tr>
                     <th>글읽기 포인트</th>
                     <td class="table_body">
-                        <input type="text" name="read_point" class="form-control form_middle" value='{{ $board['read_point'] }}' required />
+                        <input type="text" name="read_point" class="form-control form_middle required" value='{{ $board['read_point'] }}' required />
                     </td>
                     <td class="table_chk">
                         <input type="checkbox" id="chk_group_read_point" name="chk_group_read_point" value="1" />
@@ -1105,7 +1093,7 @@
                 <tr>
                     <th>글쓰기 포인트</th>
                     <td class="table_body">
-                        <input type="text" name="write_point" class="form-control form_middle" value='{{ $board['write_point'] }}' required />
+                        <input type="text" name="write_point" class="form-control form_middle required" value='{{ $board['write_point'] }}' required />
                     </td>
                     <td class="table_chk">
                         <input type="checkbox" id="chk_group_write_point" name="chk_group_write_point" value="1" />
@@ -1117,7 +1105,7 @@
                 <tr>
                     <th>댓글쓰기 포인트</th>
                     <td class="table_body">
-                        <input type="text" name="comment_point" class="form-control form_middle" value='{{ $board['comment_point'] }}' required />
+                        <input type="text" name="comment_point" class="form-control form_middle required" value='{{ $board['comment_point'] }}' required />
                     </td>
                     <td class="table_chk">
                         <input type="checkbox" id="chk_group_comment_point" name="chk_group_comment_point" value="1" />
@@ -1129,7 +1117,7 @@
                 <tr>
                     <th>다운로드 포인트</th>
                     <td class="table_body">
-                        <input type="text" name="download_point" class="form-control form_middle" value='{{ $board['download_point'] }}' required />
+                        <input type="text" name="download_point" class="form-control form_middle required" value='{{ $board['download_point'] }}' required />
                     </td>
                     <td class="table_chk">
                         <input type="checkbox" id="chk_group_download_point" name="chk_group_download_point" value="1" />
@@ -1162,7 +1150,6 @@
                 @endfor
             </table>
         </section>
-        <section id="bottom"></section>
     </div>
 </div>
 </form>

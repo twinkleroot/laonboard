@@ -147,7 +147,7 @@
                                 </select>
                             </td>--}}
                             <td>
-                                <input type="text" class="form-control" id="subject_{{ $board->id }}" value="{{ $board->subject }}">
+                                <input type="text" class="form-control required" id="subject_{{ $board->id }}" value="{{ $board->subject }}">
                             </td>
                             <td class="td_numsmall">
                                 <input type="text" class="form-control" id="read_point_{{ $board->id }}" value="{{ $board->read_point }}">

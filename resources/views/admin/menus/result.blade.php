@@ -31,15 +31,15 @@
     <div class="form-group">
         <label for="name" class="col-sm-2 col-xs-3 control-label" style="text-align: left;">메뉴</label>
         <div class="col-sm-3 col-xs-9">
-            <input type="text" class="form-control" name="name" id="name" required>
+            <input type="text" class="form-control required" name="name"id="name " required>
         </div>
     </div>
 
     <div class="form-group">
         <label for="link" class="col-sm-2 col-xs-3 control-label" style="text-align: left;">링크</label>
         <div class="col-sm-5 col-xs-9">
-            <input type="text" class="form-control" name="link" id="link" value="http://" required>
-            <p class="help-block">링크는 http://를 포함해서 입력해 주세요.</p>
+            <input type="text" class="form-control required" name="link" id="link" value="http://" required>
+            <span class="help-block">링크는 http://를 포함해서 입력해 주세요.</span>
         </div>
     </div>
 @endif

@@ -49,7 +49,7 @@
                 <label for="co_id">ID</label>
             </th>
             <td class="table_body chknone">
-                <input type="text" name="content_id" id ="content_id" required @if($type == "update") class="form-control form_input" value="{{ $content->content_id }}" readonly @else class="form-control td_id" value="{{ old('content_id') }}" @endif size="20" maxlength="20">
+                <input type="text" name="content_id" id ="content_id" required class="form-control td_id required" @if($type == "update") value="{{ $content->content_id }}" readonly @else value="{{ old('content_id') }}" @endif size="20" maxlength="20">
                 @foreach ($errors->get('content_id') as $message)
                     <span class="help-block">
                         <strong>{{ $message }}</strong>
@@ -66,7 +66,7 @@
                 <label for="subject">제목</label>
             </th>
             <td class="table_body chknone">
-                <input type="text" name="subject" id="subject" class="form-control form_w90" @if($type == "update") value="{{ $content->subject }}" @else value="{{ old('subject') }}" @endif required size="90">
+                <input type="text" name="subject" id="subject" class="form-control form_half required" @if($type == "update") value="{{ $content->subject }}" @else value="{{ old('subject') }}" @endif required size="90">
                 @foreach ($errors->get('subject') as $message)
                     <span class="help-block">
                         <strong>{{ $message }}</strong>

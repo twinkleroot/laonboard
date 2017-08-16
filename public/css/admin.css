@@ -1535,4 +1535,6 @@ input[type=radio] {
 	width: 25px;
 	padding: 0 8px;
 	text-align: left;
+	color: #587ef6;
+	font-weight: 600;
 }
