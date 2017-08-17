@@ -72,7 +72,7 @@ class Popular extends Model
     public function addPopular($kinds, $keyword, $request)
     {
          if(!in_array('user_id', $kinds)) {
-             Popular::insert([
+             Popular::firstOrCreate([
                  'word' => $keyword,
                  'date' => Carbon::now()->toDateString(),
                  'ip' => $request->ip(),
