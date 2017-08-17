@@ -67,7 +67,7 @@
                 </a>
                 <!-- 2depth -->
                 <ul class="dropdown-menu" role="menu">
-                    <li><a href="{{ route('user.point', Auth::user()->id) }}" class="point">포인트 내역</a></li>
+                    <li><a href="{{ route('admin.users.edit', Auth::user()->id) }}">관리자 정보 수정</a></li>
                     <li>
                         <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             로그 아웃

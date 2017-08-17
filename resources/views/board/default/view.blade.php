@@ -1,7 +1,7 @@
 @extends( 'layout.'. ($board->layout ? : cache('config.skin')->layout. '.basic') )
 
 @section('title')
-    {{ $view->subject }} > {{ $board->subject }} | {{ Cache::get('config.homepage')->title }}
+    {{ $write->subject }} > {{ $board->subject }} | {{ Cache::get('config.homepage')->title }}
 @endsection
 
 @section('include_script')

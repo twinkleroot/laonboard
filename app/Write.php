@@ -172,9 +172,11 @@ class Write extends Model
         // 가져온게시글 가공
         // 1. 뷰에 내보내는 아이디 검색의 링크url에는 암호화된 id를 링크로 건다.
         // 2. 검색일 경우 검색 키워드 색깔 표시를 다르게 한다.
+        // 3. 게시판 설정에 따라 목록에서 보이는 제목을 표시하고 나머지는 ...로 표시한다.
         foreach($writes as $write) {
             $write->user_id = $write->user_id_hashkey;     // 라라벨 기본 지원 encrypt
             $write->subject = searchKeyword($keyword, $write->subject);
+            $write->subject = subjectLength($write->subject, $this->board->subject_len);
             $parentWrite = $write;
             // 댓글일 경우 부모글의 제목을 댓글의 제목으로 넣기
             if($write->is_comment) {
@@ -363,8 +365,8 @@ class Write extends Model
         }
 
         // 관리자 여부에 따라 ip 다르게 보여주기
-        if( !session()->get('admin')) {
-            if ( !is_null($write->ip)) {
+        if( !auth()->user() && auth()->user()->isAdmin() ) {
+            if ($write->ip) {
                 $write->ip = preg_replace("/([0-9]+).([0-9]+).([0-9]+).([0-9]+)/", config('gnu.IP_DISPLAY'), $write->ip);
             }
         }
@@ -407,9 +409,12 @@ class Write extends Model
         // 에디터로 업로드한 이미지 경로를 추출해서 내용의 img 태그 부분을 교체한다.
         $write->content = $this->includeImagePathByEditor($write->content);
 
+        // 글 제목 길이 설정에 따라 조정하기
+        $write->subject = subjectLength($write->subject, $this->board->subject_len);
+
         return [
             'board' => $this->board,
-            'view' => $write,
+            'write' => $write,
             'request' => $request,
             'signature' => $signature,
             'boardFiles' => $boardFiles,

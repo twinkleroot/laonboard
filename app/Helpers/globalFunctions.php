@@ -416,3 +416,11 @@ function getEmailAddress($email)
 
     return count($matches) > 0 ? $matches[0] : '';
 }
+
+// 글 제목 목록에서 설정값에 따라 자르기
+function subjectLength($subject, $length)
+{
+    $str = mb_substr($subject, 0, $length, 'UTF-8'). '...';
+
+    return $str;
+}

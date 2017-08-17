@@ -3,11 +3,11 @@
 @endphp
 <!-- 게시글 조회 -->
 <div class="bd_rd_head">
-    <h1>{{ $view->subject }}</h1>
+    <h1>{{ $write->subject }}</h1>
     <ul class="bd_rd_info">
-        <li><i class="fa fa-user"></i>{{ $view->name }} @if($board->use_ip) ({{ $view->ip }}) @endif</li>
-        <li><i class="fa fa-clock-o"></i>@datetime($view->created_at)</li>
-        <li><i class="fa fa-eye"></i>{{ $view->hit }}</li>
+        <li><i class="fa fa-user"></i>{{ $write->name}} @if($board->use_ip_view) ({{ $write->ip }}) @endif</li>
+        <li><i class="fa fa-clock-o"></i>@datetime($write->created_at)</li>
+        <li><i class="fa fa-eye"></i>{{ $write->hit }}</li>
     </ul>
     <ul class="bd_rd_btn pull-right">
         <li class="dropdown">
@@ -15,23 +15,23 @@
                 <i class="fa fa-ellipsis-v"></i>
             </a>
             <ul class="dropdown-menu" role="menu">
-                @if(!$view->user_id || session()->get('admin') || ( $user && $user->id == $view->user_id ) )
-                    <li><a href="/board/{{ $board->id }}/edit/{{ $view->id }}">수정</a></li>
-                    <li><a href="/board/{{ $board->id }}/delete/{{ $view->id }}" onclick="del(this.href); return false;">삭제</a></li>
+                @if(!$write->user_id || session()->get('admin') || ( $user && $user->id == $write->user_id ) )
+                    <li><a href="/board/{{ $board->id }}/edit/{{ $write->id }}">수정</a></li>
+                    <li><a href="/board/{{ $board->id }}/delete/{{ $write->id }}" onclick="del(this.href); return false;">삭제</a></li>
                 @endif
                 @if(session()->get('admin'))
                     <li>
-                        <a class="movePopup" href="{{ route('board.view.move', $board->id)}}?type=copy&amp;writeId={{ $view->id }}" target="move">
+                        <a class="movePopup" href="{{ route('board.view.move', $board->id)}}?type=copy&amp;writeId={{ $write->id }}" target="move">
                             복사
                         </a>
                     </li>
                     <li>
-                        <a class="movePopup" href="{{ route('board.view.move', $board->id)}}?type=move&amp;writeId={{ $view->id }}" target="move">
+                        <a class="movePopup" href="{{ route('board.view.move', $board->id)}}?type=move&amp;writeId={{ $write->id }}" target="move">
                             이동
                         </a>
                     </li>
                 @endif
-                <li><a href="{{ route('board.create.reply', ['boardId' => $board->id, 'writeId' => $view->id]) }}">답변</a></li>
+                <li><a href="{{ route('board.create.reply', ['boardId' => $board->id, 'writeId' => $write->id]) }}">답변</a></li>
             </ul>
         </li>
         <li>
@@ -43,13 +43,13 @@
     </ul>
 </div>
 <div class="bd_rd">
-@if($view->link1 || $view->link2)
+@if($write->link1 || $write->link2)
     @for($i=1; $i<=2; $i++)
-        @if($view['link'.$i])
+        @if($write['link'.$i])
             <div class="bd_link">
                 <i class="fa fa-link"></i>
-                <a href="/board/{{ $board->id }}/view/{{ $view->id }}/link/{{ $i }}" target="_blank">{{ $view['link'. $i] }}</a>
-                <span class="movecount">(연결된 횟수: {{ $view['link'. $i. '_hit'] }}회)</span>
+                <a href="/board/{{ $board->id }}/view/{{ $write->id }}/link/{{ $i }}" target="_blank">{{ $write['link'. $i] }}</a>
+                <span class="movecount">(연결된 횟수: {{ $write['link'. $i. '_hit'] }}회)</span>
             </div>
         @endif
     @endfor
@@ -66,16 +66,16 @@
     @endforeach
 @endif
 
-<p>{!! $view->content !!}</p>
+<p>{!! $write->content !!}</p>
 
-@if($view->file > 0)
+@if($write->file > 0)
         <div class="bd_file">
             <i class="fa fa-paperclip"></i>
             <span class="bd_title">첨부된 파일 {{ count($boardFiles) }}개</span>
             <ul class="bd_file_list" role="menu">
                 @foreach($boardFiles as $file)
                 <li>
-                    <i class="fa fa-download"></i><a href="/board/{{ $board->id }}/view/{{ $view->id }}/download/{{ $file->board_file_no }}">{{ $file->source }}</a>
+                    <i class="fa fa-download"></i><a href="/board/{{ $board->id }}/view/{{ $write->id }}/download/{{ $file->board_file_no }}">{{ $file->source }}</a>
                     <span class="downcount">(다운로드 횟수: {{ $file->download }}회 / DATE : {{ $file->created_at }}) </span>
                 </li>
                 @endforeach
@@ -92,25 +92,25 @@
 <!-- 스크랩/추천/비추천 -->
 <div class="bd_rd_count">
     @if($user)
-        <a href="{{ route('scrap.create') }}?boardId={{ $board->id }}&amp;writeId={{ $view->id }}" target="_blank" onclick="winScrap(this.href); return false;">
+        <a href="{{ route('scrap.create') }}?boardId={{ $board->id }}&amp;writeId={{ $write->id }}" target="_blank" onclick="winScrap(this.href); return false;">
             <span>
                 <i class="fa fa-star"></i>스크랩
             </span>
         </a>
         @if($board->use_good)
-        <a id="goodButton" href="/board/{{ $board->id }}/view/{{ $view->id }}/good">
+        <a id="goodButton" href="/board/{{ $board->id }}/view/{{ $write->id }}/good">
             <span>
                 <i class="fa fa-thumbs-o-up"></i>추천
-                <strong>{{ $view->good }}</strong>
+                <strong>{{ $write->good }}</strong>
                 <span id="actGood" style="display: none;">이 글을 추천하셨습니다.</span> <!-- 메세지출력 -->
             </span>
         </a>
         @endif
         @if($board->use_nogood)
-        <a id="noGoodButton" href="/board/{{ $board->id }}/view/{{ $view->id }}/nogood">
+        <a id="noGoodButton" href="/board/{{ $board->id }}/view/{{ $write->id }}/nogood">
             <span>
                 <i class="fa fa-thumbs-o-down"></i>비추천
-                <strong>{{ $view->nogood }}</strong>
+                <strong>{{ $write->nogood }}</strong>
                 <span id="actNoGood" style="display: none;">이 글을 비추천하셨습니다.</span> <!-- 메세지출력 -->
             </span>
         </a>
@@ -119,13 +119,13 @@
         @if($board->use_good)
         <span>
             <i class="fa fa-thumbs-o-up"></i>추천
-            <strong>{{ $view->good }}</strong>
+            <strong>{{ $write->good }}</strong>
         </span>
         @endif
         @if($board->use_nogood)
         <span>
             <i class="fa fa-thumbs-o-down"></i>비추천
-            <strong>{{ $view->nogood }}</strong>
+            <strong>{{ $write->nogood }}</strong>
         </span>
         @endif
     @endif
@@ -158,7 +158,7 @@
 
 <form class="cmt_write" id="commentForm" method="post" action="" autocomplete="off">
     {{ csrf_field() }}
-    <input type="hidden" name="writeId" value="{{ $view->id }}" />
+    <input type="hidden" name="writeId" value="{{ $write->id }}" />
     <input type="hidden" name="commentId" id="commentId" />
     @if(isset($requestUri))
     <input type="hidden" name="requestUri" id="requestUri" value="{{ $requestUri }}"/>
@@ -201,7 +201,7 @@
                 @else
                     {{ $comment->name }}
                 @endif
-                @if($board->use_ip) {{ "({$comment->ip})" }} @endif
+                @if($board->use_ip_view) {{ "({$comment->ip})" }} @endif
                 </li>
                 <li><i class="fa fa-clock-o"></i>@datetime($comment->created_at)</li>
             </ul>
@@ -211,7 +211,7 @@
                 @if($comment->isEdit == 1)
                 <li><a href="#" onclick="commentBox({{ $comment->id }}, 'cu'); return false;">수정</a></li> @endif
                 @if($comment->isDelete == 1)
-                <li><a href="{{ route('board.comment.destroy', ['boardId' => $board->id, 'writeId' => $view->id, 'commentId' => $comment->id])}}" onclick="return commentDelete();">삭제</a></li> @endif
+                <li><a href="{{ route('board.comment.destroy', ['boardId' => $board->id, 'writeId' => $write->id, 'commentId' => $comment->id])}}" onclick="return commentDelete();">삭제</a></li> @endif
             </ul>
             <div class="bd_rd_cmt_view">
                 @if(str_contains($comment->option, 'secret'))
