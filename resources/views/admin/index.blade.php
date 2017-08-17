@@ -51,7 +51,7 @@
                         </td>
                         <td class="td_mngsmall">{{ $user->level }}</td>
                         <td class="text-left">
-                            <a href="{{ route('admin.points.index'). "?kind=email&keyword=". $user->email }}">{{ $user->point }}</a>
+                            <a href="{{ route('admin.points.index'). "?kind=email&keyword=". $user->email }}">{{ number_format($user->point) }}</a>
                         </td>
                         <td class="td_mngsmall">{{ $user->intercept_date ? '예' : '아니오' }}</td>
                         <td class="td_mngsmall">
