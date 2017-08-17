@@ -47,8 +47,8 @@
                         <th>링크</th>
                         <th>새창</th>
                         <th>순서</th>
-                        <th>PC사용</th>
-                        <th>모바일사용</th>
+                        <th>사용</th>
+                        {{-- <th>모바일사용</th> --}}
                         <th>관리</th>
                     </tr>
                 </thead>
@@ -84,12 +84,12 @@
                                 <option value='0' {{ $menu['use'] == 0 ? 'selected' : '' }}>사용안함</option>
                             </select>
                         </td>
-                        <td class="text-center">
+                        {{-- <td class="text-center">
                             <select name="mobile_use[]" class="form-control">
                                 <option value='1' {{ $menu['mobile_use'] == 1 ? 'selected' : '' }}>사용함</option>
                                 <option value='0' {{ $menu['mobile_use'] == 0 ? 'selected' : '' }}>사용안함</option>
                             </select>
-                        </td>
+                        </td> --}}
                         <td class="text-center">
                             @if(strlen($menu['code']) == 2)
                                 <button type="button" class="btn btn-default add_sub_menu">추가</button>

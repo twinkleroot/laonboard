@@ -148,7 +148,7 @@ class Menu extends Model
                 'target' => $menus['target'][$i],
                 'order' => $menus['order'][$i],
                 'use' => $menus['use'][$i],
-                'mobile_use' => $menus['mobile_use'][$i],
+                // 'mobile_use' => $menus['mobile_use'][$i],
             ]);
         }
 

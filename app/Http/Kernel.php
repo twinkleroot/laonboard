@@ -90,7 +90,7 @@ class Kernel extends HttpKernel
         // 댓글 삭제가 가능한지 검사
         'deletable.comment' => \App\Http\Middleware\DeletableComment::class,
         // 해당 항목의 유효 여부 검사
-        'store.write' => \App\Http\Middleware\VerifyBoardWrite::class,
+        'valid.store.write' => \App\Http\Middleware\VerifyBoardWrite::class,
         'valid.write' => \App\Http\Middleware\CheckValidWrite::class,
         'valid.board' => \App\Http\Middleware\CheckValidBoard::class,
         'valid.user' => \App\Http\Middleware\CheckValidUser::class,

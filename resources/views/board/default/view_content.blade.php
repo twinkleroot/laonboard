@@ -320,7 +320,7 @@ function commentSubmit() {
     var content = "";
 
     $.ajax({
-        url: '/ajax/filter',
+        url: '/ajax/filter/board',
         type: 'post',
         data: {
             '_token' : '{{ csrf_token() }}',

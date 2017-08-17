@@ -804,6 +804,8 @@ class Write extends Model
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'file' => count($request->attach_file),
+                'link1' => $request->link1 && !str_contains($request->link1, 'http://') ? 'http://'. $request->link1 : $request->link1,
+                'link2' => $request->link2 && !str_contains($request->link2, 'http://') ? 'http://'. $request->link2 : $request->link2,
                 'hit' => 1,
                 'num' => $num,
                 'reply' => $reply,
@@ -930,6 +932,16 @@ class Write extends Model
                 'file' => $file,
             ]
         ]);
+
+        if($inputData['link1'] && $inputData['link1'] != $write->link1) {
+            $inputData['link1'] = $inputData['link1'] && !str_contains($inputData['link1'], 'http://') ? 'http://'. $inputData['link1'] : $inputData['link1'];
+            $inputData['link1_hit'] = 0;
+        }
+        if($inputData['link2'] && $inputData['link2'] != $write->link2) {
+            $inputData['link2'] = $inputData['link2'] && !str_contains($inputData['link2'], 'http://') ? 'http://'. $inputData['link2'] : $inputData['link2'];
+            $inputData['link2_hit'] = 0;
+        }
+
         // 비회원이거나 본인 글을 수정하는 것이 아닐 때
         if( is_null($user) || $write->user_id != $user->id) {
             $inputData = array_collapse([

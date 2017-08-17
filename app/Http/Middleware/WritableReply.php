@@ -18,9 +18,9 @@ class WritableReply
      */
     public function handle($request, Closure $next)
     {
-        $boardId = $request->segment(2);    // uri의 2번째 항목
-        $writeId = $request->segment(4);    // uri의 4번째 항목
-        if(strpos($request->getRequestUri(), 'reply')) {
+        if(strpos($request->getRequestUri(), 'reply')) {	// 글 답변일 경우
+            $boardId = $request->segment(2);    // uri의 2번째 항목
+            $writeId = $request->segment(4);    // uri의 4번째 항목
             $user = auth()->user();
             $board = Board::getBoard($boardId);
             $notices = explode(',', $board->notice);

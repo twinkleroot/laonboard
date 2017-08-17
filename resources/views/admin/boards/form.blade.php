@@ -136,10 +136,10 @@
                     <td class="table_body">
                         <select name="device" class="form-control form_half">
                             <option value="both" @if($type == 'edit' && $board->device == 'both') selected @endif>PC와 모바일에서 모두 사용</option>
-                            <option value="pc" @if($type == 'edit' && $board->device == 'pc') selected @endif>PC 전용</option>
-                            <option value="mobile" @if($type == 'edit' && $board->device == 'mobile') selected @endif>모바일 전용</option>
+                            {{-- <option value="pc" @if($type == 'edit' && $board->device == 'pc') selected @endif>PC 전용</option>
+                            <option value="mobile" @if($type == 'edit' && $board->device == 'mobile') selected @endif>모바일 전용</option> --}}
                         </select>
-                        <span class="help-block">PC 와 모바일 사용을 구분합니다.</span>
+                        {{-- <span class="help-block">PC 와 모바일 사용을 구분합니다.</span> --}}
                     </td>
                     <td class="table_chk">
                         <input type="checkbox" id="chk_group_device" name="chk_group_device" value="1" />

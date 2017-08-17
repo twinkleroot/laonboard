@@ -82,10 +82,10 @@
                 <td class="table_body chknone">
                     <select class="form-control form_large" name="device">
                         <option value="both" @if($type == 'edit' && $group->device == 'both') selected @endif>PC와 모바일에서 모두 사용</option>
-                        <option value="pc" @if($type == 'edit' && $group->device == 'pc') selected @endif>PC 전용</option>
-                        <option value="mobile" @if($type == 'edit' && $group->device == 'mobile') selected @endif>모바일 전용</option>
+                        {{-- <option value="pc" @if($type == 'edit' && $group->device == 'pc') selected @endif>PC 전용</option>
+                        <option value="mobile" @if($type == 'edit' && $group->device == 'mobile') selected @endif>모바일 전용</option> --}}
                     </select>
-                    <span class="help-block">PC와 모바일 사용을 구분합니다.</span>
+                    {{-- <span class="help-block">PC와 모바일 사용을 구분합니다.</span> --}}
                 </td>
             </tr>
             <tr>

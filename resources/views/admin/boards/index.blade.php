@@ -96,16 +96,16 @@
                             <th>쓰기P</th>
                             <th>댓글P</th>
                             <th>다운P</th>
-                            <th>
+                            {{-- <th>
                                 <a class="adm_sort" href="{{ route('admin.boards.index'). $queryString }}&amp;order=use_sns&amp;direction={{$order=='use_sns' ? $direction : 'asc'}}">SNS<br />사용</a>
-                            </th>
+                            </th> --}}
                             <th>
                                 <a class="adm_sort" href="{{ route('admin.boards.index'). $queryString }}&amp;order=use_search&amp;direction={{$order=='use_search' ? $direction : 'asc'}}">검색<br />사용</a>
                             </th>
                             <th>
                                 <a class="adm_sort" href="{{ route('admin.boards.index'). $queryString }}&amp;order=order&amp;direction={{$order=='order' ? $direction : 'asc'}}">출력<br />순서</a>
                             </th>
-                            <th>접속기기</th>
+                            {{-- <th>접속기기</th> --}}
                             <th>관리</th>
                         </tr>
                     </thead>
@@ -161,22 +161,22 @@
                             <td class="td_numsmall">
                                 <input type="text" class="form-control" id="download_point_{{ $board->id }}" value="{{ $board->download_point }}">
                             </td>
-                            <td class="td_numsmall">
+                            {{-- <td class="td_numsmall">
                                 <input type='checkbox' id='use_sns_{{ $board->id }}' value='1' {{ ($board->use_sns == '1' ? 'checked' : '') }}>
-                            </td>
+                            </td> --}}
                             <td class="td_numsmall">
                                 <input type='checkbox' id='use_search_{{ $board->id }}' value='1' {{ ($board->use_search == '1' ? 'checked' : '') }}/>
                             </td>
                             <td class="td_numsmall">
                                 <input type="text" class="form-control" id="order_{{ $board->id }}" value="{{ $board->order }}">
                             </td>
-                            <td class="td_mngsmall">
+                            {{-- <td class="td_mngsmall">
                                 <select id="device_{{ $board->id }}" class="form-control">
                                     <option value='both' {{ $board->device == 'both' ? 'selected' : '' }}>모두</option>
                                     <option value='pc' {{ $board->device == 'pc' ? 'selected' : '' }}>PC</option>
                                     <option value='mobile' {{ $board->device == 'mobile' ? 'selected' : '' }}>모바일</option>
                                 </select>
-                            </td>
+                            </td> --}}
                             <td class="td_mngsmall">
                                 <a href="{{ route('admin.boards.edit', $board->id). '?'. Request::getQueryString() }}">수정</a>
                                 <a href="{{ route('admin.boards.copyForm', $board->id) }}" class="board_copy" target="win_board_copy">복사</a>

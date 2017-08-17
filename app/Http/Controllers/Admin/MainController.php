@@ -67,7 +67,7 @@ class MainController extends Controller
     private function getNewList($pageRows)
     {
         $boardNewList =
-            BoardNew::select('board_news.*', 'boards.table_name', 'boards.subject', 'boards.mobile_subject', 'groups.subject as group_subject', 'groups.id as group_id')
+            BoardNew::select('board_news.*', 'boards.table_name', 'boards.subject', 'groups.subject as group_subject', 'groups.id as group_id')
             ->leftJoin('boards', 'boards.id', '=', 'board_news.board_id')
             ->leftJoin('groups', 'groups.id', '=', 'boards.group_id')
             ->where('boards.use_search', 1)

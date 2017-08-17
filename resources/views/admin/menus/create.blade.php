@@ -127,12 +127,12 @@ function addMenuList(name, link, code)
     list += "<option value=\"0\">사용안함</option>";
     list += "</select>";
     list += "</td>";
-    list += "<td class='text-center'>";
-    list += "<select class=\"form-control\" name=\"mobile_use[]\" id=\"mobile_use_"+ms+"\">";
-    list += "<option value=\"1\">사용함</option>";
-    list += "<option value=\"0\">사용안함</option>";
-    list += "</select>";
-    list += "</td>";
+    // list += "<td class='text-center'>";
+    // list += "<select class=\"form-control\" name=\"mobile_use[]\" id=\"mobile_use_"+ms+"\">";
+    // list += "<option value=\"1\">사용함</option>";
+    // list += "<option value=\"0\">사용안함</option>";
+    // list += "</select>";
+    // list += "</td>";
     list += "<td class='text-center'>";
     @if($new == 'new')
         list += "<button type=\"button\" class=\"btn btn-default add_sub_menu\">추가</button>";

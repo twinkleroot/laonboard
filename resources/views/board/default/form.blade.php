@@ -119,11 +119,11 @@
                 <div class="link_list" style="display: none;">
                     <div class="item">
                         <label for="link1" class="sr-only">링크 1</label>
-                        <input type="url" class="form-control" id="link1" name="link1" placeholder="링크 1" @if($type == 'update')value={{ $write->link1 }}@endif>
+                        <input type="text" class="form-control" id="link1" name="link1" placeholder="링크 1" @if($type == 'update')value="{{ $write->link1 }}"@endif>
                     </div>
                     <div class="item">
                         <label for="link2" class="sr-only">링크 2</label>
-                        <input type="url" class="form-control" id="link2" name="link2" placeholder="링크 2" @if($type == 'update')value={{ $write->link2 }}@endif>
+                        <input type="text" class="form-control" id="link2" name="link2" placeholder="링크 2" @if($type == 'update')value="{{ $write->link2 }}"@endif>
                     </div>
                 </div>
                 <div class="file">
@@ -317,7 +317,9 @@ function writeSubmit() {
 $(function() {
     $(".link").click(function(){
         $(".link_list").toggle();
+        $("#link1").focus();
     });
+
     $(".file").click(function(){
         $(".file_list").toggle();
     });

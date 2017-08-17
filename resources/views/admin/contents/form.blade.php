@@ -56,7 +56,7 @@
                     </span>
                 @endforeach
                 @if($type == "update")
-                    <a href="{{ route('contents.show', $content->content_id) }}" class="btn btn-sir">내용확인</a>
+                    <a href="{{ route('contents.show', $content->content_id) }}" class="btn btn-sir" target="_blank">내용확인</a>
                 @endif
                 <span class="help-block">20자 이내의 영문자, 숫자, _ 만 가능합니다.</span>
             </td>

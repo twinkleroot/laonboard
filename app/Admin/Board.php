@@ -123,18 +123,18 @@ class Board extends Model
             'count_modify' => 1,
             'count_delete' => 1,
             'page_rows' => cache("config.homepage")->pageRows,
-            'mobile_page_rows' => cache("config.homepage")->mobilePageRows,
+            // 'mobile_page_rows' => cache("config.homepage")->mobilePageRows,
             'skin' => 'default',
-            'mobile_skin' => 'default',
+            // 'mobile_skin' => 'default',
             'layout' => 'default.basic',
             'gallery_cols' => 4,
             'gallery_width' => 174,
             'gallery_height' => 124,
-            'mobile_gallery_width' => 125,
-            'mobile_gallery_height' => 100,
+            // 'mobile_gallery_width' => 125,
+            // 'mobile_gallery_height' => 100,
             'table_width' => 100,
             'subject_len' => 60,
-            'mobile_subject_len' => 30,
+            // 'mobile_subject_len' => 30,
             'new' => 24,
             'hot' => 100,
             'image_width' => 600,
@@ -157,7 +157,7 @@ class Board extends Model
             'type' => 'create',
             'queryString' => '',
             'skins' => getSkins('board'),
-            'mobileSkins' => count(getSkins('boardMobile')) > 1 ? getSkins('boardMobile') : getSkins('board'),
+            // 'mobileSkins' => count(getSkins('boardMobile')) > 1 ? getSkins('boardMobile') : getSkins('board'),
         ];
     }
 
@@ -203,7 +203,7 @@ class Board extends Model
             'type' => 'edit',
             'skins' => getSkins('board'),
             'queryString' => $queryString,
-            'mobileSkins' => count(getSkins('boardMobile')) > 1 ? getSkins('boardMobile') : getSkins('board'),
+            // 'mobileSkins' => count(getSkins('boardMobile')) > 1 ? getSkins('boardMobile') : getSkins('board'),
         ];
     }
 
@@ -341,7 +341,7 @@ class Board extends Model
         $idArr = explode(',', $request->get('ids'));
         $groupIdArr = explode(',', $request->get('group_ids'));
         $skinArr = explode(',', $request->get('skin_ids'));
-        $mobileSkinArr = explode(',', $request->get('mobile_skin_ids'));
+        // $mobileSkinArr = explode(',', $request->get('mobile_skin_ids'));
         $subjectArr = explode(',', $request->get('subjects'));
         $readPointArr = explode(',', $request->get('read_points'));
         $writePointArr = explode(',', $request->get('write_points'));
@@ -360,7 +360,7 @@ class Board extends Model
                 $board->update([
                     'group_id' => $groupIdArr[$index],
                     'skin' => $skinArr[$index],
-                    'mobile_skin' => $mobileSkinArr[$index],
+                    // 'mobile_skin' => $mobileSkinArr[$index],
                     'subject' => $subjectArr[$index],
                     'read_point' => $readPointArr[$index],
                     'write_point' => $writePointArr[$index],
