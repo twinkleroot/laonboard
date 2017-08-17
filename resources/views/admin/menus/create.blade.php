@@ -93,7 +93,7 @@ function addMenuList(name, link, code)
 
     var menuList = $("#menulist", opener.document);
     var ms = new Date().getTime();
-    var addedMenuName = "<input type=\"text\" class=\"form-control\" name=\"name[]\" value=\""+name+"\" id=\"name_"+ms+"\" required class=\"required frm_input full_input\">";
+    var addedMenuName = "<input type=\"text\" class=\"form-control required\" name=\"name[]\" value=\""+name+"\" id=\"name_"+ms+"\" required class=\"required frm_input full_input\">";
 
     var sub_menu_class;
     @if($new == 'new')
@@ -110,7 +110,7 @@ function addMenuList(name, link, code)
     list += addedMenuName;
     list += "</td>";
     list += "<td class='text-center'>";
-    list += "<input type=\"text\" class=\"form-control\" name=\"link[]\" value=\""+link+"\" id=\"link_"+ms+"\" required class=\"required frm_input full_input\">";
+    list += "<input type=\"text\" class=\"form-control required\" name=\"link[]\" value=\""+link+"\" id=\"link_"+ms+"\" required class=\"required frm_input full_input\">";
     list += "</td>";
     list += "<td class='text-center'>";
     list += "<select class=\"form-control\" name=\"target[]\" id=\"target_"+ms+"\">";
@@ -119,7 +119,7 @@ function addMenuList(name, link, code)
     list += "</select>";
     list += "</td>";
     list += "<td class='text-center'>";
-    list += "<input type=\"text\" class=\"form-control\" name=\"order[]\" value=\"0\" id=\"order_"+ms+"\" required class=\"required frm_input\" size=\"5\">";
+    list += "<input type=\"text\" class=\"form-control required\" name=\"order[]\" value=\"0\" id=\"order_"+ms+"\" required class=\"required frm_input\" size=\"5\">";
     list += "</td>";
     list += "<td class='text-center'>";
     list += "<select class=\"form-control\" name=\"use[]\" id=\"use_"+ms+"\">";
