@@ -102,7 +102,7 @@
                             <a href="{{ route('board.index', $new->board_id) }}">{{ $new->subject }}</a>
                         </td>
                         <td class="td_subject">
-                            <a href="/board/{{ $new->board_id}}/view/{{ $new->write_parent. $new->commentTag }}">{{ $new->write->subject }}</a>
+                            <a href="/board/{{ $new->board_id}}/view/{{ $new->write_parent. $new->commentTag }}">{{ subjectLength($new->write->subject, 100) }}</a>
                         </td>
                         <td class="td_nick">
                             @component('admin.sideview', ['id' => $new->user_id, 'nick' => $new->name, 'email' => $new->user_email])

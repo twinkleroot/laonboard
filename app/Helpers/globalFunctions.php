@@ -420,7 +420,10 @@ function getEmailAddress($email)
 // 글 제목 목록에서 설정값에 따라 자르기
 function subjectLength($subject, $length)
 {
-    $str = mb_substr($subject, 0, $length, 'UTF-8'). '...';
+    $result = $subject;
+    if(strlen($subject) > $length) {
+        $result = mb_substr($subject, 0, $length, 'UTF-8'). '...';
+    }
 
-    return $str;
+    return $result;
 }

@@ -96,6 +96,7 @@ class BoardNew extends Model
             $user = $boardNew->user_id ? User::getUser($boardNew->user_id) : new User();
             // 원글, 댓글 공통 추가 데이터
             $boardNew->write = $write;
+            $boardNew->write->subject = subjectLength($boardNew->write->subject, 60);
             $boardNew->user_email = $user->email;
             $boardNew->user_id_hashkey = $user->id_hashkey;
             $boardNew->commentTag = '';
