@@ -39,6 +39,14 @@ class Comment
             if($request->has('keyword')) {
                 $comment->content = searchKeyword($request->keyword, $comment->content);
             }
+
+            // IP 표시
+            // 관리자 여부에 따라 ip 다르게 보여주기
+            if( auth()->guest() || !auth()->user()->isAdmin() ) {
+                if ($comment->ip) {
+                    $comment->ip = preg_replace("/([0-9]+).([0-9]+).([0-9]+).([0-9]+)/", config('gnu.IP_DISPLAY'), $comment->ip);
+                }
+            }
         }
 
         return [
