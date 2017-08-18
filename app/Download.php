@@ -20,7 +20,7 @@ class Download
         $board = $writeModel->board;
         $write = Write::getWrite($boardId, $writeId);
         $sessionName = 'session_download_'. $board->table_name. '_'. $write->id. '_'. $fileNo;
-        if( (auth()->user() && auth()->user()->isAdmin()) || $user->id == $write->user_id) {   // 관리자나 작성자 본인이면 패스
+        if( (auth()->user() && auth()->user()->isAdmin()) || ($user && $user->id == $write->user_id)) {   // 관리자나 작성자 본인이면 패스
             ;
         } else if(!session()->get($sessionName)) { // 사용자의 다운로드 세션이 존재하지 않는다면
             // 포인트 차감
