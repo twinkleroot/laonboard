@@ -39,7 +39,7 @@ class BoardNew extends Model
     public function getIndexParams($request)
     {
         $groups = Group::orderBy('group_id')->get();
-        $query = $this->getNewWritesThroughSearch($request, $groups);
+        $query = $this->getNewWritesThroughSearch($request);
         $pageRows = cache('config.homepage')->pageRows;
         $boardNewList = $query->paginate($pageRows);
         $boardNewList = $this->processBoardNewList($boardNewList);
@@ -55,7 +55,7 @@ class BoardNew extends Model
     }
 
     // 새글 목록에 검색 조건 추가
-    private function getNewWritesThroughSearch($request, $groups)
+    private function getNewWritesThroughSearch($request)
     {
         $query =
             BoardNew::select('board_news.*', 'boards.table_name', 'boards.subject', 'groups.subject as group_subject', 'groups.id as group_id')
@@ -91,20 +91,23 @@ class BoardNew extends Model
     // 새글 목록에 화면 표시용 데이터 추가
     public function processBoardNewList($boardNewList)
     {
+        $writeModel = new Write();
         foreach($boardNewList as $boardNew) {
-            $write = Write::getWrite($boardNew->board_id, $boardNew->write_parent, 'parent');	 // 원글
+            $writeModel->setTableName(Board::getBoard($boardNew->board_id)->table_name);
+            $write = $writeModel->find($boardNew->write_parent);	 // 원글
             $user = $boardNew->user_id ? User::getUser($boardNew->user_id) : new User();
             // 원글, 댓글 공통 추가 데이터
             $boardNew->write = $write;
-            $boardNew->write->subject = subjectLength($boardNew->write->subject, 60);
+            $subject = subjectLength($write->subject, 60);
+            $boardNew->write->subject = $subject;
             $boardNew->user_email = $user->email;
             $boardNew->user_id_hashkey = $user->id_hashkey;
             $boardNew->commentTag = '';
             $boardNew->name = $write->name;
             // 댓글은 데이터 따로 추가
             if($boardNew->write_id != $boardNew->write_parent) {
-                $comment = Write::getWrite($boardNew->board_id, $boardNew->write_id);	 // 댓글
-                $boardNew->write->subject = '[코] '. $write->subject;    // [코] + 원글의 제목
+                $comment = $writeModel->find($boardNew->write_id);	 // 댓글
+                $boardNew->write->subject = '[코] '. $subject;    // [코] + 원글의 제목
                 $boardNew->commentTag = '#comment'.$comment->id;
                 $boardNew->write->created_at = $comment->created_at;
                 $boardNew->name = $comment->name;

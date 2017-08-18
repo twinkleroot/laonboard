@@ -24,7 +24,7 @@
         <input type="hidden" name="writeId" id="writeId" @if($type != 'create') value="{{ $write->id }}" @endif/>
         <input type="hidden" name="uid" id="uid" value="{{ str_replace("/", "-", substr(bcrypt(date('ymdHis', time())), 10, 60)) }}" />
         {{ csrf_field() }}
-        @if( ($type == 'create' && is_null(auth()->user()) )
+        @if( ($type == 'create' && auth()->guest() )
             || ($type == 'update' && auth()->user() && auth()->user()->isBoardAdmin($board) && $write->user_id != auth()->user()->id) )
         <div class="nologin">
             <div class="form-group mb10 row">
@@ -55,21 +55,21 @@
         @endif
 
         @if($board->use_category)
-            <div class="form-group mb10 row">
-                <div class="col-xs-3">
-                    <select class="form-control" name="ca_name" required>
-                        <option value>분류</option>
-                        @foreach($categories as $category)
-                            <option value="{{ $category }}" @if( ($type == 'update' && $category == $write->ca_name) || ($type == 'create' && $category == $currenctCategory ) ) selected @endif>
-                                {{ $category }}
-                            </option>
-                        @endforeach
-                        @if(auth()->user() && auth()->user()->isBoardAdmin($board))
-                            <option value="공지">공지</option>
-                        @endif
-                    </select>
-                </div>
+        <div class="form-group mb10 row">
+            <div class="col-xs-3">
+                <select class="form-control" id="ca_name" name="ca_name" required>
+                    <option value>분류</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category }}" @if( ($type == 'update' && $category == $write->ca_name) || ($type == 'create' && $category == $currenctCategory ) ) selected @endif>
+                            {{ $category }}
+                        </option>
+                    @endforeach
+                    @if(auth()->user() && auth()->user()->isBoardAdmin($board))
+                        <option value="공지">공지</option>
+                    @endif
+                </select>
             </div>
+        </div>
         @endif
 
         <div class="row">
@@ -254,6 +254,12 @@ function validate(event) {
     }
 }
 function writeSubmit() {
+    @if($board->use_category)
+    if($("#ca_name").val() == '') {
+        alert("카테고리를 선택해주셔야 합니다.");
+        return false;
+    }
+    @endif
     var subject = "";
     var content = "";
     var contentData = "";
