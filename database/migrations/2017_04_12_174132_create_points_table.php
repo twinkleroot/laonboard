@@ -30,6 +30,8 @@ class CreatePointsTable extends Migration
                 $table->string('rel_table', 20)->nullable();
                 $table->string('rel_email', 50)->nullable();
                 $table->string('rel_action')->nullable();
+
+                $table->index(['expire_date'], 'index2');
             });
         }
     }

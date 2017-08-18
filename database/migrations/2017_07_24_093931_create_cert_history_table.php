@@ -16,11 +16,11 @@ class CreateCertHistoryTable extends Migration
         Schema::create('cert_history', function (Blueprint $table) {
             $table->increments('id');
             $table->string('user_email')->nullable();
-			$table->string('company')->nullable();
-			$table->string('method')->nullable();
-			$table->string('ip')->nullable();
-			$table->date('date')->nullable();
-			$table->time('time')->nullable();
+            $table->string('company')->nullable();
+            $table->string('method')->nullable();
+            $table->string('ip')->nullable();
+            $table->date('date')->nullable();
+            $table->time('time')->nullable();
         });
     }
 

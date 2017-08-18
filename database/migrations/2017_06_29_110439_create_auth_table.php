@@ -20,7 +20,7 @@ class CreateAuthTable extends Migration
             $table->string('menu', 20);
             $table->enum('auth', ['r', 'w', 'd']);
 
-            $table->unique(['user_id', 'menu'], 'mkey');
+            $table->unique(['user_id', 'menu'], 'ma_unique');
         });
 
         // 라라벨 기본 API에서 mysql의 set type을 지원하지 않으므로 enum으로 생성하고 set으로 변경한다.

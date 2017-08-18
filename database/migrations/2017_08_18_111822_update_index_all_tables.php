@@ -16,7 +16,11 @@ class UpdateIndexAllTables extends Migration
         Schema::table('manage_auth', function (Blueprint $table) {
             $table->dropIndex('manage_auth_user_id_index');
             $table->dropIndex('manage_auth_menu_index');
-            $table->unique(['user_id', 'menu'], 'mkey');
+            $table->unique(['user_id', 'menu'], 'ma_unique');
+        });
+
+        Schema::table('points', function (Blueprint $table) {
+            $table->index(['expire_date'], 'index2');
         });
     }
 
@@ -27,6 +31,14 @@ class UpdateIndexAllTables extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('manage_auth', function (Blueprint $table) {
+            $table->index('user_id');
+            $table->index('menu');
+            $table->dropUnique('ma_unique');
+        });
+
+        Schema::table('points', function (Blueprint $table) {
+            $table->dropIndex('index2');
+        });
     }
 }
