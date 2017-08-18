@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Board;
 
 class VerifyBoardWrite
 {
@@ -37,6 +38,39 @@ class VerifyBoardWrite
         if( !checkAdminAboutNotice($request) ) {
             $message = '관리자만 공지할 수 있습니다.';
             return alert($message);
+        }
+
+        $message = '';
+        $baseLevel = 1; // 비회원
+        $user = auth()->user();
+
+        if($user) {
+            $baseLevel = $user->level;  // 유저의 등급을 넣음
+        }
+
+        $boardId = $request->segments()[1];
+        $board = Board::getBoard($boardId);
+
+        // 파일 업로드 권한 있는지 검사
+        if(count($request->attach_file) > 0) {
+            if($baseLevel < $board->upload_level) {
+                $message = '파일 업로드 권한이 없습니다.';
+            }
+        }
+
+        // 링크를 걸 권한이 있는지 검사
+        if($request->link1 || $request->link2) {
+            if($baseLevel < $board->link_level) {
+                $message = '링크를 걸 권한이 없습니다.';
+            }
+        }
+
+        if($message) {
+            if($user) {
+                return alert($message);
+            } else {
+                return alertRedirect($message, '/login?nextUrl=/board/'. $boardId. '/create');
+            }
         }
 
         return $next($request);

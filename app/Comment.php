@@ -302,10 +302,12 @@ class Comment
             abort(500, '정상적으로 댓글을 삭제하는데 실패하였습니다.(댓글 삭제)');
         }
 
-        $updateWriteAboutComment = $writeModel->where('id', $write->id)->update([
-            'updated_at' => Carbon::now(),      // 원글의 최근 변경 시간 업데이트
-            'comment' => $write->comment - 1    // 원글의 댓글 숫자 감소
-        ]);
+        $updateWriteAboutComment =
+            $writeModel->where('id', $write->id)
+            ->decrement('comment', 1, [				// 원글의 댓글 숫자 감소
+                'updated_at' => Carbon::now(),      // 원글의 최근 변경 시간 업데이트
+            ]);
+
         if(!$updateWriteAboutComment) {
             abort(500, '정상적으로 원글의 정보를 변경하는데 실패하였습니다.');
         }

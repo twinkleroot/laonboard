@@ -74,6 +74,10 @@ class Main
 
             $latestList[$i]->board_id = $board->id;
             $latestList[$i]->board_subject = $board->subject;
+            $write = $latestList[$i]->first();
+            if($write) {
+                $latestList[$i][0]->subject = subjectLength($write->subject, 30);
+            }
             $i++;
         }
 

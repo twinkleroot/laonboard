@@ -122,6 +122,7 @@ class WriteController extends Controller
         if(auth()->guest() || (!auth()->user()->isSuperAdmin() && $this->writeModel->board->use_recaptcha)) {
             ReCaptcha::reCaptcha($request);
         }
+
         $writeId = $this->writeModel->storeWrite($this->writeModel, $request);
 
         if(count($request->attach_file) > 0) {

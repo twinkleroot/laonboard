@@ -293,7 +293,7 @@ Route::group(['prefix' => 'board/{boardId}'], function () {
         ->middleware('level.board:read_level', 'valid.board', 'valid.write', 'cert:read', 'comment.view.parent', 'secret.board');
     // 글 읽기 중 링크 연결
     Route::get('view/{writeId}/link/{linkNo}', ['as' => 'board.link', 'uses' => 'Board\WriteController@link'])
-        ->middleware('level.board:read_level', 'valid.board', 'valid.write', 'cert:read');
+        ->middleware('level.board:link_level', 'valid.board', 'valid.write', 'cert:read');
     // 글 읽기 중 파일 다운로드
     Route::get('view/{writeId}/download/{fileNo}', ['as' => 'board.download', 'uses' => 'Board\DownloadController@download'])
         ->middleware('level.board:download_level', 'valid.board', 'valid.write', 'cert:read');
@@ -305,18 +305,18 @@ Route::group(['prefix' => 'board/{boardId}'], function () {
     Route::get('create', ['as' => 'board.create', 'uses' => 'Board\WriteController@create'])
         ->middleware('level.board:write_level', 'valid.board', 'cert:write');
     Route::post('', ['as' => 'board.store', 'uses' => 'Board\WriteController@store'])
-        ->middleware('level.board:write_level', 'valid.board', 'cert:write', 'store.write', 'writable.reply');
+        ->middleware('level.board:write_level', 'valid.board', 'cert:write', 'valid.store.write', 'writable.reply');
     // 글 수정
     Route::get('edit/{writeId}', ['as' => 'board.edit', 'uses' => 'Board\WriteController@edit'])
         ->middleware('level.board:update_level', 'valid.board', 'valid.write', 'cert:write', 'can.action.write.immediately:edit', 'updatable.deletable.write');
     Route::put('update/{writeId}', ['as' => 'board.update', 'uses' => 'Board\WriteController@update'])
-        ->middleware('level.board:update_level', 'valid.board', 'valid.write', 'cert:write', 'store.write');
+        ->middleware('level.board:update_level', 'valid.board', 'valid.write', 'cert:write', 'valid.store.write');
     // 글 삭제
     Route::get('delete/{writeId}', ['as' => 'board.destroy', 'uses' => 'Board\WriteController@destroy'])
         ->middleware('valid.board', 'valid.write', 'can.action.write.immediately:delete', 'updatable.deletable.write');
     // 답변 쓰기
     Route::get('reply/{writeId}', ['as' => 'board.create.reply', 'uses' => 'Board\WriteController@createReply'])
-        ->middleware('level.board:write_level', 'valid.board', 'valid.write', 'cert:write', 'writable.reply');
+        ->middleware('level.board:reply_level', 'valid.board', 'valid.write', 'cert:write', 'writable.reply');
     // 댓글 삽입
     Route::post('comment/store', ['as' => 'board.comment.store', 'uses' => 'Board\CommentController@store'])
         ->middleware('level.board:comment_level', 'writable.comment:create');

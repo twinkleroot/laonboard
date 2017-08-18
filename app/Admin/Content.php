@@ -34,11 +34,11 @@ class Content extends Model
     public function getContentCreate()
     {
         $skinList = getSkins('content');
-        $mobileSkinList = getSkins('content');
+        // $mobileSkinList = getSkins('content');
 
         return [
             'skinList' => $skinList,
-            'mobileSkinList' => $mobileSkinList,
+            // 'mobileSkinList' => $mobileSkinList,
             'type' => ''
         ];
     }
@@ -66,7 +66,7 @@ class Content extends Model
             }
         }
         $skinList = getSkins('content');
-        $mobileSkinList = getSkins('content');
+        // $mobileSkinList = getSkins('content');
 
         return [
             'content' => $content,
@@ -75,7 +75,7 @@ class Content extends Model
             'existTailImage' => $existTailImage,
             'tailImageWidth' => $tailImageWidth,
             'skinList' => $skinList,
-            'mobileSkinList' => $mobileSkinList,
+            // 'mobileSkinList' => $mobileSkinList,
             'type' => 'update'
         ];
     }

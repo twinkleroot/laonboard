@@ -85,7 +85,7 @@
                         <th>
                             <a class="adm_sort" href="{{ route('admin.groups.index'). $queryString }}&amp;order=order&amp;direction={{$order=='order' ? $direction : 'asc'}}">출력순서</a>
                         </th>
-                        <th>접속기기</th>
+                        {{-- <th>접속기기</th> --}}
                         <th>관리</th>
                     </thead>
 
@@ -118,13 +118,13 @@
                             <td class="td_mngsmall">
                                 <input type="text" id='order_{{ $group->id }}' class="form-control" value='{{ $group->order }}' />
                             </td>
-                            <td class="td_mngsmall">
+                            {{-- <td class="td_mngsmall">
                                 <select id='device_{{ $group->id }}' class="form-control">
                                     <option value='both' {{ $group->device == 'both' ? 'selected' : '' }}>both</option>
                                     <option value='pc' {{ $group->device == 'pc' ? 'selected' : '' }}>pc</option>
                                     <option value='mobile' {{ $group->device == 'mobile' ? 'selected' : '' }}>mobile</option>
                                 </select>
-                            </td>
+                            </td> --}}
                             <td class="td_mngsmall">
                                 <a href="{{ route('admin.groups.edit', $group->id). '?'. Request::getQueryString() }}">수정</a>
                             </td>

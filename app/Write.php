@@ -52,9 +52,9 @@ class Write extends Model
         return $this->isDelete;
     }
 
-    public static function getWrite($boardId, $writeId)
+    public static function getWrite($boardId, $writeId, $id='id')
     {
-        return WriteSingleton::getInstance($boardId, $writeId);
+        return WriteSingleton::getInstance($boardId, $writeId, $id);
     }
 
     public function __construct()
@@ -172,9 +172,11 @@ class Write extends Model
         // 가져온게시글 가공
         // 1. 뷰에 내보내는 아이디 검색의 링크url에는 암호화된 id를 링크로 건다.
         // 2. 검색일 경우 검색 키워드 색깔 표시를 다르게 한다.
+        // 3. 게시판 설정에 따라 목록에서 보이는 제목을 표시하고 나머지는 ...로 표시한다.
         foreach($writes as $write) {
             $write->user_id = $write->user_id_hashkey;     // 라라벨 기본 지원 encrypt
             $write->subject = searchKeyword($keyword, $write->subject);
+            $write->subject = subjectLength($write->subject, $this->board->subject_len);
             $parentWrite = $write;
             // 댓글일 경우 부모글의 제목을 댓글의 제목으로 넣기
             if($write->is_comment) {
@@ -363,8 +365,8 @@ class Write extends Model
         }
 
         // 관리자 여부에 따라 ip 다르게 보여주기
-        if( !session()->get('admin')) {
-            if ( !is_null($write->ip)) {
+        if( !auth()->user() && auth()->user()->isAdmin() ) {
+            if ($write->ip) {
                 $write->ip = preg_replace("/([0-9]+).([0-9]+).([0-9]+).([0-9]+)/", config('gnu.IP_DISPLAY'), $write->ip);
             }
         }
@@ -407,9 +409,12 @@ class Write extends Model
         // 에디터로 업로드한 이미지 경로를 추출해서 내용의 img 태그 부분을 교체한다.
         $write->content = $this->includeImagePathByEditor($write->content);
 
+        // 글 제목 길이 설정에 따라 조정하기
+        $write->subject = subjectLength($write->subject, $this->board->subject_len);
+
         return [
             'board' => $this->board,
-            'view' => $write,
+            'write' => $write,
             'request' => $request,
             'signature' => $signature,
             'boardFiles' => $boardFiles,
@@ -804,6 +809,8 @@ class Write extends Model
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'file' => count($request->attach_file),
+                'link1' => $request->link1 && !str_contains($request->link1, 'http://') ? 'http://'. $request->link1 : $request->link1,
+                'link2' => $request->link2 && !str_contains($request->link2, 'http://') ? 'http://'. $request->link2 : $request->link2,
                 'hit' => 1,
                 'num' => $num,
                 'reply' => $reply,
@@ -930,6 +937,16 @@ class Write extends Model
                 'file' => $file,
             ]
         ]);
+
+        if($inputData['link1'] && $inputData['link1'] != $write->link1) {
+            $inputData['link1'] = $inputData['link1'] && !str_contains($inputData['link1'], 'http://') ? 'http://'. $inputData['link1'] : $inputData['link1'];
+            $inputData['link1_hit'] = 0;
+        }
+        if($inputData['link2'] && $inputData['link2'] != $write->link2) {
+            $inputData['link2'] = $inputData['link2'] && !str_contains($inputData['link2'], 'http://') ? 'http://'. $inputData['link2'] : $inputData['link2'];
+            $inputData['link2_hit'] = 0;
+        }
+
         // 비회원이거나 본인 글을 수정하는 것이 아닐 때
         if( is_null($user) || $write->user_id != $user->id) {
             $inputData = array_collapse([

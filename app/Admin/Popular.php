@@ -71,13 +71,17 @@ class Popular extends Model
     // 인기 검색어 추가(전체 검색에서 이용)
     public function addPopular($kinds, $keyword, $request)
     {
-         if(!in_array('user_id', $kinds)) {
-             Popular::insert([
-                 'word' => $keyword,
-                 'date' => Carbon::now()->toDateString(),
-                 'ip' => $request->ip(),
-             ]);
-         }
+        if(!in_array('user_id', $kinds)) {
+            $property = [
+                'word' => $keyword,
+                'date' => Carbon::now()->toDateString(),
+                'ip' => $request->ip(),
+            ];
+            $popular = Popular::where($property)->first();
+            if(!$popular) {
+                Popular::insert($property);
+            }
+        }
     }
 
     // 인기 검색어 순위

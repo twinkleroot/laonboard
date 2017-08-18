@@ -122,7 +122,7 @@
             <tr>
                 <th>포인트</th>
                 <td class="table_body chknone">
-                    @if($user->point == 0) 0 @else {{ $user->point }} @endif 점
+                    @if($user->point == 0) 0 @else {{ number_format($user->point) }} @endif 점
                     <span class="help-block">
                         포인트 부여 및 차감은 <a href="{{ route('admin.points.index') }}">[회원관리 - 포인트관리]</a>에서 하실 수 있습니다.
                     </span>

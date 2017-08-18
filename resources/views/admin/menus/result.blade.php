@@ -31,7 +31,7 @@
     <div class="form-group">
         <label for="name" class="col-sm-2 col-xs-3 control-label" style="text-align: left;">메뉴</label>
         <div class="col-sm-3 col-xs-9">
-            <input type="text" class="form-control required" name="name"id="name " required>
+            <input type="text" class="form-control required" name="name" id="name" required>
         </div>
     </div>
 

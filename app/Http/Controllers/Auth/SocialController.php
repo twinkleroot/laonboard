@@ -8,7 +8,6 @@ use Socialite;
 use App\SocialLogin;
 use App\User;
 use Auth;
-use Cache;
 use Laravel\Socialite\Two\InvalidStateException;
 use GuzzleHttp\Exception\ClientException;
 use Carbon\Carbon;

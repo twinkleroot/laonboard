@@ -16,10 +16,11 @@ class CreateAuthTable extends Migration
     {
         Schema::create('manage_auth', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned()->index();
-            $table->string('menu', 20)->index();
+            $table->integer('user_id')->unsigned();
+            $table->string('menu', 20);
             $table->enum('auth', ['r', 'w', 'd']);
 
+            $table->unique(['user_id', 'menu'], 'mkey');
         });
 
         // 라라벨 기본 API에서 mysql의 set type을 지원하지 않으므로 enum으로 생성하고 set으로 변경한다.
