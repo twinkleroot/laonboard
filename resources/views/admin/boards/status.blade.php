@@ -59,7 +59,9 @@
     @endif
 @else
     <div>
-        {{ $message }}
+        <span class="empty_table">
+            <i class="fa fa-exclamation-triangle"></i> {{ $message }}
+        </span>
     </div>
 @endif
     </div>
