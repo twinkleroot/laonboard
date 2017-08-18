@@ -45,8 +45,8 @@ class UpdatableAndDeletableWrite
             $id = $request->writeId;
         }
         $write = Write::getWrite($board->id, $id);
-        $writeUser = ( !is_null($write) && $write->user_id == 0) ? '' : User::find($write->user_id);
-        if( !is_null($user) ) {
+        $writeUser = ( $write && $write->user_id == 0 ) ? '' : User::find($write->user_id);
+        if($user) {
             if ($user->isSuperAdmin()) {// 최고관리자 통과
                 ;
             } else if ($user->isGroupAdmin(Group::find($board->group_id))) { // 그룹관리자
@@ -62,7 +62,7 @@ class UpdatableAndDeletableWrite
                     $message = '자신의 '. $target. '이 아니므로 '. $action. '할 수 없습니다.';
                 }
 
-                if($isDelete) {
+                if($isDelete && !$isComment) {
                     $this->checkReply($writeModel, $write);
                 }
                 $this->checkComment($writeModel, $write, $isDelete);
@@ -92,7 +92,7 @@ class UpdatableAndDeletableWrite
                     'is_comment' => 1,
                 ])->count('id');
 
-            if($cnt && !session()->get('admin')) {
+            if($cnt && auth()->user()->isAdmin()) {
                 $message = '이 댓글와 관련된 답변댓글이 존재하므로 수정 할 수 없습니다.';
             }
         }
