@@ -18,9 +18,9 @@ class CanDeleteCommentImmediately
     public function handle($request, Closure $next)
     {
         $writeId = $request->writeId;
-        $boardId = $request->boardId;
         $commentId = $request->commentId;
-        $board = Board::getBoard($boardId);
+        $board = Board::getBoard($request->boardName, 'table_name');
+        $boardId = $board->id;
         $comment = DB::table('write_'.$board->table_name)->where('id', $commentId)->first();
 
         if(session()->get(session()->getId(). 'delete_board_'. $boardId. '_write_'. $commentId)) {

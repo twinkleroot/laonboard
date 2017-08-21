@@ -18,14 +18,13 @@ class CanActionWriteImmediately
     public function handle($request, Closure $next, $action)
     {
         $writeId = $request->writeId;
-        $boardId = $request->boardId;
-        $board = Board::getBoard($boardId);
-        $write = DB::table('write_'.$board->table_name)->where('id', $writeId)->first();
+        $board = Board::getBoard($request->boardName, 'table_name');
+        $write = DB::table('write_'.$request->boardName)->where('id', $writeId)->first();
 
-        if(session()->get(session()->getId(). $action. '_board_'. $boardId. '_write_'. $writeId)) {
+        if(session()->get(session()->getId(). $action. '_board_'. $board->id. '_write_'. $writeId)) {
             return $next($request);
         } else if( !$write->user_id && !session()->get('admin') ) {
-            return redirect(route('board.password.check', camel_case('write_'.$action)). '?boardId='. $boardId. '&writeId='. $writeId. '&nextUrl='. $request->url());
+            return redirect(route('board.password.check', camel_case('write_'.$action)). '?boardId='. $board->id. '&writeId='. $writeId. '&nextUrl='. $request->url());
         }
 
         return $next($request);

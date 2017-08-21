@@ -27,19 +27,18 @@ class WriteController extends Controller
     public function __construct(Request $request, Write $write, BoardFile $boardFile, BoardGood $boardGood)
     {
         $this->writeModel = $write;
-        $this->writeModel->board = Board::getBoard($request->boardId);
-        $table = is_null($this->writeModel->board) ? '' : $this->writeModel->board->table_name;
-        $this->writeModel->setTableName($table);
+        $this->writeModel->board = Board::getBoard($request->boardName, 'table_name');
+        $this->writeModel->setTableName($request->boardName);
         $this->boardFileModel = $boardFile;
         $this->boardGoodModel = $boardGood;
     }
     /**
      * Display a listing of the resource.
      *
-     * @param integer $boardId
+     * @param string $boardName
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $boardId)
+    public function index(Request $request, $boardName)
     {
         $params = $this->writeModel->getIndexParams($this->writeModel, $request);
 
@@ -54,9 +53,9 @@ class WriteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function view(Request $request, $boardId, $writeId)
+    public function view(Request $request, $boardName, $writeId)
     {
-        $board = Board::getBoard($boardId);
+        $board = Board::getBoard($boardName, 'table_name');
         // 글 보기 데이터
         $params = $this->writeModel->getViewParams($this->writeModel, $writeId, $request);
 
@@ -83,7 +82,7 @@ class WriteController extends Controller
     }
 
     // 글 보기 중 링크 연결
-    public function link($boardId, $writeId, $linkNo)
+    public function link($boardName, $writeId, $linkNo)
     {
         $linkUrl = $this->writeModel->beforeLink($this->writeModel, $writeId, $linkNo);
 
@@ -91,11 +90,15 @@ class WriteController extends Controller
     }
 
     // 추천/비추천 ajax 메서드
-    public function good($boardId, $writeId, $good)
+    public function good($boardName, $writeId, $good)
     {
-        $count = $this->boardGoodModel->good($this->writeModel, $writeId, $good);
+        $result = $this->boardGoodModel->good($this->writeModel, $writeId, $good);
 
-        return [ 'count' => $count ];
+        if(isset($result['error'])) {		
+            return [ 'error' => $result['error'] ];
+        }
+
+        return [ 'count' => $result['count'] ];
     }
 
     /**
@@ -103,7 +106,7 @@ class WriteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request, $boardId)
+    public function create(Request $request, $boardName)
     {
         $params = $this->writeModel->getCreateParams($request);
         $skin = $this->writeModel->board->skin ? : 'default';
@@ -117,7 +120,7 @@ class WriteController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $boardId)
+    public function store(Request $request, $boardName)
     {
         if(auth()->guest() || (!auth()->user()->isSuperAdmin() && $this->writeModel->board->use_recaptcha)) {
             ReCaptcha::reCaptcha($request);
@@ -137,7 +140,7 @@ class WriteController extends Controller
             $notification->sendWriteNotification($this->writeModel, $writeId);
         }
 
-        return redirect(route('board.view', ['boardId' => $boardId, 'writeId' => $writeId] ));
+        return redirect(route('board.view', ['boardId' => $boardName, 'writeId' => $writeId] ));
     }
 
     /**
@@ -146,7 +149,7 @@ class WriteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($boardId, $writeId, Request $request)
+    public function edit(Request $request, $boardName, $writeId)
     {
         $params = $this->writeModel->getEditParams($writeId, $this->writeModel, $request);
         $skin = $this->writeModel->board->skin ? : 'default';
@@ -161,7 +164,7 @@ class WriteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $boardId, $writeId)
+    public function update(Request $request, $boardName, $writeId)
     {
         $fileCount = 0;
         if(count($request->file_del) > 0 || count($request->attach_file) > 0) {
@@ -171,7 +174,7 @@ class WriteController extends Controller
         // 게시 글 수정
         $this->writeModel->updateWrite($this->writeModel, $request, $writeId, $fileCount);
 
-        return redirect(route('board.view', ['boardId' => $boardId, 'writeId' => $writeId] ));
+        return redirect(route('board.view', ['boardId' => $boardName, 'writeId' => $writeId] ));
     }
 
     /**
@@ -181,7 +184,7 @@ class WriteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function createReply($boardId, $writeId, Request $request)
+    public function createReply(Request $request, $boardName, $writeId)
     {
         $params = $this->writeModel->getReplyParams($writeId, $this->writeModel, $request);
         $skin = $this->writeModel->board->skin ? : 'default';
@@ -195,18 +198,18 @@ class WriteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $boardId, $writeId)
+    public function destroy(Request $request, $boardName, $writeId)
     {
         $message = $redirect = '';
 
         try {
             $this->writeModel->deleteWriteCascade($this->writeModel, $writeId);
         } catch (Exception $e) {
-            $redirect = route('board.index', $boardId);
+            $redirect = route('board.index', $boardName);
             return alertRedirect($e->getMessage(), $redirect);
         }
 
-        $returnUrl = route('board.index', $boardId). ($request->page == 1 ? '' : '?page='. $request->page);
+        $returnUrl = route('board.index', $boardName). ($request->page == 1 ? '' : '?page='. $request->page);
         return redirect($returnUrl);
     }
 
@@ -216,26 +219,26 @@ class WriteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function selectedDelete(Request $request, $boardId, $writeId)
+    public function selectedDelete(Request $request, $boardName, $writeId)
     {
         $ids = explode(',', $writeId);
         foreach($ids as $id) {
             try {
                 $this->writeModel->deleteWriteCascade($this->writeModel, $id);
             } catch (Exception $e) {
-                $redirect = route('board.index', $boardId);
+                $redirect = route('board.index', $boardName);
                 return alertRedirect("($id번 글) ". $e->getMessage(), $redirect);
             }
         }
 
-        $returnUrl = route('board.index', $boardId). ($request->page == 1 ? '' : '?page='. $request->page);
+        $returnUrl = route('board.index', $boardName). ($request->page == 1 ? '' : '?page='. $request->page);
         return redirect($returnUrl);
     }
 
     // RSS 보기
-    public function rss(Request $request, $boardId, RssFeed $feed)
+    public function rss(Request $request, $boardName, RssFeed $feed)
     {
-        $rss = $feed->getRSS($boardId);
+        $rss = $feed->getRSS($boardName);
 
         return response($rss)
             ->header('Content-type', 'text/xml')

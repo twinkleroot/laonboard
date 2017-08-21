@@ -26,7 +26,7 @@
                         <li><input type="submit" value="선택삭제" onclick="document.pressed=this.value"/></li>
                         <li><input type="submit" value="선택복사" onclick="document.pressed=this.value"/></li>
                         <li><input type="submit" value="선택이동" onclick="document.pressed=this.value"/></li>
-                        <li><a href="{{ route('admin.boards.edit', $board->id) }}">게시판 설정</a></li>
+                        <li><a href="{{ route('admin.boards.edit', $board->table_name) }}">게시판 설정</a></li>
                     </ul>
                 </li>
             @endif
@@ -48,9 +48,9 @@
     <div class="bd_category">
         <ul>
             <!-- 선택된 카테고리의 class에 on 추가 -->
-            <li class="btn" id="all"><a href="{{ route('board.index', $board->id) }}">전체</a></li>
+            <li class="btn" id="all"><a href="{{ route('board.index', $board->table_name) }}">전체</a></li>
             @foreach($categories as $category)
-                <li class="btn" id="{{ $category }}"><a href="{{ route('board.index', $board->id). '?category='. $category }}">{{ $category }}</a></li>
+                <li class="btn" id="{{ $category }}"><a href="{{ route('board.index', $board->table_name). '?category='. $category }}">{{ $category }}</a></li>
             @endforeach
         </ul>
     </div>
@@ -103,9 +103,9 @@
 
                     <span class="bd_subject">
                         @if($board->use_category)
-                        <a href="{{ route('board.index', $board->id). '?category='. $write->ca_name }}" class="subject_cg">{{ $write->ca_name }}</a>
+                        <a href="{{ route('board.index', $board->table_name). '?category='. $write->ca_name }}" class="subject_cg">{{ $write->ca_name }}</a>
                         @endif
-                        <a href="/board/{{ $board->id }}/view/{{ $write->parent }}?{{ Request::getQueryString() }}">
+                        <a href="/bbs/{{ $board->table_name }}/view/{{ $write->parent }}?{{ Request::getQueryString() }}">
                             {!! $write->subject !!}
                         </a>
                         {{-- 글올린시간 + 설정에 있는 신규 글 시간 > 현재 시간 --}}
@@ -139,7 +139,7 @@
                         @component('board.sideview', ['board' => $board, 'id' => $write->user_id, 'name' => $write->name, 'email' => $write->email, 'category' => $currenctCategory])
                         @endcomponent
                     @else
-                        <li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
+                        <li><a href="/bbs/{{ $board->table_name }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
                     @endif
                     @if($write->user_level)
                         <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>
@@ -152,7 +152,7 @@
                         @component('board.sideview', ['board' => $board, 'id' => $write->user_id, 'name' => $write->name, 'email' => $write->email, 'category' => $currenctCategory])
                         @endcomponent
                     @else
-                        <li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
+                        <li><a href="/bbs/{{ $board->table_name }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
                     @endif
                     @if($write->user_level)
                         <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>
@@ -188,7 +188,7 @@
 <div class="bd_btn">
     <ul class="pull-left">
         <li id="pt_sch">
-            <form method="get" action="{{ route('board.index', $board->id) }}" onsubmit="return searchFormSubmit(this);">
+            <form method="get" action="{{ route('board.index', $board->table_name) }}" onsubmit="return searchFormSubmit(this);">
                 @if($currenctCategory != '')
                     <input type="hidden" id='category' name='category' value='{{ $currenctCategory }}' />
                 @endif
@@ -212,7 +212,7 @@
 
     <ul id="bd_btn">
         <li class="mr0">
-            <button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->id). '?'. $request->getQueryString() }}'">
+            <button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->table_name). '?'. $request->getQueryString() }}'">
                 <i class="fa fa-pencil"></i> 글쓰기
             </button>
         </li>
@@ -220,7 +220,7 @@
 </div>
 
 {{-- 페이지 처리 --}}
-{{ $writes->appends(Request::except('page'))->links() }}
+{{ $writes->appends(Request::except('page'))->withPath($board->table_name)->links() }}
 
 @if($board->use_category == 1 )
 <script>
@@ -271,7 +271,7 @@ function formBoardListSubmit(f) {
         }
 
         f.removeAttribute("target");
-        f.action = '/board/{{ $board->id }}/delete/ids/' + selected_id_array;
+        f.action = '/bbs/{{ $board->table_name }}/delete/ids/' + selected_id_array;
         f._method.value = 'DELETE';
     }
 

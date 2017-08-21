@@ -4,8 +4,6 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Cache;
-use DB;
 use Exception;
 use Carbon\Carbon;
 use App\User;
@@ -117,9 +115,9 @@ class Comment
     // 댓글 생성
     public function storeComment($writeModel, $request)
     {
-        $board = Board::getBoard($request->boardId);
+        $board = Board::getBoard($request->boardName, 'table_name');
         $point = new Point();
-        $write = Write::getWrite($board->id, $request->writeId);  // 원 글
+        $write = $writeModel->find($request->writeId);  // 원 글
         $writeId = $write->id;
 
         $tmpComment = 0;
@@ -199,10 +197,9 @@ class Comment
             'extra_10' => $request->has('extra10') ? $request->extra10 : null,
         ];
 
-        $writeModel->insert($insertData);
+        $newCommentId = $writeModel->insertGetId($insertData);	// 리턴으로 마지막에 삽입한 행의 id 값 가져오기
 
         // 포인트 부여(댓글)
-        $newCommentId = DB::getPdo()->lastInsertId();   // 마지막에 삽입한 행의 id 값 가져오기
         $relAction = '댓글';
         $content = $board->subject. ' '. $writeId. '-'. $newCommentId. ' 댓글쓰기';
         $point->insertPoint($userId, $board->comment_point, $content, $board->table_name, $newCommentId, $relAction);
@@ -273,10 +270,9 @@ class Comment
     // 댓글 수정
     public function updateComment($writeModel, $request)
     {
-        $board = Board::getBoard($request->boardId);
+        $board = Board::getBoard($request->boardName, 'table_name');
         $commentId = $request->commentId;
-        $comment = Write::getWrite($board->id, $commentId);
-        $writeId = $comment->parent;
+        $comment = $writeModel->find($commentId);
         $option = $request->has('secret') ? $request->secret : null;
         $ip = !session()->get('admin') ? $request->ip() : $comment->ip;
 
@@ -293,13 +289,12 @@ class Comment
     }
 
     // 댓글 삭제
-    public function deleteComment($writeModel, $boardId, $commentId)
+    public function deleteComment($writeModel, $boardName, $commentId)
     {
-        $board = Board::getBoard($boardId);
+        $board = Board::getBoard($boardName, 'table_name');
         $point = new Point();
-        $writeModel->setTableName($board->table_name);
-        $comment = Write::getWrite($board->id, $commentId);
-        $write = Write::getWrite($board->id, $comment->parent);
+        $comment = $writeModel->find($commentId);
+        $write = $writeModel->find($comment->parent);
 
         // 댓글 포인트 삭제, 부여되었던 포인트 삭제 및 조정 반영
         if($comment->user_id) {

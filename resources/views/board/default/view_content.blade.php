@@ -16,29 +16,29 @@
             </a>
             <ul class="dropdown-menu" role="menu">
                 @if(!$write->user_id || session()->get('admin') || ( $user && $user->id == $write->user_id ) )
-                    <li><a href="/board/{{ $board->id }}/edit/{{ $write->id }}">수정</a></li>
-                    <li><a href="/board/{{ $board->id }}/delete/{{ $write->id }}" onclick="del(this.href); return false;">삭제</a></li>
+                    <li><a href="/bbs/{{ $board->table_name }}/edit/{{ $write->id }}">수정</a></li>
+                    <li><a href="/bbs/{{ $board->table_name }}/delete/{{ $write->id }}" onclick="del(this.href); return false;">삭제</a></li>
                 @endif
                 @if(session()->get('admin'))
                     <li>
-                        <a class="movePopup" href="{{ route('board.view.move', $board->id)}}?type=copy&amp;writeId={{ $write->id }}" target="move">
+                        <a class="movePopup" href="{{ route('board.view.move', $board->table_name)}}?type=copy&amp;writeId={{ $write->id }}" target="move">
                             복사
                         </a>
                     </li>
                     <li>
-                        <a class="movePopup" href="{{ route('board.view.move', $board->id)}}?type=move&amp;writeId={{ $write->id }}" target="move">
+                        <a class="movePopup" href="{{ route('board.view.move', $board->table_name)}}?type=move&amp;writeId={{ $write->id }}" target="move">
                             이동
                         </a>
                     </li>
                 @endif
-                <li><a href="{{ route('board.create.reply', ['boardId' => $board->id, 'writeId' => $write->id]) }}">답변</a></li>
+                <li><a href="{{ route('board.create.reply', ['board' => $board->table_name, 'writeId' => $write->id]) }}">답변</a></li>
             </ul>
         </li>
         <li>
-            <a href="{{ route('board.index', $board->id). '?'. $request->server('QUERY_STRING') }}"><i class="fa fa-list-ul"></i></a>
+            <a href="{{ route('board.index', $board->table_name). '?'. $request->server('QUERY_STRING') }}"><i class="fa fa-list-ul"></i></a>
         </li>
         <li>
-            <a href="{{ route('board.create', $board->id) }}"><i class="fa fa-pencil"></i></a>
+            <a href="{{ route('board.create', $board->table_name) }}"><i class="fa fa-pencil"></i></a>
         </li>
     </ul>
 </div>
@@ -48,7 +48,7 @@
         @if($write['link'.$i])
             <div class="bd_link">
                 <i class="fa fa-link"></i>
-                <a href="/board/{{ $board->id }}/view/{{ $write->id }}/link/{{ $i }}" target="_blank">{{ $write['link'. $i] }}</a>
+                <a href="/bbs/{{ $board->table_name }}/view/{{ $write->id }}/link/{{ $i }}" target="_blank">{{ $write['link'. $i] }}</a>
                 <span class="movecount">(연결된 횟수: {{ $write['link'. $i. '_hit'] }}회)</span>
             </div>
         @endif
@@ -75,7 +75,7 @@
             <ul class="bd_file_list" role="menu">
                 @foreach($boardFiles as $file)
                 <li>
-                    <i class="fa fa-download"></i><a href="/board/{{ $board->id }}/view/{{ $write->id }}/download/{{ $file->board_file_no }}">{{ $file->source }}</a>
+                    <i class="fa fa-download"></i><a href="/bbs/{{ $board->table_name }}/view/{{ $write->id }}/download/{{ $file->board_file_no }}">{{ $file->source }}</a>
                     <span class="downcount">(다운로드 횟수: {{ $file->download }}회 / DATE : {{ $file->created_at }}) </span>
                 </li>
                 @endforeach
@@ -98,7 +98,7 @@
             </span>
         </a>
         @if($board->use_good)
-        <a id="goodButton" href="/board/{{ $board->id }}/view/{{ $write->id }}/good">
+        <a id="goodButton" href="/bbs/{{ $board->table_name }}/view/{{ $write->id }}/good">
             <span>
                 <i class="fa fa-thumbs-o-up"></i>추천
                 <strong>{{ $write->good }}</strong>
@@ -107,7 +107,7 @@
         </a>
         @endif
         @if($board->use_nogood)
-        <a id="noGoodButton" href="/board/{{ $board->id }}/view/{{ $write->id }}/nogood">
+        <a id="noGoodButton" href="/bbs/{{ $board->table_name }}/view/{{ $write->id }}/nogood">
             <span>
                 <i class="fa fa-thumbs-o-down"></i>비추천
                 <strong>{{ $write->nogood }}</strong>
@@ -179,7 +179,7 @@
                         @component('board.sideview', ['board' => $board, 'id' => $comment->user_id_hashkey, 'name' => $comment->name, 'email' => $comment->email, 'category' => isset($currenctCategory) ? $currenctCategory : ''])
                         @endcomponent
                     @else
-                        <li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $comment->name }}&amp;category={{ isset($currenctCategory) ? $currenctCategory : '' }}">이름으로 검색</a></li>
+                        <li><a href="/bbs/{{ $board->table_name }}?kind=name&amp;keyword={{ $comment->name }}&amp;category={{ isset($currenctCategory) ? $currenctCategory : '' }}">이름으로 검색</a></li>
                     @endif
                     @if($comment->user_level)
                         <li><a href="{{ route('new.index') }}?nick={{ $comment->name }}">전체게시물</a></li>
@@ -192,7 +192,7 @@
                         @component('board.sideview', ['board' => $board, 'id' => $comment->user_id_hashkey, 'name' => $comment->name, 'email' => $comment->email, 'category' => isset($currenctCategory) ? $currenctCategory : ''])
                         @endcomponent
                     @else
-                        <li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $comment->name }}&amp;category={{ isset($currenctCategory) ? $currenctCategory : '' }}">이름으로 검색</a></li>
+                        <li><a href="/bbs/{{ $board->table_name }}?kind=name&amp;keyword={{ $comment->name }}&amp;category={{ isset($currenctCategory) ? $currenctCategory : '' }}">이름으로 검색</a></li>
                     @endif
                     @if($comment->user_level)
                         <li><a href="{{ route('new.index') }}?nick={{ $comment->name }}">전체게시물</a></li>
@@ -211,7 +211,7 @@
                 @if($comment->isEdit == 1)
                 <li><a href="#" onclick="commentBox({{ $comment->id }}, 'cu'); return false;">수정</a></li> @endif
                 @if($comment->isDelete == 1)
-                <li><a href="{{ route('board.comment.destroy', ['boardId' => $board->id, 'writeId' => $write->id, 'commentId' => $comment->id])}}" onclick="return commentDelete();">삭제</a></li> @endif
+                <li><a href="{{ route('board.comment.destroy', ['boardName' => $board->table_name, 'writeId' => $write->id, 'commentId' => $comment->id])}}" onclick="return commentDelete();">삭제</a></li> @endif
             </ul>
             <div class="bd_rd_cmt_view">
                 @if(str_contains($comment->option, 'secret'))
@@ -223,7 +223,7 @@
                     @elseif($user && $user->id == $comment->user_id)
                     {!! $comment->content !!}
                     @else
-                    <a href="/password/type/secret?boardId={{ $board->id }}&writeId={{ $comment->id }}&nextUrl={{ route('board.view', [ 'boardId' => $board->id, 'writeId' => $comment->parent ]). '#comment'. $comment->id }}">댓글내용확인</a>
+                    <a href="/password/type/secret?boardName={{ $board->table_name }}&writeId={{ $comment->id }}&nextUrl={{ route('board.view', [ 'boardName' => $board->table_name, 'writeId' => $comment->parent ]). '#comment'. $comment->id }}">댓글내용확인</a>
                     @endif
                 @else
                 {!! $comment->content !!}
@@ -420,11 +420,11 @@ function commentBox(commentId, work) {
             } else {
                 document.getElementById('secret').checked = false;
             }
-            document.getElementById('commentForm').action = "{{ route('board.comment.update', $board->id)}}";
+            document.getElementById('commentForm').action = "{{ route('board.comment.update', $board->table_name)}}";
             document.getElementById('_method').value = "PUT";
 
         } else {
-            document.getElementById('commentForm').action = "{{ route('board.comment.store', $board->id)}}";
+            document.getElementById('commentForm').action = "{{ route('board.comment.store', $board->table_name)}}";
             document.getElementById('_method').value = "POST";
         }
 

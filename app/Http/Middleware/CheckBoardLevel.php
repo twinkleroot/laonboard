@@ -25,8 +25,8 @@ class CheckBoardLevel
             $baseLevel = $user->level;  // 유저의 등급을 넣음
         }
 
-        $boardId = $request->segments()[1];
-        $board = Board::getBoard($boardId);
+        $boardName = $request->segments()[1];
+        $board = Board::getBoard($boardName, 'table_name');
 
         if($baseLevel < $board[$type]) {
             if(str_contains($type, 'list')) {
