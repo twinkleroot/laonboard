@@ -18,7 +18,7 @@ class WritableComment
     {
         $user = auth()->user();
         $userPoint = !$user ? 0 : $user->point;
-        $board = Board::getBoard($request->boardId);
+        $board = Board::getBoard($request->boardName, 'table_name');
         // 댓글 쓰기 포인트 설정시 포인트 검사
         if($type == 'create') {
             $tmpPoint = $userPoint > 0 ? $userPoint : 0;

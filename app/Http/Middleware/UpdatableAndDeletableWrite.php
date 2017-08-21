@@ -22,10 +22,10 @@ class UpdatableAndDeletableWrite
     public function handle($request, Closure $next)
     {
         $user = auth()->user();
-        $board = Board::getBoard($request->boardId);
+        $board = Board::getBoard($request->boardName, 'table_name');
         $writeModel = new Write();
         $writeModel->board = $board;
-        $writeModel->setTableName($board->table_name);
+        $writeModel->setTableName($request->boardName);
 
         $message = '';
         $action = '수정';

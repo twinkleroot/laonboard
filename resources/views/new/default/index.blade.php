@@ -74,10 +74,10 @@
                     <a href="{{ route('new.index') }}?groupId={{ $boardNew->group_id }}">{{ $boardNew->group_subject }}</a>
                 </td>
                 <td class="bd_board">
-                    <a href="{{ route('board.index', $boardNew->board_id) }}">{{ $boardNew->subject }}</a>
+                    <a href="{{ route('board.index', $boardNew->table_name) }}">{{ $boardNew->subject }}</a>
                 </td>
                 <td>
-                    <span class="bd_subject"><a href="/board/{{ $boardNew->board_id}}/view/{{ $boardNew->write_parent. $boardNew->commentTag }}">{{ $boardNew->write->subject }}</a></span>
+                    <span class="bd_subject"><a href="/bbs/{{ $boardNew->table_name}}/view/{{ $boardNew->write_parent. $boardNew->commentTag }}">{{ $boardNew->write->subject }}</a></span>
                 </td>
                 <td class="bd_name">
                     @if(!$boardNew->user_id)

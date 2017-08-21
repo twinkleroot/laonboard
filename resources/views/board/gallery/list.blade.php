@@ -10,7 +10,7 @@
     {{ csrf_field() }}
 
     <div class="pull-left bd_head">
-        <span><a href="{{ route('board.index', $board->id) }}">{{ $board->subject }}</a> 전체 {{ $writes->total() }}건 {{ $writes->currentPage() }}페이지</span>
+        <span><a href="{{ route('board.index', $board->table_name) }}">{{ $board->subject }}</a> 전체 {{ $writes->total() }}건 {{ $writes->currentPage() }}페이지</span>
     </div>
 
     <div class="bd_btn">
@@ -26,18 +26,18 @@
                     <li><input type="submit" value="선택삭제" onclick="document.pressed=this.value"/></li>
                     <li><input type="submit" value="선택복사" onclick="document.pressed=this.value"/></li>
                     <li><input type="submit" value="선택이동" onclick="document.pressed=this.value"/></li>
-                    <li><a href="{{ route('admin.boards.edit', $board->id) }}">게시판 설정</a></li>
+                    <li><a href="{{ route('admin.boards.edit', $board->table_name) }}">게시판 설정</a></li>
                 </ul>
             </li>
             @endif
 
             <li class="mr0">
                 @if($board->use_rss_view && $board->list_level == 1 && $board->read_level == 1)
-                <button type="button" class="btn btn-sir" onclick="location.href='{{ route('rss', $board->id) }}'">
+                <button type="button" class="btn btn-sir" onclick="location.href='{{ route('rss', $board->table_name) }}'">
                     RSS
                 </button>
                 @endif
-                <button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->id). '?'. $request->getQueryString() }}'">
+                <button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->table_name). '?'. $request->getQueryString() }}'">
                     <i class="fa fa-pencil"></i> 글쓰기
                 </button>
             </li>
@@ -48,9 +48,9 @@
     <div class="bd_category">
         <ul>
             <!-- 선택된 카테고리의 class에 on 추가 -->
-            <li class="btn" id="all"><a href="{{ route('board.index', $board->id) }}">전체</a></li>
+            <li class="btn" id="all"><a href="{{ route('board.index', $board->table_name) }}">전체</a></li>
             @foreach($categories as $category)
-            <li class="btn" id="{{ $category }}"><a href="{{ route('board.index', $board->id). '?category='. $category }}">{{ $category }}</a></li>
+            <li class="btn" id="{{ $category }}"><a href="{{ route('board.index', $board->table_name). '?category='. $category }}">{{ $category }}</a></li>
             @endforeach
         </ul>
     </div>
@@ -68,9 +68,9 @@
             <div>
                 <div class="gry_img" style="height:{{ $board->gallery_height }}px;"> <!-- height 기본값 150px로 css처리 해둠 -->
                     @if($viewParams == '')
-                    <a href="/board/{{ $board->id }}/view/{{ $write->parent }}">
+                    <a href="/bbs/{{ $board->table_name }}/view/{{ $write->parent }}">
                     @else
-                    <a href="/board/{{ $board->id }}/view/{{ $write->parent }}?{{ $viewParams }}">
+                    <a href="/bbs/{{ $board->table_name }}/view/{{ $write->parent }}?{{ $viewParams }}">
                     @endif
                         @if($write->listThumbnailPath == '공지' || $write->listThumbnailPath == 'no image')
                             <span class="gry_txt" style="padding: calc( {{ $board->gallery_height }}px / 2 - 10px ) 0;">{{ $write->listThumbnailPath }}</span>
@@ -83,10 +83,10 @@
                     <p>
                         <span class="bd_subject">
                             @if($board->use_category == 1 )
-                            <a href="{{ route('board.index', $board->id). '?category='. $write->ca_name }}" class="subject_cg">{{ $write->ca_name }}</a>
+                            <a href="{{ route('board.index', $board->table_name). '?category='. $write->ca_name }}" class="subject_cg">{{ $write->ca_name }}</a>
                             @endif
                             @if($viewParams == '')
-                            <a href="/board/{{ $board->id }}/view/{{ $write->parent }}">
+                            <a href="/bbs/{{ $board->table_name }}/view/{{ $write->parent }}">
                                 @if(isset($request->writeId) && $request->writeId == $write->id)
                                 <span class="read">    {{-- 열람중 --}}
                                     {!! $write->subject !!}
@@ -96,7 +96,7 @@
                                 @endif
                             </a>
                             @else
-                            <a href="/board/{{ $board->id }}/view/{{ $write->parent }}?{{ $viewParams }}">
+                            <a href="/bbs/{{ $board->table_name }}/view/{{ $write->parent }}?{{ $viewParams }}">
                                 @if(isset($request->writeId) && $request->writeId == $write->id)
                                 <span class="read">    {{-- 열람중 --}}
                                     {!! $write->subject !!}
@@ -126,7 +126,7 @@
                             @component('board.sideview', ['board' => $board, 'id' => $write->user_id, 'name' => $write->name, 'email' => $write->email, 'category' => $currenctCategory])
                             @endcomponent
                         @else
-                            <li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
+                            <li><a href="/bbs/{{ $board->table_name }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
                         @endif
                         @if($write->user_level)
                             <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>
@@ -139,7 +139,7 @@
                             @component('board.sideview', ['board' => $board, 'id' => $write->user_id, 'name' => $write->name, 'email' => $write->email, 'category' => $currenctCategory])
                             @endcomponent
                         @else
-                            <li><a href="/board/{{ $board->id }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
+                            <li><a href="/bbs/{{ $board->table_name }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
                         @endif
                         @if($write->user_level)
                             <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>
@@ -174,7 +174,7 @@
 <div class="bd_btn">
     <ul class="pull-left">
         <li id="pt_sch">
-            <form method="get" action="{{ route('board.index', $board->id) }}" onsubmit="return searchFormSubmit(this);">
+            <form method="get" action="{{ route('board.index', $board->table_name) }}" onsubmit="return searchFormSubmit(this);">
                 @if($currenctCategory != '')
                 <input type="hidden" id='category' name='category' value='{{ $currenctCategory }}' />
                 @endif
@@ -199,11 +199,11 @@
     <ul id="bd_btn">
         <li class="mr0">
             @if($board->use_rss_view && $board->list_level == 1 && $board->read_level == 1)
-            <button type="button" class="btn btn-sir" onclick="location.href='{{ route('rss', $board->id) }}'">
+            <button type="button" class="btn btn-sir" onclick="location.href='{{ route('rss', $board->table_name) }}'">
                 RSS
             </button>
             @endif
-            <button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->id). '?'. $request->getQueryString() }}'">
+            <button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->table_name). '?'. $request->getQueryString() }}'">
                 <i class="fa fa-pencil"></i> 글쓰기
             </button>
         </li>
@@ -211,7 +211,7 @@
 </div>
 
 {{-- 페이지 처리 --}}
-{{ $writes->appends(Request::except('page'))->links() }}
+{{ $writes->appends(Request::except('page'))->withPath($board->table_name)->links() }}
 
 <script>
 $(function(){
@@ -259,7 +259,7 @@ function formBoardListSubmit(f) {
         }
 
         f.removeAttribute("target");
-        f.action = '/board/{{ $board->id }}/delete/ids/' + selected_id_array;
+        f.action = '/bbs/{{ $board->table_name }}/delete/ids/' + selected_id_array;
         f._method.value = 'DELETE';
     }
 
@@ -280,7 +280,7 @@ function selectCopy(type) {
 
     f.type.value = type;
     f.target = "move";
-    f.action = "{{ route('board.list.move', $board->id)}}";
+    f.action = "{{ route('board.list.move', $board->table_name)}}";
     f.submit();
 }
 </script>

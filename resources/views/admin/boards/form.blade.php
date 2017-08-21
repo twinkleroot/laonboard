@@ -20,9 +20,18 @@
             }
         });
 
-        $(".tab").click(function () {
-            $(".tab").removeClass("active");
-            $(this).addClass("active");
+        $(window).on('scroll', function() {
+            $('.adm_box').each(function() {
+                if($(window).scrollTop() >= $(this).offset().top - 100) {
+                    var id = $(this).attr('id');
+                    $('#body_tab_type2 ul li').removeClass('active');
+                    $("#body_tab_type2 ul li a[href='#" + id + "']").parent().addClass('active');
+                } else if($(window).scrollTop() >= $('#bottom').position().top - $(window).outerHeight(true) + 100) {	// 제일 밑으로 스크롤을 내렸을 때
+                    var id = 'anc_extra';
+                    $('#body_tab_type2 ul li').removeClass('active');
+                    $("#body_tab_type2 ul li a[href='#" + id + "']").parent().addClass('active');
+                }
+            });
         });
     });
 </script>
@@ -44,12 +53,12 @@
     </div>
     <div id="body_tab_type2">
         <ul>
-            <li class="tab"><a href="#admin-body">기본설정</a></li>
+            <li class="tab"><a href="#anc_basic">기본설정</a></li>
             <li class="tab"><a href="#anc_auth">권한설정</a></li>
             <li class="tab"><a href="#anc_function">기능설정</a></li>
             <li class="tab"><a href="#anc_design">디자인/양식</a></li>
             <li class="tab"><a href="#anc_point">포인트설정</a></li>
-            <li class="tab"><a href="#anc_point">여분필드</a></li>
+            <li class="tab"><a href="#anc_extra">여분필드</a></li>
         </ul>
 
         <div class="submit_btn">
@@ -109,6 +118,9 @@
                                 </option>
                             @endforeach
                         </select>
+                        @if($type == 'edit')
+                            <a class="btn btn-sir" href="{{ route('admin.boards.index'). '?kind=group_id&keyword='. $board->group->group_id }}">동일그룹 게시판목록</a>
+                        @endif
                     </td>
                 </tr>
                 <tr>
@@ -164,6 +176,16 @@
                         <label for="chk_all_category_list">전체적용</label>
                     </td>
                 </tr>
+                @if($type == 'edit')
+                <tr>
+                    <th>카운트 조정</th>
+                    <td class="table_body">
+                        현재 원글수 : {{ $board->count_write }}, 현재 댓글수 : {{ $board->count_comment }}<br>
+                        게시판 목록에서 글의 번호가 맞지 않을 경우에 체크하십시오.
+                        <input type="checkbox" name="procCount" val ue="1"/>
+                    </td>
+                </tr>
+                @endif
             </table>
         </section>
         <section id="anc_auth" class="adm_box">
@@ -746,7 +768,7 @@
         </section>
         <section id="anc_design" class="adm_box">
             <div class="adm_box_hd">
-                <span class="adm_box_title">게시판 기능설정</span>
+                <span class="adm_box_title">게시판 디자인/양식</span>
             </div>
             <table class="adm_box_table">
                 <tr>
@@ -1150,6 +1172,7 @@
                 @endfor
             </table>
         </section>
+        <section id="bottom"></section>
     </div>
 </div>
 </form>

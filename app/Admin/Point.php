@@ -80,7 +80,7 @@ class Point extends Model
         $points = $query->paginate(Cache::get("config.homepage")->pageRows);
 
         foreach($points as $point) {
-            $board = Board::where('table_name', $point->rel_table)->first();
+            $board = Board::getBoard($point->rel_table, 'table_name');
             if($board) {
                 $point->rel_table = $board->id;
             }

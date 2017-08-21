@@ -11,6 +11,7 @@
     var menuVal = 100100;
     jQuery("document").ready(function($){
         var nav = $('#body_tab_type2');
+
         $(window).scroll(function () {
             if ($(this).scrollTop() > 175) {
                 nav.addClass("f-tab");
@@ -18,14 +19,15 @@
                 nav.removeClass("f-tab");
             }
         });
+
         $(window).on('scroll', function() {
             $('.adm_section').each(function() {
-                if($(window).scrollTop() >= $(this).offset().top - 100) {
+                if($(window).scrollTop() >= $(this).offset().top) {
                     var id = $(this).attr('id');
                     $('#body_tab_type2 ul li').removeClass('active');
                     $("#body_tab_type2 ul li a[href='#" + id + "']").parent().addClass('active');
-                } else if($(window).scrollTop() >= $('#bottom').position().top - $(window).outerHeight(true) + 100) {   // 제일 밑으로 스크롤을 내렸을 때
-                    var id = 'more';
+                } else if($(window).scrollTop() >= $('#bottom').position().top - $(window).outerHeight(true)) {   // 제일 밑으로 스크롤을 내렸을 때
+                    var id = 'mb_more';
                     $('#body_tab_type2 ul li').removeClass('active');
                     $("#body_tab_type2 ul li a[href='#" + id + "']").parent().addClass('active');
                 }
@@ -48,6 +50,7 @@
         </ul>
     </div>
 </div>
+
 <div id="body_tab_type2">
     <ul>
         <li class="tab"><a href="#mb_basic">기본정보</a></li>
@@ -56,7 +59,6 @@
         <li class="tab"><a href="#mb_cert">본인인증</a></li>
         <li class="tab"><a href="#mb_more">여분필드</a></li>
     </ul>
-
     <div class="submit_btn">
         <button type="submit" class="btn btn-sir">{{ method_field('PUT') }}변경</button>
         <a href="{{ route('admin.users.index') }}" class="btn btn-default" role="button">목록</a>
@@ -361,6 +363,7 @@
             @endfor
         </table>
     </section>
+    <section id="bottom"></section>
 </div>
 </form>
 <script>

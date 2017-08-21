@@ -99,10 +99,10 @@
                             <a href="{{ route('new.index') }}?groupId={{ $new->group_id }}">{{ $new->group_subject }}</a>
                         </td>
                         <td class="td_mngsmall text-left">
-                            <a href="{{ route('board.index', $new->board_id) }}">{{ $new->subject }}</a>
+                            <a href="{{ route('board.index', $new->table_name) }}">{{ $new->subject }}</a>
                         </td>
                         <td class="td_subject">
-                            <a href="/board/{{ $new->board_id}}/view/{{ $new->write_parent. $new->commentTag }}">{{ subjectLength($new->write->subject, 100) }}</a>
+                            <a href="/bbs/{{ $new->table_name}}/view/{{ $new->write_parent. $new->commentTag }}">{{ subjectLength($new->write->subject, 100) }}</a>
                         </td>
                         <td class="td_nick">
                             @component('admin.sideview', ['id' => $new->user_id, 'nick' => $new->name, 'email' => $new->user_email])
@@ -153,13 +153,13 @@
                             <a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ App\User::getUser($point->user_id)->email }}">{{ App\User::getUser($point->user_id)->email }}</a>
                         </td>
                         <td class="td_nick">
-                            @component('admin.sideview', ['id' => App\User::getUser($point->user_id)->id, 'nick' => App\User::getUser($point->user_id)->nick, 'email' => App\User::getUser($point->user_id)->email])
+                            @component('admin.sideview', ['id' => $point->user_id, 'nick' => App\User::getUser($point->user_id)->nick, 'email' => App\User::getUser($point->user_id)->email])
                             @endcomponent
                         </td>
                         <td class="td_date">{{ $point->datetime }}</td>
                         <td class="td_subject">
                             @if(!preg_match("/^\@/", $point->rel_table) && $point->rel_table)
-                                <a href="/board/{{ $point->rel_table }}/view/{{ $point->rel_email }}" target="_blank">{{ $point->content }}</a>
+                                <a href="/bbs/{{ App\Board::getBoard($point->rel_table)->table_name }}/view/{{ $point->rel_email }}" target="_blank">{{ $point->content }}</a>
                             @else
                                 {{ $point->content }}
                             @endif

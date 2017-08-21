@@ -88,16 +88,17 @@ class BoardsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  string $boardName
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, $id)
+    public function edit(Request $request, $boardName)
     {
-        if (!auth()->user()->isBoardAdmin(Board::find($id)) && auth()->user()->cant('update', $this->boardModel)) {
+        $board = Board::where('table_name', $boardName)->first();
+        if (!auth()->user()->isBoardAdmin($board) && auth()->user()->cant('update', $this->boardModel)) {
             abort(403, '게시판 수정에 대한 권한이 없습니다.');
         }
 
-        $params = $this->boardModel->getBoardEditParams($request, $id);
+        $params = $this->boardModel->getBoardEditParams($request, $board->id);
 
         return view('admin.boards.form', $params);
     }
@@ -106,12 +107,13 @@ class BoardsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  string $table_name
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->isBoardAdmin(Board::find($id)) && auth()->user()->cant('update', $this->boardModel)) {
+        $board = Board::find($id);
+        if (!auth()->user()->isBoardAdmin($board) && auth()->user()->cant('update', $this->boardModel)) {
             abort(403, '게시판 수정에 대한 권한이 없습니다.');
         }
 
@@ -123,7 +125,7 @@ class BoardsController extends Controller
             abort(500, '게시판 수정에 실패하였습니다.');
         }
 
-        return redirect(route('admin.boards.edit', $id). $request->queryString)
+        return redirect(route('admin.boards.edit', $board->table_name). $request->queryString)
             ->with('message', $subject . ' 게시판이 수정되었습니다.');
     }
 
@@ -145,7 +147,7 @@ class BoardsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Request $request, int  $id
+     * @param  Request $request, string $table_name
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request, $id)
@@ -159,13 +161,13 @@ class BoardsController extends Controller
         return redirect(route('admin.boards.index'))->with('message', $message);
     }
 
-    public function copyForm($id)
+    public function copyForm($boardName)
     {
         if (auth()->user()->cant('copy', Board::class)) {
             abort(403, '게시판 복사에 대한 권한이 없습니다.');
         }
 
-        return view('admin.boards.copy')->with('board', Board::findOrFail($id));
+        return view('admin.boards.copy')->with('board', Board::getBoard($boardName, 'table_name'));
     }
 
     public function copy(Request $request)
@@ -218,7 +220,7 @@ class BoardsController extends Controller
             'message' => $message,
             'reload' => 1,
             'popup' => 0,
-            'redirect' => '/admin/boards/copy/'. $originalBoard->id,
+            'redirect' => '/admin/boards/copy/'. $originalBoard->table_name,
         ]);
     }
 

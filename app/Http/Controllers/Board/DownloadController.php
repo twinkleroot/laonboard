@@ -17,17 +17,16 @@ class DownloadController extends Controller
     {
         $this->download = $download;
         $this->writeModel = $write;
-        $this->writeModel->board = Board::getBoard($request->boardId);
-        $table = is_null($this->writeModel->board) ? '' : $this->writeModel->board->table_name;
-        $this->writeModel->setTableName($table);
+        $this->writeModel->board = Board::getBoard($request->boardName, 'table_name');
+        $this->writeModel->setTableName($request->boardName);
     }
 
     // 글 보기 중 첨부파일 다운로드
-    public function download(Request $request, $boardId, $writeId, $fileNo)
+    public function download(Request $request, $boardName, $writeId, $fileNo)
     {
-        $file = $this->download->beforeDownload($request, $this->writeModel, $boardId, $writeId, $fileNo);
+        $file = $this->download->beforeDownload($request, $this->writeModel, $boardName, $writeId, $fileNo);
 
-        $filePath = storage_path('app/public/'.$this->writeModel->board->table_name. '/'. $file->file);
+        $filePath = storage_path('app/public/'.$boardName. '/'. $file->file);
 
         return response()->download($filePath, $file->source);
     }
