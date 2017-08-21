@@ -27,6 +27,7 @@
 <body class="white">
 
 <form method="post" action="{{ route('scrap.store')}}">
+<input type="hidden" name="boardName" value="{{ $boardName }}" />
 <input type="hidden" name="boardId" value="{{ $boardId }}" />
 <input type="hidden" name="writeId" value="{{ $write->id }}" />
 {{ csrf_field()}}

@@ -131,7 +131,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
     ]);
 
     // 게시판 관리 리소스 컨트롤러에 추가적으로 라우팅을 구성(리소스 라우트보다 앞에 와야 함)
-    Route::get('boards/copy/{boardId}', ['as' => 'admin.boards.copyForm', 'uses' => 'Admin\BoardsController@copyForm']);
+    Route::get('boards/{boardId}/copy', ['as' => 'admin.boards.copyForm', 'uses' => 'Admin\BoardsController@copyForm']);
     Route::post('boards/copy', ['as' => 'admin.boards.copy', 'uses' => 'Admin\BoardsController@copy']);
     Route::get('boards/{boardId}/thumbnail/delete', ['as' => 'admin.boards.thumbnail.delete', 'uses' => 'Admin\BoardsController@deleteThumbnail']);
     Route::put('boards/selected_update', ['as' => 'admin.boards.selectedUpdate', 'uses' => 'Admin\BoardsController@selectedUpdate']);
@@ -283,11 +283,11 @@ Route::get('message', ['as' => 'message', 'uses' => 'Message\MessageController@m
 // 처리 결과 메세지를 confirm창으로 알려주는 페이지
 Route::get('confirm', ['as' => 'confirm', 'uses' => 'Message\MessageController@confirm']);
 
-Route::group(['prefix' => 'board/{boardId}'], function () {
+Route::group(['prefix' => 'bbs/{boardName}'], function () {
     // 글 목록 + 검색
     Route::get('', ['as' => 'board.index', 'uses' => 'Board\WriteController@index'])
         ->middleware(['level.board:list_level', 'valid.board', 'cert:read'])
-        ->where('boardId', '[0-9]+');
+        ->where('boardName', '[a-zA-Z0-9_]+');
     // 글 읽기
     Route::get('view/{writeId}', ['as' => 'board.view', 'uses' => 'Board\WriteController@view'])
         ->middleware('level.board:read_level', 'valid.board', 'valid.write', 'cert:read', 'comment.view.parent', 'secret.board');

@@ -15,10 +15,10 @@
 
     <!-- 게시글 작성 -->
     @if($type=='update')
-        <form role="form" id="fwrite" method="post" action={{ route('board.update', ['boardId'=>$board->id, 'writeId'=>$write->id])}} enctype="multipart/form-data" @if(auth()->user() && auth()->user()->isBoardAdmin($board)) onsubmit="return writeSubmit();" @endif>
+        <form role="form" id="fwrite" method="post" action={{ route('board.update', ['boardId'=>$board->table_name, 'writeId'=>$write->id])}} enctype="multipart/form-data" @if(auth()->user() && auth()->user()->isBoardAdmin($board)) onsubmit="return writeSubmit();" @endif>
             {{ method_field('put') }}
     @else
-        <form role="form" id="fwrite" method="post" action={{ route('board.store', $board->id) }} enctype="multipart/form-data" @if(auth()->user() && auth()->user()->isBoardAdmin($board)) onsubmit="return writeSubmit();" @endif>
+        <form role="form" id="fwrite" method="post" action={{ route('board.store', $board->table_name) }} enctype="multipart/form-data" @if(auth()->user() && auth()->user()->isBoardAdmin($board)) onsubmit="return writeSubmit();" @endif>
     @endif
         <input type="hidden" name="type" id="type" value="{{ $type }}" />
         <input type="hidden" name="writeId" id="writeId" @if($type != 'create') value="{{ $write->id }}" @endif/>
@@ -60,7 +60,7 @@
                 <select class="form-control" id="ca_name" name="ca_name" required>
                     <option value>분류</option>
                     @foreach($categories as $category)
-                        <option value="{{ $category }}" @if( ($type == 'update' && $category == $write->ca_name) || ($type == 'create' && $category == $currenctCategory ) ) selected @endif>
+                        <option value="{{ $category }}" @if( ($type != 'create' && $category == $write->ca_name) || ($type == 'create' && $category == $currenctCategory ) ) selected @endif>
                             {{ $category }}
                         </option>
                     @endforeach

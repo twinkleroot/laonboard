@@ -46,8 +46,8 @@
     </div>
 </div>
 @endif
-<div class="body-contents"> 
-    <a class="btn btn-sir" href="{{ route('admin.boards.edit', $board->id). "?$queryString" }}">게시판 수정으로 돌아가기</a>
+<div class="body-contents">
+    <a class="btn btn-sir" href="{{ route('admin.boards.edit', $board->table_name). "?$queryString" }}">게시판 수정으로 돌아가기</a>
 </div>
 <script>
     var menuVal = 300100;

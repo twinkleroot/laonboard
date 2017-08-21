@@ -31,7 +31,7 @@ class Scrap extends Model
     public function getIndexParams()
     {
         $user = auth()->user();
-        $scraps = Scrap::select('scraps.*', 'boards.subject as board_subject')
+        $scraps = Scrap::select('scraps.*', 'boards.subject as board_subject', 'boards.table_name as table_name')
             ->leftJoin('boards', 'boards.id', '=', 'scraps.board_id')
             ->where('user_id', $user->id)
             ->orderBy('id', 'desc')

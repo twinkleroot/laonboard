@@ -65,7 +65,7 @@
                     <ul>
                         <li><a href="/search?{{ $allBoardTabQueryString }}">전체게시판</a></li>
                         @foreach($boards as $board)
-                            <li><a href="/search?{{ $boardTabQueryString }}&amp;boardId={{ $board->boardId }}"><strong>{{ $board->boardSubject }}</strong> <span class="count">{{ count($board) }}</span></a></li>
+                            <li><a href="/search?{{ $boardTabQueryString }}&amp;boardName={{ $board->boardName }}"><strong>{{ $board->boardSubject }}</strong> <span class="count">{{ count($board) }}</span></a></li>
                         @endforeach
                     </ul>
                 </div>
@@ -89,9 +89,9 @@
                     @endif
                 <section id="sch_res_list">
                     <div class="sch_res_list_hd">
-                        <span class="bdname"><a href="{{ route('board.index', $write->boardId). '?'. $commonQueryString }}">[{{ $write->boardSubject }}] 게시판 내 결과</a></span>
+                        <span class="bdname"><a href="{{ route('board.index', $write->boardName). '?'. $commonQueryString }}">[{{ $write->boardSubject }}] 게시판 내 결과</a></span>
                         <span class="more">
-                            <a href="{{ route('board.index', $write->boardId). '?'. $commonQueryString }}"><strong>[{{ $write->boardSubject }}]</strong> 결과 더보기<i class="fa fa-caret-right"></i></a>
+                            <a href="{{ route('board.index', $write->boardName). '?'. $commonQueryString }}"><strong>[{{ $write->boardSubject }}]</strong> 결과 더보기<i class="fa fa-caret-right"></i></a>
                         </span>
                     </div>
                     <div class="sch_res_list_bd">
@@ -99,7 +99,7 @@
                 @endif
                             <li class="contents">
                                 <span class="sch_subject">
-                                    <a href="/board/{{ $write->boardId }}/view/{{ $write->parent. $write->queryString }}">{!! $write->subject !!}</a> <a href="/board/{{ $write->boardId }}/view/{{ $write->parent. $write->queryString }}" target="_blank">[새창으로 열기]</a>
+                                    <a href="/bbs/{{ $write->boardName }}/view/{{ $write->parent. $write->queryString }}">{!! $write->subject !!}</a> <a href="/bbs/{{ $write->boardName }}/view/{{ $write->parent. $write->queryString }}" target="_blank">[새창으로 열기]</a>
                                 </span>
                                 <p>
                                     {!! $write->content !!}

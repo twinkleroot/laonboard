@@ -8,17 +8,18 @@ use App\Write;
 class Download
 {
     // 다운로드시 처리할 내용
-    public function beforeDownload($request, $writeModel, $boardId, $writeId, $fileNo)
+    public function beforeDownload($request, $writeModel, $boardName, $writeId, $fileNo)
     {
+        $board = $writeModel->board;
+
         $file = BoardFile::where([
-            'board_id' => $boardId,
+            'board_id' => $board->id,
             'write_id' => $writeId,
             'board_file_no' => $fileNo,
             ])->first();
 
         $user = auth()->user();
-        $board = $writeModel->board;
-        $write = Write::getWrite($boardId, $writeId);
+        $write = $writeModel->find($writeId);
         $sessionName = 'session_download_'. $board->table_name. '_'. $write->id. '_'. $fileNo;
         if( (auth()->user() && auth()->user()->isAdmin()) || ($user && $user->id == $write->user_id)) {   // 관리자나 작성자 본인이면 패스
             ;
@@ -28,7 +29,7 @@ class Download
 
             // 다운로드 횟수 증가
             $file->where([
-                'board_id' => $boardId,
+                'board_id' => $board->id,
                 'write_id' => $writeId,
                 'board_file_no' => $fileNo,
             ])->update(['download' => $file->download + 1]);

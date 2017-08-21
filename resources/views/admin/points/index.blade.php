@@ -92,15 +92,15 @@
                             <input type="checkbox" name="chkId[]" class="pointId" value='{{ $point->id }}' />
                         </td>
                         <td class="td_email">
-                            <a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $point->user->email }}">{{ $point->user->email }}</a>
+                            <a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ App\User::getUser($point->user_id)->email }}">{{ App\User::getUser($point->user_id)->email }}</a>
                         </td>
                         <td class="td_nick">
-                            @component('admin.sideview', ['id' => $point->user->id, 'nick' => $point->user->nick, 'email' => $point->user->email])
+                            @component('admin.sideview', ['id' => $point->user_id, 'nick' => App\User::getUser($point->user_id)->nick, 'email' => App\User::getUser($point->user_id)->email])
                             @endcomponent
                         </td>
                         <td class="td_subject">
                             @if(!preg_match("/^\@/", $point->rel_table) && $point->rel_table)
-                                <a href="/board/{{ $point->rel_table }}/view/{{ $point->rel_email }}" target="_blank">{{ $point->content }}</a>
+                                <a href="/bbs/{{ App\Board::getBoard($point->rel_table)->table_name }}/view/{{ $point->rel_email }}" target="_blank">{{ $point->content }}</a>
                             @else
                                 {{ $point->content }}
                             @endif

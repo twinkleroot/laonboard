@@ -27,9 +27,9 @@ class Board extends Model
         return $this->belongsTo(Group::class);
     }
 
-    public static function getBoard($boardId)
+    public static function getBoard($boardName, $key='id')
     {
-        return BoardSingleton::getInstance($boardId);
+        return BoardSingleton::getInstance($boardName, $key);
     }
 
 }
