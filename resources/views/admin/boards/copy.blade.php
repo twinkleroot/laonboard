@@ -57,7 +57,7 @@
             <div class="form-group">
                 <label for="" class="col-sm-2 col-xs-3 control-label">복사 테이블명</label>
                 <div class="col-sm-10 col-xs-9">
-                    <input type="text" name="table_name" class="form-control" value="" required/>
+                    <input type="text" name="table_name" class="form-control" value="" required maxlength="20"/>
                     <span class="help-block">영문자, 숫자, _만 가능(공백없이)</span>
                 </div>
             </div>

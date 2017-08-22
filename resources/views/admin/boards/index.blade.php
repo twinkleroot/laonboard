@@ -126,7 +126,7 @@
                                 </select>
                             </td>
                             <td class="td_mngsmall">
-                                <a href="{{ route('board.index', $board->id) }}">{{ $board->table_name }}</a>
+                                <a href="{{ route('board.index', $board->table_name) }}">{{ $board->table_name }}</a>
                             </td>
                             <td class="td_group">
                                 <select id="skin_{{ $board->id }}" class="form-control">
@@ -178,8 +178,8 @@
                                 </select>
                             </td> --}}
                             <td class="td_mngsmall">
-                                <a href="{{ route('admin.boards.edit', $board->id). '?'. Request::getQueryString() }}">수정</a>
-                                <a href="{{ route('admin.boards.copyForm', $board->id) }}" class="board_copy" target="win_board_copy">복사</a>
+                                <a href="{{ route('admin.boards.edit', $board->table_name). '?'. Request::getQueryString() }}">수정</a>
+                                <a href="{{ route('admin.boards.copyForm', $board->table_name) }}" class="board_copy" target="win_board_copy">복사</a>
                             </td>
                         </tr>
                 @endforeach

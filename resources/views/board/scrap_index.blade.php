@@ -51,7 +51,7 @@
                     @if(isset($scrap->board_empty) && $scrap->board_empty)
                         {{ $scrap->board_subject }}
                     @else
-                        <a herf="/board/{{ $scrap->board_id }}" target="_blank" onclick="opener.document.location.href='/board/{{ $scrap->board_id }}'; return false;">{{ $scrap->board_subject }}</a>
+                        <a herf="/bbs/{{ $scrap->table_name }}" target="_blank" onclick="opener.document.location.href='/bbs/{{ $scrap->table_name }}'; return false;">{{ $scrap->board_subject }}</a>
                     @endif
                 </td>
 
@@ -59,7 +59,7 @@
                     @if(isset($scrap->write_empty) && $scrap->write_empty)
                         {{ $scrap->write_subject }}
                     @else
-                        <a herf="/board/{{ $scrap->board_id }}/view/{{ $scrap->write_id }}" target="_blank" onclick="opener.document.location.href='/board/{{ $scrap->board_id }}/view/{{ $scrap->write_id }}'; return false;">{{ $scrap->write_subject }}</a>
+                        <a herf="/bbs/{{ $scrap->table_name }}/view/{{ $scrap->write_id }}" target="_blank" onclick="opener.document.location.href='/bbs/{{ $scrap->table_name }}/view/{{ $scrap->write_id }}'; return false;">{{ $scrap->write_subject }}</a>
                     @endif
                 </td>
 

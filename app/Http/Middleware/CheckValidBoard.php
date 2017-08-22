@@ -18,7 +18,7 @@ class CheckValidBoard
      */
     public function handle($request, Closure $next)
     {
-        $board = Board::getBoard($request->boardId);
+        $board = Board::getBoard($request->boardName, 'table_name');
         if(is_null($board)) {
             return alert('존재하지 않는 게시판입니다. 경로를 확인해 주세요.');
         }

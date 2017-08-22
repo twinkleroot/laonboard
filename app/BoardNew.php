@@ -93,7 +93,7 @@ class BoardNew extends Model
     {
         $writeModel = new Write();
         foreach($boardNewList as $boardNew) {
-            $writeModel->setTableName(Board::getBoard($boardNew->board_id)->table_name);
+            $writeModel->setTableName(Board::getBoard($boardNew->board_id, 'id')->table_name);
             $write = $writeModel->find($boardNew->write_parent);	 // 원글
             $user = $boardNew->user_id ? User::getUser($boardNew->user_id) : new User();
             // 원글, 댓글 공통 추가 데이터
@@ -132,7 +132,7 @@ class BoardNew extends Model
             $writeId = $boardNew->write_id;
 
             $writeModel = new Write();
-            $writeModel->board = Board::getBoard($boardId);
+            $writeModel->board = Board::getBoard($boardId, 'id');
             $writeModel->setTableName($boardNew->table_name);
             // 원글 삭제
             if($writeId == $boardNew->write_parent) {

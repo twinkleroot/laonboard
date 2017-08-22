@@ -12,9 +12,10 @@ class WriteSingleton
         static $write;
         if (is_null($write) || $write[$id] != $writeId || $write->board_id != $boardId) {
             $writeModel = new Write();
-            $writeModel->setTableName(Board::getBoard($boardId)->table_name);
+            $board = Board::getBoard($boardId);
+            $writeModel->setTableName($board->table_name);
             $write = $writeModel->find($writeId);
-            $write->board_id = $boardId;
+            $write->board_id = $board->id;
         }
 
         return $write;

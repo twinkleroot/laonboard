@@ -18,7 +18,7 @@ class SearchController extends Controller
     public $keyword;
     public $operator;
     public $groupId;
-    public $boardId;
+    public $boardName;
     public $pageRow = 10;
     public $page;
     public $user;
@@ -26,13 +26,12 @@ class SearchController extends Controller
 
     public function result(Request $request)
     {
-        // dd($request->query());
         $keyword = $request->has('keyword') ? $request->keyword : '';   // 검색어
         $this->keyword = getSearchString($keyword);
         $this->kind = $request->has('kind') ? $request->kind : 'subject||content';    // 검색필드
         $this->operator = $request->has('operator') ? $request->operator : '';    // 연산자
         $this->groupId = $request->has('groupId') ? $request->groupId : '';   // 그룹명
-        $this->boardId = $request->has('boardId') ? $request->boardId : '';    // 게시판 id
+        $this->boardName = $request->has('boardName') ? $request->boardName : '';    // 게시판 테이블 명
         $this->page = $request->has('page') ? $request->page : 1 ;
         $this->user = auth()->user();
         $this->userLevel = $this->user ? $this->user->level : 1;
@@ -59,7 +58,7 @@ class SearchController extends Controller
             'keyword' => $this->keyword,
             'operator' => $this->operator,
             'groupId' => $this->groupId,
-            'boardId' => $this->boardId,
+            'boardName' => $this->boardName,
             'page' => $this->page,
             'commonQueryString' => $queryStrings['common'],
             'allBoardTabQueryString' => $queryStrings['allBoardTab'],
@@ -81,8 +80,8 @@ class SearchController extends Controller
         if($this->groupId) {
             $boardQuery = $boardQuery->where('group_id', $this->groupId);
         }
-        if($this->boardId) {
-            $boardQuery = $boardQuery->where('id', $this->boardId);
+        if($this->boardName) {
+            $boardQuery = $boardQuery->where('table_name', $this->boardName);
         }
 
         $boards = $boardQuery->orderBy('order', 'group_id', 'table_name')->get();
@@ -212,6 +211,7 @@ class SearchController extends Controller
     {
         $writes->boardSubject = $board->subject;
         $writes->boardId = $board->id;
+        $writes->boardName = $board->table_name;
         // 댓글 때문에 원글을 계속 조회하는 문제 수정
         $tmpParent = 0;
         $parentWrite = null;
@@ -258,7 +258,7 @@ class SearchController extends Controller
             $write->subject = $subject;
             $write->content = $content;
             $write->boardSubject = $board->subject;
-            $write->boardId = $board->id;
+            $write->boardName = $board->table_name;
             $write->queryString = $queryString;
         }
 
@@ -282,7 +282,7 @@ class SearchController extends Controller
         // 상단 게시판 탭
         $boardTabArray = array_collapse([$commonArray, [
             'groupId' => $this->groupId,
-            'boardId' => $this->boardId,
+            'boardName' => $this->boardName,
         ]]);
         $boardTabQueryString = $this->assemblyQueryString($boardTabArray);
 

@@ -19,13 +19,13 @@ class WritableReply
     public function handle($request, Closure $next)
     {
         if(strpos($request->getRequestUri(), 'reply')) {	// 글 답변일 경우
-            $boardId = $request->segment(2);    // uri의 2번째 항목
+            $boardName = $request->segment(2);    // uri의 2번째 항목
             $writeId = $request->segment(4);    // uri의 4번째 항목
             $user = auth()->user();
-            $board = Board::getBoard($boardId);
+            $board = Board::getBoard($boardName, 'table_name');
             $notices = explode(',', $board->notice);
 
-            $write = Write::getWrite($boardId, $writeId);
+            $write = Write::getWrite($board->id, $writeId);
             if(str_contains($write->option, 'secret')) {
                 if(!$user && ($user && !$user->isBoardAdmin($board)) && ($user && $user->id != $write->user_id)) {
                     return alert('비밀글에는 자신 또는 관리자만 답변이 가능합니다.');

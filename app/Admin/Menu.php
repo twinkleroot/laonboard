@@ -65,9 +65,9 @@ class Menu extends Model
                 }
                 break;
             case 'board':
-                $results = Board::select('id', 'subject')->orderBy('order', 'desc')->orderBy('id', 'desc')->get();
+                $results = Board::select('id', 'subject', 'table_name')->orderBy('order', 'desc')->orderBy('id', 'desc')->get();
                 foreach($results as $result) {
-                    $result = $this->cookingSubject($result, $result->id);
+                    $result = $this->cookingSubject($result, $result->table_name);
                 }
                 break;
             case 'content':

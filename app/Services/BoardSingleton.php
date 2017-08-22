@@ -6,11 +6,17 @@ use App\Board;
 
 class BoardSingleton
 {
-    public static function getInstance($boardId)
+    public static function getInstance($boardName, $key)
     {
         static $board;
-        if (is_null($board) || $board->id != $boardId) {
-            $board = Board::find($boardId);
+        if($key == 'id') {
+            if (is_null($board) || $board->id != $boardName) {
+                $board = Board::find($boardName);
+            }
+        } else {
+            if (is_null($board) || $board->table_name != $boardName) {
+                $board = Board::where('table_name', $boardName)->first();
+            }
         }
 
         return $board;

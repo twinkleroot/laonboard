@@ -16,7 +16,7 @@ class CheckRss
      */
     public function handle($request, Closure $next)
     {
-        $board = Board::getBoard($request->boardId);
+        $board = Board::getBoard($request->boardName, 'table_name');
         if($board->read_level >= 2) {
             return alert('비회원 읽기가 가능한 게시판만 RSS 지원합니다.');
         }

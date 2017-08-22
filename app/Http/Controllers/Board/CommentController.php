@@ -4,9 +4,6 @@ namespace App\Http\Controllers\Board;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Cache;
-use Redirect;
-use URL;
 use App\Notification;
 use App\Write;
 use App\Board;
@@ -22,9 +19,8 @@ class CommentController extends Controller
     public function __construct(Request $request, Comment $comment, Write $write)
     {
         $this->writeModel = $write;
-        $this->writeModel->board = Board::getBoard($request->boardId);
-        $table = is_null($this->writeModel->board) ? '' : $this->writeModel->board->table_name;
-        $this->writeModel->setTableName($table);
+        $this->writeModel->board = Board::getBoard($request->boardName, 'table_name');
+        $this->writeModel->setTableName($request->boardName);
         $this->comment = $comment;
     }
 
@@ -33,7 +29,6 @@ class CommentController extends Controller
     {
         if(auth()->guest() || (!auth()->user()->isSuperAdmin() && $this->writeModel->board->use_recaptcha)) {
             ReCaptcha::reCaptcha($request);
-            // return Redirect::to(URL::previous() . "#comment_box")->withInput();
         }
         $result = $this->comment->storeComment($this->writeModel, $request);
 
@@ -54,10 +49,10 @@ class CommentController extends Controller
     }
 
     // 댓글 삭제
-    public function destroy(Request $request, $boardId, $writeId, $commentId)
+    public function destroy(Request $request, $boardName, $writeId, $commentId)
     {
-        $this->comment->deleteComment($this->writeModel, $boardId, $commentId);
+        $this->comment->deleteComment($this->writeModel, $boardName, $commentId);
 
-        return redirect(route('board.view', ['boardId' => $boardId, 'writeId' => $writeId]));
+        return redirect(route('board.view', ['boardName' => $boardName, 'writeId' => $writeId]));
     }
 }

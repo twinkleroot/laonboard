@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Cache;
+use App\Board;
 use App\Write;
 
 class CheckSecretView
@@ -17,7 +18,8 @@ class CheckSecretView
      */
     public function handle($request, Closure $next)
     {
-        $boardId = $request->boardId;
+        $board = Board::getBoard($request->boardName, 'table_name');
+        $boardId = $board->id;
         $writeId = $request->writeId;
 
         $write = Write::getWrite($boardId, $writeId);

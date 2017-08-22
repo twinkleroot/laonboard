@@ -35,9 +35,9 @@ class Board extends Model
         return $this->belongsTo(Group::class);
     }
 
-    public static function getBoard($boardId)
+    public static function getBoard($boardId, $key='id')
     {
-        return BoardSingleton::getInstance($boardId);
+        return BoardSingleton::getInstance($boardId, $key);
     }
 
     // (게시판 관리) index 페이지에서 필요한 파라미터 가져오기
@@ -175,8 +175,9 @@ class Board extends Model
         $data['created_at'] = Carbon::now();
         $data['updated_at'] = Carbon::now();
         // board 테이블에 새 게시판 행 추가
-        if(Board::insert($data)) {
-            return Board::getBoard(DB::getPdo()->lastInsertId());
+        $boardId = Board::insertGetId($data);
+        if($boardId) {
+            return Board::getBoard($boardId);
         }
 
         abort(500, '게시판 생성에 실패하였습니다.');
@@ -314,9 +315,9 @@ class Board extends Model
         $originalData = exceptNullData($originalData);
         $originalData = array_except($originalData, ['id']);
 
-        Board::insert($originalData);
+        $newBoardId = Board::insertGetId($originalData);
 
-        return Board::find(DB::getPdo()->lastInsertId());
+        return Board::find($newBoardId);
     }
 
     // (게시판 관리) 선택 삭제
@@ -350,7 +351,7 @@ class Board extends Model
         $useSnsArr = explode(',', $request->get('use_snss'));
         $useSearchArr = explode(',', $request->get('use_searchs'));
         $orderArr = explode(',', $request->get('orders'));
-        $deviceArr = explode(',', $request->get('devices'));
+        // $deviceArr = explode(',', $request->get('devices'));
 
         $index = 0;
         foreach($idArr as $id) {
@@ -369,7 +370,7 @@ class Board extends Model
                     'use_sns' => $useSnsArr[$index],
                     'use_search' => $useSearchArr[$index],
                     'order' => $orderArr[$index],
-                    'device' => $deviceArr[$index],
+                    // 'device' => $deviceArr[$index],
                 ]);
                 $index++;
             } else {

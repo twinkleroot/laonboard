@@ -16,8 +16,8 @@ class CheckCert
      */
     public function handle($request, Closure $next, $type)
     {
-        $boardId = $request->segments()[1];
-        $board = Board::getBoard($boardId);
+        $boardName = $request->segments()[1];
+        $board = Board::getBoard($boardName, 'table_name');
         $str = '글읽기가';
         if($type == 'write') {
             $str = '글쓰기가';

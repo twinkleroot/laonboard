@@ -15,14 +15,14 @@ class RssFeed
     /**
     * Return the content of the RSS feed
     */
-    public function getRSS($boardId)
+    public function getRSS($boardName)
     {
-        if (Cache::has('rss-feed-'. $boardId)) {
-            return Cache::get('rss-feed-'. $boardId);
+        if (Cache::has('rss-feed-'. $boardName)) {
+            return Cache::get('rss-feed-'. $boardName);
         }
 
-        $rss = $this->buildRssData($boardId);
-        Cache::add('rss-feed-'. $boardId, $rss, 120);
+        $rss = $this->buildRssData($boardName);
+        Cache::add('rss-feed-'. $boardName, $rss, 120);
 
         return $rss;
     }
@@ -32,9 +32,9 @@ class RssFeed
     *
     * @return string
     */
-    protected function buildRssData($boardId)
+    protected function buildRssData($boardName)
     {
-        $board = Board::getBoard($boardId);
+        $board = Board::getBoard($boardName, 'table_name');
         $group = $board->group;
         $writeModel = new Write();
         $writeModel->setTableName($board->table_name);
@@ -47,7 +47,7 @@ class RssFeed
         $channel
           ->title( $this->specialcharsReplace(config('rss.title'). ' &gt; '. $title1. ' &gt; '. $title2) )
           ->description(config('rss.description'))
-          ->url(route('board.index', $boardId))
+          ->url(route('board.index', $boardName))
           ->language('en')
           ->lastBuildDate($now->timestamp)
           ->appendTo($feed);
@@ -61,7 +61,7 @@ class RssFeed
           ->get();
         foreach ($writes as $write) {
           $item = new Item();
-          $writeUrl = route('board.view', ['boardId' => $boardId, 'writeId' => $write->id]);
+          $writeUrl = route('board.view', ['boardId' => $boardName, 'writeId' => $write->id]);
           $html = 0;
           if(strstr($write->option, 'html')) {
               $html = 1;
@@ -87,7 +87,7 @@ class RssFeed
         );
         $feed = str_replace(
           '<channel>',
-          '<channel>'."\n".'    <atom:link href="'.route('rss', $boardId).
+          '<channel>'."\n".'    <atom:link href="'.route('rss', $boardName).
           '" rel="self" type="application/rss+xml" />',
           $feed
         );
