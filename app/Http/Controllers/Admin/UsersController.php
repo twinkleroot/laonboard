@@ -42,8 +42,9 @@ class UsersController extends Controller
             abort(403, '회원 추가에 대한 권한이 없습니다.');
         }
 
-        return view('admin.users.create', [
+        return view('admin.users.form', [
             'user' => auth()->user(),
+            'type' => 'create',
         ]);
     }
 
@@ -69,7 +70,7 @@ class UsersController extends Controller
 
         $this->validate($request, $rule);
 
-        $id = $this->userModel->addUser($request);
+        $id = $this->userModel->storeUser($request);
 
         return redirect(route('admin.users.edit', $id));
     }
@@ -93,7 +94,7 @@ class UsersController extends Controller
 
         $params = $this->userModel->editParams($user, $id);
 
-        return view('admin.users.edit', $params);
+        return view('admin.users.form', $params);
     }
 
     /**
@@ -111,7 +112,7 @@ class UsersController extends Controller
 
         $this->userModel->updateUserInfo($request, $id);
 
-        return redirect()->back();
+        return redirect()->back()->with('message', '회원정보가 수정되었습니다.');
     }
 
     /**

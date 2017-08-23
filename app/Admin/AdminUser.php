@@ -135,24 +135,61 @@ class AdminUser extends Model
     }
 
     // 회원 추가
-    public function addUser($request)
+    public function storeUser($request)
     {
-        $data = $request->all();
-        $data = array_except($data, ['_token']);
-        $data = exceptNullData($data);
-        $data = array_add($data, 'ip', $request->ip());
-        $data['password'] = bcrypt($data['password']);  // 비밀번호 암호화
-        $data['created_at'] = Carbon::now();
-        $data['updated_at'] = Carbon::now();
+        $nowDate = Carbon::now()->toDateString();
+
+        $data = [
+            'email' => $request->email,
+            'name' => cleanXssTags($request->name),
+            'password' => bcrypt($request->password),
+            'nick' => trim($request->nick),
+            'nick_date' => $nowDate,
+            'level' => $request->level,
+            'point' => $request->point,
+            'homepage' => cleanXssTags($request->homepage),
+            'hp' => hyphenHpNumber($request->hp),
+            'tel' => cleanXssTags($request->tel),
+            'certify' => !$request->certify_signal ? '' : $request->certify,
+            'email_certify' => Carbon::now(),
+            'adult' => $request->adult,
+            'addr1' => cleanXssTags($request->addr1),
+            'addr2' => cleanXssTags($request->addr2),
+            'zip' => preg_replace('/[^0-9]/', '', $request->zip),
+            'mailing' => $request->mailing,
+            // 'sms' => $request->sms,
+            'open' => $request->open,
+            'signature' => trim($request->signature),
+            'profile' => trim($request->profile),
+            'memo' => trim($request->memo),
+            'leave_date' => $request->leave_date,
+            'intercept_date' => $request->intercept_date,
+            'ip' => $request->ip(),
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ];
+
+        if($request->open) {
+            $data = array_add($data, 'open_date', $nowDate);
+        }
 
         $lastInsertId = AdminUser::insertGetId($data);
-
         $user = AdminUser::find($lastInsertId);
+
+        $appUser = new AppUser();
+        // 추천인 입력
+        $recommendedId = $appUser->insertRecommend($request, $user);
+        if($recommendedId) {
+            $user->recommend = $recommendedId;
+        }
+        // 아이콘 업로드
+        $path = storage_path('app/public/user/'. substr($user->email,0,2). '/'). $user->email. '.gif';
+        $appUser->iconUpload($request, $user->email, $path);
 
         $user->id_hashkey = str_replace("/", "-", bcrypt($user->id));   // id 암호화
         $user->save();
 
-        return $user->id;
+        return $lastInsertId;
     }
 
     public function editParams($user, $id)
@@ -170,6 +207,7 @@ class AdminUser extends Model
             'iconUrl' => $url,
             'iconPath' => $path,
             'recommend' => $recommend,
+            'type' => 'update',
         ];
     }
 
@@ -195,7 +233,6 @@ class AdminUser extends Model
             'nick' => $request->has('nick') ? trim($request->nick) : $user->nick,
             'nick_date' => $request->has('nick') != $user->nick ? $nowDate : $user->nick_date,
             'level' => $request->level,
-            // 'point' => $request->get('point'),	// 포인트 부여 및 차감은 [회원관리 - 포인트관리]에서
             'homepage' => cleanXssTags($request->homepage),
             'hp' => hyphenHpNumber($request->hp),
             'tel' => cleanXssTags($request->tel),
@@ -205,7 +242,7 @@ class AdminUser extends Model
             'addr2' => cleanXssTags($request->addr2),
             'zip' => preg_replace('/[^0-9]/', '', $request->zip),
             'mailing' => $request->mailing,
-            'sms' => $request->sms,
+            // 'sms' => $request->sms,
             'open' => $request->open,
             'signature' => trim($request->signature),
             'profile' => trim($request->profile),
