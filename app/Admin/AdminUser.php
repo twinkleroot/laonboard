@@ -145,11 +145,9 @@ class AdminUser extends Model
         $data['created_at'] = Carbon::now();
         $data['updated_at'] = Carbon::now();
 
-        if(!AdminUser::insert($data)) {
-            abort(500, '회원추가에 실패하였습니다.');
-        }
+        $lastInsertId = AdminUser::insertGetId($data);
 
-        $user = AdminUser::find(DB::getPdo()->lastInsertId());
+        $user = AdminUser::find($lastInsertId);
 
         $user->id_hashkey = str_replace("/", "-", bcrypt($user->id));   // id 암호화
         $user->save();

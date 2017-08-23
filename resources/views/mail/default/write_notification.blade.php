@@ -13,7 +13,7 @@
         <div style="margin: 20px 0 40px; font-size: 14px; line-height: 1.8;">
             <span style="display: block;">작성자 {{ $name }}</span>
             <div style="background: #eee; padding: 20px; margin: 20px 0; border-radius: 4px;">
-                {{ $content }}
+                {!! $content !!}
             </div>
 
             <div style="background: #587ef6; width: 100%; border-radius: 4px; text-align: center; margin: 20px 0;">

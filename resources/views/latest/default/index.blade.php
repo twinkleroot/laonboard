@@ -21,6 +21,24 @@
                 <span class="lt_subject">
                     <a href="{{ route('board.view', ['boardName'=>$writes->table_name, 'writeId'=>$write->id]) }}">{{ $write->subject }}</a>
                 </span>
+                @php
+                    $createdDate = new Carbon\Carbon($write->created_at);
+                @endphp
+                @if( date($createdDate->addHours(24)) > date("Y-m-d H:i:s", time()) && $writes->new)
+                <span class=""><img src="/themes/default/images/icon_new.gif"></span> <!-- 새글 -->
+                @endif
+                @if($write->file > 0)
+                <span class=""><img src="/themes/default/images/icon_file.gif"></span> <!-- 파일 -->
+                @endif
+                @if($write->link1 || $write->link2)
+                <span class=""><img src="/themes/default/images/icon_link.gif"></span> <!-- 링크 -->
+                @endif
+                @if($write->hit >= $writes->hot)
+                <span class=""><img src="/themes/default/images/icon_hot.gif"></span> <!-- 인기 -->
+                @endif
+                @if(str_contains($write->option, 'secret'))
+                <span class=""><img src="/themes/default/images/icon_secret.gif"></span> <!-- 비밀 -->
+                @endif
                 <span class="lt_cmt">{{ $write->comment }}</span>
                 <span class="lt_date">@date($write->created_at)</span>
             </li>

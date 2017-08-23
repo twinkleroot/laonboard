@@ -6,6 +6,7 @@ use App\Board;
 use App\Group;
 use DB;
 use Cache;
+use Carbon\Carbon;
 
 class Main
 {
@@ -75,6 +76,8 @@ class Main
             $latestList[$i]->board_id = $board->id;
             $latestList[$i]->board_subject = $board->subject;
             $latestList[$i]->table_name = $board->table_name;
+            $latestList[$i]->new = $board->new;
+            $latestList[$i]->hot = $board->hot;
             $write = $latestList[$i]->first();
             if($write) {
                 $latestList[$i][0]->subject = subjectLength($write->subject, 30);

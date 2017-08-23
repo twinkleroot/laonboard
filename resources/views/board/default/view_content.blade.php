@@ -57,8 +57,13 @@
 
 @if(count($imgFiles) > 0)
     @foreach($imgFiles as $imgFile)
+        @php
+            $divImage1 = explode('.', $imgFile['name']);
+            $divImage2 = explode('_', $divImage1[0]);
+            $realImageName = str_replace("thumb-", "", $divImage2[0]). '.'. last($divImage1);
+        @endphp
         <div class="bd_rd">
-          <a href="{{ route('image.original')}}/{{ $board->table_name }}?type=attach&amp;imageName={{str_replace("thumb-", "", $imgFile['name'])}}"
+          <a href="{{ route('image.original')}}/{{ $board->table_name }}?type=attach&amp;imageName={{ $realImageName }}"
              class="viewOriginalImage" width="{{ $imgFile[0] }}" height="{{ $imgFile[1] }}" target="viewImage">
                 <img src="/storage/{{ $board->table_name. '/'. $imgFile['name'] }}" />
           </a>
@@ -92,9 +97,9 @@
 <!-- 스크랩/추천/비추천 -->
 <div class="bd_rd_count">
     @if($user)
-        <a href="{{ route('scrap.create') }}?boardId={{ $board->id }}&amp;writeId={{ $write->id }}" target="_blank" onclick="winScrap(this.href); return false;">
+        <a href="{{ route('scrap.create') }}?boardName={{ $board->table_name }}&amp;writeId={{ $write->id }}" target="_blank" onclick="winScrap(this.href); return false;">
             <span>
-                <i class="fa fa-star"></i>스크랩
+                <i class="fa fa-star" @if($scrap)style="color:#587ef6"@endif></i>스크랩
             </span>
         </a>
         @if($board->use_good)
@@ -217,19 +222,19 @@
                 @if(str_contains($comment->option, 'secret'))
                 <img src="/themes/default/images/icon_secret.gif"> <!-- 비밀 -->
                     @if($user && ($user->isSuperAdmin() || $user->isBoardAdmin($board) || $user->isGroupAdmin($board->group)))
-                    {!! $comment->content !!}
-                    @elseif(session()->get(session()->getId(). 'secret_board_'. $board->id. '_write_'. $comment->id))
-                    {!! $comment->content !!}
+                    {{ $comment->content }}
+                @elseif(session()->get(session()->getId(). 'secret_board_'. $board->table_name. '_write_'. $comment->id))
+                    {{ $comment->content }}
                     @elseif($user && $user->id == $comment->user_id)
-                    {!! $comment->content !!}
+                    {{ $comment->content }}
                     @else
-                    <a href="/password/type/secret?boardName={{ $board->table_name }}&writeId={{ $comment->id }}&nextUrl={{ route('board.view', [ 'boardName' => $board->table_name, 'writeId' => $comment->parent ]). '#comment'. $comment->id }}">댓글내용확인</a>
+                    <a href="/password/type/secret?boardName={{ $board->table_name }}&writeId={{ $comment->id }}&nextUrl={{ route('board.view', [ 'boardName' => $board->table_name, 'writeId' => $comment->parent ]). '?'. Request::getQueryString(). '#comment'. $comment->id }}">댓글내용확인</a>
                     @endif
                 @else
-                {!! $comment->content !!}
+                {{ $comment->content }}
                 @endif
                 <input type="hidden" id="secretComment_{{ $comment->id }}" value="{{ $comment->option }}">
-                <textarea id="saveComment_{{ $comment->id }}" style="display:none">{!! $comment->content !!}</textarea>
+                <textarea id="saveComment_{{ $comment->id }}" style="display:none">{{ $comment->content }}</textarea>
             </div>
             <span id="reply_{{ $comment->id }}"></span><!-- 답변 -->
             <span id="edit_{{ $comment->id }}"></span><!-- 수정 -->
@@ -270,7 +275,7 @@
     @if($board->comment_min || $board->comment_max)
         <span id="charCount"></span>글자
     @endif
-    <textarea class="form-control" rows="4" name="content" id="content" @if($board->comment_min || $board->comment_max) onkeyup="check_byte('content', 'charCount');" @endif placeholder="댓글을 입력해 주세요."></textarea>
+    <textarea class="form-control" rows="4" name="content" id="content" @if($board->comment_min || $board->comment_max) onkeyup="check_byte('content', 'charCount');" @endif placeholder="댓글을 입력해 주세요." required></textarea>
 
     <script>
         $(document).on( "keyup change", "textarea#content[maxlength]", function(){

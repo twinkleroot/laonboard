@@ -81,9 +81,12 @@ class Scrap extends Model
     // 스크랩 했는지 조회
     public function getScrap($request)
     {
+        $userId = auth()->user() ? auth()->user()->id : 0;
+        $boardId = Board::getBoard($request->boardName, 'table_name')->id;
+
         $scrap = Scrap::where([
-            'user_id' => auth()->user()->id,
-            'board_id' => $request->boardId,
+            'user_id' => $userId,
+            'board_id' => $boardId,
             'write_id' => $request->writeId,
         ])->first();
 
@@ -100,7 +103,7 @@ class Scrap extends Model
     private function getWriteModel($request)
     {
         $writeModel = new Write();
-        $writeModel->board = Board::getBoard($request->boardId);
+        $writeModel->board = Board::getBoard($request->boardName, 'table_name');
         $writeModel->setTableName($writeModel->board->table_name);
 
         return $writeModel;
@@ -119,8 +122,10 @@ class Scrap extends Model
              return 'exist';
         }
 
-        $comment = new Comment();
-        $comment->storeComment($writeModel, $request);
+        if(mb_strlen($request->content, 'utf-8') > 0) {
+            $comment = new Comment();
+            $comment->storeComment($writeModel, $request);
+        }
 
         return Scrap::insert([
             'user_id' => auth()->user()->id,

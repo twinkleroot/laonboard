@@ -115,9 +115,9 @@ class InstallController extends Controller
             'email_certify' => Carbon::now(),
         ];
 
-        User::insert($admin);
-        $user = User::find(DB::getPdo()->lastInsertId());
-        $user->id_hashkey = str_replace("/", "-", bcrypt($user->id));
+        $userId = User::insert($admin);
+        $user = User::find($userId);
+        $user->id_hashkey = str_replace("/", "-", bcrypt($userId));
         $user->save();
 
     }

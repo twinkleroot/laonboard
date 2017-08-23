@@ -31,10 +31,10 @@
 <form id="popupForm" class="form-horizontal" role="form" method="POST" action="{{ $type =='create' ? route('admin.popups.store') : route('admin.popups.update', $popup->id) }}" onsubmit="return popupFormCheck(this);" >
 <div id="body_tab_type2">
     <span class="txt">초기화면 접속 시 자동으로 뜰 팝업레이어를 설정합니다.</span>
-    <ul class="tab_right">
-        <li class="tab"><input type="submit" class="tab_btn" value="확인" /></li>
-        <li class="tab"><a href="{{ route('admin.popups.index') }}" class="tab_btn">목록</a></li>
-    </ul>
+    <div class="submit_btn">
+        <button type="submit" class="btn btn-sir">확인</button>
+        <a class="btn btn-default" href="{{ route('admin.popups.index') }}">목록</a>
+    </div>
 </div>
 <div class="body-contents">
     <div id="admin_box1" class="adm_box">
@@ -54,8 +54,8 @@
                             <div class="col-md-4">
                                 <select name="device" id="nw_device" class="form-control">
                                     <option value="both" @if($type == 'create' || ($type == 'update' && $popup->device == 'both')) selected @endif>PC와 모바일</option>
-                                    <option value="pc" @if($type == 'update' && $popup->device == 'pc') selected @endif>PC</option>
-                                    <option value="mobile" @if($type == 'update' && $popup->device == 'mobile') selected @endif>모바일</option>
+                                    {{-- <option value="pc" @if($type == 'update' && $popup->device == 'pc') selected @endif>PC</option>
+                                    <option value="mobile" @if($type == 'update' && $popup->device == 'mobile') selected @endif>모바일</option> --}}
                                 </select>
                             </div>
                         </div>

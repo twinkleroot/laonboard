@@ -340,8 +340,8 @@ function getViewThumbnail($board, $imageName, $folder, $type="view")
     if($size[0] <= $thumbWidth) {
         return $size;
     }
-    $height = round(($thumbWidth * $size[1]) / $size[0]);
     $files = explode('.', $imageName);
+    $height = round(($thumbWidth * $size[1]) / $size[0]);
     $postfix;
     if($type == 'list') {	// 글 목록에서 썸네일을 필요로 할 때 (ex - 갤러리 게시판)
         $postfix = $board->gallery_height. '.'. $files[1];

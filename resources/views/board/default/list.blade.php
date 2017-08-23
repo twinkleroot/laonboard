@@ -10,7 +10,7 @@
     {{ csrf_field() }}
 
     <div class="pull-left bd_head">
-        <span><a href="{{ route('board.index', $board->id) }}">{{ $board->subject }}</a> 전체 {{ $writes->total() }}건 {{ $writes->currentPage() }}페이지</span>
+        <span><a href="{{ route('board.index', $board->table_name) }}">{{ $board->subject }}</a> 전체 {{ $writes->total() }}건 {{ $writes->currentPage() }}페이지</span>
     </div>
 
     <div class="bd_btn">
@@ -33,11 +33,11 @@
 
             <li class="mr0">
                 @if($board->use_rss_view && $board->list_level == 1 && $board->read_level == 1)
-                    <button type="button" class="btn btn-sir" onclick="location.href='{{ route('rss', $board->id) }}'">
+                    <button type="button" class="btn btn-sir" onclick="location.href='{{ route('rss', $board->table_name) }}'">
                         RSS
                     </button>
                 @endif
-                <button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->id). '?'. $request->getQueryString() }}'">
+                <button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->table_name). '?'. $request->getQueryString() }}'">
                     <i class="fa fa-pencil"></i> 글쓰기
                 </button>
             </li>
@@ -106,7 +106,7 @@
                         <a href="{{ route('board.index', $board->table_name). '?category='. $write->ca_name }}" class="subject_cg">{{ $write->ca_name }}</a>
                         @endif
                         <a href="/bbs/{{ $board->table_name }}/view/{{ $write->parent }}?{{ Request::getQueryString() }}">
-                            {!! $write->subject !!}
+                            {{ $write->subject }}
                         </a>
                         {{-- 글올린시간 + 설정에 있는 신규 글 시간 > 현재 시간 --}}
                         @if(date($write->created_at->addHours(24)) > date("Y-m-d H:i:s", time()) && $board->new != 0 )
@@ -118,11 +118,9 @@
                         @if($write->link1 || $write->link2)
                         <img src="/themes/default/images/icon_link.gif"> <!-- 링크 -->
                         @endif
-                        <!-- 인기글 -->
                         @if($write->hit >= $board->hot)
                         <img src="/themes/default/images/icon_hot.gif"> <!-- 인기 -->
                         @endif
-                        <!-- 비밀글 -->
                         @if(str_contains($write->option, 'secret'))
                         <img src="/themes/default/images/icon_secret.gif"> <!-- 비밀 -->
                         @endif
@@ -173,8 +171,17 @@
             </tr>
         @endforeach
         @else
+            @php
+                $colspan = 6;
+                if($board->use_good) {
+                    $colspan++;
+                }
+                if($board->use_nogood) {
+                    $colspan++;
+                }
+            @endphp
             <tr>
-                <td colspan="6">
+                <td colspan="{{ $colspan }}">
                     <span class="empty_table">
                         <i class="fa fa-exclamation-triangle"></i> 게시물이 없습니다.
                     </span>
@@ -220,7 +227,7 @@
 </div>
 
 {{-- 페이지 처리 --}}
-{{ $writes->appends(Request::except('page'))->withPath($board->table_name)->links() }}
+{{ $writes->appends(Request::except('page'))->withPath('/bbs/'. $board->table_name)->links() }}
 
 @if($board->use_category == 1 )
 <script>
@@ -292,7 +299,7 @@ function selectCopy(type) {
 
     f.type.value = type;
     f.target = "move";
-    f.action = "{{ route('board.list.move', $board->id)}}";
+    f.action = "{{ route('board.list.move', $board->table_name)}}";
     f.submit();
 }
 </script>

@@ -27,7 +27,7 @@ class SimpleController extends Controller
     public function deleteCache() {
         $boards = Board::select('boards.*', 'groups.id as group_id', 'groups.subject as group_subject', 'groups.order as group_order')
             ->leftJoin('groups', 'groups.id', '=', 'boards.group_id')
-            ->where('boards.device', '<>', 'mobile')
+            // ->where('boards.device', '<>', 'mobile')
             ->where('boards.use_cert', 'not-use')
             ->orderBy('groups.order')
             ->orderBy('boards.order')

@@ -157,7 +157,7 @@ class Group extends Model
         $adminArr = explode(',', $request->get('admins'));
         $orderArr = explode(',', $request->get('orders'));
         $useAccessArr = explode(',', $request->get('use_accesss'));
-        $deviceArr = explode(',', $request->get('devices'));
+        // $deviceArr = explode(',', $request->get('devices'));
 
         $index = 0;
         foreach($idArr as $id) {
@@ -169,7 +169,7 @@ class Group extends Model
                     'admin' => $adminArr[$index],
                     'order' => $orderArr[$index],
                     'use_access' => $useAccessArr[$index] == '1' ? 1 : 0,
-                    'device' => $deviceArr[$index],
+                    // 'device' => $deviceArr[$index],
                 ]);
                 $index++;
             } else {

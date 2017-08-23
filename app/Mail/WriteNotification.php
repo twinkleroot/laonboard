@@ -47,7 +47,7 @@ class WriteNotification extends Mailable
             ->with([
                 'subject' => $this->writeSubject,
                 'name' => $this->name,
-                'content' => strip_tags($this->content),
+                'content' => $this->content,
                 'linkUrl' => $this->linkUrl,
             ]);
     }

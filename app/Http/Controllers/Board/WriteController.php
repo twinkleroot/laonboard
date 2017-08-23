@@ -94,7 +94,7 @@ class WriteController extends Controller
     {
         $result = $this->boardGoodModel->good($this->writeModel, $writeId, $good);
 
-        if(isset($result['error'])) {		
+        if(isset($result['error'])) {
             return [ 'error' => $result['error'] ];
         }
 
@@ -130,7 +130,7 @@ class WriteController extends Controller
 
         if(count($request->attach_file) > 0) {
             try {
-                $this->boardFileModel->createBoardFiles($request, $boardId, $writeId);
+                $this->boardFileModel->createBoardFiles($request, $this->writeModel->board->id, $writeId);
             } catch(Exception $e) {
             }
         }
@@ -169,7 +169,7 @@ class WriteController extends Controller
         $fileCount = 0;
         if(count($request->file_del) > 0 || count($request->attach_file) > 0) {
             // 첨부 파일 변경
-            $fileCount = $this->boardFileModel->updateBoardFiles($request, $boardId, $writeId);
+            $fileCount = $this->boardFileModel->updateBoardFiles($request, $this->writeModel->board->id, $writeId);
         }
         // 게시 글 수정
         $this->writeModel->updateWrite($this->writeModel, $request, $writeId, $fileCount);

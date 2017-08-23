@@ -99,10 +99,11 @@
                 @endif
                             <li class="contents">
                                 <span class="sch_subject">
-                                    <a href="/bbs/{{ $write->boardName }}/view/{{ $write->parent. $write->queryString }}">{!! $write->subject !!}</a> <a href="/bbs/{{ $write->boardName }}/view/{{ $write->parent. $write->queryString }}" target="_blank">[새창으로 열기]</a>
+                                    <a href="/bbs/{{ $write->boardName }}/view/{{ $write->parent. $write->queryString }}">{!! clean($write->subject) !!}</a>
+                                    <a href="/bbs/{{ $write->boardName }}/view/{{ $write->parent. $write->queryString }}" target="_blank">[새창으로 열기]</a>
                                 </span>
                                 <p>
-                                    {!! $write->content !!}
+                                    {!! clean($write->content) !!}
                                 </p>
                                 <span class="sv_wrap">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>

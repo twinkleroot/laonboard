@@ -19,14 +19,20 @@ class ImageController extends Controller
     public function viewOriginal(Request $request)
     {
         $imageName = $request->imageName;
+        // dd($imageName);
+        // 이미지 파일이름과 확장자를 분리
         $divImageNamesForExtension = explode('.', $imageName);
-        $extension = $divImageNamesForExtension[count($divImageNamesForExtension) - 1];
+        // 확장자
+        $extension = last($divImageNamesForExtension);
+        // thumbnail일 경우
         $divImageNames = explode('_', $imageName);
-        if(count($divImageNames) <= 2) {
-            $imageName = $divImageNames[0]. '.'. $extension;
-        } else {
-            array_pop($divImageNames);
-            $imageName = implode('', $divImageNames). '.'. $extension;
+        if(count($divImageNames) > 1) {
+            if(count($divImageNames) == 2) {
+                $imageName = $divImageNames[0]. '.'. $extension;
+            } else {
+                array_pop($divImageNames);
+                $imageName = implode('', $divImageNames). '.'. $extension;
+            }
         }
         $type = $request->type;
 
@@ -34,7 +40,7 @@ class ImageController extends Controller
             $folder = $type;
             $imagePath = storage_path('app/public/editor/'. $imageName);
         } else {
-            $folder = $request->boardId;
+            $folder = $request->segment(3);
             $imagePath = storage_path('app/public/'. $folder. '/'. $imageName);
         }
 

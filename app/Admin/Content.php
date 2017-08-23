@@ -5,7 +5,6 @@ namespace App\Admin;
 use Illuminate\Database\Eloquent\Model;
 use File;
 use Cache;
-use DB;
 
 class Content extends Model
 {
@@ -86,11 +85,11 @@ class Content extends Model
         $toInsert = $request->all();
         $toInsert = array_except($toInsert, ['_token', '_method', 'type', 'himg', 'timg']);
 
-        Content::insert($toInsert);
+        $id = Content::insertGetId($toInsert);
 
         $this->uploadContentImage($request);
 
-        return Content::find(DB::getPdo()->lastInsertId())->content_id;
+        return Content::find($id)->content_id;
     }
 
     public function updateContent($request, $id)

@@ -48,8 +48,8 @@ class VerifyBoardWrite
             $baseLevel = $user->level;  // 유저의 등급을 넣음
         }
 
-        $boardId = $request->segments()[1];
-        $board = Board::getBoard($boardId);
+        $boardName = $request->segment(2);
+        $board = Board::getBoard($boardName, 'table_name');
 
         // 파일 업로드 권한 있는지 검사
         if(count($request->attach_file) > 0) {
@@ -69,7 +69,7 @@ class VerifyBoardWrite
             if($user) {
                 return alert($message);
             } else {
-                return alertRedirect($message, '/login?nextUrl=/board/'. $boardId. '/create');
+                return alertRedirect($message, '/login?nextUrl=/bbs/'. $boardName. '/create');
             }
         }
 

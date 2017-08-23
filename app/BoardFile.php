@@ -122,10 +122,10 @@ class BoardFile extends Model
     private function selectBoardFile($boardId, $writeId, $fileNo)
     {
         return BoardFile::where([
-                        'board_id' => $boardId,
-                        'write_id' => $writeId,
-                        'board_file_no' => $fileNo
-                ]);
+            'board_id' => $boardId,
+            'write_id' => $writeId,
+            'board_file_no' => $fileNo
+        ]);
     }
 
     // 업로드할 파일의 정보를 배열에 저장한다.
@@ -137,7 +137,7 @@ class BoardFile extends Model
             $image = $this->checkServerUploadError($file);
 
             $uploadFileInfo = [
-                'board_id' => $request->boardId,
+                'board_id' => Board::getBoard($request->boardName, 'table_name')->id,
                 'write_id' => $writeId,
                 'board_file_no' => $index,
                 'source' => $file->getClientOriginalName(),
@@ -258,7 +258,7 @@ class BoardFile extends Model
         ])->get();
 
         if(count($delFiles) < 1) {
-            return true;
+            return [ 0 => true ];
         }
 
         $result = array();

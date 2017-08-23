@@ -54,9 +54,7 @@ class Popup extends Model
         $data = $request->all();
         $data = array_except($data, ['begin_chk', 'end_chk', '_token', '_method']);
 
-        Popup::insert($data);
-
-        return DB::getPdo()->lastInsertId();
+        return Popup::insertGetId($data);
     }
 
     public function getEditParams($id)

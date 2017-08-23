@@ -84,7 +84,7 @@ function formMoveListSubmit(f) {
         return false;
     }
 
-    f.action = '{{ route('board.moveUpdate', $currentBoard->id) }}';
+    f.action = '{{ route('board.moveUpdate', $currentBoard->table_name) }}';
 
     return true;
 }

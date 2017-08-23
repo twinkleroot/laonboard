@@ -9,7 +9,6 @@ use App\Point;
 use App\Group;
 use App\Write;
 use Auth;
-use DB;
 use Cache;
 use Mail;
 use File;
@@ -286,8 +285,8 @@ class User extends Authenticatable
         $userInfo = array_collapse([$userInfo, $addCertInfo]);
 
         // 회원정보로 유저를 추가한다.
-        User::insert($userInfo);
-        $user = User::find(DB::getPdo()->lastInsertId());
+        $lastInsertId = User::insertGetId($userInfo);
+        $user = User::find($lastInsertId);
 
         // 회원 가입 축하 포인트 부여
         $point = new Point();

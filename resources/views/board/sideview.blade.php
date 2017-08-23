@@ -6,5 +6,5 @@
 <li><a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $email }}" target="_blank">포인트내역</a></li>
 @endif
 @if($board)
-<li><a href="/board/{{ $board->id }}?kind=user_id&amp;keyword={{ $id }}&amp;category={{ $category }}">이 회원이 작성한 글</a></li>
+<li><a href="/bbs/{{ $board->table_name }}?kind=user_id&amp;keyword={{ $id }}&amp;category={{ $category }}">이 회원이 작성한 글</a></li>
 @endif

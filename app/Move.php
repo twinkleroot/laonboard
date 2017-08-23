@@ -14,7 +14,7 @@ use App\Write;
 class Move
 {
     // (게시판) 관리자의 선택 복사, 이동에 필요한 파라미터
-    public function getMoveParams($boardId, $request)
+    public function getMoveParams($boardName, $request)
     {
         // 세션에 해당 게시물 아이디들을 보관
         $moveId = $request->has('chkId') ? $request->chkId : $request->writeId;
@@ -22,7 +22,7 @@ class Move
 
         return [
             'boards' => Board::orderBy('group_id', 'desc')->orderBy('subject', 'desc')->get(),
-            'currentBoard' => Board::getBoard($boardId),
+            'currentBoard' => Board::getBoard($boardName, 'table_name'),
             'type' => $request->type,
         ];
     }
@@ -60,9 +60,8 @@ class Move
                 $parent = 0;
                 foreach($originalWrites as $originalWrite) {
                     $insertArray = array_except($originalWrite->toArray(), ['id', 'isReply', 'isEdit', 'isDelete']);
-                    $destinationWrite->insert($insertArray);  // 새로 insert하기 때문에 auto increment 되는 id값은 제거
+                    $lastInsertId = $destinationWrite->insertGetId($insertArray);  // 새로 insert하기 때문에 auto increment 되는 id값은 제거
                     // 복사할 글을 복사한 테이블에 맞춰서 parent 재설정
-                    $lastInsertId = DB::getPdo()->lastInsertId();   // 마지막에 삽입한 행의 id 값 가져오기
                     $newWrite = Write::getWrite($board->id, $lastInsertId);
                     if(!$originalWrite->is_comment && !$originalWrite->reply) {
                         $parent = $lastInsertId;
@@ -121,11 +120,9 @@ class Move
     // 게시물 복사할 때 첨부파일정보도 함께 복사하는 메서드
     private function updateAttachedFileInfo($write, $lastInsertId, $toBoard, $request)
     {
-        $boardId = $request->boardId;
         $writeId = $write->id;
-        $boardFiles = BoardFile::where(['board_id' => $boardId, 'write_id' => $writeId])->get();
-
-        $board = Board::getBoard($boardId);
+        $board = Board::getBoard($request->boardName, 'table_name');
+        $boardFiles = BoardFile::where(['board_id' => $board->id, 'write_id' => $writeId])->get();
 
         foreach($boardFiles as $boardFile) {
             $copyBoardFile = $boardFile->toArray();
@@ -135,7 +132,7 @@ class Move
 
             BoardFile::insert($copyBoardFile);
             // 파일복사(다른 테이블로 복사했을 경우)
-            if($boardId != $toBoard->id) {
+            if($board->id != $toBoard->id) {
                 $this->copyFile($boardFile, $board, $toBoard);
             }
         }
@@ -165,24 +162,25 @@ class Move
         }
 
         foreach($writes as $write) {
-            $this->deleteMovedFileAndWrite($writeModel, $request->boardId, $write->id, $request->type);
+            $this->deleteMovedFileAndWrite($writeModel, $request->boardName, $write->id, $request->type);
         }
     }
 
     // 기존 원본 첨부파일 삭제
-    private function deleteMovedFileAndWrite($writeModel, $boardId, $writeId, $type)
+    private function deleteMovedFileAndWrite($writeModel, $boardName, $writeId, $type)
     {
         // 서버에서 첨부파일+첨부파일의 썸네일 삭제, 파일 테이블 삭제
         $boardFile = new BoardFile();
-        $result = $boardFile->deleteWriteAndAttachFile($boardId, $writeId, $type);
+        $board = Board::getBoard($boardName, 'table_name');
+        $result = $boardFile->deleteWriteAndAttachFile($board->id, $writeId, $type);
         if( array_search(false, $result) != false ) {
-            abort(500, '정상적으로 게시글을 이동하는데 실패하였습니다.\\n('. $boardId. '게시판 '. $writeId. '번 글의 첨부 파일 삭제)');
+            abort(500, '정상적으로 게시글을 이동하는데 실패하였습니다.\\n('. $boardName. '게시판 '. $writeId. '번 글의 첨부 파일 삭제)');
         }
 
         // 게시글 삭제
         $result = $writeModel->deleteWrite($writeModel, $writeId);
         if($result <= 0) {
-            abort(500, '정상적으로 게시글을 이동하는데 실패하였습니다.\\n('. $boardId. '게시판 '. $writeId. '번 글의 삭제)');
+            abort(500, '정상적으로 게시글을 이동하는데 실패하였습니다.\\n('. $boardName. '게시판 '. $writeId. '번 글의 삭제)');
         }
     }
 

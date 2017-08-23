@@ -30,9 +30,9 @@ class CheckSecretView
             $userId = !$user ? 0 : $user->id;
             if( ( !auth()->guest() && $userId == $write->user_id) || session()->get('admin')) {
                 ;
-            } else if(!session()->get(session()->getId(). 'secret_board_'.$boardId.'_write_'.$writeId)) {
+            } else if(!session()->get(session()->getId(). 'secret_board_'.$request->boardName.'_write_'.$writeId)) {
                 // 비밀번호 입력 폼으로 연결
-                return redirect(route('board.password.check', 'secret'). '?boardId='. $boardId. '&writeId='. $writeId. '&nextUrl='. $request->url());
+                return redirect(route('board.password.check', 'secret'). '?boardName='. $request->boardName. '&writeId='. $writeId. '&nextUrl='. $request->fullUrl());
             }
         }
 

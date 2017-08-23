@@ -75,7 +75,7 @@
         <div class="row">
             <div class="form-group mb10 col-xs-8">
                 <label for="" class="sr-only">게시물 작성</label>
-                <input type="text" class="form-control" id="subject" name="subject" placeholder="게시물 제목" @if($type != 'create') value="{{ $write->subject}}" @endif required>
+                <input type="text" class="form-control" id="subject" name="subject" placeholder="게시물 제목" @if($type != 'create') value="{{ $write->subject }}" @endif required>
             </div>
             @if(auth()->user())
                 <script src="{{ asset('js/autosave.js') }}"></script>
@@ -92,7 +92,7 @@
 @if($board->use_dhtml_editor)
         {{-- 에디터 --}}
         <div style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px;">
-            <textarea class="editorArea" name="content" id="content">@if($type == 'update'){!! convertContent($write->content, 0) !!}@endif</textarea>
+            <textarea class="editorArea" name="content" id="content">@if($type == 'update'){{ convertContent($write->content, 0) }}@endif</textarea>
         </div>
 @else
     @if(auth()->guest() || !auth()->user()->isSuperAdmin())
@@ -101,7 +101,7 @@
         @endif
     @endif
         <div style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px; padding: 2px;">
-            <textarea name="content" id="content" maxlength="65536" style="width:100%; min-height:400px; border:0;" required>@if($type == 'update'){!! convertContent($write->content, 0) !!}@endif</textarea>
+            <textarea name="content" id="content" maxlength="65536" style="width:100%; min-height:400px; border:0;" required>@if($type == 'update'){{ convertContent($write->content, 0) }}@endif</textarea>
         </div>
     @if(auth()->guest() || !auth()->user()->isSuperAdmin())
         @if($board->write_min || $board->write_max)

@@ -185,6 +185,7 @@ return [
         Khill\Lavacharts\Laravel\LavachartsServiceProvider::class,
         Sven\FlexEnv\FlexEnvServiceProvider::class,
         Ixudra\Curl\CurlServiceProvider::class,
+        Mews\Purifier\PurifierServiceProvider::class,
     ],
 
     /*
@@ -238,7 +239,8 @@ return [
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Lava' => Khill\Lavacharts\Laravel\LavachartsFacade::class,
-        'Curl'          => Ixudra\Curl\Facades\Curl::class,
+        'Curl' => Ixudra\Curl\Facades\Curl::class,
+        'Purifier' => Mews\Purifier\Facades\Purifier::class,
     ],
 
 ];

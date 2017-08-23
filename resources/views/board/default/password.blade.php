@@ -30,7 +30,7 @@
             <form class="contents col-md-8 col-md-offset-2" role="form" method="POST" action="{{ route('board.password.compare') }}">
                 {{ csrf_field() }}
                 <input type="hidden" name="type" value="{{ $type }}">
-                <input type="hidden" name="boardId" value="{{ $boardId }}">
+                <input type="hidden" name="boardName" value="{{ $boardName }}">
                 <input type="hidden" name="writeId" value="{{ $writeId }}">
                 @if($commentId)
                     <input type="hidden" name="commentId" value="{{ $commentId }}">

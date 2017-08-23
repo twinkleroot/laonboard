@@ -441,7 +441,7 @@ class Board extends Model
     }
 
     // 게시판 썸네일 삭제
-    public function deleteThumbnail($dirName, $id)
+    public function deleteThumbnail($dirName, $boardName)
     {
         $path = storage_path("app/public/$dirName");
         $files = File::files($path);
@@ -454,7 +454,7 @@ class Board extends Model
         }
 
         return [
-            'board' => Board::getBoard($id),
+            'board' => Board::getBoard($boardName, 'table_name'),
             'files' => $results
         ];
     }

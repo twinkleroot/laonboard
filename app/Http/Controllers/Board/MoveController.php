@@ -17,22 +17,21 @@ class MoveController extends Controller
     public function __construct(Request $request, Move $move, Write $write)
     {
         $this->writeModel = $write;
-        $this->writeModel->board = Board::getBoard($request->boardId);
-        $table = is_null($this->writeModel->board) ? '' : $this->writeModel->board->table_name;
-        $this->writeModel->setTableName($table);
+        $this->writeModel->board = Board::getBoard($request->boardName, 'table_name');
+        $this->writeModel->setTableName($request->boardName);
         $this->move = $move;
     }
 
     // 게시물 복사 및 이동 폼
-    public function move(Request $request, $boardId)
+    public function move(Request $request, $boardName)
     {
-        $params = $this->move->getMoveParams($boardId, $request);
+        $params = $this->move->getMoveParams($boardName, $request);
 
         return view('board.move', $params);
     }
 
     // 게시물 복사 및 이동 수행
-    public function moveUpdate(Request $request, $boardId)
+    public function moveUpdate(Request $request, $boardName)
     {
         $writeIds = session()->get('move_writeIds');
         // 복사 및 이동
@@ -42,7 +41,7 @@ class MoveController extends Controller
                 $this->move->moveWrites($this->writeModel, $writeIds, $request);
                 return redirect(route('message'))->with([
                     'message' => '게시물 이동이 완료되었습니다.',
-                    'openerRedirect' => route('board.index', $boardId),
+                    'openerRedirect' => route('board.index', $boardName),
                 ]);
             } else {
                 abort(200, '게시물 복사가 완료되었습니다.');

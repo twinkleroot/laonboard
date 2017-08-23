@@ -48,8 +48,8 @@ class ScrapController extends Controller
 
         return view('board.scrap_form', [
             'write' => $write,
-            'boardId' => $request->boardId,
-            'boardName' => Board::getBoard($request->boardId)->table_name
+            'boardId' => Board::getBoard($request->boardName, 'table_name')->id,
+            'boardName' => $request->boardName
         ]);
     }
 
@@ -83,8 +83,10 @@ class ScrapController extends Controller
      */
     public function destroy($id)
     {
+        $userId = auth()->user() ? auth()->user()->id : 0;
+
         $this->scrap->where([
-            'user_id' => auth()->user()->id,
+            'user_id' => $userId,
             'id' => $id
         ])->delete();
 

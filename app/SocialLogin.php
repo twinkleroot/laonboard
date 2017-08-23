@@ -5,7 +5,6 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\User;
 use Auth;
-use DB;
 use Carbon\Carbon;
 
 class SocialLogin extends Model
@@ -50,7 +49,7 @@ class SocialLogin extends Model
     {
         $userFromSocial = session()->get('userFromSocial');
 
-        SocialLogin::insert([
+        $id = SocialLogin::insertGetId([
             'provider' => $provider,
             'social_id' => $userFromSocial->id,
             'social_token' => $userFromSocial->token,
@@ -59,7 +58,7 @@ class SocialLogin extends Model
             'updated_at' => Carbon::now(),
         ]);
 
-        return SocialLogin::find(DB::getPdo()->lastInsertId());
+        return SocialLogin::find($id);
     }
 
     // 소셜 로그인 다음 단계를 위한 파라미터를 가져온다.

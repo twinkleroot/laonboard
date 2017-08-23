@@ -85,22 +85,22 @@
                     <th>TABLE</th>
                     <td class="table_body chknone" colspan="2">
                         <div class="@if($errors->get('table_name')) has-error @endif">
-                            @if($type == 'edit')
-                                <input type="text" name="table_name" class="form-control form_input required" value="{{ $board->table_name }}" maxlength="20" readonly>
-                                <a href="{{ route('admin.boards.copyForm', $board->id) }}" class="btn btn-sir board_copy" target="win_board_copy">
-                                    게시판 복사
-                                </a>
-                                <a class="btn btn-sir" href="{{ route('board.index', $board->id) }}">게시판 바로가기</a>
-                                <a class="btn btn-sir" href="{{ route('admin.boards.thumbnail.delete', $board->id). $queryString }}?dir={{ $board->table_name }}" onclick="return del2(this.href, '게시판 썸네일 파일을 삭제하시겠습니까?');">게시판 썸네일 삭제</a>
-                            @else
-                                <input type="text" name="table_name" class="form-control form_middle required" class="form-control" required/>
-                                <span class="help-block">영문자, 숫자, _ 만 가능(공백없이 20자 이내)</span>
-                            @endif
-                            @foreach ($errors->get('table_name') as $message)
-                                <span class="help-block">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @endforeach
+                        @if($type == 'edit')
+                            <input type="text" name="table_name" class="form-control form_input required" value="{{ $board->table_name }}" maxlength="20" readonly>
+                            <a href="{{ route('admin.boards.copyForm', $board->table_name) }}" class="btn btn-sir board_copy" target="win_board_copy">
+                                게시판 복사
+                            </a>
+                            <a class="btn btn-sir" href="{{ route('board.index', $board->table_name) }}">게시판 바로가기</a>
+                            <a class="btn btn-sir" href="{{ route('admin.boards.thumbnail.delete', $board->table_name). $queryString }}?dir={{ $board->table_name }}" onclick="return del2(this.href, '게시판 썸네일 파일을 삭제하시겠습니까?');">게시판 썸네일 삭제</a>
+                        @else
+                            <input type="text" name="table_name" class="form-control form_middle required" class="form-control" required/>
+                            <span class="help-block">영문자, 숫자, _ 만 가능(공백없이 20자 이내)</span>
+                        @endif
+                        @foreach ($errors->get('table_name') as $message)
+                            <span class="help-block">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @endforeach
                         </div>
                     </td>
                 </tr>

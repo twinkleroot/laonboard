@@ -224,9 +224,9 @@ class BoardsController extends Controller
         ]);
     }
 
-    public function deleteThumbnail(Request $request, $id)
+    public function deleteThumbnail(Request $request, $boardName)
     {
-        $params = $this->boardModel->deleteThumbnail($request->dir, $id);
+        $params = $this->boardModel->deleteThumbnail($request->dir, $boardName);
         $queryString = $request->getQueryString();
         $params = array_add($params, 'queryString', $queryString);
 

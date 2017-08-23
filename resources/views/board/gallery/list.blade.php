@@ -211,7 +211,7 @@
 </div>
 
 {{-- 페이지 처리 --}}
-{{ $writes->appends(Request::except('page'))->withPath($board->table_name)->links() }}
+{{ $writes->appends(Request::except('page'))->withPath('/bbs/'. $board->table_name)->links() }}
 
 <script>
 $(function(){

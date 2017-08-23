@@ -354,9 +354,9 @@ class Write extends Model
         }
          // 에디터를 사용하면서 html에 체크하지 않았을 때
         if($this->board->use_dhtml_editor && $html == 0) {
-            $write->content = convertContent($write->content, 2);
+            // $write->content = convertContent($write->content, 2);
         } else {
-            $write->content = convertContent($write->content, $html);
+            // $write->content = convertContent($write->content, $html);
         }
 
         // 검색어 색깔 다르게 표시
@@ -408,13 +408,21 @@ class Write extends Model
 
         // 에디터로 업로드한 이미지 경로를 추출해서 내용의 img 태그 부분을 교체한다.
         $write->content = $this->includeImagePathByEditor($write->content);
+        $write->content = clean($write->content);
 
         // 글 제목 길이 설정에 따라 조정하기
         $write->subject = subjectLength($write->subject, $this->board->subject_len);
 
+        $scrap = Scrap::where([
+            'user_id' => auth()->user() ? auth()->user()->id : 0,
+            'board_id' => $this->board->id,
+            'write_id' => $write->id,
+        ])->first();
+
         return [
             'board' => $this->board,
             'write' => $write,
+            'scrap' => $scrap,
             'request' => $request,
             'signature' => $signature,
             'boardFiles' => $boardFiles,
@@ -506,7 +514,11 @@ class Write extends Model
             // 썸네일 만들기
             $imageFileInfo = getViewThumbnail($this->board, basename($matches[1][$i]), 'editor');
 
-            $html = "a href='". route('image.original'). "?type=editor&amp;imageName=". str_replace("thumb-", "", $imageFileInfo['name']). "'"
+            $divImage1 = explode('.', $imageFileInfo['name']);
+            $divImage2 = explode('_', $divImage1[0]);
+            $realImageName = str_replace("thumb-", "", $divImage2[0]). '.'. last($divImage1);
+
+            $html = "a href='". route('image.original'). "?type=editor&amp;imageName=". $realImageName. "'"
                     . " class='viewOriginalImage' width='". $imageFileInfo[0]. "' height='". $imageFileInfo[1]. "' target='viewImage'>"
                     . "<img src='/storage/editor/". $imageFileInfo['name']. "' /></a";
             // 글 내용에 이미지 원본보기 링크와 이미지경로를 넣어준다.
@@ -585,7 +597,7 @@ class Write extends Model
     // 이전 or 다음 글 url을 만든다.
     public function getPrevNextUrl($request, $write)
     {
-        $url = route('board.view', ['boardId' => $this->board->id, 'writeId' => $write->id ]);
+        $url = route('board.view', ['boardId' => $this->board->table_name, 'writeId' => $write->id ]);
 
         if($request->server('QUERY_STRING') != '') {
            $url .= '?'. $request->server('QUERY_STRING');
@@ -817,8 +829,7 @@ class Write extends Model
             ]
         ]);
 
-        $writeModel->insert($insertData);
-        $lastInsertId = DB::getPdo()->lastInsertId();   // 마지막에 삽입한 행의 id 값 가져오기
+        $lastInsertId = $writeModel->insertGetId($insertData);
         $newWrite = Write::getWrite($this->board->id, $lastInsertId);
 
         // 포인트 부여(글쓰기, 댓글)
@@ -861,7 +872,7 @@ class Write extends Model
 
         // 비회원 글쓰기 + 비밀글일 경우 세션에 등록하기
         if(auth()->guest() && $request->has('secret') && $request->secret) {
-            session()->put(session()->getId(). 'secret_board_'. $this->board->id. '_write_'. $lastInsertId, true);
+            session()->put(session()->getId(). 'secret_board_'. $this->board->table_name. '_write_'. $lastInsertId, true);
         }
 
         return $lastInsertId;

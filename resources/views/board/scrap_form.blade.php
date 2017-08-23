@@ -39,7 +39,7 @@
         </div>
 
         <div class="cbtn">
-            <input type="submit" class="btn btn-sir" value="스크랩 확인" />
+            <input type="submit" class="btn btn-sir" value="스크랩 하기" />
         </div>
     </div>
     </div>
