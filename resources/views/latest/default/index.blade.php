@@ -21,7 +21,7 @@
                 <span class="lt_subject">
                     <a href="{{ route('board.view', ['boardName'=>$writes->table_name, 'writeId'=>$write->id]) }}">{{ $write->subject }}</a>
                 </span>
-                <span class="lt_cmt">{{ $write->comment }}</span>
+                <span class="lt_cmt">[{{ $write->comment }}]</span>
                 <span class="lt_date">@date($write->created_at)</span>
             </li>
             @endforeach

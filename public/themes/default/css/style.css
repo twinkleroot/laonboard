@@ -1466,6 +1466,7 @@ div {
 .lt_cmt {
 	font-weight: 600;
 	font-size: 9px;
+	color: #bbb;
 }
 .lt_date {
 	float: right;
