@@ -739,6 +739,26 @@ div {
 	font-weight: 600;
 	float: left;
 }
+.bd_head a {
+	background: #fff;
+	padding: 6px 12px;
+	border:1px solid #d8d8d8;
+	color: #587ef6 !important;
+	border-radius: 4px;
+	margin-right: 5px;
+	display: inline-block;
+	line-height: 20px;
+}
+.bd_head a:hover {
+	background: #f0f0f0;
+}
+.bd_head a:active {
+	box-shadow: 0px 2px 3px #ddd inset;
+}
+.bd_head span {
+	display: inline-block;
+	vertical-align: top;
+}
 .bd_header:after {
 	content: '';
 	display: block;

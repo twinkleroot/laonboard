@@ -10,7 +10,7 @@
     {{ csrf_field() }}
 
     <div class="pull-left bd_head">
-        <span><a href="{{ route('board.index', $board->table_name) }}">{{ $board->subject }}</a> 전체 {{ $writes->total() }}건 {{ $writes->currentPage() }}페이지</span>
+        <a href="{{ route('board.index', $board->table_name) }}">{{ $board->subject }}</a><span>전체 {{ $writes->total() }}건 {{ $writes->currentPage() }}페이지</span>
     </div>
 
     <div class="bd_btn">
