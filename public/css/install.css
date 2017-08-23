@@ -25,7 +25,7 @@ h1.install_uncnf {font-size:28px;margin:0;}
 .ins_frm tbody tr td input {width: 400px;display:inline-block;}
 .ins_frm tbody tr td span {color:#333;}
 .ins_frm tbody tr td span:before {content:"\f071";font-family:"FontAwesome";margin:0 5px 0 15px;}
-.ins_license #license {width: 100%;background:#efefef;border:1px solid #d8d8d8;border-radius:4px;height:300px;margin:10px 0;}
+.ins_license #license {width: 100%;background:#efefef;border:1px solid #d8d8d8;border-radius:4px;height:300px;margin:10px 0;overflow-x:none;outline:0;padding:15px;font-size:12px;line-height:1.7;}
 #ins_agree {display:block;width:100%;text-align:left;}
 .inner_btn {text-align:left;margin:20px 0 0;}
 .inner_btn input,.inner_btn a.btn {background:#587ef6;color:#fff !important;}
