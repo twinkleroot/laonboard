@@ -288,7 +288,7 @@
                         <label for="recommend" class="col-xs-12 control-label">추천인 닉네임</label>
 
                         <div class="col-xs-12">
-                            <input type="text" class="form-control" name="recommend" value="{{ $recommend!='' ? $recommend : old('recommend') }}">
+                            <input type="text" class="form-control" name="recommend" value="{{ $recommend ? : old('recommend') }}">
                         </div>
 
                     </div>

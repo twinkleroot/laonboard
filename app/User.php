@@ -188,9 +188,7 @@ class User extends Authenticatable
     {
         $recommendedNick = '';
         if($user->recommend) {
-            $recommendedUser = User::where([
-                'id' => $user->recommend,
-            ])->first();
+            $recommendedUser = User::find($user->recommend);
             if($recommendedUser) {
                 $recommendedNick = $recommendedUser->nick;
             }
@@ -445,7 +443,7 @@ class User extends Authenticatable
     public function insertRecommend($request, $user)
     {
         // 추천인 닉네임 받은 것을 해당 닉네임의 id로 조회
-        $recommendedId = '';
+        $recommendedId = 0;
         if($request->has('recommend')) {
             $recommendedUser = User::where([
                 'nick' => $request->recommend,
