@@ -39,7 +39,7 @@
                 @if(str_contains($write->option, 'secret'))
                 <span class=""><img src="/themes/default/images/icon_secret.gif"></span> <!-- 비밀 -->
                 @endif
-                <span class="lt_cmt">{{ $write->comment }}</span>
+                <span class="lt_cmt">[{{ $write->comment }}]</span>
                 <span class="lt_date">@date($write->created_at)</span>
             </li>
             @endforeach

@@ -9,24 +9,24 @@
 @endsection
 
 @section('content')
-
-@if($type == 'already')
-<div class="ins_inner">
-    <p>프로그램이 이미 설치 되어 있습니다.</p>
-    <div class="inner_btn">
-        <a onclick="history.back();">뒤로가기</a>
+<div class="container">
+    @if($type == 'already')
+    <div class="ins_inner">
+        <p>프로그램이 이미 설치 되어 있습니다.</p>
+        <div class="inner_btn">
+            <a onclick="history.back();" class="btn">뒤로가기</a>
+        </div>
     </div>
+    @else
+    @foreach($results as $key => $value)
+    <div class="ins_inner">
+        <p>
+            {{ $key }} 디렉토리의 퍼미션을 707로 변경하여 주십시오.<br />
+            $ chmod -R 707 {{ $key }}<br />
+            위 명령 실행후 브라우저를 새로고침 하십시오.
+        </p>
+    </div>
+    @endforeach
+    @endif
 </div>
-@else
-@foreach($results as $key => $value)
-<div class="ins_inner">
-    <p>
-        {{ $key }} 디렉토리의 퍼미션을 707로 변경하여 주십시오.<br />
-        $ chmod -R 707 {{ $key }}<br />
-        위 명령 실행후 브라우저를 새로고침 하십시오.
-    </p>
-</div>
-@endforeach
-@endif
-
 @endsection

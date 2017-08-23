@@ -1,0 +1,35 @@
+body {margin:0;padding:0;background:#efefef;}
+p {margin:0;}
+#header {background:#fff;border-bottom:1px solid #d8d8d8;line-height:70px;margin-bottom:40px;font-family:'Univers';}
+#header:after {content:"";display:block;clear:both;}
+#header .title,#header .install {font-size:18px;font-weight:600;}
+#header .title {float:left;color:#587ef6;}
+#header .install {float:right;color:#333;}
+.step {padding:0;margin:0 -7px 14px;}
+.step:after {content:"";display:block;clear:both;}
+.step li {list-style:none;float:left;border:1px solid #d8d8d8;border-radius:4px;padding:10px 15px;margin:0 7px;background:#fff;}
+.step li.on {background:#587ef6;color:#fff;font-weight:bold;border-color:#587ef6;}
+h1.install_uncnf {font-size:28px;margin:0;}
+.ins_inner {background:#fff;padding:30px;border:1px solid #d8d8d8;border-radius:4px;margin:14px 0 40px;line-height:22px;}
+.ins_inner strong {color:red;}
+.ins_inner h2 {font-size:24px;margin:10px 0;}
+.ins_inner ol {padding:0 0 0 20px;margin:0 0 20px;}
+.ins_inner ol li {}
+.ins_frm {margin:20px 0;}
+.ins_frm:first-child {margin-top:0;}
+.ins_frm caption {font-weight:bold;color:#000;}
+.ins_frm tbody tr {display:inline-block;width:100%;padding:3px 0;}
+.ins_frm tbody tr th {width:150px;}
+.ins_frm tbody tr th label {font-weight:100;color:#999;}
+.ins_frm tbody tr td {width: calc(100%; - 150px);}
+.ins_frm tbody tr td input {width: 400px;display:inline-block;}
+.ins_frm tbody tr td span {color:#333;}
+.ins_frm tbody tr td span:before {content:"\f071";font-family:"FontAwesome";margin:0 5px 0 15px;}
+.ins_license #license {width: 100%;background:#efefef;border:1px solid #d8d8d8;border-radius:4px;height:300px;margin:10px 0;overflow-x:none;outline:0;padding:15px;font-size:12px;line-height:1.7;}
+#ins_agree {display:block;width:100%;text-align:left;}
+.inner_btn {text-align:left;margin:20px 0 0;}
+.inner_btn input,.inner_btn a.btn {background:#587ef6;color:#fff !important;}
+.inner_btn input:hover,.inner_btn a.btn:hover {background:#3e63d6;}
+#footer {margin:40px 0;}
+#footer #ft_copy {text-align:center;font-size:15px;line-height:22px;color:#aaa;}
+#footer #ft_copy p {font-size:12px;}

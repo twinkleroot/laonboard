@@ -257,7 +257,19 @@ div {
 	box-shadow: none;
 	border-radius: 0;
 	border: 1px solid #d8d8d8;
-	margin-top: 0;
+	margin-top: -15px !important;
+	}
+	.dropdown-menu:before {
+	content: "";
+	display: block;
+	background: #fff;
+	width: 13px;
+	height: 11px;
+	background: url(../../../images/dropdown.png) no-repeat;
+
+	position: absolute;
+	right: 12px;
+	top: -10px;
 	}
 	#header .navbar-nav .gnb-li ul li a {
 		padding: 10px;
@@ -1454,6 +1466,7 @@ div {
 .lt_cmt {
 	font-weight: 600;
 	font-size: 9px;
+	color: #bbb;
 }
 .lt_date {
 	float: right;
