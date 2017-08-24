@@ -72,7 +72,7 @@
                     <tr>
                         <th scope="row"><label for="tablePrefix">Table 접두사</label></th>
                         <td>
-                            <input name="tablePrefix" type="text" class="form-control" value="{{ env('DB_PREFIX', 'laon_') }}" id="tablePrefix">
+                            <input name="tablePrefix" type="text" class="form-control" value="{{ env('DB_PREFIX', 'la_') }}" id="tablePrefix">
                             <span>가능한 변경하지 마십시오.</span>
                         </td>
                     </tr>
