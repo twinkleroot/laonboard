@@ -333,10 +333,6 @@ class Config extends Model
         Cache::forget("config.email.default");
         Cache::forget("config.email.board");
         Cache::forget("config.email.join");
-
-        Cache::forget("config.theme");
-        Cache::forget("config.skin");
-
         Cache::forget("config.sns");
         Cache::forget("config.extra");
 
