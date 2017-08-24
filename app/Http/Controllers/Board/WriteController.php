@@ -122,7 +122,7 @@ class WriteController extends Controller
      */
     public function store(Request $request, $boardName)
     {
-        if(auth()->guest() || (!auth()->user()->isSuperAdmin() && $this->writeModel->board->use_recaptcha)) {
+        if(auth()->guest() || (!auth()->user()->isBoardAdmin($this->writeModel->board) && $this->writeModel->board->use_recaptcha)) {
             ReCaptcha::reCaptcha($request);
         }
 
@@ -135,7 +135,7 @@ class WriteController extends Controller
             }
         }
 
-        if(cache('config.email.default')->emailUse && $this->writeModel->board->use_email) {
+        if(cache('config.email.default')->emailUse && $this->writeModel->board->use_email && $request->mail == 'mail') {
             $notification = new Notification();
             $notification->sendWriteNotification($this->writeModel, $writeId);
         }

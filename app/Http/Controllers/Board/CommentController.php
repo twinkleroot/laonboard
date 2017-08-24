@@ -27,7 +27,7 @@ class CommentController extends Controller
     // 댓글 저장
     public function store(Request $request)
     {
-        if(auth()->guest() || (!auth()->user()->isSuperAdmin() && $this->writeModel->board->use_recaptcha)) {
+        if(auth()->guest() || (!auth()->user()->isBoardAdmin($this->writeModel->board) && $this->writeModel->board->use_recaptcha)) {
             ReCaptcha::reCaptcha($request);
         }
         $result = $this->comment->storeComment($this->writeModel, $request);

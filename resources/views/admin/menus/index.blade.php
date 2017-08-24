@@ -4,6 +4,10 @@
     메뉴설정 | {{ $config->title }}
 @endsection
 
+@section('include_script')
+    <script src="{{ asset('js/jquery.tablednd.js') }}"></script>
+@endsection
+
 @section('content')
 <form role="form" method="POST" action="{{ route('admin.menus.store') }}">
 {{ csrf_field() }}
@@ -40,7 +44,7 @@
         </div>
 
         <div id="menulist">
-            <table class="table table-striped box">
+            <table class="table table-striped box" id="menuTable">
                 <thead>
                     <tr>
                         <th>메뉴</th>
@@ -144,6 +148,8 @@ $(function(){
             $("#menulist table tbody").append(list);
         }
     });
+
+    $("#menuTable").tableDnD();
 
 });
 

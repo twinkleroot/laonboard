@@ -365,12 +365,14 @@ function commentSubmit() {
             alert("댓글은 " + maxComment + "글자 이하로 쓰셔야 합니다.");
             return false;
         }
-    } else if (!document.getElementById('content').value) {
+    }
+
+    if (!document.getElementById('content').value) {
         alert("댓글을 입력하여 주십시오.");
         return false;
     }
 
-    if ($.type($('#userName').val()) != 'undefined') {
+    if ($.type($('#userName').val()) != 'undefined') {		// 비회원 댓글 입력일 때
         var replaceStr = $('#userName').val().replace(pattern, "");
         $('#userName').val(replaceStr);
         if ($('#userName').val() == '') {
@@ -380,7 +382,7 @@ function commentSubmit() {
         }
     }
 
-    if ($.type($('#password').val()) != 'undefined') {
+    if ($.type($('#password').val()) != 'undefined') {		// 비회원 댓글 입력일 때
         var replaceStr = $('#password').val().replace(pattern, "");
         $('#password').val(replaceStr);
         if ($('#password').val() == '') {
