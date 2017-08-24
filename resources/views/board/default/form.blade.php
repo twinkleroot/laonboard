@@ -89,7 +89,7 @@
             @endif
         </div>
 
-@if($board->use_dhtml_editor)
+@if($board->use_dhtml_editor && $userLevel >= $board->html_level)
         {{-- 에디터 --}}
         <div style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px;">
             <textarea class="editorArea" name="content" id="content">@if($type == 'update'){{ convertContent($write->content, 0) }}@endif</textarea>
@@ -167,12 +167,14 @@
                     <input type="checkbox" id="notice" name="notice" value="1" @if($type=='update' && strpos($board->notice, (string)$write->id) !== false) checked @endif> 공지
                 </label>
                 @endif
-                @if(!$board->use_dhtml_editor)
-                <label for="html" class="checkbox-inline">
-                    <input type="checkbox" id="html" name="html" onclick="htmlAutoBr(this);" value="" @if($type=='update' && strpos($write->option, 'html') !== false) checked @endif> html
-                </label>
-                @else
+                @if($userLevel >= $board->html_level)
+                @if($board->use_dhtml_editor)
                 <input type="hidden" name="html" value="html1" />
+                @else
+                <label for="html" class="checkbox-inline">
+                    <input type="checkbox" id="html" name="html" onclick="htmlAutoBr(this);" @if($type=='update') @if(strstr($write->option, 'html1')) checked value="html1" @elseif(strstr($write->option, 'html2')) checked value="html2" @endif @endif> html
+                </label>
+                @endif
                 @endif
                 @if($board->use_secret == 1 || auth()->user() && auth()->user()->isBoardAdmin($board))
                 <label for="secret" class="checkbox-inline">
@@ -190,7 +192,7 @@
             <div class="pull-right">
                 @if((auth()->user() && auth()->user()->isBoardAdmin($board)) || !$board->use_recaptcha)
                     <button type="submit" class="btn btn-sir">작성완료</button>
-                @elseif($board->use_recaptcha)
+                @else
                     <!-- 리캡챠 -->
                     <div id='recaptcha' class="g-recaptcha"
                         data-sitekey="{{ cache('config.sns')->googleRecaptchaClient }}"
@@ -264,7 +266,8 @@ function writeSubmit() {
     var content = "";
     var contentData = "";
     var useEditor = {{ $board->use_dhtml_editor }};
-    if(useEditor == 1) {
+    var htmlUsable = {{ $userLevel >= $board->html_level ? 1 : 0 }};
+    if(useEditor == 1 && htmlUsable == 1) {
         contentData = tinymce.get('content').getContent();
     } else {
         contentData = $('#content').val();
@@ -299,7 +302,7 @@ function writeSubmit() {
         return false;
     }
 
-    @if(!$board->use_dhtml_editor)
+    @if(!$board->use_dhtml_editor || $userLevel < $board->html_level)
     @if(auth()->guest() || !auth()->user()->isSuperAdmin())
     @if($board->write_min || $board->write_max)
        var charMin = {{ $board->write_min }};
@@ -332,7 +335,7 @@ $(function() {
 });
 </script>
 {{-- 글자수 제한 --}}
-@if(!$board->use_dhtml_editor)
+@if(!$board->use_dhtml_editor || $userLevel < $board->html_level)
 @if(auth()->guest() || !auth()->user()->isSuperAdmin())
 @if($board->write_min || $board->write_max)
 <script>

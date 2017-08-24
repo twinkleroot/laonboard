@@ -692,6 +692,7 @@ class Write extends Model
             'currenctCategory' => $request->category ? : '',
             'categories' => $categories,
             'autosaveCount' => $autosaveCount,
+            'userLevel' => auth()->guest() ? 1 : auth()->user()->level,
         ];
     }
 
@@ -791,7 +792,7 @@ class Write extends Model
         }
 
         // 회원 글쓰기 일 때
-        if( !is_null($user) ) {
+        if( $user ) {
             // 실명을 사용할 때
             if($this->board->use_name && !is_null($user->name)) {
                 $name = $user->name;
@@ -804,8 +805,8 @@ class Write extends Model
             $email = $user->email;
             $homepage = $user->homepage;
         } else {
-            $email = $inputData['email'];
-            $homepage = $inputData['homepage'];
+            $email = isset($inputData['email']) ? $inputData['email'] : null;
+            $homepage = isset($inputData['homepage']) ? $inputData['homepage'] : null;
         }
 
         $insertData = array_collapse([
