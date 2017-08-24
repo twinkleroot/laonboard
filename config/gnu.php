@@ -6,7 +6,7 @@
 
     // 홈페이지 기본 환경 설정
     'title' => '라라벨게시판',
-    'superAdmin' => '',
+    'superAdmin' => 'admin@admin.com',
     'usePoint' => 1,
     'loginPoint' => 100,
     'memoSendPoint' => 0,

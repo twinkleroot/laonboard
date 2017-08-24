@@ -29,7 +29,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
 
     // 기본 환경 설정
     Route::get('config', ['as' => 'admin.config', 'uses' => 'Admin\ConfigController@index']);
-    Route::put('config/update/{name}', ['as' => 'admin.config.update', 'uses' => 'Admin\ConfigController@update']);
+    Route::put('config/update', ['as' => 'admin.config.update', 'uses' => 'Admin\ConfigController@update']);
 
     // 관리 권한 설정 리소스 컨트롤러
     Route::resource('manageAuth', 'Admin\ManageAuthController', [

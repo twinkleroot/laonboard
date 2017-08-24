@@ -24,80 +24,16 @@ class ConfigController extends Controller
         return view('admin.configs.basic', $params);
     }
 
-    public function update($name, Request $request)
+    public function update(Request $request)
     {
         $data = $request->all();
-        $message;
+        $message = '';
 
-        switch ($name) {
-            case 'homepage':
-                if($this->configModel->updateConfig($data, $name)) {
-                    $message = '홈페이지 기본 환경설정 변경이 완료되었습니다.';
-                } else {
-                    $message = '홈페이지 기본 환경설정 변경에 실패하였습니다.';
-                }
-                break;
-            case 'board':
-                if($this->configModel->updateConfig($data, $name)) {
-                    $message = '게시판 기본 설정 변경이 완료되었습니다.';
-                } else {
-                    $message = '게시판 기본 설정 변경에 실패하였습니다.';
-                }
-                break;
-            case 'join':
-                if($this->configModel->updateConfig($data, $name)) {
-                    $message = '회원가입 설정 변경이 완료되었습니다.';
-                } else {
-                    $message = '회원가입 설정 변경에 실패하였습니다.';
-                }
-                break;
-            case 'cert':
-                if($this->configModel->updateConfig($data, $name)) {
-                    $message = '본인확인 설정 변경이 완료되었습니다.';
-                } else {
-                    $message = '본인확인 설정 변경에 실패하였습니다.';
-                }
-                break;
-            case 'email.default':
-                if($this->configModel->updateConfig($data, $name)) {
-                    $message = '기본 메일 환경 설정 변경이 완료되었습니다.';
-                } else {
-                    $message = '기본 메일 환경 설정 변경에 실패하였습니다.';
-                }
-                break;
-            case 'email.board':
-                if($this->configModel->updateConfig($data, $name)) {
-                    $message = '게시판 글 작성시 메일 설정 변경이 완료되었습니다.';
-                } else {
-                    $message = '게시판 글 작성시 메일 설정 변경에 실패하였습니다.';
-                }
-                break;
-            case 'email.join':
-                if($this->configModel->updateConfig($data, $name)) {
-                    $message = '회원가입 시 메일 설정 변경이 완료되었습니다.';
-                } else {
-                    $message = '회원가입 시 메일 설정 변경에 실패하였습니다.';
-                }
-                break;
-            case 'sns':
-                if($this->configModel->updateConfig($data, $name)) {
-                    $message = 'SNS 설정 변경이 완료되었습니다.';
-                } else {
-                    $message = 'SNS 설정 변경에 실패하였습니다.';
-                }
-                break;
-            case 'extra':
-                if($this->configModel->updateConfig($data, $name)) {
-                    $message = '여분필드 설정 변경이 완료되었습니다.';
-                } else {
-                    $message = '여분필드 설정 변경에 실패하였습니다.';
-                }
-                break;
-            default:
-                # code...
-                break;
+        if($this->configModel->updateConfig($data)) {
+            $message = '기본환경설정 변경이 완료되었습니다.';
+        } else {
+            $message = '기본환경설정 변경에 실패하였습니다.';
         }
-
         return redirect(route('admin.config'))->with('message', $message);
     }
 }

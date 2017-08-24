@@ -197,7 +197,7 @@ class Config extends Model
     {
         $configArr = array (
             'certUse' => config('gnu.certUse'),
-            'certIpin' => config('gnu.certIpin'),
+            // 'certIpin' => config('gnu.certIpin'),
             'certHp' => config('gnu.certHp'),
             'certKcbCd' => config('gnu.certKcbCd'),
             'certLimit' => config('gnu.certLimit'),
@@ -273,20 +273,20 @@ class Config extends Model
     public function createConfigSns()
     {
         $configArr = array (
-            'kakaoKey' => '',
-            'kakaoSecret' => '',
-            'kakaoRedirect' => '',
-            'naverKey' => '',
-            'naverSecret' => '',
-            'naverRedirect' => '',
-            'facebookKey' => '',
-            'facebookSecret' => '',
-            'facebookRedirect' => '',
-            'googleKey' => '',
-            'googleSecret' => '',
-            'googleRedirect' => '',
-            'googleRecaptchaClient' => '',
-            'googleRecaptchaServer' => '',
+            'kakaoKey' => null,
+            'kakaoSecret' => null,
+            'kakaoRedirect' => null,
+            'naverKey' => null,
+            'naverSecret' => null,
+            'naverRedirect' => null,
+            'facebookKey' => null,
+            'facebookSecret' => null,
+            'facebookRedirect' => null,
+            'googleKey' => null,
+            'googleSecret' => null,
+            'googleRedirect' => null,
+            'googleRecaptchaClient' => null,
+            'googleRecaptchaServer' => null,
         );
 
         return $this->createConfig('config.sns', $configArr);
@@ -295,28 +295,11 @@ class Config extends Model
     // 여분필드 설정 가져오기
     public function createConfigExtra()
     {
-        $configArr = array (
-            'subj_1' => '',
-            'value_1' => '',
-            'subj_2' => '',
-            'value_2' => '',
-            'subj_3' => '',
-            'value_3' => '',
-            'subj_4' => '',
-            'value_4' => '',
-            'subj_5' => '',
-            'value_5' => '',
-            'subj_6' => '',
-            'value_6' => '',
-            'subj_7' => '',
-            'value_7' => '',
-            'subj_8' => '',
-            'value_8' => '',
-            'subj_9' => '',
-            'value_9' => '',
-            'subj_10' => '',
-            'value_10' => '',
-        );
+        $configArr = [];
+        for($i=1; $i<=10; $i++) {
+            $configArr = array_add($configArr, "subj_$i", null);
+            $configArr = array_add($configArr, "value_$i", null);
+        }
 
         return $this->createConfig('config.extra', $configArr);
     }
@@ -332,59 +315,170 @@ class Config extends Model
     }
 
     // 설정을 변경한다.
-    public function updateConfig($data, $name, $theme = 0)
+    public function updateConfig($data, $name='', $theme=0)
     {
         // DB엔 안들어가는 값은 데이터 배열에서 제외한다.
         $data = array_except($data, ['_token', '_method']);
 
-        $config = Config::where('name', 'config.'. $name)->first();
-
-        if($name == 'homepage') {       // 홈페이지 기본 환경 설정 일때
-            Cache::forget("config.homepage");   // 설정이 변경될 때 캐시를 지운다.
-            if( !$theme ) {
-                $data = array_add($data, 'usePoint', isset($data['usePoint']) ? $data['usePoint'] : 0);
-                $data = array_add($data, 'useCopyLog', isset($data['useCopyLog']) ? $data['useCopyLog'] : 0);
-            }
-        } else if($name == 'join') {    // 회원 가입 설정 일 때
-            Cache::forget("config.join");   // 설정이 변경될 때 캐시를 지운다.
-            if( !$theme ) {
-                $data['banId'] = [ 0 => $data['banId'] ];
-                $data = array_add($data, 'passwordPolicySpecial', isset($data['passwordPolicySpecial']) ? $data['passwordPolicySpecial'] : 0);
-                $data = array_add($data, 'passwordPolicyUpper', isset($data['passwordPolicyUpper']) ? $data['passwordPolicyUpper'] : 0);
-                $data = array_add($data, 'passwordPolicyNumber', isset($data['passwordPolicyNumber']) ? $data['passwordPolicyNumber'] : 0);
-            }
-        } else if($name == 'board') {   // 게시판 기본 설정일 때
-            Cache::forget("config.board");  // 설정이 변경될 때 캐시를 지운다.
-            $data['filter'] = [ 0 => $data['filter'] ];
-        } else if($name == 'email.default') {   // 기본 메일 환경 설정 일때
-            Cache::forget("config.email.default");  // 설정이 변경될 때 캐시를 지운다.
-            $data = array_add($data, 'emailUse', isset($data['emailUse']) ? $data['emailUse'] : 0);
-            $data = array_add($data, 'emailCertify', isset($data['emailCertify']) ? $data['emailCertify'] : 0);
-            $data = array_add($data, 'formmailIsMember', isset($data['formmailIsMember']) ? $data['formmailIsMember'] : 0);
-        } else if($name == 'email.board') { // 게시판 글 작성 시 메일 설정일 때
-            Cache::forget("config.email.board");  // 설정이 변경될 때 캐시를 지운다.
-            $data = array_add($data, 'emailWriteSuperAdmin', isset($data['emailWriteSuperAdmin']) ? $data['emailWriteSuperAdmin'] : 0);
-            $data = array_add($data, 'emailWriteGroupAdmin', isset($data['emailWriteGroupAdmin']) ? $data['emailWriteGroupAdmin'] : 0);
-            $data = array_add($data, 'emailWriteBoardAdmin', isset($data['emailWriteBoardAdmin']) ? $data['emailWriteBoardAdmin'] : 0);
-            $data = array_add($data, 'emailWriter', isset($data['emailWriter']) ? $data['emailWriter'] : 0);
-            $data = array_add($data, 'emailAllCommenter', isset($data['emailAllCommenter']) ? $data['emailAllCommenter'] : 0);
-        } else if($name == 'email.join') {  // 회원가입 시 메일 설정일 때
-            Cache::forget("config.email.join");  // 설정이 변경될 때 캐시를 지운다.
-            $data = array_add($data, 'emailJoinSuperAdmin', isset($data['emailJoinSuperAdmin']) ? $data['emailJoinSuperAdmin'] : 0);
-            $data = array_add($data, 'emailJoinUser', isset($data['emailJoinUser']) ? $data['emailJoinUser'] : 0);
-        } else if($name == 'theme') {
-            Cache::forget("config.theme");
-        } else if($name == 'skin') {
-            Cache::forget("config.skin");
-        } else if($name == 'cert') {
-            Cache::forget("config.cert");
-            $data = array_add($data, 'certLimit', isset($data['certLimit']) ? $data['certLimit'] : 0);
-            $data = array_add($data, 'certReq', isset($data['certReq']) ? $data['certReq'] : 0);
-        } else if($name == 'sns') {
-            Cache::forget("config.sns");
-        } else if($name == 'extra') {
-            Cache::forget("config.extra");
+        if($name) {
+            Cache::forget("config.$name");
+            return $this->updateConfigByOne($name, $data);
         }
+
+           // 설정이 변경될 때 캐시를 지운다.
+        Cache::forget("config.homepage");
+        Cache::forget("config.board");
+        Cache::forget("config.join");
+        Cache::forget("config.cert");
+        Cache::forget("config.email.default");
+        Cache::forget("config.email.board");
+        Cache::forget("config.email.join");
+
+        Cache::forget("config.theme");
+        Cache::forget("config.skin");
+
+        Cache::forget("config.sns");
+        Cache::forget("config.extra");
+
+        $configData = [
+            'title' => $data['title'],
+            'superAdmin' => $data['superAdmin'],
+            'usePoint' => $data['usePoint'],
+            'loginPoint' => $data['loginPoint'],
+            'memoSendPoint' => $data['memoSendPoint'],
+            'openDate' => $data['openDate'],
+            'newDel' => $data['newDel'],
+            'memoDel' => $data['memoDel'],
+            'popularDel' => $data['popularDel'],
+            'newRows' => $data['newRows'],
+            'pageRows' => $data['pageRows'],
+            // 'mobilePageRows' => $data['title'],
+            'writePages' => $data['writePages'],
+            // 'mobilePages' => $data['title'],
+            'newSkin' => $data['newSkin'],
+            'searchSkin' => $data['searchSkin'],
+            'useCopyLog' => $data['useCopyLog'],
+            'pointTerm' => $data['pointTerm'],
+        ];
+
+        $this->updateConfigByOne('homepage', $configData);
+
+        $configData = [
+            'linkTarget' => $data['linkTarget'],
+            'readPoint' => $data['readPoint'],
+            'writePoint' => $data['writePoint'],
+            'commentPoint' => $data['commentPoint'],
+            'downloadPoint' => $data['downloadPoint'],
+            'imageExtension' => $data['imageExtension'],
+            'flashExtension' => $data['flashExtension'],
+            'movieExtension' => $data['movieExtension'],
+            'filter' => [ 0 => $data['filter'] ],
+        ];
+
+        $this->updateConfigByOne('board', $configData);
+
+        $configData = [
+            'skin' => $data['userSkin'],
+            'nickDate' => $data['nickDate'],
+            'name' => $data['name'],
+            'homepage' => $data['homepage'],
+            'tel' => $data['tel'],
+            'hp' => $data['hp'],
+            'addr' => $data['addr'],
+            'signature' => $data['signature'],
+            'profile' => $data['profile'],
+            'joinLevel' => $data['joinLevel'],
+            'joinPoint' => $data['joinPoint'],
+            'leaveDay' => $data['leaveDay'],
+            'useMemberIcon' => $data['useMemberIcon'],
+            'iconLevel' => $data['iconLevel'],
+            'memberIconSize' => $data['memberIconSize'],
+            'memberIconWidth' => $data['memberIconWidth'],
+            'memberIconHeight' => $data['memberIconHeight'],
+            'recommend' => $data['recommend'],
+            'recommendPoint' => $data['recommendPoint'],
+            'loginPoint' => $data['loginPoint'],
+            'banId' => [ 0 => $data['banId'] ],
+            'stipulation' => $data['stipulation'],
+            'privacy' => $data['privacy'],
+            'passwordPolicyDigits' => $data['passwordPolicyDigits'],
+            'passwordPolicySpecial' => isset($data['passwordPolicySpecial']) ? $data['passwordPolicySpecial'] : 0,
+            'passwordPolicyUpper' => isset($data['passwordPolicyUpper']) ? $data['passwordPolicyUpper'] : 0,
+            'passwordPolicyNumber' => isset($data['passwordPolicyNumber']) ? $data['passwordPolicyNumber'] : 0,
+        ];
+
+        $this->updateConfigByOne('join', $configData);
+
+        $configData = [
+            'certUse' => $data['certUse'],
+            // 'certIpin' => $data['certIpin'],
+            'certHp' => $data['certHp'],
+            'certKcbCd' => $data['certKcbCd'],
+            'certLimit' => isset($data['certLimit']) ? $data['certLimit'] : 0,
+            'certReq' => isset($data['certReq']) ? $data['certReq'] : 0,
+        ];
+
+        $this->updateConfigByOne('cert', $configData);
+
+        $configData = [
+            'emailUse' => isset($data['emailUse']) ? $data['emailUse'] : 0,
+            'adminEmail' => $data['adminEmail'],
+            'adminEmailName' => $data['adminEmailName'],
+            'emailCertify' => isset($data['emailCertify']) ? $data['emailCertify'] : 0,
+            'formmailIsMember' => isset($data['formmailIsMember']) ? $data['formmailIsMember'] : 0,
+        ];
+
+        $this->updateConfigByOne('email.default', $configData);
+
+        $configData = [
+            'emailWriteSuperAdmin' => isset($data['emailWriteSuperAdmin']) ? $data['emailWriteSuperAdmin'] : 0,
+            'emailWriteGroupAdmin' => isset($data['emailWriteGroupAdmin']) ? $data['emailWriteGroupAdmin'] : 0,
+            'emailWriteBoardAdmin' => isset($data['emailWriteBoardAdmin']) ? $data['emailWriteBoardAdmin'] : 0,
+            'emailWriter' => isset($data['emailWriter']) ? $data['emailWriter'] : 0,
+            'emailAllCommenter' => isset($data['emailAllCommenter']) ? $data['emailAllCommenter'] : 0,
+        ];
+
+        $this->updateConfigByOne('email.board', $configData);
+
+        $configData = [
+            'emailJoinSuperAdmin' => isset($data['emailJoinSuperAdmin']) ? $data['emailJoinSuperAdmin'] : 0,
+            'emailJoinUser' => isset($data['emailJoinUser']) ? $data['emailJoinUser'] : 0,
+        ];
+
+        $this->updateConfigByOne('email.join', $configData);
+
+        $configData = [
+            'naverKey' => isset($data['naverKey']) ? $data['naverKey'] : null,
+            'naverSecret' => isset($data['naverSecret']) ? $data['naverSecret'] : null,
+            'naverRedirect' => isset($data['naverRedirect']) ? $data['naverRedirect'] : null,
+            'kakaoKey' => isset($data['kakaoKey']) ? $data['kakaoKey'] : null,
+            'kakaoSecret' => isset($data['kakaoSecret']) ? $data['kakaoSecret'] : null,
+            'kakaoRedirect' => isset($data['kakaoRedirect']) ? $data['kakaoRedirect'] : null,
+            'facebookKey' => isset($data['facebookKey']) ? $data['facebookKey'] : null,
+            'facebookSecret' => isset($data['facebookSecret']) ? $data['facebookSecret'] : null,
+            'facebookRedirect' => isset($data['facebookRedirect']) ? $data['facebookRedirect'] : null,
+            'googleKey' => isset($data['googleKey']) ? $data['googleKey'] : null,
+            'googleSecret' => isset($data['googleSecret']) ? $data['googleSecret'] : null,
+            'googleRedirect' => isset($data['googleRedirect']) ? $data['googleRedirect'] : null,
+            'googleRecaptchaClient' => isset($data['googleRecaptchaClient']) ? $data['googleRecaptchaClient'] : null,
+            'googleRecaptchaServer' => isset($data['googleRecaptchaServer']) ? $data['googleRecaptchaServer'] : null,
+        ];
+
+        $this->updateConfigByOne('sns', $configData);
+
+        $configData = [];
+        for($i=1; $i<=10; $i++) {
+            $configData = array_add($configData, "subj_$i", isset($data["subj_$i"]) ? $data["subj_$i"] : null);
+            $configData = array_add($configData, "value_$i", isset($data["value_$i"]) ? $data["value_$i"] : null);
+        }
+
+        return $this->updateConfigByOne('extra', $configData);
+
+    }
+
+    private function updateConfigByOne($name, $data)
+    {
+        $config = Config::where('name', 'config.'. $name)->first();
 
         // json 형식으로 되어 있는 설정값을 배열로 바꾼다.
         $originalData = json_decode($config->vars, true);
@@ -396,6 +490,7 @@ class Config extends Model
 
         // 다시 json 형식으로 바꿔서 config 테이블에 저장한다.
         $config->vars = json_encode($originalData);
+
         return $config->save();
     }
 
