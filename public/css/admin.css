@@ -40,6 +40,10 @@ input[type=radio] {
 	height: 100%;
 	display: block;
 	line-height: 50px;
+	padding: 18px 20px;
+}
+.upbtn i {
+	vertical-align: top;
 }
 .savebtn {
 	position: fixed;
