@@ -97,7 +97,7 @@
                     @endif
                 </td>
                 @if(auth()->user() && auth()->user()->isBoardAdmin($board))
-                    <td class="bd_check"><input type="checkbox" name="chkId[]" class="writeId" value='{{ $write->id }}'></td>
+                    <td class="bd_check td_chk"><input type="checkbox" name="chkId[]" class="writeId" value='{{ $write->id }}'></td>
                 @endif
                 <td @if($write->reply != '') class="bd_reply" style="padding-left: calc(20px * {{ strlen($write->reply) }} @endif">
 
@@ -131,7 +131,10 @@
                 </td>
                 <td class="bd_name">
                 @if(auth()->user() && $board->use_sideview)
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                        <span class="tt_icon"></span> <!-- 아이콘 -->
+                        <span class="tt_nick">{{ $write->name }}</span> <!-- 닉네임 -->
+                    </a>
                     <ul class="dropdown-menu" role="menu">
                     @if($write->user_level)
                         @component('board.sideview', ['board' => $board, 'id' => $write->user_id, 'name' => $write->name, 'email' => $write->email, 'category' => $currenctCategory])

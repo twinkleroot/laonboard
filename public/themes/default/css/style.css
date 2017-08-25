@@ -251,7 +251,7 @@ div {
 	#navbar {
 		border: 0;
 	}
-	.dropdown-menu {
+	#header .dropdown-menu {
 	left: auto;
 	right: 0;
 	box-shadow: none;
@@ -259,7 +259,7 @@ div {
 	border: 1px solid #d8d8d8;
 	margin-top: -15px !important;
 	}
-	.dropdown-menu:before {
+	#header .dropdown-menu:before {
 	content: "";
 	display: block;
 	background: #fff;
@@ -940,6 +940,12 @@ div {
 	left: 40px;
 	box-shadow: 0 0 2px #888;
 	font-size: 12px;
+}
+.tt_icon {
+	display:inline-block;width:22px;height: 22px;background: #ccc
+}
+.tt_nick {
+	line-height:22px;vertical-align: top;
 }
 .bd_re {
 	color: #bbb;
