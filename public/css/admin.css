@@ -55,12 +55,6 @@ input[type=radio] {
 	background: #fff;
 	width: auto;
 }
-.savebtn:hover {
-	
-}
-.savebtn a {
-	
-}
 .empty_table {
 	line-height: 150px;
 	color: #587ef6;
@@ -75,6 +69,12 @@ input[type=radio] {
 .btn-sir:hover {
 	background-color: #3e63d6;
 	border-color: #3e63d6;
+}
+.tt_icon {
+	display:inline-block;width:22px;height: 22px;background: #ccc
+}
+.tt_nick {
+	line-height:22px;vertical-align: top;
 }
 .mb0  {margin-bottom: 0;}
 .mb5  {margin-bottom: 5px;}
