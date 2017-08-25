@@ -100,14 +100,11 @@
                             <li class="contents">
                                 <span class="sch_subject">
                                     <a href="/bbs/{{ $write->boardName }}/view/{{ $write->parent. $write->queryString }}">{!! clean($write->subject) !!}</a>
-                                    <a href="/bbs/{{ $write->boardName }}/view/{{ $write->parent. $write->queryString }}" target="_blank">[새창으로 열기]</a>
+                                    <a href="/bbs/{{ $write->boardName }}/view/{{ $write->parent. $write->queryString }}" target="_blank" style="margin-left:7px;">[새창으로 열기]</a>
                                 </span>
-                                <p>
-                                    {!! clean($write->content) !!}
-                                </p>
+                                <p>{!! clean($write->content) !!}</p>
                                 <span class="sv_wrap">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
-
                                     <ul class="dropdown-menu" role="menu">
                                     @if(auth()->user() && $write->user_id)
                                         <li><a href="{{ route('memo.create') }}?to={{ $write->user_id_hashKey }}" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지보내기</a></li>

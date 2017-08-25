@@ -555,6 +555,25 @@ input[type=radio] {
 	display: block;
 	clear: both;
 }
+.adm_box_table tr .table_body .usericon {
+	margin-bottom: 10px;	
+}
+.adm_box_table tr .table_body .usericon .usericon_img {
+	display: inline-block;
+	padding: 7px;
+	border: 1px solid #d8d8d8;
+	border-radius: 4px;
+	margin-right: 5px;
+	font-size: 0;
+}
+.adm_box_table tr .table_body .usericon .usericon_del {
+	display: inline-block;
+	line-height: 38px;
+	vertical-align: top;
+}
+.adm_box_table tr .table_body .usericon .usericon_del label {
+	margin: 0;
+}
 .adm_box_table tr .table_chk {
 	width: 175px; text-align: center; padding: 10px 15px; vertical-align: middle;
 }

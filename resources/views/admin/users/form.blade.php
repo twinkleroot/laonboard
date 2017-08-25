@@ -336,12 +336,18 @@
             <tr>
                 <th><label for="icon">회원아이콘</label></th>
                 <td class="table_body chknone">
+                    @if($type == 'update' && File::exists($iconPath))
+                    <div class="usericon">
+                        <span class="usericon_img">
+                            <img alt="회원아이콘" src="{{ $iconUrl }}">
+                        </span>
+                        <span class="usericon_del">
+                            <input type="checkbox" name="delIcon" value="1" id="delIcon">
+                            <label for="delIcon">삭제</label>
+                        </span>
+                    </div>
+                    @endif
                     <input type="file" name="icon" id="icon">
-                @if($type == 'update' && File::exists($iconPath))
-                    <img src="{{ $iconUrl }}" alt="회원아이콘">
-                    <input type="checkbox" name="delIcon" value="1" id="delIcon">
-                    <label for="delIcon">삭제</label>
-                @endif
                     <span class="help-block">이미지 크기는 넓이 {{ cache('config.join')->memberIconWidth }}픽셀 높이 {{ cache('config.join')->memberIconHeight }}픽셀로 해주세요.<br>
                     gif만 가능하며 용량 {{ cache('config.join')->memberIconSize }}바이트 이하만 등록됩니다.
                     </span>
