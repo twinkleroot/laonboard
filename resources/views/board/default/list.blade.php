@@ -9,9 +9,11 @@
     <input type="hidden" id='page' name='page' value='{{ $writes->currentPage() }}' />
     {{ csrf_field() }}
 
-    <div class="pull-left bd_head">
-        <a href="{{ route('board.index', $board->table_name) }}">{{ $board->subject }}</a><span>전체 {{ $writes->total() }}건 {{ $writes->currentPage() }}페이지</span>
+    <div class="bd_head">
+        <a href="{{ route('board.index', $board->table_name) }}">{{ $board->subject }}</a>
     </div>
+
+    <div class="bd_count">전체 {{ $writes->total() }}건 {{ $writes->currentPage() }}페이지</div>
 
     <div class="bd_btn">
         <ul id="bd_btn" class="pull-right">
@@ -60,21 +62,21 @@
     <table class="table box">
         <thead>
             <tr>
-                <th @if(count($writes) == 0)class="bd_num"@endif>번호</th>
+                <th class="mo">번호</th>
                 @if(auth()->user() && auth()->user()->isBoardAdmin($board))
-                    <th @if(count($writes) == 0)class="bd_check"@endif> <!-- 전체선택 -->
+                    <th class="mo"> <!-- 전체선택 -->
                         <input type="checkbox" name="chkAll" onclick="checkAll(this.form)">
                     </th>
                 @endif
                 <th>제목</th>
-                <th @if(count($writes) == 0)class="bd_name"@endif>글쓴이</th>
-                <th @if(count($writes) == 0)class="bd_date"@endif>날짜</th>
-                <th @if(count($writes) == 0)class="bd_hits"@endif>조회</th>
+                <th class="mo">글쓴이</th>
+                <th>날짜</th>
+                <th class="mo">조회</th>
                 @if($board->use_good)
-                <th @if(count($writes) == 0)class="bd_re"@endif>추천</th>
+                <th class="mo">추천</th>
                 @endif
                 @if($board->use_nogood)
-                <th @if(count($writes) == 0)class="bd_nre"@endif>비추천</th>
+                <th class="mo">비추천</th>
                 @endif
             </tr>
         </thead>
@@ -87,7 +89,7 @@
             <tr>
             @endif
                 <!-- 공지사항 기능 넣으면 공지사항 까지 포함시켜서 넘버링 -->
-                <td class="bd_num">
+                <td class="bd_num mo">
                     @if($kind != 'user_id' && in_array($write->id, $notices) && $search == 0 && $currenctCategory == '')
                         공지
                     @elseif(isset($request->writeId) && $request->writeId == $write->id)
@@ -97,7 +99,7 @@
                     @endif
                 </td>
                 @if(auth()->user() && auth()->user()->isBoardAdmin($board))
-                    <td class="bd_check td_chk"><input type="checkbox" name="chkId[]" class="writeId" value='{{ $write->id }}'></td>
+                    <td class="bd_check td_chk mo"><input type="checkbox" name="chkId[]" class="writeId" value='{{ $write->id }}'></td>
                 @endif
                 <td @if($write->reply != '') class="bd_reply" style="padding-left: calc(20px * {{ strlen($write->reply) }} @endif">
 
@@ -129,12 +131,10 @@
                         @endif
                     </span>
                 </td>
-                <td class="bd_name">
+                <td class="bd_name mo">
                 @if(auth()->user() && $board->use_sideview)
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-                        @if(cache('config.join')->useMemberIcon && $write->iconPath)
-                        <span class="tt_icon"><img src="{{ $write->iconPath }}" /></span> <!-- 아이콘 -->
-                        @endif
+                        <span class="tt_icon"><!-- 아이콘 이미지 링크 --></span> <!-- 아이콘 -->
                         <span class="tt_nick">{{ $write->name }}</span> <!-- 닉네임 -->
                     </a>
                     <ul class="dropdown-menu" role="menu">
@@ -162,19 +162,16 @@
                     @endif
                     </ul>
                 @else
-                    @if(cache('config.join')->useMemberIcon && $write->iconPath)
-                    <span class="tt_icon"><img src="{{ $write->iconPath }}" /></span> <!-- 아이콘 -->
-                    @endif
-                    <span class="tt_nick">{{ $write->name }}</span>
+                    {{ $write->name }}
                 @endif
                 </td>
                 <td class="bd_date">@monthAndDay($write->created_at)</td>
-                <td class="bd_hits">{{ $write->hit }}</td>
+                <td class="bd_hits mo">{{ $write->hit }}</td>
                 @if($board->use_good)
-                <td class="bd_re"><span class="up">{{ $write->good }}</span></td>
+                <td class="bd_re mo"><span class="up">{{ $write->good }}</span></td>
                 @endif
                 @if($board->use_nogood)
-                <td class="bd_nre">{{ $write->nogood }}</td>
+                <td class="bd_nre mo">{{ $write->nogood }}</td>
                 @endif
             </tr>
         @endforeach
@@ -201,37 +198,34 @@
 </form>
 
 <div class="bd_btn">
-    <ul class="pull-left">
-        <li id="pt_sch">
-            <form method="get" action="{{ route('board.index', $board->table_name) }}" onsubmit="return searchFormSubmit(this);">
-                @if($currenctCategory != '')
-                    <input type="hidden" id='category' name='category' value='{{ $currenctCategory }}' />
-                @endif
-                <label for="kind" class="sr-only">검색대상</label>
-                <select name="kind" id="kind">
-                    <option value="subject" @if($kind == 'subject') selected @endif>제목</option>
-                    <option value="content" @if($kind == 'content') selected @endif>내용</option>
-                    <option value="subject || content" @if($kind == 'subject || content') selected @endif>제목+내용</option>
-                    <option value="name, 0" @if($kind == 'name, 0') selected @endif>글쓴이</option>
-                    <option value="name, 1" @if($kind == 'name, 1') selected @endif>글쓴이(코멘트 포함)</option>
-                </select>
-
-                <label for="keyword" class="sr-only">검색어</label>
-                <input type="text" name="keyword" id="keyword" value="{{ $kind != 'user_id' ? $keyword : '' }}" class="search" required>
-                <button type="submit" class="search-icon">
-                    <i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">검색</span>
-                </button>
-            </form>
-        </li>
-    </ul>
-
-    <ul id="bd_btn">
-        <li class="mr0">
+    <div id="bd_btn">
+        <div class="mr0">
             <button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->table_name). '?'. $request->getQueryString() }}'">
                 <i class="fa fa-pencil"></i> 글쓰기
             </button>
-        </li>
-    </ul>
+        </div>
+    </div>
+    <div id="bd_sch">
+        <form method="get" action="{{ route('board.index', $board->table_name) }}" onsubmit="return searchFormSubmit(this);">
+            @if($currenctCategory != '')
+                <input type="hidden" id='category' name='category' value='{{ $currenctCategory }}' />
+            @endif
+            <label for="kind" class="sr-only">검색대상</label>
+            <select name="kind" id="kind">
+                <option value="subject" @if($kind == 'subject') selected @endif>제목</option>
+                <option value="content" @if($kind == 'content') selected @endif>내용</option>
+                <option value="subject || content" @if($kind == 'subject || content') selected @endif>제목+내용</option>
+                <option value="name, 0" @if($kind == 'name, 0') selected @endif>글쓴이</option>
+                <option value="name, 1" @if($kind == 'name, 1') selected @endif>글쓴이(코멘트 포함)</option>
+            </select>
+
+            <label for="keyword" class="sr-only">검색어</label>
+            <input type="text" name="keyword" id="keyword" value="{{ $kind != 'user_id' ? $keyword : '' }}" class="search" required>
+            <button type="submit" class="search-icon">
+                <i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">검색</span>
+            </button>
+        </form>
+    </div>
 </div>
 
 {{-- 페이지 처리 --}}
