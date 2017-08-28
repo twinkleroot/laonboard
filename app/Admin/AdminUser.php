@@ -183,7 +183,7 @@ class AdminUser extends Model
             $user->recommend = $recommendedId;
         }
         // 아이콘 업로드
-        $path = storage_path('app/public/user/'. substr($user->email,0,2). '/'). $user->email. '.gif';
+        $path = storage_path('app/public/user/'. mb_substr($user->email, 0, 2, 'utf-8'). '/'). $user->email. '.gif';
         $appUser->iconUpload($request, $user->email, $path);
 
         $user->id_hashkey = str_replace("/", "-", bcrypt($user->id));   // id 암호화
@@ -195,8 +195,8 @@ class AdminUser extends Model
     public function editParams($user, $id)
     {
         // 회원아이콘 경로
-        $path = storage_path('app/public/user/'. substr($user->email,0,2). '/'). $user->email. '.gif';
-        $url = '/storage/user/'. substr($user->email,0,2). '/'. $user->email. '.gif';
+        $path = storage_path('app/public/user/'. mb_substr($user->email, 0, 2, 'utf-8'). '/'). $user->email. '.gif';
+        $url = '/storage/user/'. mb_substr($user->email, 0, 2, 'utf-8'). '/'. $user->email. '.gif';
 
         $appUser = new AppUser();
         $recommend = $appUser->recommendedPerson(getUser($id));
@@ -260,7 +260,7 @@ class AdminUser extends Model
             ] ]);
         }
 
-        $path = storage_path('app/public/user/'. substr($user->email,0,2). '/'). $user->email. '.gif';
+        $path = storage_path('app/public/user/'. mb_substr($user->email, 0, 2, 'utf-8'). '/'). $user->email. '.gif';
         // 아이콘 삭제
         $appUser->iconDelete($request, $path);
         // 아이콘 업로드
@@ -336,7 +336,7 @@ class AdminUser extends Model
         // 게시판관리자인 경우 게시판관리자를 공백으로
         Board::where('admin', $user->email)->update([ 'admin' => '' ]);
         // 아이콘 삭제
-        $path = storage_path('app/public/user/'. substr($user->email,0,2). '/'). $user->email. '.gif';
+        $path = storage_path('app/public/user/'. mb_substr($user->email, 0, 2, 'utf-8'). '/'). $user->email. '.gif';
         File::delete($path);
         }
     }

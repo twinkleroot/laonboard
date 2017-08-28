@@ -38,6 +38,8 @@
 @endsection
 
 @section('content')
+{{ session()->put('user_leave_date', $user->leave_date) }}
+{{ session()->put('user_intercept_date', $user->intercept_date) }}
 @if($type == 'update')
 <form role="form" method="POST" action="{{ route('admin.users.update', $id) }}" enctype="multipart/form-data" autocomplete="off">
 @else
@@ -412,11 +414,16 @@
 <script>
 function setToday(chkbox, place) {
     var now = new Date();
-
+    var storedDate = '';
+    if(place.name.indexOf('leave') == 0) {
+        storedDate = '{{ session()->get('user_leave_date') }}';
+    } else if(place.name.indexOf('intercept') == 0) {
+        storedDate = '{{ session()->get('user_intercept_date') }}';
+    }
     if(chkbox.checked) {
         $(place).val(getFormattedDate(now));
     } else {
-        $(place).val('');
+        $(place).val(storedDate);
     }
 }
 function getFormattedDate(date) {

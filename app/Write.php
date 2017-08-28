@@ -187,6 +187,13 @@ class Write extends Model
             if($this->board->skin == 'gallery') {
                 $write->listThumbnailPath = $this->getListThumbnail($write);
             }
+
+            if($write->user_id && cache('config.join')->useMemberIcon) {
+                $iconPath = storage_path('app/public/user'). '/'. mb_substr($write->email, 0, 2, 'utf-8'). '/'. $write->email. '.gif';
+                if(File::exists($iconPath)) {
+                    $write->iconPath = '/storage/user/'. mb_substr($write->email, 0, 2, 'utf-8'). '/'. $write->email. '.gif';
+                }
+            }
         }
         // 페이징 버튼의 경로 지정 (항상 목록으로 이동하도록 하기)
         $writes->withPath('/board/'.$this->board->id);

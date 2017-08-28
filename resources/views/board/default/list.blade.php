@@ -132,7 +132,9 @@
                 <td class="bd_name">
                 @if(auth()->user() && $board->use_sideview)
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-                        <span class="tt_icon"><!-- 아이콘 이미지 링크 --></span> <!-- 아이콘 -->
+                        @if(cache('config.join')->useMemberIcon && $write->iconPath)
+                        <span class="tt_icon"><img src="{{ $write->iconPath }}" /></span> <!-- 아이콘 -->
+                        @endif
                         <span class="tt_nick">{{ $write->name }}</span> <!-- 닉네임 -->
                     </a>
                     <ul class="dropdown-menu" role="menu">
@@ -160,7 +162,10 @@
                     @endif
                     </ul>
                 @else
-                    {{ $write->name }}
+                    @if(cache('config.join')->useMemberIcon && $write->iconPath)
+                    <span class="tt_icon"><img src="{{ $write->iconPath }}" /></span> <!-- 아이콘 -->
+                    @endif
+                    <span class="tt_nick">{{ $write->name }}</span>
                 @endif
                 </td>
                 <td class="bd_date">@monthAndDay($write->created_at)</td>
