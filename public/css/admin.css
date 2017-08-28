@@ -71,7 +71,14 @@ input[type=radio] {
 	border-color: #3e63d6;
 }
 .tt_icon {
-	display:inline-block;width:22px;height: 22px;background: #ccc
+	display:inline-block;
+	width:22px;
+	height: 22px;
+}
+.tt_icon img {
+	width: 22px;
+	height: 22px;
+	vertical-align: top;
 }
 .tt_nick {
 	line-height:22px;vertical-align: top;

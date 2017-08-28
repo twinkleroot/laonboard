@@ -132,7 +132,7 @@
                 <td class="bd_name">
                 @if(auth()->user() && $board->use_sideview)
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-                        <span class="tt_icon"></span> <!-- 아이콘 -->
+                        <span class="tt_icon"><!-- 아이콘 이미지 링크 --></span> <!-- 아이콘 -->
                         <span class="tt_nick">{{ $write->name }}</span> <!-- 닉네임 -->
                     </a>
                     <ul class="dropdown-menu" role="menu">
