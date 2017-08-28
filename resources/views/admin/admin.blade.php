@@ -105,8 +105,13 @@
 <div id="admin-body" class="sidebarmenu2">
     <div class="admin-body">
     @yield('content')
+
+        <div id="footer" style="">
+            Copyright © jeeevely.gnutest.com. All rights reserved.
+        </div>
     </div>
 </div>
+
 
 <div class="upbtn">
     <a href="#admin-header">

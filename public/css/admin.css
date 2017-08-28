@@ -40,6 +40,10 @@ input[type=radio] {
 	height: 100%;
 	display: block;
 	line-height: 50px;
+	padding: 18px 20px;
+}
+.upbtn i {
+	vertical-align: top;
 }
 .savebtn {
 	position: fixed;
@@ -50,12 +54,6 @@ input[type=radio] {
 	border-radius: 4px;
 	background: #fff;
 	width: auto;
-}
-.savebtn:hover {
-	
-}
-.savebtn a {
-	
 }
 .empty_table {
 	line-height: 150px;
@@ -71,6 +69,19 @@ input[type=radio] {
 .btn-sir:hover {
 	background-color: #3e63d6;
 	border-color: #3e63d6;
+}
+.tt_icon {
+	display:inline-block;
+	width:22px;
+	height: 22px;
+}
+.tt_icon img {
+	width: 22px;
+	height: 22px;
+	vertical-align: top;
+}
+.tt_nick {
+	line-height:22px;vertical-align: top;
 }
 .mb0  {margin-bottom: 0;}
 .mb5  {margin-bottom: 5px;}
@@ -555,6 +566,25 @@ input[type=radio] {
 	display: block;
 	clear: both;
 }
+.adm_box_table tr .table_body .usericon {
+	margin-bottom: 10px;	
+}
+.adm_box_table tr .table_body .usericon .usericon_img {
+	display: inline-block;
+	padding: 7px;
+	border: 1px solid #d8d8d8;
+	border-radius: 4px;
+	margin-right: 5px;
+	font-size: 0;
+}
+.adm_box_table tr .table_body .usericon .usericon_del {
+	display: inline-block;
+	line-height: 38px;
+	vertical-align: top;
+}
+.adm_box_table tr .table_body .usericon .usericon_del label {
+	margin: 0;
+}
 .adm_box_table tr .table_chk {
 	width: 175px; text-align: center; padding: 10px 15px; vertical-align: middle;
 }
@@ -806,12 +836,11 @@ input[type=radio] {
 
 /* footer */
 #footer {
-	width: 100%;
-	padding: 30px 0;
-	margin-top: 40px;
-	font-size: 1em;
-	color: #aaa;
-	text-align: center;
+	padding: 0 30px 40px;
+	margin-top: 30px;
+	font-size:12px;
+	line-height:22px;
+	color:#aaa;
 }
 
 /* table */

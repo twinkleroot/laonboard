@@ -98,26 +98,26 @@
 <div class="bd_rd_count">
     @if($user)
         <a href="{{ route('scrap.create') }}?boardName={{ $board->table_name }}&amp;writeId={{ $write->id }}" target="_blank" onclick="winScrap(this.href); return false;">
-            <span>
+            <div class="countBtn">
                 <i class="fa fa-star" @if($scrap)style="color:#587ef6"@endif></i>스크랩
-            </span>
+            </div>
         </a>
         @if($board->use_good)
         <a id="goodButton" href="/bbs/{{ $board->table_name }}/view/{{ $write->id }}/good">
-            <span>
+            <div class="countBtn">
                 <i class="fa fa-thumbs-o-up"></i>추천
                 <strong>{{ $write->good }}</strong>
                 <span id="actGood" style="display: none;">이 글을 추천하셨습니다.</span> <!-- 메세지출력 -->
-            </span>
+            </div>
         </a>
         @endif
         @if($board->use_nogood)
         <a id="noGoodButton" href="/bbs/{{ $board->table_name }}/view/{{ $write->id }}/nogood">
-            <span>
+            <div class="countBtn">
                 <i class="fa fa-thumbs-o-down"></i>비추천
                 <strong>{{ $write->nogood }}</strong>
                 <span id="actNoGood" style="display: none;">이 글을 비추천하셨습니다.</span> <!-- 메세지출력 -->
-            </span>
+            </div>
         </a>
         @endif
     @else
@@ -365,14 +365,12 @@ function commentSubmit() {
             alert("댓글은 " + maxComment + "글자 이하로 쓰셔야 합니다.");
             return false;
         }
-    }
-
-    if (!document.getElementById('content').value) {
+    } else if (!document.getElementById('content').value) {
         alert("댓글을 입력하여 주십시오.");
         return false;
     }
 
-    if ($.type($('#userName').val()) != 'undefined') {		// 비회원 댓글 입력일 때
+    if ($.type($('#userName').val()) != 'undefined') {
         var replaceStr = $('#userName').val().replace(pattern, "");
         $('#userName').val(replaceStr);
         if ($('#userName').val() == '') {
@@ -382,7 +380,7 @@ function commentSubmit() {
         }
     }
 
-    if ($.type($('#password').val()) != 'undefined') {		// 비회원 댓글 입력일 때
+    if ($.type($('#password').val()) != 'undefined') {
         var replaceStr = $('#password').val().replace(pattern, "");
         $('#password').val(replaceStr);
         if ($('#password').val() == '') {

@@ -251,7 +251,7 @@ div {
 	#navbar {
 		border: 0;
 	}
-	.dropdown-menu {
+	#header .dropdown-menu {
 	left: auto;
 	right: 0;
 	box-shadow: none;
@@ -259,7 +259,7 @@ div {
 	border: 1px solid #d8d8d8;
 	margin-top: -15px !important;
 	}
-	.dropdown-menu:before {
+	#header .dropdown-menu:before {
 	content: "";
 	display: block;
 	background: #fff;
@@ -687,8 +687,25 @@ div {
 	margin: 8px 0 25px;
 	line-height: 1.7;
 }
+.sch_subject {
+	width: 100%;
+	margin: 0;
+	display: block;
+}
+.sch_subject:after {
+	content: "";
+	display: block;
+	clear: both;
+}
+.sch_subject a {
+	float: left;
+	line-height: 22px;
+}
 .sch_subject a:hover {
 	text-decoration: underline !important;
+}
+.sch_subject p {
+	margin:0;
 }
 .sv_wrap.open {
 	position: relative;
@@ -923,6 +940,19 @@ div {
 	left: 40px;
 	box-shadow: 0 0 2px #888;
 	font-size: 12px;
+}
+.tt_icon {
+	display:inline-block;
+	width:22px;
+	height: 22px;
+}
+.tt_icon img {
+	width: 22px;
+	height: 22px;
+	vertical-align: top;
+}
+.tt_nick {
+	line-height:22px;vertical-align: top;
 }
 .bd_re {
 	color: #bbb;
@@ -1173,7 +1203,7 @@ div {
 .bd_rd_count i {
 	margin-right: 5px;
 }
-.bd_rd_count span {
+.bd_rd_count div.countBtn {
 	margin: 20px 3px;
 	border: 1px solid #d8d8d8;
 	display: inline-block;
@@ -1185,12 +1215,12 @@ div {
 .bd_rd_count strong {
 	color: #ff6699;
 }
-#actgood, #actnogood {
-	/*display: none;*/
+#actGood, #actNoGood {
+	display: block;
 	border: 0;
     position: absolute;
-    top: 20px;
-    left: -4px;
+    top: 38px;
+    left: 0;
     padding: 10px 0;
     width: 167px;
     background: #587ef6;
@@ -1487,10 +1517,17 @@ div {
 	font-weight: 600;
 	font-size: 9px;
 	color: #bbb;
+	margin-left: 4px;
 }
 .lt_date {
 	float: right;
 	color: #bbb;
+}
+.lt_icon {
+	display: inline-block;
+	vertical-align:top;
+	line-height:16px;
+	margin:0 1px;
 }
 
 /* write */
