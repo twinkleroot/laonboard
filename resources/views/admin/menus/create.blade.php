@@ -24,6 +24,7 @@
     </script>
 
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ asset('js/jquery.tablednd.js') }}"></script>
 </head>
 
 <body>
@@ -98,13 +99,14 @@ function addMenuList(name, link, code)
     var sub_menu_class;
     @if($new == 'new')
         sub_menu_class = " class=\"text-center\"";
+        addedMenuName = "<div>" + addedMenuName + "</div>";
     @else
         sub_menu_class = " class=\"text-center sub_menu_class\"";
-        // 임시로 ㄴ 으로 화면에 표시함.
-        addedMenuName = "<div class=\"row\"><div class=\"col-md-2\">ㄴ</div><div class=\"col-md-10\">" + addedMenuName + "</div></div>";
+        addedMenuName = "<div class=\"depth2\">" + addedMenuName + "</div>";
     @endif
 
     var list = "<tr class=\"menu_list menu_group_"+ code + "\">";
+    list += "<td class=\"dragHandle\" style=\"cursor:move; background-color:#587ef6;\"></td>";
     list += "<td" + sub_menu_class + ">";
     list += "<input type=\"hidden\" name=\"code[]\" value=\""+ code +"\">";
     list += addedMenuName;

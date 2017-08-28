@@ -107,7 +107,7 @@
     @yield('content')
 
         <div id="footer" style="">
-            Copyright © jeeevely.gnutest.com. All rights reserved.
+            Copyright © {{ str_replace("http://", "", env('APP_URL')) }}. All rights reserved.
         </div>
     </div>
 </div>

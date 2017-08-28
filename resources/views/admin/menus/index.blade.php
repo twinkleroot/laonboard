@@ -9,7 +9,7 @@
 @endsection
 
 @section('content')
-<form role="form" method="POST" action="{{ route('admin.menus.store') }}">
+<form role="form" method="POST" action="{{ route('admin.menus.store') }}" onsubmit="menuFormSubmit()">
 {{ csrf_field() }}
     <div class="body-head">
         <div class="pull-left">
@@ -41,13 +41,18 @@
             <span class="adm_alert_txt">
                 <strong>주의!</strong> 메뉴설정 작업 후 반드시 <strong>확인</strong>을 누르셔야 저장됩니다.
             </span>
+            <div>
+                <span class="adm_alert_txt">
+                    앞의 핸들을 <strong>Drag & Drop</strong> 해서 메뉴 순서를 조정할 수 있습니다. 핸들을 더블클릭하면 서브 메뉴로 변경하거나, 주 메뉴로 변경할 수 있습니다.
+                </span>
+            </div>
         </div>
 
         <div id="menulist">
             <table class="table table-striped box" id="menuTable">
                 <thead>
                     <tr>
-                        <th></th>
+                        <th>핸들</th>
                         <th>메뉴</th>
                         <th>링크</th>
                         <th>새창</th>
@@ -61,16 +66,12 @@
                 @if(count($menus) > 0)
                 @foreach ($menus as $menu)
                     <tr class="menu_list menu_group_{{ substr($menu['code'], 0, 2) }}">
-                        <td class="dragHandle" style="cursor:move;"></td>
+                        <td class="dragHandle" style="cursor:move; background-color:#587ef6;"></td>
                         <td class="text-center @if(strlen($menu['code']) == 4) sub_menu_class @endif">
                             <input type="hidden" name="code[]" value="{{ substr($menu['code'], 0, 2) }}">
-                            @if(strlen($menu['code']) == 4)
-                                <div class="depth2">
-                                    <input type="text" class="form-control required" name="name[]" value="{{ $menu['name']}}" />
-                                </div>
-                            @else
+                            <div @if(strlen($menu['code']) == 4)class="depth2" @endif>
                                 <input type="text" class="form-control required" name="name[]" value="{{ $menu['name']}}" />
-                            @endif
+                            </div>
                         </td>
                         <td class="text-center">
                             <input type="text" class="form-control required" name="link[]" value="{{ $menu['link']}}" />
@@ -151,15 +152,18 @@ $(function(){
         }
     });
 
-    $("#menuTable").tableDnD({
-        dragHandle: ".dragHandle"
+    // Drag & Drop 플러그인 초기화
+    $(document).on("mousemove", "#menuTable", function() {
+        $("#menuTable").tableDnD({
+            dragHandle: ".dragHandle",
+        });
     });
 
-    $(".dragHandle").dblclick(function(e){
+    $(document).on("dblclick", ".dragHandle", function(e) {
         e.preventDefault();
         $(this).siblings('td:first').toggleClass('sub_menu_class');
-        $(this).siblings('td:first').find("input[name='name[]']").before('<div class="depth2">');
-        $(this).siblings('td:first').find("input[name='name[]']").after('</div>');
+        $(this).siblings('td:first').find("input[name='name[]']").closest('div').toggleClass('depth2');
+
         var thisMenuCode = $(this).siblings('td:first').find("input[name='code[]']").val();
         var prevMenuCode = $(this).parents("tr").prev().find("input[name='code[]']").val();
         if(typeof(prevMenuCode) == 'undefined') {
@@ -167,23 +171,62 @@ $(function(){
         }
 
         if(thisMenuCode == prevMenuCode) {	// 현재 2 depth 메뉴이고 1 depth 메뉴로 변경하려고 할 경우
-            // 현재 코드에 10을 더하고 그 아래 있는 모든 메뉴들의 코드값도 10을 더한다. (현재 속한 1 depth의 나머지 row는 증가 시키지 않는다.)
+            // 현재 코드에 10을 더하고 그 아래 있는 모든 메뉴들의 코드값도 10을 더한다.
             var code = $(this).parents("tr").find("input[name='code[]']").val();
             var codePlusTen = parseInt(code) + 10;
             $(this).parents("tr").find("input[name='code[]']").val(codePlusTen);
             $(this).parents("tr").nextAll().each(function(index,tr) {
                 var nextCode = $(tr).find("input[name='code[]']").val();
-                if(code != nextCode) {
-                    var nextCodePlusTen = parseInt(nextCode) + 10;
-                    $(tr).find("input[name='code[]']").val(nextCodePlusTen);
-                }
+                var nextCodePlusTen = parseInt(nextCode) + 10;
+                $(tr).find("input[name='code[]']").val(nextCodePlusTen);
             });
         } else {	// 현재 1 depth 메뉴이고 2 depth 메뉴로 변경하려고 하는 경우
+            var tmpCode = $(this).find("input[name='code[]']").val();
             $(this).siblings('td:first').find("input[name='code[]']").val(prevMenuCode);
+            $(this).parents("tr").nextAll().each(function(index,tr) {
+                var nextCode = $(tr).find("input[name='code[]']").val();
+                if(tmpCode == nextCode) {
+                    $(tr).find("input[name='code[]']").val(prevMenuCode);
+                }
+            });
         }
     });
 
 });
+
+function menuFormSubmit() {
+    // 메인 메뉴와 서브메뉴의 code값을 넣는다.
+    insertCode();
+    // Drag & drop으로 메뉴 순서 정한거 DB의 order 값에 반영하기
+    adjustOrder();
+}
+
+function insertCode() {
+    var code = $("#menulist tr.menu_list").find("input[name='code[]']").first().val();
+    $("#menulist tr.menu_list").each(function(index, tr) {
+        if(!$(this).find("td.sub_menu_class").find("input[name='code[]']").val()) {
+            code = parseInt(code) + 10;
+        }
+        $(this).find("input[name='code[]']").val(code);
+    });
+}
+
+function adjustOrder() {
+    var depthOneIndex = 0;
+    var depthTwoIndex = 0;
+    var code = 0;
+    $("#menulist tr.menu_list").each(function() {
+        if( code == $(this).find("input[name='code[]']").val() ) {
+            $(this).find("input[name='order[]']").val(depthTwoIndex);
+            depthTwoIndex++;
+        } else {
+            $(this).find("input[name='order[]']").val(depthOneIndex);
+            depthOneIndex++;
+            depthTwoIndex = 0;
+            code = $(this).find("input[name='code[]']").val();
+        }
+    });
+}
 
 // 메뉴 추가 버튼 클릭
 function add_menu() {
