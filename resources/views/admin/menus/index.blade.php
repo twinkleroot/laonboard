@@ -47,6 +47,7 @@
             <table class="table table-striped box" id="menuTable">
                 <thead>
                     <tr>
+                        <th></th>
                         <th>메뉴</th>
                         <th>링크</th>
                         <th>새창</th>
@@ -60,6 +61,7 @@
                 @if(count($menus) > 0)
                 @foreach ($menus as $menu)
                     <tr class="menu_list menu_group_{{ substr($menu['code'], 0, 2) }}">
+                        <td class="dragHandle" style="cursor:move;"></td>
                         <td class="text-center @if(strlen($menu['code']) == 4) sub_menu_class @endif">
                             <input type="hidden" name="code[]" value="{{ substr($menu['code'], 0, 2) }}">
                             @if(strlen($menu['code']) == 4)
@@ -135,7 +137,7 @@ $(function(){
         }
 
         var $tr = $(this).closest("tr");
-        console.log($tr.find("td.sub_menu_class").length);
+
         if($tr.find("td.sub_menu_class").length > 0) {
             $tr.remove();
         } else {
@@ -149,7 +151,37 @@ $(function(){
         }
     });
 
-    $("#menuTable").tableDnD();
+    $("#menuTable").tableDnD({
+        dragHandle: ".dragHandle"
+    });
+
+    $(".dragHandle").dblclick(function(e){
+        e.preventDefault();
+        $(this).siblings('td:first').toggleClass('sub_menu_class');
+        $(this).siblings('td:first').find("input[name='name[]']").before('<div class="depth2">');
+        $(this).siblings('td:first').find("input[name='name[]']").after('</div>');
+        var thisMenuCode = $(this).siblings('td:first').find("input[name='code[]']").val();
+        var prevMenuCode = $(this).parents("tr").prev().find("input[name='code[]']").val();
+        if(typeof(prevMenuCode) == 'undefined') {
+            prevMenuCode = $(this).parents("tr").find("input[name='code[]']").val();
+        }
+
+        if(thisMenuCode == prevMenuCode) {	// 현재 2 depth 메뉴이고 1 depth 메뉴로 변경하려고 할 경우
+            // 현재 코드에 10을 더하고 그 아래 있는 모든 메뉴들의 코드값도 10을 더한다. (현재 속한 1 depth의 나머지 row는 증가 시키지 않는다.)
+            var code = $(this).parents("tr").find("input[name='code[]']").val();
+            var codePlusTen = parseInt(code) + 10;
+            $(this).parents("tr").find("input[name='code[]']").val(codePlusTen);
+            $(this).parents("tr").nextAll().each(function(index,tr) {
+                var nextCode = $(tr).find("input[name='code[]']").val();
+                if(code != nextCode) {
+                    var nextCodePlusTen = parseInt(nextCode) + 10;
+                    $(tr).find("input[name='code[]']").val(nextCodePlusTen);
+                }
+            });
+        } else {	// 현재 1 depth 메뉴이고 2 depth 메뉴로 변경하려고 하는 경우
+            $(this).siblings('td:first').find("input[name='code[]']").val(prevMenuCode);
+        }
+    });
 
 });
 

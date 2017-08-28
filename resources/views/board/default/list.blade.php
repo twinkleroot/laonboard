@@ -60,21 +60,21 @@
     <table class="table box">
         <thead>
             <tr>
-                <th>번호</th>
+                <th @if(count($writes) == 0)class="bd_num"@endif>번호</th>
                 @if(auth()->user() && auth()->user()->isBoardAdmin($board))
-                    <th> <!-- 전체선택 -->
+                    <th @if(count($writes) == 0)class="bd_check"@endif> <!-- 전체선택 -->
                         <input type="checkbox" name="chkAll" onclick="checkAll(this.form)">
                     </th>
                 @endif
                 <th>제목</th>
-                <th>글쓴이</th>
-                <th>날짜</th>
-                <th>조회</th>
+                <th @if(count($writes) == 0)class="bd_name"@endif>글쓴이</th>
+                <th @if(count($writes) == 0)class="bd_date"@endif>날짜</th>
+                <th @if(count($writes) == 0)class="bd_hits"@endif>조회</th>
                 @if($board->use_good)
-                <th>추천</th>
+                <th @if(count($writes) == 0)class="bd_re"@endif>추천</th>
                 @endif
                 @if($board->use_nogood)
-                <th>비추천</th>
+                <th @if(count($writes) == 0)class="bd_nre"@endif>비추천</th>
                 @endif
             </tr>
         </thead>

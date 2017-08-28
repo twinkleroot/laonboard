@@ -28,7 +28,7 @@ class Menu extends Model
     public function getMenuIndexParams()
     {
         return [
-            'menus' => Menu::all(),
+            'menus' => Menu::orderBy('code')->get(),
             'maxCode' => Menu::max('code'),
             'config' => Cache::get("config.homepage"),
         ];
@@ -37,8 +37,8 @@ class Menu extends Model
     // 메뉴 추가 페이지에서 필요한 파라미터
     public function getMenuCreateParams($request)
     {
-        $code = $request->get('code');
-        $new = $request->get('new');
+        $code = $request->code;
+        $new = $request->new;
 
         if($new == 'new' || !$code) {
             $code = base_convert(mb_substr($code, 0, 2, 'utf-8'), 36, 10);
