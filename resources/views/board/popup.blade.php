@@ -1,13 +1,3 @@
-@section('include_css')
-    <!-- 팝업레이어용 CSS파일 -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/popuplayer.css') }}">
-@endsection
-
-@section('include_script')
-    <script src="js/jquery-3.1.1.min.js"></script>
-    <script src="js/common.js"></script>
-@endsection
-
 <div id="popuplayer">
     <h2>팝업레이어 알림</h2>
     @foreach($popups as $popup)

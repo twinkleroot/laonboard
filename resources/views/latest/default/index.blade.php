@@ -1,7 +1,3 @@
-@section('include_css')
-<link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/latest.css') }}">
-@endsection
-
 <div class="container">
     <div class="row">
         @if(count($boardList))
