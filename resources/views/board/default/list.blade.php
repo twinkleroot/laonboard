@@ -1,8 +1,11 @@
 @section('fisrt_include_css')
-    <link rel="alternate" type="application/rss+xml" href="{{ url('rss') }}" title="RSS Feed {{ config('rss.title') }}">
+<link rel="alternate" type="application/rss+xml" href="{{ url('rss') }}" title="RSS Feed {{ config('rss.title') }}">
 @endsection
 
-<!-- Board list start -->
+@section('include_css')
+<link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/board.css') }}">
+@endsection
+
 <form name="fBoardList" id="fBoardList" action="" onsubmit="return formBoardListSubmit(this);" method="post" target="move">
     <input type="hidden" id='_method' name='_method' value='post' />
     <input type="hidden" id='type' name='type' value='' />
@@ -12,11 +15,9 @@
     <div class="bd_head">
         <a href="{{ route('board.index', $board->table_name) }}">{{ $board->subject }}</a>
     </div>
-
     <div class="bd_count">전체 {{ $writes->total() }}건 {{ $writes->currentPage() }}페이지</div>
-
     <div class="bd_btn">
-        <ul id="bd_btn" class="pull-right">
+        <ul>
             @if(auth()->user() && auth()->user()->isBoardAdmin($board))
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle bd_rd_more" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -32,8 +33,7 @@
                     </ul>
                 </li>
             @endif
-
-            <li class="mr0">
+            <li>
                 @if($board->use_rss_view && $board->list_level == 1 && $board->read_level == 1)
                     <button type="button" class="btn btn-sir" onclick="location.href='{{ route('rss', $board->table_name) }}'">
                         RSS
@@ -105,7 +105,7 @@
 
                     <span class="bd_subject">
                         @if($board->use_category)
-                        <a href="{{ route('board.index', $board->table_name). '?category='. $write->ca_name }}" class="subject_cg" >{{ $write->ca_name }}</a>
+                        <a href="{{ route('board.index', $board->table_name). '?category='. $write->ca_name }}" class="subject_cg">{{ $write->ca_name }}</a>
                         @endif
                         <a href="/bbs/{{ $board->table_name }}/view/{{ $write->parent }}?{{ Request::getQueryString() }}">
                             {!! clean($write->subject) !!}
@@ -203,34 +203,30 @@
 </form>
 
 <div class="bd_btn">
-    <div id="bd_btn">
-        <div class="mr0">
-            <button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->table_name). '?'. $request->getQueryString() }}'">
-                <i class="fa fa-pencil"></i> 글쓰기
-            </button>
-        </div>
-    </div>
-    <div id="bd_sch">
-        <form method="get" action="{{ route('board.index', $board->table_name) }}" onsubmit="return searchFormSubmit(this);">
-            @if($currenctCategory != '')
-                <input type="hidden" id='category' name='category' value='{{ $currenctCategory }}' />
-            @endif
-            <label for="kind" class="sr-only">검색대상</label>
-            <select name="kind" id="kind">
-                <option value="subject" @if($kind == 'subject') selected @endif>제목</option>
-                <option value="content" @if($kind == 'content') selected @endif>내용</option>
-                <option value="subject || content" @if($kind == 'subject || content') selected @endif>제목+내용</option>
-                <option value="name, 0" @if($kind == 'name, 0') selected @endif>글쓴이</option>
-                <option value="name, 1" @if($kind == 'name, 1') selected @endif>글쓴이(코멘트 포함)</option>
-            </select>
+    <button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->table_name). '?'. $request->getQueryString() }}'">
+        <i class="fa fa-pencil"></i> 글쓰기
+    </button>
+</div>
+<div class="bd_sch">
+    <form method="get" action="{{ route('board.index', $board->table_name) }}" onsubmit="return searchFormSubmit(this);">
+        @if($currenctCategory != '')
+            <input type="hidden" id='category' name='category' value='{{ $currenctCategory }}' />
+        @endif
+        <label for="kind" class="sr-only">검색대상</label>
+        <select name="kind" id="kind">
+            <option value="subject" @if($kind == 'subject') selected @endif>제목</option>
+            <option value="content" @if($kind == 'content') selected @endif>내용</option>
+            <option value="subject || content" @if($kind == 'subject || content') selected @endif>제목+내용</option>
+            <option value="name, 0" @if($kind == 'name, 0') selected @endif>글쓴이</option>
+            <option value="name, 1" @if($kind == 'name, 1') selected @endif>글쓴이(코멘트 포함)</option>
+        </select>
 
-            <label for="keyword" class="sr-only">검색어</label>
-            <input type="text" name="keyword" id="keyword" value="{{ $kind != 'user_id' ? $keyword : '' }}" class="search" required>
-            <button type="submit" class="search-icon">
-                <i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">검색</span>
-            </button>
-        </form>
-    </div>
+        <label for="keyword" class="sr-only">검색어</label>
+        <input type="text" name="keyword" id="keyword" value="{{ $kind != 'user_id' ? $keyword : '' }}" class="search" required>
+        <button type="submit" class="search-icon">
+            <i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">검색</span>
+        </button>
+    </form>
 </div>
 
 {{-- 페이지 처리 --}}
@@ -256,54 +252,42 @@ function searchFormSubmit(f) {
         alert('검색어 : 필수 입력입니다.');
         return false;
     }
-
     return true;
 }
-
 // 관리자 메뉴 폼 서브밋 전 실행되는 함수
 function formBoardListSubmit(f) {
     var selected_id_array = selectIdsByCheckBox(".writeId");
-
     if(selected_id_array.length == 0) {
         alert(document.pressed + '할 게시물을 한 개 이상 선택하세요.')
         return false;
     }
-
     if(document.pressed == "선택복사") {
         selectCopy("copy");
         return;
     }
-
     if(document.pressed == "선택이동") {
         selectCopy("move");
         return;
     }
-
     if(document.pressed == "선택삭제") {
         if (!confirm("선택한 게시물을 정말 삭제하시겠습니까?\n\n한번 삭제한 자료는 복구할 수 없습니다\n\n답변글이 있는 게시글을 선택하신 경우\n답변글도 선택하셔야 게시글이 삭제됩니다.")) {
             return false;
         }
-
         f.removeAttribute("target");
         f.action = '/bbs/{{ $board->table_name }}/delete/ids/' + selected_id_array;
         f._method.value = 'DELETE';
     }
-
     return true;
 }
-
 // 선택한 게시물 복사 및 이동
 function selectCopy(type) {
     var f = document.fBoardList;
-
     if (type == "copy") {
         str = "복사";
     } else {
         str = "이동";
     }
-
     var sub_win = window.open("", "move", "left=50, top=50, width=500, height=550, scrollbars=1");
-
     f.type.value = type;
     f.target = "move";
     f.action = "{{ route('board.list.move', $board->table_name)}}";
