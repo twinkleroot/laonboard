@@ -339,7 +339,7 @@ class Config extends Model
         $configData = [
             'title' => $data['title'],
             'superAdmin' => $data['superAdmin'],
-            'usePoint' => $data['usePoint'],
+            'usePoint' => isset($data['usePoint']) ? $data['usePoint'] : 0,
             'loginPoint' => $data['loginPoint'],
             'memoSendPoint' => $data['memoSendPoint'],
             'openDate' => $data['openDate'],
@@ -353,7 +353,7 @@ class Config extends Model
             // 'mobilePages' => $data['title'],
             'newSkin' => $data['newSkin'],
             'searchSkin' => $data['searchSkin'],
-            'useCopyLog' => $data['useCopyLog'],
+            'useCopyLog' => isset($data['useCopyLog']) ? $data['useCopyLog'] : 0,
             'pointTerm' => $data['pointTerm'],
         ];
 

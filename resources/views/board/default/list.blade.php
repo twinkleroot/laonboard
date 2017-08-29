@@ -105,10 +105,10 @@
 
                     <span class="bd_subject">
                         @if($board->use_category)
-                        <a href="{{ route('board.index', $board->table_name). '?category='. $write->ca_name }}" class="subject_cg">{{ $write->ca_name }}</a>
+                        <a href="{{ route('board.index', $board->table_name). '?category='. $write->ca_name }}" class="subject_cg" >{{ $write->ca_name }}</a>
                         @endif
                         <a href="/bbs/{{ $board->table_name }}/view/{{ $write->parent }}?{{ Request::getQueryString() }}">
-                            {{ $write->subject }}
+                            {!! clean($write->subject) !!}
                         </a>
                         {{-- 글올린시간 + 설정에 있는 신규 글 시간 > 현재 시간 --}}
                         @if(date($write->created_at->addHours(24)) > date("Y-m-d H:i:s", time()) && $board->new != 0 )
@@ -165,7 +165,7 @@
                     </ul>
                 @else
                     @if(cache('config.join')->useMemberIcon && $write->iconPath)
-                    <span class="tt_icon"><img src="{{ $write->iconPath }}" /></span> <!-- 아이콘 -->		
+                    <span class="tt_icon"><img src="{{ $write->iconPath }}" /></span> <!-- 아이콘 -->
                     @endif
                     <span class="tt_nick">{{ $write->name }}</span>
                 @endif
