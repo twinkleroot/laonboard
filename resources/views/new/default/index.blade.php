@@ -83,7 +83,12 @@
                     @if(!$boardNew->user_id)
                         {{ $boardNew->name }}
                     @else
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $boardNew->name }}</a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                        @if(cache('config.join')->useMemberIcon && $boardNew->write->iconPath)
+                        <span class="tt_icon"><img src="{{ $boardNew->write->iconPath }}" /></span> <!-- 아이콘 -->
+                        @endif
+                        <span class="tt_nick">{{ $boardNew->name }}</span> <!-- 닉네임 -->
+                    </a>
                     <ul class="dropdown-menu" role="menu">
                         @component('board.sideview', ['board' => '', 'id' => $boardNew->user_id_hashkey, 'name' => $boardNew->name, 'email' => $boardNew->user_email, 'category' => ''])
                         @endcomponent

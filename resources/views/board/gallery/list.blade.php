@@ -120,7 +120,12 @@
                     </p>
                     <span>
                     @if(auth()->user() && $board->use_sideview)
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                            @if(cache('config.join')->useMemberIcon && $write->iconPath)
+                            <span class="tt_icon"><img src="{{ $write->iconPath }}" /></span> <!-- 아이콘 -->
+                            @endif
+                            <span class="tt_nick">{{ $write->name }}</span> <!-- 닉네임 -->
+                        </a>
                         <ul class="dropdown-menu" role="menu">
                         @if($write->user_level)
                             @component('board.sideview', ['board' => $board, 'id' => $write->user_id, 'name' => $write->name, 'email' => $write->email, 'category' => $currenctCategory])
@@ -146,7 +151,10 @@
                         @endif
                         </ul>
                     @else
-                        {{ $write->name }}
+                        @if(cache('config.join')->useMemberIcon && $write->iconPath)
+                        <span class="tt_icon"><img src="{{ $write->iconPath }}" /></span> <!-- 아이콘 -->
+                        @endif
+                        <span class="tt_nick">{{ $write->name }}</span>
                     @endif
                     </span>
                     <span><i class="fa fa-clock-o"></i>@monthAndDay($write->created_at)</span>
