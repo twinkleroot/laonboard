@@ -78,7 +78,6 @@ input[type=radio] {
 .tt_icon img {
 	width: 22px;
 	height: 22px;
-	vertical-align: top;
 }
 .tt_nick {
 	line-height:22px;vertical-align: top;
