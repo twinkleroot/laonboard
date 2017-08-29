@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Exception;
+use File;
 use Carbon\Carbon;
 use App\User;
 use App\Board;
@@ -43,6 +44,13 @@ class Comment
             if( auth()->guest() || !auth()->user()->isAdmin() ) {
                 if ($comment->ip) {
                     $comment->ip = preg_replace("/([0-9]+).([0-9]+).([0-9]+).([0-9]+)/", config('gnu.IP_DISPLAY'), $comment->ip);
+                }
+            }
+
+            if($comment->user_id && cache('config.join')->useMemberIcon) {
+                $iconPath = storage_path('app/public/user'). '/'. mb_substr($comment->email, 0, 2, 'utf-8'). '/'. $comment->email. '.gif';
+                if(File::exists($iconPath)) {
+                    $comment->iconPath = '/storage/user/'. mb_substr($comment->email, 0, 2, 'utf-8'). '/'. $comment->email. '.gif';
                 }
             }
         }

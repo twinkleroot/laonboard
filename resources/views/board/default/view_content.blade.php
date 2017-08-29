@@ -5,7 +5,10 @@
 <div class="bd_rd_head">
     <h1>{{ $write->subject }}</h1>
     <ul class="bd_rd_info">
-        <li><i class="fa fa-user"></i>
+        <li>
+        @if(!$write->iconPath)
+            <i class="fa fa-user"></i>
+        @endif
         @if(auth()->user() && $board->use_sideview)
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                 @if(cache('config.join')->useMemberIcon && $write->iconPath)
@@ -215,9 +218,16 @@
         <div class="cmt_box @if(strlen($comment->comment_reply)>0) cmt_reply" style="padding-left: calc(25px * {{ strlen($comment->comment_reply) }}); @endif">
             <ul class="bd_rd_cmt_info">
                 <li class="td_nick">
+                @if(!$comment->iconPath)
                     <i class="fa fa-user"></i>
+                @endif
                 @if($user && $board->use_sideview)
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $comment->name }}</a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                        @if(cache('config.join')->useMemberIcon && $comment->iconPath)
+                        <span class="tt_icon"><img src="{{ $comment->iconPath }}" /></span> <!-- 아이콘 -->
+                        @endif
+                        <span class="tt_nick">{{ $comment->name }}</span> <!-- 닉네임 -->
+                    </a>
                     <ul class="dropdown-menu" role="menu">
                     @if($comment->user_level)
                         @component('board.sideview', ['board' => $board, 'id' => $comment->user_id_hashkey, 'name' => $comment->name, 'email' => $comment->email, 'category' => isset($currenctCategory) ? $currenctCategory : ''])
@@ -243,7 +253,10 @@
                     @endif
                     </ul>
                 @else
-                    {{ $comment->name }}
+                    @if(cache('config.join')->useMemberIcon && $comment->iconPath)
+                    <span class="tt_icon"><img src="{{ $comment->iconPath }}" /></span> <!-- 아이콘 -->
+                    @endif
+                    <span class="tt_nick">{{ $comment->name }}</span> <!-- 닉네임 -->
                 @endif
                 @if($board->use_ip_view) {{ "({$comment->ip})" }} @endif
                 </li>

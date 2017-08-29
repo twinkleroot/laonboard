@@ -21,7 +21,11 @@ class Notification
         $superAdmin = Cache::get('config.homepage')->superAdmin;    // 최고 관리자
         $write = $writeModel->find($writeId);   // 작성한 글
         $parentWrite = $writeModel->find($write->parent);   // 원글
-        $content = clean($write->content);     // 글 내용
+        if($write->is_comment) {
+            $content = clean('<p>원글<br>'. $parentWrite->subject. '</p><br><p>댓글<br>'. $write->content. '</p>');     // 글 내용
+        } else {
+            $content = clean($write->content);
+        }
         $writeSubject = $write->subject;    // 글 제목
         $name = $write->name;
         $type = '새';
