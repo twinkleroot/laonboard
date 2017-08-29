@@ -2,8 +2,6 @@
 @import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
 @import url('https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900');
 
-/* common */
-
 /* margin reset */
 .mt0  {margin-top: 0;}
 .mt5  {margin-top: 5px;}
@@ -18,21 +16,6 @@
 
 .mr0  {margin-right: 0px;}
 .mr5  {margin-right: 5px;}
-
-
-/* header */
-
-
-/* form */
-
-.bg-sir {
-	background-color: #587ef6 !important;
-	color: #fff !important;
-}
-.sr-only-input {
-	margin-top: -20px;
-}
-
 
 /* content */
 .mdline-title {
@@ -115,24 +98,6 @@
 	background: #f5f5f5;
 }
 
-/* pagination */
-.pagination {
-	margin: 20px auto;
-	display: table;
-	font-size: 12px;
-}
-.pagination>li>a,
-.pagination>li>span {
-	color: #555;
-}
-.pagination>li>a:hover,
-.pagination>li>span:hover {
-	color: #0000FF;
-	background-color: #f7f7f7;
-	font-weight: 600;
-	text-decoration: underline;
-}
-
 /* 포인트 내역 */
 #pt .box {
 	padding: 15px;
@@ -190,33 +155,6 @@
 	height:34px; padding:6px; border: 1px solid #d8d8d8; margin-right: -4px;
 }
 #pt_sch .search-icon {
-	border: 0; background: #fff; margin-left: -30px; outline: none;
-}
-.bd_sch {
-	width: 100%;
-	font-size: 12px;
-}
-.bd_sch:after {
-	content: '';
-	display: block;
-	clear: both;
-}
-.bd_sch ul {
-	padding: 0;
-	margin: 0;
-}
-.bd_sch ul li {
-	list-style: none;
-	float: left;
-	margin: 0 2px;
-}
-.bd_sch select {
-	height:34px; padding:6px; border: 1px solid #ccc;
-}
-.bd_sch .search {
-	height:34px; padding:6px; border: 1px solid #d8d8d8; margin-right: -4px;
-}
-.bd_sch .search-icon {
 	border: 0; background: #fff; margin-left: -30px; outline: none;
 }
 #sch_result {
@@ -390,17 +328,6 @@
 #pt_change {
 	margin: 40px 0;
 }
-.bd_new {
-	float: right;
-	font-size: 11px;
-	margin: 5px 0 10px;
-	letter-spacing: -1px;
-}
-.bd_new:after {
-	content: "";
-	display: block;
-	clear: both;
-}
 
 /* 리스트형 게시판 */
 #board .table>thead,
@@ -417,115 +344,10 @@
 	color: #333;
 	text-decoration: none;
 }
-.bd_head {
-	vertical-align: bottom;
-	font-weight: 600;
-	clear: both;
-	font-size: 18px;
-	margin-bottom: 10px;
-}
-.bd_head a {
-	display: inline-block;
-	line-height: 20px;
-}
-.bd_head a:hover {
-	background: #f0f0f0;
-}
-.bd_head a:active {
-	box-shadow: 0px 2px 3px #ddd inset;
-}
-.bd_count {
-	float: left;
-	line-height: 34px;
-	font-weight: normal;
-}
 .bd_header:after {
 	content: '';
 	display: block;
 	clear: both;
-}
-.bd_btn {
-	padding: 0;
-	margin-bottom: 10px;
-	float: right;
-}
-.bd_btn:after {
-	content: '';
-	display: block;
-	clear: both;
-}
-.bd_btn ul {
-	padding: 0;
-	margin-bottom: 0;
-}
-.bd_btn .bd_btn_left {
-	padding: 0;
-	margin-bottom: 0;
-	float: left !important;
-}
-.bd_btn ul li {
-	list-style: none;
-	float: left;
-	margin-right: 5px;
-}
-.bd_btn ul li:last-child {
-	margin-right: 0;
-}
-.bd_btn ul:after {
-	content: '';
-	display: block;
-	clear: both;
-}
-.bd_btn span {
-	line-height: 34px; font-size: 14px;
-}
-.bd_adm li {
-	width: 100%;
-	margin: 0;
-}
-.bd_adm input {
-	border: 0;
-	background: none;
-	width: 100%;
-	text-align: left;
-	padding: 3px 20px;
-}
-.bd_adm input:hover {
-	background: #f5f5f5;
-}
-.bd_category {
-	margin: 10px 0;
-	clear: both;
-}
-.bd_category ul {
-	padding: 0;
-	margin: 0;
-	display: inline-block;
-}
-.bd_category ul li {
-	list-style: none;
-	float: left;
-	padding: 0 20px;
-	font-size: 12px;
-	padding: 0;
-	margin: 0 3px;
-	border: 1px solid #ddd;
-	border-top: 3px solid #ddd;
-	border-radius: 4px;
-	background: #fff;
-}
-.bd_category ul li:hover {
-	border-top: 3px solid #587ef6;
-}
-.bd_category ul li:first-child {
-	margin-left: 0;
-}
-.bd_category ul li a {
-	display: block;
-	padding: 8px 12px;
-}
-.bd_category .on {
-	border-top: 3px solid #587ef6;
 }
 .bd_write {
 	margin-right: 0;
@@ -622,13 +444,6 @@
 }
 .bd_re .up {
 	color: #f53497;
-}
-#bd_notice {
-	background: #ecf7f8;
-}
-#bd_notice .bd_num {
-	color: #587ef6;
-	font-weight: 600;
 }
 
 /* 갤러리형 게시판 */
@@ -1568,29 +1383,6 @@ input[type=checkbox],
 input[type=radio] {
 	vertical-align: middle; margin: 0 0 0 5px;
 }
-.ctt_admin {
-	float: right;
-}
-#ctt header {
-	padding-bottom: 10px;
-	border-bottom: 1px solid #d8d8d8;
-}
-#ctt header:after {
-	content: "";
-	display: block;
-	clear: both;
-}
-#ctt h1 {
-	font-size: 18px;
-	float: left;
-	margin: 0;
-	padding: 0 5px;
-	line-height: 34px;
-	font-weight: bold;
-}
-#ctt_con {
-	margin: 30px 0;
-}
 @media (max-width: 767px) {
     #popular ul {
         margin: 8px 0 0;
@@ -1601,9 +1393,6 @@ input[type=radio] {
     }
     #contents {
     	min-height: 100%;
-    }
-    .bd_head a {
-    	clear: both;
     }
     .table>thead>tr>th.mo,
     .table>tbody>tr>td.mo {

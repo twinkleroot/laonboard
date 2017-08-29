@@ -4,6 +4,10 @@
     {{ $content->subject }} | {{ Cache::get("config.homepage")->title }}
 @endsection
 
+@section('include_css')
+<link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/content.css') }}">
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row">

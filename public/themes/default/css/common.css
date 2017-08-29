@@ -21,6 +21,13 @@ div {
 	background-color: #3e63d6;
 	border-color: #3e63d6;
 }
+.bg-sir {
+	background-color: #587ef6 !important;
+	color: #fff !important;
+}
+.sr-only-input {
+	margin-top: -20px;
+}
 
 /* header */
 #header {
@@ -328,6 +335,22 @@ div {
 }
 
 /* pagination */
+.pagination {
+	margin: 20px auto;
+	display: table;
+	font-size: 12px;
+}
+.pagination>li>a,
+.pagination>li>span {
+	color: #555;
+}
+.pagination>li>a:hover,
+.pagination>li>span:hover {
+	color: #0000FF;
+	background-color: #f7f7f7;
+	font-weight: 600;
+	text-decoration: underline;
+}
 .pagination>.active>a,
 .pagination>.active>a:focus,
 .pagination>.active>a:hover,

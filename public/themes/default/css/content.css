@@ -1,0 +1,23 @@
+.ctt_admin {
+    float: right;
+}
+#ctt header {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #d8d8d8;
+}
+#ctt header:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+#ctt h1 {
+    font-size: 18px;
+    float: left;
+    margin: 0;
+    padding: 0 5px;
+    line-height: 34px;
+    font-weight: bold;
+}
+#ctt_con {
+    margin: 30px 0;
+}

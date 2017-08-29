@@ -1,0 +1,156 @@
+.bd_head {
+    vertical-align: bottom;
+    font-weight: 600;
+    clear: both;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+.bd_head a {
+    display: inline-block;
+    line-height: 20px;
+}
+.bd_head a:hover {
+    text-decoration: underline !important;
+}
+.bd_count {
+    float: left;
+    line-height: 34px;
+    font-weight: normal;
+}
+.bd_btn {
+    padding: 0;
+    margin-bottom: 10px;
+    float: right;
+}
+.bd_btn:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+.bd_btn ul {
+    padding: 0;
+    margin-bottom: 0;
+}
+.bd_btn ul li {
+    list-style: none;
+    float: left;
+    margin-right: 5px;
+}
+.bd_btn ul li:last-child {
+    margin-right: 0;
+}
+.bd_btn ul:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+.bd_btn span {
+    line-height: 34px; font-size: 14px;
+}
+.bd_adm li {
+    width: 100%;
+    margin: 0;
+}
+.bd_adm input {
+    border: 0;
+    background: none;
+    width: 100%;
+    text-align: left;
+    padding: 3px 20px;
+}
+.bd_adm input:hover {
+    background: #f5f5f5;
+}
+
+/* category */
+.bd_category {
+    margin: 10px 0;
+    clear: both;
+}
+.bd_category ul {
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+}
+.bd_category ul li {
+    list-style: none;
+    float: left;
+    padding: 0 20px;
+    font-size: 12px;
+    padding: 0;
+    margin: 0 3px;
+    border: 1px solid #ddd;
+    border-top: 3px solid #ddd;
+    border-radius: 4px;
+    background: #fff;
+}
+.bd_category ul li:hover {
+    border-top: 3px solid #587ef6;
+}
+.bd_category ul li:first-child {
+    margin-left: 0;
+}
+.bd_category ul li a {
+    display: block;
+    padding: 8px 12px;
+}
+.bd_category .on {
+    border-top: 3px solid #587ef6;
+}
+
+/* board list */
+#bd_notice {
+    background: #ecf7f8;
+}
+#bd_notice .bd_num {
+    color: #587ef6;
+    font-weight: 600;
+}
+
+/* search */
+.bd_sch {
+    width: 100%;
+    font-size: 12px;
+}
+.bd_sch:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+.bd_sch ul {
+    padding: 0;
+    margin: 0;
+}
+.bd_sch ul li {
+    list-style: none;
+    float: left;
+    margin: 0 2px;
+}
+.bd_sch select {
+    height:34px; padding:6px; border: 1px solid #ccc;
+}
+.bd_sch .search {
+    height:34px; padding:6px; border: 1px solid #d8d8d8; margin-right: -4px;
+}
+.bd_sch .search-icon {
+    border: 0; background: #fff; margin-left: -30px; outline: none;
+}
+
+/* 새글 */
+.bd_new {
+    float: right;
+    font-size: 11px;
+    margin: 5px 0 10px;
+    letter-spacing: -1px;
+}
+.bd_new:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+@media (max-width: 767px) {
+    .bd_head a {
+        clear: both;
+    }
+}
