@@ -244,8 +244,9 @@ class Write extends Model
                 if($kinds[1] == 0) {	// 글쓴이 원글만 검색
                     $query = $query->where('is_comment', $kinds[1]);
                 }
-            // 단독 키워드 검색(제목, 내용)
-            } else {
+            } else if($kind == 'name') {
+                $query = $query->where($writeModel->table.'.name', $keyword);
+            } else { // 단독 키워드 검색(제목, 내용)
                 $query = $query->whereRaw("INSTR($kind, '$keyword')");
             }
         } else {
@@ -359,12 +360,12 @@ class Write extends Model
         } else if (strpos($write->option, 'html2') !== false) {
             $html = 2;
         }
-         // 에디터를 사용하면서 html에 체크하지 않았을 때
-        if($this->board->use_dhtml_editor && $html == 0) {
-            // $write->content = convertContent($write->content, 2);
-        } else {
-            // $write->content = convertContent($write->content, $html);
-        }
+        // 에디터를 사용하면서 html에 체크하지 않았을 때
+        // if($this->board->use_dhtml_editor && $html == 0) {
+        //     $write->content = convertContent($write->content, 2);
+        // } else {
+        //     $write->content = convertContent($write->content, $html);
+        // }
 
         // 검색어 색깔 다르게 표시
         if($request->has('keyword')) {
@@ -419,6 +420,13 @@ class Write extends Model
 
         // 글 제목 길이 설정에 따라 조정하기
         $write->subject = subjectLength($write->subject, $this->board->subject_len);
+
+        if($write->user_id && cache('config.join')->useMemberIcon) {
+            $iconPath = storage_path('app/public/user'). '/'. mb_substr($write->email, 0, 2, 'utf-8'). '/'. $write->email. '.gif';
+            if(File::exists($iconPath)) {
+                $write->iconPath = '/storage/user/'. mb_substr($write->email, 0, 2, 'utf-8'). '/'. $write->email. '.gif';
+            }
+        }
 
         $scrap = Scrap::where([
             'user_id' => auth()->user() ? auth()->user()->id : 0,

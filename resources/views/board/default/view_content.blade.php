@@ -5,7 +5,46 @@
 <div class="bd_rd_head">
     <h1>{{ $write->subject }}</h1>
     <ul class="bd_rd_info">
-        <li><i class="fa fa-user"></i>{{ $write->name}} @if($board->use_ip_view) ({{ $write->ip }}) @endif</li>
+        <li><i class="fa fa-user"></i>
+        @if(auth()->user() && $board->use_sideview)
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                @if(cache('config.join')->useMemberIcon && $write->iconPath)
+                <span class="tt_icon"><img src="{{ $write->iconPath }}" /></span> <!-- 아이콘 -->
+                @endif
+                <span class="tt_nick">{{ $write->name }}</span> <!-- 닉네임 -->
+            </a>
+            <ul class="dropdown-menu" role="menu">
+            @if($write->user_id && App\User::getUser($write->user_id)->level)
+                @component('board.sideview', ['board' => $board, 'id' => $write->user_id, 'name' => $write->name, 'email' => $write->email, 'category' => $currenctCategory])
+                @endcomponent
+            @else
+                <li><a href="/bbs/{{ $board->table_name }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
+            @endif
+            @if($write->user_id && App\User::getUser($write->user_id)->level)
+                <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>
+            @endif
+            </ul>
+        @elseif(auth()->guest() && $board->use_sideview)
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
+            <ul class="dropdown-menu" role="menu">
+            @if($write->user_id && App\User::getUser($write->user_id)->level)
+                @component('board.sideview', ['board' => $board, 'id' => $write->user_id, 'name' => $write->name, 'email' => $write->email, 'category' => $currenctCategory])
+                @endcomponent
+            @else
+                <li><a href="/bbs/{{ $board->table_name }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
+            @endif
+            @if($write->user_id && App\User::getUser($write->user_id)->level)
+                <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>
+            @endif
+            </ul>
+        @else
+            @if(cache('config.join')->useMemberIcon && $write->iconPath)
+            <span class="tt_icon"><img src="{{ $write->iconPath }}" /></span> <!-- 아이콘 -->
+            @endif
+            <span class="tt_nick">{{ $write->name }}</span>
+        @endif
+        @if($board->use_ip_view) ({{ $write->ip }}) @endif
+        </li>
         <li><i class="fa fa-clock-o"></i>@datetime($write->created_at)</li>
         <li><i class="fa fa-eye"></i>{{ $write->hit }}</li>
     </ul>

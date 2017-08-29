@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use DB;
 use Cache;
+use File;
 use App\Write;
 use App\Comment;
 use App\Point;
@@ -96,6 +97,13 @@ class BoardNew extends Model
             $writeModel->setTableName(Board::getBoard($boardNew->board_id, 'id')->table_name);
             $write = $writeModel->find($boardNew->write_parent);	 // 원글
             $user = $boardNew->user_id ? User::getUser($boardNew->user_id) : new User();
+            // 회원 아이콘 경로 추가
+            if($write->user_id && cache('config.join')->useMemberIcon) {
+                $iconPath = storage_path('app/public/user'). '/'. mb_substr($write->email, 0, 2, 'utf-8'). '/'. $write->email. '.gif';
+                if(File::exists($iconPath)) {
+                    $write->iconPath = '/storage/user/'. mb_substr($write->email, 0, 2, 'utf-8'). '/'. $write->email. '.gif';
+                }
+            }
             // 원글, 댓글 공통 추가 데이터
             $boardNew->write = $write;
             $subject = subjectLength($write->subject, 60);
@@ -104,6 +112,7 @@ class BoardNew extends Model
             $boardNew->user_id_hashkey = $user->id_hashkey;
             $boardNew->commentTag = '';
             $boardNew->name = $write->name;
+
             // 댓글은 데이터 따로 추가
             if($boardNew->write_id != $boardNew->write_parent) {
                 $comment = $writeModel->find($boardNew->write_id);	 // 댓글
