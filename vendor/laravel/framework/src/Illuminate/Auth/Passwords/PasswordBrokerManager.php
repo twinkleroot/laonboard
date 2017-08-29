@@ -1,8 +1,10 @@
 <?php
 namespace Illuminate\Auth\Passwords;
+
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Illuminate\Contracts\Auth\PasswordBrokerFactory as FactoryContract;
+
 class PasswordBrokerManager implements FactoryContract
 {
     /**
