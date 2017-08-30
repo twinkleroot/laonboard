@@ -9,14 +9,14 @@
 
     <!-- css -->
     <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('font-awesome/css/font-awesome.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/common.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/profile.css') }}">
 
     <!-- js -->
 </head>
-<body class="white">
-
-<div id="header">
+<body>
+<div id="header" class="sub">
 <div class="container">
     <div class="title">
         <span>[{{ $user->nick }}]님의 프로필</span>

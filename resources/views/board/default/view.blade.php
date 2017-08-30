@@ -10,6 +10,10 @@
     <script src="https://www.google.com/recaptcha/api.js"></script>
 @endsection
 
+@section('include_css')
+<link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/board.css') }}">
+@endsection
+
 @section('content')
 <!-- Board start -->
 <div id="board" class="container">

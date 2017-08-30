@@ -1,0 +1,59 @@
+#profile label {
+    font-weight: normal;
+    margin: 0;
+    font-size: 0;
+}
+#profile i {
+    margin: 0 8px;
+    font-size: 12px;
+}
+#profile span {
+    font-size: 12px;
+}
+#profile .gr0 {
+    color: #aaa;
+}
+#profile .gr1 {
+    color: #ff6699;
+}
+#profile .on {
+    background: #f4f4f4;
+}
+#profile .on .here {
+    color:#ff6699;
+    float: right;
+    font-weight: bold;
+}
+#profile .on .here:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+#profile .table>tbody>tr>td {
+    width: 30%;
+    border-right: 1px solid #d8d8d8;
+}
+#profile .table>tbody>tr>td.subject {
+    background: #f0f0f0;
+    font-weight: bold;
+    text-align: left;
+    border-right: 1px solid #d8d8d8;
+    width: 20%;
+}
+#profile a {
+    color: #333 !important;
+    cursor: pointer;
+}
+#profile .profile_title {
+    margin-top: 25px;
+}
+#profile .introduce {
+    background: #fff;
+    border: 1px solid #d8d8d8;
+    padding: 15px;
+    margin: 10px 0 30px;
+    min-height: 150px;
+}
+#profile .introduce p {
+    margin: 0;
+}

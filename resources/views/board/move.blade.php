@@ -12,9 +12,9 @@
 
     <!-- css -->
     <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('font-awesome/css/font-awesome.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/common.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/move.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('font-awesome/css/font-awesome.css') }}">
 
     <!-- Scripts -->
     <script>

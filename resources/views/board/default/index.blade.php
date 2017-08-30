@@ -4,6 +4,10 @@
     {{ $board->subject }} 리스트 | {{ Cache::get("config.homepage")->title }}
 @endsection
 
+@section('include_css')
+<link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/board.css') }}">
+@endsection
+
 @section('include_script')
     <script src="{{ asset('js/common.js') }}"></script>
 @endsection
