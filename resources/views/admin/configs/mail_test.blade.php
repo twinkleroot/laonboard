@@ -17,24 +17,33 @@
 </div>
 
 <div class="body-contents">
-@if(Session::has('successAddress') && count(Session::get('successAddress')) > 0)
+@if ($errors->any())
+    <div id="adm_save">
+        <span class="adm_save_txt">{{ $errors->first() }}</span>
+        <button onclick="alertclose()" class="adm_alert_close">
+            <i class="fa fa-times"></i>
+        </button>
+    </div>
+@else
+    @if(Session::has('successAddress') && count(Session::get('successAddress')) > 0)
     <div class="alert alert-info">
         다음 {{ count(Session::get('successAddress')) }}개의 메일 주소로 테스트 메일 발송이 완료되었습니다.
     </div>
     <ul>
         @foreach(Session::get('successAddress') as $email)
-            <li>
-                {{ $email }}
-            </li>
+        <li>
+            {{ $email }}
+        </li>
         @endforeach
     </ul>
     해당 주소로 테스트 메일이 도착했는지 확인해 주십시오.<br />
     만약, 테스트 메일이 오지 않는다면 더 다양한 계정의 메일 주소로 메일을 보내 보십시오.<br />
     그래도 메일이 하나도 도착하지 않는다면 메일 서버(sendmail server)의 오류일 가능성이 높으니, 웹 서버관리자에게 문의하여 주십시오.<br />
-@elseif(Session::has('successAddress'))
+    @elseif(Session::has('successAddress'))
     <div class="alert alert-danger">
         테스트 메일 발송에 실패하였습니다.
     </div>
+    @endif
 @endif
 
 메일서버가 정상적으로 동작 중인지 확인할 수 있습니다.<br />

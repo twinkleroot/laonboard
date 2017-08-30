@@ -31,6 +31,14 @@
         </button>
     </div>
     @endif
+    @if ($errors->any())
+    <div id="adm_save">
+        <span class="adm_save_txt">{{ $errors->first() }}</span>
+        <button onclick="alertclose()" class="adm_alert_close">
+            <i class="fa fa-times"></i>
+        </button>
+    </div>
+    @endif
 
     <div id="auth_list">
         <ul id="adm_btn">

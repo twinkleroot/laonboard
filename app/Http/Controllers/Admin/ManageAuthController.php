@@ -37,6 +37,13 @@ class ManageAuthController extends Controller
      */
     public function store(Request $request)
     {
+        $rules = [ 'email' => 'bail|email|required'];
+        $messages = [
+            'email.email' => '받는 메일주소에 올바른 이메일 형식으로 입력해 주세요.',
+            'email.required' => '받는 메일주소를 입력해 주세요.',
+        ];
+        $this->validate($request, $rules, $messages);
+
         $message = $this->authModel->storeManageAuth($request);
 
         return redirect()->back()->with('message', $message);

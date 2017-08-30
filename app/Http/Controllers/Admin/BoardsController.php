@@ -233,6 +233,7 @@ class BoardsController extends Controller
         return view('admin.boards.thumbnail_delete', $params);
     }
 
+    // 유효성 검사 규칙
     public function rules()
     {
         return [

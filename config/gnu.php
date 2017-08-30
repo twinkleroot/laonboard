@@ -16,11 +16,11 @@
     'popularDel' => 180,
     'newRows' => 15,
     'pageRows' => 10,
-    'mobilePageRows' => 10,
+    // 'mobilePageRows' => 10,
     'writePages' => 10,
-    'mobilePages' => 5,
-    'newSkin' => '',
-    'searchSkin' => '',
+    // 'mobilePages' => 5,
+    'newSkin' => 'default',
+    'searchSkin' => 'default',
     'useCopyLog' => 1,
     'pointTerm' => 0,
 
@@ -39,7 +39,7 @@
     ),
 
     // 회원 가입
-    'skin' => 'default',
+    'userSkin' => 'default',
     'nickDate' => 30,
     'name' => 0,
     'homepage' => 0,

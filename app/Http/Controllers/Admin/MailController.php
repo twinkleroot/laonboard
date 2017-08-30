@@ -25,6 +25,13 @@ class MailController extends Controller
     public function postMail(Request $request)
     {
         if(auth()->user()->isSuperAdmin() || Gate::allows('view-admin-mailtest', getManageAuthModel($this->menuCode))) {
+            $rules = [ 'email' => 'bail|email|required'];
+            $messages = [
+                'email.email' => '받는 메일주소에 올바른 이메일 형식으로 입력해 주세요.',
+                'email.required' => '받는 메일주소를 입력해 주세요.',
+            ];
+            $this->validate($request, $rules, $messages);
+
             $toAddresses = explode(',', $request->email);
             $successAddress = [];
             foreach($toAddresses as $to) {
