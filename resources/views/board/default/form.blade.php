@@ -4,10 +4,6 @@
     {{ $board->subject }} 게시글 작성 | {{ Cache::get("config.homepage")->title }}
 @endsection
 
-@section('include_css')
-<link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/board.css') }}">
-@endsection
-
 @section('include_script')
     <script src="{{ asset('tinymce/tinymce.min.js') }}"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
@@ -22,7 +18,7 @@
         <form role="form" id="fwrite" method="post" action={{ route('board.update', ['boardId'=>$board->table_name, 'writeId'=>$write->id])}} enctype="multipart/form-data" @if(auth()->user() && auth()->user()->isBoardAdmin($board)) onsubmit="return writeSubmit();" @endif>
             {{ method_field('put') }}
     @else
-        <form role="form" id="fwrite" method="post" action={{ route('board.store', $board->table_name) }} enctype="multipart/form-data" @if(auth()->user() && auth()->user()->isBoardAdmin($board)) onsubmit="return writeSubmit();" @endif>
+        <form role="form" id="fwrite" method="post" action={{ route('board.store', $board->table_name) }} enctype="multipart/form-data" @if(auth()->guest() || !auth()->user()->isBoardAdmin($board)) onsubmit="return writeSubmit();" @endif>
     @endif
         <input type="hidden" name="type" id="type" value="{{ $type }}" />
         <input type="hidden" name="writeId" id="writeId" @if($type != 'create') value="{{ $write->id }}" @endif/>
@@ -260,12 +256,6 @@ function validate(event) {
     }
 }
 function writeSubmit() {
-    @if($board->use_category)
-    if($("#ca_name").val() == '') {
-        alert("카테고리를 선택해주셔야 합니다.");
-        return false;
-    }
-    @endif
     var subject = "";
     var content = "";
     var contentData = "";
@@ -276,6 +266,21 @@ function writeSubmit() {
     } else {
         contentData = $('#content').val();
     }
+
+    @if($board->use_category)
+    if($("#ca_name").val() == '') {
+        alert("카테고리를 선택해 주세요.");
+        return false;
+    }
+    if($("#subject").val() == '') {
+        alert("제목을 입력해 주세요.");
+        return false;
+    }
+    if(contentData == '') {
+        alert("내용을 입력해 주세요.");
+        return false;
+    }
+    @endif
 
     $.ajax({
         url: '/ajax/filter/board',
