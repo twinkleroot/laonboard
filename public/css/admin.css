@@ -732,6 +732,11 @@ input[type=radio] {
 .body-contents {
 	padding: 30px;
 }
+.body-contents:after {
+	content: "";
+	display: block;
+	clear: both;
+}
 .body-contents .help {
 	border: 1px solid #ddd;
 	border-radius: 4px;
@@ -840,6 +845,11 @@ input[type=radio] {
 	font-size:12px;
 	line-height:22px;
 	color:#aaa;
+}
+#footer:before {
+	content: "";
+	display: block;
+	clear: both;
 }
 
 /* table */
