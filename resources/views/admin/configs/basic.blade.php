@@ -8,16 +8,6 @@
 <script type="text/javascript">
     var menuVal = 100100;
     $(document).ready(function(){
-        var nav = $('#body_tab_type2');
-
-        $(window).scroll(function () {
-            if ($(this).scrollTop() > 175) {
-                nav.addClass("f-tab");
-            } else {
-                nav.removeClass("f-tab");
-            }
-        });
-
         $(window).on('scroll', function() {
             $('.adm_box').each(function() {
                 if($(window).scrollTop() >= $(this).offset().top - 100) {

@@ -11,7 +11,7 @@
         </h1>
         <hr style="width: 100%; height: 0; border-top: 2px solid #587ef6; margin: 20px 0;">
         <div style="margin: 20px 0 40px; font-size: 14px; line-height: 1.8;">
-            <b>{{ $nick }}</b>님께서 회원가입 하셨습니다.
+            <b>{{ $user->nick }}</b>님께서 회원가입 하셨습니다.
 
             <div style="background: #eee; padding: 20px; margin: 20px 0; border-radius: 4px;">
                 회원 이메일 : <b>{{ $user->email }}</b><br>

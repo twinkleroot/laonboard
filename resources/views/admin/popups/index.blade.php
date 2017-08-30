@@ -22,6 +22,14 @@
         </ul>
     </div>
 </div>
+
+<div id="body_tab_type2">
+    <span class="txt">커뮤니티 메인에 표시될 팝업 레이어를 설정합니다.</span>
+    <div class="submit_btn">
+        <a href="{{ route('admin.popups.create') }}" class="btn btn-sir" role="button">팝업 레이어 추가</a>
+    </div>
+</div>
+
 <div class="body-contents">
     <div id="auth_list">
         <ul id="adm_btn">
@@ -29,12 +37,6 @@
                 <span>
                     전체 {{ count($popups) }}건
                 </span>
-            </li>
-        </ul>
-
-        <ul id="adm_btn" class="pull-right">
-            <li>
-                <a href="{{ route('admin.popups.create') }}" class="btn btn-sir" role="button">새창관리추가</a>
             </li>
         </ul>
 

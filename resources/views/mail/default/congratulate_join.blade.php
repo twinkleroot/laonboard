@@ -11,7 +11,7 @@
         </h1>
         <hr style="width: 100%; height: 0; border-top: 2px solid #587ef6; margin: 20px 0;">
         <div style="margin: 20px 0 40px; font-size: 14px; line-height: 1.8;">
-            <b>{{ $nick }}</b>님의 회원가입을 진심으로 축하합니다.<br>
+            <b>{{ $user->nick }}</b>님의 회원가입을 진심으로 축하합니다.<br>
             회원님의 성원에 보답하고자 더욱 더 열심히 하겠습니다.<br>
             @if(Cache::get('config.email.default')->emailCertify)
                 아래의 <strong>메일인증</strong>을 클릭하시면 회원가입이 완료됩니다.<br>

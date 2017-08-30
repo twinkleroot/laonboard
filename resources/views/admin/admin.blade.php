@@ -17,6 +17,7 @@
     @yield('include_css')
 
     <!-- Scripts -->
+    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script>
         window.Laravel = {!! json_encode([
             'csrfToken' => csrf_token(),
@@ -25,9 +26,19 @@
         function alertclose() {
             document.getElementById("adm_save").style.display = "none";
         }
-    </script>
 
-    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+        $(document).ready(function($){
+            var nav = $('#body_tab_type2');
+
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 175) {
+                    nav.addClass("f-tab");
+                } else {
+                    nav.removeClass("f-tab");
+                }
+            });
+        });
+    </script>
     @yield('include_script')
 </head>
 <body>
