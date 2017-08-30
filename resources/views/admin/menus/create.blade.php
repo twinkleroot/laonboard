@@ -28,6 +28,8 @@
 </head>
 
 <body>
+<form class="form-horizontal">
+{{ csrf_field() }}
 <div id="header">
 <div class="container">
     <div class="title">
@@ -35,32 +37,30 @@
     </div>
 
     <div class="cbtn">
-        <button type="button" id="add_manual" class="btn btn-sir">추가</button>
+        <button type="submit" id="add_manual" class="btn btn-sir">추가</button>
         <button type="button" class="btn btn-default" onclick="window.close();">창닫기</button>
     </div>
 </div>
 </div>
 
 <div id="bd_menu_form" class="container">
-    <form class="form-horizontal">
-    {{ csrf_field() }}
-        <div class="form-group">
-            <label for="" class="col-sm-2 col-xs-3 control-label" style="text-align: left;">대상선택</label>
-            <div class="col-sm-3 col-xs-4">
-                <select class="form-control" name="type" id="type">
-                    <option value="">직접입력</option>
-                    <option value="group">게시판그룹</option>
-                    <option value="board">게시판</option>
-                    <option value="content">내용관리</option>
-                </select>
-            </div>
+    <div class="form-group">
+        <label for="" class="col-sm-2 col-xs-3 control-label" style="text-align: left;">대상선택</label>
+        <div class="col-sm-3 col-xs-4">
+            <select class="form-control" name="type" id="type">
+                <option value="">직접입력</option>
+                <option value="group">게시판그룹</option>
+                <option value="board">게시판</option>
+                <option value="content">내용관리</option>
+            </select>
         </div>
+    </div>
 
-        <div id="menu_result">
+    <div id="menu_result">
 
-        </div>
-    </form>
+    </div>
 </div>
+</form>
 
 <script>
 $(function() {
@@ -120,9 +120,7 @@ function addMenuList(name, link, code)
     list += "<option value=\"blank\">사용함</option>";
     list += "</select>";
     list += "</td>";
-    list += "<td class='text-center'>";
-    list += "<input type=\"text\" class=\"form-control required\" name=\"order[]\" value=\"0\" id=\"order_"+ms+"\" required class=\"required frm_input\" size=\"5\">";
-    list += "</td>";
+    list += "<input type=\"hidden\" class=\"form-control required\" name=\"order[]\" value=\"0\" id=\"order_"+ms+"\" required class=\"required frm_input\" size=\"5\">";
     list += "<td class='text-center'>";
     list += "<select class=\"form-control\" name=\"use[]\" id=\"use_"+ms+"\">";
     list += "<option value=\"1\">사용함</option>";
@@ -136,9 +134,6 @@ function addMenuList(name, link, code)
     // list += "</select>";
     // list += "</td>";
     list += "<td class='text-center'>";
-    @if($new == 'new')
-        list += "<button type=\"button\" class=\"btn btn-default add_sub_menu\">추가</button>";
-    @endif
     list += "<button type=\"button\" class=\"btn btn-danger del_menu\">삭제</button>";
     list += "</td>";
     list += "</tr>";

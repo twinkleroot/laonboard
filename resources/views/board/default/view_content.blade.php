@@ -141,7 +141,7 @@
     @if($user)
         <a href="{{ route('scrap.create') }}?boardName={{ $board->table_name }}&amp;writeId={{ $write->id }}" target="_blank" onclick="winScrap(this.href); return false;">
             <div class="countBtn">
-                <i class="fa fa-star" @if($scrap)style="color:#587ef6"@endif></i>스크랩
+                <i class="fa fa-star" @if($scrap)style="color:#ff6699"@endif></i>스크랩
             </div>
         </a>
         @if($board->use_good)

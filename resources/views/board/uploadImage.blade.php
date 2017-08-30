@@ -92,6 +92,8 @@
 </head>
 <body>
 
+<form class="form-horizontal" role="form" id="imageForm" method="POST" action="{{ route('image.upload')}}" onsubmit="return false;" enctype="multipart/form-data">
+    {{ csrf_field() }}
 <div id="header">
 <div class="container">
     <div class="title">
@@ -105,8 +107,6 @@
 </div>
 </div>
 
-<form class="form-horizontal" role="form" id="imageForm" method="POST" action="{{ route('image.upload')}}" onsubmit="return false;" enctype="multipart/form-data">
-    {{ csrf_field() }}
 <div id="photoUploader" class="container">
     <div class="file_upload" id="fileUploaderNo0">
         <div>

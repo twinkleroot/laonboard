@@ -296,9 +296,11 @@ class BoardFile extends Model
         $imgUrl = [];
 
         foreach($files as $file) {
-            $this->storePrivatly($file, 'editor', $file->hashName());
+            if($file) {
+                $this->storePrivatly($file, 'editor', $file->hashName());
 
-            array_push($imgUrl, '/storage/editor/'.$file->hashName());
+                array_push($imgUrl, '/storage/editor/'.$file->hashName());
+            }
         }
 
         return $imgUrl;

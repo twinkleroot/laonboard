@@ -56,7 +56,6 @@
                         <th>메뉴</th>
                         <th>링크</th>
                         <th>새창</th>
-                        <th>순서</th>
                         <th>사용</th>
                         {{-- <th>모바일사용</th> --}}
                         <th>관리</th>
@@ -82,9 +81,7 @@
                                 <option value='blank' {{ $menu['target'] == 'blank' ? 'selected' : '' }}>사용함</option>
                             </select>
                         </td>
-                        <td class="text-center">
-                            <input type="text" class="form-control required" name="order[]" value="{{ $menu['order']}}" size="5"/>
-                        </td>
+                        <input type="hidden" class="form-control required" name="order[]" value="{{ $menu['order']}}"/>
                         <td class="text-center">
                             <select name="use[]" class="form-control">
                                 <option value='1' {{ $menu['use'] == 1 ? 'selected' : '' }}>사용함</option>
@@ -98,9 +95,6 @@
                             </select>
                         </td> --}}
                         <td class="text-center">
-                            @if(strlen($menu['code']) == 2)
-                                <button type="button" class="btn btn-default add_sub_menu">추가</button>
-                            @endif
                             <button type="button" class="btn btn-danger del_menu">삭제</button>
                         </td>
                     </tr>
@@ -122,15 +116,6 @@
 <script>
 var menuVal = 100400;
 $(function(){
-    // 관리의 추가 버튼 클릭(하위 메뉴 추가)
-    $(document).on("click", ".add_sub_menu", function() {
-        var code = $(this).closest("tr").find("input[name='code[]']").val().substr(0, 2);
-        var url = "/admin/menus/create?code=" + code;
-        window.open(url, "add_menu", "left=100,top=100,width=550,height=650,scrollbars=yes,resizable=yes");
-
-        return false;
-    });
-
     // 관리의 삭제 버튼 클릭(한 건 삭제)
     $(document).on("click", ".del_menu", function() {
         if(!confirm("메뉴를 삭제하시겠습니까?")) {

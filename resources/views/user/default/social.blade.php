@@ -24,7 +24,7 @@ function joinValidation(form) {
     }
 
     if(form.password.value != form.password_confirmation.value) {
-        alert('비밀번호가 같지 않습니다.');
+        alert('비밀번호와 비밀번호 확인이 같지 않습니다.');
         form.password_confirmation.focus();
         return false;
     }
