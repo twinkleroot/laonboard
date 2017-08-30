@@ -1,0 +1,31 @@
+#bd_move label {
+    font-weight: normal;
+    margin: 0;
+    font-size: 0;
+}
+#bd_move i {
+    margin: 0 8px;
+    font-size: 12px;
+}
+#bd_move span {
+    font-size: 12px;
+}
+#bd_move .gr0 {
+    color: #aaa;
+}
+#bd_move .gr1 {
+    color: #ff6699;
+}
+#bd_move .on {
+    background: #f4f4f4;
+}
+#bd_move .on .here {
+    color:#ff6699;
+    float: right;
+    font-weight: bold;
+}
+#bd_move .on .here:after {
+    content: "";
+    display: block;
+    clear: both;
+}

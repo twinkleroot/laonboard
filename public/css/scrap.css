@@ -1,0 +1,45 @@
+a,
+a:hover,
+a:focus,
+a:active {
+    color: #333 !important;
+    cursor: pointer !important;
+}
+#bd_scrap label {
+    font-weight: normal;
+    margin: 0;
+    font-size: 0;
+}
+#bd_scrap i {
+    margin: 0 8px;
+    font-size: 12px;
+}
+#bd_scrap span {
+    font-size: 12px;
+}
+#bd_scrap .gr0 {
+    color: #aaa;
+}
+#bd_scrap .gr1 {
+    color: #ff6699;
+}
+#bd_scrap .on {
+    background: #f4f4f4;
+}
+#bd_scrap .on .here {
+    color:#ff6699;
+    float: right;
+    font-weight: bold;
+}
+#bd_scrap .on .here:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+#bd_scrap .table>tbody>tr>td.popin {
+    background: #f0f0f0;
+    font-weight: bold;
+    text-align: left;
+    border-right: 1px solid #d8d8d8;
+    width: 25%;
+}

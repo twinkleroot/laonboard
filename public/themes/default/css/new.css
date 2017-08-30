@@ -1,0 +1,84 @@
+.bd_head {
+    vertical-align: bottom;
+    font-weight: 600;
+    clear: both;
+    font-size: 18px;
+}
+.bd_head a {
+    display: inline-block;
+    line-height: 20px;
+}
+.bd_head a:hover {
+    text-decoration: underline !important;
+}
+.bd_btn {
+    padding: 0;
+    margin-bottom: 10px;
+    float: right;
+}
+.bd_btn:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+.bd_btn ul {
+    padding: 0;
+    margin-bottom: 0;
+}
+.bd_btn ul li {
+    list-style: none;
+    float: left;
+    margin-right: 5px;
+}
+.bd_btn ul li:last-child {
+    margin-right: 0;
+}
+.bd_btn ul:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+.bd_btn span {
+    line-height: 34px; font-size: 14px;
+}
+.bd_sch {
+    text-align: right;
+    padding-right: 5px;
+}
+.bd_sch:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+.bd_sch select {
+    height:34px; padding:6px; border: 1px solid #ccc;
+}
+.bd_sch .search {
+    height:34px; padding:6px; border: 1px solid #d8d8d8; margin-right: -4px;
+}
+.bd_sch .search-icon {
+    border: 0; background: #fff; margin-left: -30px; outline: none;
+}
+.bd_new {
+    font-size: 11px;
+    margin: 5px 0 10px;
+    letter-spacing: -1px;
+    text-align: right;
+}
+.bd_new:before {
+    content: "";
+    display: block;
+    clear: both;
+}
+@media (max-width: 767px) {
+    .bd_head a {
+        clear: both;
+    }
+    .bd_sch {
+        margin: 10px 0;
+        font-size: 12px;        
+    }
+    .bd_sch input {
+        width: 100px;
+    }
+}

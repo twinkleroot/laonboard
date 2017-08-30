@@ -29,6 +29,21 @@ div {
 	margin-top: -20px;
 }
 
+/* sideview icon & nick */
+.tt_icon {
+	display:inline-block;
+	width:22px;
+	height: 22px;
+}
+.tt_icon img {
+	width: 22px;
+	height: 22px;
+	vertical-align: top;
+}
+.tt_nick {
+	line-height:22px;vertical-align: top;
+}
+
 /* header */
 #header {
 	width: 100%;
@@ -253,6 +268,137 @@ div {
 	min-height: 707px;
 }
 
+/* table */
+.table {
+	width: 100%;
+	max-width: 100%;
+	margin: 10px 0;
+	background-color: #fff;
+	border: 1px solid #d8d8d8;
+}
+.table>tbody>tr>td,
+.table>tbody>tr>th,
+.table>tfoot>tr>td,
+.table>tfoot>tr>th,
+.table>thead>tr>td,
+.table>thead>tr>th {
+	padding: 10px 15px;
+	font-size: 12px;
+	line-height: 22px;
+}
+.table>thead>tr>th {
+	text-align: center;
+	border-bottom: 2px solid #d8d8d8;
+	font-weight: bold;
+	font-size: 14px;
+}
+.table-striped>tbody>tr:nth-of-type(odd) {
+	background: #f5f5f5;
+}
+#board .table>thead,
+#bd_move .table>thead,
+#bd_scrap .table>thead,
+#memo .table>thead,
+#profile .table>thead {
+	background: #f0f0f0;
+}
+.table>tbody>tr>td.popin {
+	background: #f0f0f0;
+	font-weight: bold;
+	text-align: left;
+	border-right: 1px solid #d8d8d8;
+	width: 25%;
+}
+
+/* td size common */
+.bd_num,
+.bd_check,
+.bd_subject,
+.bd_date,
+.bd_name,
+.bd_hits,
+.bd_re,
+.bd_nre {
+	vertical-align: middle;
+	text-align: center;
+}
+.bd_num,
+.bd_check,
+.bd_date,
+.bd_hits,
+.bd_re,
+.bd_nre {
+	width: 7%;
+}
+.table thead tr th input[type=checkbox],
+.table thead tr th input[type=radio],
+.bd_check > input[type=checkbox],
+.bd_check > input[type=radio] {
+	margin: 0 0 0;
+	vertical-align: middle;
+}
+/* help */
+.help {
+	padding: 10px 15px;
+	border-radius: 4px;
+	line-height: 1.7;
+	font-size: 13px;
+}
+.help .cert:before {
+	content: "\f058";
+	font-family: 'FontAwesome';
+	font-size: 13px;
+	width: 13px;
+	margin-right: 5px;
+}
+.help .warning:before {
+	content: "\f071";
+	font-family: 'FontAwesome';
+	font-size: 13px;
+	width: 13px;
+	margin-right: 5px;
+}
+
+/* td style */
+.td_chk {
+	text-align: center;
+}
+.td_chk input[type=checkbox] {
+	margin: 0;
+	vertical-align: middle;
+}
+.td_numsmall,
+.td_chk {
+	width: 55px !important;
+}
+.td_mngsmall {
+	width: 100px !important;
+}
+.td_num {
+	width:60px;
+	text-align: center;
+}
+.td_board {
+	width:120px;
+	text-align: center;
+}
+.td_datetime {
+	width:170px;
+	text-align: center;
+}
+.td_nick.open {
+	position: relative;
+}
+.td_nick .dropdown-menu {
+	top: 33px;
+	left: 10px;
+	font-size: 12px;
+}
+.td_mng {
+	width:80px;
+	text-align: center;
+}
+
 /* footer */
 #footer {
 	width: 100%;
@@ -361,12 +507,18 @@ div {
 	border-color: #587ef6;
 }
 .empty_table {
-    line-height: 150px;
     color: #587ef6;
-    font-size: 14px;
     font-weight: 600;
     display: block;
     text-align: center;
+    padding: 60px 0;
+}
+.empty_table span:before {
+	content: "\f071";
+	display: inline-block;
+	font-family: "FontAwesome";
+	margin-right: 8px;
+	vertical-align: middle;
 }
 .gry_empty_table {
 	background: #fff;

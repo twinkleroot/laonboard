@@ -8,9 +8,10 @@
     <title>받은 쪽지 보기</title>
 
     <!-- css -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('font-awesome/css/font-awesome.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/common.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/memo.css') }}">
 
     <!-- js -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>

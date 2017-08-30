@@ -5,49 +5,42 @@
 @endsection
 
 @section('include_css')
-<link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/board.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/new.css') }}">
 @endsection
 
 @section('include_script')
-    <script src="{{ asset('js/common.js') }}"></script>
+<script src="{{ asset('js/common.js') }}"></script>
 @endsection
 
 @section('content')
 <div id="board" class="container">
-
-    <div class="pull-left bd_head">
+    <div class="bd_head">
         <span>새글</span>
     </div>
+    <div class="bd_sch">
+        <form method='get' action='{{ route('new.index') }}'>
+            <label for="groupId" class="sr-only">그룹</label>
+            <select name="groupId" id="groupId">
+                <option value="">전체그룹</option>
+                @foreach($groups as $group)
+                    <option value="{{ $group->id }}" @if($groupId == $group->id) selected @endif>{{ $group->subject }}</option>
+                @endforeach
+            </select>
 
-    <div class="bd_btn">
-        <ul>
-            <li id="pt_sch">
-                <form method='get' action='{{ route('new.index') }}'>
-                    <label for="groupId" class="sr-only">그룹</label>
-                    <select name="groupId" id="groupId">
-                        <option value="">전체그룹</option>
-                        @foreach($groups as $group)
-                            <option value="{{ $group->id }}" @if($groupId == $group->id) selected @endif>{{ $group->subject }}</option>
-                        @endforeach
-                    </select>
+            <label for="type" class="sr-only">검색대상</label>
+            <select name="type" id="type">
+                <option value="">전체게시물</option>
+                <option value="w" @if($type == 'w') selected @endif>원글만</option>
+                <option value="c" @if($type == 'c') selected @endif>코멘트만</option>
+            </select>
 
-                    <label for="type" class="sr-only">검색대상</label>
-                    <select name="type" id="type">
-                        <option value="">전체게시물</option>
-                        <option value="w" @if($type == 'w') selected @endif>원글만</option>
-                        <option value="c" @if($type == 'c') selected @endif>코멘트만</option>
-                    </select>
-
-                    <label for="nick" class="sr-only">검색어</label>
-                    <input type="text" name="nick" value="{{ $nick }}" id="nick" class="search" required>
-                    <button type="submit" id="" class="search-icon">
-                        <i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">검색</span>
-                    </button>
-                </form>
-            </li>
-        </ul>
+            <label for="nick" class="sr-only">검색어</label>
+            <input type="text" name="nick" value="{{ $nick }}" id="nick" class="search" required>
+            <button type="submit" id="" class="search-icon">
+                <i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">검색</span>
+            </button>
+        </form>
     </div>
-
     <div class="bd_new">회원 닉네임만 검색 가능</div>
 
     <form id="listForm" method="post" action="{{ route('new.destroy') }}">
@@ -114,11 +107,7 @@
     </table>
 
     <div class="bd_btn">
-        <ul id="bd_btn" class="bd_btn_left">
-            <li class="mr0">
-                <button type="button" class="btn btn-sir" onclick="confirmDel()">선택삭제</button>
-            </li>
-        </ul>
+        <button type="button" class="btn btn-sir" onclick="confirmDel()">선택삭제</button>
     </div>
     </form>
 </div>

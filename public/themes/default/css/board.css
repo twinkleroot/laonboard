@@ -1,3 +1,8 @@
+/* common */
+.bg-sir {
+    background-color: #587ef6 !important;
+    color: #fff !important;
+}
 .bd_head {
     vertical-align: bottom;
     font-weight: 600;
@@ -97,7 +102,6 @@
 .bd_category .on {
     border-top: 3px solid #587ef6;
 }
-
 /* board list */
 #bd_notice {
     background: #ecf7f8;
@@ -106,7 +110,6 @@
     color: #587ef6;
     font-weight: 600;
 }
-
 /* search */
 .bd_sch {
     width: 100%;
@@ -135,20 +138,6 @@
 .bd_sch .search-icon {
     border: 0; background: #fff; margin-left: -30px; outline: none;
 }
-
-/* 새글 */
-.bd_new {
-    float: right;
-    font-size: 11px;
-    margin: 5px 0 10px;
-    letter-spacing: -1px;
-}
-.bd_new:after {
-    content: "";
-    display: block;
-    clear: both;
-}
-
 @media (max-width: 767px) {
     .bd_head a {
         clear: both;

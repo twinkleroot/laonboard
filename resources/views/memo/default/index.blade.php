@@ -8,9 +8,10 @@
     <title>내 쪽지함</title>
 
     <!-- css -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('font-awesome/css/font-awesome.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/common.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/memo.css') }}">
 
     <!-- js -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -69,7 +70,9 @@
             @else
             <tr>
                 <td colspan="4">
-                    자료가 없습니다.
+                    <div class="empty_table">
+                        <span>자료가 없습니다.</span>
+                    </div>
                 </td>
             </tr>
             @endif

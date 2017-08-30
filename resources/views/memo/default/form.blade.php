@@ -8,9 +8,10 @@
     <title>쪽지 보내기</title>
 
     <!-- css -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('font-awesome/css/font-awesome.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/common.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/memo.css') }}">
 
     <!-- js -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -18,7 +19,8 @@
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body class="white">
-
+<form id="memoForm" method="post" action="{{ route('memo.store') }}" autocomplete="off">
+{{ csrf_field() }}
 <div id="header">
     <div class="container">
         <div class="title" style="border-bottom: 0;">
@@ -41,8 +43,6 @@
 
 <div id="memo" class="container">
     <p><strong>쪽지쓰기</strong></p>
-    <form id="memoForm" method="post" action="{{ route('memo.store') }}" autocomplete="off">
-        {{ csrf_field() }}
     <table class="table box">
         <tbody>
             <tr>
@@ -59,7 +59,7 @@
                     내용
                 </td>
                 <td>
-                    <textarea class="form-control" rows="4" name="memo" id="memo" required>@if( isset($content) ) {{ $content }} @else {{ old('memo') }} @endif</textarea>
+                    <textarea class="form-control" rows="4" name="memo" id="memo" required>@if( isset($content) ){{ $content }}@else{{ old('memo') }}@endif</textarea>
                 </td>
             </tr>
         </tbody>

@@ -4,6 +4,10 @@
     포인트 내역 | {{ $config->title }}
 @endsection
 
+@section('include_css')
+<link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/auth.css') }}">
+@endsection
+
 @section('content')
 @if(Session::has('message'))
   <div class="alert alert-info">

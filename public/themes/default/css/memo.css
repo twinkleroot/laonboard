@@ -1,0 +1,89 @@
+#header + #memo {
+    margin-top: -30px;
+}
+#memo label {
+    font-weight: normal;
+    margin: 0;
+    font-size: 0;
+}
+#memo i {
+    margin: 0 8px;
+    font-size: 12px;
+}
+#memo span {
+    font-size: 12px;
+}
+#memo a {
+    color: #333;
+}
+#memo p {
+    margin: 0;
+    padding: 10px 0 5px;
+}
+#memo input,
+#memo textarea {
+    font-size: 12px;
+}
+#memo .gr0 {
+    color: #aaa;
+}
+#memo .gr1 {
+    color: #ff6699;
+}
+#memo .on {
+    background: #f4f4f4;
+}
+#memo .on .here {
+    color:#ff6699;
+    float: right;
+    font-weight: bold;
+}
+#memo .on .here:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+#memo .bd_name {
+    width: auto !important;
+    text-align: left;
+}
+#memo .bd_name a {
+    text-decoration: none;
+}
+#memo .bd_name .dropdown-menu {
+    width: 158px;
+}
+#memo .bd_time {
+    width: 120px;
+    text-align: center;
+}
+#memo .td_mngsmall {
+    text-align: center;
+}
+#memo_view_li {
+    padding: 0;
+    margin: 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #d8d8d8;
+}
+#memo_view_li .info {
+    list-style: none;
+    margin: 7px 0;
+    font-size: 0;
+}
+#memo_view_li .info .bd_name {
+    vertical-align: top;
+}
+#memo_view_li .info .bd_name .dropdown-menu {
+    left: 30px;
+    top: 20px;
+}
+#memo_view_li .info strong {
+    font-size: 14px;
+}
+#memo_view_li .memo_view_subj {
+    margin-right: 15px;
+}
+#memo_view_li span {
+    font-size: 14px;
+}

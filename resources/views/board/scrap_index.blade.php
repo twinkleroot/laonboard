@@ -8,14 +8,15 @@
     <title>{{ $user->nick }}님의 스크랩 | {{ Cache::get("config.homepage")->title }}</title>
 
     <!-- css -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('font-awesome/css/font-awesome.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/common.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/scrap.css') }}">
 
     <!-- js -->
     <script src="{{ asset('js/common.js') }}"></script>
 </head>
-<body class="white">
+<body>
 
 <div id="header">
 <div class="container">

@@ -1,5 +1,3 @@
-/* auth */
-
 .panel-title {
 	padding: 10px 0;
 }
@@ -84,4 +82,96 @@
 	width: 31px;
 	height: 31px;
 	background: url('../images/sns_logo.png') -72px 0 no-repeat;
+}
+
+/* point */
+#pt .box {
+	padding: 15px;
+	border-radius: 5px;
+	background: #fff;
+	text-align: center;
+	line-height: 1.3;
+	border: 1px solid #d8d8d8;
+}
+#pt .mypoint {
+	margin: 0;
+}
+#pt .mypoint_num {
+	font-weight: 800;
+	color: #587ef6;
+	font-size: 33px;
+	letter-spacing: -1px;
+}
+#pt .table .total {
+	border-top: 2px solid #d8d8d8;
+	font-weight: 600;
+	background: #fff;
+}
+.pt_con {
+	text-align: left;
+}
+
+/* welcome */
+.welc_box {
+	width: 100%;
+	padding: 30px;
+	background: #fff;
+	border: 4px solid #587ef6;
+	font-size: 13px;
+	line-height: 1.7;
+}
+.welc_box .btn {
+	margin-top: 10px;
+}
+.welc_title {
+	font-size: 22px; font-weight: bold;
+	color: #587ef6;
+	margin-bottom: 20px;
+}
+.welc_email {
+	padding: 0;
+	margin: 10px 0;
+	width: 100%;
+	display: inline-block
+}
+.welc_email:after {
+	content: '';
+	display: block;
+	clear: both;
+}
+.welc_email li {
+	list-style: none;
+	float: left;
+	border: 1px solid #d8d8d8;
+	padding: 15px;
+	width: 100%;
+	height: auto;
+	border-radius: 0;
+}
+.welc_email li.label {
+	width: 140px;
+	font-size: 13px;
+	color: #333;
+	text-align: left;
+	background: #e8eded;
+	border-right: 0;
+	line-height: 33px;
+}
+.welc_email li.email {
+	width: calc(100% - 140px);
+	border-left: 0;
+	line-height: 11px;
+}
+.welc_email li.email p {
+	font-size: 13px;
+	font-weight: bold;
+}
+.welc_email li.email span {
+	font-size: 11px;
+	font-weight: normal;
+	color: ;
+}
+.welc_email strong {
+	color: #587ef6;
+	font-weight: bold;
 }

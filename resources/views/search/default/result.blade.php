@@ -4,6 +4,10 @@
     전체검색 결과 | {{ cache("config.homepage")->title }}
 @endsection
 
+@section('include_css')
+<link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/search.css') }}">
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row">

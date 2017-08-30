@@ -8,9 +8,10 @@
     <title>스크랩하기 | {{ Cache::get("config.homepage")->title }}</title>
 
     <!-- css -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('font-awesome/css/font-awesome.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/common.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/scrap.css') }}">
 
     <!-- js -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -24,8 +25,7 @@
         });
     </script>
 </head>
-<body class="white">
-
+<body>
 <form method="post" action="{{ route('scrap.store')}}">
 <input type="hidden" name="boardName" value="{{ $boardName }}" />
 <input type="hidden" name="boardId" value="{{ $boardId }}" />
