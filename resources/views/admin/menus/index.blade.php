@@ -73,7 +73,7 @@
                 @if(count($menus) > 0)
                 @foreach ($menus as $menu)
                     <tr class="menu_list menu_group_{{ substr($menu['code'], 0, 2) }}">
-                        <td class="dragHandle" style="cursor:move; background-color:#587ef6;"></td>
+                        <td class="dragHandle" style=""></td>
                         <td class="text-center @if(strlen($menu['code']) == 4) sub_menu_class @endif @if($errors->get('name.'. $loop->index)) has-error @endif">
                             <input type="hidden" name="code[]" value="{{ substr($menu['code'], 0, 2) }}">
                             <div @if(strlen($menu['code']) == 4)class="depth2" @endif>
