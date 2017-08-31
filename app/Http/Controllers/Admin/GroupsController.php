@@ -58,12 +58,7 @@ class GroupsController extends Controller
             abort(403, '최고관리자만 접근 가능합니다.');
         }
 
-        $rules = [
-            'group_id' => 'required|regex:/^[a-zA-Z0-9_]+$/',
-            'subject' => 'required',
-        ];
-
-        $this->validate($request, $rules);
+        $this->validate($request, $this->rules(), $this->messages());
 
         if($this->groupModel->existGroupId($request)) {
             return redirect(route('admin.groups.create'))->with('message', '이미 존재하는 그룹 ID입니다.');
@@ -108,6 +103,17 @@ class GroupsController extends Controller
             abort(403, '해당 게시판 그룹 수정에 대한 권한이 없습니다.');
         }
 
+        $beforeGroupInfo = Group::find($id);
+        $rules = $this->rules();
+        $rules = array_except($rules, 'group_id');
+        if($beforeGroupInfo->subject == $request->subject) {
+            $rules = array_except($rules, 'subject');
+        }
+        if($beforeGroupInfo->admin == $request->admin) {
+            $rules = array_except($rules, 'admin');
+        }
+        $this->validate($request, $rules, $this->messages());
+
         $subject = $this->groupModel->updateGroup($request->all(), $id);
 
         if(!$subject) {
@@ -150,5 +156,29 @@ class GroupsController extends Controller
         $message = $this->groupModel->deleteGroups($request->get('ids'));
 
         return redirect(route('admin.groups.index'))->with('message', $message);
+    }
+
+    // 유효성 검사 규칙
+    public function rules()
+    {
+        return [
+            'group_id' => 'bail|required|regex:/^[a-zA-Z0-9_]+$/|unique:groups',
+            'subject' => 'bail|required|alpha_dash',
+            'admin' => 'bail|email|nullable',
+            'use_access' => 'bail|numeric|nullable',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'group_id.required' => '그룹 ID를 입력해 주세요.',
+            'group_id.regex' => '그룹 ID에는 영문자, 숫자, 언더스코어(_)만 들어갈 수 있습니다.',
+            'group_id.unique' => '이미 등록된 그룹 ID입니다. 다른 그룹 ID를 입력해 주세요.',
+            'subject.required' => '그룹 제목을 입력해 주세요.',
+            'subject.alpha_dash' => '그룹 ID에는 영문자, 한글, 숫자, 대쉬(-), 언더스코어(_)만 들어갈 수 있습니다.',
+            'admin.email' => '그룹관리자에 올바른 Email양식으로 입력해 주세요.',
+            'use_access.numeric' => '접근회원사용에는 숫자만 들어갈 수 있습니다.',
+        ];
     }
 }

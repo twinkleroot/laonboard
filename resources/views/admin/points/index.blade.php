@@ -19,21 +19,26 @@
         </ul>
     </div>
 </div>
-@if(Session::has('message'))
-  <div class="alert alert-info">
-    {{ Session::get('message') }}
-  </div>
-@endif
 <div id="body_tab_type2">
-    <span class="txt">전체 {{ $points->total() }} 건 (
-                    @if($kind == 'email' && $points->total() > 0)
-                        {{ $keyword }} 님 포인트
-                    @else 전체
-                    @endif
-                    합계 {{ number_format($sum) }}점)</span>
+    <span class="txt">
+        전체 {{ $points->total() }} 건 (@if($kind == 'email' && $points->total() > 0){{ $keyword }} 님 포인트 @else 전체@endif 합계 {{ number_format($sum) }}점)
+    </span>
 </div>
 
 <div class="body-contents">
+@if(Session::has('message'))
+    <div class="alert alert-info">
+        {{ Session::get('message') }}
+    </div>
+@endif
+@if ($errors->any())
+    <div id="adm_save">
+        <span class="adm_save_txt">{{ $errors->first() }}</span>
+        <button onclick="alertclose()" class="adm_alert_close">
+            <i class="fa fa-times"></i>
+        </button>
+    </div>
+@endif
     <div id="pt">
         <ul id="adm_btn">
             <li><button type="button" class="btn btn-sir pull-left" onclick="location.href='{{ route('admin.points.index') }}'">전체보기</button></li>

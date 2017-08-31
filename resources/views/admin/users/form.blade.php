@@ -77,6 +77,14 @@
         </button>
     </div>
 @endif
+@if ($errors->any())
+    <div id="adm_save">
+        <span class="adm_save_txt">{{ $errors->first() }}</span>
+        <button onclick="alertclose()" class="adm_alert_close">
+            <i class="fa fa-times"></i>
+        </button>
+    </div>
+@endif
     <section id="mb_basic" class="adm_section">
         <div class="adm_box_hd">
             <span class="adm_box_title">기본 회원정보</span>
@@ -84,7 +92,7 @@
         <table class="adm_box_table">
             <tr>
                 <th><label for="email">이메일</label></th>
-                <td class="table_body chknone">
+                <td class="table_body chknone @if($errors->get('email')) has-error @endif">
                     @if($type == 'update')
                     <input type="email" class="form-control form_large required" name="email" value="{{ $user->email }}" style="display: inline-block;" readonly>
                     <a href="{{ route('admin.accessGroups.show', $user->id). '?'. Request::getQueryString() }}" class="btn btn-sir form_btn">접근가능그룹보기</a>
@@ -111,20 +119,20 @@
                     <input type="password" class="form-control form_large required" name="password" value="">
                     @endif
                     @foreach ($errors->get('password') as $message)
-                        <span class="help-block">
-                            <strong>{{ $message }}</strong>
-                        </span>
+                    <span class="help-block">
+                        <strong>{{ $message }}</strong>
+                    </span>
                     @endforeach
                 </td>
             </tr>
             <tr>
                 <th><label for="name">이름</label></th>
-                <td class="table_body chknone">
+                <td class="table_body chknone @if($errors->get('name')) has-error @endif">
                     <input type="text" class="form-control form_middle" name="name" @if($type == 'update') value="{{ $user->name }}"@else value="{{ old('name') }}"@endif>
                     @foreach ($errors->get('name') as $message)
-                        <span class="help-block">
-                            <strong>{{ $message }}</strong>
-                        </span>
+                    <span class="help-block">
+                        <strong>{{ $message }}</strong>
+                    </span>
                     @endforeach
                 </td>
             </tr>
@@ -133,15 +141,15 @@
                 <td class="table_body chknone @if($errors->get('nick')) has-error @endif">
                     <input type="text" class="form-control form_middle required" name="nick" @if($type == 'update') value="{{ $user->nick }}"@else value="{{ old('nick') }}"@endif>
                     @foreach ($errors->get('nick') as $message)
-                        <span class="help-block">
-                            <strong>{{ $message }}</strong>
-                        </span>
+                    <span class="help-block">
+                        <strong>{{ $message }}</strong>
+                    </span>
                     @endforeach
                 </td>
             </tr>
             <tr>
                 <th><label for="level">회원권한</label></th>
-                <td class="table_body chknone">
+                <td class="table_body chknone @if($errors->get('level')) has-error @endif">
                     <select name="level" class="form-control level form_num">
                     @for ($i=1; $i<=auth()->user()->level; $i++)
                         @if($type == 'update')
@@ -155,19 +163,29 @@
                         @endif
                     @endfor
                     </select>
+                    @foreach ($errors->get('level') as $message)
+                    <span class="help-block">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @endforeach
                 </td>
             </tr>
             <tr>
                 <th>포인트</th>
-                <td class="table_body chknone">
+                <td class="table_body chknone @if($errors->get('point')) has-error @endif">
                 @if($type == 'update')
                     @if($user->point == 0) 0 @else {{ number_format($user->point) }} @endif 점
                     <span class="help-block">
                         포인트 부여 및 차감은 <a href="{{ route('admin.points.index') }}">[회원관리 - 포인트관리]</a>에서 하실 수 있습니다.
                     </span>
                 @else
-                    <input type="text" class="form-control form_middle" name="point" value="{{ Cache::get("config.join")->joinPoint }}">
+                    <input type="text" class="form-control form_middle" name="point" value="{{ old('point') != Cache::get("config.join")->joinPoint ? old('point') : Cache::get("config.join")->joinPoint }}">
                 @endif
+                @foreach ($errors->get('point') as $message)
+                    <span class="help-block">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @endforeach
                 </td>
             </tr>
             @if($type == 'update')
@@ -205,18 +223,28 @@
             @endif
             <tr>
                 <th><label for="leave_date">탈퇴일자</label></th>
-                <td class="table_body chknone">
-                    <input type="text" class="form-control form_middle" name="leave_date" id="leave_date" value="{{ $user->leave_date }}">
+                <td class="table_body chknone @if($errors->get('leave_date')) has-error @endif">
+                    <input type="text" class="form-control form_middle" name="leave_date" id="leave_date" @if($type == 'update') value="{{ $user->leave_date }}"@else value="{{ old('leave_date') }}"@endif>
                     <input type="checkbox" name="leave_date_set_today" value="1" id="leave_date_set_today" onclick="setToday(this.form.leave_date_set_today, this.form.leave_date)"/>
                     <label for="leave_date_set_today">탈퇴일을 오늘로 지정</label>
+                    @foreach ($errors->get('leave_date') as $message)
+                    <span class="help-block">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @endforeach
                 </td>
             </tr>
             <tr>
                 <th><label for="intercept_date">접근차단일자</label></th>
-                <td class="table_body chknone">
-                    <input type="text" class="form-control form_middle" name="intercept_date" id="intercept_date" value="{{ $user->intercept_date }}">
+                <td class="table_body chknone @if($errors->get('intercept_date')) has-error @endif">
+                    <input type="text" class="form-control form_middle" name="intercept_date" id="intercept_date" @if($type == 'update') value="{{ $user->intercept_date }}"@else value="{{ old('intercept_date') }}"@endif>
                     <input type="checkbox" name="intercept_date_set_today" id="intercept_date_set_today" value="1" onclick="setToday(this.form.intercept_date_set_today, this.form.intercept_date)"/>
                     <label for="intercept_date_set_today">접근차단일을 오늘로 지정</label>
+                    @foreach ($errors->get('intercept_date') as $message)
+                    <span class="help-block">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @endforeach
                 </td>
             </tr>
         </table>
@@ -228,27 +256,42 @@
         <table class="adm_box_table">
             <tr>
                 <th><label for="homepage">홈페이지</label></th>
-                <td class="table_body chknone">
+                <td class="table_body chknone @if($errors->get('homepage')) has-error @endif">
                     <input type="text" class="form-control form_half" name="homepage" @if($type == 'update') value="{{ $user->homepage }}"@else value="{{ old('homepage') }}"@endif>
+                    @foreach ($errors->get('homepage') as $message)
+                    <span class="help-block">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @endforeach
                 </td>
             </tr>
             <tr>
                 <th><label for="tel">전화번호</label></th>
-                <td class="table_body chknone">
+                <td class="table_body chknone @if($errors->get('tel')) has-error @endif">
                     <input type="text" class="form-control form_half" name="tel" @if($type == 'update') value="{{ $user->tel }}"@else value="{{ old('tel') }}"@endif>
+                    @foreach ($errors->get('tel') as $message)
+                    <span class="help-block">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @endforeach
                 </td>
             </tr>
             <tr>
                 <th><label for="hp">휴대폰번호</label></th>
                 <td class="table_body chknone @if($errors->get('hp')) has-error @endif">
                     <input type="text" class="form-control form_half" name="hp" @if($type == 'update') value="{{ $user->hp }}"@else value="{{ old('hp') }}"@endif>
+                    @foreach ($errors->get('hp') as $message)
+                    <span class="help-block">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @endforeach
                 </td>
             </tr>
             <tr>
                 <th><label for="zip">주소</label></th>
                 <td class="table_body chknone">
                     <div class="mb10">
-                        <input type="text" class="form-control form_middle" id="zip" name="zip" value="{{ $user->zip }}" placeholder="우편번호">
+                        <input type="text" class="form-control form_middle" id="zip" name="zip" @if($type == 'update') value="{{ $user->zip }}"@else value="{{ old('zip') }}"@endif placeholder="우편번호">
                         <input type="button" class="btn btn-sir form_btn" onclick="execDaumPostcode()" value="주소 검색">
                     </div>
                     <!-- 우편번호검색 -->
@@ -259,11 +302,11 @@
                     </div>
                     <div class="mb10">
                         <label for="addr1" class="sr-only">기본주소</label>
-                        <input type="text" class="form-control form_half" id="addr1" name="addr1" value="{{ $user->addr1 }}" placeholder="기본 주소">
+                        <input type="text" class="form-control form_half" id="addr1" name="addr1" @if($type == 'update') value="{{ $user->addr1 }}"@else value="{{ old('addr1') }}"@endif placeholder="기본 주소">
                     </div>
                     <div>
                         <label for="addr2" class="sr-only">상세주소</label>
-                        <input type="text" class="form-control form_half" id="addr2" name="addr2" value="{{ $user->addr2 }}" placeholder="상세 주소">
+                        <input type="text" class="form-control form_half" id="addr2" name="addr2" @if($type == 'update') value="{{ $user->addr2 }}"@else value="{{ old('addr2') }}"@endif placeholder="상세 주소">
                     </div>
                 </td>
             </tr>
@@ -287,8 +330,13 @@
             </tr>
             <tr>
                 <th><label for="recommend">추천인</label></th>
-                <td class="table_body chknone">
+                <td class="table_body chknone @if($errors->get('recommend')) has-error @endif">
                     <input type="text" class="form-control form_large" name="recommend" id="recommend" placeholder="닉네임" @if($type == 'update') value="{{ $recommend }}"@else value="{{ old('recommend') }}"@endif>
+                    @foreach ($errors->get('recommend') as $message)
+                    <span class="help-block">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @endforeach
                 </td>
             </tr>
         </table>
@@ -327,7 +375,7 @@
             </tr>
             <tr>
                 <th><label for="icon">회원아이콘</label></th>
-                <td class="table_body chknone">
+                <td class="table_body chknone @if($errors->get('iconName')) has-error @endif">
                     @if($type == 'update' && File::exists($iconPath))
                     <div class="usericon">
                         <span class="usericon_img">
@@ -339,10 +387,15 @@
                         </span>
                     </div>
                     @endif
-                    <input type="file" name="icon" id="icon">
+                    <input type="file" name="icon" id="icon" value="{{ old('icon') }}">
                     <span class="help-block">이미지 크기는 넓이 {{ cache('config.join')->memberIconWidth }}픽셀 높이 {{ cache('config.join')->memberIconHeight }}픽셀로 해주세요.<br>
                     gif만 가능하며 용량 {{ cache('config.join')->memberIconSize }}바이트 이하만 등록됩니다.
                     </span>
+                    @foreach ($errors->get('iconName') as $message)
+                    <span class="help-block">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @endforeach
                 </td>
             </tr>
         </table>

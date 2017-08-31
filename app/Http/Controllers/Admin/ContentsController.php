@@ -130,6 +130,7 @@ class ContentsController extends Controller
         return [
             'subject' => 'bail|required',
             'content' => 'bail|required',
+            'skin' => 'bail|required'
         ];
     }
 
@@ -143,6 +144,7 @@ class ContentsController extends Controller
             'content_id.regex' => 'ID는 20자 이내의 영문자, 숫자, _ 만 가능합니다.',
             'subject.required'  => '제목을 입력해 주세요.',
             'content.required'  => '내용을 입력해 주세요.',
+            'skin.required'  => '스킨을 선택해 주세요.',
         ];
     }
 }

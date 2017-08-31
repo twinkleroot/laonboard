@@ -144,7 +144,7 @@ class Menu extends Model
             Menu::insert([
                 'code' => $menus['code'][$i],
                 'name' => $menus['name'][$i],
-                'link' => is_null($menus['link'][$i]) ? "#" : $menus['link'][$i],
+                'link' => is_null($menus['link'][$i]) ? '' : $menus['link'][$i],
                 'target' => $menus['target'][$i],
                 'order' => $menus['order'][$i],
                 'use' => $menus['use'][$i],

@@ -32,9 +32,17 @@
 
     <div class="body-contents">
         @if(Session::has('message'))
-          <div class="alert alert-info">
+        <div class="alert alert-info">
             {{ Session::get('message') }}
-          </div>
+        </div>
+        @endif
+        @if ($errors->any())
+        <div id="adm_save">
+            <span class="adm_save_txt">{{ $errors->first() }}</span>
+            <button onclick="alertclose()" class="adm_alert_close">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
         @endif
 
         <div id="adm_alert">
@@ -66,13 +74,13 @@
                 @foreach ($menus as $menu)
                     <tr class="menu_list menu_group_{{ substr($menu['code'], 0, 2) }}">
                         <td class="dragHandle" style="cursor:move; background-color:#587ef6;"></td>
-                        <td class="text-center @if(strlen($menu['code']) == 4) sub_menu_class @endif">
+                        <td class="text-center @if(strlen($menu['code']) == 4) sub_menu_class @endif @if($errors->get('name.'. $loop->index)) has-error @endif">
                             <input type="hidden" name="code[]" value="{{ substr($menu['code'], 0, 2) }}">
                             <div @if(strlen($menu['code']) == 4)class="depth2" @endif>
                                 <input type="text" class="form-control required" name="name[]" value="{{ $menu['name']}}" />
                             </div>
                         </td>
-                        <td class="text-center">
+                        <td class="text-center @if($errors->get('link.'. $loop->index)) has-error @endif">
                             <input type="text" class="form-control required" name="link[]" value="{{ $menu['link']}}" />
                         </td>
                         <td class="text-center">

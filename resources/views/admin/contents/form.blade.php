@@ -14,6 +14,14 @@
 
 @section('content')
 <form name="contentform" onsubmit="return contentFormCheck(this);" action="{{ $type == "update" ? route('admin.contents.update', $content->id) : route('admin.contents.store') }}" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="type" value="{{ $type }}">
+    <input type="hidden" name="html" value="1">
+@if($type == "update")
+    {{ method_field('PUT')}}
+@else
+    {{ method_field('POST')}}
+@endif
+    {{ csrf_field() }}
 <div class="body-head">
     <div class="pull-left">
         <h3>내용관리추가</h3>
@@ -32,14 +40,14 @@
     </div>
 </div>
 <div class="body-contents">
-    <input type="hidden" name="type" value="{{ $type }}">
-    <input type="hidden" name="html" value="1">
-    @if($type == "update")
-        {{ method_field('PUT')}}
-    @else
-        {{ method_field('POST')}}
-    @endif
-    {{ csrf_field() }}
+@if ($errors->any())
+    <div id="adm_save">
+        <span class="adm_save_txt">{{ $errors->first() }}</span>
+        <button onclick="alertclose()" class="adm_alert_close">
+            <i class="fa fa-times"></i>
+        </button>
+    </div>
+@endif
     <div class="adm_box_hd">
         <span class="adm_box_title">내용관리 추가</span>
     </div>
@@ -50,11 +58,6 @@
             </th>
             <td class="table_body chknone">
                 <input type="text" name="content_id" id ="content_id" required class="form-control form_middle required" @if($type == "update") value="{{ $content->content_id }}" readonly @else value="{{ old('content_id') }}" @endif size="20" maxlength="20">
-                @foreach ($errors->get('content_id') as $message)
-                    <span class="help-block">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                @endforeach
                 @if($type == "update")
                     <a href="{{ route('contents.show', $content->content_id) }}" class="btn btn-sir" target="_blank">내용확인</a>
                 @endif
@@ -67,11 +70,6 @@
             </th>
             <td class="table_body chknone">
                 <input type="text" name="subject" id="subject" class="form-control form_half required" @if($type == "update") value="{{ $content->subject }}" @else value="{{ old('subject') }}" @endif required size="90">
-                @foreach ($errors->get('subject') as $message)
-                    <span class="help-block">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                @endforeach
             </td>
         </tr>
         <tr>
@@ -82,11 +80,6 @@
                 <div style="background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box;">
                     <textarea name="content" id="content" class="editorArea">@if($type == "update"){{ $content->content }} @else {{ old('content') }} @endif</textarea>
                 </div>
-                @foreach ($errors->get('content') as $message)
-                    <span class="help-block">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                @endforeach
             </td>
         </tr>
         {{-- <tr>
@@ -101,7 +94,7 @@
         </tr> --}}
         <tr>
             <th>
-                <label for="skin">스킨 디렉토리</label>
+                <label for="skin">스킨</label>
             </th>
             <td class="table_body chknone">
                 <select name="skin" id="skin" class="form-control form_large">

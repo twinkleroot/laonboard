@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Admin\Config;
 use App\Admin\AdminUser;
+use App\User;
 
 class UsersController extends Controller
 {
@@ -60,15 +61,14 @@ class UsersController extends Controller
             abort(403, '회원 추가에 대한 권한이 없습니다.');
         }
 
-        $adminConfig = new Config();
-        $rulePassword = $adminConfig->getPasswordRuleByConfigPolicy();
-        $rule = [
-            'email' => 'required|email|max:255|unique:users',
-            'nick' => 'required|nick_length:2,4|unique:users|alpha_num',
-            'password' => $rulePassword[0] . '|' . $rulePassword[2],
-        ];
+        // icon 확장자 확인을 위해 이미지 파일의 원래 이름을 가져온다.
+        if($request->icon) {
+            $request->merge([
+                'iconName' => $request->icon->getClientOriginalName()
+            ]);
+        }
 
-        $this->validate($request, $rule);
+        $this->validate($request, $this->rules(), $this->messages());
 
         $id = $this->userModel->storeUser($request);
 
@@ -110,6 +110,26 @@ class UsersController extends Controller
             abort(403, '회원 정보 수정에 대한 권한이 없습니다.');
         }
 
+        $beforeUserInfo = User::getUser($id);
+        $rules = $this->rules();
+
+        $rules = array_except($rules, ['email', 'password']);
+        if($beforeUserInfo->name == $request->name) {
+            $rules = array_except($rules, 'name');
+        }
+        if($beforeUserInfo->nick == $request->nick) {
+            $rules = array_except($rules, 'nick');
+        }
+
+        // icon 확장자 확인을 위해 이미지 파일의 원래 이름을 가져온다.
+        if($request->icon) {
+            $request->merge([
+                'iconName' => $request->icon->getClientOriginalName()
+            ]);
+        }
+
+        $this->validate($request, $rules, $this->messages());
+
         $this->userModel->updateUserInfo($request, $id);
 
         return redirect()->back()->with('message', '회원정보가 수정되었습니다.');
@@ -144,5 +164,62 @@ class UsersController extends Controller
         $this->userModel->deleteUser($request);
 
         return redirect(route('admin.users.index'))->with('message', '선택한 회원이 삭제되었습니다.');
+    }
+
+    // 유효성 검사 규칙
+    public function rules()
+    {
+        $adminConfig = new Config();
+        $rulePassword = $adminConfig->getPasswordRuleByConfigPolicy();
+
+        return [
+            'email' => 'bail|required|email|max:255|unique:users',
+            'password' => 'bail|'. $rulePassword[0] . '|' . $rulePassword[2],
+            'name' => 'bail|alpha_dash|nullable',
+            'nick' => 'bail|required|nick_length:2,4|unique:users|alpha_num',
+            'level' => 'bail|required|numeric',
+            'point' => 'bail|numeric|nullable',
+            'leave_date' => 'bail|date_format:"Ymd"|nullable',
+            'intercept_date' => 'bail|date_format:"Ymd"|nullable',
+            'homepage' => 'bail|regex:/^(((http(s?))\:\/\/)?)([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(\/\S*)?$/|nullable',
+            'tel' => 'bail|regex:/^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/|nullable',
+            'hp' => 'bail|regex:/^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/|nullable',
+            'addr1' => 'bail|nullable',
+            'addr2' => 'bail|nullable',
+            'signature' => 'bail|nullable',
+            'profile' => 'bail|nullable',
+            'memo' => 'bail|nullable',
+            'recommend' => 'bail|nick_length:2,4|alpha_num|nullable',
+            'iconName' => 'bail|regex:/\.(gif)$/i|nullable'
+        ];
+    }
+
+    // 에러 메세지
+    public function messages()
+    {
+        return [
+            'email.required' => '이메일을 입력해 주세요.',
+            'email.email' => '이메일에 올바른 Email양식으로 입력해 주세요.',
+            'email.max' => '이메일은 255자리를 넘길 수 없습니다.',
+            'email.unique' => '이미 등록된 이메일입니다. 다른 이메일을 입력해 주세요.',
+            'password.required' => '비밀번호를 입력해 주세요.',
+            'name.alpha_dash' => '이름에 영문자, 한글, 숫자, 대쉬(-), 언더스코어(_)만 입력해 주세요.',
+            'nick.required' => '닉네임을 입력해 주세요.',
+            'nick.nick_length' => '닉네임의 길이는 한글 2자, 영문 4자 이상이어야 합니다.',
+            'nick.unique' => '이미 등록된 닉네임입니다. 다른 닉네임을 입력해 주세요.',
+            'nick.alpha_num' => '닉네임에 영문자, 한글, 숫자만 입력해 주세요.',
+            'nick.required' => '닉네임을 입력해 주세요.',
+            'level.required' => '회원권한을 선택해 주세요.',
+            'level.numeric' => '회원권한에는 숫자만 들어갈 수 있습니다.',
+            'point.numeric' => '포인트에는 숫자만 들어갈 수 있습니다.',
+            'leave_date.date_format' => '탈퇴일자에 올바른 날짜 형식(Ymd)으로 입력해 주세요.',
+            'intercept_date.date_format' => '접근차단일자에 올바른 날짜 형식(Ymd)으로 입력해 주세요.',
+            'homepage.regex' => '홈페이지에 올바른 url 형식으로 입력해 주세요.',
+            'tel.regex' => '전화번호에 전화번호형식(000-0000-0000)으로 입력해 주세요.',
+            'hp.regex' => '휴대폰번호에 전화번호형식(000-0000-0000)으로 입력해 주세요.',
+            'recommend.nick_length' => '추천인의 길이는 한글 2자, 영문 4자 이상이어야 합니다.',
+            'recommend.alpha_num' => '추천인에 영문자, 한글, 숫자만 입력해 주세요.',
+            'iconName.regex' => '회원아이콘에는 확장자가 gif인 이미지 파일만 들어갈 수 있습니다.',
+        ];
     }
 }

@@ -8,9 +8,9 @@
 <form class="form-horizontal" role="form" method="POST" action="{{ $action }}">
 {{ csrf_field() }}
 @if(Session::has('message'))
-  <div class="alert alert-info">
+<div class="alert alert-info">
     {{ Session::get('message') }}
-  </div>
+</div>
 @endif
 <div class="body-head">
     <div class="pull-left">
@@ -30,6 +30,14 @@
     </div>
 </div>
 <div class="body-contents">
+    @if ($errors->any())
+    <div id="adm_save">
+        <span class="adm_save_txt">{{ $errors->first() }}</span>
+        <button onclick="alertclose()" class="adm_alert_close">
+            <i class="fa fa-times"></i>
+        </button>
+    </div>
+    @endif
     <div id="adm_tip">
         <span class="adm_save_txt">
             게시판을 생성하시려면 1개 이상의 게시판그룹이 필요합니다.<br />
@@ -50,13 +58,13 @@
                     <div @if($errors->get('group_id')) class="has-error" @endif>
                         <input type="text" class="form-control form_input required" name="group_id" maxlength="10" @if($type == 'edit') value="{{ $group->group_id }}" readonly @endif />
                         @if($type == 'edit')
-                            <a class="btn btn-sir" href="{{ route('group', $group->id) }}">게시판그룹 바로가기</a>
-                            <span class="help-block">영문자, 숫자, _ 만 가능 (공백없이)</span>
+                        <a class="btn btn-sir" href="{{ route('group', $group->id) }}">게시판그룹 바로가기</a>
+                        <span class="help-block">영문자, 숫자, _ 만 가능 (공백없이)</span>
                         @endif
                         @foreach ($errors->get('group_id') as $message)
-                            <span class="help-block">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                        <span class="help-block">
+                            <strong>{{ $message }}</strong>
+                        </span>
                         @endforeach
                     </div>
                 </td>
@@ -67,12 +75,12 @@
                     <div @if($errors->get('subject')) class="has-error" @endif>
                         <input type="text" class="form-control form_subject required" name="subject" @if($type == 'edit') value="{{ $group->subject }}" @endif required/>
                         @if($type == 'edit')
-                            <a class="btn btn-sir" href="/admin/boards/create?group_id={{ $group->id }}">게시판생성</a>
+                        <a class="btn btn-sir" href="/admin/boards/create?group_id={{ $group->id }}">게시판생성</a>
                         @endif
                         @foreach ($errors->get('subject') as $message)
-                            <span class="help-block">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                        <span class="help-block">
+                            <strong>{{ $message }}</strong>
+                        </span>
                         @endforeach
                     </div>
                 </td>
@@ -94,9 +102,9 @@
                     <div @if($errors->get('admin')) class="has-error" @endif>
                         <input type="text" class="form-control" name="admin" @if($type == 'edit') value="{{ $group->admin }}" @endif />
                         @foreach ($errors->get('admin') as $message)
-                            <span class="help-block">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                        <span class="help-block">
+                            <strong>{{ $message }}</strong>
+                        </span>
                         @endforeach
                     </div>
                 </td>
@@ -104,11 +112,16 @@
             <tr>
                 <th>접근회원사용</th>
                 <td class="table_body chknone">
-                    <div>
+                    <div @if($errors->get('use_access')) class="has-error" @endif>
                         <input type="checkbox" name="use_access" value="1" id="use_access"
                             @if($type == 'edit' && $group->use_access == '1') checked @endif/>
                         <label for="use_access">사용</label>
                         <span class="help-block">사용에 체크하시면 이 그룹에 속한 게시판은 접근가능한 회원만 접근이 가능합니다.</span>
+                        @foreach ($errors->get('use_access') as $message)
+                        <span class="help-block">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @endforeach
                     </div>
                 </td>
             </tr>

@@ -54,6 +54,8 @@ class PopupsController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, $this->rules(), $this->messages());
+
         if(auth()->user()->cant('create', Popup::class)) {
             abort(403, '팝업 레이어 생성에 대한 권한이 없습니다.');
         }
@@ -89,6 +91,8 @@ class PopupsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->validate($request, $this->rules(), $this->messages());
+
         if(auth()->user()->cant('update', $this->popup)) {
             abort(403, '팝업 레이어 수정에 대한 권한이 없습니다.');
         }
@@ -113,5 +117,50 @@ class PopupsController extends Controller
         $result = $this->popup->deletePopup($id);
 
         return redirect()->back();
+    }
+
+    // 유효성 검사 규칙
+    public function rules()
+    {
+        return [
+            'disable_hours' => 'bail|numeric|required',
+            'begin_time' => 'bail|date_format:"Y-m-d H:i:s"|required',
+            'end_time' => 'bail|date_format:"Y-m-d H:i:s"|required',
+            'left' => 'bail|numeric|required',
+            'top' => 'bail|numeric|required',
+            'width' => 'bail|numeric|required',
+            'height' => 'bail|numeric|required',
+            'color' => 'bail|required',
+            'color_button' => 'bail|required',
+            'color_button_font' => 'bail|required',
+            'subject' => 'bail|required',
+            'content' => 'bail|required',
+        ];
+    }
+
+    // 에러 메세지
+    public function messages()
+    {
+        return [
+            'disable_hours.numeric' => '시간에는 숫자만 들어갈 수 있습니다.',
+            'disable_hours.required' => '시간을 입력해 주세요.',
+            'begin_time.date_format' => '시작일시에 올바른 날짜 형식(Y-m-d H:i:s)으로 입력해 주세요.',
+            'begin_time.required' => '시작일시를 입력해 주세요.',
+            'end_time.date_format' => '종료일시에 올바른 날짜 형식(Y-m-d H:i:s)으로 입력해 주세요.',
+            'end_time.required' => '종료일시를 입력해 주세요.',
+            'left.numeric' => '팝업레이어 좌측 위치에는 숫자만 들어갈 수 있습니다.',
+            'left.required' => '팝업레이어 좌측 위치를 입력해 주세요.',
+            'top.numeric' => '팝업레이어 상단 위치에는 숫자만 들어갈 수 있습니다.',
+            'top.required' => '팝업레이어 상단 위치를 입력해 주세요.',
+            'width.numeric' => '팝업레이어 넓이에는 숫자만 들어갈 수 있습니다.',
+            'width.required' => '팝업레이어 넓이를 입력해 주세요.',
+            'height.numeric' => '팝업레이어 높이에는 숫자만 들어갈 수 있습니다.',
+            'height.required' => '팝업레이어 높이를 입력해 주세요.',
+            'color.required' => '팝업레이어 색상을 입력해 주세요.',
+            'color_button.required' => '팝업레이어 버튼 색상을 입력해 주세요.',
+            'color_button_font.required' => '팝업레이어 버튼 폰트 색상을 입력해 주세요.',
+            'subject.required' => '팝업 제목을 입력해 주세요.',
+            'content.required' => '내용을 입력해 주세요.',
+        ];
     }
 }

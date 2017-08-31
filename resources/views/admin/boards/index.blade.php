@@ -35,6 +35,14 @@
         </button>
     </div>
 @endif
+@if ($errors->any())
+    <div id="adm_save">
+        <span class="adm_save_txt">{{ $errors->first() }}</span>
+        <button onclick="alertclose()" class="adm_alert_close">
+            <i class="fa fa-times"></i>
+        </button>
+    </div>
+@endif
     <div id="board">
         <ul id="adm_btn">
             <li><a href="{{ route('admin.boards.index') }}" class="btn btn-sir" role="button">전체목록</a></li>

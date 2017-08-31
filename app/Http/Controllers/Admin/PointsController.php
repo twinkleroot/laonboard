@@ -45,14 +45,22 @@ class PointsController extends Controller
             abort(403, '포인트 추가에 대한 권한이 없습니다.');
         }
 
-        $rule = [
-            'email' => 'required|email',
-            'point' => 'required|numeric',
-            'content' => 'required',
+        $rules = [
+            'email' => 'bail|required|email',
+            'content' => 'bail|required',
+            'point' => 'bail|required|numeric',
         ];
 
-        $this->validate($request, $rule);
-		
+        $messages = [
+            'email.required' => '회원 이메일을 입력해 주세요.',
+            'email.email' => '회원 이메일에 올바른 Email양식으로 입력해 주세요.',
+            'content.required' => '포인트내용을 입력해 주세요.',
+            'point.required' => '포인트를 입력해 주세요.',
+            'point.numeric' => '포인트에는 숫자만 들어갈 수 있습니다.',
+        ];
+
+        $this->validate($request, $rules, $messages);
+
         $this->pointModel->givePoint($request);
 
         return redirect()->back();

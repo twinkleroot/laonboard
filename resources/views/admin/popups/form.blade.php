@@ -37,6 +37,14 @@
     </div>
 </div>
 <div class="body-contents">
+    @if ($errors->any())
+    <div id="adm_save">
+        <span class="adm_save_txt">{{ $errors->first() }}</span>
+        <button onclick="alertclose()" class="adm_alert_close">
+            <i class="fa fa-times"></i>
+        </button>
+    </div>
+    @endif
     <div id="admin_box1" class="adm_box">
         <div class="adm_panel">
             <div class="adm_box_bd">
