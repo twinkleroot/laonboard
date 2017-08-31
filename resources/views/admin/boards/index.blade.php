@@ -35,14 +35,6 @@
         </button>
     </div>
 @endif
-@if ($errors->any())
-    <div id="adm_save">
-        <span class="adm_save_txt">{{ $errors->first() }}</span>
-        <button onclick="alertclose()" class="adm_alert_close">
-            <i class="fa fa-times"></i>
-        </button>
-    </div>
-@endif
     <div id="board">
         <ul id="adm_btn">
             <li><a href="{{ route('admin.boards.index') }}" class="btn btn-sir" role="button">전체목록</a></li>
@@ -120,7 +112,7 @@
                     <tbody>
                     @if(count($boards) > 0)
                     @foreach ($boards as $board)
-                        <tr>
+                        <tr data-table="{{ $board->table_name }}">
                             <td class="td_chk">
                                 <input type="checkbox" name="chkId[]" class="boardId" value='{{ $board->id }}' />
                             </td>
@@ -240,9 +232,13 @@ $(function(){
             return;
         }
 
+        if(!formValidate(selected_id_array)) {
+            return false;
+        }
+
         var group_array = toUpdateBySelectOption("group_id", selected_id_array);
         var skin_array = toUpdateBySelectOption("skin", selected_id_array);
-        var mobile_skin_array = toUpdateBySelectOption("mobile_skin", selected_id_array);
+        // var mobile_skin_array = toUpdateBySelectOption("mobile_skin", selected_id_array);
         var subject_array = toUpdateByText("subject", selected_id_array);
         var read_point_array = toUpdateByText("read_point", selected_id_array);
         var write_point_array = toUpdateByText("write_point", selected_id_array);
@@ -256,7 +252,7 @@ $(function(){
         $('#ids').val(selected_id_array);
         $('#group_ids').val(group_array);
         $('#skin_ids').val(skin_array);
-        $('#mobile_skin_ids').val(mobile_skin_array);
+        // $('#mobile_skin_ids').val(mobile_skin_array);
         $('#subjects').val(subject_array);
         $('#read_points').val(read_point_array);
         $('#write_points').val(write_point_array);
@@ -277,6 +273,52 @@ $(function(){
         return false;
     });
 });
+
+function formValidate(selected_id_array) {
+    $("#adm_save").remove();
+    $(".body-contents td").removeClass('has-error');
+
+    var message = '';
+    selected_id_array.forEach (function (v, i) {
+        var table = $('input[id=subject_' + v + ']').closest('tr').attr('data-table');
+        if($('input[id=subject_' + v + ']').val() == '') {
+            $('input[id=subject_' + v + ']').closest('td').addClass('has-error');
+            message += "<span class=\"adm_save_txt\">" + 'TABLE 이름이 ' + table + '인 게시판의 제목을 입력해 주세요.' + "</span><br>";
+        }
+        if(isNaN($('input[id=read_point_' + v + ']').val())) {
+            $('input[id=read_point_' + v + ']').closest('td').addClass('has-error');
+            message += "<span class=\"adm_save_txt\">" + 'TABLE 이름이 ' + table + '인 게시판의 읽기P에 숫자를 입력해 주세요.' + "</span><br>";
+        }
+        if(isNaN($('input[id=write_point_' + v + ']').val())) {
+            $('input[id=write_point_' + v + ']').closest('td').addClass('has-error');
+            message += "<span class=\"adm_save_txt\">" + 'TABLE 이름이 ' + table + '인 게시판의 쓰기P에 숫자를 입력해 주세요.' + "</span><br>";
+        }
+        if(isNaN($('input[id=comment_point_' + v + ']').val())) {
+            $('input[id=comment_point_' + v + ']').closest('td').addClass('has-error');
+            message += "<span class=\"adm_save_txt\">" + 'TABLE 이름이 ' + table + '인 게시판의 댓글P에 숫자를 입력해 주세요.' + "</span><br>";
+        }
+        if(isNaN($('input[id=download_point_' + v + ']').val())) {
+            $('input[id=download_point_' + v + ']').closest('td').addClass('has-error');
+            message += "<span class=\"adm_save_txt\">" + 'TABLE 이름이 ' + table + '인 게시판의 다운P에 숫자를 입력해 주세요.' + "</span><br>";
+        }
+        if(isNaN($('input[id=order_' + v + ']').val())) {
+            $('input[id=order_' + v + ']').closest('td').addClass('has-error');
+            message += "<span class=\"adm_save_txt\">" + 'TABLE 이름이 ' + table + '인 게시판의 출력순서에 숫자를 입력해 주세요.' + "</span><br>";
+        }
+    });
+
+    if(message != '') {
+        var htmlMessage = '';
+        htmlMessage += "<div id=\"adm_save\">";
+        htmlMessage += "<button onclick=\"alertclose()\" class=\"adm_alert_close\">";
+        htmlMessage += "<i class=\"fa fa-times\"></i>";
+        htmlMessage += "</button>";
+        htmlMessage += message;
+        htmlMessage += "</div>";
+        $(".body-contents").prepend(htmlMessage);
+        return false;
+    }
+}
 
 </script>
 @endsection

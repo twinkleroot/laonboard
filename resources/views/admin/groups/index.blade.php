@@ -92,7 +92,7 @@
                     <tbody>
                     @if(count($groups) > 0)
                     @foreach ($groups as $group)
-                        <tr>
+                        <tr data-group-id="{{ $group->group_id }}">
                             <td class="td_chk">
                                 <input type="checkbox" name="chkId[]" class="groupId" value='{{ $group->id }}' />
                             </td>
@@ -180,6 +180,10 @@ $(function(){
             return;
         }
 
+        if(!formValidate(selected_id_array)) {
+            return false;
+        }
+
         // 목록에서 제목, 그룹관리자, 접근사용, 출력순서, 접속기기 변경 가능
         var subject_array = toUpdateByText("subject", selected_id_array);
         var admin_array = toUpdateByText("admin", selected_id_array);
@@ -199,5 +203,41 @@ $(function(){
     });
 
 });
+
+function formValidate(selected_id_array) {
+    $("#adm_save").remove();
+    $(".body-contents td").removeClass('has-error');
+
+    var message = '';
+    selected_id_array.forEach (function (v, i) {
+        var groupId = $('input[id=subject_' + v + ']').closest('tr').attr('data-group-id');
+        if($('input[id=subject_' + v + ']').val() == '') {
+            $('input[id=subject_' + v + ']').closest('td').addClass('has-error');
+            message += "<span class=\"adm_save_txt\">" + '그룹 ID가 ' + groupId + '인 그룹의 제목을 입력해 주세요.' + "</span><br>";
+        }
+        var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+        var admin = $('input[id=admin_' + v + ']').val();
+        if(admin != '' && !regex.test(admin)) {
+            $('input[id=admin_' + v + ']').closest('td').addClass('has-error');
+            message += "<span class=\"adm_save_txt\">" + '그룹 ID가 ' + groupId + '인 그룹의 그룹관리자에 올바른 이메일 형식으로 입력해 주세요.' + "</span><br>";
+        }
+        if(isNaN($('input[id=order_' + v + ']').val())) {
+            $('input[id=order_' + v + ']').closest('td').addClass('has-error');
+            message += "<span class=\"adm_save_txt\">" + '그룹 ID가 ' + groupId + '인 그룹의 출력순서에 숫자를 입력해 주세요.' + "</span><br>";
+        }
+    });
+
+    if(message != '') {
+        var htmlMessage = '';
+        htmlMessage += "<div id=\"adm_save\">";
+        htmlMessage += "<button onclick=\"alertclose()\" class=\"adm_alert_close\">";
+        htmlMessage += "<i class=\"fa fa-times\"></i>";
+        htmlMessage += "</button>";
+        htmlMessage += message;
+        htmlMessage += "</div>";
+        $(".body-contents").prepend(htmlMessage);
+        return false;
+    }
+}
 </script>
 @endsection
