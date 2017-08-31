@@ -90,23 +90,23 @@
                             <a href="{{ route('board.index', $board->table_name). '?category='. $write->ca_name }}" class="subject_cg">{{ $write->ca_name }}</a>
                             @endif
                             @if($viewParams == '')
-                            <a href="/bbs/{{ $board->table_name }}/view/{{ $write->parent }}">
+                            <a href="/bbs/{{ $board->table_name }}/view/{{ $write->parent }}" class="bd_subject_title">
                                 @if(isset($request->writeId) && $request->writeId == $write->id)
                                 <span class="read">    {{-- 열람중 --}}
-                                    {!! $write->subject !!}
+                                    {!! clean($write->subject) !!}
                                 </span>
                                 @else
-                                {!! $write->subject !!}
+                                {!! clean($write->subject) !!}
                                 @endif
                             </a>
                             @else
-                            <a href="/bbs/{{ $board->table_name }}/view/{{ $write->parent }}?{{ $viewParams }}">
+                            <a href="/bbs/{{ $board->table_name }}/view/{{ $write->parent }}?{{ $viewParams }}" class="bd_subject_title">
                                 @if(isset($request->writeId) && $request->writeId == $write->id)
                                 <span class="read">    {{-- 열람중 --}}
-                                    {!! $write->subject !!}
+                                    {!! clean($write->subject) !!}
                                 </span>
                                 @else
-                                {!! $write->subject !!}
+                                {!! clean($write->subject) !!}
                                 @endif
                             @endif
                             {{-- 글올린시간 + 설정에 있는 신규 글 시간 > 현재 시간 --}}
