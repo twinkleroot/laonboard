@@ -1576,3 +1576,18 @@ input[type=radio] {
 	color: #587ef6;
 	font-weight: 600;
 }
+#menulist tbody .dragHandle {
+	cursor:move;
+	color: #fff;
+	background-color:#587ef6;
+}
+#menulist tbody .dragHandle:hover {
+	color: #ff6699;
+	background: #3e63d6;
+}
+#menulist tbody .dragHandle:after {
+	content: "\f047";
+	font-family: "FontAwesome";
+	display: block;
+	font-weight: 100;
+}
