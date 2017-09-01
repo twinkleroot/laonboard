@@ -56,7 +56,12 @@ div {
 	vertical-align: top;
 }
 .tt_nick {
-	line-height:22px;vertical-align: top;
+	line-height:22px;
+	vertical-align: top;
+	color: #aaa;
+}
+.tt_nick a {
+	color: #aaa;
 }
 
 /* header */

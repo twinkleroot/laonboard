@@ -121,7 +121,7 @@
                         </span>
                     </p>
                     <div style="display: block;">
-                        <span>
+                        <span class="bd_nick">
                         @if(auth()->user() && $board->use_sideview)
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                                 @if(cache('config.join')->useMemberIcon && $write->iconPath)

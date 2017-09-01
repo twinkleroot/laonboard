@@ -217,7 +217,7 @@
     <article class="cmt" id="comment{{ $comment->id }}">
         <div class="cmt_box @if(strlen($comment->comment_reply)>0) cmt_reply" style="padding-left: calc(25px * {{ strlen($comment->comment_reply) }}); @endif">
             <ul class="bd_rd_cmt_info">
-                <li class="td_nick">
+                <li class="post_info td_nick">
                 @if(!$comment->iconPath)
                     <i class="fa fa-user"></i>
                 @endif
@@ -260,7 +260,7 @@
                 @endif
                 @if($board->use_ip_view) {{ "({$comment->ip})" }} @endif
                 </li>
-                <li><i class="fa fa-clock-o"></i>@datetime($comment->created_at)</li>
+                <li class="post_info"><i class="fa fa-clock-o"></i>@datetime($comment->created_at)</li>
             </ul>
             <ul class="bd_rd_cmt_ctr">
                 @if($comment->isReply == 1)
@@ -310,11 +310,21 @@
             <div class="form-group @if($errors->get('password'))has-error @endif">
                 <label for="userName" class="sr-only">이름</label>
                 <input type="text" class="form-control" id="userName" name="userName" placeholder="이름">
+                @foreach ($errors->get('userName') as $message)
+                <span class="help-block">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @endforeach
             </div>
 
             <div class="form-group @if($errors->get('password'))has-error @endif">
                 <label for="password" class="sr-only">비밀번호</label>
                 <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호">
+                @foreach ($errors->get('password') as $message)
+                <span class="help-block">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @endforeach
             </div>
             @endif
             <div class="form-group checkbox">
@@ -399,47 +409,6 @@ function commentSubmit() {
         alert("내용에 금지단어 (" + content + ") 가 포함되어 있습니다.");
         $('#content').focus();
         return false;
-    }
-
-    // 양쪽 공백 없애기
-    var pattern = /(^\s*)|(\s*$)/g; // \s 공백 문자
-    document.getElementById('content').value = document.getElementById('content').value.replace(pattern, "");
-
-    var minComment = parseInt('{{ $board->comment_min }}');
-    var maxComment = parseInt('{{ $board->commnet_max }}');
-    if (minComment > 0 || maxComment > 0) {
-        check_byte('content', 'charCount');
-        var cnt = parseInt(document.getElementById('charCount').innerHTML);
-        if (minComment > 0 && minComment > cnt) {
-            alert("댓글은 " + minComment + "글자 이상 쓰셔야 합니다.");
-            return false;
-        } else if (maxComment > 0 && maxComment < cnt) {
-            alert("댓글은 " + maxComment + "글자 이하로 쓰셔야 합니다.");
-            return false;
-        }
-    } else if (!document.getElementById('content').value) {
-        alert("댓글을 입력하여 주십시오.");
-        return false;
-    }
-
-    if ($.type($('#userName').val()) != 'undefined') {
-        var replaceStr = $('#userName').val().replace(pattern, "");
-        $('#userName').val(replaceStr);
-        if ($('#userName').val() == '') {
-            alert('이름이 입력되지 않았습니다.');
-            $('#userName').focus();
-            return false;
-        }
-    }
-
-    if ($.type($('#password').val()) != 'undefined') {
-        var replaceStr = $('#password').val().replace(pattern, "");
-        $('#password').val(replaceStr);
-        if ($('#password').val() == '') {
-            alert('비밀번호가 입력되지 않았습니다.');
-            $('#password').focus();
-            return false;
-        }
     }
 
     return true;
