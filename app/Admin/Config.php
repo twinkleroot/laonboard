@@ -24,7 +24,7 @@ class Config extends Model
 
     // 비밀번호 정책 설정에 따라 비밀번호 정규식 조합
     public function getPasswordRuleByConfigPolicy() {
-        $config = cache('config.join');
+        $config = cache("config.join") ? : json_decode(Config::where('name', 'config.join')->first()->vars);
         $rulePieces = array();
         $ruleString = array();
         $ruleArr = [

@@ -59,9 +59,9 @@
 <div class="body-contents">
     <div class="adm_panel">
         @if ($errors->any())
-            <script>
-                alert("{{ $errors->first() }}");
-            </script>
+        <script>
+            alert("{{ $errors->first() }}");
+        </script>
         @endif
         @if($type == 'edit')
             {{ method_field('PUT') }}

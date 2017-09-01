@@ -16,6 +16,7 @@ use App\Board;
 use App\User as AppUser;
 use File;
 use DB;
+use Auth;
 use Carbon\Carbon;
 
 class AdminUser extends Model
@@ -217,8 +218,9 @@ class AdminUser extends Model
         $user = getUser($id);
 
         $password = $user->password;
-        if($request->get('change_password') !== '') {
-            $password = bcrypt($request->get('change_password'));
+        // 비밀번호 변경시
+        if($request->change_password && !Auth::validate(['email' => $user->email, 'password' => $request->change_password ])) {
+            $password = bcrypt($request->change_password);
         }
 
         $nowDate = Carbon::now()->toDateString();

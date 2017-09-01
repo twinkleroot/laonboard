@@ -5,7 +5,7 @@
 @endsection
 
 @section('include_css')
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/'. cache('config.skin')->layout. '/css/auth.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/auth.css') }}">
 @endsection
 
 @section('include_script')
@@ -14,102 +14,114 @@
 @endsection
 
 @section('content')
+@if($errors->any())
+<div class="alert alert-info">
+    {{ $errors->first() }}
+</div>
+@endif
 <div class="container">
 <div class="row">
 <div class="col-md-6 col-md-offset-3 col-xs-12">
 
 <!-- auth login -->
-    <div class="panel panel-default">
-        <div class="panel-heading bg-sir">
-            <h3 class="panel-title">회원가입</h3>
-        </div>
-        <div class="panel-body row">
-            <form class="contents col-md-8 col-md-offset-2" id="userForm" name="userForm" role="form" method="POST" action="{{ route('user.register') }}">
-                @if(cache('config.cert')->certHp || cache('config.cert')->certIpin)
-                <input type="hidden" name="certType" value="">
-                <input type="hidden" name="name" value="">
-                <input type="hidden" name="hp" value="">
-                <input type="hidden" name="certNo" value="">
-                @endif
-
-                {{ csrf_field() }}
-                <div class="form-group {{ $errors->has('email') ? ' has-error' : '' }}">
-                    <label for="email">이메일</label>
-                    <input id="email" type="email" name="email" class="form-control" value="{{ old('email') }}" placeholder="이메일 주소를 입력하세요" required autofocus>
-
-                    @if ($errors->has('email'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('email') }}</strong>
-                        </span>
-                    @endif
-                </div>
-
-                <div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
-                    <label for="password">비밀번호</label>
-                    <input id="password" type="password" name="password" class="form-control" placeholder="비밀번호를 입력하세요" required>
-
-                    @if ($errors->has('password'))
-                        <span class="help-block">
-                          <strong>{{ $errors->first('password') }}</strong>
-                        </span>
-                    @endif
-                </div>
-
-                <div class="form-group">
-                    <label for="password">비밀번호 확인</label>
-                    <input id="password-confirm" type="password" name="password_confirmation" class="form-control" placeholder="비밀번호를 한번 더 입력하세요" required>
-                </div>
-
-                <div class="form-group {{ $errors->has('nick') ? ' has-error' : '' }}">
-                    <label for="nick">닉네임</label>
-                    <input id="nick" type="text" name="nick" class="form-control" value="{{ old('nick') }}" placeholder="닉네임을 입력하세요" required>
-                    @if ($errors->has('nick'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('nick') }}</strong>
-                        </span>
-                    @endif
-                    <p class="help-block">
-                        공백없이 한글, 영문, 숫자만 입력 가능<br>
-                        (한글2자, 영문4자 이상)<br>
-                        닉네임을 바꾸시면 0일 이내에는 변경할 수 없습니다
-                    </p>
-                </div>
-
-                @if(cache('config.cert')->certIpin)
-                <div class="form-group">
-                    <button type="button" class="btn btn-lg btn-block btn-sir" id="win_ipin_cert">아이핀 본인확인</button>
-
-                    @if ($errors->has('ipin'))
-                        <span class="help-block">
-                          <strong>{{ $errors->first('ipin') }}</strong>
-                        </span>
-                    @endif
-                </div>
-                @endif
-                @if(cache('config.cert')->certHp)
-                <div class="form-group">
-                    <button type="button" class="btn btn-lg btn-block btn-sir" id="win_hp_cert">휴대폰 본인확인</button>
-
-                    @if ($errors->has('hpCert'))
-                        <span class="help-block">
-                          <strong>{{ $errors->first('hpCert') }}</strong>
-                        </span>
-                    @endif
-                </div>
-                @endif
-
-                <div class="form-group">
-                    <button type="button" class="btn btn-lg btn-block btn-sir" onclick="validate();">회원가입</button>
-                </div>
-                <!-- 리캡챠 -->
-                <div id='recaptcha' class="g-recaptcha"
-                    data-sitekey="{{ cache('config.sns')->googleRecaptchaClient }}"
-                    data-callback="onSubmit"
-                    data-size="invisible" style="display:none">
-                </div>
-            </form>
-        </div>
+<div class="panel panel-default">
+    <div class="panel-heading bg-sir">
+        <h3 class="panel-title">회원가입</h3>
     </div>
+    <div class="panel-body row">
+        <form class="contents col-md-8 col-md-offset-2" id="userForm" name="userForm" role="form" method="POST" action="{{ route('user.register') }}">
+        @if(cache('config.cert')->certHp || cache('config.cert')->certIpin)
+            <input type="hidden" name="certType" value="">
+            <input type="hidden" name="name" value="">
+            <input type="hidden" name="hp" value="">
+            <input type="hidden" name="certNo" value="">
+        @endif
+            {{ csrf_field() }}
+
+            <div class="form-group @if($errors->has('email'))has-error @endif">
+                <label for="email">이메일</label>
+                <input id="email" type="email" name="email" class="form-control" value="{{ old('email') }}" placeholder="이메일 주소를 입력하세요" required autofocus>
+
+                @if ($errors->has('email'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('email') }}</strong>
+                </span>
+                @endif
+            </div>
+
+            <div class="form-group @if($errors->has('password'))has-error @endif">
+                <label for="password">비밀번호</label>
+                <input id="password" type="password" name="password" class="form-control" placeholder="비밀번호를 입력하세요" required>
+
+                @if ($errors->has('password'))
+                <span class="help-block">
+                  <strong>{{ $errors->first('password') }}</strong>
+                </span>
+                @endif
+            </div>
+
+            <div class="form-group @if($errors->has('password_confirmation'))has-error @endif">
+                <label for="password">비밀번호 확인</label>
+                <input id="password-confirm" type="password" name="password_confirmation" class="form-control" placeholder="비밀번호를 한번 더 입력하세요" required>
+
+                @if ($errors->has('password_confirmation'))
+                <span class="help-block">
+                  <strong>{{ $errors->first('password_confirmation') }}</strong>
+                </span>
+                @endif
+            </div>
+
+            <div class="form-group @if($errors->has('nick'))has-error @endif">
+                <label for="nick">닉네임</label>
+                <input id="nick" type="text" name="nick" class="form-control" value="{{ old('nick') }}" placeholder="닉네임을 입력하세요" required>
+                @if ($errors->has('nick'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('nick') }}</strong>
+                </span>
+                @endif
+                <p class="help-block">
+                    {{-- 공백없이 한글, 영문, 숫자만 입력 가능<br> --}}
+                    (한글2자, 영문4자 이상, Emoji 포함 가능)<br>
+                    닉네임을 정하시면 {{ cache("config.join")->nickDate }}일 이내에는 변경할 수 없습니다
+                </p>
+            </div>
+
+            {{-- @if(cache('config.cert')->certIpin)
+            <div class="form-group">
+                <button type="button" class="btn btn-lg btn-block btn-sir" id="win_ipin_cert">아이핀 본인확인</button>
+
+                @if ($errors->has('ipin'))
+                <span class="help-block">
+                  <strong>{{ $errors->first('ipin') }}</strong>
+                </span>
+                @endif
+            </div>
+            @endif --}}
+            @if(cache('config.cert')->certHp)
+            <div class="form-group @if($errors->has('hpCert'))has-error @endif">
+                <button type="button" class="btn btn-lg btn-block btn-sir" id="win_hp_cert">휴대폰 본인확인</button>
+
+                @if($errors->has('hpCert'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('hpCert') }}</strong>
+                </span>
+                @endif
+            </div>
+            @endif
+
+            <div class="form-group">
+                <button type="button" class="btn btn-lg btn-block btn-sir" onclick="validate();">회원가입</button>
+            </div>
+            <!-- 리캡챠 -->
+            <div id='recaptcha' class="g-recaptcha"
+                data-sitekey="{{ cache('config.sns')->googleRecaptchaClient }}"
+                data-callback="onSubmit"
+                data-size="invisible" style="display:none">
+            </div>
+        </form>
+    </div>
+</div>
+
 </div>
 </div>
 </div>

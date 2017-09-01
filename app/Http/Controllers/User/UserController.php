@@ -19,13 +19,15 @@ use App\Notification;
 class UserController extends Controller
 {
 
+    public $config;
     public $skin;
-    public $rulePassword;
+    public $rulesPassword;
     public $userModel;
 
     public function __construct(Config $config, User $userModel)
     {
-        $this->skin = cache("config.join")->skin ? : 'default';
+        $this->config = cache("config.join") ? : json_decode(Config::where('name', 'config.join')->first()->vars);
+        $this->skin = $this->config->skin ? : 'default';
         $this->userModel = $userModel;
 
         $adminConfig = new Config();
@@ -69,6 +71,15 @@ class UserController extends Controller
     // 비밀번호 비교
     public function confirmPassword(Request $request)
     {
+        $rules = [
+            'password' => 'required'
+        ];
+        $messages = [
+            'password.required' => '비밀번호를 입력해 주세요.'
+        ];
+
+        $this->validate($request, $rules, $messages);
+
         $email = auth()->user()->email;
         $work = $request->work;	// 비밀번호 비교 후 맞으면 수행할 작업
 
@@ -83,8 +94,10 @@ class UserController extends Controller
     // 최초 비밀번호 설정
     public function setPassword(Request $request)
     {
-        $rule = array_add($this->userModel->rulesPassword, 'password', $this->rulePassword);
-        $this->validate($request, $rule);
+        $rules = array_add($this->userModel->rulesPassword, 'password', $this->rulePassword);
+        $messages = $this->userModel->messages;
+
+        $this->validate($request, $rules, $messages);
 
         $this->userModel->setPassword($request);
 
@@ -98,19 +111,45 @@ class UserController extends Controller
         $params = $this->userModel->editParams();
         $skin = $this->skin;
         $user = auth()->user();
-        $rule = [];
+        $rules = [];
+        $messages = $this->userModel->messages;
         // 비밀번호를 변경할 경우 validation에 password 조건을 추가한다.
         if($request->password && !Auth::validate(['email' => $user->email, 'password' => $request->password ])) {
-            $rule = array_add($this->userModel->rulesPassword, 'password', $this->rulePassword);
+            $rules = array_add($this->userModel->rulesPassword, 'password', $this->rulePassword);
         }
         // 이메일을 변경할 경우 validation에 email 조건을 추가한다.
         $email = getEmailAddress($request->email);
         $changeEmail = ($email != $user->email);
         if($changeEmail) {
-            $rule = array_add($rule, 'email', 'required|email|max:255|unique:users');
+            $rules = array_add($rules, 'email', 'required|email|max:255|unique:users');
+        }
+        if($this->config->name) {
+            $rules = array_add($rules, 'name', 'alpha_dash|nullable');
+        }
+        if($this->config->homepage) {
+            $rules = array_add($rules, 'homepage', 'regex:/^(((http(s?))\:\/\/)?)([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(\/\S*)?$/|nullable');
+        }
+        if($this->config->tel) {
+            $rules = array_add($rules, 'tel', 'regex:/^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/|nullable');
+        }
+        if($this->config->hp) {
+            $rules = array_add($rules, 'hp', 'regex:/^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/|nullable');
+        }
+        if($this->config->addr) {
+            $rules = array_add($rules, 'addr1', 'nullable');
+            $rules = array_add($rules, 'addr2', 'nullable');
+        }
+        if($this->config->recommend) {
+            $rules = array_add($rules, 'recommend', 'nick_length:2,4|nullable');
+        }
+        if($request->icon) {
+            $request->merge([
+                'iconName' => $request->icon->getClientOriginalName()
+            ]);
+            $rules = array_add($rules, 'iconName', 'regex:/\.(gif)$/i|nullable');
         }
 
-        $this->validate($request, $rule);
+        $this->validate($request, $rules, $messages);
 
         $this->userModel->updateUserInfo($request);
 

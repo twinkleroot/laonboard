@@ -176,7 +176,7 @@ class UsersController extends Controller
             'email' => 'bail|required|email|max:255|unique:users',
             'password' => 'bail|'. $rulePassword[0] . '|' . $rulePassword[2],
             'name' => 'bail|alpha_dash|nullable',
-            'nick' => 'bail|required|nick_length:2,4|unique:users|alpha_num',
+            'nick' => 'bail|required|nick_length:2,4|unique:users',
             'level' => 'bail|required|numeric',
             'point' => 'bail|numeric|nullable',
             'leave_date' => 'bail|date_format:"Ymd"|nullable',
@@ -184,12 +184,12 @@ class UsersController extends Controller
             'homepage' => 'bail|regex:/^(((http(s?))\:\/\/)?)([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(\/\S*)?$/|nullable',
             'tel' => 'bail|regex:/^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/|nullable',
             'hp' => 'bail|regex:/^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/|nullable',
-            'addr1' => 'bail|nullable',
-            'addr2' => 'bail|nullable',
-            'signature' => 'bail|nullable',
-            'profile' => 'bail|nullable',
-            'memo' => 'bail|nullable',
-            'recommend' => 'bail|nick_length:2,4|alpha_num|nullable',
+            'addr1' => 'nullable',
+            'addr2' => 'nullable',
+            'signature' => 'nullable',
+            'profile' => 'nullable',
+            'memo' => 'nullable',
+            'recommend' => 'bail|nick_length:2,4|nullable',
             'iconName' => 'bail|regex:/\.(gif)$/i|nullable'
         ];
     }
@@ -207,8 +207,6 @@ class UsersController extends Controller
             'nick.required' => '닉네임을 입력해 주세요.',
             'nick.nick_length' => '닉네임의 길이는 한글 2자, 영문 4자 이상이어야 합니다.',
             'nick.unique' => '이미 등록된 닉네임입니다. 다른 닉네임을 입력해 주세요.',
-            'nick.alpha_num' => '닉네임에 영문자, 한글, 숫자만 입력해 주세요.',
-            'nick.required' => '닉네임을 입력해 주세요.',
             'level.required' => '회원권한을 선택해 주세요.',
             'level.numeric' => '회원권한에는 숫자만 들어갈 수 있습니다.',
             'point.numeric' => '포인트에는 숫자만 들어갈 수 있습니다.',
@@ -218,7 +216,6 @@ class UsersController extends Controller
             'tel.regex' => '전화번호에 전화번호형식(000-0000-0000)으로 입력해 주세요.',
             'hp.regex' => '휴대폰번호에 전화번호형식(000-0000-0000)으로 입력해 주세요.',
             'recommend.nick_length' => '추천인의 길이는 한글 2자, 영문 4자 이상이어야 합니다.',
-            'recommend.alpha_num' => '추천인에 영문자, 한글, 숫자만 입력해 주세요.',
             'iconName.regex' => '회원아이콘에는 확장자가 gif인 이미지 파일만 들어갈 수 있습니다.',
         ];
     }

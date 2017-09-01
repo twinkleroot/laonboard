@@ -4,6 +4,10 @@
     회원가입 완료 | {{ Cache::get("config.homepage")->title }}
 @endsection
 
+@section('include_css')
+    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/auth.css') }}">
+@endsection
+
 @section('content')
 <div class="container">
     <div class="welc_box">

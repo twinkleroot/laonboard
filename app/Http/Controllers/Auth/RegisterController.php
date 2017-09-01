@@ -63,8 +63,10 @@ class RegisterController extends Controller
         ReCaptcha::reCaptcha($request);
         $adminConfig = new Config();
         $rulePassword = $adminConfig->getPasswordRuleByConfigPolicy();
-        $rule = array_add($this->userModel->rulesRegister, 'password', $rulePassword);
-        $this->validate($request, $rule);
+        $rules = array_add($this->userModel->rulesRegister, 'password', $rulePassword);
+        $messages = $this->userModel->messages;
+        
+        $this->validate($request, $rules, $messages);
 
         if(cache('config.cert')->certUse && cache('config.cert')->certReq) {
             if( trim($request->certNo) != session()->get('ss_cert_no') || !session()->get('ss_cert_no') ) {

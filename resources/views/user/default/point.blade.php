@@ -10,9 +10,9 @@
 
 @section('content')
 @if(Session::has('message'))
-  <div class="alert alert-info">
+<div class="alert alert-info">
     {{ Session::get('message') }}
-  </div>
+</div>
 @endif
 
 <div id="pt" class="container">

@@ -5,7 +5,7 @@
 @endsection
 
 @section('include_css')
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/'. cache('config.skin')->layout. '/css/auth.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/auth.css') }}">
 @endsection
 
 @section('content')
