@@ -46,42 +46,6 @@
             </li>
         </ul>
     </div>
-    <!--
-    <div class="bd_head">
-        <span><a href="{{ route('board.index', $board->table_name) }}">{{ $board->subject }}</a> 전체 {{ $writes->total() }}건 {{ $writes->currentPage() }}페이지</span>
-    </div>
-
-    <div class="bd_btn">
-        <ul id="bd_btn" class="pull-right">
-            @if(auth()->user() && auth()->user()->isBoardAdmin($board))
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle bd_rd_more" data-toggle="dropdown" role="button" aria-expanded="false">
-                    <button type="" class="btn btn-danger">
-                        <i class="fa fa-cog"></i> 관리
-                    </button>
-                </a>
-                <ul class="dropdown-menu bd_adm" role="menu">
-                    <li><input type="submit" value="선택삭제" onclick="document.pressed=this.value"/></li>
-                    <li><input type="submit" value="선택복사" onclick="document.pressed=this.value"/></li>
-                    <li><input type="submit" value="선택이동" onclick="document.pressed=this.value"/></li>
-                    <li><a href="{{ route('admin.boards.edit', $board->table_name) }}">게시판 설정</a></li>
-                </ul>
-            </li>
-            @endif
-
-            <li class="mr0">
-                @if($board->use_rss_view && $board->list_level == 1 && $board->read_level == 1)
-                <button type="button" class="btn btn-sir" onclick="location.href='{{ route('rss', $board->table_name) }}'">
-                    RSS
-                </button>
-                @endif
-                <button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->table_name). '?'. $request->getQueryString() }}'">
-                    <i class="fa fa-pencil"></i> 글쓰기
-                </button>
-            </li>
-        </ul>
-    </div>
--->
     @if($board->use_category == 1 )
     <div class="bd_category">
         <ul>
