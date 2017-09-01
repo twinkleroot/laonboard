@@ -307,12 +307,12 @@
     <article id="comment_box">
         <div class="form-inline info_user">
             @if( auth()->guest() )  <!-- 비회원일경우 노출 -->
-            <div class="form-group @if($errors->get('password')) has-error @endif">
+            <div class="form-group @if($errors->get('password'))has-error @endif">
                 <label for="userName" class="sr-only">이름</label>
                 <input type="text" class="form-control" id="userName" name="userName" placeholder="이름">
             </div>
 
-            <div class="form-group @if($errors->get('password')) has-error @endif">
+            <div class="form-group @if($errors->get('password'))has-error @endif">
                 <label for="password" class="sr-only">비밀번호</label>
                 <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호">
             </div>
