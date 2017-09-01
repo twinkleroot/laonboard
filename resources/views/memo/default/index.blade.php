@@ -54,7 +54,7 @@
             @if($countMemo)
             @foreach($memos as $memo)
             <tr>
-                <td class="bd_name">
+                <td class="td_nick">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $memo->nick }}</a>
                     <ul class="dropdown-menu" role="menu">
                         @component('board.sideview', ['board' => '', 'id' => $memo->user_id_hashkey, 'name' => $memo->nick, 'email' => $memo->email, 'category' => ''])
@@ -62,8 +62,8 @@
                         <li><a href="{{ route('new.index') }}?nick={{ $memo->nick }}">전체게시물</a></li>
                     </ul>
                 </td>
-                <td class="bd_time"><a href="{{ route('memo.show', $memo->id) }}?kind={{ $kind }}">{{ $memo->send_timestamp }}</a></td>
-                <td class="bd_time"><a href="{{ route('memo.show', $memo->id) }}?kind={{ $kind }}">{{ $memo->read_timestamp ? : '아직 읽지 않음' }}</a></td>
+                <td class="td_datetime"><a href="{{ route('memo.show', $memo->id) }}?kind={{ $kind }}">{{ $memo->send_timestamp }}</a></td>
+                <td class="td_datetime"><a href="{{ route('memo.show', $memo->id) }}?kind={{ $kind }}">{{ $memo->read_timestamp ? : '아직 읽지 않음' }}</a></td>
                 <td class="td_mngsmall"><a href="{{ route('memo.destroy', $memo->id) }}?kind={{ $kind }}" onclick="del(this.href); return false;">삭제</a></td>
             </tr>
             @endforeach

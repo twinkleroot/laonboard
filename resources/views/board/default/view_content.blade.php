@@ -5,7 +5,7 @@
 <div class="bd_rd_head">
     <h1>{{ $write->subject }}</h1>
     <ul class="bd_rd_info">
-        <li>
+        <li class="post_info">
         @if(!$write->iconPath)
             <i class="fa fa-user"></i>
         @endif
@@ -48,8 +48,8 @@
         @endif
         @if($board->use_ip_view) ({{ $write->ip }}) @endif
         </li>
-        <li><i class="fa fa-clock-o"></i>@datetime($write->created_at)</li>
-        <li><i class="fa fa-eye"></i>{{ $write->hit }}</li>
+        <li class="post_info"><i class="fa fa-clock-o"></i>@datetime($write->created_at)</li>
+        <li class="post_info"><i class="fa fa-eye"></i>{{ $write->hit }}</li>
     </ul>
     <ul class="bd_rd_btn pull-right">
         <li class="dropdown">
@@ -217,7 +217,7 @@
     <article class="cmt" id="comment{{ $comment->id }}">
         <div class="cmt_box @if(strlen($comment->comment_reply)>0) cmt_reply" style="padding-left: calc(25px * {{ strlen($comment->comment_reply) }}); @endif">
             <ul class="bd_rd_cmt_info">
-                <li class="td_nick">
+                <li class="post_info td_nick">
                 @if(!$comment->iconPath)
                     <i class="fa fa-user"></i>
                 @endif
@@ -260,7 +260,7 @@
                 @endif
                 @if($board->use_ip_view) {{ "({$comment->ip})" }} @endif
                 </li>
-                <li><i class="fa fa-clock-o"></i>@datetime($comment->created_at)</li>
+                <li class="post_info"><i class="fa fa-clock-o"></i>@datetime($comment->created_at)</li>
             </ul>
             <ul class="bd_rd_cmt_ctr">
                 @if($comment->isReply == 1)
@@ -338,14 +338,9 @@
         <span id="charCount"></span>글자
     @endif
     <textarea class="form-control" rows="4" name="content" id="content" @if($board->comment_min || $board->comment_max) onkeyup="check_byte('content', 'charCount');" @endif placeholder="댓글을 입력해 주세요." required></textarea>
-    @foreach ($errors->get('content') as $message)
-    <span class="help-block" style="color:#a94442;">
-        <strong>{{ $message }}</strong>
-    </span>
-    @endforeach
 
     <script>
-        $(document).on("keyup change", "textarea#content[maxlength]", function(){
+        $(document).on( "keyup change", "textarea#content[maxlength]", function(){
             var str = $(this).val()
             var mx = parseInt($(this).attr("maxlength"))
             if (str.length > mx) {
