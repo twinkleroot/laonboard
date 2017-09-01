@@ -5,7 +5,7 @@
 <div class="bd_rd_head">
     <h1>{{ $write->subject }}</h1>
     <ul class="bd_rd_info">
-        <li>
+        <li class="post_info">
         @if(!$write->iconPath)
             <i class="fa fa-user"></i>
         @endif
@@ -48,8 +48,8 @@
         @endif
         @if($board->use_ip_view) ({{ $write->ip }}) @endif
         </li>
-        <li><i class="fa fa-clock-o"></i>@datetime($write->created_at)</li>
-        <li><i class="fa fa-eye"></i>{{ $write->hit }}</li>
+        <li class="post_info"><i class="fa fa-clock-o"></i>@datetime($write->created_at)</li>
+        <li class="post_info"><i class="fa fa-eye"></i>{{ $write->hit }}</li>
     </ul>
     <ul class="bd_rd_btn pull-right">
         <li class="dropdown">
@@ -307,24 +307,14 @@
     <article id="comment_box">
         <div class="form-inline info_user">
             @if( auth()->guest() )  <!-- 비회원일경우 노출 -->
-            <div class="form-group @if($errors->get('password'))has-error @endif">
+            <div class="form-group">
                 <label for="userName" class="sr-only">이름</label>
                 <input type="text" class="form-control" id="userName" name="userName" placeholder="이름">
-                @foreach ($errors->get('userName') as $message)
-                <span class="help-block">
-                    <strong>{{ $message }}</strong>
-                </span>
-                @endforeach
             </div>
 
-            <div class="form-group @if($errors->get('password'))has-error @endif">
+            <div class="form-group">
                 <label for="password" class="sr-only">비밀번호</label>
                 <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호">
-                @foreach ($errors->get('password') as $message)
-                <span class="help-block">
-                    <strong>{{ $message }}</strong>
-                </span>
-                @endforeach
             </div>
             @endif
             <div class="form-group checkbox">
@@ -338,14 +328,9 @@
         <span id="charCount"></span>글자
     @endif
     <textarea class="form-control" rows="4" name="content" id="content" @if($board->comment_min || $board->comment_max) onkeyup="check_byte('content', 'charCount');" @endif placeholder="댓글을 입력해 주세요." required></textarea>
-    @foreach ($errors->get('content') as $message)
-    <span class="help-block" style="color:#a94442;">
-        <strong>{{ $message }}</strong>
-    </span>
-    @endforeach
 
     <script>
-        $(document).on("keyup change", "textarea#content[maxlength]", function(){
+        $(document).on( "keyup change", "textarea#content[maxlength]", function(){
             var str = $(this).val()
             var mx = parseInt($(this).attr("maxlength"))
             if (str.length > mx) {
@@ -414,6 +399,47 @@ function commentSubmit() {
         alert("내용에 금지단어 (" + content + ") 가 포함되어 있습니다.");
         $('#content').focus();
         return false;
+    }
+
+    // 양쪽 공백 없애기
+    var pattern = /(^\s*)|(\s*$)/g; // \s 공백 문자
+    document.getElementById('content').value = document.getElementById('content').value.replace(pattern, "");
+
+    var minComment = parseInt('{{ $board->comment_min }}');
+    var maxComment = parseInt('{{ $board->commnet_max }}');
+    if (minComment > 0 || maxComment > 0) {
+        check_byte('content', 'charCount');
+        var cnt = parseInt(document.getElementById('charCount').innerHTML);
+        if (minComment > 0 && minComment > cnt) {
+            alert("댓글은 " + minComment + "글자 이상 쓰셔야 합니다.");
+            return false;
+        } else if (maxComment > 0 && maxComment < cnt) {
+            alert("댓글은 " + maxComment + "글자 이하로 쓰셔야 합니다.");
+            return false;
+        }
+    } else if (!document.getElementById('content').value) {
+        alert("댓글을 입력하여 주십시오.");
+        return false;
+    }
+
+    if ($.type($('#userName').val()) != 'undefined') {
+        var replaceStr = $('#userName').val().replace(pattern, "");
+        $('#userName').val(replaceStr);
+        if ($('#userName').val() == '') {
+            alert('이름이 입력되지 않았습니다.');
+            $('#userName').focus();
+            return false;
+        }
+    }
+
+    if ($.type($('#password').val()) != 'undefined') {
+        var replaceStr = $('#password').val().replace(pattern, "");
+        $('#password').val(replaceStr);
+        if ($('#password').val() == '') {
+            alert('비밀번호가 입력되지 않았습니다.');
+            $('#password').focus();
+            return false;
+        }
     }
 
     return true;

@@ -280,17 +280,22 @@
     margin-bottom: 0;
     font-size: 12px;
 }
-.bd_rd_head .bd_rd_info li {
+.bd_rd_head .bd_rd_info li.post_info {
     list-style: none;
     float: left;
     margin: 0 10px;
+    line-height: 22px;
 }
-.bd_rd_head .bd_rd_info li:first-child {
+.bd_rd_head .bd_rd_info li.post_info:first-child {
     margin-left: 0;
-
 }
-.bd_rd_head .bd_rd_info li i {
+.bd_rd_head .bd_rd_info li.post_info i {
     margin-right: 7px;
+}
+.bd_rd_head .bd_rd_info li.post_info ul.dropdown-menu {
+    top: 105px;
+    left: 25px;
+    font-size: 12px;
 }
 .bd_rd_head .bd_rd_btn {
     padding: 0;
