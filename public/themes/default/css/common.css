@@ -28,10 +28,6 @@ div {
 .sr-only-input {
 	margin-top: -20px;
 }
-input[type=checkbox],
-input[type=radio] {
-	vertical-align: middle; margin: 0 0 0 5px;
-}
 
 /* margin reset */
 .mt0  {margin-top: 0;}
