@@ -144,6 +144,10 @@ class WriteController extends Controller
             }
         }
 
+        if($this->writeModel->board->use_category) {
+            $rules = array_add($rules, 'ca_name', 'required');
+        }
+
         // 공백 제거
         $request->merge([
             'subject' => trim($request->subject),
@@ -310,7 +314,6 @@ class WriteController extends Controller
         return [
             'email' => 'email|max:255|nullable',
             'homepage' => 'regex:/^(((http(s?))\:\/\/)?)([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(\/\S*)?$/|nullable',
-            'ca_name' => 'required',
             'subject' => 'required|max:255',
             'content' => 'required',
             'link1' => 'regex:/^(((http(s?))\:\/\/)?)([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(\/\S*)?$/|nullable',
