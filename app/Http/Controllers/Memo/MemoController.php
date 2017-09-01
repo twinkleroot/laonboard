@@ -55,6 +55,17 @@ class MemoController extends Controller
      */
     public function store(Request $request)
     {
+        $rules = [
+            'recv_nicks' => 'required',
+            'memo' => 'required',
+        ];
+        $messages = [
+            'recv_nicks.required' => '받는 회원 닉네임을 1개이상 입력해 주세요.',
+            'memo.required' => '내용을 입력해 주세요.',
+        ];
+
+        $this->validate($request, $rules, $messages);
+
         ReCaptcha::reCaptcha($request);	// 구글 리캡챠 체크
         try {
             $this->memo->storeMemo($request);

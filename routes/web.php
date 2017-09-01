@@ -317,7 +317,7 @@ Route::group(['prefix' => 'bbs/{boardName}'], function () {
     // 답변 쓰기
     Route::get('reply/{writeId}', ['as' => 'board.create.reply', 'uses' => 'Board\WriteController@createReply'])
         ->middleware('level.board:reply_level', 'valid.board', 'valid.write', 'cert:write', 'writable.reply');
-    // 댓글 삽입
+    // 댓글 쓰기
     Route::post('comment/store', ['as' => 'board.comment.store', 'uses' => 'Board\CommentController@store'])
         ->middleware('level.board:comment_level', 'writable.comment:create');
     // 댓글 수정

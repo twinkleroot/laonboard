@@ -49,17 +49,27 @@
                 <td class="popin">
                     받는 회원 닉네임
                 </td>
-                <td>
+                <td @if($errors->has('name')) class="has-error" @endif>
                     <input type="text" class="form-control" name="recv_nicks" size="47" @if( isset($to) ) value="{{ $to }}" @else value="{{ old('recv_nicks') }}" @endif required>
                     <p class="help-block">여러 회원에게 보낼때는 컴마(,)로 구분하세요.</p>
+                    @if($errors->has('recv_nicks'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('recv_nicks') }}</strong>
+                    </span>
+                    @endif
                 </td>
             </tr>
             <tr>
                 <td class="popin">
                     내용
                 </td>
-                <td>
+                <td @if($errors->has('name')) class="has-error" @endif>
                     <textarea class="form-control" rows="4" name="memo" id="memo" required>@if( isset($content) ){{ $content }}@else{{ old('memo') }}@endif</textarea>
+                    @if($errors->has('memo'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('memo') }}</strong>
+                    </span>
+                    @endif
                 </td>
             </tr>
         </tbody>

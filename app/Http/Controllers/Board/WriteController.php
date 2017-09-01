@@ -122,6 +122,28 @@ class WriteController extends Controller
      */
     public function store(Request $request, $boardName)
     {
+        $rules = $this->rules();
+        $messages = $this->messages();
+
+        if(auth()->guest()) {
+            $rules = array_add($rules, 'name', 'required|alpha_dash|max:20');
+            $rules = array_add($rules, 'password', 'required|max:20');
+        }
+
+        if(!$this->writeModel->board->use_dhtml_editor
+            || auth()->guest()
+            || !auth()->user()->isSuperAdmin()
+            || auth()->user()->level < $this->writeModel->board->html_level) {
+            if($this->writeModel->board->write_min) {
+                $rules['content'] .= '|min:'.$this->writeModel->board->write_min;
+            }
+            if($this->writeModel->board->write_max) {
+                $rules['content'] .= '|max:'.$this->writeModel->board->write_max;
+            }
+        }
+
+        $this->validate($request, $rules, $messages);
+
         if(auth()->guest() || (!auth()->user()->isBoardAdmin($this->writeModel->board) && $this->writeModel->board->use_recaptcha)) {
             ReCaptcha::reCaptcha($request);
         }
@@ -166,6 +188,27 @@ class WriteController extends Controller
      */
     public function update(Request $request, $boardName, $writeId)
     {
+        $rules = $this->rules();
+        $messages = $this->messages();
+
+        if(auth()->guest()) {
+            $rules = array_add($rules, 'name', 'required|alpha_dash|max:20');
+        }
+
+        if(!$this->writeModel->board->use_dhtml_editor
+            || auth()->guest()
+            || !auth()->user()->isSuperAdmin()
+            || auth()->user()->level < $this->writeModel->board->html_level) {
+            if($this->writeModel->board->write_min) {
+                $rules['content'] .= '|min:'.$this->writeModel->board->write_min;
+            }
+            if($this->writeModel->board->write_max) {
+                $rules['content'] .= '|max:'.$this->writeModel->board->write_max;
+            }
+        }
+
+        $this->validate($request, $rules, $messages);
+
         $fileCount = 0;
         if(count($request->file_del) > 0 || count($request->attach_file) > 0) {
             // 첨부 파일 변경
@@ -245,6 +288,43 @@ class WriteController extends Controller
             ->header('Cache-Control', 'no-cache, must-revalidate')
             ->header('Pragma', 'no-cache')
             ->header('charset', 'utf-8');
+    }
+
+    // 유효성 검사 규칙
+    public function rules()
+    {
+        return [
+            'email' => 'email|max:255|nullable',
+            'homepage' => 'regex:/^(((http(s?))\:\/\/)?)([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(\/\S*)?$/|nullable',
+            'ca_name' => 'required',
+            'subject' => 'required|max:255',
+            'content' => 'required',
+            'link1' => 'regex:/^(((http(s?))\:\/\/)?)([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(\/\S*)?$/|nullable',
+            'link2' => 'regex:/^(((http(s?))\:\/\/)?)([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(\/\S*)?$/|nullable'
+        ];
+    }
+
+    // 에러 메세지
+    public function messages()
+    {
+        return [
+            'name.required' => '이름을 입력해 주세요.',
+            'name.alpha_dash' => '이름에 영문자, 한글, 숫자, 대쉬(-), 언더스코어(_)만 입력해 주세요.',
+            'name.max' => '이름은 :max자리를 넘길 수 없습니다.',
+            'password.required' => '비밀번호를 입력해 주세요.',
+            'password.max' => '비밀번호는 :max자리를 넘길 수 없습니다.',
+            'email.email' => '이메일에 올바른 Email양식으로 입력해 주세요.',
+            'email.max' => '이메일은 :max자리를 넘길 수 없습니다.',
+            'homepage.regex' => '홈페이지에 올바른 url 형식으로 입력해 주세요.',
+            'ca_name.required' => '카테고리를 선택해 주세요.',
+            'subject.required' => '제목을 입력해 주세요.',
+            'subject.max' => '제목은 :max자리를 넘길 수 없습니다.',
+            'content.required' => '내용을 입력해 주세요.',
+            'content.min' => '내용은 :min글자 이상 쓰셔야 합니다.',
+            'content.max' => '내용은 :max글자 이하로 쓰셔야 합니다.',
+            'link1.regex' => '첫번째 링크에 올바른 url 형식으로 입력해 주세요.',
+            'link2.regex' => '두번째 링크에 올바른 url 형식으로 입력해 주세요.',
+        ];
     }
 
 }

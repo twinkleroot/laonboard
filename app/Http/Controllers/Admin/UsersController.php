@@ -200,12 +200,12 @@ class UsersController extends Controller
         return [
             'email.required' => '이메일을 입력해 주세요.',
             'email.email' => '이메일에 올바른 Email양식으로 입력해 주세요.',
-            'email.max' => '이메일은 255자리를 넘길 수 없습니다.',
+            'email.max' => '이메일은 :max자리를 넘길 수 없습니다.',
             'email.unique' => '이미 등록된 이메일입니다. 다른 이메일을 입력해 주세요.',
             'password.required' => '비밀번호를 입력해 주세요.',
             'name.alpha_dash' => '이름에 영문자, 한글, 숫자, 대쉬(-), 언더스코어(_)만 입력해 주세요.',
             'nick.required' => '닉네임을 입력해 주세요.',
-            'nick.nick_length' => '닉네임의 길이는 한글 2자, 영문 4자 이상이어야 합니다.',
+            'nick.nick_length' => '닉네임의 길이는 한글 :half자, 영문 :min자 이상이어야 합니다.',
             'nick.unique' => '이미 등록된 닉네임입니다. 다른 닉네임을 입력해 주세요.',
             'level.required' => '회원권한을 선택해 주세요.',
             'level.numeric' => '회원권한에는 숫자만 들어갈 수 있습니다.',
@@ -215,7 +215,7 @@ class UsersController extends Controller
             'homepage.regex' => '홈페이지에 올바른 url 형식으로 입력해 주세요.',
             'tel.regex' => '전화번호에 전화번호형식(000-0000-0000)으로 입력해 주세요.',
             'hp.regex' => '휴대폰번호에 전화번호형식(000-0000-0000)으로 입력해 주세요.',
-            'recommend.nick_length' => '추천인의 길이는 한글 2자, 영문 4자 이상이어야 합니다.',
+            'recommend.nick_length' => '추천인의 길이는 한글 :half자, 영문 :min자 이상이어야 합니다.',
             'iconName.regex' => '회원아이콘에는 확장자가 gif인 이미지 파일만 들어갈 수 있습니다.',
         ];
     }

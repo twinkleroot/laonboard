@@ -261,6 +261,27 @@ class UserController extends Controller
     // 메일 보내기 실행
     public function send(Request $request)
     {
+        $rules = [
+            'subject' => 'required',
+            'content' => 'required',
+        ];
+        if(auth()->guest()) {
+            $rules = array_add($rules, 'name', 'required|alpha_dash|max:20');
+            $rules = array_add($rules, 'email', 'required|email|max:255');
+        }
+        $messages = [
+            'name.required' => '이름을 입력해 주세요.',
+            'name.alpha_dash' => '이름에 영문자, 한글, 숫자, 대쉬(-), 언더스코어(_)만 입력해 주세요.',
+            'name.max' => '이름은 :max자리를 넘길 수 없습니다.',
+            'email.required' => '이메일을 입력해 주세요.',
+            'email.email' => '이메일에 올바른 Email양식으로 입력해 주세요.',
+            'email.max' => '이메일은 :max자리를 넘길 수 없습니다.',
+            'subject.required' => '제목을 입력해 주세요.',
+            'content.required' => '내용을 입력해 주세요.',
+        ];
+
+        $this->validate($request, $rules, $messages);
+
         try {
             $this->userModel->sendFormMail($request);
         } catch (Exception $e) {

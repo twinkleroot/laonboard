@@ -5,7 +5,7 @@
 @endsection
 
 @section('include_css')
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/board.css') }}">		
+    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/board.css') }}">
 @endsection
 
 @section('include_script')
@@ -29,37 +29,58 @@
         <input type="hidden" name="uid" id="uid" value="{{ str_replace("/", "-", substr(bcrypt(date('ymdHis', time())), 10, 60)) }}" />
         {{ csrf_field() }}
         @if( ($type == 'create' && auth()->guest() )
-            || ($type == 'update' && auth()->user() && auth()->user()->isBoardAdmin($board) && $write->user_id != auth()->user()->id) )
+            || ($type == 'update' && auth()->guest())
+            || ($type == 'update' && auth()->user()->isBoardAdmin($board) && $write->user_id != auth()->user()->id))
         <div class="nologin">
-            <div class="form-group mb10 row">
+            <div class="form-group mb10 row @if($errors->get('name'))has-error @endif">
                 <div class="col-xs-3">
                     <label for="name" class="sr-only">이름</label>
                     <input type="text" class="form-control" id="name" name="name" placeholder="이름" @if($type=='update') value={{ $write->name }}@else required @endif>
+                    @foreach ($errors->get('name') as $message)
+                    <span class="help-block">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @endforeach
                 </div>
             </div>
-            <div class="form-group mb10 row">
+            <div class="form-group mb10 row @if($errors->get('password'))has-error @endif">
                 <div class="col-xs-4">
                     <label for="password" class="sr-only">비밀번호</label>
                     <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호" @if($type!='update') required @endif>
+                    @foreach ($errors->get('password') as $message)
+                    <span class="help-block">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @endforeach
                 </div>
             </div>
-            <div class="form-group mb10 row">
+            <div class="form-group mb10 row @if($errors->get('email'))has-error @endif">
                 <div class="col-xs-5">
                     <label for="email" class="sr-only">이메일</label>
                     <input type="email" class="form-control" id="email" name="email" placeholder="이메일" @if($type=='update') value="{{ $write->email }}" @endif>
+                    @foreach ($errors->get('email') as $message)
+                    <span class="help-block">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @endforeach
                 </div>
             </div>
-            <div class="form-group mb10 row">
+            <div class="form-group mb10 row @if($errors->get('homepage'))has-error @endif">
                 <div class="col-xs-5">
                     <label for="homepage" class="sr-only">홈페이지</label>
                     <input type="text" class="form-control" id="homepage" name="homepage" placeholder="홈페이지" @if($type=='update') value="{{ $write->homepage }}" @endif>
+                    @foreach ($errors->get('homepage') as $message)
+                    <span class="help-block">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @endforeach
                 </div>
             </div>
         </div>
         @endif
 
         @if($board->use_category)
-        <div class="form-group mb10 row">
+        <div class="form-group mb10 row @if($errors->get('ca_name'))has-error @endif">
             <div class="col-xs-3">
                 <select class="form-control" id="ca_name" name="ca_name" required>
                     <option value>분류</option>
@@ -73,13 +94,25 @@
                     @endif
                 </select>
             </div>
+            @foreach ($errors->get('ca_name') as $message)
+            <div>
+                <span class="help-block">
+                    <strong>{{ $message }}</strong>
+                </span>
+            </div>
+            @endforeach
         </div>
         @endif
 
         <div class="row">
-            <div class="form-group mb10 col-xs-8">
+            <div class="form-group mb10 col-xs-8 @if($errors->get('subject'))has-error @endif">
                 <label for="" class="sr-only">게시물 작성</label>
                 <input type="text" class="form-control" id="subject" name="subject" placeholder="게시물 제목" @if($type != 'create') value="{{ $write->subject }}" @endif required>
+                @foreach ($errors->get('subject') as $message)
+                <span class="help-block">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @endforeach
             </div>
             @if(auth()->user())
                 <script src="{{ asset('js/autosave.js') }}"></script>
@@ -95,7 +128,7 @@
 
 @if($board->use_dhtml_editor && $userLevel >= $board->html_level)
         {{-- 에디터 --}}
-        <div style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px;">
+        <div style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px;" @if($errors->get('content')) class="has-error" @endif>
             <textarea class="editorArea" name="content" id="content">@if($type == 'update'){{ convertContent($write->content, 0) }}@endif</textarea>
         </div>
 @else
@@ -104,23 +137,28 @@
             <p id="charCountDesc">이 게시판은 최소 <strong>{{ $board->write_min }}</strong>글자 이상, 최대 <strong>{{ $board->write_max }}</strong>글자 이하까지 글을 쓰실 수 있습니다.</p>
         @endif
     @endif
-        <div style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px; padding: 2px;">
+        <div style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px; padding: 2px;" @if($errors->get('content')) class="has-error" @endif>
             <textarea name="content" id="content" maxlength="65536" style="width:100%; min-height:400px; border:0;" required>@if($type == 'update'){{ convertContent($write->content, 0) }}@endif</textarea>
         </div>
     @if(auth()->guest() || !auth()->user()->isSuperAdmin())
         @if($board->write_min || $board->write_max)
-        <div id="charCountWrap"><span id="charCount"></span>글자</div>
+        <div id="charCountWrap">
+            <span id="charCount"></span>글자
+
+        </div>
         @endif
     @endif
 @endif
-
+    @foreach($errors->get('content') as $message)
+        <p><strong style="color:#a94442;">{{ $message }}</strong></p>
+    @endforeach
         <div class="wt_more">
             <div class="add">
                 <div class="link">
                     <i class="fa fa-link"></i>
                     <span class="bd_title">링크추가</span>
                 </div>
-                <div class="link_list" style="display: none;">
+                <div class="link_list @if($errors->get('link1') || $errors->get('link2'))has-error @endif" style="display: none;">
                     <div class="item">
                         <label for="link1" class="sr-only">링크 1</label>
                         <input type="text" class="form-control" id="link1" name="link1" placeholder="링크 1" @if($type == 'update')value="{{ $write->link1 }}"@endif>
@@ -129,6 +167,20 @@
                         <label for="link2" class="sr-only">링크 2</label>
                         <input type="text" class="form-control" id="link2" name="link2" placeholder="링크 2" @if($type == 'update')value="{{ $write->link2 }}"@endif>
                     </div>
+                    @foreach ($errors->get('link1') as $message)
+                    <div>
+                        <span class="help-block">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    </div>
+                    @endforeach
+                    @foreach ($errors->get('link2') as $message)
+                    <div>
+                        <span class="help-block">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    </div>
+                    @endforeach
                 </div>
                 <div class="file">
                     <i class="fa fa-download"></i>
@@ -271,21 +323,6 @@ function writeSubmit() {
         contentData = $('#content').val();
     }
 
-    @if($board->use_category)
-    if($("#ca_name").val() == '') {
-        alert("카테고리를 선택해 주세요.");
-        return false;
-    }
-    if($("#subject").val() == '') {
-        alert("제목을 입력해 주세요.");
-        return false;
-    }
-    if(contentData == '') {
-        alert("내용을 입력해 주세요.");
-        return false;
-    }
-    @endif
-
     $.ajax({
         url: '/ajax/filter/board',
         type: 'post',
@@ -314,24 +351,6 @@ function writeSubmit() {
         tinymce.get('content').focus();
         return false;
     }
-
-    @if(!$board->use_dhtml_editor || $userLevel < $board->html_level)
-    @if(auth()->guest() || !auth()->user()->isSuperAdmin())
-    @if($board->write_min || $board->write_max)
-       var charMin = {{ $board->write_min }};
-       var charMax = {{ $board->write_max }};
-       var cnt = parseInt(check_byte("content", "charCount"));
-       if (charMin > 0 && charMin > cnt) {
-           alert("내용은 "+charMin+"글자 이상 쓰셔야 합니다.");
-           return false;
-       }
-       else if (charMax > 0 && charMax < cnt) {
-           alert("내용은 "+charMax+"글자 이하로 쓰셔야 합니다.");
-           return false;
-       }
-     @endif
-     @endif
-     @endif
 
     return true;
 }
