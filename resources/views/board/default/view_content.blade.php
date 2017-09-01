@@ -338,9 +338,13 @@
         <span id="charCount"></span>글자
     @endif
     <textarea class="form-control" rows="4" name="content" id="content" @if($board->comment_min || $board->comment_max) onkeyup="check_byte('content', 'charCount');" @endif placeholder="댓글을 입력해 주세요." required></textarea>
-
+    @foreach ($errors->get('content') as $message)
+    <span class="help-block" style="color:#a94442;">
+        <strong>{{ $message }}</strong>
+    </span>
+    @endforeach
     <script>
-        $(document).on( "keyup change", "textarea#content[maxlength]", function(){
+        $(document).on("keyup change", "textarea#content[maxlength]", function(){
             var str = $(this).val()
             var mx = parseInt($(this).attr("maxlength"))
             if (str.length > mx) {
