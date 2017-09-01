@@ -33,14 +33,6 @@ class WritableComment
             return alert($message);
         }
 
-        if(!$user) {
-            // 이름이 누락되어 있는지 확인
-            if($request->userName  == '') {
-                $message = '이름은 필히 입력하셔야 합니다.';
-                return alert($message);
-            }
-        }
-
         return $next($request);
     }
 }

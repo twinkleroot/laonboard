@@ -142,6 +142,12 @@ class WriteController extends Controller
             }
         }
 
+        // 공백 제거
+        $request->merge([
+            'subject' => trim($request->subject),
+            'content' => trim($request->content)
+        ]);
+
         $this->validate($request, $rules, $messages);
 
         if(auth()->guest() || (!auth()->user()->isBoardAdmin($this->writeModel->board) && $this->writeModel->board->use_recaptcha)) {
@@ -206,6 +212,12 @@ class WriteController extends Controller
                 $rules['content'] .= '|max:'.$this->writeModel->board->write_max;
             }
         }
+
+        // 공백 제거
+        $request->merge([
+            'subject' => trim($request->subject),
+            'content' => trim($request->content)
+        ]);
 
         $this->validate($request, $rules, $messages);
 
