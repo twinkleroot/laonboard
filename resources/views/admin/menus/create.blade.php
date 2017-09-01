@@ -92,7 +92,7 @@ $(function() {
 function addMenuList(name, link, code)
 {
 
-    var menuList = $("#menulist", opener.document);
+    var menuList = $(opener.document).find("#menulist");
     var ms = new Date().getTime();
     var addedMenuName = "<input type=\"text\" class=\"form-control required\" name=\"name[]\" value=\""+name+"\" id=\"name_"+ms+"\" required class=\"required frm_input full_input\">";
 
@@ -151,8 +151,9 @@ function addMenuList(name, link, code)
     if(menuLast.length > 0) {
         menuLast.after(list);
     } else {
-        if(menuList.find("#empty_menu_list").length > 0)
+        if(menuList.find("#empty_menu_list").length > 0) {
             menuList.find("#empty_menu_list").remove();
+        }
 
         menuList.find("table tbody").append(list);
     }
@@ -162,6 +163,9 @@ function addMenuList(name, link, code)
     //     $(this).removeClass("bg0 bg1")
     //         .addClass("bg"+(index % 2));
     // });
+
+    // 부모 창의 DragAndDrop Plugin 초기화
+    opener.initDragAndDropPlugin();
 
     window.close();
 }

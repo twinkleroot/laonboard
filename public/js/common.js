@@ -2,6 +2,24 @@
 var errmsg = "";
 var errfld = null;
 
+function initDragAndDropPlugin() {
+    $("#menuTable").tableDnD({
+        dragHandle: ".dragHandle",
+    });
+
+    $('.dragHandle').mousedown(function(){
+        $(this).css({
+            'color' : '#ff6699',
+            'background' : '#3e63d6'
+        });
+    }).mouseup(function(){
+        $(this).css({
+            'color' : '',
+            'background' : ''
+        });
+    });
+}
+
 // 문자열에 특수문자가 들어가 있는지 검사
 function checkStringFormat(string) {
     var stringRegx = /[~!@\#$%<>^&*\()\-=+_\’]/gi;

@@ -145,12 +145,7 @@ $(function(){
         }
     });
 
-    // Drag & Drop 플러그인 초기화
-    $(document).on("mousemove", "#menuTable", function() {
-        $("#menuTable").tableDnD({
-            dragHandle: ".dragHandle",
-        });
-    });
+    initDragAndDropPlugin();
 
     $(document).on("dblclick", ".dragHandle", function(e) {
         e.preventDefault();
