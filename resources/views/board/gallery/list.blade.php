@@ -13,7 +13,41 @@
     <input type="hidden" id='page' name='page' value='{{ $writes->currentPage() }}' />
     {{ csrf_field() }}
 
-    <div class="pull-left bd_head">
+    <div class="bd_head">
+        <a href="{{ route('board.index', $board->table_name) }}">{{ $board->subject }}</a>
+    </div>
+    <div class="bd_count">전체 {{ $writes->total() }}건 {{ $writes->currentPage() }}페이지</div>
+    <div class="bd_btn">
+        <ul>
+            @if(auth()->user() && auth()->user()->isBoardAdmin($board))
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle bd_rd_more" data-toggle="dropdown" role="button" aria-expanded="false">
+                        <button type="" class="btn btn-danger">
+                            <i class="fa fa-cog"></i> 관리
+                        </button>
+                    </a>
+                    <ul class="dropdown-menu bd_adm" role="menu">
+                        <li><input type="submit" value="선택삭제" onclick="document.pressed=this.value"/></li>
+                        <li><input type="submit" value="선택복사" onclick="document.pressed=this.value"/></li>
+                        <li><input type="submit" value="선택이동" onclick="document.pressed=this.value"/></li>
+                        <li><a href="{{ route('admin.boards.edit', $board->table_name) }}">게시판 설정</a></li>
+                    </ul>
+                </li>
+            @endif
+            <li>
+                @if($board->use_rss_view && $board->list_level == 1 && $board->read_level == 1)
+                    <button type="button" class="btn btn-sir" onclick="location.href='{{ route('rss', $board->table_name) }}'">
+                        RSS
+                    </button>
+                @endif
+                <button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->table_name). '?'. $request->getQueryString() }}'">
+                    <i class="fa fa-pencil"></i> 글쓰기
+                </button>
+            </li>
+        </ul>
+    </div>
+    <!--
+    <div class="bd_head">
         <span><a href="{{ route('board.index', $board->table_name) }}">{{ $board->subject }}</a> 전체 {{ $writes->total() }}건 {{ $writes->currentPage() }}페이지</span>
     </div>
 
@@ -47,7 +81,7 @@
             </li>
         </ul>
     </div>
-
+-->
     @if($board->use_category == 1 )
     <div class="bd_category">
         <ul>
@@ -84,7 +118,7 @@
                     </a>
                 </div>
                 <div class="gry_info">
-                    <p>
+                    <p @if($board->use_category == 1 ) style="display: block;" @endif>
                         <span class="bd_subject">
                             @if($board->use_category == 1 )
                             <a href="{{ route('board.index', $board->table_name). '?category='. $write->ca_name }}" class="subject_cg">{{ $write->ca_name }}</a>
@@ -122,53 +156,55 @@
                             @endif
                         </span>
                     </p>
-                    <span>
-                    @if(auth()->user() && $board->use_sideview)
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                    <div style="display: block;">
+                        <span>
+                        @if(auth()->user() && $board->use_sideview)
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                                @if(cache('config.join')->useMemberIcon && $write->iconPath)
+                                <span class="tt_icon"><img src="{{ $write->iconPath }}" /></span> <!-- 아이콘 -->
+                                @endif
+                                <span class="tt_nick">{{ $write->name }}</span> <!-- 닉네임 -->
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                            @if($write->user_level)
+                                @component('board.sideview', ['board' => $board, 'id' => $write->user_id, 'name' => $write->name, 'email' => $write->email, 'category' => $currenctCategory])
+                                @endcomponent
+                            @else
+                                <li><a href="/bbs/{{ $board->table_name }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
+                            @endif
+                            @if($write->user_level)
+                                <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>
+                            @endif
+                            </ul>
+                        @elseif(auth()->guest() && $board->use_sideview)
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
+                            <ul class="dropdown-menu" role="menu">
+                            @if($write->user_level)
+                                @component('board.sideview', ['board' => $board, 'id' => $write->user_id, 'name' => $write->name, 'email' => $write->email, 'category' => $currenctCategory])
+                                @endcomponent
+                            @else
+                                <li><a href="/bbs/{{ $board->table_name }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
+                            @endif
+                            @if($write->user_level)
+                                <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>
+                            @endif
+                            </ul>
+                        @else
                             @if(cache('config.join')->useMemberIcon && $write->iconPath)
                             <span class="tt_icon"><img src="{{ $write->iconPath }}" /></span> <!-- 아이콘 -->
                             @endif
-                            <span class="tt_nick">{{ $write->name }}</span> <!-- 닉네임 -->
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                        @if($write->user_level)
-                            @component('board.sideview', ['board' => $board, 'id' => $write->user_id, 'name' => $write->name, 'email' => $write->email, 'category' => $currenctCategory])
-                            @endcomponent
-                        @else
-                            <li><a href="/bbs/{{ $board->table_name }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
+                            <span class="tt_nick">{{ $write->name }}</span>
                         @endif
-                        @if($write->user_level)
-                            <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>
+                        </span>
+                        <span><i class="fa fa-clock-o"></i>@monthAndDay($write->created_at)</span>
+                        <span><i class="fa fa-clock-o"></i>{{ $write->hit }}</span><br>
+                        @if($board->use_good)
+                        <span><i class="fa fa-thumbs-up"></i>{{ $write->good }}</span>
                         @endif
-                        </ul>
-                    @elseif(auth()->guest() && $board->use_sideview)
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
-                        <ul class="dropdown-menu" role="menu">
-                        @if($write->user_level)
-                            @component('board.sideview', ['board' => $board, 'id' => $write->user_id, 'name' => $write->name, 'email' => $write->email, 'category' => $currenctCategory])
-                            @endcomponent
-                        @else
-                            <li><a href="/bbs/{{ $board->table_name }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
+                        @if($board->use_nogood)
+                        <span><i class="fa fa-thumbs-down"></i>{{ $write->nogood }}</span>
                         @endif
-                        @if($write->user_level)
-                            <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>
-                        @endif
-                        </ul>
-                    @else
-                        @if(cache('config.join')->useMemberIcon && $write->iconPath)
-                        <span class="tt_icon"><img src="{{ $write->iconPath }}" /></span> <!-- 아이콘 -->
-                        @endif
-                        <span class="tt_nick">{{ $write->name }}</span>
-                    @endif
-                    </span>
-                    <span><i class="fa fa-clock-o"></i>@monthAndDay($write->created_at)</span>
-                    <span><i class="fa fa-clock-o"></i>{{ $write->hit }}</span><br>
-                    @if($board->use_good)
-                    <span><i class="fa fa-thumbs-up"></i>{{ $write->good }}</span>
-                    @endif
-                    @if($board->use_nogood)
-                    <span><i class="fa fa-thumbs-down"></i>{{ $write->nogood }}</span>
-                    @endif
+                    </div>
                 </div>
             </div>
         </div>

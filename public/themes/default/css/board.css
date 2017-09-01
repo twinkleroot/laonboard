@@ -72,6 +72,11 @@
     margin: 10px 0;
     clear: both;
 }
+.bd_category:after {
+    content: "";
+    display: block;
+    clear: both;
+}
 .bd_category ul {
     padding: 0;
     margin: 0;
@@ -185,18 +190,23 @@
 /* 갤러리형 게시판 */
 #gry {
     margin: 10px -15px;
+    clear: both;
+}
+.gry {
+    margin-bottom: 10px;
 }
 .gry_info {
     z-index: 1;
     padding: 15px;
     width: 100%;
+    min-height: 97px;
     border: 1px solid #d8d8d8;
     border-top: 0;
     background: #fff;
 }
 .gry_img {
     width: 100%;
-    min-height: 150px;
+    min-height: 124px;
     border: 1px solid #d8d8d8;
     overflow: hidden;
     position: relative;
@@ -226,11 +236,19 @@
     box-sizing: border-box;
 }
 .gry_info p {
-    font-weight: 600; margin-bottom: 5px;
+    font-weight: 600;
+    margin-bottom: 0px;
+    display: inline-block;
 }
 .gry_info span {
-    font-size: 13px; color: #aaa; margin-right: 10px;
-    line-height: 1.8; display: inline-block;
+    font-size: 13px;
+    color: #aaa;
+    line-height: 1.8;
+    display: inline-block;
+}
+#gry .bd_subject,
+#gry .bd_subject a {
+    margin: 0;
 }
 #gry i {
     margin-right: 5px;
