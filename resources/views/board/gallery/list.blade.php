@@ -184,42 +184,30 @@
 </form>
 
 <div class="bd_btn">
-    <ul class="pull-left">
-        <li id="pt_sch">
-            <form method="get" action="{{ route('board.index', $board->table_name) }}" onsubmit="return searchFormSubmit(this);">
-                @if($currenctCategory != '')
-                <input type="hidden" id='category' name='category' value='{{ $currenctCategory }}' />
-                @endif
-                <label for="kind" class="sr-only">검색대상</label>
-                <select name="kind" id="kind">
-                    <option value="subject" @if($kind == 'subject') selected @endif>제목</option>
-                    <option value="content" @if($kind == 'content') selected @endif>내용</option>
-                    <option value="subject || content" @if($kind == 'subject || content') selected @endif>제목+내용</option>
-                    <option value="name, 0" @if($kind == 'name, 0') selected @endif>글쓴이</option>
-                    <option value="name, 1" @if($kind == 'name, 1') selected @endif>글쓴이(코멘트 포함)</option>
-                </select>
+    <button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->table_name). '?'. $request->getQueryString() }}'">
+        <i class="fa fa-pencil"></i> 글쓰기
+    </button>
+</div>
+<div class="bd_sch">
+    <form method="get" action="{{ route('board.index', $board->table_name) }}" onsubmit="return searchFormSubmit(this);">
+        @if($currenctCategory != '')
+            <input type="hidden" id='category' name='category' value='{{ $currenctCategory }}' />
+        @endif
+        <label for="kind" class="sr-only">검색대상</label>
+        <select name="kind" id="kind">
+            <option value="subject" @if($kind == 'subject') selected @endif>제목</option>
+            <option value="content" @if($kind == 'content') selected @endif>내용</option>
+            <option value="subject || content" @if($kind == 'subject || content') selected @endif>제목+내용</option>
+            <option value="name, 0" @if($kind == 'name, 0') selected @endif>글쓴이</option>
+            <option value="name, 1" @if($kind == 'name, 1') selected @endif>글쓴이(코멘트 포함)</option>
+        </select>
 
-                <label for="keyword" class="sr-only">검색어</label>
-                <input type="text" name="keyword" id="keyword" value="{{ $keyword }}" class="search" required>
-                <button type="submit" class="search-icon">
-                    <i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">검색</span>
-                </button>
-            </form>
-        </li>
-    </ul>
-
-    <ul id="bd_btn">
-        <li class="mr0">
-            @if($board->use_rss_view && $board->list_level == 1 && $board->read_level == 1)
-            <button type="button" class="btn btn-sir" onclick="location.href='{{ route('rss', $board->table_name) }}'">
-                RSS
-            </button>
-            @endif
-            <button type="button" class="btn btn-sir" onclick="location.href='{{ route('board.create', $board->table_name). '?'. $request->getQueryString() }}'">
-                <i class="fa fa-pencil"></i> 글쓰기
-            </button>
-        </li>
-    </ul>
+        <label for="keyword" class="sr-only">검색어</label>
+        <input type="text" name="keyword" id="keyword" value="{{ $kind != 'user_id' ? $keyword : '' }}" class="search" required>
+        <button type="submit" class="search-icon">
+            <i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">검색</span>
+        </button>
+    </form>
 </div>
 
 {{-- 페이지 처리 --}}
