@@ -66,6 +66,8 @@ class WriteController extends Controller
         // 전체 목록 보기 선택시 목록 데이터
         if($board->use_list_view) {
             $params = array_collapse([$params, $this->writeModel->getIndexParams($this->writeModel, $request)]);
+        } else {
+            $params = array_add($params, 'currenctCategory', '');
         }
         // 이전글, 다음글 데이터 추가
         $params = array_collapse([$params, $this->writeModel->getPrevNextView($this->writeModel, $writeId, $request)]);

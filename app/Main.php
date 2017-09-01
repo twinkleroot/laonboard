@@ -80,7 +80,7 @@ class Main
             $latestList[$i]->hot = $board->hot;
             $write = $latestList[$i]->first();
             if($write) {
-                $latestList[$i][0]->subject = subjectLength($write->subject, 30);
+                $latestList[$i][0]->subject = subjectLength($write->subject, 10);
             }
             $i++;
         }
