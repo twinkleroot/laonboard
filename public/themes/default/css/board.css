@@ -210,6 +210,7 @@
     border: 1px solid #d8d8d8;
     overflow: hidden;
     position: relative;
+    background: #fff;
 }
 .gry_img img {
     top: 0;
@@ -217,11 +218,10 @@
     position: absolute;
     height: auto;
     width: 100%;
-    transition: all 0.2s cubic-bezier(0.300, 0.100, 0.580, 1.000);
+    transition: all 0.2s;
 }
 .gry_img img:hover {
-    top: -10px;
-    transition: all 0.2s cubic-bezier(0.300, 0.100, 0.580, 1.000);
+    transition: all 0.2s;
     opacity: 0.6;
     background: #fff;
 }
