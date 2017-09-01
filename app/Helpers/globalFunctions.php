@@ -421,7 +421,7 @@ function getEmailAddress($email)
 function subjectLength($subject, $length)
 {
     $result = $subject;
-    if(strlen($subject) > $length) {
+    if(mb_strlen($subject, 'UTF-8') > $length) {
         $result = mb_substr($subject, 0, $length, 'UTF-8'). '...';
     }
 

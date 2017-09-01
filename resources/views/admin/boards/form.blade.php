@@ -1197,8 +1197,10 @@ function getThemeGalleryConfig() {
         return false;
     }
 
-    // $("input[name=gallery_cols]").val("{{ config('gnu.gallery_cols') }}");
-    // $("input[name=gallery_width]").val("{{ config('gnu.gallery_width') }}");
+    @php
+        $currentSkin = $board['skin'] ? : 'default';
+    @endphp
+    $("input[name=subject_len]").val("{{ config('gnu.subject_len.'. $currentSkin) }}");
     $("input[name=gallery_height]").val("{{ config('gnu.gallery_height') }}");
     $("input[name=image_width]").val("{{ config('gnu.image_width') }}");
 }

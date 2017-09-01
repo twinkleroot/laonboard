@@ -109,6 +109,10 @@
     // 게시판 테마 설정
     // 'gallery_cols' => 4,
     // 'gallery_width' => 174,
+    'subject_len' => [
+        'default' => 20,
+        'gallery' => 15,
+    ],
     'gallery_height' => 150,
     // 'mobile_gallery_width' => 125,
     // 'mobile_gallery_height' => 100,
