@@ -54,7 +54,7 @@
             @if($countMemo)
             @foreach($memos as $memo)
             <tr>
-                <td class="bd_name">
+                <td class="td_nick">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $memo->nick }}</a>
                     <ul class="dropdown-menu" role="menu">
                         @component('board.sideview', ['board' => '', 'id' => $memo->user_id_hashkey, 'name' => $memo->nick, 'email' => $memo->email, 'category' => ''])
