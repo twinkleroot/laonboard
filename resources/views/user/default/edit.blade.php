@@ -5,14 +5,16 @@
 @endsection
 
 @section('include_css')
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/auth.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/auth.css') }}">
 @endsection
 
 @section('include_script')
-    <script src='https://www.google.com/recaptcha/api.js' async defer></script>
-    <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
-    <script src="{{ url('js/postcode.js') }}"></script>
-    <script src="{{ url('js/certify.js') }}"></script>
+<script src='https://www.google.com/recaptcha/api.js' async defer></script>
+@if($config->addr) <!-- 주소 -->
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+<script src="{{ url('js/postcode.js') }}"></script>
+@endif
+<script src="{{ url('js/certify.js') }}"></script>
 @endsection
 
 @section('content')
@@ -296,7 +298,8 @@
                 <label for="social_link" class="col-xs-12 control-label">소셜 계정 연결</label>
                 <div class="col-xs-12 social-login social_login_container">
                 @foreach($socials as $key => $value)
-                    @if($key)
+                    {{-- 소셜 로그인 키가 설정된 소셜 로그인 서비스만 노출시킨다. --}}
+                    @if(get_object_vars(cache('config.sns'))[$key.'Key'])
                     <a href="{{ $value == '' ? route('social', $key) : route('user.disconnectSocialAccount') }}" id="{{ $key }}_social_link" class="btn btn-block btn-{{ $key }} social_link" data-provider="{{ $key }}">
                         <input type="hidden" data-key="{{ $key }}" name="social_id[]" class="social_id" value="{{ $value }}" />
                         <div class="icon icon-{{ $key }} @if($value != '') unlink @endif"></div>
@@ -364,15 +367,15 @@ function userSubmit() {
 $(function(){
 
     // 아이핀인증
-    $("#win_ipin_cert").click(function() {
-        if(!cert_confirm())
-            return false;
-
-        var url = "http://ahn13.gnutest.com/gnu5/plugin/okname/ipin1.php";
-        {{-- var url = "{{ route('cert.kcb.ipin') }}"; --}}
-        certify_win_open('kcb-ipin', url);
-        return;
-    });
+    // $("#win_ipin_cert").click(function() {
+    //     if(!cert_confirm())
+    //         return false;
+    //
+    //     var url = "http://ahn13.gnutest.com/gnu5/plugin/okname/ipin1.php";
+    //     {{-- var url = "{{ route('cert.kcb.ipin') }}"; --}}
+    //     certify_win_open('kcb-ipin', url);
+    //     return;
+    // });
 
     // 휴대폰인증
     $("#win_hp_cert").click(function() {
