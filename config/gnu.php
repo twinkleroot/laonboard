@@ -112,7 +112,9 @@
     'subject_len' => [
         'default' => 20,
         'gallery' => 15,
+        'main' => 10,
     ],
+
     'gallery_height' => 150,
     // 'mobile_gallery_width' => 125,
     // 'mobile_gallery_height' => 100,

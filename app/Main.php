@@ -78,10 +78,14 @@ class Main
             $latestList[$i]->table_name = $board->table_name;
             $latestList[$i]->new = $board->new;
             $latestList[$i]->hot = $board->hot;
+            $subjectLength = config('gnu.subject_len.main') ? : 10;
             $write = $latestList[$i]->first();
-            if($write) {
-                $latestList[$i][0]->subject = subjectLength($write->subject, 10);
+            foreach($latestList[$i] as $write) {
+                if($write) {
+                    $write->subject = subjectLength($write->subject, $subjectLength);
+                }
             }
+
             $i++;
         }
 
