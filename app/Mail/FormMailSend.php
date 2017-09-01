@@ -11,12 +11,12 @@ class FormMailSend extends Mailable
 {
     use Queueable, SerializesModels;
 
-	public $name;
-	public $email;
-	public $subject;
-	public $content;
-	public $type;
-	public $files;
+    public $name;
+    public $email;
+    public $subject;
+    public $content;
+    public $type;
+    public $files;
 
     /**
      * Create a new message instance.
@@ -40,18 +40,22 @@ class FormMailSend extends Mailable
      */
     public function build()
     {
-		$mail = $this->from($this->email, $this->name)
-					->subject($this->subject);
-		foreach($this->files as $file) {
-			$mail->attach($file->path(), [
-                        'as' => $file->getClientOriginalName(),
-                    ]);
-		}
-		if($this->type) {
-			$mail->view('mail.default.formmail');
-		} else {
-			$mail->text('mail.default.formmail_plain');
-		}
+        $mail = $this
+            ->from($this->email, $this->name)
+            ->subject($this->subject);
+
+        if(count($this->files) > 0) {
+            foreach($this->files as $file) {
+                $mail->attach($file->path(), [
+                    'as' => $file->getClientOriginalName(),
+                ]);
+            }
+        }
+        if($this->type) {
+            $mail->view('mail.default.formmail');
+        } else {
+            $mail->text('mail.default.formmail_plain');
+        }
 
         return $mail;
     }

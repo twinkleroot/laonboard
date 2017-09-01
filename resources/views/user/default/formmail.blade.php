@@ -45,21 +45,36 @@
                 @if(auth()->guest())
                 <tr>
                     <td class="popin">이름</td>
-                    <td>
+                    <td @if($errors->has('name')) class="has-error" @endif>
                         <input type="text" class="form-control" name="name">
+                        @if($errors->has('name'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('name') }}</strong>
+                        </span>
+                        @endif
                     </td>
                 </tr>
                 <tr>
                     <td class="popin">이메일</td>
-                    <td>
+                    <td @if($errors->has('email')) class="has-error" @endif>
                         <input type="text" class="form-control" name="email">
+                        @if($errors->has('email'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('email') }}</strong>
+                        </span>
+                        @endif
                     </td>
                 </tr>
                 @endif
                 <tr>
                     <td class="popin">제목</td>
-                    <td>
+                    <td @if($errors->has('subject')) class="has-error" @endif>
                         <input type="text" class="form-control" name="subject">
+                        @if($errors->has('subject'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('subject') }}</strong>
+                        </span>
+                        @endif
                     </td>
                 </tr>
                 <tr>
@@ -72,8 +87,13 @@
                 </tr>
                 <tr>
                     <td class="popin">내용</td>
-                    <td>
+                    <td @if($errors->has('content')) class="has-error" @endif>
                         <textarea class="form-control" name="content" rows="4"></textarea>
+                        @if($errors->has('content'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('content') }}</strong>
+                        </span>
+                        @endif
                     </td>
                 </tr>
                 <tr>

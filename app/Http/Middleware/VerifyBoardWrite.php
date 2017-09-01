@@ -16,14 +16,6 @@ class VerifyBoardWrite
      */
     public function handle($request, Closure $next)
     {
-        if( !isset($request->subject)) {
-            $message = '제목을 입력해 주세요.';
-            return alert($message);
-        }
-        if( !isset($request->content)) {
-            $message = '내용을 입력해 주세요.';
-            return alert($message);
-        }
         // 글 내용 검사
         if( !checkIncorrectContent($request) ) {
             $message = '내용에 올바르지 않은 코드가 다수 포함되어 있습니다.';
