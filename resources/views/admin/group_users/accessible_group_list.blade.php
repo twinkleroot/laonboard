@@ -20,10 +20,10 @@
     </div>
 </div>
 <div id="body_tab_type2">
-    <span class="txt">이메일 <b>{{ $user->email }}</b>, 닉네임 <b>{{ $user->nick }}</b>@if(!is_null($user->name)), 이름 <b>{{ $user->name }}</b> @endif</span>
+    <span class="txt">이메일 <b>{{ $user->email }}</b>, 닉네임 <b>{{ $user->nick }}</b></span>
 
     <div class="submit_btn">
-        
+
     </div>
 </div>
 
