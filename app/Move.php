@@ -59,17 +59,31 @@ class Move
                 $beforeWriteNum = 0;
                 $parent = 0;
                 foreach($originalWrites as $originalWrite) {
+                    // 새로 insert하기 때문에 auto increment 되는 id값은 제거
                     $insertArray = array_except($originalWrite->toArray(), ['id', 'isReply', 'isEdit', 'isDelete']);
-                    $lastInsertId = $destinationWrite->insertGetId($insertArray);  // 새로 insert하기 때문에 auto increment 되는 id값은 제거
+                    $lastInsertId = $destinationWrite->insertGetId($insertArray);
                     // 복사할 글을 복사한 테이블에 맞춰서 parent 재설정
                     $newWrite = Write::getWrite($board->id, $lastInsertId);
                     if(!$originalWrite->is_comment && !$originalWrite->reply) {
                         $parent = $lastInsertId;
                     }
+                    // 설정에 복사,이동시 로그 남김 체크한 경우 로그 남기는 기능
+                    if(!$originalWrite->is_comment && cache('config.homepage')->useCopyLog) {
+                        if(str_contains($originalWrite->option, 'html')) {
+                            $logTag1 = '<div class="content_'.$request->type.'">';
+                            $logTag2 = '</div>';
+                        } else {
+                            $logTag1 = "\n";
+                            $logTag2 = '';
+                        }
+
+                        $content = $originalWrite->content. "\n". $logTag1. '[이 게시물은 '. $originalWrite->name. '님에 의해 '. Carbon::now(). ' '. $writeModel->board->subject. '게시판에서 '. ($request->type == 'copy' ? '복사' : '이동'). ' 됨]'. $logTag2;
+                    }
 
                     $toUpdateColumn = [
                         'num' => $minNum,
                         'parent' => $parent,
+                        'content' => $content,
                     ];
 
                     // 복사할 글을 복사한 테이블에 맞춰서 num 재설정

@@ -106,7 +106,19 @@
     'memoSkin' => 'default',
     'latestSkin' => 'default',
 
-    // 게시판 테마 설정
+    // 게시판 추가 기본 값
+    'use_secret' => 0,
+    'count_modify' => 0,
+    'count_delete' => 1,
+    'new' => 24,
+    'hot' => 100,
+    'upload_count' => 2,
+    'upload_size' => 1048576,
+    'reply_order' => 1,
+    'use_search' => 1,
+    'content_head' => '',
+    'content_tail' => '',
+    'insert_content' => '',
     // 'gallery_cols' => 4,
     // 'gallery_width' => 174,
     'subject_len' => [
