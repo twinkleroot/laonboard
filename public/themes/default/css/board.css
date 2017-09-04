@@ -67,6 +67,26 @@
     background: #f5f5f5;
 }
 
+/* sideview icon & nick */
+.tt_icon {
+    display:inline-block;
+    width:22px;
+    height: 22px;
+}
+.tt_icon img {
+    width: 22px;
+    height: 22px;
+    vertical-align: top;
+}
+.tt_nick {
+    line-height:22px;
+    vertical-align: top;
+    color: #333;
+}
+.tt_nick a {
+    color: #333;
+}
+
 /* category */
 .bd_category {
     margin: 10px 0;
