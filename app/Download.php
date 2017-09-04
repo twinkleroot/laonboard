@@ -16,7 +16,11 @@ class Download
             'board_id' => $board->id,
             'write_id' => $writeId,
             'board_file_no' => $fileNo,
-            ])->first();
+        ])->first();
+
+        if(!$file) {
+            abort(500, '파일 정보를 찾을 수 없습니다.');
+        }
 
         $user = auth()->user();
         $write = $writeModel->find($writeId);
