@@ -142,7 +142,7 @@ class BoardFile extends Model
                 'board_file_no' => $index,
                 'source' => $file->getClientOriginalName(),
                 'file' => $file->hashName(),
-                'content' => $request->has('file_content') ? $request->file_content[$index] : null,
+                'content' => $request->filled('file_content') ? $request->file_content[$index] : null,
                 'filesize' => filesize($file),
                 'width' => $image ? $image[0] : 0,
                 'height' => $image ? $image[1] : 0,

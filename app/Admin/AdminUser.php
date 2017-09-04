@@ -232,8 +232,8 @@ class AdminUser extends Model
         $toUpdateUserInfo = [
             'name' => cleanXssTags($request->name),
             'password' => $password,
-            'nick' => $request->has('nick') ? trim($request->nick) : $user->nick,
-            'nick_date' => $request->has('nick') != $user->nick ? $nowDate : $user->nick_date,
+            'nick' => $request->filled('nick') ? trim($request->nick) : $user->nick,
+            'nick_date' => $request->filled('nick') != $user->nick ? $nowDate : $user->nick_date,
             'level' => $request->level,
             'homepage' => cleanXssTags($request->homepage),
             'hp' => hyphenHpNumber($request->hp),
@@ -251,11 +251,11 @@ class AdminUser extends Model
             'memo' => trim($request->memo),
             'leave_date' => $request->leave_date,
             'intercept_date' => $request->intercept_date,
-            'recommend' => $request->has('recommend') ? $recommendedId : $user->recommend,
+            'recommend' => $request->filled('recommend') ? $recommendedId : $user->recommend,
         ];
 
         // 정보공개 체크박스에 체크를 했거나 기존에 open값과 open입력값이 다르다면 기존 open 값에 open 입력값을 넣는다.
-        if($request->has('open') || $user->open != $request->open) {
+        if($request->filled('open') || $user->open != $request->open) {
             $toUpdateUserInfo = array_collapse([ $toUpdateUserInfo, [
                 'open' => $request->open,
                 'open_date' => $nowDate

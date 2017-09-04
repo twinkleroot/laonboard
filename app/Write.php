@@ -96,14 +96,14 @@ class Write extends Model
 
         // 검색 기준
         $kind = '';
-        if($request->has('kind')) {
+        if($request->filled('kind')) {
             $kind = $request->kind;
             $viewParams['kind'] = 'kind='. $kind;
         }
 
         // 검색어
         $keyword = '';
-        if($request->has('keyword')) {
+        if($request->filled('keyword')) {
             $keyword = $request->keyword;
             $viewParams['keyword'] = 'keyword='. $keyword;
         }
@@ -132,7 +132,7 @@ class Write extends Model
             'categories' => $categories,
             'currenctCategory' => $currenctCategory,
             'request' => $request,
-            'search' => $request->has('keyword') ? 1 : 0,
+            'search' => $request->filled('keyword') ? 1 : 0,
             'viewParams' => implode('&', $viewParams),
         ];
     }
@@ -274,7 +274,7 @@ class Write extends Model
     // 수동 페이징
     public function customPaging($request, $query, $sortField)
     {
-        $currentPage = $request->has('page') ? $request->page : 1 ;
+        $currentPage = $request->filled('page') ? $request->page : 1 ;
         // 공지 글은 가장 앞에 나와야 하므로 컬렉션의 위치를 조절해서 수동으로 페이징 한다.
         $totalWrites = $query->orderByRaw($sortField)->get();
 
@@ -368,7 +368,7 @@ class Write extends Model
         // }
 
         // 검색어 색깔 다르게 표시
-        if($request->has('keyword')) {
+        if($request->filled('keyword')) {
             $write->content = searchKeyword($request->keyword, $write->content);
         }
 
@@ -774,9 +774,9 @@ class Write extends Model
         $inputData = $this->convertSomeField($inputData);
 
         $options = [];
-        $options['html'] = $request->has('html') ? $request->html : '';
-        $options['secret'] = $request->has('secret') ? $request->secret : '';
-        $options['mail'] = $request->has('mail') ? $request->mail : '';
+        $options['html'] = $request->filled('html') ? $request->html : '';
+        $options['secret'] = $request->filled('secret') ? $request->secret : '';
+        $options['mail'] = $request->filled('mail') ? $request->mail : '';
 
         foreach($options as $key => $value) {
             if($value == '') {
@@ -799,7 +799,7 @@ class Write extends Model
 
             $write = Write::getWrite($this->board->id, $request->writeId);
 
-            if($request->has('secret')) {
+            if($request->filled('secret')) {
                 $password = $write->password;
             }
             $num = $write->num;
@@ -862,7 +862,7 @@ class Write extends Model
         $this->point->insertPoint($userId, $pointType, $content, $this->board->table_name, $lastInsertId, $relAction);
 
         // 공지사항인 경우 등록
-        if($request->has('notice')) {
+        if($request->filled('notice')) {
             $this->registerNotice($lastInsertId);
         }
 
@@ -887,7 +887,7 @@ class Write extends Model
         deleteCache('main', $this->board->table_name);
 
         // 비회원 글쓰기 + 비밀글일 경우 세션에 등록하기
-        if(auth()->guest() && $request->has('secret') && $request->secret) {
+        if(auth()->guest() && $request->filled('secret') && $request->secret) {
             session()->put(session()->getId(). 'secret_board_'. $this->board->table_name. '_write_'. $lastInsertId, true);
         }
 
@@ -945,9 +945,9 @@ class Write extends Model
         $inputData = $this->convertSomeField($inputData);
 
         $options = [];
-        $options['html'] = $request->has('html') ? $request->html : '';
-        $options['secret'] = $request->has('secret') ? $request->secret : '';
-        $options['mail'] = $request->has('mail') ? $request->mail : '';
+        $options['html'] = $request->filled('html') ? $request->html : '';
+        $options['secret'] = $request->filled('secret') ? $request->secret : '';
+        $options['mail'] = $request->filled('mail') ? $request->mail : '';
 
         foreach($options as $key => $value) {
             if($value == '') {
@@ -1039,7 +1039,7 @@ class Write extends Model
     // 공지사항 등록하기
     private function registerAndDeleteNotice($request, $writeId)
     {
-        if($request->has('notice')) {
+        if($request->filled('notice')) {
             $this->registerNotice($writeId);
         } else {
             $this->deleteNotice($writeId);

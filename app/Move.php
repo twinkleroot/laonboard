@@ -17,7 +17,7 @@ class Move
     public function getMoveParams($boardName, $request)
     {
         // 세션에 해당 게시물 아이디들을 보관
-        $moveId = $request->has('chkId') ? $request->chkId : $request->writeId;
+        $moveId = $request->filled('chkId') ? $request->chkId : $request->writeId;
         session()->put('move_writeIds', $moveId);
 
         return [

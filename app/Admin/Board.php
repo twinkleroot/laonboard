@@ -188,11 +188,11 @@ class Board extends Model
     {
         $board = Board::getBoard($id);
         $groups = Group::get();
-        $kind = $request->has('kind') ? $request->kind : '';
-        $keyword = $request->has('keyword') ? $request->keyword : '';
-        $order = $request->has('order') ? $request->order : '';
-        $direction = $request->has('direction') ? $request->direction : '';
-        $page = $request->has('page') ? $request->page : '';
+        $kind = $request->filled('kind') ? $request->kind : '';
+        $keyword = $request->filled('keyword') ? $request->keyword : '';
+        $order = $request->filled('order') ? $request->order : '';
+        $direction = $request->filled('direction') ? $request->direction : '';
+        $page = $request->filled('page') ? $request->page : '';
 
         $queryString = "?kind=$kind&keyword=$keyword&order=$order&direction=$direction&page=$page";
 

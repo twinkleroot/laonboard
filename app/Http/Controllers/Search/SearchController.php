@@ -26,13 +26,13 @@ class SearchController extends Controller
 
     public function result(Request $request)
     {
-        $keyword = $request->has('keyword') ? $request->keyword : '';   // 검색어
+        $keyword = $request->filled('keyword') ? $request->keyword : '';   // 검색어
         $this->keyword = getSearchString($keyword);
-        $this->kind = $request->has('kind') ? $request->kind : 'subject||content';    // 검색필드
-        $this->operator = $request->has('operator') ? $request->operator : '';    // 연산자
-        $this->groupId = $request->has('groupId') ? $request->groupId : '';   // 그룹명
-        $this->boardName = $request->has('boardName') ? $request->boardName : '';    // 게시판 테이블 명
-        $this->page = $request->has('page') ? $request->page : 1 ;
+        $this->kind = $request->filled('kind') ? $request->kind : 'subject||content';    // 검색필드
+        $this->operator = $request->filled('operator') ? $request->operator : '';    // 연산자
+        $this->groupId = $request->filled('groupId') ? $request->groupId : '';   // 그룹명
+        $this->boardName = $request->filled('boardName') ? $request->boardName : '';    // 게시판 테이블 명
+        $this->page = $request->filled('page') ? $request->page : 1 ;
         $this->user = auth()->user();
         $this->userLevel = $this->user ? $this->user->level : 1;
 

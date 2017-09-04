@@ -29,7 +29,7 @@ class InstallController extends Controller
     public function form(Request $request)
     {
         $params = [
-            'agree' => $request->has('agree') ? $request->agree : ''
+            'agree' => $request->filled('agree') ? $request->agree : ''
         ];
         return view('install.form', $params);
     }

@@ -267,7 +267,7 @@ class User extends Authenticatable
 
         $userInfo = [
             'email' => getEmailAddress($request->get('email')),
-            'password' => $request->has('password') ? bcrypt($request->get('password')) : '',
+            'password' => $request->filled('password') ? bcrypt($request->get('password')) : '',
             'nick' => $request->get('nick'),
             'nick_date' => $nowDate,
             'mailing' => 0,
@@ -333,8 +333,8 @@ class User extends Authenticatable
     {
         $certType = session()->get('ss_cert_type');
         $certNo = session()->get('ss_cert_no');
-        $name = $request->has('name') ? cleanXssTags(trim($request->name)) : null;
-        $hp = $request->has('hp') ? trim($request->hp) : null;
+        $name = $request->filled('name') ? cleanXssTags(trim($request->name)) : null;
+        $hp = $request->filled('hp') ? trim($request->hp) : null;
         if(cache('config.cert')->certUse && $certType && $certNo) {
             // 해시값이 같은 경우에만 본인확인 값을 저장한다.
             if( session()->get('ss_cert_hash') == md5($name.$certType.session()->get('ss_cert_birth').$certNo) ) {
@@ -387,7 +387,7 @@ class User extends Authenticatable
         $email = getEmailAddress(trim($request->email));
         $nick = $user->nick;
         $nickDate = $user->nick_date;
-        if($request->has('nick') && $request->nick != $nick) {
+        if($request->filled('nick') && $request->nick != $nick) {
             $nick = trim($request->nick);
             $nickDate = $nowDate;
         }
@@ -405,12 +405,12 @@ class User extends Authenticatable
             'signature' => trim($request->signature),
             'profile' => trim($request->profile),
             'memo' => trim($request->memo),
-            'mailing' => $request->has('mailing') ? $request->mailing : 0,
-            'recommend' => $request->has('recommend') ? $recommendedId : $user->recommend,
+            'mailing' => $request->filled('mailing') ? $request->mailing : 0,
+            'recommend' => $request->filled('recommend') ? $recommendedId : $user->recommend,
         ];
 
         // 정보공개 체크박스에 체크를 했거나 기존에 open값과 open입력값이 다르다면 기존 open 값에 open 입력값을 넣는다.
-        if($request->has('open') || $user->open != $request->get('open')) {
+        if($request->filled('open') || $user->open != $request->get('open')) {
             $toUpdateUserInfo = array_collapse([ $toUpdateUserInfo, [
                 'open' => $request->get('open'),
                 'open_date' => $nowDate
@@ -464,7 +464,7 @@ class User extends Authenticatable
     {
         // 추천인 닉네임 받은 것을 해당 닉네임의 id로 조회
         $recommendedId = 0;
-        if($request->has('recommend')) {
+        if($request->filled('recommend')) {
             $recommendedUser = User::where([
                 'nick' => $request->recommend,
             ])->first();
@@ -490,7 +490,7 @@ class User extends Authenticatable
     // 아이콘 삭제
     public function iconDelete($request, $path)
     {
-        if($request->has('delIcon') && $request->delIcon) {
+        if($request->filled('delIcon') && $request->delIcon) {
             File::delete($path);
         }
     }
@@ -637,7 +637,7 @@ class User extends Authenticatable
     public function getFormMailParams($request)
     {
         $user = getUser($request->to);
-        $email = $request->has('email') ? $request->email : '';
+        $email = $request->filled('email') ? $request->email : '';
         $decEmail;
         if($email) {
             $decEmail = decrypt($email);
@@ -647,7 +647,7 @@ class User extends Authenticatable
         } else {
             abort(500, '이메일이 올바르지 않습니다.');
         }
-        $name = $request->has('name') ? convertText(stripslashes($request->name), true) : $email;
+        $name = $request->filled('name') ? convertText(stripslashes($request->name), true) : $email;
 
         return [
             'user' => $user,

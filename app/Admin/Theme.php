@@ -73,7 +73,7 @@ class Theme
     {
         $config = new Config();
         // 테마 변경
-        $theme = $request->has('theme') ? $request->theme : 'default';
+        $theme = $request->filled('theme') ? $request->theme : 'default';
         $data = ['name' => $theme];
         $config->updateConfig($data, 'theme', 1);
 

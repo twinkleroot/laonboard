@@ -35,7 +35,7 @@ class Comment
             $comment->isDelete = $editable['isDelete'];
 
             // 검색어 색깔 다르게 표시
-            if($request->has('keyword')) {
+            if($request->filled('keyword')) {
                 $comment->content = searchKeyword($request->keyword, $comment->content);
             }
 
@@ -132,7 +132,7 @@ class Comment
         $tmpCommentReply = '';
         $comment = null;
         // 댓글의 댓글일 때
-        if($request->has('commentId')) {
+        if($request->filled('commentId')) {
             $comment = $writeModel->where('id', $request->commentId)->first();   // 원 댓글
 
             if( is_null($comment) ) {
@@ -192,17 +192,17 @@ class Comment
             'name' => $name,
             'email' => $email,
             'homepage' => $homepage,
-            'option' => $request->has('secret') ? $request->secret : null,
-            'extra_1' => $request->has('extra1') ? $request->extra1 : null,
-            'extra_2' => $request->has('extra2') ? $request->extra2 : null,
-            'extra_3' => $request->has('extra3') ? $request->extra3 : null,
-            'extra_4' => $request->has('extra4') ? $request->extra4 : null,
-            'extra_5' => $request->has('extra5') ? $request->extra5 : null,
-            'extra_6' => $request->has('extra6') ? $request->extra6 : null,
-            'extra_7' => $request->has('extra7') ? $request->extra7 : null,
-            'extra_8' => $request->has('extra8') ? $request->extra8 : null,
-            'extra_9' => $request->has('extra9') ? $request->extra9 : null,
-            'extra_10' => $request->has('extra10') ? $request->extra10 : null,
+            'option' => $request->filled('secret') ? $request->secret : null,
+            'extra_1' => $request->filled('extra1') ? $request->extra1 : null,
+            'extra_2' => $request->filled('extra2') ? $request->extra2 : null,
+            'extra_3' => $request->filled('extra3') ? $request->extra3 : null,
+            'extra_4' => $request->filled('extra4') ? $request->extra4 : null,
+            'extra_5' => $request->filled('extra5') ? $request->extra5 : null,
+            'extra_6' => $request->filled('extra6') ? $request->extra6 : null,
+            'extra_7' => $request->filled('extra7') ? $request->extra7 : null,
+            'extra_8' => $request->filled('extra8') ? $request->extra8 : null,
+            'extra_9' => $request->filled('extra9') ? $request->extra9 : null,
+            'extra_10' => $request->filled('extra10') ? $request->extra10 : null,
         ];
 
         $newCommentId = $writeModel->insertGetId($insertData);	// 리턴으로 마지막에 삽입한 행의 id 값 가져오기
@@ -281,7 +281,7 @@ class Comment
         $board = Board::getBoard($request->boardName, 'table_name');
         $commentId = $request->commentId;
         $comment = $writeModel->find($commentId);
-        $option = $request->has('secret') ? $request->secret : null;
+        $option = $request->filled('secret') ? $request->secret : null;
         $ip = !session()->get('admin') ? $request->ip() : $comment->ip;
 
         $result = $writeModel->where('id', $commentId)->update([

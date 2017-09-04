@@ -245,7 +245,7 @@ function checkPostMaxSize($request)
 // 관리자가 아닌데 공지사항을 남기려 하는 경우가 있는지 검사
 function checkAdminAboutNotice($request)
 {
-    if ( !session()->get('admin') && $request->has('notice') ) {
+    if ( !session()->get('admin') && $request->filled('notice') ) {
         return false;
     }
     return true;
