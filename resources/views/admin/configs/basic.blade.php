@@ -175,12 +175,12 @@
                     <span class="help-block">목록 한 페이지당 라인수</span>
                 </td>
             </tr> --}}
-            <tr>
+            {{-- <tr>
                 <th>페이지 표시 수</th>
                 <td class="table_body chknone">
                     <input type="text" name="writePages" class="form-control form_num required" value="{{ $configHomepage->writePages }}">페이지씩 표시
                 </td>
-            </tr>
+            </tr> --}}
             {{-- <tr>
                 <th>모바일 페이지 표시 수</th>
                 <td class="table_body chknone">

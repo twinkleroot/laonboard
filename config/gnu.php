@@ -17,7 +17,7 @@
     'newRows' => 15,
     'pageRows' => 10,
     // 'mobilePageRows' => 10,
-    'writePages' => 10,
+    // 'writePages' => 10,
     // 'mobilePages' => 5,
     'newSkin' => 'default',
     'searchSkin' => 'default',
