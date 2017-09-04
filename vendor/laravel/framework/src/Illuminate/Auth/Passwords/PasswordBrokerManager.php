@@ -1,10 +1,14 @@
 <?php
+
 namespace Illuminate\Auth\Passwords;
 
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Illuminate\Contracts\Auth\PasswordBrokerFactory as FactoryContract;
 
+/**
+ * @mixin \Illuminate\Contracts\Auth\PasswordBroker
+ */
 class PasswordBrokerManager implements FactoryContract
 {
     /**
@@ -13,12 +17,14 @@ class PasswordBrokerManager implements FactoryContract
      * @var \Illuminate\Foundation\Application
      */
     protected $app;
+
     /**
      * The array of created "drivers".
      *
      * @var array
      */
     protected $brokers = [];
+
     /**
      * Create a new PasswordBroker manager instance.
      *
@@ -29,6 +35,7 @@ class PasswordBrokerManager implements FactoryContract
     {
         $this->app = $app;
     }
+
     /**
      * Attempt to get the broker from the local cache.
      *
@@ -38,10 +45,12 @@ class PasswordBrokerManager implements FactoryContract
     public function broker($name = null)
     {
         $name = $name ?: $this->getDefaultDriver();
+
         return isset($this->brokers[$name])
                     ? $this->brokers[$name]
                     : $this->brokers[$name] = $this->resolve($name);
     }
+
     /**
      * Resolve the given broker.
      *
@@ -53,17 +62,20 @@ class PasswordBrokerManager implements FactoryContract
     protected function resolve($name)
     {
         $config = $this->getConfig($name);
+
         if (is_null($config)) {
             throw new InvalidArgumentException("Password resetter [{$name}] is not defined.");
         }
+
         // The password broker uses a token repository to validate tokens and send user
         // password e-mails, as well as validating that password reset process as an
         // aggregate service of sorts providing a convenient interface for resets.
         return new PasswordBroker(
             $this->createTokenRepository($config),
-            $this->app['auth']->createUserProvider($config['provider'])
+            $this->app['auth']->createUserProvider($config['provider'] ?? null)
         );
     }
+
     /**
      * Create a token repository instance based on the given configuration.
      *
@@ -73,10 +85,13 @@ class PasswordBrokerManager implements FactoryContract
     protected function createTokenRepository(array $config)
     {
         $key = $this->app['config']['app.key'];
+
         if (Str::startsWith($key, 'base64:')) {
             $key = base64_decode(substr($key, 7));
         }
-        $connection = isset($config['connection']) ? $config['connection'] : null;
+
+        $connection = $config['connection'] ?? null;
+
         return new DatabaseTokenRepository(
             $this->app['db']->connection($connection),
             $this->app['hash'],
@@ -85,6 +100,7 @@ class PasswordBrokerManager implements FactoryContract
             $config['expire']
         );
     }
+
     /**
      * Get the password broker configuration.
      *
@@ -95,6 +111,7 @@ class PasswordBrokerManager implements FactoryContract
     {
         return $this->app['config']["auth.passwords.{$name}"];
     }
+
     /**
      * Get the default password broker name.
      *
@@ -104,6 +121,7 @@ class PasswordBrokerManager implements FactoryContract
     {
         return $this->app['config']['auth.defaults.passwords'];
     }
+
     /**
      * Set the default password broker name.
      *
@@ -114,6 +132,7 @@ class PasswordBrokerManager implements FactoryContract
     {
         $this->app['config']['auth.defaults.passwords'] = $name;
     }
+
     /**
      * Dynamically call the default driver instance.
      *

@@ -108,12 +108,13 @@ abstract class MorphOneOrMany extends HasOneOrMany
      * Get the first related model record matching the attributes or instantiate it.
      *
      * @param  array  $attributes
+     * @param  array  $values
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function firstOrNew(array $attributes)
+    public function firstOrNew(array $attributes, array $values = [])
     {
         if (is_null($instance = $this->where($attributes)->first())) {
-            $instance = $this->related->newInstance($attributes);
+            $instance = $this->related->newInstance($attributes + $values);
 
             // When saving a polymorphic relationship, we need to set not only the foreign
             // key, but also the foreign key type, which is typically the class name of
@@ -122,37 +123,6 @@ abstract class MorphOneOrMany extends HasOneOrMany
         }
 
         return $instance;
-    }
-
-    /**
-     * Get the first related record matching the attributes or create it.
-     *
-     * @param  array  $attributes
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public function firstOrCreate(array $attributes)
-    {
-        if (is_null($instance = $this->where($attributes)->first())) {
-            $instance = $this->create($attributes);
-        }
-
-        return $instance;
-    }
-
-    /**
-     * Create or update a related record matching the attributes, and fill it with values.
-     *
-     * @param  array  $attributes
-     * @param  array  $values
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public function updateOrCreate(array $attributes, array $values = [])
-    {
-        return tap($this->firstOrNew($attributes), function ($instance) use ($values) {
-            $instance->fill($values);
-
-            $instance->save();
-        });
     }
 
     /**
@@ -174,18 +144,16 @@ abstract class MorphOneOrMany extends HasOneOrMany
      * @param  array  $attributes
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function create(array $attributes)
+    public function create(array $attributes = [])
     {
-        $instance = $this->related->newInstance($attributes);
+        return tap($this->related->newInstance($attributes), function ($instance) {
+            // When saving a polymorphic relationship, we need to set not only the foreign
+            // key, but also the foreign key type, which is typically the class name of
+            // the parent model. This makes the polymorphic item unique in the table.
+            $this->setForeignAttributesForCreate($instance);
 
-        // When saving a polymorphic relationship, we need to set not only the foreign
-        // key, but also the foreign key type, which is typically the class name of
-        // the parent model. This makes the polymorphic item unique in the table.
-        $this->setForeignAttributesForCreate($instance);
-
-        $instance->save();
-
-        return $instance;
+            $instance->save();
+        });
     }
 
     /**

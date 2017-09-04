@@ -11,7 +11,7 @@ use Cache;
 
 trait ResetsPasswords
 {
-    use RedirectsUsers;
+    use RedirectsUsers; 
 
     /**
      * Display the form to request a password reset link.

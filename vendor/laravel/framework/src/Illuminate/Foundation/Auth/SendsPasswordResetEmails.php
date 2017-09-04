@@ -77,3 +77,4 @@ trait SendsPasswordResetEmails
         return Password::broker();
     }
 }
+

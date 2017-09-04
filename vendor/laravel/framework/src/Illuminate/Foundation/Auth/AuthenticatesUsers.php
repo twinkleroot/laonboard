@@ -177,3 +177,4 @@ trait AuthenticatesUsers
         return Auth::guard();
     }
 }
+
