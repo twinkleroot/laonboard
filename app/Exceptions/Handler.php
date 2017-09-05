@@ -27,6 +27,16 @@ class Handler extends ExceptionHandler
     ];
 
     /**
+     * A list of the inputs that are never flashed for validation exceptions.
+     *
+     * @var array
+     */
+    protected $dontFlash = [
+        'password',
+        'password_confirmation',
+    ];
+
+    /**
      * Report or log an exception.
      *
      * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
@@ -52,9 +62,9 @@ class Handler extends ExceptionHandler
             return response()->view('errors.tokenMismatch');
         }
 
-        // if ($exception instanceof QueryException) {
-        //     return response()->view('errors.query', ['message' => $exception->getCode()]);
-        // }
+        if ($exception instanceof QueryException) {
+            return response()->view('errors.query', ['message' => $exception->getCode()]);
+        }
 
         if ($exception instanceof MethodNotAllowedHttpException) {
             return response()->view('errors.methodNotAllowed');

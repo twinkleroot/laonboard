@@ -17,9 +17,9 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         'ce89ac35a6c330c55f4710717db9ff78' => __DIR__ . '/..' . '/kriswallsmith/assetic/src/functions.php',
         'e7223560d890eab89cda23685e711e2c' => __DIR__ . '/..' . '/psy/psysh/src/Psy/functions.php',
+        '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
         'f0906e6318348a765ffb6eb24e0d0938' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/helpers.php',
         '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
-        '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
         '4a1f389d6ce373bda9e57857d3b61c84' => __DIR__ . '/..' . '/barryvdh/laravel-debugbar/src/helpers.php',
         'cb61d74ad51d00867155534456b38b23' => __DIR__ . '/..' . '/mews/purifier/src/helpers.php',
         'a6938000668c05d4629a215593b432bb' => __DIR__ . '/../..' . '/app/Helpers/globalFunctions.php',
@@ -36,6 +36,7 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         ),
         'W' => 
         array (
+            'Whoops\\' => 7,
             'Webmozart\\Assert\\' => 17,
         ),
         'T' => 
@@ -107,6 +108,7 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         ),
         'F' => 
         array (
+            'Fideloper\\Proxy\\' => 16,
             'Faker\\' => 6,
         ),
         'E' => 
@@ -149,6 +151,10 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         'XdgBaseDir\\' => 
         array (
             0 => __DIR__ . '/..' . '/dnoegel/php-xdg-base-dir/src',
+        ),
+        'Whoops\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/filp/whoops/src/Whoops',
         ),
         'Webmozart\\Assert\\' => 
         array (
@@ -314,6 +320,10 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
         ),
+        'Fideloper\\Proxy\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fideloper/proxy/src',
+        ),
         'Faker\\' => 
         array (
             0 => __DIR__ . '/..' . '/fzaninotto/faker/src/Faker',
@@ -449,26 +459,6 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
 
     public static $classMap = array (
         'ConfigsTableSeeder' => __DIR__ . '/../..' . '/database/seeds/ConfigsTableSeeder.php',
-        'CreateAuthTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_29_110439_create_auth_table.php',
-        'CreateAutosavesTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_16_183110_create_autosaves_table.php',
-        'CreateBoardFiles' => __DIR__ . '/../..' . '/database/migrations/2017_04_26_170256_create_board_files.php',
-        'CreateBoardGoodsTable' => __DIR__ . '/../..' . '/database/migrations/2017_05_12_110031_create_board_goods_table.php',
-        'CreateBoardNewsTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_13_171247_create_board_news_table.php',
-        'CreateBoardsTable' => __DIR__ . '/../..' . '/database/migrations/2017_04_05_105802_create_boards_table.php',
-        'CreateCertHistoryTable' => __DIR__ . '/../..' . '/database/migrations/2017_07_24_093931_create_cert_history_table.php',
-        'CreateConfigsTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_21_154604_create_configs_table.php',
-        'CreateContentsTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_09_093555_create_contents_table.php',
-        'CreateGroupUserTable' => __DIR__ . '/../..' . '/database/migrations/2017_04_03_144538_create_group_user_table.php',
-        'CreateGroupsTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_30_144728_create_groups_table.php',
-        'CreateMemosTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_15_100922_create_memos_table.php',
-        'CreateMenusTable' => __DIR__ . '/../..' . '/database/migrations/2017_04_17_103514_create_menus_table.php',
-        'CreatePasswordResetsTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
-        'CreatePointsTable' => __DIR__ . '/../..' . '/database/migrations/2017_04_12_174132_create_points_table.php',
-        'CreatePopularsTable' => __DIR__ . '/../..' . '/database/migrations/2017_07_10_102205_create_populars_table.php',
-        'CreatePopupTable' => __DIR__ . '/../..' . '/database/migrations/2017_07_03_110439_create_popup_table.php',
-        'CreateScrapsTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_12_144109_create_scraps_table.php',
-        'CreateSocialLoginTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_17_115255_create_social_login_table.php',
-        'CreateUsersTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_12_000000_create_users_table.php',
         'DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeds/DatabaseSeeder.php',
         'File_Iterator' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Iterator.php',
         'File_Iterator_Facade' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Facade.php',

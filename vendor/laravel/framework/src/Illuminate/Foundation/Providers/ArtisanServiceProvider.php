@@ -98,7 +98,6 @@ class ArtisanServiceProvider extends ServiceProvider
         'MigrateReset' => 'command.migrate.reset',
         'MigrateRollback' => 'command.migrate.rollback',
         'MigrateStatus' => 'command.migrate.status',
-        'Optimize' => 'command.optimize',
         'PackageDiscover' => 'command.package.discover',
         'Preset' => 'command.preset',
         'QueueFailed' => 'command.queue.failed',
@@ -558,18 +557,6 @@ class ArtisanServiceProvider extends ServiceProvider
     {
         $this->app->singleton('command.notification.make', function ($app) {
             return new NotificationMakeCommand($app['files']);
-        });
-    }
-
-    /**
-     * Register the command.
-     *
-     * @return void
-     */
-    protected function registerOptimizeCommand()
-    {
-        $this->app->singleton('command.optimize', function ($app) {
-            return new OptimizeCommand($app['composer']);
         });
     }
 

@@ -4,7 +4,6 @@ namespace Illuminate\Foundation\Auth;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
-use Cache;
 
 trait SendsPasswordResetEmails
 {
@@ -15,9 +14,7 @@ trait SendsPasswordResetEmails
      */
     public function showLinkRequestForm()
     {
-        $skin = Cache::get('config.join')->skin ? : 'default';
-
-        return viewDefault("user.$skin.password_email");
+        return view('auth.passwords.email');
     }
 
     /**
@@ -28,7 +25,7 @@ trait SendsPasswordResetEmails
      */
     public function sendResetLinkEmail(Request $request)
     {
-        $this->validate($request, ['email' => 'required|email']);
+        $this->validateEmail($request);
 
         // We will send the password reset link to this user. Once we have attempted
         // to send the link, we will examine the response then see the message we
@@ -40,6 +37,17 @@ trait SendsPasswordResetEmails
         return $response == Password::RESET_LINK_SENT
                     ? $this->sendResetLinkResponse($response)
                     : $this->sendResetLinkFailedResponse($request, $response);
+    }
+
+    /**
+     * Validate the email for the given request.
+     *
+     * @param \Illuminate\Http\Request  $request
+     * @return void
+     */
+    protected function validateEmail(Request $request)
+    {
+        $this->validate($request, ['email' => 'required|email']);
     }
 
     /**
@@ -77,4 +85,3 @@ trait SendsPasswordResetEmails
         return Password::broker();
     }
 }
-

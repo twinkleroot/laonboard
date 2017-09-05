@@ -49,7 +49,7 @@ class InstallController extends Controller
         // 3. 파일 쓰기를 위한 폴더 public/storage로 링크 걸기
         Artisan::call('storage:link');
         // 4. DB 구성
-        Artisan::call('migrate');
+        Artisan::call('migrate:fresh');
         // 5. 입력받은 관리자 데이터로 관리자 회원 추가
         $this->addAdmin($request);
         // 6. 환경 설정 기본값 데이터 추가
