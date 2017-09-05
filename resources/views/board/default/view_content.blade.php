@@ -306,7 +306,7 @@
 <aside id="commentWriteArea">
     <article id="comment_box">
         <div class="form-inline info_user">
-            @if( auth()->guest() )  <!-- 비회원일경우 노출 -->
+            @guest  <!-- 비회원일경우 노출 -->
             <div class="form-group @if($errors->get('password'))has-error @endif">
                 <label for="userName" class="sr-only">이름</label>
                 <input type="text" class="form-control" id="userName" name="userName" placeholder="이름">
@@ -326,7 +326,7 @@
                 </span>
                 @endforeach
             </div>
-            @endif
+            @endguest
             <div class="form-group checkbox">
                 <label>
                     <input type="checkbox" name="secret" id="secret" value="secret"><span>비밀글 사용</span>

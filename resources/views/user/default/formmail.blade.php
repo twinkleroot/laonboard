@@ -36,13 +36,13 @@
     <form method="post" id="mailForm" action="{{ route('user.mail.send') }}" role="form" enctype="multipart/form-data">
         {{ csrf_field() }}
         <input type="hidden" name="to" value="{{ $email }}" />
-        @if(auth()->user())
+        @auth
         <input type="hidden" name="name" value="{{ auth()->user()->nick }}" />
         <input type="hidden" name="email" value="{{ auth()->user()->email }}" />
-        @endif
+        @endauth
         <table class="table box">
             <tbody>
-                @if(auth()->guest())
+                @guest
                 <tr>
                     <td class="popin">이름</td>
                     <td @if($errors->has('name')) class="has-error" @endif>
@@ -65,7 +65,7 @@
                         @endif
                     </td>
                 </tr>
-                @endif
+                @endguest
                 <tr>
                     <td class="popin">제목</td>
                     <td @if($errors->has('subject')) class="has-error" @endif>

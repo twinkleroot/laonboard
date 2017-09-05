@@ -1,13 +1,15 @@
 <?php
 
-namespace Illuminate\Foundation\Auth;
+namespace App\Http\Controllers\Auth\Traits;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Cache;
+use Illuminate\Foundation\Auth\ThrottlesLogins;
+use Illuminate\Foundation\Auth\RedirectsUsers;
 use App\User;
 
-trait AuthenticatesUsers
+trait LoginUsers
 {
     use RedirectsUsers, ThrottlesLogins;
     /**

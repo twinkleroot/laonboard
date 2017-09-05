@@ -1,11 +1,12 @@
 <?php
 
-namespace Illuminate\Foundation\Auth;
+namespace App\Http\Controllers\Auth\Traits;
 
 use Illuminate\Http\Request;
 use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Foundation\Auth\RedirectsUsers;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Cache;
 

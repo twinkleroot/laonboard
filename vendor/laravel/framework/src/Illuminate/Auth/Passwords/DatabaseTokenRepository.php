@@ -2,8 +2,8 @@
 
 namespace Illuminate\Auth\Passwords;
 
+use Carbon\Carbon;
 use Illuminate\Support\Str;
-use Illuminate\Support\Carbon;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Contracts\Hashing\Hasher as HasherContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
@@ -16,35 +16,30 @@ class DatabaseTokenRepository implements TokenRepositoryInterface
      * @var \Illuminate\Database\ConnectionInterface
      */
     protected $connection;
-
     /**
      * The Hasher implementation.
      *
      * @var \Illuminate\Contracts\Hashing\Hasher
      */
     protected $hasher;
-
     /**
      * The token database table.
      *
      * @var string
      */
     protected $table;
-
     /**
      * The hashing key.
      *
      * @var string
      */
     protected $hashKey;
-
     /**
      * The number of seconds a token should last.
      *
      * @var int
      */
     protected $expires;
-
     /**
      * Create a new token repository instance.
      *
@@ -64,7 +59,6 @@ class DatabaseTokenRepository implements TokenRepositoryInterface
         $this->expires = $expires * 60;
         $this->connection = $connection;
     }
-
     /**
      * Create a new token record.
      *
@@ -74,19 +68,14 @@ class DatabaseTokenRepository implements TokenRepositoryInterface
     public function create(CanResetPasswordContract $user)
     {
         $email = $user->getEmailForPasswordReset();
-
         $this->deleteExisting($user);
-
         // We will create a new, random token for the user so that we can e-mail them
         // a safe link to the password reset form. Then we will insert a record in
         // the database so that we can verify the token within the actual reset.
         $token = $this->createNewToken();
-
         $this->getTable()->insert($this->getPayload($email, $token));
-
         return $token;
     }
-
     /**
      * Delete all existing reset tokens from the database.
      *
@@ -97,7 +86,6 @@ class DatabaseTokenRepository implements TokenRepositoryInterface
     {
         return $this->getTable()->where('email', $user->getEmailForPasswordReset())->delete();
     }
-
     /**
      * Build the record payload for the table.
      *
@@ -109,7 +97,6 @@ class DatabaseTokenRepository implements TokenRepositoryInterface
     {
         return ['email' => $email, 'token' => $this->hasher->make($token), 'created_at' => new Carbon];
     }
-
     /**
      * Determine if a token record exists and is valid.
      *
@@ -122,12 +109,10 @@ class DatabaseTokenRepository implements TokenRepositoryInterface
         $record = (array) $this->getTable()->where(
             'email', $user->getEmailForPasswordReset()
         )->first();
-
         return $record &&
                ! $this->tokenExpired($record['created_at']) &&
                  $this->hasher->check($token, $record['token']);
     }
-
     /**
      * Determine if the token has expired.
      *
@@ -138,7 +123,6 @@ class DatabaseTokenRepository implements TokenRepositoryInterface
     {
         return Carbon::parse($createdAt)->addSeconds($this->expires)->isPast();
     }
-
     /**
      * Delete a token record by user.
      *
@@ -149,7 +133,6 @@ class DatabaseTokenRepository implements TokenRepositoryInterface
     {
         $this->deleteExisting($user);
     }
-
     /**
      * Delete expired tokens.
      *
@@ -158,10 +141,8 @@ class DatabaseTokenRepository implements TokenRepositoryInterface
     public function deleteExpired()
     {
         $expiredAt = Carbon::now()->subSeconds($this->expires);
-
         $this->getTable()->where('created_at', '<', $expiredAt)->delete();
     }
-
     /**
      * Create a new token for the user.
      *
@@ -171,7 +152,6 @@ class DatabaseTokenRepository implements TokenRepositoryInterface
     {
         return hash_hmac('sha256', Str::random(40), $this->hashKey);
     }
-
     /**
      * Get the database connection instance.
      *
@@ -181,7 +161,6 @@ class DatabaseTokenRepository implements TokenRepositoryInterface
     {
         return $this->connection;
     }
-
     /**
      * Begin a new database query against the table.
      *
@@ -191,7 +170,6 @@ class DatabaseTokenRepository implements TokenRepositoryInterface
     {
         return $this->connection->table($this->table);
     }
-
     /**
      * Get the hasher instance.
      *

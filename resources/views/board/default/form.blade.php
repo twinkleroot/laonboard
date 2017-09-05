@@ -114,7 +114,7 @@
                 </span>
                 @endforeach
             </div>
-            @if(auth()->user())
+            @auth
                 <script src="{{ asset('js/autosave.js') }}"></script>
                 <div class="bd-save col-xs-4 dropdown">
                     <a href="#" id="autosaveBtn" class="dropdown-toggle btn btn-sir" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -123,7 +123,7 @@
                     </a>
                     <ul class="dropdown-menu" role="menu" id="autosavePop"></ul>
                 </div>
-            @endif
+            @endauth
         </div>
 
 @if($board->use_dhtml_editor && $userLevel >= $board->html_level)
