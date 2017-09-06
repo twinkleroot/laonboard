@@ -1,5 +1,4 @@
-@if(!is_null($type))
-
+@if($type)
     <table class="table box">
         <thead>
             <tr>

@@ -86,11 +86,11 @@
             @foreach($writes as $write)
                 @if ($write->boardChange || $loop->first)
                     {{-- 페이징된 객체의 첫번째 모델이거나 다른 게시판으로 넘어갔을 때 --}}
-                    @if(!$loop->first)  {{-- 첫번째 모델이 아닐때 닫는 태그 추가한다. --}}
+                    @unless($loop->first)  {{-- 첫번째 모델이 아닐때 닫는 태그 추가한다. --}}
                                 </ul>
                             </div>
                         </section>
-                    @endif
+                    @endunless
                 <section id="sch_res_list">
                     <div class="sch_res_list_hd">
                         <span class="bdname"><a href="{{ route('board.index', $write->boardName). '?'. $commonQueryString }}">[{{ $write->boardSubject }}] 게시판 내 결과</a></span>

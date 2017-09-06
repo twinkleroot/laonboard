@@ -77,7 +77,7 @@
                     <span class="bd_subject"><a href="/bbs/{{ $boardNew->table_name}}/view/{{ $boardNew->write_parent. $boardNew->commentTag }}">{{ $boardNew->write->subject }}</a></span>
                 </td>
                 <td class="bd_name">
-                    @if(!$boardNew->user_id)
+                    @unless($boardNew->user_id)
                         {{ $boardNew->name }}
                     @else
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
@@ -91,7 +91,7 @@
                         @endcomponent
                         <li><a href="{{ route('new.index') }}?nick={{ $boardNew->name }}">전체게시물</a></li>
                     </ul>
-                    @endif
+                    @endunless
                 </td>
                 <td class="bd_date">@if($today->toDateString() == substr($boardNew->created_at, 0, 10)) @hourAndMin($boardNew->created_at) @else @monthAndDay($boardNew->created_at) @endif</td>
             </tr>

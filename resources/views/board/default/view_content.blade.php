@@ -6,9 +6,9 @@
     <h1>{{ $write->subject }}</h1>
     <ul class="bd_rd_info">
         <li class="post_info">
-        @if(!$write->iconPath)
+        @unless($write->iconPath)
             <i class="fa fa-user"></i>
-        @endif
+        @endunless
         @if(auth()->user() && $board->use_sideview)
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                 @if(cache('config.join')->useMemberIcon && $write->iconPath)
@@ -218,9 +218,9 @@
         <div class="cmt_box @if(strlen($comment->comment_reply)>0) cmt_reply" style="padding-left: calc(25px * {{ strlen($comment->comment_reply) }}); @endif">
             <ul class="bd_rd_cmt_info">
                 <li class="post_info td_nick">
-                @if(!$comment->iconPath)
+                @unless($comment->iconPath)
                     <i class="fa fa-user"></i>
-                @endif
+                @endunless
                 @if($user && $board->use_sideview)
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                         @if(cache('config.join')->useMemberIcon && $comment->iconPath)

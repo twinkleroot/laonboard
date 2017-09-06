@@ -35,16 +35,16 @@
     </div>
     <div class="panel-body row">
         <form class="contents col-md-10 col-md-offset-1" role="form" id="userForm" name="userForm" method="POST" action="{{ route('user.update') }}" enctype="multipart/form-data" autocomplete="off" onsubmit="return userSubmit();">
-            @if(cache('config.cert')->certHp || cache('config.cert')->certIpin)
+        @if(cache('config.cert')->certHp || cache('config.cert')->certIpin)
             <input type="hidden" name="certType" value="">
-            @if(!$config->name)
-            <input type="hidden" name="name" value="">
-            @endif
-            @if(!$config->hp)
-            <input type="hidden" name="hp" value="">
-            @endif
             <input type="hidden" name="certNo" value="">
-            @endif
+            @unless($config->name)
+            <input type="hidden" name="name" value="">
+            @endunless
+            @unless ($config->hp)
+            <input type="hidden" name="hp" value="">
+            @endunless
+        @endif
             {{ csrf_field() }}
             {{ method_field('PUT') }}
 

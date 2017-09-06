@@ -25,7 +25,7 @@
             {{ csrf_field() }}
             <label for="boardId" class="sr-only">게시판종류</label>
             <select name="boardId" id="boardId">
-                <option value="" @if(!$selectBoard) selected @endif>전체게시판</option>
+                <option value="" @unless($selectBoard) selected @endunless>전체게시판</option>
                 @foreach($boards as $board)
                     <option value="{{ $board->id }}" @if($selectBoard == $board->id) selected @endif>{{ $board->subject }}</option>
                 @endforeach

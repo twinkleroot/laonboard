@@ -122,9 +122,9 @@
                             @endcomponent
                         </td>
                         <td class="td_date">
-                        @if(!is_null($user->leave_date))
+                        @if($user->leave_date)
                             <span class="mb_msg withdraw">탈퇴</span>
-                        @elseif (!is_null($user->intercept_date))
+                        @elseif ($user->intercept_date)
                             <span class="mb_msg intercept">차단</span>
                         @else
                             <span class="mb_msg">정상</span>

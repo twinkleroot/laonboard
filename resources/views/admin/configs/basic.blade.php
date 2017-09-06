@@ -618,7 +618,7 @@
                 </th>
                 <td class="table_body chknone">
                     <select name='certHp' class="form-control form_large">
-                        <option value @if(!$configCert->certHp) selected @endif>사용안함</option>
+                        <option value @unless($configCert->certHp) selected @endunless>사용안함</option>
                         <option value='kcb' @if($configCert->certHp == 'kcb') selected @endif>코리아크레딧뷰로(KCB) 휴대폰 본인확인</option>
                         {{-- <option value='kcp' @if($configCert->certHp == 'kcp') selected @endif>NHN KCP 휴대폰 본인확인</option>
                         <option value='lg' @if($configCert->certHp == 'lg') selected @endif>LG유플러스 휴대폰 본인확인</option> --}}

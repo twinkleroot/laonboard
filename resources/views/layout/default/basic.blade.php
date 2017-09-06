@@ -91,9 +91,9 @@
                             {{ Auth::user()->nick }} <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
-                            @if(!Auth::user()->isSuperAdmin())
+                            @unless(Auth::user()->isSuperAdmin())
                                 <li><a href="{{ route('user.checkPassword') }}?work=edit">회원 정보 수정</a></li>
-                            @endif
+                            @endunless
                             <li>
                                 <a href="{{ route('scrap.index') }}" class="winScrap" target="_blank" onclick="winScrap(this.href); return false;">스크랩</a>
                             </li>
@@ -109,9 +109,9 @@
                                     {{ csrf_field() }}
                                 </form>
                             </li>
-                            @if(!$isAdmin)
+                            @unless($isAdmin)
                                 <li><a href="{{ route('user.checkPassword') }}?work=leave">회원 탈퇴</a></li>
-                            @endif
+                            @endunless
                         </ul>
                     </li>
                 @endif

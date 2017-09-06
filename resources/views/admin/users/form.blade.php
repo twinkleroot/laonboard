@@ -210,12 +210,12 @@
             <tr>
                 <th>회원상태</th>
                 <td class="table_body chknone">
-                    @if(!is_null($user->leave_date))
-                        <span class="mb_msg withdraw">탈퇴</span>
-                    @elseif (!is_null($user->intercept_date))
-                        <span class="mb_msg intercept">차단</span>
+                    @if($user->leave_date)
+                    <span class="mb_msg withdraw">탈퇴</span>
+                    @elseif ($user->intercept_date)
+                    <span class="mb_msg intercept">차단</span>
                     @else
-                        <span class="mb_msg">정상</span>
+                    <span class="mb_msg">정상</span>
                     @endif
                     <span class="help-block">하단의 탈퇴일자 혹은 접근차단일자를 지정하면 회원상태가 변경됩니다.</span>
                 </td>
