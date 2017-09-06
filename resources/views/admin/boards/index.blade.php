@@ -110,8 +110,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @if(count($boards) > 0)
-                    @foreach ($boards as $board)
+                    @forelse ($boards as $board)
                         <tr data-table="{{ $board->table_name }}">
                             <td class="td_chk">
                                 <input type="checkbox" name="chkId[]" class="boardId" value='{{ $board->id }}' />
@@ -182,8 +181,7 @@
                                 <a href="{{ route('admin.boards.copyForm', $board->table_name) }}" class="board_copy" target="win_board_copy">복사</a>
                             </td>
                         </tr>
-                @endforeach
-                    @else
+                    @empty
                         <tr>
                             <td colspan="15">
                                 <span class="empty_table">
@@ -191,7 +189,7 @@
                                 </span>
                             </td>
                         </tr>
-                    @endif
+                    @endforelse
                     </tbody>
                 </table>
 

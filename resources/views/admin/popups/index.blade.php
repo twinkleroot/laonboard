@@ -57,37 +57,32 @@
                 </tr>
             </thead>
             <tbody>
-                @if(count($popups) > 0)
-                    @foreach($popups as $popup)
-                    <!-- 자료가 있을 경우 -->
-                    <tr>
-                        <td class="td_numsmall">{{ $popup->id }}</td>
-                        <td class="td_subject">{{ $popup->subject }}</td>
-                        <td class="td_mngsmall">@if($popup->device == 'pc')PC @elseif($popup->device == 'mobile')모바일 @else 모두 @endif</td>
-                        <td class="td_email">{{ $popup->begin_time }}</td>
-                        <td class="td_email">{{ $popup->end_time }}</td>
-                        <td class="td_mngsmall">{{ $popup->disable_hours }}</td>
-                        <td class="td_mngsmall">{{ $popup->left }}px</td>
-                        <td class="td_mngsmall">{{ $popup->top }}px</td>
-                        <td class="td_mngsmall">{{ $popup->width }}px</td>
-                        <td class="td_mngsmall">{{ $popup->height }}px</td>
-                        <td class="td_mngsmall">
-                            <a href="{{ route('admin.popups.edit', $popup->id) }}">수정</a>
-                            <a href="{{ route('admin.popups.destroy', $popup->id) }}" onclick="del(this.href); return false;">삭제</a>
-                        </td>
-                    </tr>
-                    @endforeach
-                @else
-                <!-- 자료가 없을 경우 -->
-                    <tr>
-                        <td colspan="11">
-                            <span class="empty_table">
-                                <i class="fa fa-exclamation-triangle"></i> 자료가 없습니다.
-                            </span>
-                        </td>
-                    </tr>
-                 <!-- 끝 -->
-                @endif
+                @forelse($popups as $popup)
+                <tr>
+                    <td class="td_numsmall">{{ $popup->id }}</td>
+                    <td class="td_subject">{{ $popup->subject }}</td>
+                    <td class="td_mngsmall">@if($popup->device == 'pc')PC @elseif($popup->device == 'mobile')모바일 @else 모두 @endif</td>
+                    <td class="td_email">{{ $popup->begin_time }}</td>
+                    <td class="td_email">{{ $popup->end_time }}</td>
+                    <td class="td_mngsmall">{{ $popup->disable_hours }}</td>
+                    <td class="td_mngsmall">{{ $popup->left }}px</td>
+                    <td class="td_mngsmall">{{ $popup->top }}px</td>
+                    <td class="td_mngsmall">{{ $popup->width }}px</td>
+                    <td class="td_mngsmall">{{ $popup->height }}px</td>
+                    <td class="td_mngsmall">
+                        <a href="{{ route('admin.popups.edit', $popup->id) }}">수정</a>
+                        <a href="{{ route('admin.popups.destroy', $popup->id) }}" onclick="del(this.href); return false;">삭제</a>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="11">
+                        <span class="empty_table">
+                            <i class="fa fa-exclamation-triangle"></i> 자료가 없습니다.
+                        </span>
+                    </td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
     </div>

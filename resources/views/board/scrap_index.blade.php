@@ -43,8 +43,7 @@
             </tr>
         </thead>
         <tbody>
-            @if($scraps->total() > 0)
-            @foreach($scraps as $scrap)
+            @forelse($scraps as $scrap)
             <tr>
                 <td class="td_num">{{ $scraps->total() - ($scraps->currentPage() - 1) * Cache::get('config.homepage')->pageRows - $loop->index }}</td>
 
@@ -69,12 +68,11 @@
                     <a href="{{ route('scrap.destroy', $scrap->id) }}" onclick="del(this.href); return false;">삭제</a>
                 </td>
             </tr>
-            @endforeach
-            @else
+            @empty
             <tr>
                 <td colspan="5">자료가 없습니다.</td>
             </tr>
-            @endif
+            @endforelse
         </tbody>
     </table>
     </form>

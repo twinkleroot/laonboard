@@ -89,8 +89,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if(count($points) > 0)
-                    @foreach ($points as $point)
+                    @forelse ($points as $point)
                     <!-- 하단 tr이 출력될 목록갯수에 따라 반복 -->
                     <tr>
                         <td class="td_chk">
@@ -115,8 +114,7 @@
                         <td class="td_date">{{ $point->expire_date == '9999-12-31' ? '' : $point->expire_date }}</td>
                         <td class="td_mngsmall">{{ number_format($point->user_point) }}</td>
                     </tr>
-                    @endforeach
-                    @else
+                    @empty
                         <tr>
                             <td colspan="8">
                                 <span class="empty_table">
@@ -124,7 +122,7 @@
                                 </span>
                             </td>
                         </tr>
-                    @endif
+                    @endforelse
                 </tbody>
             </table>
         </form>

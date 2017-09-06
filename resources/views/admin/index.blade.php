@@ -40,8 +40,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if(count($users) > 0)
-                    @foreach($users as $user)
+                @forelse($users as $user)
                     <tr>
                         <td class="td_email">{{ $user->email }}</td>
 
@@ -58,8 +57,7 @@
                             <a href="{{ route('admin.accessGroups.show', $user->id) }}">{{ $user->count_groups }}</a>
                         </td>
                     </tr>
-                    @endforeach
-                    @else
+                @empty
                     <tr>
                         <td colspan="13">
                             <span class="empty_table">
@@ -67,7 +65,7 @@
                             </span>
                         </td>
                     </tr>
-                    @endif
+                @endforelse
                 </tbody>
             </table>
         </div>
@@ -92,8 +90,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if(count($boardNews) > 0)
-                    @foreach($boardNews as $new)
+                    @forelse($boardNews as $new)
                     <tr>
                         <td class="td_mngsmall text-left">
                             <a href="{{ route('new.index') }}?groupId={{ $new->group_id }}">{{ $new->group_subject }}</a>
@@ -110,8 +107,7 @@
                         </td>
                         <td class="td_mngsmall">@date($new->created_at)</td>
                     </tr>
-                    @endforeach
-                    @else
+                    @empty
                     <tr>
                         <td colspan="13">
                             <span class="empty_table">
@@ -119,7 +115,7 @@
                             </span>
                         </td>
                     </tr>
-                    @endif
+                    @endforelse
                 </tbody>
             </table>
         </div>
@@ -146,8 +142,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if(count($points) > 0)
-                    @foreach($points as $point)
+                    @forelse($points as $point)
                     <tr>
                         <td class="td_email">
                             <a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ App\User::getUser($point->user_id)->email }}">{{ App\User::getUser($point->user_id)->email }}</a>
@@ -167,8 +162,7 @@
                         <td class="td_mngsmall">{{ number_format($point->point) }}</td>
                         <td class="td_mngsmall">{{ number_format($point->user_point) }}</td>
                     </tr>
-                    @endforeach
-                    @else
+                    @empty
                     <tr>
                         <td colspan="13">
                             <span class="empty_table">
@@ -176,7 +170,7 @@
                             </span>
                         </td>
                     </tr>
-                    @endif
+                    @endforelse
                 </tbody>
             </table>
         </div>

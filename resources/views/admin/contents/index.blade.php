@@ -43,8 +43,7 @@
                 <th>관리</th>
             </thead>
             <tbody>
-            @if($contents->total() > 0)
-            @foreach ($contents as $content)
+            @forelse ($contents as $content)
                 <tr>
                     <td class="td_id">{{ $content->content_id }}</td>
                     <td class="td_subject">{{ $content->subject }}</td>
@@ -54,14 +53,13 @@
                         <a href="{{ route('admin.contents.destroy', $content->id) }}" onclick="del(this.href); return false;">삭제</a>
                     </td>
                 </tr>
-            @endforeach
-            @else
+            @empty
                 <tr>
                     <td colspan="3" class="empty_table">
                         자료가 한건도 없습니다.
                     </td>
                 </tr>
-            @endif
+            @endforelse
             </tbody>
         </table>
     </div>

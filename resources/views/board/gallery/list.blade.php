@@ -63,8 +63,7 @@
     <input type="checkbox" name="chkAll" onclick="checkAll(this.form)"> <!-- 전체선택 -->
     @endif
     <div id="gry" class="row">
-        @if(count($writes) > 0)
-        @foreach($writes as $write)
+        @forelse($writes as $write)
         <div class="col-md-3 col-sm-6 col-xs-12 gry"> <!-- 한줄에 4개 배치 -->
             <input type="checkbox" name="chkId[]" class="writeId" value='{{ $write->id }}'>
             <div>
@@ -172,14 +171,13 @@
                 </div>
             </div>
         </div>
-        @endforeach
-        @else
+        @empty
             <div class="gry_empty_table">
                 <span class="empty_table">
                     <i class="fa fa-exclamation-triangle"></i> 게시물이 없습니다.
                 </span>
             </div>
-        @endif
+        @endforelse
     </div>
 </form>
 

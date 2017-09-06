@@ -107,8 +107,7 @@
                     <th>관리</th>
                 </thead>
                 <tbody>
-                    @if(count($users) > 0)
-                    @foreach ($users as $user)
+                    @forelse($users as $user)
                     <tr>
                         <td class="td_chk"><input type="checkbox" name="chkId[]" class="userId" value='{{ $user->id }}' /></td>
                         <td class="td_subject">
@@ -160,8 +159,7 @@
                             <a href="{{ route('admin.accessGroups.show', $user->id). '?'. Request::getQueryString() }}">그룹</a>
                         </td>
                     </tr>
-                    @endforeach
-                    @else
+                    @empty
                     <tr>
                         <td colspan="9">
                             <span class="empty_table">
@@ -169,11 +167,10 @@
                             </span>
                         </td>
                     </tr>
-                    @endif
+                    @endforelse
                 </tbody>
             </table>
-            </form>
-
+        </form>
         {{-- 페이지 처리 --}}
         {{ $users->appends(Request::except('page'))->links() }}
     </div>

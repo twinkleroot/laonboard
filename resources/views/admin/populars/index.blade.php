@@ -74,28 +74,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if(count($populars) > 0)
-                    @foreach($populars as $popular)
-                        <tr>
-                            <td class="td_chk">
-                                <input type="checkbox" name="chkId[]" class="popularId" value='{{ $popular->id }}' />
-                            </td>
-                            <td class="td_subject">
-                                <a href="{{ route('admin.populars.index'). "?kind=word&keyword=". $popular->word }}">{{ $popular->word }}</a>
-                            </td>
-                            <td class="td_mngsmall">{{ $popular->date }}</td>
-                            <td class="td_mngsmall">{{ $popular->ip }}</td>
-                        </tr>
-                    @endforeach
-                    @else
-                        <tr>
-                            <td colspan="11">
-                                <span class="empty_table">
-                                    <i class="fa fa-exclamation-triangle"></i> 자료가 없습니다.
-                                </span>
-                            </td>
-                        </tr>
-                    @endif
+                    @forelse($populars as $popular)
+                    <tr>
+                        <td class="td_chk">
+                            <input type="checkbox" name="chkId[]" class="popularId" value='{{ $popular->id }}' />
+                        </td>
+                        <td class="td_subject">
+                            <a href="{{ route('admin.populars.index'). "?kind=word&keyword=". $popular->word }}">{{ $popular->word }}</a>
+                        </td>
+                        <td class="td_mngsmall">{{ $popular->date }}</td>
+                        <td class="td_mngsmall">{{ $popular->ip }}</td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="11">
+                            <span class="empty_table">
+                                <i class="fa fa-exclamation-triangle"></i> 자료가 없습니다.
+                            </span>
+                        </td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </form>

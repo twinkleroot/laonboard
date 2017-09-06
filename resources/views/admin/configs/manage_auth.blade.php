@@ -86,8 +86,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if(count($manageAuthList) > 0)
-                    @foreach($manageAuthList as $auth)
+                    @forelse($manageAuthList as $auth)
                     <tr>
                         <td>
                             <input type="checkbox" name="chkId[]" class="authId" value='{{ $auth->id }}' />
@@ -100,8 +99,7 @@
                         <td class="td_subject">{{ $auth->menu }}</td>
                         <td class="td_mngsmall">{{ $auth->auth }}</td>
                     </tr>
-                    @endforeach
-                    @else
+                    @empty
                         <tr>
                             <td colspan="5">
                                 <span class="empty_table">
@@ -109,7 +107,7 @@
                                 </span>
                             </td>
                         </tr>
-                    @endif
+                    @endforelse
                 </tbody>
             </table>
         </form>

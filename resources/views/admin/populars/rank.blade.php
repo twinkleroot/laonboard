@@ -38,7 +38,7 @@
             </li>
             <li>
                 <span>
-                    
+
                 </span>
             </li>
         </ul>
@@ -64,15 +64,13 @@
                 </tr>
             </thead>
             <tbody>
-                @if(count($ranks) > 0)
-                @foreach($ranks as $rank)
+                @forelse($ranks as $rank)
                 <tr>
                     <td class="td_numsmall">{{ $loop->iteration }}</td>
                     <td class="td_subject">{{ $rank->word }}</td>
                     <td class="td_mngsmall">{{ $rank->cnt }}</td>
                 </tr>
-                @endforeach
-                @else
+                @empty
                     <tr>
                         <td colspan="11">
                             <span class="empty_table">
@@ -80,7 +78,7 @@
                             </span>
                         </td>
                     </tr>
-                @endif
+                @endforelse
             </tbody>
         </table>
     </div>

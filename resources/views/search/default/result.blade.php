@@ -74,16 +74,7 @@
                     </ul>
                 </div>
 
-            @if(count($writes) < 1)
-                <section id="sch_res_list">
-                    <div class="sch_res_list_bd">
-                        <span class="empty_table">
-                            <i class="fa fa-exclamation-triangle"></i> 검색된 자료가 없습니다.
-                        </span>
-                    </div>
-                </section>
-            @else
-            @foreach($writes as $write)
+            @forelse($writes as $write)
                 @if ($write->boardChange || $loop->first)
                     {{-- 페이징된 객체의 첫번째 모델이거나 다른 게시판으로 넘어갔을 때 --}}
                     @unless($loop->first)  {{-- 첫번째 모델이 아닐때 닫는 태그 추가한다. --}}
@@ -133,8 +124,15 @@
                     </div>
                 </section>
                 @endif
-            @endforeach
-            @endif
+            @empty
+                <section id="sch_res_list">
+                    <div class="sch_res_list_bd">
+                        <span class="empty_table">
+                            <i class="fa fa-exclamation-triangle"></i> 검색된 자료가 없습니다.
+                        </span>
+                    </div>
+                </section>
+            @endforelse
             </div>
 
             {{-- 페이지 처리 --}}

@@ -81,8 +81,7 @@
             </tr>
         </thead>
         <tbody>
-        @if(count($writes) > 0)
-        @foreach($writes as $write)
+        @forelse($writes as $write)
             @if($kind != 'user_id' && in_array($write->id, $notices) && $search == 0 && $currenctCategory == '')
             <tr id="bd_notice">
             @else
@@ -179,8 +178,7 @@
                 <td class="bd_nre mo">{{ $write->nogood }}</td>
                 @endif
             </tr>
-        @endforeach
-        @else
+        @empty
             @php
                 $colspan = 6;
                 if($board->use_good) {
@@ -197,7 +195,7 @@
                     </span>
                 </td>
             </tr>
-        @endif
+        @endforelse
         </tbody>
     </table>
 </form>

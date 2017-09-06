@@ -70,8 +70,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                @if(count($menus) > 0)
-                @foreach ($menus as $menu)
+                @forelse ($menus as $menu)
                     <tr class="menu_list menu_group_{{ substr($menu['code'], 0, 2) }}">
                         <td class="dragHandle" style=""></td>
                         <td class="text-center @if(strlen($menu['code']) == 4) sub_menu_class @endif @if($errors->get('name.'. $loop->index)) has-error @endif">
@@ -106,8 +105,7 @@
                             <button type="button" class="btn btn-danger del_menu">삭제</button>
                         </td>
                     </tr>
-                @endforeach
-                @else
+                @empty
                     <tr id="empty_menu_list">
                         <td colspan="7">
                             <span class="empty_table">
@@ -115,7 +113,7 @@
                             </span>
                         </td>
                     </tr>
-                @endif
+                @endforelse
                 </tbody>
             </table>
         </div>

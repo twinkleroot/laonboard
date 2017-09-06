@@ -53,8 +53,7 @@
     <section id="theme" class="adm_box">
         <p>설치된 테마 : {{ count($layoutSkins) }}</p>
         <ul class="theme_list">
-            @if(count($layoutSkins) > 0)
-            @foreach($layoutSkins as $theme)
+            @forelse($layoutSkins as $theme)
                 <li class="themebox">
                     <div class="tmli_if">
                         <span class="img">
@@ -72,10 +71,8 @@
                         <button class="theme_preview" data-theme="{{ $theme['name'] }}">상세보기</button>
                     </div>
                 </li>
-            @endforeach
-            @else
-
-            @endif
+            @empty
+            @endforelse
         </ul>
     </section>
 

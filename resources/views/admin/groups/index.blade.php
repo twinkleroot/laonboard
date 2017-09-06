@@ -90,8 +90,7 @@
                     </thead>
 
                     <tbody>
-                    @if(count($groups) > 0)
-                    @foreach ($groups as $group)
+                    @forelse ($groups as $group)
                         <tr data-group-id="{{ $group->group_id }}">
                             <td class="td_chk">
                                 <input type="checkbox" name="chkId[]" class="groupId" value='{{ $group->id }}' />
@@ -129,8 +128,7 @@
                                 <a href="{{ route('admin.groups.edit', $group->id). '?'. Request::getQueryString() }}">수정</a>
                             </td>
                         </tr>
-                    @endforeach
-                    @else
+                    @empty
                     <tr>
                         <td colspan="10">
                             <span class="empty_table">
@@ -138,7 +136,7 @@
                             </span>
                         </td>
                     </tr>
-                    @endif
+                    @endforelse
                     </tbody>
                 </table>
         </form>
