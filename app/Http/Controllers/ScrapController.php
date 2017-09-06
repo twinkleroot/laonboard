@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Board;
+namespace App\Http\Controllers;
 
 use App\Scrap;
 use App\Board;

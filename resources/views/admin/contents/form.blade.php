@@ -59,7 +59,7 @@
             <td class="table_body chknone">
                 <input type="text" name="content_id" id ="content_id" required class="form-control form_middle required" @if($type == "update") value="{{ $content->content_id }}" readonly @else value="{{ old('content_id') }}" @endif size="20" maxlength="20">
                 @if($type == "update")
-                    <a href="{{ route('contents.show', $content->content_id) }}" class="btn btn-sir" target="_blank">내용확인</a>
+                    <a href="{{ route('content.show', $content->content_id) }}" class="btn btn-sir" target="_blank">내용확인</a>
                 @endif
                 <span class="help-block">20자 이내의 영문자, 숫자, _ 만 가능합니다.</span>
             </td>

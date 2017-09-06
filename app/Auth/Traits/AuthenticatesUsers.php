@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth\Traits;
+namespace App\Auth\Traits;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -9,7 +9,7 @@ use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\RedirectsUsers;
 use App\User;
 
-trait LoginUsers
+trait AuthenticatesUsers
 {
     use RedirectsUsers, ThrottlesLogins;
     /**
@@ -105,7 +105,7 @@ trait LoginUsers
      */
     protected function credentials(Request $request)
     {
-        return $request->only($this->username(), 'password');
+        return $request->all($this->username(), 'password');
     }
     /**
      * Send the response after the user was authenticated.
@@ -144,7 +144,7 @@ trait LoginUsers
             return response()->json($errors, 422);
         }
         return redirect()->back()
-            ->withInput($request->only($this->username(), 'remember'))
+            ->withInput($request->all($this->username(), 'remember'))
             ->withErrors($errors);
     }
     /**

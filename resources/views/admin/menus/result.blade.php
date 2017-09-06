@@ -17,7 +17,7 @@
                     <input type="hidden" name="link[]" value=
                         @if($type == 'group') {{ route('group', $result['id']) }}
                         @elseif($type == 'board') {{ route('board.index', $result['table_name']) }}
-                        @elseif($type == 'content') {{ route('contents.show', $result['content_id']) }}
+                        @elseif($type == 'content') {{ route('content.show', $result['content_id']) }}
                         @endif
                     >
                     <button type="button" class="btn btn-default add_select">선택</button>

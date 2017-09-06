@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Content;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Content;
 
-class ContentsController extends Controller
+class ContentController extends Controller
 {
     public $content;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Board;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -12,7 +12,7 @@ use App\BoardFile;
 use App\BoardGood;
 use App\Comment;
 use App\Notification;
-use App\ReCaptcha;
+use App\Services\ReCaptcha;
 use Auth;
 use Cache;
 use App\Services\RssFeed;

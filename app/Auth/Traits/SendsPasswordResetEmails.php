@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth\Traits;
+namespace App\Auth\Traits;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -34,7 +34,7 @@ trait SendsPasswordResetEmails
         // to send the link, we will examine the response then see the message we
         // need to show to the user. Finally, we'll send out a proper response.
         $response = $this->broker()->sendResetLink(
-            $request->only('email')
+            $request->all('email')
         );
 
         return $response == Password::RESET_LINK_SENT

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Services;
 
 use Illuminate\Http\Request;
 use Ixudra\Curl\Facades\Curl;

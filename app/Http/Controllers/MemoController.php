@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Memo;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Memo;
-use App\ReCaptcha;
+use App\Services\ReCaptcha;
 use Exception;
 
 class MemoController extends Controller

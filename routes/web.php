@@ -19,7 +19,7 @@ Route::get('/home', ['as' => 'home', 'uses' => 'MainController@index'] );
 // 게시판 그룹별 메인
 Route::get('/group/{group}', ['as' => 'group', 'uses' => 'MainController@groupIndex'] );
 // 전체 검색 결과
-Route::get('/search', ['as' => 'search', 'uses' => 'Search\SearchController@result'] );
+Route::get('/search', ['as' => 'search', 'uses' => 'SearchController@result'] );
 
 // 관리자 그룹
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], function() {
@@ -225,25 +225,25 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
 // 인증에 관련한 라우트들
 Auth::routes();
 // 내용관리
-Route::get('contents/{id}', ['as' => 'contents.show', 'uses' => 'Content\ContentsController@show']);
+Route::get('content/{id}', ['as' => 'content.show', 'uses' => 'ContentController@show']);
 // 쪽지 보내기 (리소스 라우트보다 먼저 나와야 함)
-Route::get('memo/create', ['as' => 'memo.create', 'uses' => 'Memo\MemoController@create']);
+Route::get('memo/create', ['as' => 'memo.create', 'uses' => 'MemoController@create']);
 // 인증이 필요한 라우트 그룹
 Route::group(['middleware' => 'auth'], function() {
     // 사용자가 회원 정보 수정할 때 관련한 라우트들
-    Route::get('user/edit', ['as' => 'user.edit', 'uses' => 'User\UserController@edit']);
-    Route::put('user/update', ['as' => 'user.update', 'uses' => 'User\UserController@update']);
-    Route::get('user/check_password', ['as' => 'user.checkPassword', 'uses' => 'User\UserController@checkPassword']);
-    Route::post('user/set_password', ['as' => 'user.setPassword', 'uses' => 'User\UserController@setPassword']);
-    Route::post('user/confirm_password', ['as' => 'user.confirmPassword', 'uses' => 'User\UserController@confirmPassword']);
-    Route::get('user/leave', ['as' => 'user.leave', 'uses' => 'User\UserController@leave']);
-    Route::get('user/point/{id}', ['as' => 'user.point', 'uses' => 'User\UserController@pointList']);
+    Route::get('user/edit', ['as' => 'user.edit', 'uses' => 'UserController@edit']);
+    Route::put('user/update', ['as' => 'user.update', 'uses' => 'UserController@update']);
+    Route::get('user/check_password', ['as' => 'user.checkPassword', 'uses' => 'UserController@checkPassword']);
+    Route::post('user/set_password', ['as' => 'user.setPassword', 'uses' => 'UserController@setPassword']);
+    Route::post('user/confirm_password', ['as' => 'user.confirmPassword', 'uses' => 'UserController@confirmPassword']);
+    Route::get('user/leave', ['as' => 'user.leave', 'uses' => 'UserController@leave']);
+    Route::get('user/point/{id}', ['as' => 'user.point', 'uses' => 'UserController@pointList']);
     // 회원 정보 수정 - 소셜 로그인 계정 연결 해제
-    Route::post('user/disconnectSocialAccount', ['as' => 'user.disconnectSocialAccount', 'uses' => 'User\UserController@disconnectSocialAccount']);
+    Route::post('user/disconnectSocialAccount', ['as' => 'user.disconnectSocialAccount', 'uses' => 'UserController@disconnectSocialAccount']);
 
     // 쪽지
-    Route::get('memo/{memo}/delete', ['as' => 'memo.destroy', 'uses' => 'Memo\MemoController@destroy']);
-    Route::resource('memo', 'Memo\MemoController', [
+    Route::get('memo/{memo}/delete', ['as' => 'memo.destroy', 'uses' => 'MemoController@destroy']);
+    Route::resource('memo', 'MemoController', [
         'except' => [
             'edit', 'update', 'destroy', 'create'
         ],
@@ -253,9 +253,38 @@ Route::group(['middleware' => 'auth'], function() {
             'store' => 'memo.store',
         ],
     ]);
+
+    // 스크랩
+    Route::get('scrap/{scrap}/delete', ['as' => 'scrap.destroy', 'uses' => 'ScrapController@destroy']);
+    Route::post('scrap', ['as' => 'scrap.store', 'uses' => 'ScrapController@store'])
+        ->middleware('level.board:comment_level', 'writable.comment:create');
+    Route::resource('scrap', 'ScrapController', [
+            'only' => [
+                'index', 'create', 'store'
+            ],
+            'names' => [
+                'index' => 'scrap.index',
+                'create' => 'scrap.create',
+                'store' => 'scrap.store',
+            ],
+    ]);
+    // 임시 저장
+    Route::group(['middleware' => 'valid.user'], function () {
+        Route::resource('autosave', 'AutosaveController', [
+            'only' => [
+                'index', 'show', 'store', 'destroy'
+            ],
+            'names' => [
+                'index' => 'autosave.index',
+                'show' => 'autosave.show',
+                'store' => 'autosave.store',
+                'destroy' => 'autosave.destroy'
+            ]
+        ]);
+    });
 });
 // 자기소개
-Route::get('user/profile/{id}', ['as' => 'user.profile', 'uses' => 'User\UserController@profile']);
+Route::get('user/profile/{id}', ['as' => 'user.profile', 'uses' => 'UserController@profile']);
 // 소셜 로그인 - 콜백 함수에서 회원 로그인 여부로 분기 (콜백함수 경로 지정은 config/services.php 에서)
 Route::get('social/{provider}', ['as' => 'social', 'uses' => 'Auth\SocialController@redirectToProvider']);
 Route::get('social/{provider}/callback/', ['as' => 'social.callback', 'uses' => 'Auth\SocialController@handleProviderCallback']);
@@ -267,64 +296,64 @@ Route::post('social/connectExistAccount', ['as' => 'social.connectExistAccount',
 // 회원 가입
 Route::get('user/join', ['as' => 'user.join', 'uses' => 'Auth\RegisterController@join']);
 Route::post('user/register', ['as' => 'user.register', 'uses' => 'Auth\RegisterController@register']);
-Route::get('user/welcome', ['as' => 'user.welcome', 'uses' => 'User\UserController@welcome']);
+Route::get('user/welcome', ['as' => 'user.welcome', 'uses' => 'UserController@welcome']);
 // 툴팁 : 메일 보내기
-Route::get('user/mail/send', ['as' => 'user.mail.form', 'uses' => 'User\UserController@form'])->middleware('form.mail');
-Route::post('user/mail/send', ['as' => 'user.mail.send', 'uses' => 'User\UserController@send'])->middleware('send.mail');
+Route::get('user/mail/send', ['as' => 'user.mail.form', 'uses' => 'UserController@form'])->middleware('form.mail');
+Route::post('user/mail/send', ['as' => 'user.mail.send', 'uses' => 'UserController@send'])->middleware('send.mail');
 // 메일 인증 이메일 주소 변경
-Route::get('user/email/edit/{email}', ['as' => 'user.email.edit', 'uses' => 'User\UserController@editEmail']);
-Route::put('user/email/update', ['as' => 'user.email.update', 'uses' => 'User\UserController@updateEmail']);
+Route::get('user/email/edit/{email}', ['as' => 'user.email.edit', 'uses' => 'UserController@editEmail']);
+Route::put('user/email/update', ['as' => 'user.email.update', 'uses' => 'UserController@updateEmail']);
 // 이메일 인증 라우트
-Route::get('user/emailCertify/id/{id}/crypt/{crypt}', ['as' => 'user.email.certify', 'uses' => 'User\UserController@emailCertify']);
+Route::get('user/emailCertify/id/{id}/crypt/{crypt}', ['as' => 'user.email.certify', 'uses' => 'UserController@emailCertify']);
 // 닉네임, 이메일 사용이 가능한지 검사
-Route::post('user/existData', ['as' => 'user.existData', 'uses' => 'User\UserController@existData']);
+Route::post('user/existData', ['as' => 'user.existData', 'uses' => 'UserController@existData']);
 // 처리 결과 메세지를 alert창으로 알려주는 페이지
-Route::get('message', ['as' => 'message', 'uses' => 'Message\MessageController@message']);
+Route::get('message', ['as' => 'message', 'uses' => 'MessageController@message']);
 // 처리 결과 메세지를 confirm창으로 알려주는 페이지
-Route::get('confirm', ['as' => 'confirm', 'uses' => 'Message\MessageController@confirm']);
+Route::get('confirm', ['as' => 'confirm', 'uses' => 'MessageController@confirm']);
 
 Route::group(['prefix' => 'bbs/{boardName}'], function () {
     // 글 목록 + 검색
-    Route::get('', ['as' => 'board.index', 'uses' => 'Board\WriteController@index'])
+    Route::get('', ['as' => 'board.index', 'uses' => 'WriteController@index'])
         ->middleware(['level.board:list_level', 'valid.board', 'cert:read'])
         ->where('boardName', '[a-zA-Z0-9_]+');
     // 글 읽기
-    Route::get('view/{writeId}', ['as' => 'board.view', 'uses' => 'Board\WriteController@view'])
+    Route::get('view/{writeId}', ['as' => 'board.view', 'uses' => 'WriteController@view'])
         ->middleware('level.board:read_level', 'valid.board', 'valid.write', 'cert:read', 'comment.view.parent', 'secret.board');
     // 글 읽기 중 링크 연결
-    Route::get('view/{writeId}/link/{linkNo}', ['as' => 'board.link', 'uses' => 'Board\WriteController@link'])
+    Route::get('view/{writeId}/link/{linkNo}', ['as' => 'board.link', 'uses' => 'WriteController@link'])
         ->middleware('level.board:link_level', 'valid.board', 'valid.write', 'cert:read');
     // 글 읽기 중 파일 다운로드
-    Route::get('view/{writeId}/download/{fileNo}', ['as' => 'board.download', 'uses' => 'Board\DownloadController@download'])
+    Route::get('view/{writeId}/download/{fileNo}', ['as' => 'board.download', 'uses' => 'DownloadController@download'])
         ->middleware('level.board:download_level', 'valid.board', 'valid.write', 'cert:read');
     // 글 읽기 중 추천/비추천
-    Route::post('view/{writeId}/{good}', ['as' => 'board.good', 'uses' => 'Board\WriteController@good'])
+    Route::post('view/{writeId}/{good}', ['as' => 'board.good', 'uses' => 'WriteController@good'])
         ->where('good', 'good|nogood')
         ->middleware('level.board:read_level', 'valid.board', 'valid.write', 'cert:read');
     // 글 쓰기
-    Route::get('create', ['as' => 'board.create', 'uses' => 'Board\WriteController@create'])
+    Route::get('create', ['as' => 'board.create', 'uses' => 'WriteController@create'])
         ->middleware('level.board:write_level', 'valid.board', 'cert:write');
-    Route::post('', ['as' => 'board.store', 'uses' => 'Board\WriteController@store'])
+    Route::post('', ['as' => 'board.store', 'uses' => 'WriteController@store'])
         ->middleware('level.board:write_level', 'valid.board', 'cert:write', 'valid.store.write', 'writable.reply');
     // 글 수정
-    Route::get('edit/{writeId}', ['as' => 'board.edit', 'uses' => 'Board\WriteController@edit'])
+    Route::get('edit/{writeId}', ['as' => 'board.edit', 'uses' => 'WriteController@edit'])
         ->middleware('level.board:update_level', 'valid.board', 'valid.write', 'cert:write', 'can.action.write.immediately:edit', 'updatable.deletable.write');
-    Route::put('update/{writeId}', ['as' => 'board.update', 'uses' => 'Board\WriteController@update'])
+    Route::put('update/{writeId}', ['as' => 'board.update', 'uses' => 'WriteController@update'])
         ->middleware('level.board:update_level', 'valid.board', 'valid.write', 'cert:write', 'valid.store.write');
     // 글 삭제
-    Route::get('delete/{writeId}', ['as' => 'board.destroy', 'uses' => 'Board\WriteController@destroy'])
+    Route::get('delete/{writeId}', ['as' => 'board.destroy', 'uses' => 'WriteController@destroy'])
         ->middleware('valid.board', 'valid.write', 'can.action.write.immediately:delete', 'updatable.deletable.write');
     // 답변 쓰기
-    Route::get('reply/{writeId}', ['as' => 'board.create.reply', 'uses' => 'Board\WriteController@createReply'])
+    Route::get('reply/{writeId}', ['as' => 'board.create.reply', 'uses' => 'WriteController@createReply'])
         ->middleware('level.board:reply_level', 'valid.board', 'valid.write', 'cert:write', 'writable.reply');
     // 댓글 쓰기
-    Route::post('comment/store', ['as' => 'board.comment.store', 'uses' => 'Board\CommentController@store'])
+    Route::post('comment/store', ['as' => 'board.comment.store', 'uses' => 'CommentController@store'])
         ->middleware('level.board:comment_level', 'writable.comment:create');
     // 댓글 수정
-    Route::put('comment/update', ['as' => 'board.comment.update', 'uses' => 'Board\CommentController@update'])
+    Route::put('comment/update', ['as' => 'board.comment.update', 'uses' => 'CommentController@update'])
         ->middleware('level.board:comment_level', 'writable.comment:update', 'updatable.deletable.write');
     // 댓글 삭제
-    Route::get('view/{writeId}/delete/{commentId}', ['as' => 'board.comment.destroy', 'uses' => 'Board\CommentController@destroy'])
+    Route::get('view/{writeId}/delete/{commentId}', ['as' => 'board.comment.destroy', 'uses' => 'CommentController@destroy'])
         ->middleware('level.board:comment_level', 'can.delete.comment.immediately', 'updatable.deletable.write');
 
     // 커뮤니티에서의 관리자 기능
@@ -332,77 +361,43 @@ Route::group(['prefix' => 'bbs/{boardName}'], function () {
     // 글 보기 : 복사, 이동, 삭제, 수정
     Route::group(['middleware' => ['auth', 'admin.board', 'valid.board']], function() {
         // 복사, 이동 폼
-        Route::get('move', ['as' => 'board.view.move', 'uses' => 'Board\MoveController@move']);
+        Route::get('move', ['as' => 'board.view.move', 'uses' => 'MoveController@move']);
         // 선택 복사, 이동 폼
-        Route::post('move', ['as' => 'board.list.move', 'uses' => 'Board\MoveController@move']);
+        Route::post('move', ['as' => 'board.list.move', 'uses' => 'MoveController@move']);
         // 이동, 복사 수행
-        Route::post('move/update', ['as' => 'board.moveUpdate', 'uses' => 'Board\MoveController@moveUpdate']);
+        Route::post('move/update', ['as' => 'board.moveUpdate', 'uses' => 'MoveController@moveUpdate']);
         // 선택 삭제
-        Route::delete('delete/ids/{writeId}', ['as' => 'board.delete.ids', 'uses' => 'Board\WriteController@selectedDelete'])
+        Route::delete('delete/ids/{writeId}', ['as' => 'board.delete.ids', 'uses' => 'WriteController@selectedDelete'])
             ->middleware('valid.write');
     });
 
     // RSS
-    Route::get('rss', ['as' => 'rss', 'uses' => 'Board\WriteController@rss'])
+    Route::get('rss', ['as' => 'rss', 'uses' => 'WriteController@rss'])
         ->middleware('rss');
 });
 // 비밀 글, 댓글 읽기 전, 댓글삭제 전 비밀번호 검사
-Route::get('password/type/{type}', ['as' => 'board.password.check', 'uses' => 'Board\PasswordController@checkPassword']);
-Route::post('password/compare', ['as' => 'board.password.compare', 'uses' => 'Board\PasswordController@comparePassword']);
-
-// 스크랩
-Route::get('scrap/{scrap}/delete', ['as' => 'scrap.destroy', 'uses' => 'Board\ScrapController@destroy'])
-    ->middleware('auth');
-Route::post('scrap', ['as' => 'scrap.store', 'uses' => 'Board\ScrapController@store'])
-    ->middleware('level.board:comment_level', 'writable.comment:create');
-Route::resource('scrap', 'Board\ScrapController', [
-        'only' => [
-            'index', 'create', 'store'
-        ],
-        'names' => [
-            'index' => 'scrap.index',
-            'create' => 'scrap.create',
-            'store' => 'scrap.store',
-        ],
-        'middleware' => [
-            'auth',
-        ]
-]);
+Route::get('password/type/{type}', ['as' => 'board.password.check', 'uses' => 'PasswordController@checkPassword']);
+Route::post('password/compare', ['as' => 'board.password.compare', 'uses' => 'PasswordController@comparePassword']);
 
 // 새글
-Route::get('new', ['as' => 'new.index', 'uses' => 'BoardNew\BoardNewController@index']);
-Route::post('new', ['as' => 'new.destroy', 'uses' => 'BoardNew\BoardNewController@destroy'])
-    ->middleware('auth');
+Route::get('new', ['as' => 'new.index', 'uses' => 'BoardNewController@index']);
+Route::post('new', ['as' => 'new.destroy', 'uses' => 'BoardNewController@destroy'])
+    ->middleware('super');
 
 // 이미지 관련
 Route::group(['prefix' => 'image'], function () {
     // 원본 이미지 보기
-    Route::get('original/{boardId?}', ['as' => 'image.original', 'uses' => 'Board\ImageController@viewOriginal']);
+    Route::get('original/{boardId?}', ['as' => 'image.original', 'uses' => 'ImageController@viewOriginal']);
     // 에디터에서 이미지 업로드 팝업 페이지
-    Route::get('upload', ['as' => 'image.form', 'uses' => 'Board\ImageController@popup']);
+    Route::get('upload', ['as' => 'image.form', 'uses' => 'ImageController@popup']);
     // 에디터에서 이미지 업로드 실행
-    Route::post('upload', ['as' => 'image.upload', 'uses' => 'Board\ImageController@uploadImage']);
+    Route::post('upload', ['as' => 'image.upload', 'uses' => 'ImageController@uploadImage']);
 });
 
-// 임시 저장
-Route::group(['middleware' => 'valid.user'], function () {
-    Route::resource('autosave', 'Board\AutosaveController', [
-        'only' => [
-            'index', 'show', 'store', 'destroy'
-        ],
-        'names' => [
-            'index' => 'autosave.index',
-            'show' => 'autosave.show',
-            'store' => 'autosave.store',
-            'destroy' => 'autosave.destroy'
-        ]
-    ]);
-});
-
-// ajax api
-Route::post('ajax/filter/board', ['as' => 'ajax.filter.board', 'uses' => 'Board\FilterController@boardFilter']);
-Route::post('ajax/filter/user', ['as' => 'ajax.filter.user', 'uses' => 'Board\FilterController@userFilter']);
+// filter
+Route::post('ajax/filter/board', ['as' => 'ajax.filter.board', 'uses' => 'FilterController@boardFilter']);
+Route::post('ajax/filter/user', ['as' => 'ajax.filter.user', 'uses' => 'FilterController@userFilter']);
 
 // KCB 본인 확인 서비스
-Route::get('cert/kcb/hpcert1', ['as' => 'cert.kcb.hp1', 'uses' => 'User\CertController@kcbHpCert1']);
-Route::post('cert/kcb/hpcert2', ['as' => 'cert.kcb.hp2', 'uses' => 'User\CertController@kcbHpCert2']);
+Route::get('cert/kcb/hpcert1', ['as' => 'cert.kcb.hp1', 'uses' => 'CertController@kcbHpCert1']);
+Route::post('cert/kcb/hpcert2', ['as' => 'cert.kcb.hp2', 'uses' => 'CertController@kcbHpCert2']);

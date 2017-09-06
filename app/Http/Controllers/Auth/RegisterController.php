@@ -11,7 +11,7 @@ use Auth;
 use Cache;
 use App\User;
 use App\Cert;
-use App\ReCaptcha;
+use App\Services\ReCaptcha;
 use App\Admin\Config;
 
 class RegisterController extends Controller
@@ -65,7 +65,7 @@ class RegisterController extends Controller
         $rulePassword = $adminConfig->getPasswordRuleByConfigPolicy();
         $rules = array_add($this->userModel->rulesRegister, 'password', $rulePassword);
         $messages = $this->userModel->messages;
-        
+
         $this->validate($request, $rules, $messages);
 
         if(cache('config.cert')->certUse && cache('config.cert')->certReq) {

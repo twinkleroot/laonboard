@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\BoardNew;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -20,7 +20,7 @@ class BoardNewController extends Controller
     {
         // 기본환경설정에서 최근 게시물 설정일 보다 더 지난 글은 삭제한다.
         $this->boardNew->deleteOldWrites();
-        
+
         $params = $this->boardNew->getIndexParams($request);
         $skin = Cache::get('config.homepage')->newSkin ? : 'default';
 

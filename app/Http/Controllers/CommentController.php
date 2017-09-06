@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Board;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -8,7 +8,7 @@ use App\Notification;
 use App\Write;
 use App\Board;
 use App\Comment;
-use App\ReCaptcha;
+use App\Services\ReCaptcha;
 
 class CommentController extends Controller
 {

@@ -146,7 +146,7 @@
         <div class="container">
             <div class="link">
                 @foreach(App\Content::all() as $content)
-                    <a href="{{ route('contents.show', $content->content_id) }}">{{ $content->subject }}</a>
+                    <a href="{{ route('content.show', $content->content_id) }}">{{ $content->subject }}</a>
                 @endforeach
             </div>
             <div class="copy">

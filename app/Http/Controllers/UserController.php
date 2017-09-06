@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -10,7 +10,7 @@ use Cache;
 use Exception;
 use Socialite;
 use Carbon\Carbon;
-use App\ReCaptcha;
+use App\Services\ReCaptcha;
 use App\User;
 use App\Point;
 use App\Admin\Config;

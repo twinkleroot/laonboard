@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth\Traits;
+namespace App\Auth\Traits;
 
 use Illuminate\Http\Request;
 use Illuminate\Mail\Message;
@@ -35,7 +35,7 @@ trait ResetsPasswords
     {
         $this->validate($request, ['email' => 'required|email']);
 
-        $response = Password::sendResetLink($request->only('email'), function (Message $message) {
+        $response = Password::sendResetLink($request->all('email'), function (Message $message) {
             $message->subject($this->getEmailSubject());
         });
 
@@ -88,7 +88,7 @@ trait ResetsPasswords
             'password' => 'required|confirmed|min:6',
         ]);
 
-        $credentials = $request->only(
+        $credentials = $request->all(
             'email', 'password', 'password_confirmation', 'token'
         );
 
@@ -101,7 +101,7 @@ trait ResetsPasswords
                 return redirect($this->redirectPath())->with('status', trans($response));
             default:
                 return redirect()->back()
-                            ->withInput($request->only('email'))
+                            ->withInput($request->all('email'))
                             ->withErrors(['email' => trans($response)]);
         }
     }
