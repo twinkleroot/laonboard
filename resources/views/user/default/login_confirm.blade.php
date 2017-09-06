@@ -6,7 +6,7 @@
             if(confirm("{{ $confirm }}")) {
                 history.back();
             } else {
-                var redirect = "{{ isset($redirect) ? $redirect : '' }}";
+                var redirect = "{{ $redirect or '' }}";
                 location.href = redirect;
             }
         });

@@ -5,10 +5,10 @@
         $(document).ready(function(){
             alert("{!! $message !!}");
 
-            var popup = "{{ isset($popup) ? $popup : 0 }}";
-            var reload = "{{ isset($reload) ? $reload : 0 }}";
-            var redirect = "{{ isset($redirect) ? $redirect : '' }}";
-            var openerRedirect = "{{ isset($openerRedirect) ? $openerRedirect : '' }}";
+            var popup = "{{ $popup or 0 }}";
+            var reload = "{{ $reload or 0 }}";
+            var redirect = "{{ $redirect or '' }}";
+            var openerRedirect = "{{ $openerRedirect or '' }}";
 
             // 팝업창에서 처리하는 경우
             if(reload == 1) {

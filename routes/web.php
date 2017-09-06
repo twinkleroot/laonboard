@@ -15,7 +15,9 @@
 // 기본 홈
 Route::get('/', ['as' => 'home', 'uses' => 'MainController@index'] );
 // 로그인 후 리다이렉트
-Route::get('/home', ['as' => 'home', 'uses' => 'MainController@index'] );
+Route::get('/home', function() {
+    return redirect(route('home'));
+});
 // 게시판 그룹별 메인
 Route::get('/group/{group}', ['as' => 'group', 'uses' => 'MainController@groupIndex'] );
 // 전체 검색 결과

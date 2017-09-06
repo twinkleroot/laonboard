@@ -85,7 +85,7 @@
                 <select class="form-control" id="ca_name" name="ca_name" required>
                     <option value>분류</option>
                     @foreach($categories as $category)
-                        <option value="{{ $category }}" @if( ($type != 'create' && $category == $write->ca_name) || ($type == 'create' && $category == $currenctCategory ) ) selected @endif>
+                        <option value="{{ $category }}" @if( ($type != 'create' && $category == $write->ca_name) || ($type == 'create' && ($category == $currenctCategory || $category == old('ca_name')) ) ) selected @endif>
                             {{ $category }}
                         </option>
                     @endforeach
@@ -107,7 +107,7 @@
         <div class="row">
             <div class="form-group mb10 col-xs-8 @if($errors->get('subject'))has-error @endif">
                 <label for="" class="sr-only">게시물 작성</label>
-                <input type="text" class="form-control" id="subject" name="subject" placeholder="게시물 제목" @if($type != 'create') value="{{ $write->subject }}" @endif required>
+                <input type="text" class="form-control" id="subject" name="subject" placeholder="게시물 제목" @if($type == 'create') value="{{ old('subject') }}"@else value="{{ $write->subject }}" @endif required>
                 @foreach ($errors->get('subject') as $message)
                 <span class="help-block">
                     <strong>{{ $message }}</strong>

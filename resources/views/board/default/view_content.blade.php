@@ -233,7 +233,7 @@
                         @component('board.sideview', ['board' => $board, 'id' => $comment->user_id_hashkey, 'name' => $comment->name, 'email' => $comment->email, 'category' => isset($currenctCategory) ? $currenctCategory : ''])
                         @endcomponent
                     @else
-                        <li><a href="/bbs/{{ $board->table_name }}?kind=name&amp;keyword={{ $comment->name }}&amp;category={{ isset($currenctCategory) ? $currenctCategory : '' }}">이름으로 검색</a></li>
+                        <li><a href="/bbs/{{ $board->table_name }}?kind=name&amp;keyword={{ $comment->name }}&amp;category={{  $currenctCategory or '' }}">이름으로 검색</a></li>
                     @endif
                     @if($comment->user_level)
                         <li><a href="{{ route('new.index') }}?nick={{ $comment->name }}">전체게시물</a></li>
@@ -246,7 +246,7 @@
                         @component('board.sideview', ['board' => $board, 'id' => $comment->user_id_hashkey, 'name' => $comment->name, 'email' => $comment->email, 'category' => isset($currenctCategory) ? $currenctCategory : ''])
                         @endcomponent
                     @else
-                        <li><a href="/bbs/{{ $board->table_name }}?kind=name&amp;keyword={{ $comment->name }}&amp;category={{ isset($currenctCategory) ? $currenctCategory : '' }}">이름으로 검색</a></li>
+                        <li><a href="/bbs/{{ $board->table_name }}?kind=name&amp;keyword={{ $comment->name }}&amp;category={{ $currenctCategory or '' }}">이름으로 검색</a></li>
                     @endif
                     @if($comment->user_level)
                         <li><a href="{{ route('new.index') }}?nick={{ $comment->name }}">전체게시물</a></li>
