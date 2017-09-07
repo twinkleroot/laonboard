@@ -56,7 +56,7 @@
             <tr>
                 <td class="td_nick">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $memo->nick }}</a>
-                    @component('board.sideview', ['type' => 'other', 'id' => $memo->user_id_hashkey, 'name' => $memo->nick, 'email' => $memo->email])
+                    @component('board.sideview', ['sideview' => 'other', 'id' => $memo->user_id_hashkey, 'name' => $memo->nick, 'email' => $memo->email])
                     @endcomponent
                 </td>
                 <td class="td_datetime"><a href="{{ route('memo.show', $memo->id) }}?kind={{ $kind }}">{{ $memo->send_timestamp }}</a></td>

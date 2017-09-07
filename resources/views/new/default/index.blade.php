@@ -86,7 +86,7 @@
                         @endif
                         <span class="tt_nick">{{ $boardNew->name }}</span> <!-- 닉네임 -->
                     </a>
-                    @component('board.sideview', ['type' => 'other', 'id' => $boardNew->user_id_hashkey, 'name' => $boardNew->name, 'email' => $boardNew->user_email])
+                    @component('board.sideview', ['sideview' => 'other', 'id' => $boardNew->user_id_hashkey, 'name' => $boardNew->name, 'email' => $boardNew->user_email])
                     @endcomponent
                         {{-- <li><a href="{{ route('new.index') }}?nick={{ $boardNew->name }}">전체게시물</a></li> --}}
                     @endunless
