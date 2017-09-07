@@ -25,7 +25,7 @@
         ]) !!};
 
         function alertclose() {
-            document.getElementById("adm_save").style.display = "none";
+            $("#adm_save").remove();
         }
 
         $(document).ready(function($){

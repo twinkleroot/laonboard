@@ -125,7 +125,7 @@
                                 </select>
                             </td> --}}
                             <td class="td_mngsmall">
-                                <a href="{{ route('admin.groups.edit', $group->id). '?'. Request::getQueryString() }}">수정</a>
+                                <a href="{{ route('admin.groups.edit', $group->group_id). '?'. Request::getQueryString() }}">수정</a>
                             </td>
                         </tr>
                     @empty

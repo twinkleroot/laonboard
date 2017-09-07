@@ -7,11 +7,6 @@
 @section('content')
 <form class="form-horizontal" role="form" method="POST" action="{{ $action }}">
 {{ csrf_field() }}
-@if(Session::has('message'))
-<div class="alert alert-info">
-    {{ Session::get('message') }}
-</div>
-@endif
 <div class="body-head">
     <div class="pull-left">
         <h3>게시판그룹{{ $type == 'edit' ? '수정' : '생성' }}</h3>
@@ -33,6 +28,14 @@
     @if ($errors->any())
     <div id="adm_save">
         <span class="adm_save_txt">{{ $errors->first() }}</span>
+        <button onclick="alertclose()" class="adm_alert_close">
+            <i class="fa fa-times"></i>
+        </button>
+    </div>
+    @endif
+    @if(Session::has('message'))
+    <div id="adm_save">
+        <span class="adm_save_txt">{{ Session::get('message') }}</span>
         <button onclick="alertclose()" class="adm_alert_close">
             <i class="fa fa-times"></i>
         </button>

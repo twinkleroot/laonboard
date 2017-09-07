@@ -81,7 +81,7 @@ class GroupsController extends Controller
      */
     public function edit($id)
     {
-        if (auth()->user()->cant('update', $this->groupModel->find($id))) {
+        if (auth()->user()->cant('update', $this->groupModel->where('group_id', $id)->first())) {
             abort(403, '해당 게시판 그룹 수정에 대한 권한이 없습니다.');
         }
 
@@ -120,7 +120,7 @@ class GroupsController extends Controller
             abort('500', '게시판 그룹 정보의 수정에 실패하였습니다.');
         }
 
-        return redirect(route('admin.groups.index'))->with('message', $subject . '의 게시판 그룹 정보가 수정되었습니다.');
+        return redirect(route('admin.groups.edit', $beforeGroupInfo->group_id))->with('message', $subject . '의 게시판 그룹 정보가 수정되었습니다.');
     }
 
     // 선택 수정 수행
