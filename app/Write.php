@@ -692,12 +692,14 @@ class Write extends Model
     public function getCreateParams($request)
     {
         $categories = [];
-        if( !is_null($this->board->category_list) ) {
+        
+        if($this->board->category_list) {
             $categories = explode('|', $this->board->category_list);
             $categories = array_map('trim', $categories);
         }
 
         $autosaveCount = 0;
+
         if(auth()->user()) {
             $autosaveCount = Autosave::getAutosaveCount();
         }

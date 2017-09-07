@@ -89,7 +89,7 @@
                             {{ $category }}
                         </option>
                     @endforeach
-                    @if(auth()->user() && auth()->user()->isBoardAdmin($board))
+                    @if(!is_int(array_search('공지', $categories)) && auth()->user() && auth()->user()->isBoardAdmin($board))
                         <option value="공지">공지</option>
                     @endif
                 </select>
