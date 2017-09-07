@@ -9,7 +9,7 @@
     @yield('fisrt_include_css')
     <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('font-awesome/css/font-awesome.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/common.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/style.css') }}">
     @yield('include_css')
     <script>
         window.Laravel = {!! json_encode([
