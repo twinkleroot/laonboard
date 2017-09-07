@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Storage;
 use File;
-use App\Board;
 
 class BoardFile extends Model
 {

@@ -4,8 +4,6 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
-use App\User;
-use App\Write;
 use Cache;
 use DB;
 use Exception;

@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\User;
 use Cache;
 use Mail;
 use App\Mail\WriteNotification;

@@ -4,7 +4,6 @@ namespace App\Admin;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use App\Admin\Group;
 use App\Write;
 use DB;
 use Cache;

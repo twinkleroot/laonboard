@@ -4,10 +4,6 @@ namespace App\Admin;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use App\Admin\Point;
-use App\Admin\Group;
-use App\Admin\ManageAuth;
-use App\Admin\GroupUser;
 use App\SocialLogin;
 use App\Write;
 use App\Memo;

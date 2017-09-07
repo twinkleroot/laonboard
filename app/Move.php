@@ -6,10 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use DB;
 use File;
-use App\BoardFile;
 use Carbon\Carbon;
-use App\Board;
-use App\Write;
 
 class Move
 {

@@ -4,19 +4,12 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\SocialLogin;
-use App\Point;
-use App\Group;
-use App\Write;
 use Auth;
 use Cache;
 use Mail;
 use File;
 use Exception;
-use App\Notification;
-use App\GroupUser;
 use App\Mail\FormMailSend;
-use App\Cert;
 use App\Services\UserSingleton;
 use Carbon\Carbon;
 

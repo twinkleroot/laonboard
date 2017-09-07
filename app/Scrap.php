@@ -7,9 +7,6 @@ use DB;
 use Cache;
 use Exception;
 use Carbon\Carbon;
-use App\Comment;
-use App\Board;
-use App\Notification;
 
 class Scrap extends Model
 {

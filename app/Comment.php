@@ -7,12 +7,6 @@ use Illuminate\Http\Request;
 use Exception;
 use File;
 use Carbon\Carbon;
-use App\User;
-use App\Board;
-use App\Point;
-use App\Group;
-use App\Write;
-use App\BoardNew;
 
 class Comment
 {

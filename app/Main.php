@@ -2,8 +2,6 @@
 
 namespace App;
 
-use App\Board;
-use App\Group;
 use DB;
 use Cache;
 use Carbon\Carbon;

@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Cache;
 use DB;
 use Carbon\Carbon;
-use App\User;
-use App\Point;
 
 class Memo extends Model
 {

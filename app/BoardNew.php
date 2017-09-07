@@ -7,11 +7,6 @@ use Carbon\Carbon;
 use DB;
 use Cache;
 use File;
-use App\Write;
-use App\Comment;
-use App\Point;
-use App\Board;
-use App\BoardFile;
 
 class BoardNew extends Model
 {

@@ -7,7 +7,6 @@ use DB;
 use Cache;
 use Carbon\Carbon;
 use App\User;
-use App\Admin\Board;
 
 class Group extends Model
 {

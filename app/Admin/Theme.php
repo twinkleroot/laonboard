@@ -2,7 +2,6 @@
 
 namespace App\Admin;
 
-use App\Admin\Config;
 use App\Board;
 use App\Content;
 use File;

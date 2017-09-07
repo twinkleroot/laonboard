@@ -10,15 +10,8 @@ use File;
 use Cache;
 use Carbon\Carbon;
 use Exception;
-use App\User;
-use App\Board;
-use App\Point;
-use App\Scrap;
 use App\Services\CustomPaginator;
 use App\Services\WriteSingleton;
-use App\Autosave;
-use App\BoardNew;
-use App\BoardFile;
 use App\Admin\Popular;
 
 
@@ -692,7 +685,7 @@ class Write extends Model
     public function getCreateParams($request)
     {
         $categories = [];
-        
+
         if($this->board->category_list) {
             $categories = explode('|', $this->board->category_list);
             $categories = array_map('trim', $categories);

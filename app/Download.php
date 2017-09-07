@@ -2,9 +2,6 @@
 
 namespace App;
 
-use App\BoardFile;
-use App\Write;
-
 class Download
 {
     // 다운로드시 처리할 내용
