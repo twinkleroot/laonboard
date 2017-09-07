@@ -72,7 +72,7 @@ class ThemePreviewController extends Controller
         // 테마명 : 테마명에 해당하는 스킨이 존재하지 않으면 기본으로 설정
         $themeName = view()->exists("board.$themeName.view") ? $themeName : 'default';
         // 파라미터 배열 결합
-        $params = array_collapse([$preview, $view, $comments, $prevAndNext, ['themeName' => $themeName] ]);
+        $params = array_collapse([$preview, $view, $comments, $prevAndNext, ['themeName' => $themeName, 'currenctCategory' => ''] ]);
 
         return view('admin.themes.preview', $params);
     }
