@@ -58,7 +58,7 @@
                     <div @if($errors->get('group_id')) class="has-error" @endif>
                         <input type="text" class="form-control form_input required" name="group_id" maxlength="10" @if($type == 'edit') value="{{ $group->group_id }}" readonly @endif />
                         @if($type == 'edit')
-                        <a class="btn btn-sir" href="{{ route('group', $group->id) }}">게시판그룹 바로가기</a>
+                        <a class="btn btn-sir" href="{{ route('group', $group->group_id) }}">게시판그룹 바로가기</a>
                         <span class="help-block">영문자, 숫자, _ 만 가능 (공백없이)</span>
                         @endif
                         @foreach ($errors->get('group_id') as $message)

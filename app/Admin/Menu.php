@@ -59,13 +59,13 @@ class Menu extends Model
         $results = null;
         switch ($type) {
             case 'group':
-                $results = Group::select('id', 'group_id', 'subject')->orderBy('order', 'desc')->orderBy('group_id', 'desc')->get();
+                $results = Group::orderBy('order', 'desc')->orderBy('group_id', 'desc')->get();
                 foreach($results as $result) {
                     $result = $this->cookingSubject($result, $result->id);
                 }
                 break;
             case 'board':
-                $results = Board::select('id', 'subject', 'table_name')->orderBy('order', 'desc')->orderBy('id', 'desc')->get();
+                $results = Board::orderBy('order', 'desc')->orderBy('id', 'desc')->get();
                 foreach($results as $result) {
                     $result = $this->cookingSubject($result, $result->table_name);
                 }

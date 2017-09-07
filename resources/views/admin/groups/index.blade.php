@@ -96,7 +96,7 @@
                                 <input type="checkbox" name="chkId[]" class="groupId" value='{{ $group->id }}' />
                             </td>
                             <td class="td_group">
-                                <a href="{{ route('group', $group->id) }}">{{ $group->group_id }}</a>
+                                <a href="{{ route('group', $group->group_id) }}">{{ $group->group_id }}</a>
                             </td>
                             <td>
                                 <input type="text" id="subject_{{ $group->id }}" class="form-control" value="{{ $group->subject }}" />

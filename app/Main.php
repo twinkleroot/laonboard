@@ -37,10 +37,11 @@ class Main
     public function getGroupContents($groupId, $skin, $default)
     {
         $skin = view()->exists("latest.$skin.index") ? $skin : $default;
+        $group = Group::where('group_id', $groupId)->first();
 
         $boards =
             Board::where([
-                'group_id' => $groupId,
+                'group_id' => $group->id,
                 'use_cert' => 'not-use',
             ])
             // ->where('device', '<>', 'mobile')
@@ -49,7 +50,7 @@ class Main
             ->get();
 
         $groupList = $this->getLatestWrites($boards, 5, 70);
-        $group = Group::find($groupId);
+
 
         return [
             'boardList' => $groupList,
