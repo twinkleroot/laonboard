@@ -174,7 +174,7 @@ class Write extends Model
         // 2. 검색일 경우 검색 키워드 색깔 표시를 다르게 한다.
         // 3. 게시판 설정에 따라 목록에서 보이는 제목을 표시하고 나머지는 ...로 표시한다.
         foreach($writes as $write) {
-            $write->level = User::getUser($write->user_id)->level;
+            $write->level = User::getUser($write->user_id) ? User::getUser($write->user_id)->level : 0;
             $write->user_id = $write->user_id_hashkey;     // 라라벨 기본 지원 encrypt
             $write->subject = searchKeyword($keyword, $write->subject);
             $write->subject = subjectLength($write->subject, $this->board->subject_len);

@@ -33,6 +33,7 @@ class Comment
             $comment->isReply = $editable['isReply'];
             $comment->isEdit = $editable['isEdit'];
             $comment->isDelete = $editable['isDelete'];
+            $comment->level = $comment->user_level;
 
             // 검색어 색깔 다르게 표시
             if($request->filled('keyword')) {

@@ -1,7 +1,6 @@
 @php
     $user = isset($user) ? $user : auth()->user();
 @endphp
-<!-- 게시글 조회 -->
 <div class="bd_rd_head">
     <h1>{{ $write->subject }}</h1>
     <ul class="bd_rd_info">
@@ -13,20 +12,20 @@
         @auth
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                 @if(cache('config.join')->useMemberIcon && $write->iconPath)
-                <span class="tt_icon"><img src="{{ $write->iconPath }}" /></span> <!-- 아이콘 -->
+                <span class="tt_icon"><img src="{{ $write->iconPath }}" /></span>
                 @endif
-                <span class="tt_nick">{{ $write->name }}</span> <!-- 닉네임 -->
+                <span class="tt_nick">{{ $write->name }}</span>
             </a>
-            @component('board.sideview', ['type' => 'board', 'board' => $board, 'write' => $write, 'category' => $currenctCategory])
+            @component('board.sideview', ['sideview' => 'board', 'board' => $board, 'write' => $write, 'category' => $currenctCategory])
             @endcomponent
         @else
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
-            @component('board.sideview', ['type' => 'board', 'board' => $board, 'write' => $write, 'category' => $currenctCategory])
+            @component('board.sideview', ['sideview' => 'board', 'board' => $board, 'write' => $write, 'category' => $currenctCategory])
             @endcomponent
         @endauth
         @else
             @if(cache('config.join')->useMemberIcon && $write->iconPath)
-            <span class="tt_icon"><img src="{{ $write->iconPath }}" /></span> <!-- 아이콘 -->
+            <span class="tt_icon"><img src="{{ $write->iconPath }}" /></span>
             @endif
             <span class="tt_nick">{{ $write->name }}</span>
         @endif
@@ -71,47 +70,46 @@
 <div class="bd_rd">
 @if($write->link1 || $write->link2)
     @for($i=1; $i<=2; $i++)
-        @if($write['link'.$i])
-            <div class="bd_link">
-                <i class="fa fa-link"></i>
-                <a href="/bbs/{{ $board->table_name }}/view/{{ $write->id }}/link/{{ $i }}" target="_blank">{{ $write['link'. $i] }}</a>
-                <span class="movecount">(연결된 횟수: {{ $write['link'. $i. '_hit'] }}회)</span>
-            </div>
-        @endif
+    @if($write['link'.$i])
+    <div class="bd_link">
+        <i class="fa fa-link"></i>
+        <a href="/bbs/{{ $board->table_name }}/view/{{ $write->id }}/link/{{ $i }}" target="_blank">{{ $write['link'. $i] }}</a>
+        <span class="movecount">(연결된 횟수: {{ $write['link'. $i. '_hit'] }}회)</span>
+    </div>
+    @endif
     @endfor
 @endif
 
-@if(count($imgFiles) > 0)
-    @foreach($imgFiles as $imgFile)
-        @php
-            $divImage1 = explode('.', $imgFile['name']);
-            $divImage2 = explode('_', $divImage1[0]);
-            $realImageName = str_replace("thumb-", "", $divImage2[0]). '.'. last($divImage1);
-        @endphp
-        <div class="bd_rd">
-          <a href="{{ route('image.original')}}/{{ $board->table_name }}?type=attach&amp;imageName={{ $realImageName }}"
-             class="viewOriginalImage" width="{{ $imgFile[0] }}" height="{{ $imgFile[1] }}" target="viewImage">
-                <img src="/storage/{{ $board->table_name. '/'. $imgFile['name'] }}" />
-          </a>
-        </div>
-    @endforeach
-@endif
+@forelse($imgFiles as $imgFile)
+    @php
+        $divImage1 = explode('.', $imgFile['name']);
+        $divImage2 = explode('_', $divImage1[0]);
+        $realImageName = str_replace("thumb-", "", $divImage2[0]). '.'. last($divImage1);
+    @endphp
+    <div class="bd_rd">
+      <a href="{{ route('image.original')}}/{{ $board->table_name }}?type=attach&amp;imageName={{ $realImageName }}"
+         class="viewOriginalImage" width="{{ $imgFile[0] }}" height="{{ $imgFile[1] }}" target="viewImage">
+            <img src="/storage/{{ $board->table_name. '/'. $imgFile['name'] }}" />
+      </a>
+    </div>
+@empty
+@endforelse
 
-<p>{!! $write->content !!}</p>
+    <p>{!! $write->content !!}</p>
 
-@if($write->file > 0)
-        <div class="bd_file">
-            <i class="fa fa-paperclip"></i>
-            <span class="bd_title">첨부된 파일 {{ count($boardFiles) }}개</span>
-            <ul class="bd_file_list" role="menu">
-                @foreach($boardFiles as $file)
-                <li>
-                    <i class="fa fa-download"></i><a href="/bbs/{{ $board->table_name }}/view/{{ $write->id }}/download/{{ $file->board_file_no }}">{{ $file->source }}</a>
-                    <span class="downcount">(다운로드 횟수: {{ $file->download }}회 / DATE : {{ $file->created_at }}) </span>
-                </li>
-                @endforeach
-            </ul>
-        </div>
+@if(count($boardFiles) > 0)
+    <div class="bd_file">
+        <i class="fa fa-paperclip"></i>
+        <span class="bd_title">첨부된 파일 {{ count($boardFiles) }}개</span>
+        <ul class="bd_file_list" role="menu">
+            @foreach($boardFiles as $file)
+            <li>
+                <i class="fa fa-download"></i><a href="/bbs/{{ $board->table_name }}/view/{{ $write->id }}/download/{{ $file->board_file_no }}">{{ $file->source }}</a>
+                <span class="downcount">(다운로드 횟수: {{ $file->download }}회 / DATE : {{ $file->created_at }}) </span>
+            </li>
+            @endforeach
+        </ul>
+    </div>
 @endif
 @if($board->use_signature && $signature)
     <div class="bd_sign">
@@ -195,9 +193,8 @@
     <input type="hidden" name="requestUri" id="requestUri" value="{{ $requestUri }}"/>
     @endif
     <input type="hidden" name="_method" id="_method" />
-@if(count($comments) > 0)
 <section id="bd_rd_cmt">
-    @foreach($comments as $comment)
+@forelse($comments as $comment)
     <article class="cmt" id="comment{{ $comment->id }}">
         <div class="cmt_box @if(strlen($comment->comment_reply)>0) cmt_reply" style="padding-left: calc(25px * {{ strlen($comment->comment_reply) }}); @endif">
             <ul class="bd_rd_cmt_info">
@@ -205,37 +202,21 @@
                 @unless($comment->iconPath)
                     <i class="fa fa-user"></i>
                 @endunless
-                @if($user && $board->use_sideview)
+                @if($board->use_sideview)
+                @auth
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                         @if(cache('config.join')->useMemberIcon && $comment->iconPath)
                         <span class="tt_icon"><img src="{{ $comment->iconPath }}" /></span> <!-- 아이콘 -->
                         @endif
                         <span class="tt_nick">{{ $comment->name }}</span> <!-- 닉네임 -->
                     </a>
-                    <ul class="dropdown-menu" role="menu">
-                    @if($comment->user_level)
-                        @component('board.sideview', ['board' => $board, 'id' => $comment->user_id_hashkey, 'name' => $comment->name, 'email' => $comment->email, 'category' => isset($currenctCategory) ? $currenctCategory : ''])
-                        @endcomponent
-                    @else
-                        <li><a href="/bbs/{{ $board->table_name }}?kind=name&amp;keyword={{ $comment->name }}&amp;category={{  $currenctCategory or '' }}">이름으로 검색</a></li>
-                    @endif
-                    @if($comment->user_level)
-                        <li><a href="{{ route('new.index') }}?nick={{ $comment->name }}">전체게시물</a></li>
-                    @endif
-                    </ul>
-                @elseif(auth()->guest() && $board->use_sideview)
+                    @component('board.sideview', ['sideview' => 'board', 'board' => $board, 'write' => $comment, 'category' => $currenctCategory or ''])
+                    @endcomponent
+                @else
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $comment->name }}</a>
-                    <ul class="dropdown-menu" role="menu">
-                    @if($comment->user_level)
-                        @component('board.sideview', ['board' => $board, 'id' => $comment->user_id_hashkey, 'name' => $comment->name, 'email' => $comment->email, 'category' => isset($currenctCategory) ? $currenctCategory : ''])
-                        @endcomponent
-                    @else
-                        <li><a href="/bbs/{{ $board->table_name }}?kind=name&amp;keyword={{ $comment->name }}&amp;category={{ $currenctCategory or '' }}">이름으로 검색</a></li>
-                    @endif
-                    @if($comment->user_level)
-                        <li><a href="{{ route('new.index') }}?nick={{ $comment->name }}">전체게시물</a></li>
-                    @endif
-                    </ul>
+                    @component('board.sideview', ['sideview' => 'board', 'board' => $board, 'write' => $comment, 'category' => $currenctCategory or ''])
+                    @endcomponent
+                @endauth
                 @else
                     @if(cache('config.join')->useMemberIcon && $comment->iconPath)
                     <span class="tt_icon"><img src="{{ $comment->iconPath }}" /></span> <!-- 아이콘 -->
@@ -276,16 +257,12 @@
             <span id="edit_{{ $comment->id }}"></span><!-- 수정 -->
         </div>
     </article>
-    @endforeach
-</section>
-@else
-
-<section id="bd_rd_cmt">
+@empty
     <article class="cmt">
         <p>등록된 댓글이 없습니다.</p>
     </article>
+@endforelse
 </section>
-@endif
 
 <aside id="commentWriteArea">
     <article id="comment_box">

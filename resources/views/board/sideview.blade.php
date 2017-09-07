@@ -1,5 +1,5 @@
     <ul class="dropdown-menu" role="menu">
-@if($type == 'board')
+@if($sideview == 'board')
     @if($write->user_id && $write->level)
         <li><a href="{{ route('memo.create') }}?to={{ $write->user_id }}" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지보내기</a></li>
         <li><a href="{{ route('user.mail.form')}}?to={{ $write->user_id }}&amp;name={{ $write->name }}&amp;email={{ encrypt($write->email) }}" class="winFormMail" target="_blank" onclick="winFormMail(this.href); return false;">메일보내기</a></li>
@@ -12,7 +12,7 @@
         <li><a href="/bbs/{{ $board->table_name }}?kind=user_id&amp;keyword={{ $write->user_id }}&amp;category={{ $category }}">이 회원이 작성한 글</a></li>
         @endif
     @else
-        <li><a href="/bbs/{{ $board->table_name }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
+        <li><a href="/bbs/{{ $board->table_name }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $category }}">이름으로 검색</a></li>
     @endif
     @if($write->user_id && $write->level)
         <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>

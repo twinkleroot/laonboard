@@ -139,11 +139,11 @@
                         @endif
                         <span class="tt_nick">{{ $write->name }}</span> <!-- 닉네임 -->
                     </a>
-                    @component('board.sideview', ['type' => 'board', 'board' => $board, 'write' => $write, 'category' => $currenctCategory])
+                    @component('board.sideview', ['sideview' => 'board', 'board' => $board, 'write' => $write, 'category' => $currenctCategory])
                     @endcomponent
                 @else
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
-                    @component('board.sideview', ['type' => 'board', 'board' => $board, 'write' => $write, 'category' => $currenctCategory])
+                    @component('board.sideview', ['sideview' => 'board', 'board' => $board, 'write' => $write, 'category' => $currenctCategory])
                     @endcomponent
                 @endauth
                 @else
