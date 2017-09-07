@@ -174,6 +174,7 @@ class Write extends Model
         // 2. 검색일 경우 검색 키워드 색깔 표시를 다르게 한다.
         // 3. 게시판 설정에 따라 목록에서 보이는 제목을 표시하고 나머지는 ...로 표시한다.
         foreach($writes as $write) {
+            $write->level = User::getUser($write->user_id)->level;
             $write->user_id = $write->user_id_hashkey;     // 라라벨 기본 지원 encrypt
             $write->subject = searchKeyword($keyword, $write->subject);
             $write->subject = subjectLength($write->subject, $this->board->subject_len);
@@ -379,13 +380,13 @@ class Write extends Model
             }
         }
 
+        $user = User::getUser($write->user_id);
+        // 사용자 등급 추가
+        $write->level = $user->level;
         // 서명 사용하면 글쓴이의 서명을 담는다.
         $signature = '';
         if($this->board->use_signature && $write->user_id > 0) {
-            $user = User::find($write->user_id);
-            if(!is_null($user)) {
-                $signature = $user->signature;
-            }
+            $signature = $user->signature;
         }
 
         // 첨부 파일과 이미지 파일 분류

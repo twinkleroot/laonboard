@@ -56,11 +56,8 @@
             <tr>
                 <td class="td_nick">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $memo->nick }}</a>
-                    <ul class="dropdown-menu" role="menu">
-                        @component('board.sideview', ['board' => '', 'id' => $memo->user_id_hashkey, 'name' => $memo->nick, 'email' => $memo->email, 'category' => ''])
-                        @endcomponent
-                        <li><a href="{{ route('new.index') }}?nick={{ $memo->nick }}">전체게시물</a></li>
-                    </ul>
+                    @component('board.sideview', ['type' => 'other', 'id' => $memo->user_id_hashkey, 'name' => $memo->nick, 'email' => $memo->email])
+                    @endcomponent
                 </td>
                 <td class="td_datetime"><a href="{{ route('memo.show', $memo->id) }}?kind={{ $kind }}">{{ $memo->send_timestamp }}</a></td>
                 <td class="td_datetime"><a href="{{ route('memo.show', $memo->id) }}?kind={{ $kind }}">{{ $memo->read_timestamp ? : '아직 읽지 않음' }}</a></td>

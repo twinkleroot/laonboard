@@ -86,11 +86,9 @@
                         @endif
                         <span class="tt_nick">{{ $boardNew->name }}</span> <!-- 닉네임 -->
                     </a>
-                    <ul class="dropdown-menu" role="menu">
-                        @component('board.sideview', ['board' => '', 'id' => $boardNew->user_id_hashkey, 'name' => $boardNew->name, 'email' => $boardNew->user_email, 'category' => ''])
-                        @endcomponent
-                        <li><a href="{{ route('new.index') }}?nick={{ $boardNew->name }}">전체게시물</a></li>
-                    </ul>
+                    @component('board.sideview', ['type' => 'other', 'id' => $boardNew->user_id_hashkey, 'name' => $boardNew->name, 'email' => $boardNew->user_email])
+                    @endcomponent
+                        {{-- <li><a href="{{ route('new.index') }}?nick={{ $boardNew->name }}">전체게시물</a></li> --}}
                     @endunless
                 </td>
                 <td class="bd_date">@if($today->toDateString() == substr($boardNew->created_at, 0, 10)) @hourAndMin($boardNew->created_at) @else @monthAndDay($boardNew->created_at) @endif</td>

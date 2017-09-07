@@ -131,37 +131,21 @@
                     </span>
                 </td>
                 <td class="bd_name mo">
-                @if(auth()->user() && $board->use_sideview)
+                @if($board->use_sideview)
+                @auth
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                         @if(cache('config.join')->useMemberIcon && $write->iconPath)
                         <span class="tt_icon"><img src="{{ $write->iconPath }}" /></span> <!-- 아이콘 -->
                         @endif
                         <span class="tt_nick">{{ $write->name }}</span> <!-- 닉네임 -->
                     </a>
-                    <ul class="dropdown-menu" role="menu">
-                    @if($write->user_level)
-                        @component('board.sideview', ['board' => $board, 'id' => $write->user_id, 'name' => $write->name, 'email' => $write->email, 'category' => $currenctCategory])
-                        @endcomponent
-                    @else
-                        <li><a href="/bbs/{{ $board->table_name }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
-                    @endif
-                    @if($write->user_level)
-                        <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>
-                    @endif
-                    </ul>
-                @elseif(auth()->guest() && $board->use_sideview)
+                    @component('board.sideview', ['type' => 'board', 'board' => $board, 'write' => $write, 'category' => $currenctCategory])
+                    @endcomponent
+                @else
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
-                    <ul class="dropdown-menu" role="menu">
-                    @if($write->user_level)
-                        @component('board.sideview', ['board' => $board, 'id' => $write->user_id, 'name' => $write->name, 'email' => $write->email, 'category' => $currenctCategory])
-                        @endcomponent
-                    @else
-                        <li><a href="/bbs/{{ $board->table_name }}?kind=name&amp;keyword={{ $write->name }}&amp;category={{ $currenctCategory }}">이름으로 검색</a></li>
-                    @endif
-                    @if($write->user_level)
-                        <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>
-                    @endif
-                    </ul>
+                    @component('board.sideview', ['type' => 'board', 'board' => $board, 'write' => $write, 'category' => $currenctCategory])
+                    @endcomponent
+                @endauth
                 @else
                     @if(cache('config.join')->useMemberIcon && $write->iconPath)
                     <span class="tt_icon"><img src="{{ $write->iconPath }}" /></span> <!-- 아이콘 -->
