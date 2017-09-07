@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'host' => env('MAIL_HOST', 'admin@gnutest.com'),
+    'host' => env('MAIL_HOST', 'admin@domain.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -56,7 +56,7 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'admin@gnutest.com'),
+        'address' => env('MAIL_FROM_ADDRESS', 'admin@domain.com'),
         'name' => env('MAIL_FROM_NAME', 'Admin'),
     ],
 

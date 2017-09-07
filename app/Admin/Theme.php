@@ -76,6 +76,10 @@ class Theme
         $theme = $request->filled('theme') ? $request->theme : 'default';
         $data = ['name' => $theme];
         $config->updateConfig($data, 'theme', 1);
+        foreach(Board::cursor() as $board) {
+            $board->layout = "$theme.basic";
+            $board->save();
+        }
 
         // 모든 스킨의 theme 값을 변경 : 해당 항목의 스킨이 존재 하지 않으면 변경하지 않음.
         // 게시판별 스킨 변경
