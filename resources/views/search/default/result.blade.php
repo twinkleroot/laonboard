@@ -67,9 +67,9 @@
 
                 <div class="sch_res_ctg">
                     <ul>
-                        <li><a href="/search?{{ $allBoardTabQueryString }}">전체게시판</a></li>
+                        <li><a href="/searches?{{ $allBoardTabQueryString }}">전체게시판</a></li>
                         @foreach($boards as $board)
-                            <li><a href="/search?{{ $boardTabQueryString }}&amp;boardName={{ $board->boardName }}"><strong>{{ $board->boardSubject }}</strong> <span class="count">{{ count($board) }}</span></a></li>
+                            <li><a href="/searches?{{ $boardTabQueryString }}&amp;boardName={{ $board->boardName }}"><strong>{{ $board->boardSubject }}</strong> <span class="count">{{ count($board) }}</span></a></li>
                         @endforeach
                     </ul>
                 </div>
@@ -94,28 +94,24 @@
                 @endif
                             <li class="contents">
                                 <span class="sch_subject">
-                                    <a href="/bbs/{{ $write->boardName }}/view/{{ $write->parent. $write->queryString }}">{!! clean($write->subject) !!}</a>
-                                    <a href="/bbs/{{ $write->boardName }}/view/{{ $write->parent. $write->queryString }}" target="_blank" style="margin-left:7px;">[새창으로 열기]</a>
+                                    <a href="/bbs/{{ $write->boardName }}/views/{{ $write->parent. $write->queryString }}">{!! clean($write->subject) !!}</a>
+                                    <a href="/bbs/{{ $write->boardName }}/views/{{ $write->parent. $write->queryString }}" target="_blank" style="margin-left:7px;">[새창으로 열기]</a>
                                 </span>
                                 <p>{!! clean($write->content) !!}</p>
                                 <span class="sv_wrap">
+                                @if($write->user_id)
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
-                                    <ul class="dropdown-menu" role="menu">
-                                    @if(auth()->user() && $write->user_id)
-                                        <li><a href="{{ route('memo.create') }}?to={{ $write->user_id_hashKey }}" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지보내기</a></li>
-                                        <li><a href="#">메일보내기</a></li>
-                                        <li><a href="{{ route('user.profile', $write->user_id_hashKey) }}" class="winProfile" target="_blank" onclick="winProfile(this.href); return false;">자기소개</a></li>
-                                        <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>
-                                        @if(session()->get('admin'))
-                                            <li><a href="{{ route('admin.users.edit', $write->user_id_hashKey) }}" target="_blank">회원정보변경</a></li>
-                                            <li><a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $write->email }}" target="_blank">포인트내역</a></li>
-                                        @endif
-                                    @elseif(auth()->guest() && $write->user_id)
-                                        <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>
+                                    @auth
+                                    @component('sideview', ['sideview' => 'other', 'id' => $write->user_id_hashKey, 'name' => $write->name, 'email' => $write->email])
+                                    @endcomponent
                                     @else
-                                        {{ $write->name }}
-                                    @endif
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="{{ route('new.index') }}?nick={{ $write->name }}">전체게시물</a></li>
                                     </ul>
+                                    @endauth
+                                @else
+                                    {{ $write->name }}
+                                @endif
                                 </span>
                                 <span class="sch_datetime">{{ $write->created_at }}</span>
                             </li>

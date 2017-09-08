@@ -99,7 +99,7 @@
                             <a href="{{ route('board.index', $new->table_name) }}">{{ $new->subject }}</a>
                         </td>
                         <td class="td_subject">
-                            <a href="/bbs/{{ $new->table_name}}/view/{{ $new->write_parent. $new->commentTag }}">{{ subjectLength($new->write->subject, 100) }}</a>
+                            <a href="/bbs/{{ $new->table_name}}/views/{{ $new->write_parent. $new->commentTag }}">{{ subjectLength($new->write->subject, 100) }}</a>
                         </td>
                         <td class="td_nick">
                             @component('admin.sideview', ['id' => $new->user_id, 'nick' => $new->name, 'email' => $new->user_email])
@@ -154,7 +154,7 @@
                         <td class="td_date">{{ $point->datetime }}</td>
                         <td class="td_subject">
                             @if(!preg_match("/^\@/", $point->rel_table) && $point->rel_table)
-                                <a href="/bbs/{{ App\Board::getBoard($point->rel_table)->table_name }}/view/{{ $point->rel_email }}" target="_blank">{{ $point->content }}</a>
+                                <a href="/bbs/{{ App\Board::getBoard($point->rel_table)->table_name }}/views/{{ $point->rel_email }}" target="_blank">{{ $point->content }}</a>
                             @else
                                 {{ $point->content }}
                             @endif

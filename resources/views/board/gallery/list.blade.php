@@ -69,9 +69,9 @@
             <div>
                 <div class="gry_img" style="height:{{ $board->gallery_height }}px;"> <!-- height 기본값 150px로 css처리 해둠 -->
                     @if($viewParams == '')
-                    <a href="/bbs/{{ $board->table_name }}/view/{{ $write->parent }}">
+                    <a href="/bbs/{{ $board->table_name }}/views/{{ $write->parent }}">
                     @else
-                    <a href="/bbs/{{ $board->table_name }}/view/{{ $write->parent }}?{{ $viewParams }}">
+                    <a href="/bbs/{{ $board->table_name }}/views/{{ $write->parent }}?{{ $viewParams }}">
                     @endif
                         @if($write->listThumbnailPath == '공지' || $write->listThumbnailPath == 'no image')
                             <span class="gry_txt" style="padding: calc( {{ $board->gallery_height }}px / 2 - 10px ) 0;">{{ $write->listThumbnailPath }}</span>
@@ -87,7 +87,7 @@
                             <a href="{{ route('board.index', $board->table_name). '?category='. $write->ca_name }}" class="subject_cg">{{ $write->ca_name }}</a>
                             @endif
                             @if($viewParams == '')
-                            <a href="/bbs/{{ $board->table_name }}/view/{{ $write->parent }}" class="bd_subject_title">
+                            <a href="/bbs/{{ $board->table_name }}/views/{{ $write->parent }}" class="bd_subject_title">
                                 @if(isset($request->writeId) && $request->writeId == $write->id)
                                 <span class="read">    {{-- 열람중 --}}
                                     {!! clean($write->subject) !!}
@@ -97,7 +97,7 @@
                                 @endif
                             </a>
                             @else
-                            <a href="/bbs/{{ $board->table_name }}/view/{{ $write->parent }}?{{ $viewParams }}" class="bd_subject_title">
+                            <a href="/bbs/{{ $board->table_name }}/views/{{ $write->parent }}?{{ $viewParams }}" class="bd_subject_title">
                                 @if(isset($request->writeId) && $request->writeId == $write->id)
                                 <span class="read">    {{-- 열람중 --}}
                                     {!! clean($write->subject) !!}
@@ -129,11 +129,11 @@
                                 @endif
                                 <span class="tt_nick">{{ $write->name }}</span> <!-- 닉네임 -->
                             </a>
-                            @component('board.sideview', ['sideview' => 'board', 'board' => $board, 'write' => $write, 'category' => $currenctCategory])
+                            @component('sideview', ['sideview' => 'board', 'board' => $board, 'write' => $write, 'category' => $currenctCategory])
                             @endcomponent
                         @else
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
-                            @component('board.sideview', ['sideview' => 'board', 'board' => $board, 'write' => $write, 'category' => $currenctCategory])
+                            @component('sideview', ['sideview' => 'board', 'board' => $board, 'write' => $write, 'category' => $currenctCategory])
                             @endcomponent
                         @endauth
                         @else

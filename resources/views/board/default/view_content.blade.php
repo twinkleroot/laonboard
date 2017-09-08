@@ -16,11 +16,11 @@
                 @endif
                 <span class="tt_nick">{{ $write->name }}</span>
             </a>
-            @component('board.sideview', ['sideview' => 'board', 'board' => $board, 'write' => $write, 'category' => $currenctCategory])
+            @component('sideview', ['sideview' => 'board', 'board' => $board, 'write' => $write, 'category' => $currenctCategory])
             @endcomponent
         @else
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
-            @component('board.sideview', ['sideview' => 'board', 'board' => $board, 'write' => $write, 'category' => $currenctCategory])
+            @component('sideview', ['sideview' => 'board', 'board' => $board, 'write' => $write, 'category' => $currenctCategory])
             @endcomponent
         @endauth
         @else
@@ -73,7 +73,7 @@
     @if($write['link'.$i])
     <div class="bd_link">
         <i class="fa fa-link"></i>
-        <a href="/bbs/{{ $board->table_name }}/view/{{ $write->id }}/link/{{ $i }}" target="_blank">{{ $write['link'. $i] }}</a>
+        <a href="/bbs/{{ $board->table_name }}/views/{{ $write->id }}/link/{{ $i }}" target="_blank">{{ $write['link'. $i] }}</a>
         <span class="movecount">(연결된 횟수: {{ $write['link'. $i. '_hit'] }}회)</span>
     </div>
     @endif
@@ -104,7 +104,7 @@
         <ul class="bd_file_list" role="menu">
             @foreach($boardFiles as $file)
             <li>
-                <i class="fa fa-download"></i><a href="/bbs/{{ $board->table_name }}/view/{{ $write->id }}/download/{{ $file->board_file_no }}">{{ $file->source }}</a>
+                <i class="fa fa-download"></i><a href="/bbs/{{ $board->table_name }}/views/{{ $write->id }}/download/{{ $file->board_file_no }}">{{ $file->source }}</a>
                 <span class="downcount">(다운로드 횟수: {{ $file->download }}회 / DATE : {{ $file->created_at }}) </span>
             </li>
             @endforeach
@@ -127,7 +127,7 @@
             </div>
         </a>
         @if($board->use_good)
-        <a id="goodButton" href="/bbs/{{ $board->table_name }}/view/{{ $write->id }}/good">
+        <a id="goodButton" href="/bbs/{{ $board->table_name }}/views/{{ $write->id }}/good">
             <div class="countBtn">
                 <i class="fa fa-thumbs-o-up"></i>추천
                 <strong>{{ $write->good }}</strong>
@@ -136,7 +136,7 @@
         </a>
         @endif
         @if($board->use_nogood)
-        <a id="noGoodButton" href="/bbs/{{ $board->table_name }}/view/{{ $write->id }}/nogood">
+        <a id="noGoodButton" href="/bbs/{{ $board->table_name }}/views/{{ $write->id }}/nogood">
             <div class="countBtn">
                 <i class="fa fa-thumbs-o-down"></i>비추천
                 <strong>{{ $write->nogood }}</strong>
@@ -210,11 +210,11 @@
                         @endif
                         <span class="tt_nick">{{ $comment->name }}</span> <!-- 닉네임 -->
                     </a>
-                    @component('board.sideview', ['sideview' => 'board', 'board' => $board, 'write' => $comment, 'category' => $currenctCategory or ''])
+                    @component('sideview', ['sideview' => 'board', 'board' => $board, 'write' => $comment, 'category' => $currenctCategory or ''])
                     @endcomponent
                 @else
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $comment->name }}</a>
-                    @component('board.sideview', ['sideview' => 'board', 'board' => $board, 'write' => $comment, 'category' => $currenctCategory or ''])
+                    @component('sideview', ['sideview' => 'board', 'board' => $board, 'write' => $comment, 'category' => $currenctCategory or ''])
                     @endcomponent
                 @endauth
                 @else

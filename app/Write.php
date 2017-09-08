@@ -375,7 +375,7 @@ class Write extends Model
 
         $user = User::getUser($write->user_id);
         // 사용자 등급 추가
-        $write->level = $user->level;
+        $write->level = $user ? $user->level : 0;
         // 서명 사용하면 글쓴이의 서명을 담는다.
         $signature = '';
         if($this->board->use_signature && $write->user_id > 0) {

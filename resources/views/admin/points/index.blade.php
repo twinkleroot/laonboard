@@ -104,7 +104,7 @@
                         </td>
                         <td class="td_subject">
                             @if(!preg_match("/^\@/", $point->rel_table) && $point->rel_table)
-                                <a href="/bbs/{{ App\Board::getBoard($point->rel_table)->table_name }}/view/{{ $point->rel_email }}" target="_blank">{{ $point->content }}</a>
+                                <a href="/bbs/{{ App\Board::getBoard($point->rel_table)->table_name }}/views/{{ $point->rel_email }}" target="_blank">{{ $point->content }}</a>
                             @else
                                 {{ $point->content }}
                             @endif

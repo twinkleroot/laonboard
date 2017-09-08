@@ -106,7 +106,7 @@
                         @if($board->use_category)
                         <a href="{{ route('board.index', $board->table_name). '?category='. $write->ca_name }}" class="subject_cg">{{ $write->ca_name }}</a>
                         @endif
-                        <a href="/bbs/{{ $board->table_name }}/view/{{ $write->parent }}?{{ Request::getQueryString() }}" class="bd_subject_title">
+                        <a href="/bbs/{{ $board->table_name }}/views/{{ $write->parent }}?{{ Request::getQueryString() }}" class="bd_subject_title">
                             {!! clean($write->subject) !!}
                         </a>
                         {{-- 글올린시간 + 설정에 있는 신규 글 시간 > 현재 시간 --}}
@@ -139,11 +139,11 @@
                         @endif
                         <span class="tt_nick">{{ $write->name }}</span> <!-- 닉네임 -->
                     </a>
-                    @component('board.sideview', ['sideview' => 'board', 'board' => $board, 'write' => $write, 'category' => $currenctCategory])
+                    @component('sideview', ['sideview' => 'board', 'board' => $board, 'write' => $write, 'category' => $currenctCategory])
                     @endcomponent
                 @else
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
-                    @component('board.sideview', ['sideview' => 'board', 'board' => $board, 'write' => $write, 'category' => $currenctCategory])
+                    @component('sideview', ['sideview' => 'board', 'board' => $board, 'write' => $write, 'category' => $currenctCategory])
                     @endcomponent
                 @endauth
                 @else

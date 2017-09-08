@@ -74,22 +74,21 @@
                     <a href="{{ route('board.index', $boardNew->table_name) }}">{{ $boardNew->subject }}</a>
                 </td>
                 <td>
-                    <span class="bd_subject"><a href="/bbs/{{ $boardNew->table_name}}/view/{{ $boardNew->write_parent. $boardNew->commentTag }}">{{ $boardNew->write->subject }}</a></span>
+                    <span class="bd_subject"><a href="/bbs/{{ $boardNew->table_name}}/views/{{ $boardNew->write_parent. $boardNew->commentTag }}">{{ $boardNew->write->subject }}</a></span>
                 </td>
                 <td class="bd_name">
-                    @unless($boardNew->user_id)
+                @unless($boardNew->user_id)
                         {{ $boardNew->name }}
-                    @else
+                @else
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                         @if(cache('config.join')->useMemberIcon && $boardNew->write->iconPath)
                         <span class="tt_icon"><img src="{{ $boardNew->write->iconPath }}" /></span> <!-- 아이콘 -->
                         @endif
                         <span class="tt_nick">{{ $boardNew->name }}</span> <!-- 닉네임 -->
                     </a>
-                    @component('board.sideview', ['sideview' => 'other', 'id' => $boardNew->user_id_hashkey, 'name' => $boardNew->name, 'email' => $boardNew->user_email])
+                    @component('sideview', ['sideview' => 'other', 'id' => $boardNew->user_id_hashkey, 'name' => $boardNew->name, 'email' => $boardNew->user_email])
                     @endcomponent
-                        {{-- <li><a href="{{ route('new.index') }}?nick={{ $boardNew->name }}">전체게시물</a></li> --}}
-                    @endunless
+                @endunless
                 </td>
                 <td class="bd_date">@if($today->toDateString() == substr($boardNew->created_at, 0, 10)) @hourAndMin($boardNew->created_at) @else @monthAndDay($boardNew->created_at) @endif</td>
             </tr>
