@@ -59,7 +59,7 @@
                     @if(isset($scrap->write_empty) && $scrap->write_empty)
                         {{ $scrap->write_subject }}
                     @else
-                        <a herf="/bbs/{{ $scrap->table_name }}/view/{{ $scrap->write_id }}" target="_blank" onclick="opener.document.location.href='/bbs/{{ $scrap->table_name }}/view/{{ $scrap->write_id }}'; return false;">{{ $scrap->write_subject }}</a>
+                        <a herf="/bbs/{{ $scrap->table_name }}/views/{{ $scrap->write_id }}" target="_blank" onclick="opener.document.location.href='/bbs/{{ $scrap->table_name }}/views/{{ $scrap->write_id }}'; return false;">{{ $scrap->write_subject }}</a>
                     @endif
                 </td>
 

@@ -58,10 +58,10 @@ class Memo extends Model
         if( isset($request->to) ) {
             $toUser = getUser($request->to);
 
-            if( is_null($toUser)) {
+            if( is_null($toUser) || $toUser->leave_date) {
                 abort(500, "회원정보가 존재하지 않습니다.\\n\\n탈퇴하였을 수 있습니다.");
             }
-            if( !$toUser->open && !$user->isSuperAdmin()) {
+            if( !$toUser->open && !$user->isSuperAdmin() && $user->id_hashkey != $request->to) {
                 abort(500, "정보공개를 하지 않았습니다.");
             }
 

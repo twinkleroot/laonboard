@@ -212,7 +212,6 @@ class Write extends Model
         if($kind != '' && $keyword != '') {
             if($kind == 'user_id') {
                 // 암호화된 user_id를 복호화해서 검색한다.
-                // $userId = decrypt($keyword);    // 라라벨 기본 지원 decrypt
                 $userId = User::where('id_hashkey', $keyword)->first()->id;
                 $query = $query->where('user_id', $userId);
             } else if(str_contains($kind, '||')) { // 제목 + 내용으로 검색
@@ -421,6 +420,8 @@ class Write extends Model
                 $write->iconPath = '/storage/user/'. mb_substr($write->email, 0, 2, 'utf-8'). '/'. $write->email. '.gif';
             }
         }
+
+        $write->user_id = $user ? $user->id_hashkey : 0;
 
         $scrap = Scrap::where([
             'user_id' => auth()->user() ? auth()->user()->id : 0,
