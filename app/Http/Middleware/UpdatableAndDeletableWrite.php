@@ -92,7 +92,7 @@ class UpdatableAndDeletableWrite
                     'is_comment' => 1,
                 ])->count('id');
 
-            if($cnt && auth()->user()->isAdmin()) {
+            if($cnt && session()->get('admin')) {
                 $message = '이 댓글와 관련된 답변댓글이 존재하므로 수정 할 수 없습니다.';
             }
         }

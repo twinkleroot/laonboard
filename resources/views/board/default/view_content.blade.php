@@ -40,7 +40,7 @@
                 <i class="fa fa-ellipsis-v"></i>
             </a>
             <ul class="dropdown-menu" role="menu">
-                @if(!$write->user_id || session()->get('admin') || ( $user && $user->id == $write->user_id ) )
+                @if(!$write->user_id || session()->get('admin') || ( auth()->check() && $user->id == $write->user_id ) )
                     <li><a href="/bbs/{{ $board->table_name }}/edit/{{ $write->id }}">수정</a></li>
                     <li><a href="/bbs/{{ $board->table_name }}/delete/{{ $write->id }}" onclick="del(this.href); return false;">삭제</a></li>
                 @endif
@@ -120,7 +120,7 @@
 
 <!-- 스크랩/추천/비추천 -->
 <div class="bd_rd_count">
-    @if($user)
+    @auth
         <a href="{{ route('scrap.create') }}?boardName={{ $board->table_name }}&amp;writeId={{ $write->id }}" target="_blank" onclick="winScrap(this.href); return false;">
             <div class="countBtn">
                 <i class="fa fa-star" @if($scrap)style="color:#ff6699"@endif></i>스크랩
@@ -157,7 +157,7 @@
             <strong>{{ $write->nogood }}</strong>
         </span>
         @endif
-    @endif
+    @endauth
 </div>
 
 <!-- 이전글/다음글 -->
@@ -238,11 +238,11 @@
             <div class="bd_rd_cmt_view">
                 @if(str_contains($comment->option, 'secret'))
                 <img src="/themes/default/images/icon_secret.gif"> <!-- 비밀 -->
-                    @if($user && ($user->isSuperAdmin() || $user->isBoardAdmin($board) || $user->isGroupAdmin($board->group)))
+                    @if(auth()->check() && ($user->isSuperAdmin() || $user->isBoardAdmin($board) || $user->isGroupAdmin($board->group)))
                     {{ $comment->content }}
                 @elseif(session()->get(session()->getId(). 'secret_board_'. $board->table_name. '_write_'. $comment->id))
                     {{ $comment->content }}
-                    @elseif($user && $user->id == $comment->user_id)
+                    @elseif(auth()->check() && $user->id == $comment->user_id)
                     {{ $comment->content }}
                     @else
                     <a href="/password/type/secret?boardName={{ $board->table_name }}&writeId={{ $comment->id }}&nextUrl={{ route('board.view', [ 'boardName' => $board->table_name, 'writeId' => $comment->parent ]). '?'. Request::getQueryString(). '#comment'. $comment->id }}">댓글내용확인</a>
@@ -317,7 +317,7 @@
 
     <div class="row clearfix">
         <div class="pull-right col-md-3">
-            @if( ($user && !$user->isAdmin() && $board->use_recaptcha) || auth()->guest())
+            @if( (auth()->check() && !session()->get('admin')) && $board->use_recaptcha) || !auth()->check())
             <button type="button" class="btn btn-sir btn-block btn-lg" onclick="validate();">댓글등록</button>
             @else
             <button type="submit" id="btnSubmit" class="btn btn-sir btn-block btn-lg">댓글등록</button>

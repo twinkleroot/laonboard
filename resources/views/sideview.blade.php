@@ -4,7 +4,7 @@
         <li><a href="{{ route('memo.create') }}?to={{ $write->user_id }}" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지보내기</a></li>
         <li><a href="{{ route('user.mail.form')}}?to={{ $write->user_id }}&amp;name={{ $write->name }}&amp;email={{ encrypt($write->email) }}" class="winFormMail" target="_blank" onclick="winFormMail(this.href); return false;">메일보내기</a></li>
         <li><a href="{{ route('user.profile', $write->user_id) }}" class="winProfile" target="_blank" onclick="winProfile(this.href); return false;">자기소개</a></li>
-        @if($board && auth()->user() && auth()->user()->isBoardAdmin($board))
+        @if($board && auth()->check() && auth()->user()->isBoardAdmin($board))
         <li><a href="{{ route('admin.users.edit', $write->user_id) }}" target="_blank">회원정보변경</a></li>
         <li><a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $write->email }}" target="_blank">포인트내역</a></li>
         @endif
@@ -21,7 +21,7 @@
         <li><a href="{{ route('memo.create') }}?to={{ $id }}" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지보내기</a></li>
         <li><a href="{{ route('user.mail.form')}}?to={{ $id }}&amp;name={{ $name }}&amp;email={{ encrypt($email) }}" class="winFormMail" target="_blank" onclick="winFormMail(this.href); return false;">메일보내기</a></li>
         <li><a href="{{ route('user.profile', $id) }}" class="winProfile" target="_blank" onclick="winProfile(this.href); return false;">자기소개</a></li>
-        @if(auth()->user() && auth()->user()->isSuperAdmin())
+        @if(auth()->check() && auth()->user()->isSuperAdmin())
         <li><a href="{{ route('admin.users.edit', $id) }}" target="_blank">회원정보변경</a></li>
         <li><a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $email }}" target="_blank">포인트내역</a></li>
         @endif

@@ -76,14 +76,11 @@
                 </li>
             @endfor
                 <li class="gnb-li"><a href="{{ route('new.index') }}">새글</a></li>
-                @if (Auth::guest())
+                @unless(auth()->check())
                     <li class="gnb-li"><a href="{{ route('login'). '?nextUrl='. Request::getRequestUri() }}">로그인</a></li>
                     <li class="gnb-li"><a href="{{ route('user.join') }}">회원가입</a></li>
                 @else
-                    @php
-                        $isAdmin = auth()->user()->isAdmin();
-                    @endphp
-                    @if($isAdmin)
+                    @if(session()->get('admin'))
                         <li class="gnb-li"><a href="{{ route('admin.index') }}">관리자 모드</a></li>
                     @endif
                     <li class="gnb-li dropdown">
@@ -109,12 +106,12 @@
                                     {{ csrf_field() }}
                                 </form>
                             </li>
-                            @unless($isAdmin)
+                            @unless(session()->get('admin'))
                                 <li><a href="{{ route('user.checkPassword') }}?work=leave">회원 탈퇴</a></li>
                             @endunless
                         </ul>
                     </li>
-                @endif
+                @endunless
             </ul>
         </div>
     </div>

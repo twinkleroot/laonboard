@@ -19,13 +19,13 @@ class CheckValidBoard
     public function handle($request, Closure $next)
     {
         $board = Board::getBoard($request->boardName, 'table_name');
-        if(is_null($board)) {
+        if(!$board) {
             return alert('존재하지 않는 게시판입니다. 경로를 확인해 주세요.');
         }
 
         $group = $board->group;
         if($group->use_access) {
-            if(auth()->guest()) {
+            if(! auth()->check()) {
                 $msg = "비회원은 이 게시판에 접근할 권한이 없습니다.\\n\\n회원이시라면 로그인 후 이용해 보십시오.";
                 return alertRedirect($msg, '/login?nextUrl='. $request->getRequestUri());
             }

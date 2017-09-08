@@ -61,8 +61,7 @@
             </tr>
         </thead>
         <tbody>
-            @if($boardNewList->total())
-            @foreach($boardNewList as $boardNew)
+            @forelse($boardNewList as $boardNew)
             <tr>
                 @if(session()->get('admin'))
                 <td class="bd_check"><input type="checkbox" name="chkId[]" class="newId" value='{{ $boardNew->id }}'></td>
@@ -78,7 +77,7 @@
                 </td>
                 <td class="bd_name">
                 @unless($boardNew->user_id)
-                        {{ $boardNew->name }}
+                    {{ $boardNew->name }}
                 @else
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                         @if(cache('config.join')->useMemberIcon && $boardNew->write->iconPath)
@@ -92,14 +91,13 @@
                 </td>
                 <td class="bd_date">@if($today->toDateString() == substr($boardNew->created_at, 0, 10)) @hourAndMin($boardNew->created_at) @else @monthAndDay($boardNew->created_at) @endif</td>
             </tr>
-            @endforeach
-            @else
+            @empty
             <tr>
                 <td colspan="{{ session()->get('admin') ? 6 : 5}}">
                     게시물이 없습니다.
                 </td>
             </tr>
-            @endif
+            @endforelse
         </tbody>
     </table>
 
@@ -110,10 +108,10 @@
 </div>
 
 {{ $boardNewList->appends([
-        'groupId' => $groupId,
-        'type' => $type,
-        'nick' => $nick,
-    ])->links() }}
+    'groupId' => $groupId,
+    'type' => $type,
+    'nick' => $nick,
+])->links() }}
 
 <script>
 function confirmDel() {

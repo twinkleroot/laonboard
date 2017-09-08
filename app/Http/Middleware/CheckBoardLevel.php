@@ -17,12 +17,11 @@ class CheckBoardLevel
      */
     public function handle($request, Closure $next, $type)
     {
-        $user = auth()->user();
         $message = '';
 
         $baseLevel = 1; // 비회원
-        if($user) {
-            $baseLevel = $user->level;  // 유저의 등급을 넣음
+        if(auth()->check()) {
+            $baseLevel = auth()->user()->level;  // 유저의 등급을 넣음
         }
 
         $boardName = $request->segments()[1];
@@ -51,7 +50,7 @@ class CheckBoardLevel
                 $message = '링크에 연결할 권한이 없습니다.';
             }
 
-            if($user) {
+            if(auth()->check()) {
                 return alert($message);
             } else {
                 return alertRedirect($message, '/login');

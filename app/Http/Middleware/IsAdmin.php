@@ -15,9 +15,8 @@ class IsAdmin
      */
     public function handle($request, Closure $next)
     {
-        $user = auth()->user();
         // 최고 관리자나 일반 관리자면
-        if($user->isAdmin()) {
+        if(auth()->check() && session()->get('admin')) {
             return $next($request);
         }
 

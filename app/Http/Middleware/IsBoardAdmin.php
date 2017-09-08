@@ -16,9 +16,8 @@ class IsBoardAdmin
      */
     public function handle($request, Closure $next)
     {
-        $user = auth()->user();
         $board = Board::getBoard($request->boardId);
-        if($user->isBoardAdmin($board)) {
+        if(auth()->user()->isBoardAdmin($board)) {
             return $next($request);
         }
 

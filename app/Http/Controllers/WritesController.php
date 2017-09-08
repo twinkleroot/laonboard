@@ -75,9 +75,6 @@ class WritesController extends Controller
         // 요청 URI 추가
         $params = array_add($params, 'requestUri', $request->getRequestUri());
 
-        // 현재 사용자 추가
-        $params = array_add($params, 'user', auth()->user());
-
         $skin = $board->skin ? : 'default';
 
         return viewDefault("board.$skin.view", $params);

@@ -15,9 +15,7 @@ class IsSuperAdmin
      */
     public function handle($request, Closure $next)
     {
-        $user = auth()->user();
-
-        if(!$user->IsSuperAdmin()) {
+        if(!auth()->user()->IsSuperAdmin()) {
             return alertRedirect('최고관리자만 접근 가능합니다.');
         }
 

@@ -36,7 +36,7 @@ class Comment
 
             // IP 표시
             // 관리자 여부에 따라 ip 다르게 보여주기
-            if( auth()->guest() || !auth()->user()->isAdmin() ) {
+            if( auth()->guest() || !session()->get('admin') ) {
                 if ($comment->ip) {
                     $comment->ip = preg_replace("/([0-9]+).([0-9]+).([0-9]+).([0-9]+)/", config('gnu.IP_DISPLAY'), $comment->ip);
                 }
@@ -66,7 +66,7 @@ class Comment
         if( !is_null($user) ) {
             if ($user->isSuperAdmin()) {// 최고관리자 통과
                 ;
-            } else if ($user->isGroupAdmin(Group::find($writeModel->board->group_id))) { // 그룹관리자
+            } else if ($user->isGroupAdmin($writeModel->board->group)) { // 그룹관리자
                 if ($user->level < $commentUser->level)  { // 자신의 레벨이 글쓴이의 레벨보다 작다면
                     $isEdit = 0;
                     $isDelete = 0;

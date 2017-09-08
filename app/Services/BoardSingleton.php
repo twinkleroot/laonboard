@@ -15,7 +15,7 @@ class BoardSingleton
             }
         } else {
             if (is_null($board) || $board->table_name != $boardName) {
-                $board = Board::where('table_name', $boardName)->first();
+                $board = Board::with('group')->where('table_name', $boardName)->first();
             }
         }
 

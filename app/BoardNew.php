@@ -88,10 +88,18 @@ class BoardNew extends Model
     public function processBoardNewList($boardNewList)
     {
         $writeModel = new Write();
+        $boardList = $this->createBoardList($boardNewList);
+        $userList = $this->createUserList($boardNewList);
+        $writeList = [];
         foreach($boardNewList as $boardNew) {
-            $writeModel->setTableName(Board::getBoard($boardNew->board_id, 'id')->table_name);
-            $write = $writeModel->find($boardNew->write_parent);	 // 원글
-            $user = $boardNew->user_id ? User::getUser($boardNew->user_id) : new User();
+            $board = $boardList[$boardNew->board_id];
+            // 한 페이지에서 원글은 한번만 호출 하도록 한다.
+            $writeModel->setTableName($board->table_name);
+            if( !array_has($writeList, $boardNew->write_parent) ) {
+                $writeList = array_add($writeList, $boardNew->write_parent, $writeModel->find($boardNew->write_parent));
+            }
+            $write = $writeList[$boardNew->write_parent];
+            $user = $userList[$boardNew->user_id];
             // 회원 아이콘 경로 추가
             if($write->user_id && cache('config.join')->useMemberIcon) {
                 $iconPath = storage_path('app/public/user'). '/'. mb_substr($write->email, 0, 2, 'utf-8'). '/'. $write->email. '.gif';
@@ -119,6 +127,32 @@ class BoardNew extends Model
         }
 
         return $boardNewList;
+    }
+
+    // 한 페이지에서 한 게시판 및 그룹은 한번만 불러오도록 게시판 리스트를 만들어서 가져다 쓴다.
+    public function createBoardList($items)
+    {
+        $boardList = [];
+        foreach($items as $item) {
+            if( !array_has($boardList, $item->board_id) ) {
+                $boardList = array_add($boardList, $item->board_id, Board::getBoard($item->board_id, 'id'));
+            }
+        }
+
+        return $boardList;
+    }
+
+    // 한 페이지에서 한 사용자는 한번만 불러오도록 사용자 리스트를 만들어서 가져다 쓴다.
+    public function createUserList($items)
+    {
+        $userList = [];
+        foreach($items as $item) {
+            if( !array_has($userList, $item->user_id) ) {
+                $userList = array_add($userList, $item->user_id, $item->user_id ? User::getUser($item->user_id) : new User());
+            }
+        }
+
+        return $userList;
     }
 
     // 새글 선택 삭제
