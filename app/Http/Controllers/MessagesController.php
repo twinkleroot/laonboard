@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Session;
 
-class MessageController extends Controller
+class MessagesController extends Controller
 {
     public function message(Request $request)
     {

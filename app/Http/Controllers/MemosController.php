@@ -8,7 +8,7 @@ use App\Memo;
 use App\Services\ReCaptcha;
 use Exception;
 
-class MemoController extends Controller
+class MemosController extends Controller
 {
     public $memo;
 

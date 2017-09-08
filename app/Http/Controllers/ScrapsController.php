@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Exception;
 
-class ScrapController extends Controller
+class ScrapsController extends Controller
 {
     public $scrap;
 

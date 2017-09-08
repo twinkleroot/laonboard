@@ -8,7 +8,7 @@ use App\Board;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class SimpleController extends Controller
+class ExtrasController extends Controller
 {
     // 세션파일 일괄삭제
     public function deleteSession() {

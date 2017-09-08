@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Content;
 
-class ContentController extends Controller
+class ContentsController extends Controller
 {
     public $content;
 

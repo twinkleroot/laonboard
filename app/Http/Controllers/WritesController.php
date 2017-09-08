@@ -18,7 +18,7 @@ use Cache;
 use App\Services\RssFeed;
 use Illuminate\Pagination\Paginator;
 
-class WriteController extends Controller
+class WritesController extends Controller
 {
     public $writeModel;
     public $boardFileModel;

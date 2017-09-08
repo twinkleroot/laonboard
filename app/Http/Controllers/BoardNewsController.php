@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\BoardNew;
 use Cache;
 
-class BoardNewController extends Controller
+class BoardNewsController extends Controller
 {
     public $boardNew;
 

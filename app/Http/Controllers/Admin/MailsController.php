@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\EmailSendTest;
 use App\User;
 
-class MailController extends Controller
+class MailsController extends Controller
 {
     public $menuCode = ['100500', 'r'];
 

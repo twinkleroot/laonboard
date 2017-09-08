@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Admin\Config;
 
-class ConfigController extends Controller
+class ConfigsController extends Controller
 {
     public $configModel;
 

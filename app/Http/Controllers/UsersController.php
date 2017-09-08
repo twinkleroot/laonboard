@@ -16,7 +16,7 @@ use App\Point;
 use App\Admin\Config;
 use App\Notification;
 
-class UserController extends Controller
+class UsersController extends Controller
 {
 
     public $config;

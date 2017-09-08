@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Admin\Theme;
 
-class ThemeController extends Controller
+class ThemesController extends Controller
 {
     public $theme;
 

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\BoardFile;
 
-class ImageController extends Controller
+class ImagesController extends Controller
 {
     public $boardFileModel;
 

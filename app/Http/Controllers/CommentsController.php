@@ -10,7 +10,7 @@ use App\Board;
 use App\Comment;
 use App\Services\ReCaptcha;
 
-class CommentController extends Controller
+class CommentsController extends Controller
 {
     public $writeModel;
     public $comment;
