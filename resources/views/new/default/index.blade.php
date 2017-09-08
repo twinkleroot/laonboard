@@ -5,6 +5,7 @@
 @endsection
 
 @section('include_css')
+<link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/common.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/new.css') }}">
 @endsection
 
@@ -13,7 +14,7 @@
 @endsection
 
 @section('content')
-<div id="board" class="container">
+<div id="board">
     <div class="bd_head">
         <span>새글</span>
     </div>
@@ -49,14 +50,14 @@
         <thead>
             <tr>
                 @if(session()->get('admin'))
-                <th> <!-- 전체선택 -->
+                <th class="mo"> <!-- 전체선택 -->
                     <input type="checkbox" name="chkAll" onclick="checkAll(this.form)">
                 </th>
                 @endif
-                <th>그룹</th>
+                <th class="mo">그룹</th>
                 <th>게시판</th>
                 <th>제목</th>
-                <th>이름</th>
+                <th class="mo">이름</th>
                 <th>일시</th>
             </tr>
         </thead>
@@ -64,18 +65,18 @@
             @forelse($boardNewList as $boardNew)
             <tr>
                 @if(session()->get('admin'))
-                <td class="bd_check"><input type="checkbox" name="chkId[]" class="newId" value='{{ $boardNew->id }}'></td>
+                <td class="bd_check mo"><input type="checkbox" name="chkId[]" class="newId" value='{{ $boardNew->id }}'></td>
                 @endif
-                <td class="bd_group">
+                <td class="td_board mo">
                     <a href="{{ route('new.index') }}?groupId={{ $boardNew->group_id }}">{{ $boardNew->group_subject }}</a>
                 </td>
-                <td class="bd_board">
+                <td class="td_board">
                     <a href="{{ route('board.index', $boardNew->table_name) }}">{{ $boardNew->subject }}</a>
                 </td>
                 <td>
                     <span class="bd_subject"><a href="/bbs/{{ $boardNew->table_name}}/views/{{ $boardNew->write_parent. $boardNew->commentTag }}">{{ $boardNew->write->subject }}</a></span>
                 </td>
-                <td class="bd_name">
+                <td class="td_nick mo">
                 @unless($boardNew->user_id)
                     {{ $boardNew->name }}
                 @else
@@ -89,7 +90,7 @@
                     @endcomponent
                 @endunless
                 </td>
-                <td class="bd_date">@if($today->toDateString() == substr($boardNew->created_at, 0, 10)) @hourAndMin($boardNew->created_at) @else @monthAndDay($boardNew->created_at) @endif</td>
+                <td class="td_date">@if($today->toDateString() == substr($boardNew->created_at, 0, 10)) @hourAndMin($boardNew->created_at) @else @monthAndDay($boardNew->created_at) @endif</td>
             </tr>
             @empty
             <tr>

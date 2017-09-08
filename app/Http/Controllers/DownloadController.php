@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Write;
 use App\Board;
 use App\Download;
+use File;
 
 class DownloadController extends Controller
 {
@@ -27,6 +28,10 @@ class DownloadController extends Controller
         $file = $this->download->beforeDownload($request, $this->writeModel, $boardName, $writeId, $fileNo);
 
         $filePath = storage_path('app/public/'.$boardName. '/'. $file->file);
+
+        if(!File::exists($filePath)) {
+            abort(500, $file->source. ' 파일을 찾을 수 없습니다.');
+        }
 
         return response()->download($filePath, $file->source);
     }

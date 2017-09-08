@@ -5,7 +5,8 @@
 @endsection
 
 @section('include_css')
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/auth.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/common.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/auth.css') }}">
 @endsection
 
 @section('include_script')

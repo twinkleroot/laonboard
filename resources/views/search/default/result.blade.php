@@ -5,6 +5,7 @@
 @endsection
 
 @section('include_css')
+<link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/common.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/search.css') }}">
 @endsection
 

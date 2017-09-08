@@ -316,6 +316,8 @@ function formValidate(selected_id_array) {
         $(".body-contents").prepend(htmlMessage);
         return false;
     }
+
+    return true;
 }
 
 </script>

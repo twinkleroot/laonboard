@@ -5,6 +5,9 @@
 	height: 40px;
 	padding: 12px 12px;
 }
+.form-group {
+	margin-bottom: 10px;
+}
 .checkbox {
 	margin-top: 0;
 }
