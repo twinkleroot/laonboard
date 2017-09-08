@@ -74,7 +74,7 @@ class SearchController extends Controller
     // 검색 조건에 따라 Board 모델을 구한다.
     private function getBoards()
     {
-        $boardQuery = Board::where('use_search', 1)
+        $boardQuery = Board::with('group')->where('use_search', 1)
             ->where('list_level', '<=', $this->userLevel);
 
         if($this->groupId) {
