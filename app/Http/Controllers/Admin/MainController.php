@@ -53,7 +53,7 @@ class MainController extends Controller
             $query = $query->where('level', '<=', auth()->user()->level);
         }
 
-        $users = $query->orderBy('created_at', 'desc')->paginate($pageRows);
+        $users = $query->latest()->paginate($pageRows);
         $interceptUsers = $query->whereNotNull('intercept_date')->count();
         $leaveUsers = $query->whereNotNull('leave_date')->count();
 

@@ -104,7 +104,7 @@ class AdminUser extends Model
         if($order) {
             $query = $query->orderBy($order, $direction);
         } else {
-            $query = $query->orderBy('created_at', 'desc');
+            $query = $query->latest();
         }
         // 최고 관리자가 아니면 관리자보다 등급이 같거나 낮은 사람만 조회가능.
         if( !auth()->user()->isSuperAdmin() ) {
