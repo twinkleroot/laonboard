@@ -46,12 +46,12 @@ class Point extends Model
 
         if($kind) {
             if($kind == 'content') {
-                $query = Point::where($kind, 'like', '%'.$keyword.'%');
+                $query = Point::with('user')->where($kind, 'like', '%'.$keyword.'%');
             } else {
                 $user = User::where($kind, $keyword)->first();
                 if($user) {
                     // 검색한 유저의 id로 포인트 테이블 조회
-                    $query = Point::where(['user_id' => $user->id]);
+                    $query = Point::with('user')->where(['user_id' => $user->id]);
                     $sum = $user->point;
                     $searchEmail = $user->email;
                 } else {
@@ -60,7 +60,7 @@ class Point extends Model
                 }
             }
         } else {
-            $query = Point::select('*');
+            $query = Point::with('user');
         }
 
         // 정렬
@@ -80,9 +80,11 @@ class Point extends Model
         $points = $query->paginate(Cache::get("config.homepage")->pageRows);
 
         foreach($points as $point) {
-            $board = Board::getBoard($point->rel_table, 'table_name');
-            if($board) {
-                $point->rel_table = $board->id;
+            if(!str_contains($point->rel_table, '@')) {
+                $board = Board::getBoard($point->rel_table, 'table_name');
+                if($board) {
+                    $point->rel_table = $board->id;
+                }
             }
         }
 

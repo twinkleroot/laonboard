@@ -106,7 +106,7 @@ class Write extends Model
             $this->addPopular($kind, $keyword, $request);
         }
 
-        $userLevel = is_null(Auth::user()) ? 1 : Auth::user()->level;
+        $userLevel = auth()->check() ? auth()->user()->level : 1;
         $notices = explode(',', $this->board->notice);
 
         $writes = $this->getWrites($writeModel, $request, $kind, $keyword, $currenctCategory);
