@@ -34,7 +34,7 @@
             || ($type == 'update' && auth()->user()->isBoardAdmin($board) && $write->user_id != auth()->user()->id))
         <div class="nologin">
             <div class="form-group mb10 row @if($errors->get('name'))has-error @endif">
-                <div class="col-xs-3">
+                <div class="col-sm-3">
                     <label for="name" class="sr-only">이름</label>
                     <input type="text" class="form-control" id="name" name="name" placeholder="이름" @if($type=='update') value={{ $write->name }}@else required @endif>
                     @foreach ($errors->get('name') as $message)
@@ -45,7 +45,7 @@
                 </div>
             </div>
             <div class="form-group mb10 row @if($errors->get('password'))has-error @endif">
-                <div class="col-xs-4">
+                <div class="col-sm-4">
                     <label for="password" class="sr-only">비밀번호</label>
                     <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호" @if($type!='update') required @endif>
                     @foreach ($errors->get('password') as $message)
@@ -56,7 +56,7 @@
                 </div>
             </div>
             <div class="form-group mb10 row @if($errors->get('email'))has-error @endif">
-                <div class="col-xs-5">
+                <div class="col-sm-5">
                     <label for="email" class="sr-only">이메일</label>
                     <input type="email" class="form-control" id="email" name="email" placeholder="이메일" @if($type=='update') value="{{ $write->email }}" @endif>
                     @foreach ($errors->get('email') as $message)
@@ -67,7 +67,7 @@
                 </div>
             </div>
             <div class="form-group mb10 row @if($errors->get('homepage'))has-error @endif">
-                <div class="col-xs-5">
+                <div class="col-sm-5">
                     <label for="homepage" class="sr-only">홈페이지</label>
                     <input type="text" class="form-control" id="homepage" name="homepage" placeholder="홈페이지" @if($type=='update') value="{{ $write->homepage }}" @endif>
                     @foreach ($errors->get('homepage') as $message)
@@ -82,7 +82,7 @@
 
         @if($board->use_category)
         <div class="form-group mb10 row @if($errors->get('ca_name'))has-error @endif">
-            <div class="col-xs-3">
+            <div class="col-sm-3">
                 <select class="form-control" id="ca_name" name="ca_name" required>
                     <option value>분류</option>
                     @foreach($categories as $category)
@@ -106,7 +106,7 @@
         @endif
 
         <div class="row">
-            <div class="form-group mb10 col-xs-8 @if($errors->get('subject'))has-error @endif">
+            <div class="form-group mb10 col-sm-8 @if($errors->get('subject'))has-error @endif">
                 <label for="" class="sr-only">게시물 작성</label>
                 <input type="text" class="form-control" id="subject" name="subject" placeholder="게시물 제목" @if($type == 'create') value="{{ old('subject') }}"@else value="{{ $write->subject }}" @endif required>
                 @foreach ($errors->get('subject') as $message)

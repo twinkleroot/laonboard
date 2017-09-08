@@ -34,7 +34,7 @@
         <li class="post_info"><i class="fa fa-clock-o"></i>@datetime($write->created_at)</li>
         <li class="post_info"><i class="fa fa-eye"></i>{{ $write->hit }}</li>
     </ul>
-    <ul class="bd_rd_btn pull-right">
+    <ul class="bd_rd_btn">
         <li class="dropdown">
             <a href="#" class="dropdown-toggle bd_rd_more" data-toggle="dropdown" role="button" aria-expanded="false">
                 <i class="fa fa-ellipsis-v"></i>
@@ -315,12 +315,12 @@
         });
     </script>
 
-    <div class="row clearfix">
-        <div class="pull-right col-md-3">
+    <div class="clearfix">
+        <div class="pull-right">
             @if( (auth()->check() && !session()->get('admin')) && $board->use_recaptcha) || !auth()->check())
-            <button type="button" class="btn btn-sir btn-block btn-lg" onclick="validate();">댓글등록</button>
+            <button type="button" class="btn btn-sir" onclick="validate();">댓글등록</button>
             @else
-            <button type="submit" id="btnSubmit" class="btn btn-sir btn-block btn-lg">댓글등록</button>
+            <button type="submit" id="btnSubmit" class="btn btn-sir">댓글등록</button>
             @endif
         </div>
     </div>

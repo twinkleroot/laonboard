@@ -355,6 +355,16 @@
 .bd_rd_head .bd_rd_btn li .bdmenu li {
     margin: 0;
 }
+@media (max-width: 767px) {
+    .bd_rd_head .bd_rd_btn {
+        float: none;
+        display: block;
+        text-align: right;
+    }
+    .bd_rd_head .bd_rd_btn li {
+        float: right;
+    }
+}
 .bd_rd {
     line-height: 2;
     width: 100%;
@@ -794,5 +804,29 @@
 @media (max-width: 767px) {
     .bd_head a {
         clear: both;
+    }
+    .bd_sch {
+        clear: both;
+        font-size: 0;
+    }
+    .bd_sch #kind,
+    .bd_sch #keyword,
+    .bd_sch .search-icon {
+        font-size: 12px;
+    }
+    .bd_sch #kind {
+        width: 100%;
+        clear: both;
+        margin-bottom: 5px;
+    }
+    .bd_sch #keyword {
+        margin: 0;
+        width: 90%;
+    }
+    .bd_sch .search-icon {
+        margin: 0;
+        width: 10%;
+        line-height: 32px;
+        background: #d8d8d8;
     }
 }
