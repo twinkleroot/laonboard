@@ -93,37 +93,38 @@ class SearchController extends Controller
     private function rejectGroupAccess($boards)
     {
         $user = $this->user;
-        $result = $boards->reject(function ($board, $key) use ($user) {
-            if(auth()->guest() || !$user->isSuperAdmin()) {  // 비회원이거나 최고관리자가 아닐때
-                $group = session()->get('all_search_group');
-                if(!$group || $group->id != $board->group_id) {
-                    $group = $board->group;
-                    session()->put('all_search_group', $group);
-                }
+        $groupUserList = [];
+        foreach($boards as $key => $value) {
+            if(!auth()->check() || !$user->isSuperAdmin()) {  // 비회원이거나 최고관리자가 아닐때
+                $group = $value->group;
 
                 if($group->use_access) {    // 그룹 접근을 사용할 때
-                    if(auth()->guest()) {
-                        return true;
-                    }
-                    if(($group->admin && !$user->isGroupAdmin($group))) { // 비회원이거나 그룹관리자가 존재하고 그룹관리자가 아닐떄
-                        $userId = $user ? $user->id : 0;
-                        $groupUser = GroupUser::
-                            where([
-                                'group_id' => $group->id,
-                                'user_id' => $userId,
-                            ])
-                            ->where('user_id', '<>', '')
-                            ->first();
-                        return is_null($groupUser);
+                    if(!auth()->check()) {
+                        $boards->pull($key);
+                    } else if(($group->admin && !$user->isGroupAdmin($group))) { // 비회원이거나 그룹관리자가 존재하고 그룹관리자가 아닐떄
+                        $userId = auth()->check() ? $user->id : 0;
+                        if( !array_has($groupUserList, $group->id)) {
+                            $groupUserList =
+                                array_add($groupUserList, $group->id,
+                                    GroupUser::
+                                    where([
+                                        'group_id' => $group->id,
+                                        'user_id' => $userId,
+                                    ])
+                                    ->where('user_id', '<>', '')
+                                    ->first()
+                                );
+                        }
+
+                        if(!$groupUserList[$group->id]) {
+                            $boards->pull($key);
+                        }
                     }
                 }
             }
-            return false;
-        });
+        }
 
-        session()->forget('all_search_group');
-
-        return $result;
+        return $boards;
     }
 
     // 게시판마다 해당 검색필드와 검색어로 검색해서 Write모델을 모은 컬렉션으로 리턴한다.
