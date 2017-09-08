@@ -14,6 +14,7 @@ use File;
 use DB;
 use Auth;
 use Carbon\Carbon;
+use App\Services\UserSingleton;
 
 class AdminUser extends Model
 {
@@ -72,6 +73,11 @@ class AdminUser extends Model
     public function writes()
     {
         return $this->hasMany(Write::class);
+    }
+
+    public static function getUser($id)
+    {
+        return UserSingleton::getInstance($id);
     }
 
     // 회원 목록
@@ -196,7 +202,7 @@ class AdminUser extends Model
         $url = '/storage/user/'. mb_substr($user->email, 0, 2, 'utf-8'). '/'. $user->email. '.gif';
 
         $appUser = new AppUser();
-        $recommend = $appUser->recommendedPerson(getUser($id));
+        $recommend = $appUser->recommendedPerson($user);
 
         return [
             'user' => $user,
