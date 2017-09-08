@@ -121,10 +121,10 @@ class Group extends Model
     }
 
     // edit 페이지에서 필요한 파라미터 가져오기
-    public function getGroupEditParams($id)
+    public function getGroupEditParams($group)
     {
-        $group = Group::where('group_id', $id)->first();
-        $group->count_users = GroupUser::where('group_id', $group->id)->count();
+        $group->count_users = $group->users->count();
+        // $group->count_users = GroupUser::where('group_id', $group->id)->count();
 
         return [
             'group' => $group,

@@ -81,11 +81,12 @@ class GroupsController extends Controller
      */
     public function edit($id)
     {
-        if (auth()->user()->cant('update', $this->groupModel->where('group_id', $id)->first())) {
+        $group = Group::whereGroupId($id)->first();
+        if (auth()->user()->cant('update', $group)) {
             abort(403, '해당 게시판 그룹 수정에 대한 권한이 없습니다.');
         }
 
-        $params = $this->groupModel->getGroupEditParams($id);
+        $params = $this->groupModel->getGroupEditParams($group);
 
         return view('admin.groups.form', $params);
     }
