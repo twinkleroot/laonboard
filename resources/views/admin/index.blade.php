@@ -145,10 +145,10 @@
                     @forelse($points as $point)
                     <tr>
                         <td class="td_email">
-                            <a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ App\User::getUser($point->user_id)->email }}">{{ App\User::getUser($point->user_id)->email }}</a>
+                            <a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $point->user->email }}">{{ $point->user->email }}</a>
                         </td>
                         <td class="td_nick">
-                            @component('admin.sideview', ['id' => $point->user_id, 'nick' => App\User::getUser($point->user_id)->nick, 'email' => App\User::getUser($point->user_id)->email])
+                            @component('admin.sideview', ['id' => $point->user_id, 'nick' => $point->user->nick, 'email' => $point->user->email])
                             @endcomponent
                         </td>
                         <td class="td_date">{{ $point->datetime }}</td>

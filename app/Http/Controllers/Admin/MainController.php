@@ -82,12 +82,14 @@ class MainController extends Controller
 
     private function getPointList($pageRows)
     {
-        $points = Point::orderBy('id', 'desc')->paginate($pageRows);
+        $points = Point::with('user')->orderBy('id', 'desc')->paginate($pageRows);
 
         foreach($points as $point) {
-            $board = Board::where('table_name', $point->rel_table)->first();
-            if($board) {
-                $point->rel_table = $board->id;
+            if(!str_contains($point->rel_table, '@')) {
+                $board = Board::getBoard($point->rel_table, 'table_name');
+                if($board) {
+                    $point->rel_table = $board->id;
+                }
             }
         }
 
