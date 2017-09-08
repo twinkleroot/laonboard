@@ -19,7 +19,7 @@ class CreateBoardsTable extends Migration
                 $table->string('table_name', '20');
                 // groups 테이블에 대한 참조키
                 $table->integer('group_id')->unsigned();
-                $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');
+                $table->foreign('group_id')->references('id')->on('groups')->onUpdate('cascade')->onDelete('cascade');
 
                 $table->string('subject');
                 $table->string('mobile_subject')->nullable();

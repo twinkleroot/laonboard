@@ -24,7 +24,7 @@ class CreateSocialLoginTable extends Migration
 
                 // users 테이블에 대한 참조키
                 $table->integer('user_id')->unsigned()->nullable();
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             });
         }
     }
