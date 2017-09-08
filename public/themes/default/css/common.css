@@ -273,9 +273,20 @@ div {
 	width:120px;
 	text-align: center;
 }
+.td_group {
+    width: 150px;
+    text-align: left;
+}
+.td_date {
+    width: 100px;
+    text-align: center;
+}
 .td_datetime {
 	width:170px;
 	text-align: center;
+}
+.td_nick {
+    width: 130px;
 }
 .td_nick.open {
 	position: relative;

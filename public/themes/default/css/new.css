@@ -18,12 +18,7 @@ a:hover {
 .bd_btn {
     padding: 0;
     margin-bottom: 10px;
-    float: right;
-}
-.bd_btn:after {
-    content: '';
-    display: block;
-    clear: both;
+    text-align: right;
 }
 .bd_btn ul {
     padding: 0;
@@ -80,10 +75,42 @@ a:hover {
     }
     .bd_sch {
         margin: 10px 0;
-        font-size: 12px;        
+        font-size: 0px;   
     }
     .bd_sch input {
         width: 100px;
+    }
+    .bd_sch #groupId,
+    .bd_sch #type {
+        width: 49%;
+        font-size: 12px;
+    }
+    .bd_sch #groupId {
+        margin-right: 1%;
+    }
+    .bd_sch #type {
+        margin-left: 1%;
+    }
+    .bd_sch #type:after {
+        float: none;
+        clear: both;
+    }
+    .bd_sch .search {
+        float: none;
+        width: 90%;
+        font-size: 12px;
+        margin: 5px 0 0;
+    }
+    .bd_sch .search-icon {
+        font-size: 12px;
+        margin: 0;
+        width: 10%;
+        background: #d8d8d8;
+        line-height: 32px;
+    }
+    .bd_btn {
+        float: none;
+        clear: both;
     }
 }
 /* sideview icon & nick */
