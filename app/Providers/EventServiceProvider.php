@@ -51,6 +51,17 @@ class EventServiceProvider extends ServiceProvider
     ];
 
     /**
+     * The subscriber classes to register.
+     *
+     * @var array
+     */
+    protected $subscribe = [
+        // 댓글 쓰기/수정전 검사하는 이벤트
+        \App\Listeners\CommentListener::class,
+    ];
+
+
+    /**
      * Register any other events for your application.
      *
      * @param  \Illuminate\Contracts\Events\Dispatcher  $events

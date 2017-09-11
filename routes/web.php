@@ -259,7 +259,7 @@ Route::group(['middleware' => 'auth'], function() {
     // 스크랩
     Route::get('scraps/{scrap}/delete', ['as' => 'scrap.destroy', 'uses' => 'ScrapsController@destroy']);
     Route::post('scraps', ['as' => 'scrap.store', 'uses' => 'ScrapsController@store'])
-        ->middleware('level.board:comment_level', 'writable.comment:create');
+        ->middleware('level.board:comment_level');
     Route::resource('scraps', 'ScrapsController', [
             'only' => [
                 'index', 'create', 'store'
@@ -350,10 +350,10 @@ Route::group(['prefix' => 'bbs/{boardName}'], function () {
         ->middleware('level.board:reply_level', 'valid.board', 'valid.write', 'cert:write');
     // 댓글 쓰기
     Route::post('comments/store', ['as' => 'board.comment.store', 'uses' => 'CommentsController@store'])
-        ->middleware('level.board:comment_level', 'writable.comment:create');
+        ->middleware('level.board:comment_level');
     // 댓글 수정
     Route::put('comments/update', ['as' => 'board.comment.update', 'uses' => 'CommentsController@update'])
-        ->middleware('level.board:comment_level', 'writable.comment:update', 'updatable.deletable.write');
+        ->middleware('level.board:comment_level', 'updatable.deletable.write');
     // 댓글 삭제
     Route::get('views/{writeId}/delete/{commentId}', ['as' => 'board.comment.destroy', 'uses' => 'CommentsController@destroy'])
         ->middleware('level.board:comment_level', 'can.delete.comment.immediately', 'updatable.deletable.write');

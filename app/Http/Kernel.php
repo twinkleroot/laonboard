@@ -84,12 +84,6 @@ class Kernel extends HttpKernel
         'cert' => \App\Http\Middleware\CheckCert::class,
         // 댓글/글 수정, 삭제가 가능한지 검사
         'updatable.deletable.write' => \App\Http\Middleware\UpdatableAndDeletableWrite::class,
-        // 글 답변이 가능한지 검사
-        'writable.reply' => \App\Http\Middleware\WritableReply::class,
-        // 댓글 쓰기가 가능한지 검사
-        'writable.comment' => \App\Http\Middleware\WritableComment::class,
-        // 댓글 삭제가 가능한지 검사
-        'deletable.comment' => \App\Http\Middleware\DeletableComment::class,
         // 해당 항목의 유효 여부 검사
         'valid.store.write' => \App\Http\Middleware\VerifyBoardWrite::class,
         'valid.write' => \App\Http\Middleware\CheckValidWrite::class,
@@ -101,8 +95,6 @@ class Kernel extends HttpKernel
         'secret.board' => \App\Http\Middleware\CheckSecretView::class,
         'can.action.write.immediately' => \App\Http\Middleware\CanActionWriteImmediately::class,
         'can.delete.comment.immediately' => \App\Http\Middleware\CanDeleteCommentImmediately::class,
-        // RSS 조회 가능한지 검사
-        'rss' => \App\Http\Middleware\CheckRss::class,
         // 메일 보내기가 가능한지 검사
         'form.mail' => \App\Http\Middleware\CheckFormMail::class,
         'send.mail' => \App\Http\Middleware\CheckSendMail::class,

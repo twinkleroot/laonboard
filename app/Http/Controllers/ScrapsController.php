@@ -61,6 +61,8 @@ class ScrapsController extends Controller
      */
     public function store(Request $request)
     {
+        event(new \App\Events\CreateComment($request));
+
         $result = '';
         try {
             $result = $this->scrap->storeScrap($request);

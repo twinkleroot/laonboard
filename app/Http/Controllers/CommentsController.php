@@ -52,6 +52,9 @@ class CommentsController extends Controller
         if(auth()->guest() || (!auth()->user()->isBoardAdmin($this->writeModel->board) && $this->writeModel->board->use_recaptcha)) {
             ReCaptcha::reCaptcha($request);
         }
+
+        event(new \App\Events\CreateComment($request));
+
         $result = $this->comment->storeComment($this->writeModel, $request);
 
         if(cache('config.email.default')->emailUse && $this->writeModel->board->use_email) {
@@ -86,6 +89,8 @@ class CommentsController extends Controller
         ]);
 
         $this->validate($request, $rules, $messages);
+
+        event(new \App\Events\UpdateComment($request));
 
         $id = $this->comment->updateComment($this->writeModel, $request);
 
