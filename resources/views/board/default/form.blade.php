@@ -29,9 +29,13 @@
         <input type="hidden" name="writeId" id="writeId" @if($type != 'create') value="{{ $write->id }}" @endif/>
         <input type="hidden" name="uid" id="uid" value="{{ str_replace("/", "-", substr(bcrypt(date('ymdHis', time())), 10, 60)) }}" />
         {{ csrf_field() }}
+        @php
+            $level = auth()->check() ? auth()->user()->level : 1;
+        @endphp
         @if( ($type == 'create' && auth()->guest() )
             || ($type == 'update' && auth()->guest())
-            || ($type == 'update' && auth()->user()->isBoardAdmin($board) && $write->user_id != auth()->user()->id))
+            || ($type == 'update' && auth()->user()->isBoardAdmin($board) && $write->user_id != auth()->user()->id)
+            || ($type == 'reply' && $level >= $board->reply_level) )
         <div class="nologin">
             <div class="form-group mb10 row @if($errors->get('name'))has-error @endif">
                 <div class="col-sm-3">

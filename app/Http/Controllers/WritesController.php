@@ -56,6 +56,10 @@ class WritesController extends Controller
     public function view(Request $request, $boardName, $writeId)
     {
         $board = Board::getBoard($boardName, 'table_name');
+        $write = Write::getWrite($board->id, $writeId);
+        // 글 읽기전 조회수 증가, 포인트 계산 이벤트 Fire
+        event(new \App\Events\BeforeRead($request, $this->writeModel, $write));
+
         // 글 보기 데이터
         $params = $this->writeModel->getViewParams($this->writeModel, $writeId, $request);
 
@@ -78,6 +82,20 @@ class WritesController extends Controller
         $skin = $board->skin ? : 'default';
 
         return viewDefault("board.$skin.view", $params);
+    }
+
+    // 글 보기 중 첨부파일 다운로드
+    public function download(Request $request, $boardName, $writeId, $fileNo)
+    {
+        $file = $this->boardFileModel->where([
+            'board_id' => $this->writeModel->board->id,
+            'write_id' => $writeId,
+            'board_file_no' => $fileNo,
+        ])->first();
+
+        event(new \App\Events\BeforeDownload($request, $this->writeModel, $this->writeModel->board, $file));
+
+        return response()->download(storage_path('app/public/'. $request->boardName. '/'. $file->file), $file->source);
     }
 
     // 글 보기 중 링크 연결
@@ -244,6 +262,8 @@ class WritesController extends Controller
      */
     public function createReply(Request $request, $boardName, $writeId)
     {
+        event(new \App\Events\WriteReply($request, $boardName, $writeId));
+
         $params = $this->writeModel->getReplyParams($writeId, $this->writeModel, $request);
         $skin = $this->writeModel->board->skin ? : 'default';
 
@@ -296,6 +316,8 @@ class WritesController extends Controller
     // RSS 보기
     public function rss(Request $request, $boardName, RssFeed $feed)
     {
+        event(new \App\Events\GetRssView($request, $this->writeModel->board));
+
         $rss = $feed->getRSS($boardName);
 
         return response($rss)

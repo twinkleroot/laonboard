@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers\Illuminate\Auth\Events;
+namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
@@ -9,25 +9,32 @@ use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Http\Request;
 
-class Login
+class WriteReply
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    public $request;
+    public $boardName;
+    public $writeId;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Request $request, $boardName, $writeId)
     {
-        //
+        $this->request = $request;
+        $this->boardName = $boardName;
+        $this->writeId = $writeId;
     }
 
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return Channel|array
+     * @return \Illuminate\Broadcasting\Channel|array
      */
     public function broadcastOn()
     {

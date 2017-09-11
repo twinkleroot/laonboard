@@ -350,9 +350,6 @@ class Write extends Model
     {
         $write = Write::getWrite($this->board->id, $writeId);
 
-        // 조회수 증가, 포인트 부여
-        $write->hit = $this->beforeRead($writeModel, $write, $request);
-
         // 글쓰기 할때 html 체크에 따라 글 내용 보여주는 방식을 다르게 한다.
         // html = 0 - 체크안함, 1 - 체크 후 취소, 2 - 체크 후 확인
         $html = 0;
@@ -361,12 +358,6 @@ class Write extends Model
         } else if (strpos($write->option, 'html2') !== false) {
             $html = 2;
         }
-        // 에디터를 사용하면서 html에 체크하지 않았을 때
-        // if($this->board->use_dhtml_editor && $html == 0) {
-        //     $write->content = convertContent($write->content, 2);
-        // } else {
-        //     $write->content = convertContent($write->content, $html);
-        // }
 
         // 검색어 색깔 다르게 표시
         if($request->filled('keyword')) {
@@ -446,26 +437,6 @@ class Write extends Model
             'boardFiles' => $boardFiles,
             'imgFiles' => $imgFiles,
         ];
-    }
-
-    // 글 읽기 전 프로세스
-    public function beforeRead($writeModel, $write, $request)
-    {
-        $hit = $write->hit;
-        $user = auth()->user();
-        $userId = !$user ? 0 : $user->id;
-        $userHash = !$user ? '' : $user->id_hashkey;
-        $sessionName = "session_view_". $this->board->table_name. '_'. $write->id. '_'. $userHash;
-        if(!session()->get($sessionName) && $userId != $write->user_id) {
-            // 조회수 증가
-            $hit = $this->increaseHit($writeModel, $write);
-            // 포인트 계산(차감)
-            $this->calculatePoint($write, $request, 'read');
-
-            session()->put($sessionName, true);
-        }
-
-        return $hit;
     }
 
     // 조회수 증가
@@ -655,39 +626,6 @@ class Write extends Model
             ->update(['link'. $linkNo. '_hit' => $linkHit]);
 
         return $linkHit;
-    }
-
-    // 다운로드시 처리할 내용
-    public function beforeDownload($request, $writeModel, $writeId, $fileNo)
-    {
-        $file = BoardFile::where([
-            'board_id' => $this->board->id,
-            'write_id' => $writeId,
-            'board_file_no' => $fileNo,
-            ])->first();
-
-        $write = Write::getWrite($this->board->id, $writeId);
-        $user = auth()->user();
-        $userId = is_null($user) ? 0 : $user->id;
-        $sessionName = 'session_download_'. $this->board->table_name. '_'. $write->id. '_'. $fileNo;
-        if(session()->get('admin') || $userId == $write->user_id) {   // 관리자나 작성자 본인이면 패스
-            ;
-        } else if(!session()->get($sessionName)) { // 사용자의 다운로드 세션이 존재하지 않는다면
-            // 포인트 차감
-            $this->calculatePoint($write, $request, 'download');
-
-            // 다운로드 횟수 증가
-            $file->where([
-                'board_id' => $this->board->id,
-                'write_id' => $writeId,
-                'board_file_no' => $fileNo,
-            ])->update(['download' => $file->download + 1]);
-
-
-            session()->put($sessionName, true);
-        }
-
-        return $file;
     }
 
     // (게시판) 글 쓰기 폼
@@ -1101,11 +1039,11 @@ class Write extends Model
         // 서버에서 첨부파일+첨부파일의 썸네일 삭제, 파일 테이블 삭제
         $boardFile = new BoardFile();
         $result = $boardFile->deleteWriteAndAttachFile($this->board->id, $writeId);
-        if(!is_bool($result) && array_search(false, $result) != false) {
+        if(!$result) {
             abort(500, '정상적으로 게시글을 삭제하는데 실패하였습니다.(첨부 파일 삭제)');
         }
         // 게시글 삭제
-        $result = $writeModel->deleteWrite($writeModel, $writeId);
+        $result = $this->deleteWrite($writeModel, $writeId);
         if($result <= 0) {
             abort(500, '정상적으로 게시글을 삭제하는데 실패하였습니다.(게시글 삭제)');
         }

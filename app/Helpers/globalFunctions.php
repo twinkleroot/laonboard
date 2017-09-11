@@ -370,6 +370,9 @@ if (! function_exists('getViewThumbnail')) {
         $imgPath = storage_path('app/public/'. $folder);
 
         $imgPathAndFileName = $imgPath. '/'. $imageName;
+        if(!File::exists($imgPathAndFileName)) {
+            return abort(500, '첨부파일이 존재하지 않습니다.');
+        }
         $img = Image::make(file_get_contents($imgPathAndFileName));
         $thumbWidth = $board->image_width;
 

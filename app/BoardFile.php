@@ -61,9 +61,7 @@ class BoardFile extends Model
                     // 삭제할 파일정보를 선택한다.
                     $delFile = $this->selectBoardFile($boardId, $writeId, $i)->first();
                     // 기존 파일과 썸네일을 삭제한다.
-                    if( !$this->deleteFileOnServer($board, $board->table_name, $delFile->file) ) {
-                        abort(500, '업로드한 파일을 삭제하는데 실패하였습니다.');
-                    }
+                    $this->deleteFileOnServer($board, $board->table_name, $delFile->file);
                     // 파일 테이블의 해당 행을(board_file_no) 삭제한다.
                     if( $this->selectBoardFile($boardId, $writeId, $i)->delete() < 1) {
                         abort(500, '파일정보 삭제에 실패하였습니다.');
@@ -78,9 +76,7 @@ class BoardFile extends Model
                     // 기존에 파일이 존재하는 번호(board_file_no)라면
                     if( !is_null($delFile) ) {
                         // 기존 파일과 썸네일을 삭제한다.
-                        if( !$this->deleteFileOnServer($board, $board->table_name, $delFile->file) ) {
-                            abort(500, '기존 파일을 삭제하는데 실패하였습니다.');
-                        }
+                        $this->deleteFileOnServer($board, $board->table_name, $delFile->file);
                         // 선택한 파일을 업로드 한다.
                         if( !$this->uploadFile($files[$i], $board->table_name) ) {
                             abort(500, '선택한 파일을 업로드하는데 실패했습니다.');
@@ -235,6 +231,9 @@ class BoardFile extends Model
         // 기존 파일을 삭제한다.
         $dir = storage_path('app/public/'. $tableName);
         $path = "$dir/$delFileName";
+        if(!File::exists($path)) {
+            return 1;
+        }
         if(getimagesize($path)) {
             // 기존 썸네일을 삭제한다.
             $thumbSize = getViewThumbnail($board, $delFileName, $tableName);
@@ -257,16 +256,18 @@ class BoardFile extends Model
         ])->get();
 
         if(count($delFiles) < 1) {
-            return [ 0 => true ];
+            return true;
         }
 
-        $result = array();
         // 첨부 파일 삭제
-        $index = 0;
-        $result[$index++] = $this->deleteAttachFile($board, $board->table_name, $delFiles);
+        $result = $this->deleteAttachFile($board, $board->table_name, $delFiles);
+
+        if(!$result) {
+            return $result;
+        }
 
         // 첨부 파일 정보 삭제
-        $result[$index] = BoardFile::where([
+        $result = BoardFile::where([
             'board_id' => $boardId,
             'write_id' => $writeId,
         ])->delete() > 0 ? true : false;

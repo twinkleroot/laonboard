@@ -35,7 +35,7 @@ class CheckBoardLevel
             } else if(str_contains($type, 'write')) {
                 $message = '글을 쓸 권한이 없습니다.';
             } else if(str_contains($type, 'reply')) {
-                $message = '답글을 쓸 권한이 없습니다.';
+                $message = '답변을 쓸 권한이 없습니다.';
             } else if(str_contains($type, 'update')) {
                 $message = '글을 수정할 권한이 없습니다.';
             } else if(str_contains($type, 'comment')) {

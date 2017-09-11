@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\User;
 
 class CheckValidUser
 {
@@ -16,8 +15,7 @@ class CheckValidUser
      */
     public function handle($request, Closure $next)
     {
-        $user = User::find(auth()->user()->id);
-        if(is_null($user)) {
+        if(!auth()->check()) {
             return alert('탈퇴하거나 가입하지 않은 회원입니다.');
         }
 

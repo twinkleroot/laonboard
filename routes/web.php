@@ -326,7 +326,7 @@ Route::group(['prefix' => 'bbs/{boardName}'], function () {
     Route::get('views/{writeId}/link/{linkNo}', ['as' => 'board.link', 'uses' => 'WritesController@link'])
         ->middleware('level.board:link_level', 'valid.board', 'valid.write', 'cert:read');
     // 글 읽기 중 파일 다운로드
-    Route::get('views/{writeId}/download/{fileNo}', ['as' => 'board.download', 'uses' => 'DownloadController@download'])
+    Route::get('views/{writeId}/download/{fileNo}', ['as' => 'board.download', 'uses' => 'WritesController@download'])
         ->middleware('level.board:download_level', 'valid.board', 'valid.write', 'cert:read');
     // 글 읽기 중 추천/비추천
     Route::post('views/{writeId}/{good}', ['as' => 'board.good', 'uses' => 'WritesController@good'])
@@ -336,7 +336,7 @@ Route::group(['prefix' => 'bbs/{boardName}'], function () {
     Route::get('create', ['as' => 'board.create', 'uses' => 'WritesController@create'])
         ->middleware('level.board:write_level', 'valid.board', 'cert:write');
     Route::post('', ['as' => 'board.store', 'uses' => 'WritesController@store'])
-        ->middleware('level.board:write_level', 'valid.board', 'cert:write', 'valid.store.write', 'writable.reply');
+        ->middleware('level.board:write_level', 'valid.board', 'cert:write', 'valid.store.write');
     // 글 수정
     Route::get('edit/{writeId}', ['as' => 'board.edit', 'uses' => 'WritesController@edit'])
         ->middleware('level.board:update_level', 'valid.board', 'valid.write', 'cert:write', 'can.action.write.immediately:edit', 'updatable.deletable.write');
@@ -347,7 +347,7 @@ Route::group(['prefix' => 'bbs/{boardName}'], function () {
         ->middleware('valid.board', 'valid.write', 'can.action.write.immediately:delete', 'updatable.deletable.write');
     // 답변 쓰기
     Route::get('reply/{writeId}', ['as' => 'board.create.reply', 'uses' => 'WritesController@createReply'])
-        ->middleware('level.board:reply_level', 'valid.board', 'valid.write', 'cert:write', 'writable.reply');
+        ->middleware('level.board:reply_level', 'valid.board', 'valid.write', 'cert:write');
     // 댓글 쓰기
     Route::post('comments/store', ['as' => 'board.comment.store', 'uses' => 'CommentsController@store'])
         ->middleware('level.board:comment_level', 'writable.comment:create');
@@ -374,8 +374,7 @@ Route::group(['prefix' => 'bbs/{boardName}'], function () {
     });
 
     // RSS
-    Route::get('rss', ['as' => 'rss', 'uses' => 'WritesController@rss'])
-        ->middleware('rss');
+    Route::get('rss', ['as' => 'rss', 'uses' => 'WritesController@rss']);
 });
 // 비밀 글, 댓글 읽기 전, 댓글삭제 전 비밀번호 검사
 Route::get('password/type/{type}', ['as' => 'board.password.check', 'uses' => 'PasswordController@checkPassword']);

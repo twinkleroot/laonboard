@@ -23,13 +23,13 @@ class CheckCert
             $str = '글쓰기가';
         }
 
-        $userCertify = auth()->user() ? auth()->user()->certify : '';
-        $userAdult = auth()->user() ? auth()->user()->adult : 0;
+        $userCertify = auth()->check() ? auth()->user()->certify : '';
+        $userAdult = auth()->check() ? auth()->user()->adult : 0;
 
         // 본인 확인을 사용한다면
         if(cache('config.cert')->certUse && !session()->get('admin')) {
             // 인증된 회원만 가능
-            if($board->use_cert != 'not-use' && auth()->guest()) {
+            if($board->use_cert != 'not-use' && !auth()->check()) {
                 return alertRedirect('이 게시판은 본인확인 하신 회원님만 '. $str. ' 가능합니다.\\n\\n회원이시라면 로그인 후 이용해 보십시오.', '/login?nextUrl='. $request->getRequestUri());
             }
             if($board->use_cert == 'cert' && !$userCertify) {
