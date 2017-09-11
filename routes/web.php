@@ -225,7 +225,30 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // 인증에 관련한 라우트들
-Auth::routes();
+// Auth::routes();
+// 회원 가입
+Route::get('users/join', ['as' => 'user.join', 'uses' => 'Auth\RegisterController@join']);
+Route::post('users/register', ['as' => 'user.register', 'uses' => 'Auth\RegisterController@register']);
+Route::get('users/welcome', ['as' => 'user.welcome', 'uses' => 'UsersController@welcome']);
+// 로그인
+Route::get('login', ['as' => 'login', 'uses' => 'Auth\LoginController@showLoginForm']);
+Route::post('login', ['as' => '', 'uses' => 'Auth\LoginController@login']);
+// 로그아웃
+Route::post('logout', ['as' => 'logout', 'uses' => 'Auth\LoginController@logout']);
+// 비밀번호 재설정
+Route::get('auth/remind', ['as' => 'remind.create', 'uses' => 'Auth\PasswordsController@getRemind']);
+Route::post('auth/remind', ['as' => 'remind.store', 'uses' => 'Auth\PasswordsController@postRemind']);
+Route::get('auth/reset/{token}', ['as' => 'reset.create', 'uses' => 'Auth\PasswordsController@getReset'])
+    ->where('token', '[\pL-\pN]{64}');
+Route::post('auth/reset', ['as' => 'reset.store', 'uses' => 'Auth\PasswordsController@postReset']);
+// 소셜 로그인 - 콜백 함수에서 회원 로그인 여부로 분기 (콜백함수 경로 지정은 config/services.php 에서)
+Route::get('social/{provider}', ['as' => 'social', 'uses' => 'Auth\SocialController@redirectToProvider']);
+Route::get('social/{provider}/callback/', ['as' => 'social.callback', 'uses' => 'Auth\SocialController@handleProviderCallback']);
+// 소셜 로그인 후 회원가입
+Route::post('social/socialUserJoin', ['as' => 'social.socialUserJoin', 'uses' => 'Auth\SocialController@socialUserJoin']);
+// 소셜 로그인 후 기존 계정에 연결
+Route::post('social/connectExistAccount', ['as' => 'social.connectExistAccount', 'uses' => 'Auth\SocialController@connectExistAccount']);
+
 // 내용관리
 Route::get('contents/{id}', ['as' => 'content.show', 'uses' => 'ContentsController@show']);
 // 쪽지 보내기 (리소스 라우트보다 먼저 나와야 함)
@@ -287,18 +310,6 @@ Route::group(['middleware' => 'auth'], function() {
 });
 // 자기소개
 Route::get('users/profile/{id}', ['as' => 'user.profile', 'uses' => 'UsersController@profile']);
-// 소셜 로그인 - 콜백 함수에서 회원 로그인 여부로 분기 (콜백함수 경로 지정은 config/services.php 에서)
-Route::get('social/{provider}', ['as' => 'social', 'uses' => 'Auth\SocialController@redirectToProvider']);
-Route::get('social/{provider}/callback/', ['as' => 'social.callback', 'uses' => 'Auth\SocialController@handleProviderCallback']);
-// 소셜 로그인 후 회원가입
-Route::post('social/socialUserJoin', ['as' => 'social.socialUserJoin', 'uses' => 'Auth\SocialController@socialUserJoin']);
-// 소셜 로그인 후 기존 계정에 연결
-Route::post('social/connectExistAccount', ['as' => 'social.connectExistAccount', 'uses' => 'Auth\SocialController@connectExistAccount']);
-
-// 회원 가입
-Route::get('users/join', ['as' => 'user.join', 'uses' => 'Auth\RegisterController@join']);
-Route::post('users/register', ['as' => 'user.register', 'uses' => 'Auth\RegisterController@register']);
-Route::get('users/welcome', ['as' => 'user.welcome', 'uses' => 'UsersController@welcome']);
 // 툴팁 : 메일 보내기
 Route::get('users/mails/send', ['as' => 'user.mail.form', 'uses' => 'UsersController@form'])->middleware('form.mail');
 Route::post('users/mails/send', ['as' => 'user.mail.send', 'uses' => 'UsersController@send'])->middleware('send.mail');

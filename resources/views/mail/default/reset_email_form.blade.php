@@ -12,7 +12,7 @@
         <hr style="width: 100%; height: 0; border-top: 2px solid #587ef6; margin: 20px 0;">
         <div style="margin: 20px 0 40px; font-size: 14px; line-height: 1.8;">
             아래 주소를 클릭하시면 비밀번호 재설정 페이지로 연결됩니다.<br><br>
-            <a href="{{ route('password.reset', $token) }}" target="_blank">{{ route('password.reset', $token) }}</a>
+            <a href="{{ route('reset.create', $token) }}" target="_blank">{{ route('reset.create', $token) }}</a>
         </div>
     </div>
 </body>

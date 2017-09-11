@@ -10,6 +10,11 @@
 @endsection
 
 @section('content')
+@if($errors->any())
+<script>
+    alert("{{ $errors->first() }}");
+</script>
+@endif
 <div class="container">
 <div class="row">
 <div class="col-md-6 col-md-offset-3 col-xs-10 col-xs-offset-1">
@@ -26,7 +31,7 @@
                     {{ session('status') }}
                 </div>
             @endif
-            <form class="contents col-md-8 col-md-offset-2" role="form" method="POST" action="/password/reset">
+            <form class="contents col-md-8 col-md-offset-2" role="form" method="POST" action="{{ route('reset.store') }}">
             {{ csrf_field() }}
 
                 <input type="hidden" name="token" value="{{ $token }}">
@@ -55,7 +60,7 @@
 
                 <div class="form-group {{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
                     <label for="password-confirm">비밀번호 확인</label>
-                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation" placeholder="비밀번호를 다시 입력하세요"  required>
+                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation" placeholder="비밀번호를 다시 입력하세요" required>
 
                     @if ($errors->has('password_confirmation'))
                         <span class="help-block">

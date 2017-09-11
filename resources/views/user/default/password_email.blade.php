@@ -26,7 +26,7 @@
                     {{ session('status') }}
                 </div>
             @endif
-            <form class="contents col-md-8 col-md-offset-2" role="form" method="POST" action="{{ route('password.email') }}">
+            <form class="contents col-md-8 col-md-offset-2" role="form" method="POST" action="{{ route('remind.store') }}">
             {{ csrf_field() }}
 
                 <div class="form-group {{ $errors->has('email') ? ' has-error' : '' }}">

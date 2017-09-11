@@ -57,7 +57,8 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $subscribe = [
         // 댓글 쓰기/수정전 검사하는 이벤트
-        \App\Listeners\CommentListener::class,
+        \App\Listeners\CommentsEventListener::class,
+        \App\Listeners\UsersEventListener::class,
     ];
 
 
@@ -71,10 +72,5 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
-
-        // Event::listen(
-        //     \Illuminate\Auth\Events\Login::class,
-        //     \App\Listeners\LoginSuccessful::class
-        // );
     }
 }

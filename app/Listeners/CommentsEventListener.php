@@ -8,7 +8,7 @@ use App\Board;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class CommentListener
+class CommentsEventListener
 {
     /**
      * Create the event listener.
