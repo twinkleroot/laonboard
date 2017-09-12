@@ -94,7 +94,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row"><label for="adminNick">Nick name</label></th>
+                        <th scope="row"><label for="adminNick">Nickname</label></th>
                         <td>
                             <input name="adminNick" type="text" class="form-control" value="최고관리자" id="adminNick">
                         </td>

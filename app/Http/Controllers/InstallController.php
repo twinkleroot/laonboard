@@ -34,7 +34,7 @@ class InstallController extends Controller
         return view('install.form', $params);
     }
 
-    public function setup(Request $request)
+    public function setup(App\Http\Requests\InstallRequest $request)
     {
         // 1. .env파일에 App 정보, DB 정보를 셋팅한다.
         $this->setEnv($request);
