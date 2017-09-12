@@ -36,7 +36,7 @@
     </div>
     <div class="panel-body row">
         <form class="contents col-md-10 col-md-offset-1" role="form" id="userForm" name="userForm" method="POST" action="{{ route('user.update') }}" enctype="multipart/form-data" autocomplete="off" onsubmit="return userSubmit();">
-        @if(cache('config.cert')->certHp || cache('config.cert')->certIpin)
+        @if(cache('config.cert')->certHp)
             <input type="hidden" name="certType" value="">
             <input type="hidden" name="certNo" value="">
             @unless($config->name)

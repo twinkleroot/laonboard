@@ -31,7 +31,7 @@
     </div>
     <div class="panel-body row">
         <form class="contents col-md-8 col-md-offset-2" id="userForm" name="userForm" role="form" method="POST" action="{{ route('user.register') }}">
-        @if(cache('config.cert')->certHp || cache('config.cert')->certIpin)
+        @if(cache('config.cert')->certHp)
             <input type="hidden" name="certType" value="">
             <input type="hidden" name="name" value="">
             <input type="hidden" name="hp" value="">
