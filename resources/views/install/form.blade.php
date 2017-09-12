@@ -32,6 +32,9 @@
                         <th><label for="appUrl">App Url</label></th>
                         <td>
                             <input name="appUrl" type="text" class="form-control" value="{{ old('appUrl') ? : env('APP_URL', Request::root()) }}" id="appUrl">
+                            @foreach ($errors->get('appUrl') as $message)
+                            <strong class="st_strong">{{ $message }}</strong>
+                            @endforeach
                         </td>
                     </tr>
                 </tbody>
@@ -43,30 +46,45 @@
                         <th scope="row"><label for="mysqlHost">Host</label></th>
                         <td>
                             <input name="mysqlHost" type="text" class="form-control" value="{{ old('mysqlHost') ? : env('DB_HOST', '127.0.0.1') }}" id="mysqlHost">
+                            @foreach ($errors->get('mysqlHost') as $message)
+                            <strong class="st_strong">{{ $message }}</strong>
+                            @endforeach
                         </td>
                     </tr>
                     <tr>
                         <th scope="row"><label for="mysqlPort">Port</label></th>
                         <td>
                             <input name="mysqlPort" type="text" class="form-control" value="{{ old('mysqlPort') ? : env('DB_PORT', '3306') }}" id="mysqlPort">
+                            @foreach ($errors->get('mysqlPort') as $message)
+                            <strong class="st_strong">{{ $message }}</strong>
+                            @endforeach
                         </td>
                     </tr>
                     <tr>
                         <th scope="row"><label for="mysqlDb">Database</label></th>
                         <td>
                             <input name="mysqlDb" type="text" class="form-control" id="mysqlDb" value="{{ old('mysqlDb') ? : env('DB_DATABASE', '') }}">
+                            @foreach ($errors->get('mysqlDb') as $message)
+                            <strong class="st_strong">{{ $message }}</strong>
+                            @endforeach
                         </td>
                     </tr>
                     <tr>
                         <th scope="row"><label for="mysqlUser">User Name</label></th>
                         <td>
                             <input name="mysqlUser" type="text" class="form-control" id="mysqlUser" value="{{ old('mysqlUser') ? : env('DB_USERNAME', '') }}">
+                            @foreach ($errors->get('mysqlUser') as $message)
+                            <strong class="st_strong">{{ $message }}</strong>
+                            @endforeach
                         </td>
                     </tr>
                     <tr>
                         <th scope="row"><label for="mysqlPass">Password</label></th>
                         <td>
                             <input name="mysqlPass" type="text" class="form-control" id="mysqlPass">
+                            @foreach ($errors->get('mysqlPass') as $message)
+                            <strong class="st_strong">{{ $message }}</strong>
+                            @endforeach
                         </td>
                     </tr>
                     <tr>
@@ -74,6 +92,9 @@
                         <td>
                             <input name="tablePrefix" type="text" class="form-control" value="{{ old('tablePrefix') ? : env('DB_PREFIX', 'la_') }}" id="tablePrefix">
                             <span>가능한 변경하지 마십시오.</span>
+                            @foreach ($errors->get('tablePrefix') as $message)
+                            <strong class="st_strong">{{ $message }}</strong>
+                            @endforeach
                         </td>
                     </tr>
                 </tbody>
@@ -85,18 +106,27 @@
                         <th scope="row"><label for="adminEmail">Email</label></th>
                         <td>
                             <input name="adminEmail" type="text" class="form-control" value="{{ old('adminNick') ? : 'admin@laonboard.com' }}" id="adminEmail">
+                            @foreach ($errors->get('adminEmail') as $message)
+                            <strong class="st_strong">{{ $message }}</strong>
+                            @endforeach
                         </td>
                     </tr>
                     <tr>
                         <th scope="row"><label for="adminPass">Password</label></th>
                         <td>
                             <input name="adminPass" type="text" class="form-control" id="adminPass">
+                            @foreach ($errors->get('adminPass') as $message)
+                            <strong class="st_strong">{{ $message }}</strong>
+                            @endforeach
                         </td>
                     </tr>
                     <tr>
                         <th scope="row"><label for="adminNick">Nickname</label></th>
                         <td>
                             <input name="adminNick" type="text" class="form-control" value="{{ old('adminNick') ? : '최고관리자' }}" id="adminNick">
+                            @foreach ($errors->get('adminNick') as $message)
+                            <strong class="st_strong">{{ $message }}</strong>
+                            @endforeach
                         </td>
                     </tr>
                 </tbody>

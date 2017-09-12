@@ -22,7 +22,7 @@
                 라이센스에 동의하시는 경우에만 설치가 진행됩니다.
             </p>
             <div class="ins_ta ins_license">
-                <textarea name="license" id="license" readonly>
+                <textarea id="license" readonly>
 프로그램 명칭  라라벨 프레임워크 5.4로 만든 게시판 (board made by laravel framework 5.4)
 저작자  (주)에스아이알소프트 (sir.kr)
 GNU 약소 일반 공중 사용 허가서
