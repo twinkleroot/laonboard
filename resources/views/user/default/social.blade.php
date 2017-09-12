@@ -153,7 +153,7 @@ function loginValidation(form) {
                         @endif
                     </div>
                     <div class="form-group">
-                        <input type="submit" id="userJoin" class="btn btn-lg btn-block btn-sir" placeholder="닉네임을 입력하세요" value="회원가입"/>
+                        <input type="submit" id="userJoin" class="btn btn-block btn-sir" placeholder="닉네임을 입력하세요" value="회원가입"/>
                     </div>
                 </form>
             </div>
@@ -177,7 +177,7 @@ function loginValidation(form) {
                         <input type="password" name="password" class="form-control" maxlength="20" placeholder="비밀번호를 입력하세요" required />
                     </div>
                     <div class="form-group">
-                        <input type="submit" id="connectExistAccount" class="btn btn-lg btn-block btn-sir" value="연결하고 로그인하기"/>
+                        <input type="submit" id="connectExistAccount" class="btn btn-block btn-sir" value="연결하고 로그인하기"/>
                     </div>
                 </form>
             </div>

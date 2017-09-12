@@ -192,6 +192,7 @@
 .bd_name {
     width: 10%;
     position: relative;
+    text-align: left;
 }
 .bd_name .dropdown-menu {
     position: absolute;
@@ -615,29 +616,22 @@
     border-top: 1px  !important;
 }
 .cmt_reply:before {
-    content: "\f112";
-    font-family: FontAwesome;
-    font-size: 12px;
-    margin-left: -25px;
-    margin-top: -3px;
+    content: "";
+    display: block;
+    background: url("../images/reply.gif");
+    width: 10px;
+    height: 10px;
+    margin: 3px 7px 0 0;
     float: left;
-    color: #aaa;
-
-    -ms-transform: rotate(180deg);
-    -webkit-transform: rotate(180deg);
-    transform: rotate(180deg);
 }
 .bd_reply:before {
-    content: "\f112";
-    font-family: FontAwesome;
-    font-size: 12px;
-    margin-right: 7px;
+    content: "";
+    display: block;
+    background: url("../images/reply.gif");
+    width: 10px;
+    height: 10px;
+    margin: 3px 7px 0 0;
     float: left;
-    color: #aaa;
-
-    -ms-transform: rotate(180deg);
-    -webkit-transform: rotate(180deg);
-    transform: rotate(180deg);
 }
 .cmt_box {
     float: left;

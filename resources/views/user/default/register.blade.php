@@ -22,7 +22,7 @@
 @endif
 <div class="container">
 <div class="row">
-<div class="col-md-6 col-md-offset-3 col-xs-12">
+<div class="col-md-6 col-md-offset-3">
 
 <!-- auth login -->
 <div class="panel panel-default">
@@ -89,7 +89,7 @@
 
             {{-- @if(cache('config.cert')->certIpin)
             <div class="form-group">
-                <button type="button" class="btn btn-lg btn-block btn-sir" id="win_ipin_cert">아이핀 본인확인</button>
+                <button type="button" class="btn btn-block btn-sir" id="win_ipin_cert">아이핀 본인확인</button>
 
                 @if ($errors->has('ipin'))
                 <span class="help-block">
@@ -100,7 +100,7 @@
             @endif --}}
             @if(cache('config.cert')->certHp)
             <div class="form-group @if($errors->has('hpCert'))has-error @endif">
-                <button type="button" class="btn btn-lg btn-block btn-sir" id="win_hp_cert">휴대폰 본인확인</button>
+                <button type="button" class="btn btn-block btn-sir" id="win_hp_cert">휴대폰 본인확인</button>
 
                 @if($errors->has('hpCert'))
                 <span class="help-block">
@@ -111,7 +111,7 @@
             @endif
 
             <div class="form-group">
-                <button type="button" class="btn btn-lg btn-block btn-sir" onclick="validate();">회원가입</button>
+                <button type="button" class="btn btn-block btn-sir" onclick="validate();">회원가입</button>
             </div>
             <!-- 리캡챠 -->
             <div id='recaptcha' class="g-recaptcha"

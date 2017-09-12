@@ -21,7 +21,7 @@
 @endif
 <div class="container">
 <div class="row">
-<div class="col-md-6 col-md-offset-3 col-xs-10 col-xs-offset-1">
+<div class="col-md-6 col-md-offset-3">
     <div class="panel panel-default">
         <div class="panel-heading bg-sir">
             <h3 class="panel-title">회원 비밀번호 확인</h3>

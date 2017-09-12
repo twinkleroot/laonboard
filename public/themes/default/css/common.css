@@ -300,6 +300,14 @@ div {
 	width:80px;
 	text-align: center;
 }
+.cmt_nick.open {
+    position: relative;
+}
+.cmt_nick .dropdown-menu {
+    top: 20px;
+    left: 15px;
+    font-size: 12px;
+}
 
 /* pagination */
 .pagination {
