@@ -10,7 +10,7 @@ use Carbon\Carbon;
 use App\Point;
 use App\Memo;
 
-class LoginListener
+class LoginEventListener
 {
 
     public $request;
