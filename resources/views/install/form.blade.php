@@ -32,9 +32,9 @@
                         <th><label for="appUrl">App Url</label></th>
                         <td>
                             <input name="appUrl" type="text" class="form-control" value="{{ old('appUrl') ? : env('APP_URL', Request::root()) }}" id="appUrl">
-                            @if(session()->has('appUrl'))
-                            <strong class="st_strong">{{ session()->get('appUrl') }}</strong>
-                            @endif
+                            @foreach ($errors->get('appUrl') as $message)
+                            <strong>{{ $message }}</strong>
+                            @endforeach
                         </td>
                     </tr>
                 </tbody>
@@ -46,45 +46,45 @@
                         <th scope="row"><label for="mysqlHost">Host</label></th>
                         <td>
                             <input name="mysqlHost" type="text" class="form-control" value="{{ old('mysqlHost') ? : env('DB_HOST', '127.0.0.1') }}" id="mysqlHost">
-                            @if(session()->has('mysqlHost'))
-                            <strong class="st_strong">{{ session()->get('mysqlHost') }}</strong>
-                            @endif
+                            @foreach ($errors->get('mysqlHost') as $message)
+                            <strong>{{ $message }}</strong>
+                            @endforeach
                         </td>
                     </tr>
                     <tr>
                         <th scope="row"><label for="mysqlPort">Port</label></th>
                         <td>
                             <input name="mysqlPort" type="text" class="form-control" value="{{ old('mysqlPort') ? : env('DB_PORT', '3306') }}" id="mysqlPort">
-                            @if(session()->has('mysqlPort'))
-                            <strong class="st_strong">{{ session()->get('mysqlPort') }}</strong>
-                            @endif
+                            @foreach ($errors->get('mysqlPort') as $message)
+                            <strong>{{ $message }}</strong>
+                            @endforeach
                         </td>
                     </tr>
                     <tr>
                         <th scope="row"><label for="mysqlDb">Database</label></th>
                         <td>
                             <input name="mysqlDb" type="text" class="form-control" id="mysqlDb" value="{{ old('mysqlDb') ? : env('DB_DATABASE', '') }}">
-                            @if(session()->has('mysqlDb'))
-                            <strong class="st_strong">{{ session()->get('mysqlDb') }}</strong>
-                            @endif
+                            @foreach ($errors->get('mysqlDb') as $message)
+                            <strong>{{ $message }}</strong>
+                            @endforeach
                         </td>
                     </tr>
                     <tr>
                         <th scope="row"><label for="mysqlUser">User Name</label></th>
                         <td>
                             <input name="mysqlUser" type="text" class="form-control" id="mysqlUser" value="{{ old('mysqlUser') ? : env('DB_USERNAME', '') }}">
-                            @if(session()->has('mysqlUser'))
-                            <strong class="st_strong">{{ session()->get('mysqlUser') }}</strong>
-                            @endif
+                            @foreach ($errors->get('mysqlUser') as $message)
+                            <strong>{{ $message }}</strong>
+                            @endforeach
                         </td>
                     </tr>
                     <tr>
                         <th scope="row"><label for="mysqlPass">Password</label></th>
                         <td>
                             <input name="mysqlPass" type="text" class="form-control" id="mysqlPass">
-                            @if(session()->has('mysqlPass'))
-                            <strong class="st_strong">{{ session()->get('mysqlPass') }}</strong>
-                            @endif
+                            @foreach ($errors->get('mysqlPass') as $message)
+                            <strong>{{ $message }}</strong>
+                            @endforeach
                         </td>
                     </tr>
                     <tr>
@@ -92,9 +92,9 @@
                         <td>
                             <input name="tablePrefix" type="text" class="form-control" value="{{ old('tablePrefix') ? : env('DB_PREFIX', 'la_') }}" id="tablePrefix">
                             <span>가능한 변경하지 마십시오.</span>
-                            @if(session()->has('tablePrefix'))
-                            <strong class="st_strong">{{ session()->get('tablePrefix') }}</strong>
-                            @endif
+                            @foreach ($errors->get('tablePrefix') as $message)
+                            <strong>{{ $message }}</strong>
+                            @endforeach
                         </td>
                     </tr>
                 </tbody>
@@ -105,28 +105,28 @@
                     <tr>
                         <th scope="row"><label for="adminEmail">Email</label></th>
                         <td>
-                            <input name="adminEmail" type="text" class="form-control" value="{{ old('adminNick') ? : 'admin@laonboard.com' }}" id="adminEmail">
-                            @if(session()->has('adminEmail'))
-                            <strong class="st_strong">{{ session()->get('adminEmail') }}</strong>
-                            @endif
+                            <input name="adminEmail" type="text" class="form-control" value="{{ old('adminEmail') ? : 'admin@laonboard.com' }}" id="adminEmail">
+                            @foreach ($errors->get('adminEmail') as $message)
+                            <strong>{{ $message }}</strong>
+                            @endforeach
                         </td>
                     </tr>
                     <tr>
                         <th scope="row"><label for="adminPass">Password</label></th>
                         <td>
                             <input name="adminPass" type="text" class="form-control" id="adminPass">
-                            @if(session()->has('adminPass'))
-                            <strong class="st_strong">{{ session()->get('adminPass') }}</strong>
-                            @endif
+                            @foreach ($errors->get('adminPass') as $message)
+                            <strong>{{ $message }}</strong>
+                            @endforeach
                         </td>
                     </tr>
                     <tr>
                         <th scope="row"><label for="adminNick">Nickname</label></th>
                         <td>
                             <input name="adminNick" type="text" class="form-control" value="{{ old('adminNick') ? : '최고관리자' }}" id="adminNick">
-                            @if(session()->has('adminNick'))
-                            <strong class="st_strong">{{ session()->get('adminNick') }}</strong>
-                            @endif
+                            @foreach ($errors->get('adminNick') as $message)
+                            <strong>{{ $message }}</strong>
+                            @endforeach
                         </td>
                     </tr>
                 </tbody>
