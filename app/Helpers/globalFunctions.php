@@ -267,17 +267,6 @@ if (! function_exists('checkIncorrectContent')) {
     }
 }
 
-if (! function_exists('checkPostMaxSize')) {
-    // 서버에서 지정한 Post의 최대 크기 검사
-    function checkPostMaxSize($request)
-    {
-        if (empty($_POST)) {
-            return false;
-        }
-        return true;
-    }
-}
-
 if (! function_exists('checkAdminAboutNotice')) {
     // 관리자가 아닌데 공지사항을 남기려 하는 경우가 있는지 검사
     function checkAdminAboutNotice($request)
