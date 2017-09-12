@@ -192,6 +192,7 @@
 .bd_name {
     width: 10%;
     position: relative;
+    text-align: left;
 }
 .bd_name .dropdown-menu {
     position: absolute;
