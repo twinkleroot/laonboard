@@ -68,7 +68,7 @@ class Notification
 
         foreach($uniqueEmail as $to) {
             $toUser = User::where('email', $to)->first();
-            Mail::to($toUser)->queue(new WriteNotification($mailSubject, $writeSubject, $name, $content, $linkUrl));
+            Mail::to($toUser)->send(new WriteNotification($mailSubject, $writeSubject, $name, $content, $linkUrl));
         }
     }
 
@@ -76,19 +76,19 @@ class Notification
     public function sendCongratulateJoin($user)
     {
         $subject = '['. Cache::get('config.homepage')->title. '] 회원가입을 축하드립니다.';
-        Mail::to($user)->queue(new CongratulateJoin($user, $subject));
+        Mail::to($user)->send(new CongratulateJoin($user, $subject));
     }
 
     // 최고관리자에게 회원 가입 알림 메일 보내기
     public function sendJoinNotification($user)
     {
         $subject = '['. Cache::get('config.homepage')->title. '] '. $user->nick. ' 님께서 회원으로 가입하셨습니다.';
-        Mail::to(Cache::get('config.homepage')->superAdmin)->queue(new JoinNotification($user, $subject));
+        Mail::to(Cache::get('config.homepage')->superAdmin)->send(new JoinNotification($user, $subject));
     }
 
     // 회원 정보 수정에서 이메일 변경시 이메일 인증 메일 발송
     public function sendEmailCertify($to, $user, $nick, $isEmailChange)
     {
-        Mail::to($to)->queue(new EmailCertify($user, $nick, $isEmailChange));
+        Mail::to($to)->send(new EmailCertify($user, $nick, $isEmailChange));
     }
 }
