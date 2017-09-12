@@ -48,7 +48,7 @@ class RegisterController extends Controller
     public function join()
     {
         if(!cache('config.sns')->googleRecaptchaClient || !cache('config.sns')->googleRecaptchaServer) {
-            return alert('자동등록방지 키가 등록되지 않아서 회원가입을 진행할 수 없습니다.');
+            return alertRedirect('자동등록방지 키가 등록되지 않아서 회원가입을 진행할 수 없습니다.');
         }
         // 본인확인 관련 세션 초기화
         session()->put("ss_cert_no", "");
@@ -64,9 +64,9 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         if(!cache('config.sns')->googleRecaptchaClient || !cache('config.sns')->googleRecaptchaServer) {
-            return alert('자동등록방지 키가 등록되지 않아서 회원가입을 진행할 수 없습니다.');
+            return alertRedirect('자동등록방지 키가 등록되지 않아서 회원가입을 진행할 수 없습니다.');
         }
-        
+
         ReCaptcha::reCaptcha($request);
         $adminConfig = new Config();
         $rulePassword = $adminConfig->getPasswordRuleByConfigPolicy();
