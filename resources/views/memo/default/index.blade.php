@@ -39,7 +39,6 @@
 </div>
 
 <div id="memo" class="container">
-    <form>
     <table class="table box">
         <thead>
             <tr>
@@ -61,7 +60,14 @@
                 </td>
                 <td class="td_datetime"><a href="{{ route('memo.show', $memo->id) }}?kind={{ $kind }}">{{ $memo->send_timestamp }}</a></td>
                 <td class="td_datetime"><a href="{{ route('memo.show', $memo->id) }}?kind={{ $kind }}">{{ $memo->read_timestamp ? : '아직 읽지 않음' }}</a></td>
-                <td class="td_mngsmall"><a href="{{ route('memo.destroy', $memo->id) }}?kind={{ $kind }}" onclick="del(this.href); return false;">삭제</a></td>
+                <td class="td_mngsmall">
+                    <a href="{{ route('memo.destroy', $memo->id) }}" onclick="delPost('deleteForm{{ $memo->id }}')">삭제</a>
+                    <form id="deleteForm{{ $memo->id }}" action="{{ route('memo.destroy', $memo->id) }}" method="POST" style="display: none;">
+                        {{ csrf_field() }}
+                        {{ method_field('DELETE') }}
+                        <input type="hidden" name="kind" value="{{ $kind }}" />
+                    </form>
+                </td>
             </tr>
             @endforeach
             @else
@@ -75,7 +81,6 @@
             @endif
         </tbody>
     </table>
-    </form>
 
     <div class="help bg-info">
         쪽지 보관일수는 최장 <strong>{{ cache('config.homepage')->memoDel }}일</strong> 입니다.

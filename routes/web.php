@@ -75,11 +75,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
     Route::post('mails/send', ['as' => 'admin.email.send', 'uses' => 'Admin\MailsController@postMail']);
 
     // 팝업레이어 관리 리소스 컨트롤러
-    Route::get('popups/{id}', ['as' => 'admin.popups.destroy', 'uses' => 'Admin\PopupsController@destroy'])
-        ->where('id', '[0-9]+');
     Route::resource('popups', 'Admin\PopupsController', [
         'except' => [
-            'show', 'destroy',
+            'show',
         ],
         'names' => [
             'index' => 'admin.popups.index',
@@ -87,6 +85,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
             'store' => 'admin.popups.store',
             'edit' => 'admin.popups.edit',
             'update' => 'admin.popups.update',
+            'destroy' => 'admin.popups.destroy',
         ]
     ]);
 
@@ -267,30 +266,30 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('users/disconnectSocialAccount', ['as' => 'user.disconnectSocialAccount', 'uses' => 'UsersController@disconnectSocialAccount']);
 
     // 쪽지
-    Route::get('memos/{memo}/delete', ['as' => 'memo.destroy', 'uses' => 'MemosController@destroy']);
     Route::resource('memos', 'MemosController', [
         'except' => [
-            'edit', 'update', 'destroy', 'create'
+            'edit', 'update', 'create',
         ],
         'names' => [
             'index' => 'memo.index',
             'show' => 'memo.show',
             'store' => 'memo.store',
+            'destroy' => 'memo.destroy',
         ],
     ]);
 
     // 스크랩
-    Route::get('scraps/{scrap}/delete', ['as' => 'scrap.destroy', 'uses' => 'ScrapsController@destroy']);
     Route::post('scraps', ['as' => 'scrap.store', 'uses' => 'ScrapsController@store'])
         ->middleware('level.board:comment_level');
     Route::resource('scraps', 'ScrapsController', [
             'only' => [
-                'index', 'create', 'store'
+                'index', 'create', 'store', 'destroy',
             ],
             'names' => [
                 'index' => 'scrap.index',
                 'create' => 'scrap.create',
                 'store' => 'scrap.store',
+                'destroy' => 'scrap.destroy',
             ],
     ]);
     // 임시 저장
@@ -354,7 +353,7 @@ Route::group(['prefix' => 'bbs/{boardName}'], function () {
     Route::put('update/{writeId}', ['as' => 'board.update', 'uses' => 'WritesController@update'])
         ->middleware('level.board:update_level', 'valid.board', 'valid.write', 'cert:write', 'valid.store.write');
     // 글 삭제
-    Route::get('delete/{writeId}', ['as' => 'board.destroy', 'uses' => 'WritesController@destroy'])
+    Route::delete('delete/{writeId}', ['as' => 'board.destroy', 'uses' => 'WritesController@destroy'])
         ->middleware('valid.board', 'valid.write', 'can.action.write.immediately:delete', 'updatable.deletable.write');
     // 답변 쓰기
     Route::get('reply/{writeId}', ['as' => 'board.create.reply', 'uses' => 'WritesController@createReply'])
@@ -366,7 +365,7 @@ Route::group(['prefix' => 'bbs/{boardName}'], function () {
     Route::put('comments/update', ['as' => 'board.comment.update', 'uses' => 'CommentsController@update'])
         ->middleware('level.board:comment_level', 'updatable.deletable.write');
     // 댓글 삭제
-    Route::get('views/{writeId}/delete/{commentId}', ['as' => 'board.comment.destroy', 'uses' => 'CommentsController@destroy'])
+    Route::delete('views/{writeId}/delete/{commentId}', ['as' => 'board.comment.destroy', 'uses' => 'CommentsController@destroy'])
         ->middleware('level.board:comment_level', 'can.delete.comment.immediately', 'updatable.deletable.write');
 
     // 커뮤니티에서의 관리자 기능

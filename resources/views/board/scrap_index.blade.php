@@ -31,7 +31,6 @@
 </div>
 
 <div id="bd_scrap" class="container">
-    <form>
     <table class="table box">
         <thead>
             <tr>
@@ -65,7 +64,13 @@
 
                 <td class="td_datetime">{{ $scrap->created_at }}</td>
                 <td class="td_mng">
-                    <a href="{{ route('scrap.destroy', $scrap->id) }}" onclick="del(this.href); return false;">삭제</a>
+                    <a href="{{ route('scrap.destroy', $scrap->id) }}" onclick="delPost('deleteForm{{ $scrap->id }}')">
+                        삭제
+                    </a>
+                    <form id="deleteForm{{ $scrap->id }}" action="{{ route('scrap.destroy', $scrap->id) }}" method="POST" style="display: none;">
+                        {{ csrf_field() }}
+                        {{ method_field('DELETE') }}
+                    </form>
                 </td>
             </tr>
             @empty
@@ -75,7 +80,6 @@
             @endforelse
         </tbody>
     </table>
-    </form>
 </div>
 
 {{ $scraps->links() }}

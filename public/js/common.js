@@ -198,7 +198,7 @@ function check_byte(content, target)
 
     for (i=0; i<cont.length; i++) {
         ch = cont.charAt(i);
-        if (escape(ch).length > 4) {
+        if (ch.length > 4) {
             cnt += 2;
         } else {
             cnt += 1;

@@ -71,7 +71,14 @@
                     <td class="td_mngsmall">{{ $popup->height }}px</td>
                     <td class="td_mngsmall">
                         <a href="{{ route('admin.popups.edit', $popup->id) }}">수정</a>
-                        <a href="{{ route('admin.popups.destroy', $popup->id) }}" onclick="del(this.href); return false;">삭제</a>
+                        {{-- <a href="{{ route('admin.popups.destroy', $popup->id) }}" onclick="del(this.href); return false;">삭제</a> --}}
+                        <a href="{{ route('admin.popups.destroy', $popup->id) }}" onclick="delPost('deleteForm{{ $popup->id }}')">
+                            삭제
+                        </a>
+                        <form id="deleteForm{{ $popup->id }}" action="{{ route('admin.popups.destroy', $popup->id) }}" method="POST" style="display: none;">
+                            {{ csrf_field() }}
+                            {{ method_field('DELETE') }}
+                        </form>
                     </td>
                 </tr>
                 @empty

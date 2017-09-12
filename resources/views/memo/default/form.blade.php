@@ -28,8 +28,8 @@
         </div>
 
         <div class="cbtn">
-            <button class="btn btn-sir" onclick="validate();">보내기</button>
-            <button class="btn btn-default" onclick="window.close();">창닫기</button>
+            <button type="button" class="btn btn-sir" onclick="validate();">보내기</button>
+            <button type="button" class="btn btn-default" onclick="window.close();">창닫기</button>
         </div>
     </div>
     <div class="header_ctg">

@@ -52,7 +52,6 @@
                     <td class="td_mngsmall">
                         <a href="{{ route('admin.contents.edit', $content->content_id) }}">수정</a>
                         <a href="{{ route('content.show', $content->content_id) }}">보기</a>
-                        {{-- <a href="{{ route('admin.contents.destroy', $content->content_id) }}" onclick="del(this.href); return false;">삭제</a> --}}
                         <a href="{{ route('admin.contents.destroy', $content->content_id) }}" onclick="delPost('deleteForm{{ $content->id }}')">
                             삭제
                         </a>

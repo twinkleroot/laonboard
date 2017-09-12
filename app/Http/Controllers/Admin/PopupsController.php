@@ -116,7 +116,7 @@ class PopupsController extends Controller
 
         $result = $this->popup->deletePopup($id);
 
-        return redirect()->back();
+        return redirect()->back()->withMessage('삭제하였습니다.');
     }
 
     // 유효성 검사 규칙

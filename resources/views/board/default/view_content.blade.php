@@ -42,7 +42,15 @@
             <ul class="dropdown-menu" role="menu">
                 @if(!$write->user_id || session()->get('admin') || ( auth()->check() && $user->id == $write->user_id ) )
                     <li><a href="/bbs/{{ $board->table_name }}/edit/{{ $write->id }}">수정</a></li>
-                    <li><a href="/bbs/{{ $board->table_name }}/delete/{{ $write->id }}" onclick="del(this.href); return false;">삭제</a></li>
+                    <li>
+                        <a href="{{ route('board.destroy', ['boardName' => $board->table_name, 'writeId' => $write->id]) }}" onclick="delPost('deleteForm{{ $write->id }}')">
+                            삭제
+                        </a>
+                        <form id="deleteForm{{ $write->id }}" action="{{ route('board.destroy', ['boardName' => $board->table_name, 'writeId' => $write->id]) }}" method="POST" style="display: none;">
+                            {{ csrf_field() }}
+                            {{ method_field('DELETE') }}
+                        </form>
+                    </li>
                 @endif
                 @if(session()->get('admin'))
                     <li>
@@ -185,14 +193,6 @@
     <p class="bd_rd_cmthd">댓글 {{ count($comments) }}개</p>
 </div>
 
-<form class="cmt_write" id="commentForm" method="post" action="" autocomplete="off">
-    {{ csrf_field() }}
-    <input type="hidden" name="writeId" value="{{ $write->id }}" />
-    <input type="hidden" name="commentId" id="commentId" />
-    @if(isset($requestUri))
-    <input type="hidden" name="requestUri" id="requestUri" value="{{ $requestUri }}"/>
-    @endif
-    <input type="hidden" name="_method" id="_method" />
 <section id="bd_rd_cmt">
 @forelse($comments as $comment)
     <article class="cmt" id="comment{{ $comment->id }}">
@@ -233,7 +233,16 @@
                 @if($comment->isEdit == 1)
                 <li><a href="#" onclick="commentBox({{ $comment->id }}, 'cu'); return false;">수정</a></li> @endif
                 @if($comment->isDelete == 1)
-                <li><a href="{{ route('board.comment.destroy', ['boardName' => $board->table_name, 'writeId' => $write->id, 'commentId' => $comment->id])}}" onclick="return commentDelete();">삭제</a></li> @endif
+                <li>
+                    <a href="{{ route('board.comment.destroy', ['boardName' => $board->table_name, 'writeId' => $write->id, 'commentId' => $comment->id]) }}" onclick="delPost('deleteForm{{ $comment->id }}')">
+                        삭제
+                    </a>
+                    <form id="deleteForm{{ $comment->id }}" action="{{ route('board.comment.destroy', ['boardName' => $board->table_name, 'writeId' => $write->id, 'commentId' => $comment->id]) }}" method="POST" style="display: none;">
+                        {{ csrf_field() }}
+                        {{ method_field('DELETE') }}
+                    </form>
+                </li>
+                @endif
             </ul>
             <div class="bd_rd_cmt_view">
                 @if(str_contains($comment->option, 'secret'))
@@ -263,8 +272,15 @@
     </article>
 @endforelse
 </section>
-
 <aside id="commentWriteArea">
+<form class="cmt_write" id="commentForm" method="post" action="" autocomplete="off">
+    {{ csrf_field() }}
+    <input type="hidden" name="writeId" value="{{ $write->id }}" />
+    <input type="hidden" name="commentId" id="commentId" />
+    @if(isset($requestUri))
+        <input type="hidden" name="requestUri" id="requestUri" value="{{ $requestUri }}"/>
+    @endif
+    <input type="hidden" name="_method" id="_method" />
     <article id="comment_box">
         <div class="form-inline info_user">
             @guest  <!-- 비회원일경우 노출 -->
@@ -324,6 +340,7 @@
             @endif
         </div>
     </div>
+</form>
 </aside>
 <!-- 리캡챠 -->
 <div id='recaptcha' class="g-recaptcha"
@@ -331,7 +348,6 @@
     data-callback="onSubmit"
     data-size="invisible" style="display:none">
 </div>
-</form>
 
 <script>
 var saveBefore = '';
