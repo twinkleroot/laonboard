@@ -87,7 +87,7 @@ class UsersController extends Controller
         if(Auth::validate(['email' => $email, 'password' => $request->password ])) {
             return redirect(route('user.'. $work));
         } else {
-            return redirect(route('user.checkPassword'))->with('message', '비밀번호가 틀립니다.')->with('work', $work);
+            return redirect(route('user.checkPassword'). "?work=$work")->withMessage('비밀번호가 틀립니다.');
         }
     }
 
@@ -108,14 +108,34 @@ class UsersController extends Controller
     public function update(Request $request)
     {
         ReCaptcha::reCaptcha($request);
+        
         $params = $this->userModel->editParams();
         $skin = $this->skin;
         $user = auth()->user();
         $rules = [];
         $messages = $this->userModel->messages;
         // 비밀번호를 변경할 경우 validation에 password 조건을 추가한다.
-        if($request->password && !Auth::validate(['email' => $user->email, 'password' => $request->password ])) {
+        if($request->password) {
             $rules = array_add($this->userModel->rulesPassword, 'password', $this->rulePassword);
+            if(cache("config.join")->passwordPolicyUpper) {
+                $messages['password.regex'] .= '대문자 1개 이상';
+            }
+            if(cache("config.join")->passwordPolicyNumber) {
+                if($messages['password.regex']) {
+                    $messages['password.regex'] .= ', ';
+                }
+                $messages['password.regex'] .= '숫자 1개 이상';
+            }
+            if(cache("config.join")->passwordPolicySpecial) {
+                if($messages['password.regex']) {
+                    $messages['password.regex'] .= ', ';
+                }
+                $messages['password.regex'] .= '특수문자 1개 이상';
+            }
+            if($messages['password.regex']) {
+                $messages['password.regex'] .= '으로 구성해서 ';
+            }
+            $messages['password.regex'] .= cache("config.join")->passwordPolicyDigits. '자리 이상 입력해 주세요.';
         }
         // 이메일을 변경할 경우 validation에 email 조건을 추가한다.
         $email = getEmailAddress($request->email);

@@ -21,11 +21,6 @@
         </div>
 
         <div class="panel-body row">
-            @if (session('status'))
-                <div class="alert alert-success">
-                    {{ session('status') }}
-                </div>
-            @endif
             <form class="contents col-md-8 col-md-offset-2" role="form" method="POST" action="{{ route('remind.store') }}">
             {{ csrf_field() }}
 

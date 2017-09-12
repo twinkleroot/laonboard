@@ -176,14 +176,22 @@ class BoardsController extends Controller
             abort(403, '게시판 복사에 대한 권한이 없습니다.');
         }
 
-        $rule = [
+        $rules = [
             'table_name' => 'required|max:20|unique:boards|regex:/^[a-zA-Z0-9_]+$/',
             'subject' => 'required',
         ];
 
+        $messages = [
+            'table_name.required' => '복사 테이블명을 입력해 주세요.',
+            'table_name.max' => '복사 테이블명은 20글자 내로 입력해 주세요.',
+            'table_name.unique' => '복사 테이블명에 입력한 테이블명이 이미 존재 합니다. 다른 테이블명을 입력해 주세요.',
+            'table_name.regex' => '복사 테이블명엔 영문자, 숫자, 언더스코어(_)로 구성해서 입력해 주세요.',
+            'subject.required' => '게시판 제목을 입력해 주세요.',
+        ];
+
         session()->put('table_name', $request->table_name);
 
-        $this->validate($request, $rule);
+        $this->validate($request, $rules, $messages);
 
         $originalBoard = Board::find($request->id);
 

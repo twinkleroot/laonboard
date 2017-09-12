@@ -58,6 +58,14 @@
     </div>
 <div class="body-contents">
     <div class="adm_panel">
+        @if(Session::has('message'))
+        <div id="adm_save">
+            <span class="adm_save_txt">{{ Session::get('message') }}</span>
+            <button onclick="alertclose()" class="adm_alert_close">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+        @endif
         @if ($errors->any())
         <script>
             alert("{{ $errors->first() }}");

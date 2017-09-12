@@ -139,10 +139,10 @@ class Content extends Model
     // 내용 삭제
     public function deleteContent($id)
     {
-        $content = Content::find($id);
+        $content = Content::whereContentId($id)->first();
 
         $this->deleteContentImage($content->content_id, 'h');
         $this->deleteContentImage($content->content_id, 't');
-        $content->delete($id);
+        $content->delete();
     }
 }

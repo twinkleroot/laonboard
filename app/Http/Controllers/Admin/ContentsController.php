@@ -68,7 +68,8 @@ class ContentsController extends Controller
 
         $result = $this->content->storeContent($request);
 
-        return redirect(route('admin.contents.edit', $result));
+        return redirect(route('admin.contents.edit', $result))
+            ->withMessage($request->subject. '을(를) 생성하였습니다.');
     }
 
     /**
@@ -105,7 +106,8 @@ class ContentsController extends Controller
 
         $result = $this->content->updateContent($request, $id);
 
-        return redirect(route('admin.contents.edit', $result));
+        return redirect(route('admin.contents.edit', $result))
+            ->withMessage('수정되었습니다.');
     }
 
     /**
@@ -114,7 +116,7 @@ class ContentsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         if (auth()->user()->cant('delete', $this->content)) {
             abort(403, '내용관리 삭제에 대한 권한이 없습니다.');
@@ -122,7 +124,8 @@ class ContentsController extends Controller
 
         $this->content->deleteContent($id);
 
-        return redirect()->back();
+        return redirect()->back()
+            ->withMessage('삭제되었습니다.');
     }
 
     public function rules()

@@ -63,7 +63,7 @@ class PointsController extends Controller
 
         $this->pointModel->givePoint($request);
 
-        return redirect()->back();
+        return redirect()->back()->withMessage($request->email. '회원의 포인트 증감 설정이 완료되었습니다. 포인트 내용 : '. $request->content. ', 부여한 포인트 : '. $request->point);
     }
 
     /**

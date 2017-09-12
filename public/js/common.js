@@ -129,21 +129,33 @@ function winProfile(href) {
     newWin.focus();
 }
 
+// 플래시 메세지 창 가리기
+function alertclose() {
+    document.getElementById("adm_save").style.display = "none";
+}
+
 // 삭제 검사 확인
-function del(href)
-{
+function del(href) {
     if(confirm("한번 삭제한 자료는 복구할 방법이 없습니다.\n\n정말 삭제하시겠습니까?")) {
         document.location.href = href;
     }
 }
 
 // 삭제 검사 확인2
-function del2(href, message)
-{
+function del2(href, message) {
     if(confirm(message)) {
         document.location.href = href;
     } else {
         return false;
+    }
+}
+
+// 삭제 POST 로 진행
+function delPost(form) {
+    event.preventDefault();
+
+    if(confirm("한번 삭제한 자료는 복구할 방법이 없습니다.\n\n정말 삭제하시겠습니까?")) {
+        document.getElementById(form).submit();
     }
 }
 

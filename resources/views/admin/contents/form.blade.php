@@ -40,6 +40,14 @@
     </div>
 </div>
 <div class="body-contents">
+@if(Session::has('message'))
+    <div id="adm_save">
+        <span class="adm_save_txt">{{ Session::get('message') }}</span>
+        <button onclick="alertclose()" class="adm_alert_close">
+            <i class="fa fa-times"></i>
+        </button>
+    </div>
+@endif
 @if ($errors->any())
     <div id="adm_save">
         <span class="adm_save_txt">{{ $errors->first() }}</span>

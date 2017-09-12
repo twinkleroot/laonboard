@@ -9,10 +9,14 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/auth.css') }}">
 @endsection
 
+@section('include_script')
+    <script src="{{ asset('js/common.js') }}"></script>
+@endsection
+
 @section('content')
-@if(Session::has('message'))
+@if(session()->has('message'))
 <div class="alert alert-info">
-    {{Session::get('message') }}
+    {{ session()->get('message') }}
 </div>
 @endif
 <div class="container">

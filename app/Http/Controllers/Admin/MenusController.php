@@ -64,7 +64,7 @@ class MenusController extends Controller
         // 입력된 폼을 분석해서 code를 생성하고 메뉴 정보를 저장
         $this->menuModel->saveMenu($request->all());
 
-        return redirect(route('admin.menus.index'));
+        return redirect(route('admin.menus.index'))->withMessage('메뉴설정을 완료하였습니다.');
     }
 
     // 메뉴 추가 팝업창에 대상 선택에 따라서 view를 load하는 기능 (Ajax)

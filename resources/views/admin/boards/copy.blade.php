@@ -11,10 +11,10 @@
     <title>게시판 복사 | {{ Cache::get("config.homepage")->title }} </title>
 
     <!-- css -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/admin.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/common.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('font-awesome/css/font-awesome.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
 
     <!-- Scripts -->
     <script>
@@ -81,8 +81,8 @@
 </form>
 <script>
 $(function(){
-    @if($errors->has('table_name'))
-        alert('{{ Session::get('table_name') }}' +'은(는) 이미 존재하는 게시판 테이블명입니다.\n복사할 테이블명으로 사용할 수 없습니다.');
+    @if($errors->any())
+        alert('{{ $errors->first() }}');
     @endif
 });
 </script>

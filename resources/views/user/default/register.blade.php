@@ -10,8 +10,8 @@
 @endsection
 
 @section('include_script')
-    <script src='https://www.google.com/recaptcha/api.js' async defer></script>
-    <script src="{{ url('js/certify.js') }}"></script>
+<script src='https://www.google.com/recaptcha/api.js' async defer></script>
+<script src="{{ url('js/certify.js') }}"></script>
 @endsection
 
 @section('content')
@@ -166,15 +166,15 @@ function userSubmit() {
 
 $(function() {
     // 아이핀인증
-    $("#win_ipin_cert").click(function() {
-        if(!cert_confirm())
-            return false;
-
-        var url = "http://ahn13.gnutest.com/gnu5/plugin/okname/ipin1.php";
+    // $("#win_ipin_cert").click(function() {
+    //     if(!cert_confirm())
+    //         return false;
+    //
+    //     var url = "http://ahn13.gnutest.com/gnu5/plugin/okname/ipin1.php";
         {{-- var url = "{{ route('cert.kcb.ipin') }}"; --}}
-        certify_win_open('kcb-ipin', url);
-        return;
-    });
+    //     certify_win_open('kcb-ipin', url);
+    //     return;
+    // });
 
     // 휴대폰인증
     $("#win_hp_cert").click(function() {

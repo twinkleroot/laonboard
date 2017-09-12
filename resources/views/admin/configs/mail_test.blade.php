@@ -4,6 +4,13 @@
     메일 테스트 | {{ Cache::get("config.homepage")->title }}
 @endsection
 
+@section('include_script')
+    <script src="{{ asset('js/common.js') }}"></script>
+    <script>
+        var menuVal = 100500;
+    </script>
+@endsection
+
 @section('content')
 <div class="body-head">
     <div class="pull-left">
@@ -26,8 +33,11 @@
     </div>
 @else
     @if(Session::has('successAddress') && count(Session::get('successAddress')) > 0)
-    <div class="alert alert-info">
-        다음 {{ count(Session::get('successAddress')) }}개의 메일 주소로 테스트 메일 발송이 완료되었습니다.
+    <div id="adm_save">
+        <span class="adm_save_txt">다음 {{ count(Session::get('successAddress')) }}개의 메일 주소로 테스트 메일 발송이 완료되었습니다.</span>
+        <button onclick="alertclose()" class="adm_alert_close">
+            <i class="fa fa-times"></i>
+        </button>
     </div>
     <ul>
         @foreach(Session::get('successAddress') as $email)
@@ -40,8 +50,11 @@
     만약, 테스트 메일이 오지 않는다면 더 다양한 계정의 메일 주소로 메일을 보내 보십시오.<br />
     그래도 메일이 하나도 도착하지 않는다면 메일 서버(sendmail server)의 오류일 가능성이 높으니, 웹 서버관리자에게 문의하여 주십시오.<br />
     @elseif(Session::has('successAddress'))
-    <div class="alert alert-danger">
-        테스트 메일 발송에 실패하였습니다.
+    <div id="adm_save">
+        <span class="adm_save_txt">테스트 메일 발송에 실패하였습니다.</span>
+        <button onclick="alertclose()" class="adm_alert_close">
+            <i class="fa fa-times"></i>
+        </button>
     </div>
     @endif
 @endif
@@ -74,6 +87,3 @@
 따라서 보다 정확한 테스트를 원하신다면 여러 곳으로 테스트 메일을 발송하시기 바랍니다.
 </div>
 @endsection
-<script>
-    var menuVal = 100500;
-</script>

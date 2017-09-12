@@ -29,12 +29,14 @@
     </div>
 </div>
 <div class="body-contents">
-    @if(Session::has('message'))
-        <div class="alert alert-info">
-            {{ Session::get('message') }}
-        </div>
-    @endif
-
+@if(Session::has('message'))
+    <div id="adm_save">
+        <span class="adm_save_txt">{{ Session::get('message') }}</span>
+        <button onclick="alertclose()" class="adm_alert_close">
+            <i class="fa fa-times"></i>
+        </button>
+    </div>
+@endif
     <div id="mb" class="">
         <table class="table table-striped box">
             <thead>
@@ -50,7 +52,14 @@
                     <td class="td_mngsmall">
                         <a href="{{ route('admin.contents.edit', $content->content_id) }}">수정</a>
                         <a href="{{ route('content.show', $content->content_id) }}">보기</a>
-                        <a href="{{ route('admin.contents.destroy', $content->id) }}" onclick="del(this.href); return false;">삭제</a>
+                        {{-- <a href="{{ route('admin.contents.destroy', $content->content_id) }}" onclick="del(this.href); return false;">삭제</a> --}}
+                        <a href="{{ route('admin.contents.destroy', $content->content_id) }}" onclick="delPost('deleteForm{{ $content->id }}')">
+                            삭제
+                        </a>
+                        <form id="deleteForm{{ $content->id }}" action="{{ route('admin.contents.destroy', $content->content_id) }}" method="POST" style="display: none;">
+                            {{ csrf_field() }}
+                            {{ method_field('DELETE') }}
+                        </form>
                     </td>
                 </tr>
             @empty

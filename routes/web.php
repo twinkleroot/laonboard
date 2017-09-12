@@ -199,10 +199,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
     Route::get('populars/rank', ['as' => 'admin.populars.rank', 'uses' => 'Admin\PopularsController@rank']);
 
     // 내용 관리
-    Route::get('contents/{content}/delete', ['as' => 'admin.contents.destroy', 'uses' => 'Admin\ContentsController@destroy']);
     Route::resource('contents', 'Admin\ContentsController', [
         'except' => [
-            'destroy', 'show'
+            'show'
         ],
         'names' => [
             'index' => 'admin.contents.index',
@@ -210,6 +209,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
             'store' => 'admin.contents.store',
             'edit' => 'admin.contents.edit',
             'update' => 'admin.contents.update',
+            'destroy' => 'admin.contents.destroy',
         ],
     ]);
 

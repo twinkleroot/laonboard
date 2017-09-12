@@ -10,12 +10,6 @@
 @endsection
 
 @section('content')
-@if(Session::has('message'))
-<div class="alert alert-info">
-    {{ Session::get('message') }}
-</div>
-@endif
-
 <div id="pt" class="container">
     <div class="box">
         <p class="mypoint">
