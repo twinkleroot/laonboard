@@ -72,7 +72,7 @@
                 </thead>
 
                 <tbody>
-                @foreach ($users as $user)
+                @forelse ($users as $user)
                     <tr>
                         <td class="td_chk">
                             <input type="checkbox" name="chkId[]" class="userId" value='{{ $user->pivot->id }}' /></td>
@@ -88,7 +88,15 @@
                         <td class="td_date">@date($user->today_login)</td>
                         <td class="td_date">{{ $user->pivot->created_at }}</td>
                     </tr>
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="6">
+                            <span class="empty_table">
+                                <i class="fa fa-exclamation-triangle"></i> 자료가 없습니다.
+                            </span>
+                        </td>
+                    </tr>
+                @endforelse
                 </tbody>
             </table>
         </div>

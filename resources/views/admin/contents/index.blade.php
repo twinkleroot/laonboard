@@ -63,8 +63,10 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="3" class="empty_table">
-                        자료가 한건도 없습니다.
+                    <td colspan="3">
+                        <span class="empty_table">
+                            <i class="fa fa-exclamation-triangle"></i> 자료가 없습니다.
+                        </span>
                     </td>
                 </tr>
             @endforelse

@@ -71,7 +71,7 @@
                     </thead>
 
                     <tbody>
-                    @foreach ($groups as $group)
+                    @forelse ($groups as $group)
                         <tr>
                             <td class="td_chk">
                                 <input type="checkbox" name="chkId[]" class="groupId" value='{{ $group->pivot->id }}' /></td>
@@ -79,7 +79,15 @@
                             <td class="td_subject">{{ $group->subject }}</td>
                             <td class="td_date">{{ $group->pivot->created_at }}</td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="4">
+                                <span class="empty_table">
+                                    <i class="fa fa-exclamation-triangle"></i> 자료가 없습니다.
+                                </span>
+                            </td>
+                        </tr>
+                    @endforelse
                     </tbody>
                 </table>
         </form>
