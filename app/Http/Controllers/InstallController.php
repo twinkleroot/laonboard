@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\InstallRequest;
 use File;
 use Artisan;
 use DB;
@@ -34,7 +35,7 @@ class InstallController extends Controller
         return view('install.form', $params);
     }
 
-    public function setup(App\Http\Requests\InstallRequest $request)
+    public function setup(InstallRequest $request)
     {
         // 1. .env파일에 App 정보, DB 정보를 셋팅한다.
         $this->setEnv($request);
