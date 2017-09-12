@@ -45,7 +45,7 @@
                     <tr>
                         <th scope="row"><label for="mysqlHost">Host</label></th>
                         <td>
-                            <input name="mysqlHost" type="text" class="form-control" value="{{ old('mysqlHost') ? : env('DB_HOST', '127.0.0.1') }}" id="mysqlHost">
+                            <input name="mysqlHost" type="text" class="form-control" value="{{ old('mysqlHost') ? : env('DB_HOST', 'localhost') }}" id="mysqlHost">
                             @foreach ($errors->get('mysqlHost') as $message)
                             <strong>{{ $message }} (영문자, 숫자, 점(.))</strong>
                             @endforeach
