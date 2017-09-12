@@ -14,7 +14,7 @@
     <div class="ins_inner">
         <p>프로그램이 이미 설치 되어 있습니다.</p>
         <div class="inner_btn">
-            <a onclick="history.back();" class="btn">뒤로가기</a>
+            <a href="{{ route('home') }}" class="btn">메인으로 가기</a>
         </div>
     </div>
     @else

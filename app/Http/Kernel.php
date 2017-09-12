@@ -48,11 +48,14 @@ class Kernel extends HttpKernel
         ],
 
         'install' => [
-            // \Illuminate\Session\Middleware\AuthenticateSession::class,
-            // 설치 과정에서 필요한 폴더 읽고 쓰기 가능한지 검사
-            \Illuminate\Session\Middleware\StartSession::class,
             \App\Http\Middleware\CheckInstallAlready::class,
             \App\Http\Middleware\CheckAccessFolder::class,
+            // \Illuminate\Session\Middleware\AuthenticateSession::class,
+            \App\Http\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            \Illuminate\Session\Middleware\StartSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            // 설치 과정에서 필요한 폴더 읽고 쓰기 가능한지 검사
         ]
 
     ];
