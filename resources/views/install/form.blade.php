@@ -33,7 +33,7 @@
                         <td>
                             <input name="appUrl" type="text" class="form-control" value="{{ old('appUrl') ? : env('APP_URL', Request::root()) }}" id="appUrl">
                             @foreach ($errors->get('appUrl') as $message)
-                            <strong>{{ $message }}</strong>
+                            <strong>{{ $message }} (URL 형태)</strong>
                             @endforeach
                         </td>
                     </tr>
@@ -47,7 +47,7 @@
                         <td>
                             <input name="mysqlHost" type="text" class="form-control" value="{{ old('mysqlHost') ? : env('DB_HOST', '127.0.0.1') }}" id="mysqlHost">
                             @foreach ($errors->get('mysqlHost') as $message)
-                            <strong>{{ $message }}</strong>
+                            <strong>{{ $message }} (영문자, 숫자, 점(.))</strong>
                             @endforeach
                         </td>
                     </tr>
@@ -65,7 +65,7 @@
                         <td>
                             <input name="mysqlDb" type="text" class="form-control" id="mysqlDb" value="{{ old('mysqlDb') ? : env('DB_DATABASE', '') }}">
                             @foreach ($errors->get('mysqlDb') as $message)
-                            <strong>{{ $message }}</strong>
+                            <strong>{{ $message }} (영문자, 숫자, 언더스코어(_))</strong>
                             @endforeach
                         </td>
                     </tr>
@@ -74,7 +74,7 @@
                         <td>
                             <input name="mysqlUser" type="text" class="form-control" id="mysqlUser" value="{{ old('mysqlUser') ? : env('DB_USERNAME', '') }}">
                             @foreach ($errors->get('mysqlUser') as $message)
-                            <strong>{{ $message }}</strong>
+                            <strong>{{ $message }} (영문자, 숫자, 언더스코어(_))</strong>
                             @endforeach
                         </td>
                     </tr>
@@ -93,7 +93,9 @@
                             <input name="tablePrefix" type="text" class="form-control" value="{{ old('tablePrefix') ? : env('DB_PREFIX', 'la_') }}" id="tablePrefix">
                             <span>가능한 변경하지 마십시오.</span>
                             @foreach ($errors->get('tablePrefix') as $message)
-                            <strong>{{ $message }}</strong>
+                            <p>
+                                <strong>{{ $message }} (영문자로 시작하는 '영문자, 숫자, 언더스코어(_)'로 구성된 문자열)</strong>
+                            </p>
                             @endforeach
                         </td>
                     </tr>

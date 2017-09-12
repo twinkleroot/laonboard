@@ -46,9 +46,9 @@ class InstallRequest extends FormRequest
     {
         return [
             'required' => ':attribute은(는) 필수 입력 항목입니다.',
-            'regex' => ':attribute은(는) 올바른 형식으로 입력해 주세요.',
-            'numeric' => ':attribute은(는) 숫자만 입력해 주세요.',
-            'email' => ':attribute은(는) 이메일 형식으로 입력해 주세요.',
+            'regex' => ':attribute에 올바른 형식으로 입력해 주세요.',
+            'numeric' => ':attribute에 숫자만 입력해 주세요.',
+            'email' => ':attribute에  이메일 형식으로 입력해 주세요.',
             'max' => ':attribute은(는) 최대 :max글자까지만 입력을 허용합니다.',
         ];
     }
