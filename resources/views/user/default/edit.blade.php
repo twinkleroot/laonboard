@@ -26,7 +26,7 @@
 @endif
 <div class="container">
 <div class="row">
-<div class="col-md-6 col-md-offset-3 col-xs-8 col-xs-offset-2">
+<div class="col-md-6 col-md-offset-3">
 
 <!-- user edit -->
 <div class="panel panel-default">

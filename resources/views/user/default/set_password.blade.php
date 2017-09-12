@@ -17,7 +17,7 @@
 @endif
 <div class="container">
 <div class="row">
-<div class="col-md-6 col-md-offset-3 col-xs-10 col-xs-offset-1">
+<div class="col-md-6 col-md-offset-3">
 
 <!-- user password setting -->
     <div class="panel panel-default">

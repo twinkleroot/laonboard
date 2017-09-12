@@ -16,7 +16,7 @@
 @section('content')
 <div class="container">
 <div class="row">
-<div class="col-md-6 col-md-offset-3 col-xs-12">
+<div class="col-md-6 col-md-offset-3">
     <div class="panel panel-default">
         <script src="{{ asset('js/postcode.js') }}"></script>
         <div class="panel-heading bg-sir">
