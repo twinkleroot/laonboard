@@ -31,7 +31,7 @@
                     <tr>
                         <th><label for="appUrl">App Url</label></th>
                         <td>
-                            <input name="appUrl" type="text" class="form-control" value="{{ env('APP_URL', Request::root()) }}" id="appUrl">
+                            <input name="appUrl" type="text" class="form-control" value="{{ old('appUrl') ? : env('APP_URL', Request::root()) }}" id="appUrl">
                         </td>
                     </tr>
                 </tbody>
@@ -42,37 +42,37 @@
                     <tr>
                         <th scope="row"><label for="mysqlHost">Host</label></th>
                         <td>
-                            <input name="mysqlHost" type="text" class="form-control" value="{{ env('DB_HOST', '127.0.0.1') }}" id="mysqlHost">
+                            <input name="mysqlHost" type="text" class="form-control" value="{{ old('mysqlHost') ? : env('DB_HOST', '127.0.0.1') }}" id="mysqlHost">
                         </td>
                     </tr>
                     <tr>
                         <th scope="row"><label for="mysqlPort">Port</label></th>
                         <td>
-                            <input name="mysqlPort" type="text" class="form-control" value="{{ env('DB_PORT', '3306') }}" id="mysqlPort">
+                            <input name="mysqlPort" type="text" class="form-control" value="{{ old('mysqlPort') ? : env('DB_PORT', '3306') }}" id="mysqlPort">
                         </td>
                     </tr>
                     <tr>
                         <th scope="row"><label for="mysqlDb">Database</label></th>
                         <td>
-                            <input name="mysqlDb" type="text" class="form-control" id="mysqlDb" value="{{ env('DB_DATABASE', '') }}">
+                            <input name="mysqlDb" type="text" class="form-control" id="mysqlDb" value="{{ old('mysqlDb') ? : env('DB_DATABASE', '') }}">
                         </td>
                     </tr>
                     <tr>
                         <th scope="row"><label for="mysqlUser">User Name</label></th>
                         <td>
-                            <input name="mysqlUser" type="text" class="form-control" id="mysqlUser" value="{{ env('DB_USERNAME', '') }}">
+                            <input name="mysqlUser" type="text" class="form-control" id="mysqlUser" value="{{ old('mysqlUser') ? : env('DB_USERNAME', '') }}">
                         </td>
                     </tr>
                     <tr>
                         <th scope="row"><label for="mysqlPass">Password</label></th>
                         <td>
-                            <input name="mysqlPass" type="text" class="form-control" id="mysqlPass" value="{{ env('DB_PASSWORD', '') }}">
+                            <input name="mysqlPass" type="text" class="form-control" id="mysqlPass">
                         </td>
                     </tr>
                     <tr>
                         <th scope="row"><label for="tablePrefix">Table 접두사</label></th>
                         <td>
-                            <input name="tablePrefix" type="text" class="form-control" value="{{ env('DB_PREFIX', 'la_') }}" id="tablePrefix">
+                            <input name="tablePrefix" type="text" class="form-control" value="{{ old('tablePrefix') ? : env('DB_PREFIX', 'la_') }}" id="tablePrefix">
                             <span>가능한 변경하지 마십시오.</span>
                         </td>
                     </tr>
@@ -84,7 +84,7 @@
                     <tr>
                         <th scope="row"><label for="adminEmail">Email</label></th>
                         <td>
-                            <input name="adminEmail" type="text" class="form-control" value="admin@domain.com" id="adminEmail">
+                            <input name="adminEmail" type="text" class="form-control" value="{{ old('adminNick') ? : 'admin@laonboard.com' }}" id="adminEmail">
                         </td>
                     </tr>
                     <tr>
@@ -96,7 +96,7 @@
                     <tr>
                         <th scope="row"><label for="adminNick">Nickname</label></th>
                         <td>
-                            <input name="adminNick" type="text" class="form-control" value="최고관리자" id="adminNick">
+                            <input name="adminNick" type="text" class="form-control" value="{{ old('adminNick') ? : '최고관리자' }}" id="adminNick">
                         </td>
                     </tr>
                 </tbody>
