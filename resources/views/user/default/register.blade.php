@@ -30,9 +30,13 @@
     </div>
 
     @if(!$agreePrivacy || !$agreeStipulation)
-    <div class="panel-body">
-        회원가입약관과 개인정보처리방침안내에 동의하셔야 회원가입을 계속 진행할 수 있습니다.
-        <a href="{{ route('user.join')}}" class="btn btn-block btn-sir">뒤로 가기</button>
+    <div class="panel-body row">
+        <div class="contents col-md-8 col-md-offset-2">
+            <p>회원가입약관과 개인정보처리방침안내에 동의하셔야 회원가입을 계속 진행할 수 있습니다.</p>
+            <div class="form-group">
+                <a href="{{ route('user.join')}}" class="btn btn-block btn-sir">뒤로 가기</a>
+            </div>
+        </div>
     </div>
     @else
     <div class="panel-body row">
@@ -117,11 +121,9 @@
                 @endif
             </div>
             @endif
-
             <div class="form-group">
                 <button type="button" class="btn btn-block btn-sir" onclick="validate();">회원가입</button>
             </div>
-            <!-- 리캡챠 -->
             <div id='recaptcha' class="g-recaptcha"
                 data-sitekey="{{ cache('config.sns')->googleRecaptchaClient }}"
                 data-callback="onSubmit"
