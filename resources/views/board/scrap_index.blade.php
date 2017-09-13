@@ -16,9 +16,9 @@
     <!-- js -->
     <script src="{{ asset('js/common.js') }}"></script>
 </head>
-<body>
+<body class="popup">
 
-<div id="header">
+<div id="header" class="popup">
 <div class="container">
     <div class="title">
         <span>{{ $user->nick }}님의 스크랩</span>

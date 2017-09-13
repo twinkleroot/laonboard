@@ -2,11 +2,22 @@
 @import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
 @import url('https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900');
 
+body {
+    font-family:'Nanum Gothic','돋움',sans-serif;
+}
 body.white {
 	background: #fff;
 }
+body.popup {
+    background: #f4f4f4;
+}
 div {
 	word-wrap:break-word
+}
+#header.popup {
+    background: #fff;
+    border-bottom: 1px solid #d8d8d8;
+    margin-bottom: 10px;
 }
 #header.sub {
     margin-bottom: 20px;

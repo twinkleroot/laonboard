@@ -17,9 +17,9 @@
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/common.js') }}"></script>
 </head>
-<body class="white">
+<body class="popup">
 
-<div id="header">
+<div id="header" class="popup">
     <div class="container">
         <div class="title" style="border-bottom: 0;">
             <span>{{ $kind == 'recv' ? '받은' : '보낸' }} 쪽지 보기</span>
@@ -64,7 +64,7 @@
                 <strong>{{ $memo->send_timestamp }}</strong>
             </li>
         </ul>
-        <p>{{ $memo->memo }}</p>
+        <p class="memo_view">{{ $memo->memo }}</p>
 
     </article>
 </div>

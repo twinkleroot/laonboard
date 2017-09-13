@@ -30,7 +30,7 @@
                         <i class="fa fa-desktop"></i>
                     </span>
                     <p class="head">데모 체험</p>
-                    <p class="body">라라벨 보드의 놀라움을<br>직접 체험해 보세요</p>
+                    <p class="body">라온보드의 놀라움을<br>직접 체험해 보세요</p>
                 </div>
             </a>
         </div>
@@ -41,7 +41,7 @@
                         <i class="fa fa-download"></i>
                     </span>
                     <p class="head">다운로드</p>
-                    <p class="body">라라벨 보드를 이용해<br>홈페이지를 만들어 보세요</p>
+                    <p class="body">라온보드를 이용해<br>홈페이지를 만들어 보세요</p>
                 </div>
             </a>
         </div>

@@ -25,14 +25,14 @@
         });
     </script>
 </head>
-<body>
+<body class="popup">
 <form method="post" action="{{ route('scrap.store')}}">
 <input type="hidden" name="boardName" value="{{ $boardName }}" />
 <input type="hidden" name="boardId" value="{{ $boardId }}" />
 <input type="hidden" name="writeId" value="{{ $write->id }}" />
 {{ csrf_field()}}
 
-    <div id="header">
+    <div id="header" class="popup">
     <div class="container">
         <div class="title">
             <span>스크랩하기</span>
