@@ -28,6 +28,8 @@ body {
 #preview_item {
     position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     background: #333;
     width: 100%;
     text-align: center;
