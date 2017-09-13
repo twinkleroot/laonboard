@@ -227,6 +227,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
 // Auth::routes();
 // 회원 가입
 Route::get('users/join', ['as' => 'user.join', 'uses' => 'Auth\RegisterController@join']);
+Route::get('users/register_form', ['as' => 'user.register.form.get', 'uses' => 'Auth\RegisterController@registerFormGet']);
+Route::post('users/register_form', ['as' => 'user.register.form', 'uses' => 'Auth\RegisterController@registerForm']);
 Route::post('users/register', ['as' => 'user.register', 'uses' => 'Auth\RegisterController@register']);
 Route::get('users/welcome', ['as' => 'user.welcome', 'uses' => 'UsersController@welcome']);
 // 로그인
