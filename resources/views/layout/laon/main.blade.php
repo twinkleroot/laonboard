@@ -19,12 +19,12 @@
 @section('content')
     <div class="mainVisual">
         <div class="txt">
-            
+
         </div>
     </div>
     <div class="mainCover">
         <div class="cover">
-            <a href="sub.html">
+            <a href="http://demo.laonboard.com/login">
                 <div class="box">
                     <span class="icon">
                         <i class="fa fa-desktop"></i>
@@ -35,7 +35,7 @@
             </a>
         </div>
         <div class="cover">
-            <a href="sub.html">
+            <a href="{{ route('board.index', 'download') }}">
                 <div class="box">
                     <span class="icon">
                         <i class="fa fa-download"></i>
@@ -46,7 +46,7 @@
             </a>
         </div>
         <div class="cover">
-            <a href="sub.html">
+            <a href="{{ route('board.index', 'qna') }}">
                 <div class="box">
                     <span class="icon">
                         <i class="fa fa-question"></i>
