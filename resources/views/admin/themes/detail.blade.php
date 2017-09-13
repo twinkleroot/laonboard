@@ -1,10 +1,14 @@
 <div id="theme_detail">
-    <div class="thdt_img"><img src="{{ asset("images/screenshot_$theme.png") }}"></div>
+    <div class="thdt_img"><img src="{{ asset("themes/$theme/images/screenshot.png") }}"></div>
     <div class="thdt_if">
         <button type="button" class="close_btn">닫기</button>
-        <a href="">
+        @if($info['themeUri'])
+        <a href="{{ $info['themeUri'] }}" target="_blank">
             <h2>{{ $info['themeName'] }}<i class="thdt_icon fa fa-home" aria-hidden="true"></i></h2>
         </a>
+        @else
+            <h2>{{ $info['themeName'] }}<i class="thdt_icon fa fa-home" aria-hidden="true"></i></h2>
+        @endif
         <table>
             <tbody>
                 <tr>

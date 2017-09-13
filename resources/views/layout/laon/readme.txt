@@ -1,5 +1,5 @@
 Theme Name: 라온보드
-Theme URI: http://laonboard.com/admin/themes/previews/laon/index
+Theme URI: 
 Maker: SIR
 Maker URI: http://sir.kr
 Version: 1.0.0
