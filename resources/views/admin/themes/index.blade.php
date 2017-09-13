@@ -57,7 +57,7 @@
                 <li class="themebox">
                     <div class="tmli_if">
                         <span class="img">
-                            <img src="{{ asset("images/screenshot_".$theme['name'].".png") }}">
+                            <img src="{{ asset("themes/default/images/screenshot_".$theme['name'].".png") }}">
                         </span>
                         <span class="txt">{{ $theme['info']['themeName'] }}</span>
                     </div>
