@@ -27,20 +27,20 @@
     <script src="{{ asset('js/common.js') }}"></script>
 
 </head>
-<body>
+<body class="popup">
 <form role="form" method="POST" action="" onsubmit="return formMoveListSubmit(this);">
     <input type="hidden" name="type" value="{{ $type }}" />
     {{ csrf_field() }}
-    <div id="header">
-    <div class="container">
-        <div class="title">
-            <span>게시물 {{ $type=='move' ? '이동' : '복사' }}</span>
+    <div id="header" class="popup">
+        <div class="container">
+            <div class="title">
+                <span>게시물 {{ $type=='move' ? '이동' : '복사' }}</span>
+            </div>
+            <div class="cbtn">
+                <input type="submit" class="btn btn-sir" value="{{ $type=='move' ? '이동' : '복사' }}" onclick="document.pressed=this.value"/>
+                <input type="button" class="btn btn-default" onclick="window.close();" value="창닫기"/>
+            </div>
         </div>
-        <div class="cbtn">
-            <input type="submit" class="btn btn-sir" value="{{ $type=='move' ? '이동' : '복사' }}" onclick="document.pressed=this.value"/>
-            <input type="button" class="btn btn-default" onclick="window.close();" value="창닫기"/>
-        </div>
-    </div>
     </div>
 
     <div id="bd_move" class="container">

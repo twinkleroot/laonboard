@@ -11,10 +11,9 @@
     <title>게시판 복사 | {{ Cache::get("config.homepage")->title }} </title>
 
     <!-- css -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/admin.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/common.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('font-awesome/css/font-awesome.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('font-awesome/css/font-awesome.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/admin.css') }}">
 
     <!-- Scripts -->
     <script>
@@ -26,7 +25,7 @@
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 </head>
 
-<body>
+<body class="popup">
 <form method="POST" action="{{ route('admin.boards.copy') }}">
     {{ csrf_field() }}
     <input type="hidden" name="id" value="{{ $board->id }}" />

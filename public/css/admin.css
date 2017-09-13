@@ -6,8 +6,11 @@ a {
 	color: #333;
 }
 body {
-  background:#232323;
+  background: #232323;
   font-family:'Nanum Gothic','돋움',sans-serif;
+}
+body.popup {
+	background: #f4f4f4;
 }
 input[type=checkbox],
 input[type=radio] {
@@ -101,6 +104,32 @@ input[type=radio] {
 	border-color: #587ef6;
 }
 
+/* popup header */
+#header {
+	background: #fff;
+	border-bottom: 1px solid #d8d8d8;
+	margin-bottom: 20px;
+}
+#header .title { /* subtitle */
+    border-bottom: 3px solid #587ef6;
+    line-height: 58px;
+    display: inline-block;
+    margin-bottom: -1px;
+    font-size: 16px;
+    font-weight: 600;
+}
+#header .cbtn {
+    float: right;
+    margin-top: 13px;
+}
+#header .cbtn:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+#header .cbtn button {
+    margin: 0 2px;
+}
 
 /* header */
 #admin-header {
