@@ -1,5 +1,5 @@
 Theme Name: 기본
-Theme URI: http://theme.sir.kr/gnuboard5/demo/basic
+Theme URI: http://demo.laonboard.com
 Maker: SIR
 Maker URI: http://sir.kr
 Version: 1.0.0

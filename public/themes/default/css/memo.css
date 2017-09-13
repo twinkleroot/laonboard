@@ -18,7 +18,6 @@
 }
 #memo p {
     margin: 0;
-    padding: 10px 0 5px;
 }
 #memo input,
 #memo textarea {
@@ -64,7 +63,6 @@
     padding: 0;
     margin: 0;
     padding-bottom: 8px;
-    border-bottom: 1px solid #d8d8d8;
 }
 #memo_view_li .info {
     list-style: none;
@@ -73,19 +71,29 @@
 }
 #memo_view_li .info .bd_name {
     vertical-align: top;
+    font-size: 12px;
 }
 #memo_view_li .info .bd_name .dropdown-menu {
     left: 30px;
     top: 20px;
 }
 #memo_view_li .info strong {
-    font-size: 14px;
+    font-size: 12px;
 }
 #memo_view_li .memo_view_subj {
     margin-right: 15px;
+    font-size: 12px;
 }
 #memo_view_li span {
-    font-size: 14px;
+    font-size: 12px;
+}
+.memo_view {
+    border: 1px solid #d8d8d8;
+    border-radius: 4px;
+    background: #fff;
+    padding: 15px;
+    font-size: 12px;
+    line-height: 1.5;
 }
 /* sideview icon & nick */
 .tt_icon {

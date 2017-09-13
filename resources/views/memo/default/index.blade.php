@@ -17,9 +17,9 @@
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/common.js') }}"></script>
 </head>
-<body class="white">
+<body class="popup">
 
-<div id="header">
+<div id="header" class="popup">
     <div class="container">
         <div class="title" style="border-bottom: 0;">
             <span>{{ $kind == 'send' ? '보낸' : '받은' }} 쪽지함</span>

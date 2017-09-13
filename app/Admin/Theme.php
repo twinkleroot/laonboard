@@ -209,7 +209,11 @@ class Theme
             preg_match('#^License URI:(.+)$#i', $content[7], $m7);
 
             $info['themeName'] = trim($m0[1]);
-            $info['themeUri'] = trim($m1[1]);
+            if($m1) {
+                $info['themeUri'] = trim($m1[1]);
+            } else {
+                $info['themeUri'] = '';
+            }
             $info['maker'] = trim($m2[1]);
             $info['makerUri'] = trim($m3[1]);
             $info['version'] = trim($m4[1]);
@@ -228,9 +232,8 @@ class Theme
     // 미리보기 데이터 가져오기
     public function getPreview($type, $themeName)
     {
-        $info = $this->getThemeInfo($themeName);
         return [
-            'info' => $info,
+            'info' => $this->getThemeInfo($themeName),
             'theme' => $themeName,
             'type' => $type,
         ];

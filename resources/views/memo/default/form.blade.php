@@ -18,10 +18,10 @@
     <script src="{{ asset('js/common.js') }}"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
-<body class="white">
+<body class="popup">
 <form id="memoForm" method="post" action="{{ route('memo.store') }}" autocomplete="off">
 {{ csrf_field() }}
-<div id="header">
+<div id="header" class="popup">
     <div class="container">
         <div class="title" style="border-bottom: 0;">
             <span>쪽지 보내기</span>

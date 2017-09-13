@@ -13,7 +13,6 @@
     <!-- css -->
     <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/admin.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/common.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('font-awesome/css/font-awesome.css') }}">
 
     <!-- Scripts -->
@@ -27,10 +26,10 @@
     <script src="{{ asset('js/jquery.tablednd.js') }}"></script>
 </head>
 
-<body>
+<body class="popup">
 <form class="form-horizontal">
 {{ csrf_field() }}
-<div id="header">
+<div id="header" class="popup">
 <div class="container">
     <div class="title">
         <span>메뉴 추가</span>

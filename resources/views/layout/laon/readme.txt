@@ -1,5 +1,5 @@
 Theme Name: 라온보드
-Theme URI: http://theme.sir.kr/gnuboard5/demo/basic
+Theme URI: 
 Maker: SIR
 Maker URI: http://sir.kr
 Version: 1.0.0

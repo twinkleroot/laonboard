@@ -15,8 +15,8 @@
 
     <!-- js -->
 </head>
-<body>
-<div id="header" class="sub">
+<body class="popup">
+<div id="header" class="popup">
 <div class="container">
     <div class="title">
         <span>[{{ $user->nick }}]님의 프로필</span>

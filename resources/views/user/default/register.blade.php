@@ -23,12 +23,22 @@
 <div class="container">
 <div class="row">
 <div class="col-md-6 col-md-offset-3">
-
 <!-- auth login -->
 <div class="panel panel-default">
     <div class="panel-heading bg-sir">
         <h3 class="panel-title">회원가입</h3>
     </div>
+
+    @if(!$agreePrivacy || !$agreeStipulation)
+    <div class="panel-body row">
+        <div class="contents col-md-8 col-md-offset-2">
+            <p>회원가입약관과 개인정보처리방침안내에 동의하셔야 회원가입을 계속 진행할 수 있습니다.</p>
+            <div class="form-group">
+                <a href="{{ route('user.join')}}" class="btn btn-block btn-sir">뒤로 가기</a>
+            </div>
+        </div>
+    </div>
+    @else
     <div class="panel-body row">
         <form class="contents col-md-8 col-md-offset-2" id="userForm" name="userForm" role="form" method="POST" action="{{ route('user.register') }}">
         @if(cache('config.cert')->certHp)
@@ -38,10 +48,12 @@
             <input type="hidden" name="certNo" value="">
         @endif
             {{ csrf_field() }}
+            <input type="hidden" name="agreePrivacy" value="{{ old('agreePrivacy') or $agreePrivacy }}">
+            <input type="hidden" name="agreeStipulation" value="{{ old('agreeStipulation') or $agreeStipulation }}">
 
             <div class="form-group @if($errors->has('email'))has-error @endif">
                 <label for="email">이메일</label>
-                <input id="email" type="email" name="email" class="form-control" value="{{ old('email') }}" placeholder="이메일 주소를 입력하세요" required autofocus>
+                <input id="email" type="email" name="email" class="form-control" value="{{ isset($email) ? $email : old('email') }}" placeholder="이메일 주소를 입력하세요" required autofocus>
 
                 @if ($errors->has('email'))
                 <span class="help-block">
@@ -74,7 +86,7 @@
 
             <div class="form-group @if($errors->has('nick'))has-error @endif">
                 <label for="nick">닉네임</label>
-                <input id="nick" type="text" name="nick" class="form-control" value="{{ old('nick') }}" placeholder="닉네임을 입력하세요" required>
+                <input id="nick" type="text" name="nick" class="form-control" value="{{ isset($nick) ? $nick : old('nick') }}" placeholder="닉네임을 입력하세요" required>
                 @if ($errors->has('nick'))
                 <span class="help-block">
                     <strong>{{ $errors->first('nick') }}</strong>
@@ -98,7 +110,7 @@
                 @endif
             </div>
             @endif --}}
-            @if(cache('config.cert')->certHp)
+            @if(cache('config.cert')->certReq && cache('config.cert')->certHp)
             <div class="form-group @if($errors->has('hpCert'))has-error @endif">
                 <button type="button" class="btn btn-block btn-sir" id="win_hp_cert">휴대폰 본인확인</button>
 
@@ -109,11 +121,9 @@
                 @endif
             </div>
             @endif
-
             <div class="form-group">
                 <button type="button" class="btn btn-block btn-sir" onclick="validate();">회원가입</button>
             </div>
-            <!-- 리캡챠 -->
             <div id='recaptcha' class="g-recaptcha"
                 data-sitekey="{{ cache('config.sns')->googleRecaptchaClient }}"
                 data-callback="onSubmit"
@@ -121,6 +131,7 @@
             </div>
         </form>
     </div>
+    @endif
 </div>
 
 </div>

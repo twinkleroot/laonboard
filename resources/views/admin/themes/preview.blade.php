@@ -6,9 +6,10 @@
 
 @section('include_css')
     @if($type == 'index')
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/'.$theme.'/css/latest.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ File::exists(public_path("themes/$theme/css/latest.css")) ?  asset("themes/$theme/css/latest.css") : asset("themes/default/css/latest.css")}}">
     @else
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/'.$theme.'/css/board.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ File::exists(public_path("themes/$theme/css/board.css")) ?  asset("themes/$theme/css/board.css") : asset("themes/default/css/board.css") }}">
+    <link rel="stylesheet" type="text/css" href="{{ File::exists(public_path("themes/$theme/css/common.css")) ?  asset("themes/$theme/css/common.css") : asset("themes/default/css/common.css") }}">
     @endif
 @endsection
 
@@ -28,6 +29,8 @@ body {
 #preview_item {
     position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     background: #333;
     width: 100%;
     text-align: center;

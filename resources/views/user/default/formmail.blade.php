@@ -17,8 +17,8 @@
     <script src="{{ asset('js/common.js') }}"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
-<body>
-<div id="header" class="sub">
+<body class="popup">
+<div id="header" class="popup">
     <div class="container">
         <div class="title" style="border-bottom: 0;">
             <span>[{{ $name }}]님께 메일보내기</span>

@@ -10,7 +10,7 @@ use App\Board;
 use App\Write;
 use App\Comment;
 
-class ThemePreviewController extends Controller
+class ThemePreviewsController extends Controller
 {
     public $theme;
     public $main;
