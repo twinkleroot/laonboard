@@ -17,10 +17,9 @@
 @endsection
 
 @section('content')
+<div class="container">
     <div class="mainVisual">
-        <div class="txt">
-            
-        </div>
+        <div class="txt"></div>
     </div>
     <div class="mainCover">
         <div class="cover">
@@ -64,4 +63,5 @@
         {{-- 최근 게시물 리스트--}}
         @include("latest.$skin.index")
     </div>
+</div>
 @endsection
