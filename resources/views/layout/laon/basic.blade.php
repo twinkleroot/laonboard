@@ -119,9 +119,7 @@
     </div>
 </div>
 <div id="contents">
-    <div class="container">
-        @yield('content')
-    </div>
+    @yield('content')
 </div>
 <footer id="footer">
     @component("popular.default.list")
