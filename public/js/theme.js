@@ -8,7 +8,7 @@ $(function() {
 
         $.ajax({
             type: "POST",
-            url: "theme/update",
+            url: "themes/update",
             data: {
                 "theme": theme,
                 "_token": window.Laravel.csrfToken
@@ -33,7 +33,7 @@ $(function() {
 
         $.ajax({
             type: "POST",
-            url: "theme/detail",
+            url: "themes/detail",
             data: {
                 "theme": theme,
                 "_token": window.Laravel.csrfToken
