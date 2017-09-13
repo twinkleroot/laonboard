@@ -8,6 +8,7 @@
     @if($type == 'index')
     <link rel="stylesheet" type="text/css" href="{{ File::exists(public_path("themes/$theme/css/latest.css")) ?  asset("themes/$theme/css/latest.css") : asset("themes/default/css/latest.css")}}">
     @else
+    <link rel="stylesheet" type="text/css" href="{{ File::exists(public_path("themes/$theme/css/common.css")) ?  asset("themes/$theme/css/common.css") : asset('themes/default/css/common.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ File::exists(public_path("themes/$theme/css/board.css")) ?  asset("themes/$theme/css/board.css") : asset("themes/default/css/board.css") }}">
     @endif
 @endsection
