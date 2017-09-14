@@ -58,8 +58,7 @@ class LoginEventListener
         // 회원 가입인 경우($isUserJoin == true) 로그인 포인트를 부여하지 않음.
         if( !$this->isUserJoin($event->user) ) {
             // 당일 첫 로그인 포인트 부여
-            $point = new Point();
-            $point->insertPoint($event->user->id, cache("config.homepage")->loginPoint, $nowDate . ' 첫 로그인', '@login', $event->user->email, $nowDate);
+            insertPoint($event->user->id, cache("config.homepage")->loginPoint, $nowDate . ' 첫 로그인', '@login', $event->user->email, $nowDate);
         }
 
         // 소셜 로그인으로 로그인할 때 생기는 세션 해제

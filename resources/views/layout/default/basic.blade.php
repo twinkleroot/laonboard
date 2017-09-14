@@ -95,7 +95,7 @@
                                 <a href="{{ route('scrap.index') }}" class="winScrap" target="_blank" onclick="winScrap(this.href); return false;">스크랩</a>
                             </li>
                             @if(cache('config.homepage')->usePoint)
-                            <li><a href="{{ route('user.point', Auth::user()->id) }}" class="point">포인트 내역</a></li>
+                            <li><a href="{{ route('user.point', Auth::user()->id_hashkey) }}" class="point">포인트 내역</a></li>
                             @endif
                             <li><a href="{{ route('memo.index') }}?kind=recv" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지 <span class="memocount">{{ App\Memo::where('recv_user_id', Auth::user()->id)->where('read_timestamp', null)->count() }}</span></a></li>
                             <li>

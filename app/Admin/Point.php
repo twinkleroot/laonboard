@@ -118,9 +118,7 @@ class Point extends Model
             $user->save();
 
             // 포인트 내역에 기록
-            $appPoint = new AppPoint();
-
-            $appPoint->insertPoint($user->id, $request->point, $request->content, '@passive', $user->email, $relAction);
+            insertPoint($user->id, $request->point, $request->content, '@passive', $user->email, $relAction);
         } else {
             abort(500, '존재하는 회원 이메일이 아닙니다.');
         }
@@ -131,7 +129,6 @@ class Point extends Model
     {
         $idArr = explode(',', $ids);
 
-        $appPoint = new AppPoint();
         foreach($idArr as $id) {
             // 포인트 내역 정보
             $point = Point::find($id);
@@ -140,13 +137,13 @@ class Point extends Model
                 $usePoint = abs($point->point);
 
                 if($point->rel_table == '@expire') {
-                    $appPoint->deleteExpirePoint($userId, $usePoint);
+                    deleteExpirePoint($userId, $usePoint);
                 } else {
-                    $appPoint->deleteUsePoint($userId, $usePoint);
+                    deleteUsePoint($userId, $usePoint);
                 }
             } else {
                 if($point->use_point > 0) {
-                    $appPoint->insertPoint($userId, $point->use_point, $point->id);
+                    insertPoint($userId, $point->use_point, $point->id);
                 }
             }
 
@@ -160,7 +157,7 @@ class Point extends Model
 
             // User->point에 반영
             $user = $point->user;
-            $user->point = $appPoint->getPointSum($user->id);
+            $user->point = getPointSum($user->id);
             $user->save();
         }
     }

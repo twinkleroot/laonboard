@@ -156,13 +156,12 @@ class Memo extends Model
             ]);
             // 포인트 차감
             if(!session()->get('admin')) {
-                $point = new Point();
                 $memoSendPoint = (int)Cache::get('config.homepage')->memoSendPoint * -1;
                 $content = $to->nick.'('.$to->email.')님께 쪽지 발송';
                 $relTable = '@memo';
                 $relEmail = $to->id;
                 $relAction = Memo::max('id');
-                $point->insertPoint($currentUser->id, $memoSendPoint, $content, $relTable, $relEmail, $relAction);
+                insertPoint($currentUser->id, $memoSendPoint, $content, $relTable, $relEmail, $relAction);
             }
 
             // 결과 메세지 출력용 쪽지 전송 대상의 닉네임 배열

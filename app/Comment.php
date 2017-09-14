@@ -119,7 +119,6 @@ class Comment
     public function storeComment($writeModel, $request)
     {
         $board = Board::getBoard($request->boardName, 'table_name');
-        $point = new Point();
         $write = $writeModel->find($request->writeId);  // 원 글
         $writeId = $write->id;
 
@@ -205,7 +204,7 @@ class Comment
         // 포인트 부여(댓글)
         $relAction = '댓글';
         $content = $board->subject. ' '. $writeId. '-'. $newCommentId. ' 댓글쓰기';
-        $point->insertPoint($userId, $board->comment_point, $content, $board->table_name, $newCommentId, $relAction);
+        insertPoint($userId, $board->comment_point, $content, $board->table_name, $newCommentId, $relAction);
 
         // 원글에 댓글수 증가 & 마지막 시간 반영
         $writeModel->where('id', $writeId)
@@ -295,13 +294,12 @@ class Comment
     public function deleteComment($writeModel, $boardName, $commentId)
     {
         $board = Board::getBoard($boardName, 'table_name');
-        $point = new Point();
         $comment = $writeModel->find($commentId);
         $write = $writeModel->find($comment->parent);
 
         // 댓글 포인트 삭제, 부여되었던 포인트 삭제 및 조정 반영
         if($comment->user_id) {
-            $point->deleteWritePoint($writeModel, $board->id, $commentId);
+            deleteWritePoint($writeModel, $board->id, $commentId);
         }
         // 댓글 삭제
         if(!$writeModel->where('id', $commentId)->delete()) {

@@ -175,7 +175,7 @@ class BoardNew extends Model
             // 원글 삭제
             if($writeId == $boardNew->write_parent) {
                 // 글쓰기에 부여된 포인트 삭제
-                $point->deleteWritePoint($writeModel, $boardId, $writeId);
+                deleteWritePoint($writeModel, $boardId, $writeId);
                 $write = Write::getWrite($boardId, $writeId);
                 if($write->file > 0) {
                     // 서버에서 파일 삭제 첨부파일의 썸네일 삭제, 파일 테이블에서 파일 정보 삭제
