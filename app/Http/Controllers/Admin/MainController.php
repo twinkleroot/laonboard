@@ -54,6 +54,12 @@ class MainController extends Controller
         }
 
         $users = $query->latest()->paginate($pageRows);
+        if(isDemo()) {
+            foreach($users as $user) {
+                $user->nick = invisible($user->nick);
+                $user->email = invisible($user->email);
+            }
+        }
         $interceptUsers = $query->whereNotNull('intercept_date')->count();
         $leaveUsers = $query->whereNotNull('leave_date')->count();
 
@@ -76,6 +82,12 @@ class MainController extends Controller
 
         $boardNew = new BoardNew();
         $boardNewList = $boardNew->processBoardNewList($boardNewList);
+        if(isDemo()) {
+            foreach($boardNewList as $new) {
+                $new->name = invisible($new->name);
+            }
+        }
+
 
         return [ 'boardNews' => $boardNewList ];
     }
@@ -90,6 +102,10 @@ class MainController extends Controller
                 if($board) {
                     $point->rel_table = $board->id;
                 }
+            }
+            if(isDemo()) {
+                $point->user->email = invisible($point->user->email);
+                $point->user->nick = invisible($point->user->nick);
             }
         }
 

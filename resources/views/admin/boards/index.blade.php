@@ -22,7 +22,9 @@
 <div id="body_tab_type2">
     <span class="txt">생성된 게시판수 {{ $boards->total() }}개</span>
     <div class="submit_btn">
+        @unless(isDemo())
         <a class="btn btn-default" href="{{ route('admin.boards.create') }}" role="button">게시판 추가</a>
+        @endunless
     </div>
 </div>
 

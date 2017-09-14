@@ -30,7 +30,9 @@
     <span class="txt">총회원수 {{ $users->total() }}명 중, <a href="{{ route('admin.users.index') }}?kind=intercept">차단 {{ $interceptUsers }}명</a>, <a href="{{ route('admin.users.index') }}?kind=leave">탈퇴 {{ $leaveUsers }}명</a></span>
 
     <div class="submit_btn">
+        @unless(isDemo())
         <a class="btn btn-default" href="{{ route('admin.users.create')}}" role="button">회원 추가</a>
+        @endunless
     </div>
 </div>
 

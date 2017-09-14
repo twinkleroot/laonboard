@@ -120,6 +120,14 @@ class AdminUser extends Model
         }
 
         $users = $query->paginate(cache("config.homepage")->pageRows);
+        if(isDemo()) {
+            foreach($users as $user) {
+                if($user->id != auth()->user()->id) {
+                    $user->nick = invisible($user->nick);
+                    $user->email = invisible($user->email);
+                }
+            }
+        }
         $interceptUsers = $query->whereNotNull('intercept_date')->count();
         $leaveUsers = $query->whereNotNull('leave_date')->count();
 

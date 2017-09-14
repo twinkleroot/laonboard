@@ -25,7 +25,9 @@
 <div id="body_tab_type2">
     <span class="txt">전체 내용 {{ $contents->total() }}건</span>
     <div class="submit_btn">
+        @unless(isDemo())
         <a class="btn btn-default" href="{{ route('admin.contents.create')}}" role="button">내용 추가</a>
+        @endunless
     </div>
 </div>
 <div class="body-contents">

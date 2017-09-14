@@ -23,7 +23,9 @@
     <span class="txt">전체그룹 {{ $groups->total() }}개</span>
 
     <div class="submit_btn">
+        @unless(isDemo())
         <a class="btn btn-default" href="{{ route('admin.groups.create') }}" role="button">게시판그룹 추가</a>
+        @endunless
     </div>
 </div>
 
