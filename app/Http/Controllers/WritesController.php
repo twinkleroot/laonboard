@@ -242,7 +242,7 @@ class WritesController extends Controller
 
         $this->validate($request, $rules, $messages);
 
-        $fileCount = 0;
+        $fileCount = Write::getWrite($this->writeModel->board->id, $writeId)->file;
         if(count($request->file_del) > 0 || count($request->attach_file) > 0) {
             // 첨부 파일 변경
             $fileCount = $this->boardFileModel->updateBoardFiles($request, $this->writeModel->board->id, $writeId);

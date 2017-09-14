@@ -300,8 +300,7 @@ class User extends Authenticatable
         $user = User::find($lastInsertId);
 
         // 회원 가입 축하 포인트 부여
-        $point = new Point();
-        $point->insertPoint($user->id, cache("config.join")->joinPoint, '회원가입 축하', '@users', $user->email);
+        insertPoint($user->id, cache("config.join")->joinPoint, '회원가입 축하', '@users', $user->email);
 
         // Users 테이블의 주 키인 id의 해시 값을 만들어서 저장한다. (게시글에 사용자 번호 노출 방지)
         $user->id_hashkey = str_replace("/", "-", bcrypt($user->id));
@@ -471,8 +470,7 @@ class User extends Authenticatable
             $recommendedId = $recommendedUser->id;
 
             // 추천인에게 포인트 부여
-            $point = new Point();
-            $point->insertPoint($recommendedId, cache("config.join")->recommendPoint, $user->email . '의 추천인', '@users', $recommendedUser->email, $user->email . ' 추천');
+            insertPoint($recommendedId, cache("config.join")->recommendPoint, $user->email . '의 추천인', '@users', $recommendedUser->email, $user->email . ' 추천');
 
             $recommendedUser->save();
         }

@@ -108,7 +108,7 @@ class UsersController extends Controller
     public function update(Request $request)
     {
         ReCaptcha::reCaptcha($request);
-        
+
         $params = $this->userModel->editParams();
         $skin = $this->skin;
         $user = auth()->user();
@@ -217,9 +217,12 @@ class UsersController extends Controller
     // 개인 별 포인트 목록
     public function pointList($id)
     {
+        if(!auth()->check() || auth()->user()->id_hashkey != $id) {
+            return alert('다른 회원의 포인트 내역을 조회할 수 없습니다.');
+        }
         $point = new Point();
+        $params = $point->getPointList(auth()->user()->id);
         $skin = $this->skin;
-        $params = $point->getPointList($id);
 
         return viewDefault("user.$skin.point", $params);
     }

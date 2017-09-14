@@ -50,11 +50,6 @@ class Write extends Model
         return WriteSingleton::getInstance($boardId, $writeId, $id);
     }
 
-    public function __construct()
-    {
-        $this->point = new Point();
-    }
-
     // write 모델의 테이블 이름을 지정
     public function setTableName($tableName)
     {
@@ -488,7 +483,7 @@ class Write extends Model
                 abort(500, $message);
             }
             // 포인트 부여(글 읽기, 파일 다운로드)
-            $this->point->insertPoint($userId, $boardPoint, $this->board->subject . ' ' . $write->id . $contentPiece, $this->board->table_name, $write->id, $action);
+            insertPoint($userId, $boardPoint, $this->board->subject . ' ' . $write->id . $contentPiece, $this->board->table_name, $write->id, $action);
         }
     }
 
@@ -497,6 +492,7 @@ class Write extends Model
     {
         // 에디터로 업로드한 이미지 경로를 추출한다.
         $pattern = "/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i";
+
         preg_match_all($pattern, $content, $matches);
 
         for($i=0; $i<count($matches[1]); $i++) {
@@ -507,11 +503,11 @@ class Write extends Model
             $divImage2 = explode('_', $divImage1[0]);
             $realImageName = str_replace("thumb-", "", $divImage2[0]). '.'. last($divImage1);
 
-            $html = "a href='". route('image.original'). "?type=editor&amp;imageName=". $realImageName. "'"
+            $html = "<a href='". route('image.original'). "?type=editor&amp;imageName=". $realImageName. "'"
                     . " class='viewOriginalImage' width='". $imageFileInfo[0]. "' height='". $imageFileInfo[1]. "' target='viewImage'>"
-                    . "<img src='/storage/editor/". $imageFileInfo['name']. "' /></a";
+                    . "<img src='/storage/editor/". $imageFileInfo['name']. "' /></a>";
             // 글 내용에 이미지 원본보기 링크와 이미지경로를 넣어준다.
-            $content = preg_replace("<img src=\"".$matches[1][$i]."\" />", $html, $content);
+            $content = preg_replace($pattern, $html, $content);
         }
 
         return $content;
@@ -750,7 +746,7 @@ class Write extends Model
         }
 
         // 회원 글쓰기 일 때
-        if( $user ) {
+        if(auth()->check()) {
             // 실명을 사용할 때
             if($this->board->use_name && !is_null($user->name)) {
                 $name = $user->name;
@@ -802,7 +798,7 @@ class Write extends Model
             $content .= ' 글쓰기';
             $pointType = $this->board->write_point;
         }
-        $this->point->insertPoint($userId, $pointType, $content, $this->board->table_name, $lastInsertId, $relAction);
+        insertPoint($userId, $pointType, $content, $this->board->table_name, $lastInsertId, $relAction);
 
         // 공지사항인 경우 등록
         if($request->filled('notice')) {
@@ -1033,8 +1029,7 @@ class Write extends Model
         // 부여되었던 포인트 삭제 및 조정 반영
         $write = Write::getWrite($this->board->id, $writeId);
         if($write->user_id)  {
-            $point = new Point();
-            $point->deleteWritePoint($writeModel, $this->board->id, $writeId);
+            deleteWritePoint($writeModel, $this->board->id, $writeId);
         }
         // 서버에서 첨부파일+첨부파일의 썸네일 삭제, 파일 테이블 삭제
         $boardFile = new BoardFile();
@@ -1062,9 +1057,9 @@ class Write extends Model
        foreach($comments as $comment) {
            // 포인트 삭제 및 사용 포인트 다시 부여
            $comment = Write::getWrite($this->board->id, $comment['id']);
-           $deleteResult = $this->point->deletePoint($comment->user_id, $this->board->table_name, $comment->id, '댓글');
+           $deleteResult = deletePoint($comment->user_id, $this->board->table_name, $comment->id, '댓글');
            if($deleteResult == 0) {
-               $insertResult = $this->point->insertPoint($comment->user_id, $this->board->write_point * (-1), $this->board->subject. ' '. $comment->parent. '-'. $comment->id. ' 댓글삭제');
+               $insertResult = insertPoint($comment->user_id, $this->board->write_point * (-1), $this->board->subject. ' '. $comment->parent. '-'. $comment->id. ' 댓글삭제');
            }
        }
 

@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-// use Illuminate\Support\Facades\Validator;
-// use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Auth;
@@ -26,9 +24,6 @@ class RegisterController extends Controller
     | provide this functionality without requiring any additional code.
     |
     */
-
-    // 라라벨에서 기본으로 제공해 주는 회원가입 트레이트 사용 안함.
-    // use RegistersUsers;
 
     public $userModel;
 
@@ -137,6 +132,9 @@ class RegisterController extends Controller
     // 회원 가입 정보 입력 폼으로 리다이렉트 하는 메소드
     public function registerFormGet(Request $request)
     {
+        if(!$request->agreeStipulation || !$request->agreePrivacy) {
+            return alertRedirect('회원가입 약관 동의 페이지를 거치지 않고 회원가입을 진행할 수 없습니다.');
+        }
         $skin = cache("config.join")->skin ? : 'default';
 
         return viewDefault("user.$skin.register", $request->all());

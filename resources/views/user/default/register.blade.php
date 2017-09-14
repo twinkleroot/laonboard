@@ -29,10 +29,10 @@
         <h3 class="panel-title">회원가입</h3>
     </div>
 
-    @if(!$agreePrivacy || !$agreeStipulation)
+    @if( (isset($agreePrivacy) && !$agreePrivacy) || (isset($agreeStipulation) && !$agreeStipulation))
     <div class="panel-body row">
         <div class="contents col-md-8 col-md-offset-2">
-            <p>회원가입약관과 개인정보처리방침안내에 동의하셔야 회원가입을 계속 진행할 수 있습니다.</p>
+            <p>회원가입 약관과 개인정보처리방침안내에 동의하셔야 회원가입을 계속 진행할 수 있습니다.</p>
             <div class="form-group">
                 <a href="{{ route('user.join')}}" class="btn btn-block btn-sir">뒤로 가기</a>
             </div>
@@ -48,8 +48,8 @@
             <input type="hidden" name="certNo" value="">
         @endif
             {{ csrf_field() }}
-            <input type="hidden" name="agreePrivacy" value="{{ old('agreePrivacy') or $agreePrivacy }}">
-            <input type="hidden" name="agreeStipulation" value="{{ old('agreeStipulation') or $agreeStipulation }}">
+            <input type="hidden" name="agreePrivacy" value="{{ isset($agreePrivacy) ? $agreePrivacy : old('agreePrivacy') }}">
+            <input type="hidden" name="agreeStipulation" value="{{ isset($agreeStipulation) ? $agreeStipulation : old('agreeStipulation') }}">
 
             <div class="form-group @if($errors->has('email'))has-error @endif">
                 <label for="email">이메일</label>

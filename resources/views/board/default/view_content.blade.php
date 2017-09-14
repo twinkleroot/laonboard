@@ -40,7 +40,7 @@
                 <i class="fa fa-ellipsis-v"></i>
             </a>
             <ul class="dropdown-menu" role="menu">
-                @if(!$write->user_id || session()->get('admin') || ( auth()->check() && $user->id == $write->user_id ) )
+                @if( (auth()->check() && $user->id_hashkey == $write->user_id) || !$write->user_id || session()->get('admin') )
                     <li><a href="/bbs/{{ $board->table_name }}/edit/{{ $write->id }}">수정</a></li>
                     <li>
                         <a href="{{ route('board.destroy', ['boardName' => $board->table_name, 'writeId' => $write->id]) }}" onclick="delPost('deleteForm{{ $write->id }}')">
