@@ -415,7 +415,6 @@ class Write extends Model
             }
         }
 
-        $write->original_user_id = $write->user_id;
         $write->user_id = $user ? $user->id_hashkey : 0;
 
         $scrap = Scrap::where([
