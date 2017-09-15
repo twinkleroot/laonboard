@@ -25,7 +25,7 @@
 
                 <div class="form-group mg5 {{ $errors->has('email') ? ' has-error' : '' }}">
                     <label for="email"><span class="sr-only">이메일</span></label>
-                    <input type="email" class="form-control sr-only-input" id="email" name="email" value="{{ old('email') }}" placeholder="이메일 주소를 입력하세요" required autofocus>
+                    <input type="email" class="form-control sr-only-input" id="email" name="email" value="@if(isDemo()) {{ config('demo.email') }}@else{{ old('email') }}@endif" placeholder="이메일 주소를 입력하세요" required autofocus>
 
                     @if ($errors->has('email'))
                         <span class="help-block">
@@ -36,7 +36,7 @@
 
                 <div class="form-group mg5 {{ $errors->has('password') ? ' has-error' : '' }}">
                     <label for="password"><span class="sr-only">비밀번호</span></label>
-                    <input type="password" class="form-control sr-only-input" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
+                    <input type="password" class="form-control sr-only-input" id="password" name="password" @if(isDemo()) value="{{ config('demo.email') }}" @endif placeholder="비밀번호를 입력하세요" required>
 
                     @if ($errors->has('password'))
                         <span class="help-block">
