@@ -118,7 +118,7 @@
                                 <span class="tooltiptext">{{ $user->ip }}</span>
                             </div>
                         </td>
-                        <td class="td_subject">
+                        <td class="td_nick">
                             @component('admin.sideview', ['id' => $user->id, 'nick' => $user->nick, 'email' => $user->email])
                             @endcomponent
                         </td>
