@@ -163,9 +163,9 @@ a {
     top: 17px;
     left: 20px;
     margin-bottom: 20px;
+    padding: 5px 0;
 }
 .sv_wrap.open>.dropdown-menu li a {
-    padding: 3px;
     font-size: 12px;
     line-height: 1.7;
 }

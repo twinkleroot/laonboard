@@ -22,7 +22,7 @@
 
     <!-- css -->
     <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/common.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('font-awesome/css/font-awesome.css') }}">
 
 <style type="text/css">
@@ -90,11 +90,11 @@
 
     <!-- js -->
 </head>
-<body>
+<body class="popup">
 
 <form class="form-horizontal" role="form" id="imageForm" method="POST" action="{{ route('image.upload')}}" onsubmit="return false;" enctype="multipart/form-data">
     {{ csrf_field() }}
-<div id="header">
+<div id="header" class="popup">
 <div class="container">
     <div class="title">
         <span>이미지 업로드</span>
