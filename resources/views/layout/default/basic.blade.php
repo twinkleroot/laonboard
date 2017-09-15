@@ -43,6 +43,8 @@
             <a class="logo" href="{{ url('/') }}">
                 <img src="{{ asset('themes/default/images/logo2.png') }}">
             </a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
             <form class="hd_sch" name="searchBox" method="get" action="{{ route('search')}}" onsubmit="">
                 <input type="hidden" name="kind" value="subject||content" />
                 <fieldset>
@@ -53,9 +55,8 @@
                 </fieldset>
                 <input type="hidden" name="operator" value="and" />
             </form>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-            <ul class="gnb navbar-nav">
+
+            <ul class="gnb navbar-nav navbar-right">
             @for($i=0; $i<count(Cache::get('menuList')); $i++)
             @if(count(Cache::get('subMenuList')[$i]) > 0)
                 <li class="gnb-li dropdown">
