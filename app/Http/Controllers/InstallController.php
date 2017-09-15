@@ -81,11 +81,9 @@ class InstallController extends Controller
         Artisan::call('env:set', ['key' => 'CACHE_DRIVER', 'value' => 'file']);
         Artisan::call('env:set', ['key' => 'SESSION_DRIVER', 'value' => 'file']);
         Artisan::call('env:set', ['key' => 'QUEUE_DRIVER', 'value' => 'sync']);
-        Artisan::call('env:set', ['key' => 'MAIL_DRIVER', 'value' => 'smtp']);
-        Artisan::call('env:set', ['key' => 'MAIL_HOST', 'value' => 'mail']);
+        Artisan::call('env:set', ['key' => 'MAIL_DRIVER', 'value' => 'mail']);
+        Artisan::call('env:set', ['key' => 'MAIL_HOST', 'value' => '']);
         Artisan::call('env:set', ['key' => 'MAIL_PORT', 'value' => '25']);
-        Artisan::call('env:set', ['key' => 'MAIL_FROM_ADDRESS', 'value' => 'admin@domain.com']);
-        Artisan::call('env:set', ['key' => 'MAIL_FROM_NAME', 'value' => 'Admin']);
         Artisan::call('env:set', ['key' => 'MAIL_USERNAME', 'value' => '']);
         Artisan::call('env:set', ['key' => 'MAIL_PASSWORD', 'value' => '']);
         Artisan::call('env:set', ['key' => 'MAIL_ENCRYPTION', 'value' => 'tls']);
