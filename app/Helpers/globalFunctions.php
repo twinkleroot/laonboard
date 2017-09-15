@@ -1,5 +1,27 @@
 <?php
 
+// 관리자 데모인지 판별
+if (! function_exists('isDemo')) {
+    function isDemo()
+    {
+        if(config('demo.email') && config('demo.password')) {
+            return true;
+        }
+        return false;
+    }
+}
+
+// 관리자 데모일 경우 데이터를 *로 표시
+if (! function_exists('invisible')) {
+    function invisible($data)
+    {
+        $result = '';
+        for($i=0; $i<mb_strlen($data, 'UTF-8'); $i++) {
+            $result .= '*';
+        }
+        return $result;
+    }
+}
 // 포인트 부여
 if (! function_exists('insertPoint')) {
     function insertPoint($userId, $point, $content='', $relTable='', $relEmail='', $relAction='', $expire=0)

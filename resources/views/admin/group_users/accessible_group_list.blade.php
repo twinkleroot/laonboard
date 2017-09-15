@@ -40,15 +40,18 @@
         <input type="button" id="selected_delete" class="btn btn-sir" value="선택삭제"/>
     </div>
     <div id="adm_sch">
+
         <form role="form" method="POST" action="{{ route('admin.accessGroups.store') }}">
             <input type="hidden" name="user_id" value="{{ $user->id }}" />
             {{ csrf_field() }}
             <label for="group_id" class="sr-only">그룹지정</label>
             <select name="group_id">
                 <option>접근가능 그룹을 선택하세요.</option>
+                @unless(isDemo())
                 @foreach($accessible_groups as $accessible_group)
                     <option value="{{ $accessible_group->id }}">{{ $accessible_group->subject }}</option>
                 @endforeach
+                @endunless
             </select>
             <button type="submit" id="search" class="btn btn-sir" style="margin-top: -8px;">
                 추가

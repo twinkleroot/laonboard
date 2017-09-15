@@ -86,6 +86,11 @@ class Point extends Model
                     $point->rel_table = $board->id;
                 }
             }
+
+            if(isDemo() && $point->user->id != auth()->user()->id) {
+                $point->user->nick = invisible($point->user->nick);
+                $point->user->email = invisible($point->user->email);
+            }
         }
 
         $queryString = "?kind=$kind&keyword=$keyword&page=". $points->currentPage();

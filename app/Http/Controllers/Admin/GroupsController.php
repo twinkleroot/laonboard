@@ -37,6 +37,10 @@ class GroupsController extends Controller
      */
     public function create()
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         if (auth()->user()->cant('create', Group::class)) {
             abort(403, '최고관리자만 접근 가능합니다.');
         }
@@ -54,6 +58,10 @@ class GroupsController extends Controller
      */
     public function store(Request $request)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         if (auth()->user()->cant('create', Group::class)) {
             abort(403, '최고관리자만 접근 가능합니다.');
         }
@@ -81,6 +89,10 @@ class GroupsController extends Controller
      */
     public function edit($id)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         $group = Group::whereGroupId($id)->first();
         if (auth()->user()->cant('update', $group)) {
             abort(403, '해당 게시판 그룹 수정에 대한 권한이 없습니다.');
@@ -100,6 +112,10 @@ class GroupsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         if (auth()->user()->cant('update', $this->groupModel->find($id))) {
             abort(403, '해당 게시판 그룹 수정에 대한 권한이 없습니다.');
         }
@@ -127,6 +143,10 @@ class GroupsController extends Controller
     // 선택 수정 수행
     public function selectedUpdate(Request $request)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         $idArr = explode(',', $request->get('ids'));
         foreach($idArr as $id) {
             if (auth()->user()->cant('update', $this->groupModel->find($id))) {
@@ -147,6 +167,10 @@ class GroupsController extends Controller
      */
     public function destroy(Request $request, $id)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+        
         $deleteList = $this->groupModel->whereIn('id', explode(',', $id))->get();
         foreach($deleteList as $delete) {
             if (auth()->user()->cant('delete', $delete)) {

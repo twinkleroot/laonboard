@@ -27,6 +27,10 @@ class PopularsController extends Controller
 
     public function destroy($ids)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         if (auth()->user()->cant('delete', $this->popular)) {
             abort(403, '인기 검색어 삭제에 대한 권한이 없습니다.');
         }

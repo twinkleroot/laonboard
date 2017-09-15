@@ -50,18 +50,18 @@ class Memo extends Model
         if( !$user ) {
             abort(500, '회원만 이용할 수 있습니다.');
         }
-        if( !$user->open && !$user->isSuperAdmin() && $user->id_hashkey != $request->to) {
+        if( !$user->open && !$user->isSuperAdmin() && $user->id_hashkey != $request->toUser) {
             abort(500, "자신의 정보를 공개하지 않으면 다른분에게 쪽지를 보낼 수 없습니다. 정보공개 설정은 회원정보수정에서 하실 수 있습니다.");
         }
         $content = '';
         $to = '';
-        if( isset($request->to) ) {
-            $toUser = getUser($request->to);
+        if( isset($request->toUser) ) {
+            $toUser = getUser($request->toUser);
 
             if( is_null($toUser) || $toUser->leave_date) {
                 abort(500, "회원정보가 존재하지 않습니다.\\n\\n탈퇴하였을 수 있습니다.");
             }
-            if( !$toUser->open && !$user->isSuperAdmin() && $user->id_hashkey != $request->to) {
+            if( !$toUser->open && !$user->isSuperAdmin() && $user->id_hashkey != $request->toUser) {
                 abort(500, "정보공개를 하지 않았습니다.");
             }
 

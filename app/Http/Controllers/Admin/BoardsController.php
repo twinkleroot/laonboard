@@ -40,6 +40,10 @@ class BoardsController extends Controller
      */
     public function create(Request $request)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         if (auth()->user()->cant('create', Board::class)) {
             abort(403, '게시판 생성에 대한 권한이 없습니다.');
         }
@@ -57,9 +61,14 @@ class BoardsController extends Controller
      */
     public function store(Request $request)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         if (auth()->user()->cant('create', Board::class)) {
             abort(403, '게시판 생성에 대한 권한이 없습니다.');
         }
+
 
         $rules = $this->rules();
         $rules = array_add($rules, 'table_name', 'required|max:20|unique:boards|regex:/^[a-zA-Z0-9_]+$/');
@@ -93,6 +102,10 @@ class BoardsController extends Controller
      */
     public function edit(Request $request, $boardName)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         $board = Board::where('table_name', $boardName)->first();
         if (!auth()->user()->isBoardAdmin($board) && auth()->user()->cant('update', $this->boardModel)) {
             abort(403, '게시판 수정에 대한 권한이 없습니다.');
@@ -112,6 +125,10 @@ class BoardsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         $board = Board::find($id);
         if (!auth()->user()->isBoardAdmin($board) && auth()->user()->cant('update', $this->boardModel)) {
             abort(403, '게시판 수정에 대한 권한이 없습니다.');
@@ -132,6 +149,10 @@ class BoardsController extends Controller
     // 선택 수정 수행
     public function selectedUpdate(Request $request)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         $idArr = explode(',', $request->get('ids'));
         foreach($idArr as $id) {
             if (auth()->user()->cant('update', $this->boardModel->find($id))) {
@@ -152,6 +173,10 @@ class BoardsController extends Controller
      */
     public function destroy(Request $request, $id)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         if (auth()->user()->cant('delete', $this->boardModel)) {
             abort(403, '게시판 삭제에 대한 권한이 없습니다.');
         }
@@ -163,6 +188,10 @@ class BoardsController extends Controller
 
     public function copyForm($boardName)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         if (auth()->user()->cant('copy', Board::class)) {
             abort(403, '게시판 복사에 대한 권한이 없습니다.');
         }
@@ -172,6 +201,10 @@ class BoardsController extends Controller
 
     public function copy(Request $request)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         if (auth()->user()->cant('copy', Board::class)) {
             abort(403, '게시판 복사에 대한 권한이 없습니다.');
         }
@@ -234,6 +267,10 @@ class BoardsController extends Controller
 
     public function deleteThumbnail(Request $request, $boardName)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         $params = $this->boardModel->deleteThumbnail($request->dir, $boardName);
         $queryString = $request->getQueryString();
         $params = array_add($params, 'queryString', $queryString);
