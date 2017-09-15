@@ -36,11 +36,8 @@ class MailsController extends Controller
             $successAddress = [];
             foreach($toAddresses as $to) {
                 $to = trim($to);
-                $user = User::where('email', $to)->first();
-                if( !is_null($user)) {
-                    Mail::to($user)->send(new EmailSendTest());
-                    array_push($successAddress, $to);
-                }
+                Mail::to($to)->send(new EmailSendTest());
+                array_push($successAddress, $to);
             }
 
             return redirect(route('admin.email'))->with('successAddress', $successAddress);
