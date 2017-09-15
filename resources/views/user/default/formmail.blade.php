@@ -35,7 +35,7 @@
     <p class="sr-only">메일쓰기</p>
     <form method="post" id="mailForm" action="{{ route('user.mail.send') }}" role="form" enctype="multipart/form-data">
         {{ csrf_field() }}
-        <input type="hidden" name="to" value="{{ $email }}" />
+        <input type="hidden" name="toUser" value="{{ $email }}" />
         @auth
         <input type="hidden" name="name" value="{{ auth()->user()->nick }}" />
         <input type="hidden" name="email" value="{{ auth()->user()->email }}" />

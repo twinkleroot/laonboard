@@ -12,8 +12,8 @@
     <span class="tt_nick">{{ $nick }}</span> <!-- 닉네임 -->
 </a>
 <ul class="dropdown-menu" role="menu">
-    <li><a href="{{ route('memo.create') }}?to={{ (isDemo() && $id != auth()->user()->id) ? '******' : $id }}" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지보내기</a></li>
-    <li><a href="{{ route('user.mail.form')}}?to={{ (isDemo() && $id != auth()->user()->id) ? '******' : $id }}&amp;name={{ $nick }}&amp;email= {{ encrypt($email) }}" class="winFormMail" target="_blank" onclick="winFormMail(this.href); return false;">메일보내기</a></li>
+    <li><a href="{{ route('memo.create', (isDemo() && $id != auth()->user()->id) ? '******' : $id) }}" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지보내기</a></li>
+    <li><a href="{{ route('user.mail.form', (isDemo() && $id != auth()->user()->id) ? '******' : $id)}}?name={{ $nick }}&amp;email= {{ encrypt($email) }}" class="winFormMail" target="_blank" onclick="winFormMail(this.href); return false;">메일보내기</a></li>
     <li><a href="{{ route('user.profile', (isDemo() && $id != auth()->user()->id) ? '******' : $id) }}" class="winProfile" target="_blank" onclick="winProfile(this.href); return false;">자기소개</a></li>
     @unless(isDemo())
     <li><a href="{{ route('admin.users.edit', $id) }}" target="_blank">회원정보변경</a></li>

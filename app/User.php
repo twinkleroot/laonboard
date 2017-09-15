@@ -585,9 +585,6 @@ class User extends Authenticatable
         if(auth()->guest()) {
             abort(500, '회원만 이용할 수 있습니다.');
         }
-        if(is_null($user)) {
-            abort(500, '회원정보가 존재하지 않습니다.\\n\\n탈퇴하였을 수 있습니다.');
-        }
         $loginedUser = auth()->user();
         if(!$loginedUser->open && !$loginedUser->isSuperAdmin() && $loginedUser->id != $user->id) {
             abort(500, '자신의 정보를 공개하지 않으면 다른분의 정보를 조회할 수 없습니다.\\n\\n정보공개 설정은 회원정보수정에서 하실 수 있습니다.');
@@ -627,7 +624,7 @@ class User extends Authenticatable
     // 툴팁 : 메일 보내기 양식
     public function getFormMailParams($request)
     {
-        $user = getUser($request->to);
+        $user = getUser($request->toUser);
         $email = $request->filled('email') ? $request->email : '';
         $decEmail;
         if($email) {
@@ -650,7 +647,7 @@ class User extends Authenticatable
     // 툴팁 : 메일 보내기 실행
     public function sendFormMail($request)
     {
-        $to = decrypt($request->to);
+        $to = decrypt($request->toUser);
         if (substr_count($to, "@") > 1) {
             abort(500, '한번에 한사람에게만 메일을 발송할 수 있습니다.');
         }

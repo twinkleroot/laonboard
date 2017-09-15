@@ -37,7 +37,7 @@ class UsersController extends Controller
     // 회원 정보 수정 폼
     public function edit()
     {
-        if(session()->get('admin')) {
+        if(auth()->user()->isSuperAdmin() ) {
             return alertRedirect('관리자의 회원정보는 관리자 화면에서 수정해 주십시오.');
         }
 
@@ -289,10 +289,14 @@ class UsersController extends Controller
             'content' => 'required',
         ];
         if(auth()->guest()) {
+            $rules = array_add($rules, 'toUser', 'required|email|max:255');
             $rules = array_add($rules, 'name', 'required|alpha_dash|max:20');
             $rules = array_add($rules, 'email', 'required|email|max:255');
         }
         $messages = [
+            'toUser.required' => '받는 분 이메일을 입력해 주세요.',
+            'toUser.email' => '받는 분 이메일에 올바른 Email양식으로 입력해 주세요.',
+            'toUser.max' => '받는 분 이메일은 :max자리를 넘길 수 없습니다.',
             'name.required' => '이름을 입력해 주세요.',
             'name.alpha_dash' => '이름에 영문자, 한글, 숫자, 대쉬(-), 언더스코어(_)만 입력해 주세요.',
             'name.max' => '이름은 :max자리를 넘길 수 없습니다.',

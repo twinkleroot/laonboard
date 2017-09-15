@@ -22,16 +22,8 @@ class CheckFormMail
             return alertClose('회원만 이용하실 수 있습니다.');
         }
         $user = auth()->user();
-        if( $user && !$user->open && !$user->isSuperAdmin() && $user->id_hashkey != $request->to) {
+        if( $user && !$user->open && !$user->isSuperAdmin() && $user->id_hashkey != $request->toUser) {
             return alertClose('자신의 정보를 공개하지 않으면 다른분에게 메일을 보낼 수 없습니다.\\n\\n정보공개 설정은 회원정보수정에서 하실 수 있습니다.');
-        }
-
-        $targetUser = getUser($request->to);
-        if( !$targetUser || $targetUser->leave_date) {
-            alertClose('회원정보가 존재하지 않습니다.\\n\\n탈퇴한 회원일 수 있습니다.');
-        }
-        if( !$targetUser->open && !$targetUser->isSuperAdmin()) {
-            alertClose('정보공개를 하지 않았습니다.');
         }
 
         return $next($request);
