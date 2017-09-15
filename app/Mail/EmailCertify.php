@@ -8,7 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\User;
 
-class EmailCertify extends Mailable
+class EmailCertify extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 

@@ -8,7 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Carbon\Carbon;
 
-class EmailSendTest extends Mailable
+class EmailSendTest extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
