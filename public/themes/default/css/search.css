@@ -1,6 +1,11 @@
 a {
     color: #333;
 }
+.sch_key {
+    background: yellow;
+    color: #ff6699;
+    font-weight: bold;
+}
 #sch_result {
     margin: 15px 0;
 }
