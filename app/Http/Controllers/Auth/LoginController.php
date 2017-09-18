@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Auth\Traits\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use App\AuthUsers;
 
 class LoginController extends Controller
 {
@@ -19,7 +19,8 @@ class LoginController extends Controller
     |
     */
 
-    use AuthenticatesUsers;
+    // 라라벨의 기본 사용자 인증 trait를 상속받아서 재정의한 trait를 사용
+    use AuthUsers;
 
     /**
      * Where to redirect users after login.

@@ -161,6 +161,7 @@ if (! function_exists('getPointSum')) {
             $expirePoint = getExpirePoint($userId);
             if($expirePoint > 0) {
                 $user = App\User::find($userId);
+                $content = '포인트 소멸';
                 $point = $expirePoint * (-1);
                 $pointUserPoint = $user->point + $point;
                 App\Point::insert([
