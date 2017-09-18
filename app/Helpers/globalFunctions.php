@@ -10,7 +10,7 @@ if (! function_exists('mailer')) {
             $content = nl2br($content);
         }
 
-        $mail = new PHPMailer(); // defaults to using php "mail()"
+        $mail = new PHPMailer\PHPMailer\PHPMailer(); // defaults to using php "mail()"
         if (config('mail.driver') == 'smtp') {
             $mail->IsSMTP(); // telling the class to use SMTP
             $mail->Host = config('mail.host'); // SMTP server

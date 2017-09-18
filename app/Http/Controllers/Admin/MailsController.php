@@ -37,11 +37,11 @@ class MailsController extends Controller
             $successAddress = [];
             foreach($toAddresses as $to) {
                 $to = trim($to);
+                $subject = '[메일검사] 제목';
+                $content = 'test';
                 try {
-                    Mail::to($to)->send(new EmailSendTest());
+                    Mail::to($to)->send(new EmailSendTest($subject));
                 } catch (Exception $e) {
-                    $subject = '[메일검사] 제목';
-                    $content = 'test';
                     mailer(cache('config.mail.default')->adminEmailName ,cache('config.mail.default')->adminEmail, $to, $subject, $content);
                 }
                 array_push($successAddress, $to);

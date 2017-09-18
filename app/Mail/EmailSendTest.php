@@ -12,6 +12,8 @@ class EmailSendTest extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
+    public $subject;
+
     /**
      * Create a new message instance.
      *
@@ -19,7 +21,7 @@ class EmailSendTest extends Mailable implements ShouldQueue
      */
     public function __construct()
     {
-        //
+        $this->subject = $subject;
     }
 
     /**
@@ -32,7 +34,7 @@ class EmailSendTest extends Mailable implements ShouldQueue
         $address = cache('config.email.default')->adminEmail;
         $name = cache('config.email.default')->adminEmailName;
         return $this->from($address, $name)
-                    ->subject('[메일검사] 제목')
+                    ->subject($this->subject)
                     ->view('mail.default.email_send_test')
                     ->with('now', Carbon::now());
     }
