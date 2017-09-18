@@ -1,7 +1,7 @@
 @extends('layout.'. cache('config.skin')->layout. '.basic')
 
 @section('title')
-    메인 | {{ cache("config.homepage")->title }}
+    {{ cache("config.homepage")->title }}
 @endsection
 
 @section('include_css')
@@ -23,7 +23,7 @@
     </div>
     <div class="mainCover">
         <div class="cover">
-            <a href="sub.html">
+            <a href="http://demo.laonboard.com/login">
                 <div class="box">
                     <span class="icon">
                         <i class="fa fa-desktop"></i>
@@ -34,7 +34,7 @@
             </a>
         </div>
         <div class="cover">
-            <a href="sub.html">
+            <a href="{{ route('board.index', 'download') }}">
                 <div class="box">
                     <span class="icon">
                         <i class="fa fa-download"></i>
@@ -45,7 +45,7 @@
             </a>
         </div>
         <div class="cover">
-            <a href="sub.html">
+            <a href="{{ route('board.index', 'qna') }}">
                 <div class="box">
                     <span class="icon">
                         <i class="fa fa-question"></i>

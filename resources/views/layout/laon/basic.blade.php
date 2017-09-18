@@ -132,7 +132,7 @@
                 @endforeach
             </div>
             <div class="copy">
-                Copyright © <strong>소유하신 도메인</strong>. All rights reserved.
+                Copyright © <strong>laonboard.com</strong>. All rights reserved.
             </div>
         </div>
     </div>
