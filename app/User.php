@@ -654,16 +654,28 @@ class User extends Authenticatable
         $name = $request->name;
         $email = $request->email;
         $subject = $request->subject;
-        $content = $request->content;
+        $content = stripslashes($request->content);
         $type = $request->type;
         $files = $request->file ? : [];
-        $content = stripslashes($content);
         if ($type == 2) {
             $type = 1;
             $content = str_replace("\n", "<br>", $content);
         }
 
-        Mail::to($to)->send(new FormMailSend($name, $email, $subject, $content, $type, $files));
+        try {
+            Mail::to($to)->send(new FormMailSend($name, $email, $subject, $content, $type, $files));
+        } catch (Exception $e) {
+            if($this->type) {
+                $view = 'mail.default.formmail';
+            } else {
+                $view = 'mail.default.formmail_plain';
+            }
+            $params = [
+                'content' => $content
+            ];
+            $contentHtml = \View::make($view, $params)->render();
+            mailer($name, $email, $to, $subject, $contentHtml, 1, $files);
+        }
     }
 
 }

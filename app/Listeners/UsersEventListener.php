@@ -57,16 +57,25 @@ class UsersEventListener
         $name = cache('config.email.default')->adminEmailName;
 
         $view = "mail.$skin.reset_email_form";
+        $subject = '비밀번호 재설정 메일입니다.';
 
-        \Mail::send(
-            $view,
-            ['token' => $event->token],
-            function ($message) use ($event, $address, $name) {
-                $message->to($event->email);
-                $message->subject('비밀번호 재설정 메일입니다.');
-                $message->from($address, $name);
-            }
-        );
+        try {
+            \Mail::send(
+                $view,
+                ['token' => $event->token],
+                function ($message) use ($event, $address, $name) {
+                    $message->to($event->email);
+                    $message->subject($subject);
+                    $message->from($address, $name);
+                }
+            );
+        } catch (Exception $e) {
+            $params = [
+                'token' => $event->token
+            ];
+            $content = \View::make($view, $params)->render();
+            mailer($name, $address, $event->email, $subject, $content);
+        }
     }
 
 }
