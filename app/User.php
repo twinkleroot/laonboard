@@ -638,16 +638,15 @@ class User extends Authenticatable
         $name = $request->filled('name') ? convertText(stripslashes($request->name), true) : $email;
 
         return [
-            'user' => $user,
+            'id' => $user->id_hashkey,
             'name' => $name,
-            'email' => $email,
         ];
     }
 
     // 툴팁 : 메일 보내기 실행
     public function sendFormMail($request)
     {
-        $to = decrypt($request->toUser);
+        $to = getUser($request->toUser)->email;
         if (substr_count($to, "@") > 1) {
             abort(500, '한번에 한사람에게만 메일을 발송할 수 있습니다.');
         }
