@@ -1242,6 +1242,5 @@ tinymce.init({
         });
     }
 });
-});
 </script>
 @endsection

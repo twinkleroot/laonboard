@@ -237,6 +237,5 @@ tinymce.init({
         });
     }
 });
-});
 </script>
 @endsection
