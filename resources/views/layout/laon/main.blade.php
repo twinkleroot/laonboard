@@ -1,7 +1,7 @@
 @extends('layout.'. cache('config.skin')->layout. '.basic')
 
 @section('title')
-    메인 | {{ cache("config.homepage")->title }}
+    {{ cache("config.homepage")->title }}
 @endsection
 
 @section('include_css')
