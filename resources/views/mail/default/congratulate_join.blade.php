@@ -24,7 +24,7 @@
                 </div>
             @else
                 <div style="background: #587ef6; width: 100%; border-radius: 4px; text-align: center; margin: 20px 0;">
-                    <a href="/" target="_blank" style="display: block; padding: 25px 0; color: #fff; text-decoration: none;">사이트바로가기</a>
+                    <a href="{{ route('home') }}" target="_blank" style="display: block; padding: 25px 0; color: #fff; text-decoration: none;">사이트 바로가기</a>
                 </div>
             @endif
         </div>

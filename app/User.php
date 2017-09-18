@@ -662,9 +662,9 @@ class User extends Authenticatable
         }
 
         try {
-            Mail::to($to)->send(new FormMailSend($name, $email, $subject, $content, $type, $files));
+            Mail::to($to)->queue(new FormMailSend($name, $email, $subject, $content, $type, $files));
         } catch (Exception $e) {
-            if($this->type) {
+            if($type) {
                 $view = 'mail.default.formmail';
             } else {
                 $view = 'mail.default.formmail_plain';
@@ -672,8 +672,8 @@ class User extends Authenticatable
             $params = [
                 'content' => $content
             ];
-            $contentHtml = \View::make($view, $params)->render();
-            mailer($name, $email, $to, $subject, $contentHtml, 1, $files);
+            $mailContent = \View::make($view, $params)->render();
+            mailer($name, $email, $to, $subject, $mailContent, 1, $files);
         }
     }
 

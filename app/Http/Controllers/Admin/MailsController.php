@@ -48,7 +48,14 @@ class MailsController extends Controller
                         'now' => Carbon::now()
                     ];
                     $content = \View::make('mail.default.email_send_test', $params)->render();
-                    mailer(cache('config.email.default')->adminEmailName, cache('config.email.default')->adminEmail, $to, $subject, $content);
+
+                    mailer(
+                        cache('config.email.default')->adminEmailName,
+                        cache('config.email.default')->adminEmail,
+                        $to,
+                        $subject,
+                        $content
+                    );
                 }
 
                 array_push($successAddress, $to);

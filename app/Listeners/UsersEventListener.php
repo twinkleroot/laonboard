@@ -74,6 +74,7 @@ class UsersEventListener
                 'token' => $event->token
             ];
             $content = \View::make($view, $params)->render();
+            
             mailer($name, $address, $event->email, $subject, $content);
         }
     }
