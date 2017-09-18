@@ -283,10 +283,16 @@ tinymce.init({
     min_height: 400,
     min_width: 400,
     selection_toolbar: 'bold italic | quicklink h2 h3 blockquote',
-    plugins: 'link,autolink,image,imagetools,textcolor,lists,pagebreak,table,save,insertdatetime,preview,media,searchreplace,print,contextmenu,directionality,fullscreen,noneditable,visualchars',
-    toolbar: "nonbreaking undo redo | styleselect | forecolor bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table link customImage media",
+    plugins: 'link,autolink,image,imagetools,textcolor,lists,pagebreak,table,save,insertdatetime,preview,media,searchreplace,print,contextmenu,directionality,fullscreen,noneditable,visualchars,',
+    menubar: false,
+    toolbar: "undo redo | fontselect | fontsizeselect | forecolor backcolor bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table link media customImage",
+    fontsize_formats: "8pt 10pt 12pt 14pt 18pt 24pt 36pt",
     relative_urls: false,
     setup: function(editor) {
+        editor.on('init', function() {
+            this.getDoc().body.style.fontSize = '10pt';
+            this.getDoc().body.style.fontFamily = 'Arial';
+        });
         editor.addButton('customImage', {
             text: '사진',
             icon: 'image',
