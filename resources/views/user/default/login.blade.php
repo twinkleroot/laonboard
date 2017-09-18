@@ -36,7 +36,7 @@
 
                 <div class="form-group mg5 {{ $errors->has('password') ? ' has-error' : '' }}">
                     <label for="password"><span class="sr-only">비밀번호</span></label>
-                    <input type="password" class="form-control sr-only-input" id="password" name="password" @if(isDemo()) value="{{ config('demo.email') }}" @endif placeholder="비밀번호를 입력하세요" required>
+                    <input type="password" class="form-control sr-only-input" id="password" name="password" @if(isDemo()) value="{{ config('demo.password') }}" @endif placeholder="비밀번호를 입력하세요" required>
 
                     @if ($errors->has('password'))
                         <span class="help-block">
