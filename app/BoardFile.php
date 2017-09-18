@@ -176,7 +176,7 @@ class BoardFile extends Model
     // 서버에 파일 업로드 (단수)
     public function uploadFile($file, $folderName)
     {
-        return $this->storePrivatly($file, $folderName, $file->hashName());
+        return $this->storePublicly($file, $folderName, $file->hashName());
     }
 
     // 서버에 파일 업로드 (복수)
@@ -185,18 +185,18 @@ class BoardFile extends Model
         $uploadFiles = $request->attach_file;
         $result;
         foreach($uploadFiles as $uploadFile) {
-            $result = $this->storePrivatly($uploadFile, $folderName, $uploadFile->hashName());
+            $result = $this->storePublicly($uploadFile, $folderName, $uploadFile->hashName());
         }
 
         return $result;
     }
 
     // 파일권한을 private(600)으로 업로드한다.
-    public function storePrivatly($file, $folderName, $fileName, $options = [])
+    public function storePublicly($file, $folderName, $fileName, $options = [])
     {
         $options = $this->parseOptions($options);
 
-        $options['visibility'] = 'private';	// private : 600, public : 644
+        $options['visibility'] = 'public';	// private : 600, public : 644
 
         return $file->storeAs($folderName, $fileName, $options);
     }
@@ -297,7 +297,7 @@ class BoardFile extends Model
 
         foreach($files as $file) {
             if($file) {
-                $this->storePrivatly($file, 'editor', $file->hashName());
+                $this->storePublicly($file, 'editor', $file->hashName());
 
                 array_push($imgUrl, '/storage/editor/'.$file->hashName());
             }
