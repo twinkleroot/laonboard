@@ -96,6 +96,7 @@ class UsersController extends Controller
     {
         $rules = array_add($this->userModel->rulesPassword, 'password', $this->rulePassword);
         $messages = $this->userModel->messages;
+        $messages = $this->userModel->addPasswordMessages($messages);
 
         $this->validate($request, $rules, $messages);
 
@@ -117,25 +118,7 @@ class UsersController extends Controller
         // 비밀번호를 변경할 경우 validation에 password 조건을 추가한다.
         if($request->password) {
             $rules = array_add($this->userModel->rulesPassword, 'password', $this->rulePassword);
-            if(cache("config.join")->passwordPolicyUpper) {
-                $messages['password.regex'] .= '대문자 1개 이상';
-            }
-            if(cache("config.join")->passwordPolicyNumber) {
-                if($messages['password.regex']) {
-                    $messages['password.regex'] .= ', ';
-                }
-                $messages['password.regex'] .= '숫자 1개 이상';
-            }
-            if(cache("config.join")->passwordPolicySpecial) {
-                if($messages['password.regex']) {
-                    $messages['password.regex'] .= ', ';
-                }
-                $messages['password.regex'] .= '특수문자 1개 이상';
-            }
-            if($messages['password.regex']) {
-                $messages['password.regex'] .= '으로 구성해서 ';
-            }
-            $messages['password.regex'] .= cache("config.join")->passwordPolicyDigits. '자리 이상 입력해 주세요.';
+            $messages = $this->userModel->addPasswordMessages($messages);
         }
         // 이메일을 변경할 경우 validation에 email 조건을 추가한다.
         $email = getEmailAddress($request->email);

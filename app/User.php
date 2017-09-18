@@ -677,4 +677,30 @@ class User extends Authenticatable
         }
     }
 
+    // 비밀번호 조합 정책에 따른 유효성 검사 메세지 추가
+    public function addPasswordMessages($messages)
+    {
+        if(cache("config.join")->passwordPolicyUpper) {
+            $messages['password.regex'] .= '대문자 1개 이상';
+        }
+        if(cache("config.join")->passwordPolicyNumber) {
+            if($messages['password.regex']) {
+                $messages['password.regex'] .= ', ';
+            }
+            $messages['password.regex'] .= '숫자 1개 이상';
+        }
+        if(cache("config.join")->passwordPolicySpecial) {
+            if($messages['password.regex']) {
+                $messages['password.regex'] .= ', ';
+            }
+            $messages['password.regex'] .= '특수문자 1개 이상';
+        }
+        if($messages['password.regex']) {
+            $messages['password.regex'] .= '으로 구성해서 ';
+        }
+        $messages['password.regex'] .= cache("config.join")->passwordPolicyDigits. '자리 이상 입력해 주세요.';
+
+        return $messages;
+    }
+
 }

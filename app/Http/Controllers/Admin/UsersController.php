@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Admin\Config;
 use App\Admin\AdminUser;
-use App\User;
+use App\User as AppUser;
 
 class UsersController extends Controller
 {
@@ -68,7 +68,11 @@ class UsersController extends Controller
             ]);
         }
 
-        $this->validate($request, $this->rules(), $this->messages());
+        $userModel = new AppUser();
+        $messages = $this->messages();
+        $messages = $userModel->addPasswordMessages($messages);
+
+        $this->validate($request, $this->rules(), $messages);
 
         $id = $this->userModel->storeUser($request);
 
@@ -110,7 +114,7 @@ class UsersController extends Controller
             abort(403, '회원 정보 수정에 대한 권한이 없습니다.');
         }
 
-        $beforeUserInfo = User::getUser($id);
+        $beforeUserInfo = AppUser::getUser($id);
         $rules = $this->rules();
 
         $rules = array_except($rules, ['email', 'password']);
@@ -128,7 +132,11 @@ class UsersController extends Controller
             ]);
         }
 
-        $this->validate($request, $rules, $this->messages());
+        $userModel = new AppUser();
+        $messages = $this->messages();
+        $messages = $userModel->addPasswordMessages($messages);
+
+        $this->validate($request, $rules, $messages);
 
         $this->userModel->updateUserInfo($request, $id);
 

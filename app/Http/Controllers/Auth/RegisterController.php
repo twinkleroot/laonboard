@@ -97,9 +97,11 @@ class RegisterController extends Controller
         $rulePassword = $adminConfig->getPasswordRuleByConfigPolicy();
         $rules = array_add($this->userModel->rulesRegister, 'password', $rulePassword);
         $messages = $this->userModel->messages;
+        $messages = $this->userModel->addPasswordMessages($messages);
 
         // 수동 유효성 검사
         $validator = validator($request->all(), $rules, $messages);
+
         if($validator->fails()) {
             return redirect(route('user.register.form.get', $request->except(['password', 'password_confirmation', '_token', 'g-recaptcha-response'])))->withErrors($validator);
         }
