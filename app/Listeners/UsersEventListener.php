@@ -63,7 +63,7 @@ class UsersEventListener
             \Mail::send(
                 $view,
                 ['token' => $event->token],
-                function ($message) use ($event, $address, $name) {
+                function ($message) use ($event, $address, $subject, $name) {
                     $message->to($event->email);
                     $message->subject($subject);
                     $message->from($address, $name);
@@ -74,7 +74,7 @@ class UsersEventListener
                 'token' => $event->token
             ];
             $content = \View::make($view, $params)->render();
-            
+
             mailer($name, $address, $event->email, $subject, $content);
         }
     }
