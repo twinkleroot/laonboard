@@ -1,11 +1,9 @@
 <?php
-
 namespace Illuminate\Foundation\Auth;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Cache;
-use App\User;
+use Illuminate\Validation\ValidationException;
 
 trait AuthenticatesUsers
 {
@@ -17,9 +15,7 @@ trait AuthenticatesUsers
      */
     public function showLoginForm()
     {
-        $skin = Cache::get('config.join')->skin ? : 'default';
-
-        return viewDefault("user.$skin.login");
+        return view('auth.login');
     }
     /**
      * Handle a login request to the application.
@@ -29,31 +25,6 @@ trait AuthenticatesUsers
      */
     public function login(Request $request)
     {
-        $referUrl = $request->server('HTTP_REFERER');
-        $divUrl = explode('nextUrl=', $referUrl);
-        if(count($divUrl) > 1) {
-            $this->redirectTo = $divUrl[1];
-        }
-        $user = User::where('email', $request->email)->first();
-        $skin = Cache::get('config.join')->skin ? : 'default';
-        if($user && Cache::get('config.email.default')->emailCertify && $user->level == 1) {
-            $params = [
-                'confirm' => '메일로 메일인증을 받으셔야 로그인 가능합니다.\\n다른 메일주소로 변경하여 인증하시려면 취소를 클릭하시기 바랍니다.',
-                'redirect' => route('user.email.edit', $request->email),
-            ];
-            return viewDefault("user.$skin.login_confirm", $params);
-        }
-
-        if($user && $user->leave_date) {
-            $leaveDate = $user->leave_date;
-            $leaveYear = substr($leaveDate, 0, 4);
-            $leaveMonth = substr($leaveDate, 4, 2);
-            $leaveDay = substr($leaveDate, 6, 2);
-            $message = '탈퇴한 아이디이므로 접근하실 수 없습니다.\\n탈퇴일 : '. $leaveYear. '년'. $leaveMonth. '월'. $leaveDay. '일';
-
-            return alertRedirect($message);
-        }
-
         $this->validateLogin($request);
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
         // the login attempts for this application. We'll key this by the username and
@@ -80,7 +51,8 @@ trait AuthenticatesUsers
     protected function validateLogin(Request $request)
     {
         $this->validate($request, [
-            $this->username() => 'required', 'password' => 'required',
+            $this->username() => 'required|string',
+            'password' => 'required|string',
         ]);
     }
     /**
@@ -137,13 +109,9 @@ trait AuthenticatesUsers
      */
     protected function sendFailedLoginResponse(Request $request)
     {
-        $errors = [$this->username() => trans('auth.failed')];
-        if ($request->expectsJson()) {
-            return response()->json($errors, 422);
-        }
-        return redirect()->back()
-            ->withInput($request->only($this->username(), 'remember'))
-            ->withErrors($errors);
+        throw ValidationException::withMessages([
+            $this->username() => [trans('auth.failed')],
+        ]);
     }
     /**
      * Get the login username to be used by the controller.
@@ -163,8 +131,7 @@ trait AuthenticatesUsers
     public function logout(Request $request)
     {
         $this->guard()->logout();
-        $request->session()->flush();
-        $request->session()->regenerate();
+        $request->session()->invalidate();
         return redirect('/');
     }
     /**

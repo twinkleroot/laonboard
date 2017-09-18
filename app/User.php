@@ -638,32 +638,43 @@ class User extends Authenticatable
         $name = $request->filled('name') ? convertText(stripslashes($request->name), true) : $email;
 
         return [
-            'user' => $user,
+            'id' => $user->id_hashkey,
             'name' => $name,
-            'email' => $email,
         ];
     }
 
     // 툴팁 : 메일 보내기 실행
     public function sendFormMail($request)
     {
-        $to = decrypt($request->toUser);
+        $to = getUser($request->toUser)->email;
         if (substr_count($to, "@") > 1) {
             abort(500, '한번에 한사람에게만 메일을 발송할 수 있습니다.');
         }
         $name = $request->name;
         $email = $request->email;
         $subject = $request->subject;
-        $content = $request->content;
+        $content = stripslashes($request->content);
         $type = $request->type;
         $files = $request->file ? : [];
-        $content = stripslashes($content);
         if ($type == 2) {
             $type = 1;
             $content = str_replace("\n", "<br>", $content);
         }
 
-        Mail::to($to)->send(new FormMailSend($name, $email, $subject, $content, $type, $files));
+        try {
+            Mail::to($to)->queue(new FormMailSend($name, $email, $subject, $content, $type, $files));
+        } catch (Exception $e) {
+            if($type) {
+                $view = 'mail.default.formmail';
+            } else {
+                $view = 'mail.default.formmail_plain';
+            }
+            $params = [
+                'content' => $content
+            ];
+            $mailContent = \View::make($view, $params)->render();
+            mailer($name, $email, $to, $subject, $mailContent, 1, $files);
+        }
     }
 
 }

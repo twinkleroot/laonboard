@@ -8,7 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\User;
 
-class CongratulateJoin extends Mailable
+class CongratulateJoin extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 

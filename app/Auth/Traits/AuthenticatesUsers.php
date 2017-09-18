@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Auth\Traits;
+namespace App\Traits;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -9,9 +9,9 @@ use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\RedirectsUsers;
 use App\User;
 
-trait AuthenticatesUsers
+trait LoginTrait
 {
-    use RedirectsUsers, ThrottlesLogins;
+    use \Illuminate\Foundation\Auth\AuthenticatesUsers;
     /**
      * Show the application's login form.
      *

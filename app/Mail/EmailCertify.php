@@ -8,12 +8,13 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\User;
 
-class EmailCertify extends Mailable
+class EmailCertify extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
     public $user;
     public $nick;
+    public $subject;
     public $isEmailChange;
 
     /**
@@ -25,6 +26,7 @@ class EmailCertify extends Mailable
     {
         $this->user = $user;
         $this->nick = $nick;
+        $this->subject = $subject;
         $this->isEmailChange = $isEmailChange;
     }
 
@@ -45,7 +47,7 @@ class EmailCertify extends Mailable
 
         return $this
             ->from($address, $name)
-            ->subject('['. cache('config.homepage')->title. '] 인증확인 메일입니다.')
+            ->subject($this->subject)
             ->view('mail.default.email_certify')
             ->with([
                 'nick' => $this->nick,

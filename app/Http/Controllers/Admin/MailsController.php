@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use Mail;
 use Gate;
+use Exception;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Mail\EmailSendTest;
@@ -34,13 +36,29 @@ class MailsController extends Controller
 
             $toAddresses = explode(',', $request->email);
             $successAddress = [];
+            $subject = '[메일검사] 제목';
+
             foreach($toAddresses as $to) {
                 $to = trim($to);
-                $user = User::where('email', $to)->first();
-                if( !is_null($user)) {
-                    Mail::to($user)->send(new EmailSendTest());
-                    array_push($successAddress, $to);
+
+                try {
+                    Mail::to($to)->queue(new EmailSendTest($subject));
+                } catch (Exception $e) {
+                    $params = [
+                        'now' => Carbon::now()
+                    ];
+                    $content = \View::make('mail.default.email_send_test', $params)->render();
+
+                    mailer(
+                        cache('config.email.default')->adminEmailName,
+                        cache('config.email.default')->adminEmail,
+                        $to,
+                        $subject,
+                        $content
+                    );
                 }
+
+                array_push($successAddress, $to);
             }
 
             return redirect(route('admin.email'))->with('successAddress', $successAddress);

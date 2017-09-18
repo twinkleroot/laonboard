@@ -244,7 +244,7 @@
                 @elseif($board->use_secret == 2)
                 <input type="hidden" name="secret" value="secret" />
                 @endif
-                @if(auth()->user() && $board->use_email)
+                @if(cache('config.email.default')->emailUse && auth()->check() && $board->use_email)
                 <label for="mail" class="checkbox-inline">
                     <input type="checkbox" id="mail" name="mail" value="mail" checked> 답변메일받기
                 </label>

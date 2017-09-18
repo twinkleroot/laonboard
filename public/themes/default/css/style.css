@@ -86,6 +86,21 @@ body {
     padding: 5px 8px;
     border: 1px solid #587ef6;
 }
+@media  (max-width: 767px) {
+    .hd_sch {
+        float: none;
+        width: 100%;
+        padding: 15px;
+        margin: 0;
+        border-bottom: 1px solid #d8d8d8;
+    }
+    .hd_sch input[type="text"] {
+        width: 85%;
+    }
+    .hd_sch input[type="submit"] {
+        width: 15%;
+    }
+}
 .memocount {
     background: #587ef6;
     padding: 0 7px;
