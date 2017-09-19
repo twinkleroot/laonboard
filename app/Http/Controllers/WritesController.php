@@ -175,21 +175,21 @@ class WritesController extends Controller
 
         $this->validate($request, $rules, $messages);
 
-        $writeId = $this->writeModel->storeWrite($this->writeModel, $request);
+        $write = $this->writeModel->storeWrite($this->writeModel, $request);
 
         if(count($request->attach_file) > 0) {
             try {
-                $this->boardFileModel->createBoardFiles($request, $this->writeModel->board->id, $writeId);
+                $this->boardFileModel->createBoardFiles($request, $this->writeModel->board->id, $write->id);
             } catch(Exception $e) {
             }
         }
 
-        if(cache('config.email.default')->emailUse && $this->writeModel->board->use_email && $request->mail == 'mail') {
+        if(cache('config.email.default')->emailUse && $this->writeModel->board->use_email && $request->mail == 'mail' && $write->email != cache('config.homepage')->superAdmin) {
             $notification = new Notification();
-            $notification->sendWriteNotification($this->writeModel, $writeId);
+            $notification->sendWriteNotification($this->writeModel, $write->id);
         }
 
-        return redirect(route('board.view', ['boardId' => $boardName, 'writeId' => $writeId] ));
+        return redirect(route('board.view', ['boardId' => $boardName, 'writeId' => $write->id] ));
     }
 
     /**

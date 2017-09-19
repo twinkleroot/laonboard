@@ -830,7 +830,7 @@ class Write extends Model
             session()->put(session()->getId(). 'secret_board_'. $this->board->table_name. '_write_'. $lastInsertId, true);
         }
 
-        return $lastInsertId;
+        return $newWrite;
     }
 
     // 답변 글 단계 구하는 로직
