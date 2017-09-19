@@ -1,6 +1,6 @@
 .lt {
     padding: 20px;
-    min-height: 190px;
+    min-height: 195px;
     background: #fff;
     margin: 15px 0;
 }
@@ -37,24 +37,28 @@
 .lt_list li:before {
     content: "-";
     margin-right: 5px;
-    font-size: 12px;
+    font-size: 13px;
 }
 .lt_list li {
     list-style: none;
     margin: 5px 0;
 }
+.lt_list a {
+    color: #333;
+    text-decoration: none;
+}
 .lt_subject,
 .lt_date {
-    font-size: 12px;
+    font-size: 13px;
 }
-.lt_subject a {
-    color: #333;
+.lt_subject:hover {
+    text-decoration: underline;
 }
 .lt_cmt {
     font-weight: 600;
     font-size: 9px;
     color: #bbb;
-    margin-left: 4px;
+    margin-left: 6px;
 }
 .lt_date {
     float: right;
@@ -64,5 +68,5 @@
     display: inline-block;
     vertical-align:top;
     line-height:16px;
-    margin:0 1px;
+    margin:0 1px 0 3px;
 }
