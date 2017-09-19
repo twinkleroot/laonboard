@@ -374,6 +374,9 @@
 .bd_rd + .bd_rd_bt {
     margin-top: 30px;
 }
+.bd_rd p {
+    margin-bottom: 0;
+}
 .bd_sign {
     border: 1px solid #ddd;
     border-radius: 4px;
