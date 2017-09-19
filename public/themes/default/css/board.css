@@ -356,6 +356,9 @@
     margin: 0;
 }
 @media (max-width: 767px) {
+    .bd_rd_info {
+        width: 100%;
+    }
     .bd_rd_head .bd_rd_btn {
         display: inline-block;
         font-size: 18px;
@@ -365,6 +368,9 @@
     .bd_rd_head .bd_rd_info li.post_info {
         margin: 0 5px;
     }
+}
+@media (max-width: 767px) {
+
 }
 .bd_rd {
     line-height: 2;
