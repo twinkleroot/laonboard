@@ -357,18 +357,13 @@
 }
 @media (max-width: 767px) {
     .bd_rd_head .bd_rd_btn {
-        display: block;
+        display: inline-block;
         font-size: 18px;
-    }
-    .bd_rd_head .bd_rd_info {
-        font-size: 11px;
+        position: relative;
+        top: 15px;
     }
     .bd_rd_head .bd_rd_info li.post_info {
         margin: 0 5px;
-        line-height: 25px;
-    }
-    .tt_nick {
-        line-height: 25px;
     }
 }
 .bd_rd {
