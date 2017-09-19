@@ -35,7 +35,13 @@
         <li class="post_info"><i class="fa fa-eye"></i>{{ $write->hit }}</li>
     </ul>
     <ul class="bd_rd_btn">
-        <li class="dropdown">
+        <li class="depth2">
+            <a href="{{ route('board.create', $board->table_name) }}"><i class="fa fa-pencil"></i></a>
+        </li>
+        <li class="depth2">
+            <a href="{{ route('board.index', $board->table_name). '?'. $request->server('QUERY_STRING') }}"><i class="fa fa-list-ul"></i></a>
+        </li>
+        <li class="dropdown depth2">
             <a href="#" class="dropdown-toggle bd_rd_more" data-toggle="dropdown" role="button" aria-expanded="false">
                 <i class="fa fa-ellipsis-v"></i>
             </a>
@@ -62,12 +68,6 @@
                 @endif
                 <li><a href="{{ route('board.create.reply', ['board' => $board->table_name, 'writeId' => $write->id]) }}">답변</a></li>
             </ul>
-        </li>
-        <li>
-            <a href="{{ route('board.index', $board->table_name). '?'. $request->server('QUERY_STRING') }}"><i class="fa fa-list-ul"></i></a>
-        </li>
-        <li>
-            <a href="{{ route('board.create', $board->table_name) }}"><i class="fa fa-pencil"></i></a>
         </li>
     </ul>
 </div>
