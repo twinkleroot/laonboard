@@ -26,7 +26,9 @@
 <div id="body_tab_type2">
     <span class="txt">커뮤니티 메인에 표시될 팝업 레이어를 설정합니다.</span>
     <div class="submit_btn">
+        @unless(isDemo())
         <a href="{{ route('admin.popups.create') }}" class="btn btn-sir" role="button">팝업 레이어 추가</a>
+        @endunless
     </div>
 </div>
 
