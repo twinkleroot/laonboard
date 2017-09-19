@@ -148,7 +148,7 @@
     @if(auth()->guest() || !auth()->user()->isSuperAdmin())
         @if($board->write_min || $board->write_max)
         <div id="charCountWrap">
-            <span id="charCount"></span>글자
+            <span id="charCount">0</span>글자
 
         </div>
         @endif

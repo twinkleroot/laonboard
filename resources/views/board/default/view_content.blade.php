@@ -304,7 +304,7 @@
         </div>
     </article>
     @if($board->comment_min || $board->comment_max)
-        <span id="charCount"></span>글자
+        <span id="charCount">0</span>글자
     @endif
     <textarea class="form-control" rows="4" name="content" id="content" @if($board->comment_min || $board->comment_max) onkeyup="check_byte('content', 'charCount');" @endif placeholder="댓글을 입력해 주세요." required></textarea>
     @foreach ($errors->get('content') as $message)
