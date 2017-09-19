@@ -12,7 +12,6 @@ class ThemesController extends Controller
 
     public function __construct(Theme $theme)
     {
-        $this->middleware('super');
         $this->theme = $theme;
     }
 
@@ -26,12 +25,20 @@ class ThemesController extends Controller
     // 테마 변경
     public function update(Request $request)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         $this->theme->updateTheme($request);
     }
 
     // 개별 스킨 변경
     public function updateSkins(Request $request)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         $this->theme->updateSkins($request);
 
         return redirect()->back();

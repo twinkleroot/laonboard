@@ -31,7 +31,7 @@ class AdminMenu
                     }
                 }
             } else {    // 권한을 부여받은 관리자일 경우
-                $manageMenus = ManageAuth::where('user_id', $user->id)->get();
+                $manageMenus = ManageAuth::where('user_id', $user->id)->orderBy('menu')->get();
                 foreach($manageMenus as $manageMenu) {
                     $subMenu[$manageMenu->menu] = $menus[$manageMenu->menu];
                     $primaryMenu[substr($manageMenu->menu, 0, 1). '00000'] = $menus[substr($manageMenu->menu, 0, 1). '00000'];

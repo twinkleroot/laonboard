@@ -74,6 +74,10 @@ class PointsController extends Controller
      */
     public function destroy($id)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+        
         if (auth()->user()->cant('delete', $this->pointModel)) {
             abort(403, '포인트 삭제에 대한 권한이 없습니다.');
         }

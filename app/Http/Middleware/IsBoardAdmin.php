@@ -21,6 +21,6 @@ class IsBoardAdmin
             return $next($request);
         }
 
-        return alertRedirect('게시판관리자만 접근 가능합니다.');
+        return alert('게시판관리자만 접근 가능합니다.');
     }
 }

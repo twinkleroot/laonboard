@@ -102,10 +102,6 @@ class BoardsController extends Controller
      */
     public function edit(Request $request, $boardName)
     {
-        if(isDemo()) {
-            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
-        }
-
         $board = Board::where('table_name', $boardName)->first();
         if (!auth()->user()->isBoardAdmin($board) && auth()->user()->cant('update', $this->boardModel)) {
             abort(403, '게시판 수정에 대한 권한이 없습니다.');
@@ -188,10 +184,6 @@ class BoardsController extends Controller
 
     public function copyForm($boardName)
     {
-        if(isDemo()) {
-            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
-        }
-
         if (auth()->user()->cant('copy', Board::class)) {
             abort(403, '게시판 복사에 대한 권한이 없습니다.');
         }

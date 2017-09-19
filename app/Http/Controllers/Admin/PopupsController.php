@@ -54,6 +54,10 @@ class PopupsController extends Controller
      */
     public function store(Request $request)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         $this->validate($request, $this->rules(), $this->messages());
 
         if(auth()->user()->cant('create', Popup::class)) {
@@ -91,6 +95,10 @@ class PopupsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         $this->validate($request, $this->rules(), $this->messages());
 
         if(auth()->user()->cant('update', $this->popup)) {
@@ -110,6 +118,10 @@ class PopupsController extends Controller
      */
     public function destroy($id)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+        
         if(auth()->user()->cant('delete', $this->popup)) {
             abort(403, '팝업 레이어 삭제에 대한 권한이 없습니다.');
         }

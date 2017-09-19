@@ -12,6 +12,10 @@ class ExtrasController extends Controller
 {
     // 세션파일 일괄삭제
     public function deleteSession() {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         $results = [];
         $sessionAll = session()->all();
         foreach($sessionAll as $key => $value) {
@@ -25,6 +29,10 @@ class ExtrasController extends Controller
 
     // 최신글 캐시파일 일괄삭제
     public function deleteCache() {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         $boards = Board::select('boards.*', 'groups.id as group_id', 'groups.subject as group_subject', 'groups.order as group_order')
             ->leftJoin('groups', 'groups.id', '=', 'boards.group_id')
             // ->where('boards.device', '<>', 'mobile')
@@ -47,6 +55,10 @@ class ExtrasController extends Controller
     // 썸네일 파일 일괄삭제
     public function deleteThumbnail()
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         $path = storage_path('app/public');
         $directories = File::directories($path);
         foreach($directories as $dir) {
@@ -67,6 +79,10 @@ class ExtrasController extends Controller
     // phpinfo()
     public function phpinfo()
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         $menuCode = ['100800', 'r'];
         if(auth()->user()->isSuperAdmin() || Gate::allows('view-admin-mailtest', getManageAuthModel($menuCode))) {
             return view('admin.configs.phpinfo');

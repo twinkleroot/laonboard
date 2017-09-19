@@ -53,7 +53,7 @@ class CheckBoardLevel
             if(auth()->check()) {
                 return alert($message);
             } else {
-                return alertRedirect($message, '/login');
+                return alertRedirect($message, '/login?nextUrl='. $request->getRequestUri());
             }
         }
         return $next($request);

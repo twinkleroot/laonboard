@@ -14,6 +14,10 @@ class StatusController extends Controller
 {
 
     public function index(Request $request) {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+        
         $menuCode = ['300500', 'r'];
 
         if(auth()->user()->isSuperAdmin() || Gate::allows('view-admin-mailtest', getManageAuthModel($menuCode))) {

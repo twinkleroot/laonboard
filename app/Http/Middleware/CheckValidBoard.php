@@ -37,7 +37,7 @@ class CheckValidBoard
                     'user_id' => $user->id
                 ])->count();
                 if(!$count) {
-                    return alertRedirect("접근 권한이 없으므로 글읽기가 불가합니다.\\n\\n궁금하신 사항은 관리자에게 문의 바랍니다.");
+                    return alert("접근 권한이 없으므로 글읽기가 불가합니다.\\n\\n궁금하신 사항은 관리자에게 문의 바랍니다.");
                 }
             }
         }

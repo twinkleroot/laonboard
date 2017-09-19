@@ -254,7 +254,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
 
     // 기본 환경 설정
     Route::get('configs', ['as' => 'admin.config', 'uses' => 'Admin\ConfigsController@index']);
-    Route::put('configs/update', ['as' => 'admin.config.update', 'uses' => 'Admin\ConfigsController@update']);
+    Route::put('configs/update', ['as' => 'admin.config.update', 'uses' => 'Admin\ConfigsController@update'])->middleware('super');
 
     // 관리 권한 설정 리소스 컨트롤러
     Route::resource('manage/auths', 'Admin\ManageAuthsController', [
@@ -270,8 +270,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
 
     // 테마 설정
     Route::get('themes', ['as' => 'admin.themes.index', 'uses' => 'Admin\ThemesController@index']);
-    Route::post('themes/update', ['as' => 'admin.themes.update', 'uses' => 'Admin\ThemesController@update']);
-    Route::post('themes/update/skins', ['as' => 'admin.themes.update.skin', 'uses' => 'Admin\ThemesController@updateSkins']);
+    Route::post('themes/update', ['as' => 'admin.themes.update', 'uses' => 'Admin\ThemesController@update'])->middleware('super');
+    Route::post('themes/update/skins', ['as' => 'admin.themes.update.skin', 'uses' => 'Admin\ThemesController@updateSkins'])->middleware('super');
     // 테마 상세보기 레이어
     Route::post('themes/detail', ['as' => 'admin.themes.detail', 'uses' => 'Admin\ThemesController@detail']);
     // 테마 미리보기
@@ -279,19 +279,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin.menu'] ], fun
     Route::get('themes/previews/{themeName}/boards/lists', ['as' => 'admin.themes.preview.board.list', 'uses' => 'Admin\ThemePreviewsController@boardList']);
     Route::get('themes/previews/{themeName}/boards/view', ['as' => 'admin.themes.preview.board.view', 'uses' => 'Admin\ThemePreviewsController@boardView']);
 
+    Route::get('menus', ['as' => 'admin.menus.index', 'uses' => 'Admin\MenusController@index']);
+    Route::get('menus/create', ['as' => 'admin.menus.create', 'uses' => 'Admin\MenusController@create']);
+    Route::post('menus', ['as' => 'admin.menus.store', 'uses' => 'Admin\MenusController@store'])->middleware('super');
     // 메뉴 추가 팝업창에 대상 선택에 따라서 view를 load하는 기능
     Route::post('menus/result', ['as' => 'admin.menus.result', 'uses' => 'Admin\MenusController@result']);
-    // 메뉴 설정 리소스 컨트롤러
-    Route::resource('menus', 'Admin\MenusController', [
-        'only' => [
-            'index', 'create', 'store',
-        ],
-        'names' => [
-            'index' => 'admin.menus.index',
-            'create' => 'admin.menus.create',
-            'store' => 'admin.menus.store',
-        ]
-    ]);
 
     // 메일 발송 테스트
     Route::get('mails', ['as' => 'admin.email', 'uses' => 'Admin\MailsController@index']);

@@ -147,7 +147,7 @@
                         <div class="col-sm-3">
                             <select class="form-control required" name="menu" placeholder="접근가능메뉴">
                                 @foreach($menus as $key=>$value)
-                                    @if( !(substr($key, -3) == '000')  && !$value[2] )
+                                    @if( !(substr($key, -3) == '000') )
                                         <option value="{{ $key }}">{{ $key. ' '. $value[0] }}</option>
                                     @endif
                                 @endforeach
@@ -187,7 +187,7 @@ $(function(){
         }
 
         $('#ids').val(selected_id_array);
-        $('#selectForm').attr('action', '/admin/manageAuth/' + selected_id_array);
+        $('#selectForm').attr('action', '/admin/manage/auths/' + selected_id_array);
         $('#selectForm').submit();
     });
 });

@@ -37,6 +37,10 @@ class ManageAuthsController extends Controller
      */
     public function store(Request $request)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         $rules = [ 'email' => 'bail|email|required'];
         $messages = [
             'email.email' => '받는 메일주소에 올바른 이메일 형식으로 입력해 주세요.',
@@ -57,6 +61,10 @@ class ManageAuthsController extends Controller
      */
     public function destroy($ids)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+        
         $message = $this->authModel->deleteManageAuth($ids);
 
         return redirect()->back()->with('message', $message);

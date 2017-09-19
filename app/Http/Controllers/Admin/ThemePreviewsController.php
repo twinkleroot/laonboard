@@ -19,7 +19,6 @@ class ThemePreviewsController extends Controller
 
     public function __construct(Theme $theme, Main $main, Comment $comment, Write $write)
     {
-        $this->middleware('super');
         $this->theme = $theme;
         $this->main = $main;
         $this->comment = $comment;

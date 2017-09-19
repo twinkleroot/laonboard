@@ -13,8 +13,6 @@ class MenusController extends Controller
 
     public function __construct(Menu $menu)
     {
-        $this->middleware('super');
-
         $this->menuModel = $menu;
     }
     /**
@@ -49,6 +47,10 @@ class MenusController extends Controller
      */
     public function store(Request $request)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         $rules = [
             'name.*' => 'required',
             'link.*' => 'regex:/^(((http(s?))\:\/\/)?)([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(\/\S*)?$/|nullable',

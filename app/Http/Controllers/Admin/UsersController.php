@@ -39,6 +39,10 @@ class UsersController extends Controller
      */
     public function create()
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         if (auth()->user()->cant('create', AdminUser::class)) {
             abort(403, '회원 추가에 대한 권한이 없습니다.');
         }
@@ -57,6 +61,10 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         if (auth()->user()->cant('create', AdminUser::class)) {
             abort(403, '회원 추가에 대한 권한이 없습니다.');
         }
@@ -110,6 +118,10 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         if (auth()->user()->cant('update', $this->userModel)) {
             abort(403, '회원 정보 수정에 대한 권한이 없습니다.');
         }
@@ -134,7 +146,6 @@ class UsersController extends Controller
 
         $userModel = new AppUser();
         $messages = $this->messages();
-        $messages = $userModel->addPasswordMessages($messages);
 
         $this->validate($request, $rules, $messages);
 
@@ -148,6 +159,10 @@ class UsersController extends Controller
     */
     public function selectedUpdate(Request $request)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         if (auth()->user()->cant('update', $this->userModel)) {
             abort(403, '회원 정보 수정에 대한 권한이 없습니다.');
         }
@@ -165,6 +180,10 @@ class UsersController extends Controller
      */
     public function destroy(Request $request)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+        
         if (auth()->user()->cant('delete', $this->userModel)) {
             abort(403, '회원 삭제에 대한 권한이 없습니다.');
         }

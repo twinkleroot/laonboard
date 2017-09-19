@@ -12,8 +12,6 @@ class ConfigsController extends Controller
 
     public function __construct(Config $configModel)
     {
-        $this->middleware('super');
-
         $this->configModel = $configModel;
     }
 
@@ -26,6 +24,10 @@ class ConfigsController extends Controller
 
     public function update(Request $request)
     {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
         $this->validate($request, $this->rules(), $this->messages());
 
         $data = $request->all();

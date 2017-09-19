@@ -88,10 +88,6 @@ class ContentsController extends Controller
      */
     public function edit($id)
     {
-        if(isDemo()) {
-            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
-        }
-
         if (auth()->user()->cant('update', $this->content)) {
             abort(403, '내용관리 수정에 대한 권한이 없습니다.');
         }
@@ -137,7 +133,7 @@ class ContentsController extends Controller
         if(isDemo()) {
             return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
         }
-        
+
         if (auth()->user()->cant('delete', $this->content)) {
             abort(403, '내용관리 삭제에 대한 권한이 없습니다.');
         }
