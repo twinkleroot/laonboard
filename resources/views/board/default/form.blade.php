@@ -17,7 +17,11 @@
 @section('content')
 <!-- Board start -->
 <div id="board" class="container">
-
+    @if($errors->any())
+    <script>
+        alert("{{ $errors->first() }}");
+    </script>
+    @endif
     <!-- 게시글 작성 -->
     @if($type=='update')
         <form role="form" id="fwrite" method="post" action={{ route('board.update', ['boardId'=>$board->table_name, 'writeId'=>$write->id])}} enctype="multipart/form-data" @if(auth()->user() && auth()->user()->isBoardAdmin($board)) onsubmit="return writeSubmit();" @endif>
@@ -40,7 +44,7 @@
             <div class="form-group mb10 row @if($errors->get('name'))has-error @endif">
                 <div class="col-sm-3">
                     <label for="name" class="sr-only">이름</label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="이름" @if($type=='update') value={{ $write->name }}@else required @endif>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="이름" @if($type == 'update') value="{{ $write->name }}"@else value="{{ old('name', '') }}" @endif required>
                     @foreach ($errors->get('name') as $message)
                     <span class="help-block">
                         <strong>{{ $message }}</strong>
@@ -51,7 +55,7 @@
             <div class="form-group mb10 row @if($errors->get('password'))has-error @endif">
                 <div class="col-sm-4">
                     <label for="password" class="sr-only">비밀번호</label>
-                    <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호" @if($type!='update') required @endif>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호" required>
                     @foreach ($errors->get('password') as $message)
                     <span class="help-block">
                         <strong>{{ $message }}</strong>
@@ -62,7 +66,7 @@
             <div class="form-group mb10 row @if($errors->get('email'))has-error @endif">
                 <div class="col-sm-5">
                     <label for="email" class="sr-only">이메일</label>
-                    <input type="email" class="form-control" id="email" name="email" placeholder="이메일" @if($type=='update') value="{{ $write->email }}" @endif>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="이메일" @if($type=='update') value="{{ $write->email }}"@else value="{{ old('email', '') }}" @endif>
                     @foreach ($errors->get('email') as $message)
                     <span class="help-block">
                         <strong>{{ $message }}</strong>
@@ -73,7 +77,7 @@
             <div class="form-group mb10 row @if($errors->get('homepage'))has-error @endif">
                 <div class="col-sm-5">
                     <label for="homepage" class="sr-only">홈페이지</label>
-                    <input type="text" class="form-control" id="homepage" name="homepage" placeholder="홈페이지" @if($type=='update') value="{{ $write->homepage }}" @endif>
+                    <input type="text" class="form-control" id="homepage" name="homepage" placeholder="홈페이지" @if($type=='update') value="{{ $write->homepage }}"@else value="{{ old('email', '') }}" @endif>
                     @foreach ($errors->get('homepage') as $message)
                     <span class="help-block">
                         <strong>{{ $message }}</strong>
@@ -134,7 +138,7 @@
 @if($board->use_dhtml_editor && $userLevel >= $board->html_level)
         {{-- 에디터 --}}
         <div style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px;" @if($errors->get('content')) class="has-error" @endif>
-            <textarea class="editorArea" name="content" id="content">@if($type == 'update'){{ convertText(clean($write->content), 0) }}@endif</textarea>
+            <textarea class="editorArea" name="content" id="content">@if($type == 'update'){{ convertText(clean($write->content), 0) }}@else{{ old('content', '') }}@endif</textarea>
         </div>
 @else
     @if(auth()->guest() || !auth()->user()->isSuperAdmin())
@@ -143,13 +147,12 @@
         @endif
     @endif
         <div style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px; padding: 2px;" @if($errors->get('content')) class="has-error" @endif>
-            <textarea name="content" id="content" maxlength="65536" style="width:100%; min-height:400px; border:0;" required>@if($type == 'update'){{ convertText(clean($write->content), 0) }}@endif</textarea>
+            <textarea name="content" id="content" maxlength="65536" style="width:100%; min-height:400px; border:0;" required>@if($type == 'update'){{ convertText(clean($write->content), 0) }}@else{{ old('content', '') }}@endif</textarea>
         </div>
     @if(auth()->guest() || !auth()->user()->isSuperAdmin())
         @if($board->write_min || $board->write_max)
         <div id="charCountWrap">
             <span id="charCount">0</span>글자
-
         </div>
         @endif
     @endif
@@ -166,11 +169,11 @@
                 <div class="link_list @if($errors->get('link1') || $errors->get('link2'))has-error @endif" style="display: none;">
                     <div class="item">
                         <label for="link1" class="sr-only">링크 1</label>
-                        <input type="text" class="form-control" id="link1" name="link1" placeholder="링크 1" @if($type == 'update')value="{{ $write->link1 }}"@endif>
+                        <input type="text" class="form-control" id="link1" name="link1" placeholder="링크 1" @if($type == 'update')value="{{ $write->link1 }}"@else value="{{ old('link1', '') }}"@endif>
                     </div>
                     <div class="item">
                         <label for="link2" class="sr-only">링크 2</label>
-                        <input type="text" class="form-control" id="link2" name="link2" placeholder="링크 2" @if($type == 'update')value="{{ $write->link2 }}"@endif>
+                        <input type="text" class="form-control" id="link2" name="link2" placeholder="링크 2" @if($type == 'update')value="{{ $write->link2 }}"@else value="{{ old('link2', '') }}"@endif>
                     </div>
                     @foreach ($errors->get('link1') as $message)
                     <div>
@@ -263,7 +266,7 @@
                     <input type="hidden" name="g-recaptcha-response" id="g-response" />
                     <button type="button" class="btn btn-sir" onclick="validate();">작성완료</button>
                 @endif
-                <button type="button" class="btn btn-default" onclick="history.back();">취소</button>
+                <a href="{{ route("board.index", $board->table_name). (Request::getQueryString() ? '?'.Request::getQueryString() : '')}}" type="button" class="btn btn-default">취소</a>
             </div>
         </div>
     </form>
@@ -377,6 +380,8 @@ $(function() {
     $(".file").click(function(){
         $(".file_list").toggle();
     });
+
+
 });
 </script>
 {{-- 글자수 제한 --}}

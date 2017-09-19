@@ -99,7 +99,7 @@
 @empty
 @endforelse
 
-    <p>{!! $write->content !!}</p>
+    <p>{!! urlAutoLink(clean($write->content)) !!}</p>
 
 @if(count($boardFiles) > 0)
     <div class="bd_file">
@@ -240,16 +240,16 @@
                 @if(str_contains($comment->option, 'secret'))
                 <img src="/themes/default/images/icon_secret.gif"> <!-- 비밀 -->
                     @if(auth()->check() && ($user->isSuperAdmin() || $user->isBoardAdmin($board) || $user->isGroupAdmin($board->group)))
-                    {{ $comment->content }}
+                    {!! urlAutoLink(clean($comment->content)) !!}
                 @elseif(session()->get(session()->getId(). 'secret_board_'. $board->table_name. '_write_'. $comment->id))
-                    {{ $comment->content }}
+                    {!! urlAutoLink(clean($comment->content)) !!}
                     @elseif(auth()->check() && $user->id == $comment->user_id)
-                    {{ $comment->content }}
+                    {!! urlAutoLink(clean($comment->content)) !!}
                     @else
                     <a href="/password/type/secret?boardName={{ $board->table_name }}&writeId={{ $comment->id }}&nextUrl={{ route('board.view', [ 'boardName' => $board->table_name, 'writeId' => $comment->parent ]). '?'. Request::getQueryString(). '#comment'. $comment->id }}">댓글내용확인</a>
                     @endif
                 @else
-                {{ $comment->content }}
+                {!! urlAutoLink(clean($comment->content)) !!}
                 @endif
                 <input type="hidden" id="secretComment_{{ $comment->id }}" value="{{ $comment->option }}">
                 <textarea id="saveComment_{{ $comment->id }}" style="display:none">{{ $comment->content }}</textarea>
