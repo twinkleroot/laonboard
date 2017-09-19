@@ -180,7 +180,7 @@ Route::group(['prefix' => 'bbs/{boardName}'], function () {
     Route::put('update/{writeId}', ['as' => 'board.update', 'uses' => 'WritesController@update'])
         ->middleware('level.board:update_level', 'valid.board', 'valid.write', 'cert:write', 'valid.store.write');
     // 글 삭제
-    Route::delete('delete/{writeId}', ['as' => 'board.destroy', 'uses' => 'WritesController@destroy'])
+    Route::get('delete/{writeId}', ['as' => 'board.destroy', 'uses' => 'WritesController@destroy'])
         ->middleware('valid.board', 'valid.write', 'can.action.write.immediately:delete', 'updatable.deletable.write');
     // 답변 쓰기
     Route::get('reply/{writeId}', ['as' => 'board.create.reply', 'uses' => 'WritesController@createReply'])
@@ -192,7 +192,7 @@ Route::group(['prefix' => 'bbs/{boardName}'], function () {
     Route::put('comments/update', ['as' => 'board.comment.update', 'uses' => 'CommentsController@update'])
         ->middleware('level.board:comment_level', 'updatable.deletable.write');
     // 댓글 삭제
-    Route::delete('views/{writeId}/delete/{commentId}', ['as' => 'board.comment.destroy', 'uses' => 'CommentsController@destroy'])
+    Route::get('views/{writeId}/delete/{commentId}', ['as' => 'board.comment.destroy', 'uses' => 'CommentsController@destroy'])
         ->middleware('level.board:comment_level', 'can.delete.comment.immediately', 'updatable.deletable.write');
 
     // 커뮤니티에서의 관리자 기능
