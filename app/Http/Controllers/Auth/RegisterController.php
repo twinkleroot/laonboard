@@ -77,9 +77,12 @@ class RegisterController extends Controller
 
         $skin = cache("config.join")->skin ? : 'default';
 
+        $messages = $this->userModel->addPasswordMessages($this->userModel->messages);
+
         $params = [
             'agreeStipulation' => $request->agreeStipulation,
             'agreePrivacy' => $request->agreePrivacy,
+            'passwordMessage' => $messages['password.regex'],
         ];
 
         return viewDefault("user.$skin.register", $params);
@@ -96,8 +99,7 @@ class RegisterController extends Controller
         $adminConfig = new Config();
         $rulePassword = $adminConfig->getPasswordRuleByConfigPolicy();
         $rules = array_add($this->userModel->rulesRegister, 'password', $rulePassword);
-        $messages = $this->userModel->messages;
-        $messages = $this->userModel->addPasswordMessages($messages);
+        $messages = $this->userModel->addPasswordMessages($this->userModel->messages);
 
         // 수동 유효성 검사
         $validator = validator($request->all(), $rules, $messages);

@@ -136,7 +136,7 @@
                                 @endfor
                             </select>
                         </td>
-                        <td class="td_mngsmall">{{ $user->point }}</td>
+                        <td class="td_mngsmall">{{ number_format($user->point) }}</td>
                         <td class="td_date">
                             <div class="mb_tooltip">
                                 @date($user->created_at)

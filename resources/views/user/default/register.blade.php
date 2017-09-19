@@ -50,6 +50,7 @@
             {{ csrf_field() }}
             <input type="hidden" name="agreePrivacy" value="{{ isset($agreePrivacy) ? $agreePrivacy : old('agreePrivacy') }}">
             <input type="hidden" name="agreeStipulation" value="{{ isset($agreeStipulation) ? $agreeStipulation : old('agreeStipulation') }}">
+            <input type="hidden" name="passwordMessage" value="{{ $passwordMessage }}">
 
             <div class="form-group @if($errors->has('email'))has-error @endif">
                 <label for="email">이메일</label>
@@ -70,6 +71,10 @@
                 <span class="help-block">
                   <strong>{{ $errors->first('password') }}</strong>
                 </span>
+                @else
+                <p class="help-block">
+                    {{ $passwordMessage }}
+                </p>
                 @endif
             </div>
 
@@ -94,7 +99,8 @@
                 @endif
                 <p class="help-block">
                     {{-- 공백없이 한글, 영문, 숫자만 입력 가능<br> --}}
-                    (한글2자, 영문4자 이상, Emoji 포함 가능)<br>
+                    {{-- (한글2자, 영문4자 이상, Emoji 포함 가능)<br> --}}
+                    (한글2자, 영문4자 이상)<br>
                     닉네임을 정하시면 {{ cache("config.join")->nickDate }}일 이내에는 변경할 수 없습니다
                 </p>
             </div>

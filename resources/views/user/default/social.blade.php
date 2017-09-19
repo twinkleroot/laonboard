@@ -75,7 +75,7 @@ function checkExistData(key, value) {
         type: 'POST',
         data: data,
         dataType: 'json',
-        async: false,
+        async: true,
         cache: false,
         success: function(data) {
             result = data.result;

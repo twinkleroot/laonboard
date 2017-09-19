@@ -696,9 +696,9 @@ class User extends Authenticatable
             $messages['password.regex'] .= '특수문자 1개 이상';
         }
         if($messages['password.regex']) {
-            $messages['password.regex'] .= '으로 구성해서 ';
+            $messages['password.regex'] .= '이 포함된 ';
         }
-        $messages['password.regex'] .= cache("config.join")->passwordPolicyDigits. '자리 이상 입력해 주세요.';
+        $messages['password.regex'] .= cache("config.join")->passwordPolicyDigits. '자리 이상의 문자열로 입력해 주세요.';
 
         return $messages;
     }
