@@ -49,13 +49,15 @@ class InstallController extends Controller
         Artisan::call('key:generate');
         // 4. 파일 쓰기를 위한 폴더 public/storage로 링크 걸기
         Artisan::call('storage:link');
-        // 5. DB 구성
+        // 5. 본인확인을 위한 key 폴더 생성
+        File::makeDirectory(storage_path('okname/key'));
+        // 6. DB 구성
         Artisan::call('migrate:refresh');
-        // 6. 입력받은 관리자 데이터로 관리자 회원 추가
+        // 7. 입력받은 관리자 데이터로 관리자 회원 추가
         $this->addAdmin($request);
-        // 7. 환경 설정 기본값 데이터 추가
+        // 8. 환경 설정 기본값 데이터 추가
         $this->addBasicConfig($request);
-        // 8. 모든 설정 캐시를 초기화.
+        // 9. 모든 설정 캐시를 초기화.
         Artisan::call('config:clear');
 
         return view('install.setup_result');

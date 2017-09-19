@@ -161,7 +161,7 @@ class Config extends Model
     public function createConfigJoin()
     {
         $configArr = array (
-            'skin' => config('gnu.skin'),
+            'skin' => config('gnu.userSkin'),
             'nickDate' => config('gnu.nickDate'),
             'name' => config('gnu.name'),
             'homepage' => config('gnu.homepage'),
