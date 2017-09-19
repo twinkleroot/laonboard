@@ -139,6 +139,10 @@ class WritesController extends Controller
      */
     public function store(Request $request, $boardName)
     {
+        if(!auth()->check() || (!auth()->user()->isBoardAdmin($this->writeModel->board) && $this->writeModel->board->use_recaptcha)) {
+            ReCaptcha::reCaptcha($request);
+        }
+        
         $rules = $this->rules();
         $messages = $this->messages();
 
@@ -170,10 +174,6 @@ class WritesController extends Controller
         ]);
 
         $this->validate($request, $rules, $messages);
-
-        if(auth()->guest() || (!auth()->user()->isBoardAdmin($this->writeModel->board) && $this->writeModel->board->use_recaptcha)) {
-            ReCaptcha::reCaptcha($request);
-        }
 
         $writeId = $this->writeModel->storeWrite($this->writeModel, $request);
 

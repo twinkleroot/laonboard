@@ -129,6 +129,7 @@
                 data-callback="onSubmit"
                 data-size="invisible" style="display:none">
             </div>
+            <input type="hidden" name="g-recaptcha-response" id="g-response" />
         </form>
     </div>
     @endif
@@ -139,6 +140,7 @@
 </div>
 <script>
 function onSubmit(token) {
+    $("#g-response").val(token);
     $("#userForm").submit();
 }
 
@@ -159,7 +161,7 @@ function userSubmit() {
             'nick' : $('#nick').val()
         },
         dataType: 'json',
-        async: false,
+        async: true,
         cache: false,
         success: function(data) {
             nick = data.nick;

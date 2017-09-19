@@ -133,7 +133,6 @@
                 </td>
                 <td class="bd_name mo">
                 @if($board->use_sideview)
-                @auth
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                         @if(cache('config.join')->useMemberIcon && $write->iconPath)
                         <span class="tt_icon"><img src="{{ $write->iconPath }}" /></span> <!-- 아이콘 -->
@@ -142,11 +141,6 @@
                     </a>
                     @component('sideview', ['sideview' => 'board', 'board' => $board, 'write' => $write, 'category' => $currenctCategory])
                     @endcomponent
-                @else
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
-                    @component('sideview', ['sideview' => 'board', 'board' => $board, 'write' => $write, 'category' => $currenctCategory])
-                    @endcomponent
-                @endauth
                 @else
                     @if(cache('config.join')->useMemberIcon && $write->iconPath)
                     <span class="tt_icon"><img src="{{ $write->iconPath }}" /></span> <!-- 아이콘 -->
@@ -220,8 +214,6 @@
 $(function(){
     var category = "{{ $currenctCategory }}";
     if(category != "") {
-        // document.getElementById(category).addClass
-        // $("div[id='" + category + "']'").addClass('on');
         document.getElementById(category).className += ' on'
     } else {
         document.getElementById('all').className += ' on'

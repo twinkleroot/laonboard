@@ -49,6 +49,7 @@
                     data-callback="onSubmit"
                     data-size="invisible" style="display:none">
                 </div>
+                <input type="hidden" name="g-recaptcha-response" id="g-response" />
             </form>
         </div>
     </div>
@@ -57,6 +58,7 @@
 </div>
 <script>
 function onSubmit(token) {
+    $("#g-response").val(token);
     $("#emailForm").submit();
 }
 function validate(event) {

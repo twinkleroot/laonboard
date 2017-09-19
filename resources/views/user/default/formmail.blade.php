@@ -117,11 +117,13 @@
             data-callback="onSubmit"
             data-size="invisible" style="display:none">
         </div>
+        <input type="hidden" name="g-recaptcha-response" id="g-response" />
     </form>
 </div>
 
 <script>
 function onSubmit(token) {
+    $("#g-response").val(token);
     $("#mailForm").submit();
 }
 function validate(event) {

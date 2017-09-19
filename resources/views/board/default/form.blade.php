@@ -260,6 +260,7 @@
                         data-callback="onSubmit"
                         data-size="invisible" style="display:none">
                     </div>
+                    <input type="hidden" name="g-recaptcha-response" id="g-response" />
                     <button type="button" class="btn btn-sir" onclick="validate();">작성완료</button>
                 @endif
                 <button type="button" class="btn btn-default" onclick="history.back();">취소</button>
@@ -315,6 +316,7 @@ function htmlAutoBr(obj) {
     }
 }
 function onSubmit(token) {
+    $("#g-response").val(token);
     $("#fwrite").submit();
 }
 function validate(event) {
@@ -343,7 +345,7 @@ function writeSubmit() {
             'content' : contentData
         },
         dataType: 'json',
-        async: false,
+        async: true,
         cache: false,
         success: function(data) {
             subject = data.subject;

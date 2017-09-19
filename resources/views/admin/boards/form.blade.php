@@ -473,10 +473,10 @@
                         <label for="use_recaptcha">사용</label>
                     </td>
                     <td class="table_chk">
-                        <input type="checkbox" id="chk_group_use_rss_view" name="chk_group_use_rss_view" value="1" />
-                        <label for="chk_group_use_rss_view">그룹적용</label>
-                        <input type="checkbox" id="chk_all_use_rss_view" name="chk_all_use_rss_view" value="1" />
-                        <label for="chk_all_use_rss_view">전체적용</label>
+                        <input type="checkbox" id="chk_group_use_recaptcha" name="chk_group_use_recaptcha" value="1" />
+                        <label for="chk_group_use_recaptcha">그룹적용</label>
+                        <input type="checkbox" id="chk_all_use_recaptcha" name="chk_all_use_recaptcha" value="1" />
+                        <label for="chk_all_use_recaptcha">전체적용</label>
                     </td>
                 </tr>
                 <tr>

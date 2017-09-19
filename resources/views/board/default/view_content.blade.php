@@ -334,6 +334,7 @@
     <div class="clearfix">
         <div class="pull-right">
             @if( ((auth()->check() && !session()->get('admin')) && $board->use_recaptcha) || !auth()->check())
+            <input type="hidden" name="g-recaptcha-response" id="g-response" />
             <button type="button" class="btn btn-sir" onclick="validate();">댓글등록</button>
             @else
             <button type="submit" id="btnSubmit" class="btn btn-sir">댓글등록</button>
@@ -360,6 +361,7 @@ function validate(event) {
 }
 
 function onSubmit(token) {
+    $("#g-response").val(token);
     $("#commentForm").submit();
 }
 
@@ -376,7 +378,7 @@ function commentSubmit() {
             'content' : $('#content').val()
         },
         dataType: 'json',
-        async: false,
+        async: true,
         cache: false,
         success: function(data) {
             subject = data.subject;
