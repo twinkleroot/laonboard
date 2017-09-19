@@ -90,7 +90,8 @@
                 <label for="nick" class="control-label">닉네임</label>
                 <p>
                     {{-- 공백없이 한글, 영문, 숫자만 입력 가능 <br /> --}}
-                    (한글2자, 영문4자 이상, Emoji 포함 가능)<br />
+                    (한글2자, 영문4자 이상)<br />
+                    {{-- (한글2자, 영문4자 이상, Emoji 포함 가능)<br /> --}}
                     닉네임을 바꾸시면 {{ $config->nickDate }}일 이내에는 변경할 수 없습니다.
                 </p>
                 <input id="nick" type="text" class="form-control" name="nick" value="{{ $user->nick }}" required autofocus>
@@ -428,7 +429,7 @@ $(function(){
                 },
                 dataType: 'json',
                 cache : false,
-                async: false,
+                async: true,
                 success: function(data) {
                     if (data.error) {
                             alert(data.error);

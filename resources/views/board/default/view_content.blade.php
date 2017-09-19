@@ -43,13 +43,9 @@
                 @if( (auth()->check() && $user->id_hashkey == $write->user_id) || !$write->user_id || session()->get('admin') )
                     <li><a href="/bbs/{{ $board->table_name }}/edit/{{ $write->id }}">수정</a></li>
                     <li>
-                        <a href="{{ route('board.destroy', ['boardName' => $board->table_name, 'writeId' => $write->id]) }}" onclick="delPost('deleteForm{{ $write->id }}')">
+                        <a href="{{ route('board.destroy', ['boardName' => $board->table_name, 'writeId' => $write->id]) }}">
                             삭제
                         </a>
-                        <form id="deleteForm{{ $write->id }}" action="{{ route('board.destroy', ['boardName' => $board->table_name, 'writeId' => $write->id]) }}" method="POST" style="display: none;">
-                            {{ csrf_field() }}
-                            {{ method_field('DELETE') }}
-                        </form>
                     </li>
                 @endif
                 @if(session()->get('admin'))
@@ -234,13 +230,9 @@
                 <li><a href="#" onclick="commentBox({{ $comment->id }}, 'cu'); return false;">수정</a></li> @endif
                 @if($comment->isDelete == 1)
                 <li>
-                    <a href="{{ route('board.comment.destroy', ['boardName' => $board->table_name, 'writeId' => $write->id, 'commentId' => $comment->id]) }}" onclick="delPost('deleteForm{{ $comment->id }}')">
+                    <a href="{{ route('board.comment.destroy', ['boardName' => $board->table_name, 'writeId' => $write->id, 'commentId' => $comment->id]) }}">
                         삭제
                     </a>
-                    <form id="deleteForm{{ $comment->id }}" action="{{ route('board.comment.destroy', ['boardName' => $board->table_name, 'writeId' => $write->id, 'commentId' => $comment->id]) }}" method="POST" style="display: none;">
-                        {{ csrf_field() }}
-                        {{ method_field('DELETE') }}
-                    </form>
                 </li>
                 @endif
             </ul>
@@ -312,7 +304,7 @@
         </div>
     </article>
     @if($board->comment_min || $board->comment_max)
-        <span id="charCount"></span>글자
+        <span id="charCount">0</span>글자
     @endif
     <textarea class="form-control" rows="4" name="content" id="content" @if($board->comment_min || $board->comment_max) onkeyup="check_byte('content', 'charCount');" @endif placeholder="댓글을 입력해 주세요." required></textarea>
     @foreach ($errors->get('content') as $message)

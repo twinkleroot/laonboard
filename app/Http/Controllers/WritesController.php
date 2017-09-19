@@ -142,7 +142,7 @@ class WritesController extends Controller
         if(!auth()->check() || (!auth()->user()->isBoardAdmin($this->writeModel->board) && $this->writeModel->board->use_recaptcha)) {
             ReCaptcha::reCaptcha($request);
         }
-        
+
         $rules = $this->rules();
         $messages = $this->messages();
 
@@ -278,7 +278,7 @@ class WritesController extends Controller
      */
     public function destroy(Request $request, $boardName, $writeId)
     {
-        $message = $redirect = '';
+        $redirect = '';
 
         try {
             $this->writeModel->deleteWriteCascade($this->writeModel, $writeId);

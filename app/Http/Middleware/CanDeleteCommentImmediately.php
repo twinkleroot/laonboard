@@ -25,7 +25,7 @@ class CanDeleteCommentImmediately
         if(session()->get(session()->getId(). 'delete_board_'. $request->boardName. '_write_'. $commentId)) {
             return $next($request);
         } else if( !$comment->user_id && !session()->get('admin') ) {
-            return redirect(route('board.password.check', 'commentDelete'). '?boardId='. $request->boardName. '&writeId='. $writeId. '&commentId='. $commentId. '&nextUrl='. $request->fullUrl());
+            return redirect(route('board.password.check', 'commentDelete'). '?boardName='. $request->boardName. '&writeId='. $writeId. '&commentId='. $commentId. '&nextUrl='. $request->fullUrl());
         }
 
         return $next($request);
