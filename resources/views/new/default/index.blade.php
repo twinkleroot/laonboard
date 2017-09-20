@@ -103,9 +103,11 @@
             </tbody>
         </table>
 
+        @if(session()->get('admin'))
         <div class="bd_btn">
             <button type="button" class="btn btn-sir" onclick="confirmDel()">선택삭제</button>
         </div>
+        @endif
         </form>
     </div>
 </div>
