@@ -158,8 +158,7 @@
     text-align: center;
 }
 .bd_group a:hover,
-.bd_board a:hover,
-.bd_subject a:hover {
+.bd_board a:hover {
     text-decoration: underline !important;
 }
 .read {
@@ -178,6 +177,9 @@
 .bd_subject .bd_subject_title p {
     margin: 0;
     display: inline-block;
+}
+.bd_subject .bd_subject_title p:hover {
+    text-decoration: underline;
 }
 .sch_key {
     background: yellow;
