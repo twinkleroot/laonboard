@@ -44,7 +44,7 @@ class CommentsController extends Controller
 
         // 공백 제거
         $request->merge([
-            'content' => trim($request->content)
+            'content' => trim(convertContent($request->content, 2))
         ]);
 
         $this->validate($request, $rules, $messages);
@@ -85,7 +85,7 @@ class CommentsController extends Controller
 
         // 공백 제거
         $request->merge([
-            'content' => trim($request->content)
+            'content' => trim(convertContent($request->content, 2))
         ]);
 
         $this->validate($request, $rules, $messages);

@@ -170,7 +170,7 @@ class WritesController extends Controller
         // 공백 제거
         $request->merge([
             'subject' => trim($request->subject),
-            'content' => trim($request->content)
+            'content' => trim(convertContent($request->content, 2)),
         ]);
 
         $this->validate($request, $rules, $messages);
@@ -237,7 +237,7 @@ class WritesController extends Controller
         // 공백 제거
         $request->merge([
             'subject' => trim($request->subject),
-            'content' => trim($request->content)
+            'content' => trim(convertContent($request->content, 2)),
         ]);
 
         $this->validate($request, $rules, $messages);
