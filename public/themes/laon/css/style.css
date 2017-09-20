@@ -149,12 +149,12 @@
     padding: 0 7px;
     height: 20px;
     border-radius: 2px;
-    display: block;
+    display: inline-block;
     text-align: center;
     color: #fff;
-    float: right;
+    margin-left: 4px;
     font-size: 10px;
-    line-height: 20px;
+    line-height: 22px;
 }
 
 /* contents - common */
