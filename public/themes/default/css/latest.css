@@ -43,6 +43,11 @@
     list-style: none;
     margin: 5px 0;
 }
+.lt_list li:after {
+    content: "";
+    display: block;
+    clear: both;
+}
 .lt_list a {
     color: #333;
     text-decoration: none;
@@ -52,6 +57,13 @@
     font-size: 13px;
 }
 .lt_subject:hover {
+    text-decoration: underline;
+}
+.lt_subject p {
+    margin-bottom: 0;
+    display: inline-block;
+}
+.lt_subject p:hover {
     text-decoration: underline;
 }
 .lt_cmt {
