@@ -51,7 +51,7 @@
                     <div class="form-group mg5">
                         <textarea readonly>{{ cache('config.join')->privacy }}</textarea>
                         <fieldset class="fregister_agree">
-                            <label for="agreePrivacy">회원가입약관의 내용에 동의합니다.</label>
+                            <label for="agreePrivacy">개인정보처리방침안내의 내용에 동의합니다.</label>
                             <input type="checkbox" id="agreePrivacy" name="agreePrivacy" value="1" >
                         </fieldset>
                     </div>
