@@ -75,7 +75,7 @@
                         <a href="{{ route('board.index', $boardNew->table_name) }}">{{ $boardNew->subject }}</a>
                     </td>
                     <td>
-                        <span class="bd_subject"><a href="/bbs/{{ $boardNew->table_name}}/views/{{ $boardNew->write_parent. $boardNew->commentTag }}">{{ $boardNew->write->subject }}</a></span>
+                        <span class="bd_subject"><a href="/bbs/{{ $boardNew->table_name}}/views/{{ $boardNew->write_parent. $boardNew->commentTag }}">{{ $boardNew->writeSubject }}</a></span>
                     </td>
                     <td class="td_nick mo">
                     @unless($boardNew->user_id)
