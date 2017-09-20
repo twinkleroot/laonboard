@@ -46,8 +46,16 @@ if (! function_exists('mailer')) {
 if (! function_exists('isDemo')) {
     function isDemo()
     {
-        if(config('demo.email') && config('demo.password') && auth()->check() && !auth()->user()->isSuperAdmin()) {
-            return true;
+        if(config('demo.email') && config('demo.password')) {
+            if(auth()->check()) {
+                if(!auth()->user()->isSuperAdmin()) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return true;
+            }
         }
         return false;
     }

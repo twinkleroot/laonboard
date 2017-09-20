@@ -55,14 +55,14 @@ class CommentsController extends Controller
 
         event(new \App\Events\CreateComment($request));
 
-        $result = $this->comment->storeComment($this->writeModel, $request);
+        $comment = $this->comment->storeComment($this->writeModel, $request);
 
-        if(cache('config.email.default')->emailUse && $this->writeModel->board->use_email) {
+        if(cache('config.email.default')->emailUse && $this->writeModel->board->use_email && $comment->email != cache('config.homepage')->superAdmin) {
             $notification = new Notification;
-            $notification->sendWriteNotification($this->writeModel, $result);
+            $notification->sendWriteNotification($this->writeModel, $comment->id);
         }
 
-        return redirect($request->requestUri. '#comment'. $result);
+        return redirect($request->requestUri. '#comment'. $comment->id);
     }
 
     // 댓글 수정

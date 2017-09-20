@@ -20,7 +20,7 @@ class Notification
         $groupAdmin = $board->group->admin;		// 그룹 관리자
         $superAdmin = Cache::get('config.homepage')->superAdmin;    // 최고 관리자
         $write = $writeModel->find($writeId);   // 작성한 글
-        $parentWrite = $writeModel->find($write->parent);   // 원글
+        $parentWrite = $write->id == $write->parent ? $write : $writeModel->find($write->parent);   // 원글
         if($write->is_comment) {
             $content = clean('<p>원글<br>'. $parentWrite->subject. '</p><br><p>댓글<br>'. $write->content. '</p>');     // 글 내용
         } else {

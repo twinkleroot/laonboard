@@ -228,7 +228,7 @@ class Comment
         // 메인 최신글 캐시 삭제
         deleteCache('main', $board->table_name);
 
-        return $newCommentId;
+        return $writeModel->find($newCommentId);
     }
 
     // 댓글 단계 구하는 로직
