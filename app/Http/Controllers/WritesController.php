@@ -174,7 +174,7 @@ class WritesController extends Controller
         // 공백 제거
         $request->merge([
             'subject' => trim($request->subject),
-            'content' => trim(convertContent($request->content, 2)),
+            'content' => $this->writeModel->board->use_dhtml_editor ? trim($request->content) : trim(convertContent($request->content, 2)),
         ]);
 
         $this->validate($request, $rules, $messages);
@@ -241,7 +241,7 @@ class WritesController extends Controller
         // 공백 제거
         $request->merge([
             'subject' => trim($request->subject),
-            'content' => trim(convertContent($request->content, 2)),
+            'content' => $this->writeModel->board->use_dhtml_editor ? trim($request->content) : trim(convertContent($request->content, 2)),
         ]);
 
         $this->validate($request, $rules, $messages);
