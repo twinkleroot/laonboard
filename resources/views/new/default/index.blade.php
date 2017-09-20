@@ -43,7 +43,7 @@
                 </button>
             </form>
         </div>
-        <div class="bd_new">회원 닉네임만 검색 가능</div>
+        <div class="bd_new">회원의 닉네임으로만 검색 가능(비회원글 검색 불가)</div>
 
         <form id="listForm" method="post" action="{{ route('new.destroy') }}">
             {{ csrf_field()}}
