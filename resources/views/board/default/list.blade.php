@@ -111,20 +111,20 @@
                             {!! clean($write->subject) !!}
                         </a>
                         {{-- 글올린시간 + 설정에 있는 신규 글 시간 > 현재 시간 --}}
-                        @if(date($write->created_at->addHours(24)) > date("Y-m-d H:i:s", time()) && $board->new != 0 )
-                        <img src="/themes/default/images/icon_new.gif"> <!-- 새글 -->
-                        @endif
                         @if($write->file > 0)
                         <img src="/themes/default/images/icon_file.gif"> <!-- 파일 -->
                         @endif
                         @if($write->link1 || $write->link2)
                         <img src="/themes/default/images/icon_link.gif"> <!-- 링크 -->
                         @endif
-                        @if($write->hit >= $board->hot)
-                        <img src="/themes/default/images/icon_hot.gif"> <!-- 인기 -->
-                        @endif
                         @if(str_contains($write->option, 'secret'))
                         <img src="/themes/default/images/icon_secret.gif"> <!-- 비밀 -->
+                        @endif
+                        @if(date($write->created_at->addHours(24)) > date("Y-m-d H:i:s", time()) && $board->new != 0 )
+                        <img src="/themes/default/images/icon_new.gif"> <!-- 새글 -->
+                        @endif
+                        @if($write->hit >= $board->hot)
+                        <img src="/themes/default/images/icon_hot.gif"> <!-- 인기 -->
                         @endif
                         @if($write->comment > 0)
                         <span class="bd_cmt">{{ $write->comment }}</span>

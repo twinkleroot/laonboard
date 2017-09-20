@@ -351,7 +351,7 @@ function userSubmit() {
             'nick' : $('#nick').val()
         },
         dataType: 'json',
-        async: true,
+        async: false,
         cache: false,
         success: function(data) {
             nick = data.nick;
@@ -429,7 +429,7 @@ $(function(){
                 },
                 dataType: 'json',
                 cache : false,
-                async: true,
+                async: false,
                 success: function(data) {
                     if (data.error) {
                             alert(data.error);

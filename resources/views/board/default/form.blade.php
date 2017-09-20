@@ -254,17 +254,17 @@
                 @endif
             </div>
             <div class="pull-right">
-                @if((auth()->user() && auth()->user()->isBoardAdmin($board)) || !$board->use_recaptcha)
-                    <button type="submit" class="btn btn-sir">작성완료</button>
+                @if( !auth()->check() || !auth()->user()->isBoardAdmin($board) && $board->use_recaptcha )
+                <!-- 리캡챠 -->
+                <div id='recaptcha' class="g-recaptcha"
+                    data-sitekey="{{ cache('config.sns')->googleRecaptchaClient }}"
+                    data-callback="onSubmit"
+                    data-size="invisible" style="display:none">
+                </div>
+                <input type="hidden" name="g-recaptcha-response" id="g-response" />
+                <button type="button" class="btn btn-sir" onclick="validate();">작성완료</button>
                 @else
-                    <!-- 리캡챠 -->
-                    <div id='recaptcha' class="g-recaptcha"
-                        data-sitekey="{{ cache('config.sns')->googleRecaptchaClient }}"
-                        data-callback="onSubmit"
-                        data-size="invisible" style="display:none">
-                    </div>
-                    <input type="hidden" name="g-recaptcha-response" id="g-response" />
-                    <button type="button" class="btn btn-sir" onclick="validate();">작성완료</button>
+                <button type="submit" class="btn btn-sir">작성완료</button>
                 @endif
                 <a href="{{ route("board.index", $board->table_name). (Request::getQueryString() ? '?'.Request::getQueryString() : '')}}" type="button" class="btn btn-default">취소</a>
             </div>
@@ -348,7 +348,7 @@ function writeSubmit() {
             'content' : contentData
         },
         dataType: 'json',
-        async: true,
+        async: false,
         cache: false,
         success: function(data) {
             subject = data.subject;

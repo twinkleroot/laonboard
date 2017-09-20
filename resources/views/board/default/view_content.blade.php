@@ -230,7 +230,7 @@
                 <li><a href="#" onclick="commentBox({{ $comment->id }}, 'cu'); return false;">수정</a></li> @endif
                 @if($comment->isDelete == 1)
                 <li>
-                    <a href="{{ route('board.comment.destroy', ['boardName' => $board->table_name, 'writeId' => $write->id, 'commentId' => $comment->id]) }}">
+                    <a href="{{ route('board.comment.destroy', ['boardName' => $board->table_name, 'writeId' => $write->id, 'commentId' => $comment->id]) }}" onclick="del(this.href); return false;">
                         삭제
                     </a>
                 </li>
@@ -325,7 +325,7 @@
 
     <div class="clearfix">
         <div class="pull-right">
-            @if( ((auth()->check() && !session()->get('admin')) && $board->use_recaptcha) || !auth()->check())
+            @if( !auth()->check() || !auth()->user()->isBoardAdmin($board) && $board->use_recaptcha )
             <input type="hidden" name="g-recaptcha-response" id="g-response" />
             <button type="button" class="btn btn-sir" onclick="validate();">댓글등록</button>
             @else
@@ -370,7 +370,7 @@ function commentSubmit() {
             'content' : $('#content').val()
         },
         dataType: 'json',
-        async: true,
+        async: false,
         cache: false,
         success: function(data) {
             subject = data.subject;
@@ -501,11 +501,5 @@ function excuteGood(href, $el, $tx) {
             }
         },
     });
-}
-
-// 댓글 삭제 확인
-function commentDelete()
-{
-    return confirm("이 댓글을 삭제하시겠습니까?");
 }
 </script>

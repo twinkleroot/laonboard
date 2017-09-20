@@ -167,7 +167,7 @@ function userSubmit() {
             'nick' : $('#nick').val()
         },
         dataType: 'json',
-        async: true,
+        async: false,
         cache: false,
         success: function(data) {
             nick = data.nick;
