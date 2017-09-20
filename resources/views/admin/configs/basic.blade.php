@@ -226,6 +226,20 @@
                     <span class="help-block">기간을 0으로 설정시 포인트 유효기간이 적용되지 않습니다.</span>
                 </td>
             </tr>
+            <tr>
+                <th>방문자분석 스크립트</th>
+                <td class="table_body chknone">
+                    <textarea cols="80" rows="10" name="analytics" class="form-control">{{ $configHomepage->analytics }}</textarea>
+                    <span class="help-block">방문자분석 스크립트 코드를 입력합니다. 예) 구글 애널리틱스</span>
+                </td>
+            </tr>
+            <tr>
+                <th>추가 메타태그</th>
+                <td class="table_body chknone">
+                    <textarea cols="80" rows="10" name="addMeta" class="form-control">{{ $configHomepage->addMeta }}</textarea>
+                    <span class="help-block">추가로 사용하실 meta 태그를 입력합니다.</span>
+                </td>
+            </tr>
         </table>
     </section>
 

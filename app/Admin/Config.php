@@ -133,6 +133,8 @@ class Config extends Model
             'searchSkin' => config('gnu.searchSkin'),
             'useCopyLog' => config('gnu.useCopyLog'),
             'pointTerm' => config('gnu.pointTerm'),
+            'analytics' => config('gnu.analytics'),
+            'addMeta' => config('gnu.addMeta'),
         );
 
         return $this->createConfig('config.homepage', $configArr);
@@ -325,7 +327,7 @@ class Config extends Model
             return $this->updateConfigByOne($name, $data);
         }
 
-           // 설정이 변경될 때 캐시를 지운다.
+        // 설정이 변경될 때 캐시를 지운다.
         Cache::forget("config.homepage");
         Cache::forget("config.board");
         Cache::forget("config.join");
@@ -355,6 +357,8 @@ class Config extends Model
             'searchSkin' => $data['searchSkin'],
             'useCopyLog' => isset($data['useCopyLog']) ? $data['useCopyLog'] : 0,
             'pointTerm' => $data['pointTerm'],
+            'analytics' => $data['analytics'],
+            'addMeta' => $data['addMeta'],
         ];
 
         $this->updateConfigByOne('homepage', $configData);

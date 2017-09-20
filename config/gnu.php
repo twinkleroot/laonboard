@@ -23,7 +23,8 @@
     'searchSkin' => 'default',
     'useCopyLog' => 1,
     'pointTerm' => 0,
-
+    'analytics' => '',
+    'addMeta' => '',
     // 게시판 기본
     'linkTarget' => '_blank',
     'readPoint' => 0,
