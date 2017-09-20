@@ -71,7 +71,7 @@ function checkExistData(key, value) {
     };
     var result = false;
     $.ajax({
-        url: '/user/existData',
+        url: '/users/existData',
         type: 'POST',
         data: data,
         dataType: 'json',
@@ -98,6 +98,7 @@ function loginValidation(form) {
         return false;
     }
 
+    alert(form.email.value);
     if(checkExistData('email', form.email.value) != true) {
         alert('가입되지 않은 이메일입니다. 확인 후 다시 입력해 주세요.');
         form.email.focus();
