@@ -223,19 +223,6 @@
                 </li>
                 <li class="post_info"><i class="fa fa-clock-o"></i>@datetime($comment->created_at)</li>
             </ul>
-            <ul class="bd_rd_cmt_ctr">
-                @if($comment->isReply == 1)
-                <li><a href="#" onclick="commentBox({{ $comment->id }}, 'c'); return false;">답변</a></li> @endif
-                @if($comment->isEdit == 1)
-                <li><a href="#" onclick="commentBox({{ $comment->id }}, 'cu'); return false;">수정</a></li> @endif
-                @if($comment->isDelete == 1)
-                <li>
-                    <a href="{{ route('board.comment.destroy', ['boardName' => $board->table_name, 'writeId' => $write->id, 'commentId' => $comment->id]) }}">
-                        삭제
-                    </a>
-                </li>
-                @endif
-            </ul>
             <div class="bd_rd_cmt_view">
                 @if(str_contains($comment->option, 'secret'))
                 <img src="/themes/default/images/icon_secret.gif"> <!-- 비밀 -->
@@ -254,6 +241,19 @@
                 <input type="hidden" id="secretComment_{{ $comment->id }}" value="{{ $comment->option }}">
                 <textarea id="saveComment_{{ $comment->id }}" style="display:none">{{ $comment->content }}</textarea>
             </div>
+            <ul class="bd_rd_cmt_ctr">
+                @if($comment->isReply == 1)
+                <li><a href="#" onclick="commentBox({{ $comment->id }}, 'c'); return false;">답변</a></li> @endif
+                @if($comment->isEdit == 1)
+                <li><a href="#" onclick="commentBox({{ $comment->id }}, 'cu'); return false;">수정</a></li> @endif
+                @if($comment->isDelete == 1)
+                <li>
+                    <a href="{{ route('board.comment.destroy', ['boardName' => $board->table_name, 'writeId' => $write->id, 'commentId' => $comment->id]) }}">
+                        삭제
+                    </a>
+                </li>
+                @endif
+            </ul>
             <span id="reply_{{ $comment->id }}"></span><!-- 답변 -->
             <span id="edit_{{ $comment->id }}"></span><!-- 수정 -->
         </div>

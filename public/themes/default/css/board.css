@@ -647,7 +647,7 @@
     display: block;
     width: 100%;
     border-top: 1px solid #ddd;
-    padding: 15px 0;
+    padding: 8px 0;
 }
 .cmt:first-child .cmt_box {
     border-top: 0;
@@ -670,7 +670,7 @@
 .bd_rd_cmt_ctr {
     padding: 0;
     display: inline-block;
-    margin: 0 0 5px 0;
+    margin: 0;
     color: #aaa;
     font-size: 12px;
 }
