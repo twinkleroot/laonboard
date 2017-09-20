@@ -325,7 +325,7 @@
 
     <div class="clearfix">
         <div class="pull-right">
-            @if( !auth()->check() || !auth()->user()->isBoardAdmin($board) && $board->use_recaptcha )
+            @if( !auth()->check() || !auth()->user()->isBoardAdmin($board) && $board->use_recaptcha && todayWriteCount(auth()->user()->id) > config('gnu.todayWriteCount') )
             <input type="hidden" name="g-recaptcha-response" id="g-response" />
             <button type="button" class="btn btn-sir" onclick="validate();">댓글등록</button>
             @else

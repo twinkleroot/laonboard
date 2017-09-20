@@ -139,7 +139,11 @@ class WritesController extends Controller
      */
     public function store(Request $request, $boardName)
     {
-        if(!auth()->check() || (!auth()->user()->isBoardAdmin($this->writeModel->board) && $this->writeModel->board->use_recaptcha)) {
+        if(!auth()->check() ||
+            (!auth()->user()->isBoardAdmin($this->writeModel->board)
+             && $this->writeModel->board->use_recaptcha
+             && todayWriteCount(auth()->user()->id) > config('gnu.todayWriteCount')
+            )) {
             ReCaptcha::reCaptcha($request);
         }
 

@@ -107,6 +107,9 @@
     'memoSkin' => 'default',
     'latestSkin' => 'default',
 
+    // 캡챠 확인할 오늘 남긴 글 갯수
+    'todayWriteCount' => 20,
+
     // 게시판 추가 기본 값
     'use_secret' => 0,
     'count_modify' => 0,
@@ -132,4 +135,6 @@
     // 'mobile_gallery_width' => 125,
     // 'mobile_gallery_height' => 100,
     'image_width' => 600,
+
+
 ) ;

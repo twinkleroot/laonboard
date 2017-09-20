@@ -1,5 +1,11 @@
 <?php
 
+if(! function_exists('todayWriteCount')) {
+    function todayWriteCount($id)
+    {
+        return App\BoardNew::whereUserId($id)->whereDate('created_at', '=', Carbon\Carbon::today()->toDateString())->count();
+    }
+}
 
 if (! function_exists('mailer')) {
     // 메일 보내기 (파일 여러개 첨부 가능)
