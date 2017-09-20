@@ -124,7 +124,7 @@
     'subject_len' => [
         'default' => 20,
         'gallery' => 15,
-        'main' => 10,
+        'main' => 15,
     ],
 
     'gallery_height' => 150,

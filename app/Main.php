@@ -77,7 +77,7 @@ class Main
             $latestList[$i]->table_name = $board->table_name;
             $latestList[$i]->new = $board->new;
             $latestList[$i]->hot = $board->hot;
-            $subjectLength = config('gnu.subject_len.main') ? : 10;
+            $subjectLength = config('gnu.subject_len.main') ? : 15;
             $write = $latestList[$i]->first();
             foreach($latestList[$i] as $write) {
                 if($write) {

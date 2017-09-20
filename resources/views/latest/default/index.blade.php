@@ -17,7 +17,7 @@
                     @foreach($writes as $write)
                     <a href="{{ route('board.view', ['boardName'=>$writes->table_name, 'writeId'=>$write->id]) }}">
                         <li>
-                            <span class="lt_subject">{{ $write->subject }}</span>
+                            <span class="lt_subject">{!! clean($write->subject)!!}</span>
                             @php
                                 $createdDate = new Carbon\Carbon($write->created_at);
                             @endphp
@@ -37,7 +37,13 @@
                             <span class="lt_icon"><img src="/themes/default/images/icon_secret.gif"></span> <!-- 비밀 -->
                             @endif
                             <span class="lt_cmt">[{{ $write->comment }}]</span>
-                            <span class="lt_date">@date($write->created_at)</span>
+                            <span class="lt_date">
+                                @if($createdDate->subHours(24)->toDateString() == Carbon\Carbon::now()->toDateString())
+                                    @hourAndMin($createdDate)
+                                @else
+                                    @monthAndDay($createdDate)
+                                @endif
+                            </span>
                         </li>
                     </a>
                     @endforeach
