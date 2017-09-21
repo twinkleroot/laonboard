@@ -61,8 +61,7 @@
                 <strong>{{ $memo->send_timestamp }}</strong>
             </li>
         </ul>
-        <p class="memo_view">{!! clean($memo->memo) !!}</p>
-
+        {!! clean($memo->memo) !!}
     </article>
 </div>
 <!-- Placed at the end of the document so the pages load faster -->

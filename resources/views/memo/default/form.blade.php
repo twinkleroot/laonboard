@@ -65,7 +65,7 @@
                     내용
                 </td>
                 <td @if($errors->has('name')) class="has-error" @endif>
-                    <textarea class="form-control" rows="4" name="memo" id="memo" required>@if( isset($content) ){{ $content }}@else{{ old('memo') }}@endif</textarea>
+                    <textarea class="form-control" rows="10" name="memo" id="memo" required>@if( isset($content) ){{ $content }}@else{{ old('memo') }}@endif</textarea>
                     @if($errors->has('memo'))
                     <span class="help-block">
                         <strong>{{ $errors->first('memo') }}</strong>
