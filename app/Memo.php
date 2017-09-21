@@ -71,7 +71,7 @@ class Memo extends Model
                         ->first();
                 $content = '';
                 if($memo) {
-                    $content = "\n >\n >\n >".str_replace("\n", "\n> ", convertText($memo->memo, 0))."\n > >";
+                    $content = "\n > \n > \n > ".convertText($memo->memo, 0)."\n\n > >";
                 }
             } else {
                 $content = '';
@@ -192,6 +192,8 @@ class Memo extends Model
 
         $prevMemo = $this->getMemo('prev', $kind, $id);
         $nextMemo = $this->getMemo('next', $kind, $id);
+
+        $memo->memo = trim(convertContent($memo->memo, 2));
 
         return [
             'memo' => $memo,

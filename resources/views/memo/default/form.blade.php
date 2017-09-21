@@ -25,7 +25,11 @@
         </div>
 
         <div class="cbtn">
+            @if(auth()->check() && auth()->user()->isSuperAdmin())
+            <button type="submit" class="btn btn-sir">보내기</button>
+            @else
             <button type="button" class="btn btn-sir" onclick="validate();">보내기</button>
+            @endif
             <button type="button" class="btn btn-default" onclick="window.close();">창닫기</button>
         </div>
     </div>

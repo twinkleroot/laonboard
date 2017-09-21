@@ -8,7 +8,7 @@ var saveContent = null;
 function autosave() {
     $("form#fwrite").each(function() {
 
-        if(tinymce) {
+        if(tinymce.activeEditor) {
             this.content.value = tinymce.activeEditor.getContent();
         }
 

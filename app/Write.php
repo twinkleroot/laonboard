@@ -676,6 +676,10 @@ class Write extends Model
         $createParams = $this->getCreateParams($writeModel, $request);
         $createParams['type'] = 'update';
 
+        if(!$this->board->use_dhtml_editor) {
+            $write->content = strip_tags($write->content);
+        }
+
         $params = [
             'write' => $write,
             'boardFiles' => $boardFiles,

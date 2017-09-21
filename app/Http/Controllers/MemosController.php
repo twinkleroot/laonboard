@@ -55,6 +55,9 @@ class MemosController extends Controller
      */
     public function store(Request $request)
     {
+        if(!auth()->check() || !auth()->user()->isSuperAdmin()) {
+            ReCaptcha::reCaptcha($request);	// 구글 리캡챠 체크
+        }
         $rules = [
             'recv_nicks' => 'required',
             'memo' => 'required',
@@ -66,7 +69,6 @@ class MemosController extends Controller
 
         $this->validate($request, $rules, $messages);
 
-        ReCaptcha::reCaptcha($request);	// 구글 리캡챠 체크
         try {
             $this->memo->storeMemo($request);
         } catch (Exception $e) {

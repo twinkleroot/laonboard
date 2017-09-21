@@ -30,7 +30,7 @@
                 <a class="btn btn-default" href="{{ route('memo.show', $nextMemo) }}?kind={{ $kind }}">다음쪽지</a>
             @endif
             @if($kind!='send')
-                <a class="btn btn-default" href="{{ route('memo.create') }}?to={{ $memo->user_id_hashkey }}&amp;id={{ $memo->id }}">답장</a>
+                <a class="btn btn-default" href="{{ route('memo.create', $memo->user_id_hashkey) }}?id={{ $memo->id }}">답장</a>
             @endif
             <a class="btn btn-default" href="{{ route('memo.index') }}?kind={{ $kind }}">목록보기</a>
             <button class="btn btn-default" onclick="window.close();">창닫기</button>
@@ -61,7 +61,7 @@
                 <strong>{{ $memo->send_timestamp }}</strong>
             </li>
         </ul>
-        <p class="memo_view">{{ $memo->memo }}</p>
+        <p class="memo_view">{!! clean($memo->memo) !!}</p>
 
     </article>
 </div>
