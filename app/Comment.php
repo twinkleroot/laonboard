@@ -176,7 +176,7 @@ class Comment
             'comment' => $tmpComment,
             'comment_Reply' => $tmpCommentReply,
             'ca_name' => $write->ca_name,
-            'content' => trim($request->content),      // 필터 한번 거쳐야 함
+            'content' => $request->content,
             'hit' => 0,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),

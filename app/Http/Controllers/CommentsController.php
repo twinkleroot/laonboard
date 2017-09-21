@@ -27,6 +27,14 @@ class CommentsController extends Controller
     // 댓글 저장
     public function store(Request $request)
     {
+        if(!auth()->check() ||
+            (!auth()->user()->isBoardAdmin($this->writeModel->board)
+             && $this->writeModel->board->use_recaptcha
+             && todayWriteCount(auth()->user()->id) > config('gnu.todayWriteCount')
+            )) {
+            ReCaptcha::reCaptcha($request);
+        }
+
         $rules = $this->rules();
         $messages = $this->messages();
 
@@ -44,14 +52,10 @@ class CommentsController extends Controller
 
         // 공백 제거
         $request->merge([
-            'content' => trim($request->content)
+            'content' => trim(convertContent($request->content, 2))
         ]);
 
         $this->validate($request, $rules, $messages);
-
-        if(auth()->guest() || (!auth()->user()->isBoardAdmin($this->writeModel->board) && $this->writeModel->board->use_recaptcha)) {
-            ReCaptcha::reCaptcha($request);
-        }
 
         event(new \App\Events\CreateComment($request));
 
@@ -85,7 +89,7 @@ class CommentsController extends Controller
 
         // 공백 제거
         $request->merge([
-            'content' => trim($request->content)
+            'content' => trim(convertContent($request->content, 2))
         ]);
 
         $this->validate($request, $rules, $messages);

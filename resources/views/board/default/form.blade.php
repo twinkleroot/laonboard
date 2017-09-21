@@ -254,7 +254,7 @@
                 @endif
             </div>
             <div class="pull-right">
-                @if( !auth()->check() || !auth()->user()->isBoardAdmin($board) && $board->use_recaptcha )
+                @if( !auth()->check() || !auth()->user()->isBoardAdmin($board) && $board->use_recaptcha && todayWriteCount(auth()->user()->id) > config('gnu.todayWriteCount') )
                 <!-- 리캡챠 -->
                 <div id='recaptcha' class="g-recaptcha"
                     data-sitekey="{{ cache('config.sns')->googleRecaptchaClient }}"

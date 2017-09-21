@@ -223,19 +223,6 @@
                 </li>
                 <li class="post_info"><i class="fa fa-clock-o"></i>@datetime($comment->created_at)</li>
             </ul>
-            <ul class="bd_rd_cmt_ctr">
-                @if($comment->isReply == 1)
-                <li><a href="#" onclick="commentBox({{ $comment->id }}, 'c'); return false;">답변</a></li> @endif
-                @if($comment->isEdit == 1)
-                <li><a href="#" onclick="commentBox({{ $comment->id }}, 'cu'); return false;">수정</a></li> @endif
-                @if($comment->isDelete == 1)
-                <li>
-                    <a href="{{ route('board.comment.destroy', ['boardName' => $board->table_name, 'writeId' => $write->id, 'commentId' => $comment->id]) }}" onclick="del(this.href); return false;">
-                        삭제
-                    </a>
-                </li>
-                @endif
-            </ul>
             <div class="bd_rd_cmt_view">
                 @if(str_contains($comment->option, 'secret'))
                 <img src="/themes/default/images/icon_secret.gif"> <!-- 비밀 -->
@@ -261,7 +248,7 @@
                 <li><a href="#" onclick="commentBox({{ $comment->id }}, 'cu'); return false;">수정</a></li> @endif
                 @if($comment->isDelete == 1)
                 <li>
-                    <a href="{{ route('board.comment.destroy', ['boardName' => $board->table_name, 'writeId' => $write->id, 'commentId' => $comment->id]) }}">
+                    <a href="{{ route('board.comment.destroy', ['boardName' => $board->table_name, 'writeId' => $write->id, 'commentId' => $comment->id]) }}" onclick="del(this.href); return false;">
                         삭제
                     </a>
                 </li>
@@ -338,7 +325,7 @@
 
     <div class="clearfix">
         <div class="pull-right">
-            @if( !auth()->check() || !auth()->user()->isBoardAdmin($board) && $board->use_recaptcha )
+            @if( !auth()->check() || !auth()->user()->isBoardAdmin($board) && $board->use_recaptcha && todayWriteCount(auth()->user()->id) > config('gnu.todayWriteCount') )
             <input type="hidden" name="g-recaptcha-response" id="g-response" />
             <button type="button" class="btn btn-sir" onclick="validate();">댓글등록</button>
             @else

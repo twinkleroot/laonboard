@@ -115,7 +115,7 @@ class BoardNew extends Model
             $subject = $write->is_comment
                     ? subjectLength($writeList[$boardNew->write_parent]->subject, 60)
                     : subjectLength($write->subject, 60);
-            $boardNew->write->subject = $subject;
+            $boardNew->writeSubject = $subject;
             $boardNew->user_email = $user->email;
             $boardNew->user_id_hashkey = $user->id_hashkey;
             $boardNew->commentTag = '';
@@ -124,7 +124,7 @@ class BoardNew extends Model
             // 댓글은 데이터 따로 추가
             if($boardNew->write_id != $boardNew->write_parent) {
                 $comment = $writeList[$boardNew->write_id];	 // 댓글
-                $boardNew->write->subject = '[코] '. $subject;    // [코] + 원글의 제목
+                $boardNew->writeSubject = '[코] '. $subject;    // [코] + 원글의 제목
                 $boardNew->commentTag = '#comment'.$comment->id;
                 $boardNew->write->created_at = $comment->created_at;
                 $boardNew->name = $comment->name;
