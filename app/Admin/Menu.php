@@ -139,10 +139,20 @@ class Menu extends Model
 
             $menus['code'][$i] = $finalCode;
 
+            if(is_null($menus['link'][$i])) {
+                $menus['link'][$i] = '';
+            } else {
+                $httpPattern = '/^((http(s?))\:\/\/)?/';
+                preg_match($httpPattern, $menus['link'][$i], $matches);
+                if(!isset($matches[1])) {
+                    $menus['link'][$i] = 'http://'. $menus['link'][$i];
+                }
+            }
+
             Menu::insert([
                 'code' => $menus['code'][$i],
                 'name' => $menus['name'][$i],
-                'link' => is_null($menus['link'][$i]) ? '' : $menus['link'][$i],
+                'link' => $menus['link'][$i],
                 'target' => $menus['target'][$i],
                 'order' => $menus['order'][$i],
                 'use' => $menus['use'][$i],
