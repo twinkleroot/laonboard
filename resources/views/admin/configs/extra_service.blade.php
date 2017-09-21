@@ -28,7 +28,7 @@
             정보통신망법 23조 2항(주민등록번호의 사용제한)에 따라 기존 주민등록번호 기반의 인증서비스 이용이 불가합니다. 주민등록번호 대체수단으로 최소한의 정보(생년월일, 휴대폰번호, 성별)를 입력받아 본인임을 확인하는 인증수단 입니다.
         </p>
         <ul>
-            <li class="item_1"><a href="http://sir.kr/main/service/b_cert.php" target="_blank"><img src="{{ asset('images/svc_btn_03.jpg') }}" alt="OKname 휴대폰 본인확인 신청하기" title=""></a></li>
+            <li class="item_1"><a href="http://sir.kr/main/service/b_cert.php" target="_blank"><img src="{{ ver_asset('images/svc_btn_03.jpg') }}" alt="OKname 휴대폰 본인확인 신청하기" title=""></a></li>
         </ul>
     </div>
 

@@ -6,11 +6,11 @@
 
 @section('include_css')
 <!-- common -->
-<link rel="stylesheet" type="text/css" href="{{ asset('themes/'.$skin.'/css/common.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/'.$skin.'/css/common.css') }}">
 <!-- 최근게시물용 CSS파일 -->
-<link rel="stylesheet" type="text/css" href="{{ asset('themes/'.$skin.'/css/latest.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/'.$skin.'/css/latest.css') }}">
 <!-- 팝업레이어용 CSS파일 -->
-<link rel="stylesheet" type="text/css" href="{{ asset('css/popuplayer.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('css/popuplayer.css') }}">
 @endsection
 
 {{-- 팝업 레이어 --}}

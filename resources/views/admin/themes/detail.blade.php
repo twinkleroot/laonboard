@@ -1,5 +1,5 @@
 <div id="theme_detail">
-    <div class="thdt_img"><img src="{{ asset("themes/$theme/images/screenshot.png") }}"></div>
+    <div class="thdt_img"><img src="{{ ver_asset("themes/$theme/images/screenshot.png") }}"></div>
     <div class="thdt_if">
         <button type="button" class="close_btn">닫기</button>
         @if($info['themeUri'])

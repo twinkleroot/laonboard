@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>http://laonboard.com/bbs/manual</loc>
+        <changefreq>daily</changefreq>
+    </url>
+    <url>
+        <loc>http://laonboard.com/bbs/download</loc>
+        <changefreq>daily</changefreq>
+    </url>
+    <url>
+        <loc>http://laonboard.com/bbs/notice</loc>
+        <changefreq>daily</changefreq>
+    </url>
+    <url>
+        <loc>http://laonboard.com/bbs/qna</loc>
+        <changefreq>daily</changefreq>
+    </url>
+    <url>
+        <loc>http://laonboard.com/bbs/free</loc>
+        <changefreq>daily</changefreq>
+    </url>
+    <url>
+        <loc>http://laonboard.com/news</loc>
+        <changefreq>daily</changefreq>
+    </url>
+    <url>
+        <loc>http://laonboard.com/contents/license</loc>
+	<lastmod>2017-09-21</lastmod>
+        <changefreq>daily</changefreq>
+    </url>
+</urlset>

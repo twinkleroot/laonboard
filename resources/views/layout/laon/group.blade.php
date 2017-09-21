@@ -6,7 +6,7 @@
 
 @section('include_css')
 <!-- 최근게시물용 CSS파일 -->
-<link rel="stylesheet" type="text/css" href="{{ asset('themes/'.$skin.'/css/latest.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/'.$skin.'/css/latest.css') }}">
 @endsection
 
 @section('content')

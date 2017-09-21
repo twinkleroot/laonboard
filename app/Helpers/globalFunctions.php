@@ -1,5 +1,13 @@
 <?php
 
+if(! function_exists('ver_asset')) {
+    function ver_asset($url)
+    {
+        return asset($url). '?ver='. config('gnu.VER');
+    }
+}
+
+
 if(! function_exists('todayWriteCount')) {
     function todayWriteCount($id)
     {

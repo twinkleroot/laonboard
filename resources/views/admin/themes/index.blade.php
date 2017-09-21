@@ -5,8 +5,8 @@
 @endsection
 
 @section('include_script')
-    <script src="{{ asset('js/common.js') }}"></script>
-    <script src="{{ asset('js/theme.js') }}"></script>
+    <script src="{{ ver_asset('js/common.js') }}"></script>
+    <script src="{{ ver_asset('js/theme.js') }}"></script>
     <script>
         var menuVal = 100300;
 
@@ -57,7 +57,7 @@
                 <li class="themebox">
                     <div class="tmli_if">
                         <span class="img">
-                            <img src="{{ asset("themes/".$theme['name']."/images/screenshot.png") }}">
+                            <img src="{{ ver_asset("themes/".$theme['name']."/images/screenshot.png") }}">
                         </span>
                         <span class="txt">{{ $theme['info']['themeName'] }}</span>
                     </div>

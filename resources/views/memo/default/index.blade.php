@@ -8,14 +8,14 @@
     <title>내 쪽지함</title>
 
     <!-- css -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('font-awesome/css/font-awesome.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/common.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/memo.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ ver_asset('bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ ver_asset('font-awesome/css/font-awesome.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/common.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/memo.css') }}">
 
     <!-- js -->
-    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-    <script src="{{ asset('js/common.js') }}"></script>
+    <script src="{{ ver_asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ ver_asset('js/common.js') }}"></script>
 </head>
 <body class="popup">
 

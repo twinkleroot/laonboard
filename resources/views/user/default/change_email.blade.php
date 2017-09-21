@@ -5,8 +5,8 @@
 @endsection
 
 @section('include_css')
-<link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/common.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/auth.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/common.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/auth.css') }}">
 @endsection
 
 @section('include_script')
@@ -18,7 +18,7 @@
 <div class="row">
 <div class="col-md-6 col-md-offset-3">
     <div class="panel panel-default">
-        <script src="{{ asset('js/postcode.js') }}"></script>
+        <script src="{{ ver_asset('js/postcode.js') }}"></script>
         <div class="panel-heading bg-sir">
             <h3 class="panel-title">메일인증 메일주소 변경</h3>
         </div>

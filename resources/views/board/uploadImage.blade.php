@@ -17,13 +17,13 @@
         ]) !!};
     </script>
 
-    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-    <script src="{{ asset('js/jquery.form.min.js') }}"></script>
+    <script src="{{ ver_asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ ver_asset('js/jquery.form.min.js') }}"></script>
 
     <!-- css -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/common.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('font-awesome/css/font-awesome.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/common.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ ver_asset('font-awesome/css/font-awesome.css') }}">
 
 <style type="text/css">
 .file_input_textbox {

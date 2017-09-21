@@ -5,7 +5,7 @@
 @endsection
 
 @section('include_script')
-    <script src="{{ asset('js/jquery.tablednd.js') }}"></script>
+    <script src="{{ ver_asset('js/jquery.tablednd.js') }}"></script>
 @endsection
 
 @section('content')

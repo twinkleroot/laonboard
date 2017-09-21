@@ -5,8 +5,8 @@
 @endsection
 
 @section('include_css')
-<link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/common.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/board.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/common.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/board.css') }}">
 @endsection
 
 @section('content')

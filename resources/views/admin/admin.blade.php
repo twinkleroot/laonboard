@@ -11,14 +11,14 @@
     <title>@yield('title', '라온보드')</title>
 
     <!-- css -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/admin.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('font-awesome/css/font-awesome.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ ver_asset('css/admin.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ ver_asset('font-awesome/css/font-awesome.css') }}">
     @yield('include_css')
 
     <!-- Scripts -->
-    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-    <script src="{{ asset('js/common.js') }}"></script>
+    <script src="{{ ver_asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ ver_asset('js/common.js') }}"></script>
     <script>
         window.Laravel = {!! json_encode([
             'csrfToken' => csrf_token(),
@@ -184,8 +184,8 @@ $(document).ready(function(){
 
 <!-- Bootstrap core JavaScript -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
+<script src="{{ ver_asset('bootstrap/js/bootstrap.min.js') }}"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-<script src="{{ asset('bootstrap/js/ie10-viewport-bug-workaround.js') }}"></script>
+<script src="{{ ver_asset('bootstrap/js/ie10-viewport-bug-workaround.js') }}"></script>
 </body>
 </html>

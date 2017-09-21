@@ -6,13 +6,13 @@
 
 @section('include_script')
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <script src="{{ asset('js/viewimageresize.js') }}"></script>
-    <script src="{{ asset('js/common.js') }}"></script>
+    <script src="{{ ver_asset('js/viewimageresize.js') }}"></script>
+    <script src="{{ ver_asset('js/common.js') }}"></script>
 @endsection
 
 @section('include_css')
-<link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/common.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/board.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/common.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/board.css') }}">
 @endsection
 
 @section('content')

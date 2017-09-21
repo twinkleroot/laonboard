@@ -5,8 +5,8 @@
 @endsection
 
 @section('include_script')
-<script src="{{ asset('tinymce/tinymce.min.js') }}"></script>
-<script src="{{ asset('js/common.js') }}"></script>
+<script src="{{ ver_asset('tinymce/tinymce.min.js') }}"></script>
+<script src="{{ ver_asset('js/common.js') }}"></script>
 <script type="text/javascript">
     var menuVal = 100100;
     $(document).ready(function($){

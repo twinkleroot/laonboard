@@ -12,9 +12,9 @@
         @yield('title', config('app.name'))
     </title>
     @yield('fisrt_include_css')
-    <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('font-awesome/css/font-awesome.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ ver_asset('bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ ver_asset('font-awesome/css/font-awesome.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/style.css') }}">
     @yield('include_css')
     <script>
         window.Laravel = {!! json_encode([
@@ -24,8 +24,8 @@
     @if(cache('config.homepage')->analytics)
     {!! cache('config.homepage')->analytics !!}
     @endif
-    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-    <script src="{{ asset('js/common.js') }}"></script>
+    <script src="{{ ver_asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ ver_asset('js/common.js') }}"></script>
     <script>
         $(function(){
             $('.gnb-li.dropdown').hover(function() {
@@ -49,7 +49,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="logo" href="{{ url('/') }}">
-                <img src="{{ asset('themes/default/images/logo2.png') }}">
+                <img src="{{ ver_asset('themes/default/images/logo2.png') }}">
             </a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
@@ -162,7 +162,7 @@
     </div>
 </footer>
 
-<script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
-<script src="{{ asset('bootstrap/js/ie10-viewport-bug-workaround.js') }}"></script>
+<script src="{{ ver_asset('bootstrap/js/bootstrap.min.js') }}"></script>
+<script src="{{ ver_asset('bootstrap/js/ie10-viewport-bug-workaround.js') }}"></script>
 </body>
 </html>
