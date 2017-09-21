@@ -5,8 +5,8 @@
 @endsection
 
 @section('include_css')
-<link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/common.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/auth.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/common.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/auth.css') }}">
 @endsection
 
 @section('include_script')
@@ -30,7 +30,7 @@
 
 <!-- user edit -->
 <div class="panel panel-default">
-    <script src="{{ asset('js/postcode.js') }}"></script>
+    <script src="{{ ver_asset('js/postcode.js') }}"></script>
     <div class="panel-heading bg-sir">
         <h3 class="panel-title">회원 정보 수정</h3>
     </div>

@@ -8,10 +8,10 @@
     <title>[{{ $user->nick }}]님의 프로필</title>
 
     <!-- css -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('font-awesome/css/font-awesome.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/common.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/profile.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ ver_asset('font-awesome/css/font-awesome.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/common.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/profile.css') }}">
 
     <!-- js -->
 </head>

@@ -5,12 +5,12 @@
 @endsection
 
 @section('include_css')
-<link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/common.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/board.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/common.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/board.css') }}">
 @endsection
 
 @section('include_script')
-<script src="{{ asset('tinymce/tinymce.min.js') }}"></script>
+<script src="{{ ver_asset('tinymce/tinymce.min.js') }}"></script>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 @endsection
 
@@ -124,7 +124,7 @@
                 @endforeach
             </div>
             @auth
-                <script src="{{ asset('js/autosave.js') }}"></script>
+                <script src="{{ ver_asset('js/autosave.js') }}"></script>
                 <div class="bd-save col-xs-4 dropdown">
                     <a href="#" id="autosaveBtn" class="dropdown-toggle btn btn-sir" data-toggle="dropdown" role="button" aria-expanded="false">
                         <i class="fa fa-archive"></i>

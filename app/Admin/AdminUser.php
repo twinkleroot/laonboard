@@ -302,7 +302,7 @@ class AdminUser extends Model
                     'mailing' => $mailingArr[$index] == '1' ? 1 : 0,
                     'sms' => $smsArr[$index] == '1' ? 1 : 0,
                     // 'adult' => $request->get('adult') == '1' ? 1 : 0,
-                    'intercept_date' => $interceptArr[$index] == 1 ? Carbon::now()->format('Ymj') : null ,
+                    'intercept_date' => $interceptArr[$index] == 1 ? Carbon::now()->format('Ymd') : null ,
                     'level' => $levelArr[$index],
                 ]);
                 $index++;

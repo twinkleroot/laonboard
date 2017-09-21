@@ -8,14 +8,14 @@
     <title>스크랩하기 | {{ Cache::get("config.homepage")->title }}</title>
 
     <!-- css -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('font-awesome/css/font-awesome.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('themes/default/css/common.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/scrap.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ ver_asset('bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ ver_asset('font-awesome/css/font-awesome.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/common.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ ver_asset('css/scrap.css') }}">
 
     <!-- js -->
-    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-    <script src="{{ asset('js/common.js') }}"></script>
+    <script src="{{ ver_asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ ver_asset('js/common.js') }}"></script>
     <script>
         $(document).ready(function(){
             if(window.name != 'winScrap') {

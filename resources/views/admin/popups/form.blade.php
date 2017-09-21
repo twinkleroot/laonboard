@@ -5,13 +5,13 @@
 @endsection
 
 @section('include_css')
-    <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap-colorpicker/css/bootstrap-colorpicker.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ ver_asset('bootstrap-colorpicker/css/bootstrap-colorpicker.min.css') }}">
 @endsection
 
 @section('include_script')
-    <script src="{{ asset('js/common.js') }}"></script>
-    <script src="{{ asset('bootstrap-colorpicker/js/bootstrap-colorpicker.js') }}"></script>
-    <script src="{{ asset('tinymce/tinymce.min.js') }}"></script>
+    <script src="{{ ver_asset('js/common.js') }}"></script>
+    <script src="{{ ver_asset('bootstrap-colorpicker/js/bootstrap-colorpicker.js') }}"></script>
+    <script src="{{ ver_asset('tinymce/tinymce.min.js') }}"></script>
     <script>
         var menuVal = 100600
     </script>

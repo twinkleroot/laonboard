@@ -1,6 +1,6 @@
 <html>
 <head>
-    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ ver_asset('js/jquery-3.1.1.min.js') }}"></script>
     <script>
         $(document).ready(function(){
             @if($message == '1044' || $message == '1045')

@@ -5,7 +5,7 @@
 @endsection
 
 @section('include_script')
-    <script src="{{ asset('js/common.js') }}"></script>
+    <script src="{{ ver_asset('js/common.js') }}"></script>
     <script>
         var menuVal = 100500;
     </script>
