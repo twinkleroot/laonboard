@@ -491,9 +491,9 @@ class Write extends Model
     public function includeImagePathByEditor($content)
     {
         // 에디터로 업로드한 이미지 경로를 추출한다.
-        $pattern = "/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i";
+        $imgPattern = "/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i";
 
-        preg_match_all($pattern, $content, $matches);
+        preg_match_all($imgPattern, $content, $matches);
 
         for($i=0; $i<count($matches[1]); $i++) {
             // 썸네일 만들기
@@ -507,7 +507,8 @@ class Write extends Model
                     . " class='viewOriginalImage' width='". $imageFileInfo[0]. "' height='". $imageFileInfo[1]. "' target='viewImage'>"
                     . "<img src='/storage/editor/". $imageFileInfo['name']. "' /></a>";
             // 글 내용에 이미지 원본보기 링크와 이미지경로를 넣어준다.
-            $content = preg_replace($pattern, $html, $content);
+            $replacePattern = "/<img[^>]*src=[\"']?([^>\"']+){$realImageName}[\"']?[^>]*>/i";
+            $content = preg_replace($replacePattern, $html, $content);
         }
 
         return $content;
