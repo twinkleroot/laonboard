@@ -1,8 +1,6 @@
 @extends('admin.admin')
 
-@section('title')
-     게시판 {{ $type == 'create' ? '생성' : '수정' }} | {{ cache("config.homepage")->title }}
-@endsection
+@section('title')게시판 {{ $type == 'create' ? '생성' : '수정' }} | {{ cache("config.homepage")->title }}@endsection
 
 @section('include_script')
 <script src="{{ ver_asset('tinymce/tinymce.min.js') }}"></script>

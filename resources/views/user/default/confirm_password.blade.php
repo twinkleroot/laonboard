@@ -1,8 +1,6 @@
 @extends('layout.'. cache('config.skin')->layout. '.basic')
 
-@section('title')
-    회원 비밀번호 확인 | {{ cache("config.homepage")->title }}
-@endsection
+@section('title')회원 비밀번호 확인 | {{ cache("config.homepage")->title }}@endsection
 
 @section('include_css')
 <link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/common.css') }}">
@@ -10,7 +8,7 @@
 @endsection
 
 @section('include_script')
-    <script src="{{ ver_asset('js/common.js') }}"></script>
+<script src="{{ ver_asset('js/common.js') }}"></script>
 @endsection
 
 @section('content')

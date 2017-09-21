@@ -1,32 +1,30 @@
 @extends('admin.admin')
 
-@section('title')
-    테마 설정 | {{ cache('config.homepage')->title }}
-@endsection
+@section('title')테마 설정 | {{ cache('config.homepage')->title }}@endsection
 
 @section('include_script')
-    <script src="{{ ver_asset('js/common.js') }}"></script>
-    <script src="{{ ver_asset('js/theme.js') }}"></script>
-    <script>
-        var menuVal = 100300;
+<script src="{{ ver_asset('js/common.js') }}"></script>
+<script src="{{ ver_asset('js/theme.js') }}"></script>
+<script>
+    var menuVal = 100300;
 
-        function formSubmit() {
-            $("#skinForm").submit();
-        }
+    function formSubmit() {
+        $("#skinForm").submit();
+    }
 
-        $(document).ready(function(){
-            $('.adm_box').hide().eq(0).show();
+    $(document).ready(function(){
+        $('.adm_box').hide().eq(0).show();
 
-            $("#body_tab_type2 li").click(function () {
-                $('.adm_box').hide().eq($(this).index()).show();
-            });
-
-            $(".tab").click(function () {
-                $(".tab").removeClass("active");
-                $(this).addClass("active");
-            });
+        $("#body_tab_type2 li").click(function () {
+            $('.adm_box').hide().eq($(this).index()).show();
         });
-    </script>
+
+        $(".tab").click(function () {
+            $(".tab").removeClass("active");
+            $(this).addClass("active");
+        });
+    });
+</script>
 @endsection
 
 @section('content')

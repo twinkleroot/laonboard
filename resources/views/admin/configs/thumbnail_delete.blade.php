@@ -1,8 +1,6 @@
 @extends('admin.admin')
 
-@section('title')
-    썸네일 일괄삭제 | {{ cache("config.homepage")->title }}
-@endsection
+@section('title')썸네일 일괄삭제 | {{ cache("config.homepage")->title }}@endsection
 
 @section('content')
 <div class="body-head">

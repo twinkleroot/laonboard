@@ -1,8 +1,6 @@
 @extends('admin.admin')
 
-@section('title')
-    부가서비스 | {{ Cache::get("config.homepage")->title }}
-@endsection
+@section('title')부가서비스 | {{ Cache::get("config.homepage")->title }}@endsection
 
 @section('content')
 <div class="body-head">

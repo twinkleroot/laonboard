@@ -1,11 +1,9 @@
 @extends('admin.admin')
 
-@section('title')
-    메뉴설정 | {{ $config->title }}
-@endsection
+@section('title')메뉴설정 | {{ $config->title }}@endsection
 
 @section('include_script')
-    <script src="{{ ver_asset('js/jquery.tablednd.js') }}"></script>
+<script src="{{ ver_asset('js/jquery.tablednd.js') }}"></script>
 @endsection
 
 @section('content')
@@ -241,6 +239,5 @@ function base_convert(number, frombase, tobase) {
 
     return parseInt(number + '', frombase | 0).toString(tobase | 0);
 }
-
 </script>
 @endsection

@@ -1,25 +1,23 @@
 @extends("layout.$theme.basic")
 
-@section('title')
-    {{ $info['themeName'] }} 테마 미리보기 | {{ cache("config.homepage")->title }}
-@endsection
+@section('title'){{ $info['themeName'] }} 테마 미리보기 | {{ cache("config.homepage")->title }}@endsection
 
 @section('include_css')
-    @if($type == 'index')
-    <link rel="stylesheet" type="text/css" href="{{ File::exists(public_path("themes/$theme/css/latest.css")) ?  ver_asset("themes/$theme/css/latest.css") : ver_asset("themes/default/css/latest.css")}}">
-    @else
-    <link rel="stylesheet" type="text/css" href="{{ File::exists(public_path("themes/$theme/css/common.css")) ?  ver_asset("themes/$theme/css/common.css") : ver_asset('themes/default/css/common.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ File::exists(public_path("themes/$theme/css/board.css")) ?  ver_asset("themes/$theme/css/board.css") : ver_asset("themes/default/css/board.css") }}">
-    <link rel="stylesheet" type="text/css" href="{{ File::exists(public_path("themes/$theme/css/common.css")) ?  ver_asset("themes/$theme/css/common.css") : ver_asset("themes/default/css/common.css") }}">
-    @endif
+@if($type == 'index')
+<link rel="stylesheet" type="text/css" href="{{ File::exists(public_path("themes/$theme/css/latest.css")) ?  ver_asset("themes/$theme/css/latest.css") : ver_asset("themes/default/css/latest.css")}}">
+@else
+<link rel="stylesheet" type="text/css" href="{{ File::exists(public_path("themes/$theme/css/common.css")) ?  ver_asset("themes/$theme/css/common.css") : ver_asset('themes/default/css/common.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ File::exists(public_path("themes/$theme/css/board.css")) ?  ver_asset("themes/$theme/css/board.css") : ver_asset("themes/default/css/board.css") }}">
+<link rel="stylesheet" type="text/css" href="{{ File::exists(public_path("themes/$theme/css/common.css")) ?  ver_asset("themes/$theme/css/common.css") : ver_asset("themes/default/css/common.css") }}">
+@endif
 @endsection
 
 @section('include_script')
-    <script src="{{ ver_asset('js/common.js') }}"></script>
-    @if($type != 'index')
-    <script src="{{ ver_asset('js/viewimageresize.js') }}"></script>
-    <script src="https://www.google.com/recaptcha/api.js"></script>
-    @endif
+<script src="{{ ver_asset('js/common.js') }}"></script>
+@if($type != 'index')
+<script src="{{ ver_asset('js/viewimageresize.js') }}"></script>
+<script src="https://www.google.com/recaptcha/api.js"></script>
+@endif
 @endsection
 
 @section('content')

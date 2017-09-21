@@ -1,8 +1,6 @@
 @extends('admin.admin')
 
-@section('title')
-    세션 일괄삭제 | {{ cache("config.homepage")->title }}
-@endsection
+@section('title')세션 일괄삭제 | {{ cache("config.homepage")->title }}@endsection
 
 @section('content')
 <div class="body-head">

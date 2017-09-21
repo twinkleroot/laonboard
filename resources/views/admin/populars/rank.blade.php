@@ -1,17 +1,15 @@
 @extends('admin.admin')
 
-@section('title')
-    인기검색어순위 | {{ Cache::get("config.homepage")->title }}
-@endsection
+@section('title')인기검색어순위 | {{ Cache::get("config.homepage")->title }}@endsection
 
 @section('include_css')
-    <link rel="stylesheet" type="text/css" href="{{ ver_asset('bootstrap-datepicker/css/bootstrap-datepicker.min.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('bootstrap-datepicker/css/bootstrap-datepicker.min.css') }}">
 @endsection
 
 @section('include_script')
-    <script src="{{ ver_asset('js/common.js') }}"></script>
-    <script src="{{ ver_asset('bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"></script>
-    <script src="{{ ver_asset('bootstrap-datepicker/js/locales/bootstrap-datepicker.kr.min.js') }}" charset="UTF-8"></script>
+<script src="{{ ver_asset('js/common.js') }}"></script>
+<script src="{{ ver_asset('bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"></script>
+<script src="{{ ver_asset('bootstrap-datepicker/js/locales/bootstrap-datepicker.kr.min.js') }}" charset="UTF-8"></script>
 @endsection
 
 @section('content')

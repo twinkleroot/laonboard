@@ -1,30 +1,24 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>이미지 업로드 | {{ Cache::get("config.homepage")->title }}</title>
-
-    <!-- Scripts -->
-    <script>
-        window.Laravel = {!! json_encode([
-            'csrfToken' => csrf_token(),
-        ]) !!};
-    </script>
-
-    <script src="{{ ver_asset('js/jquery-3.1.1.min.js') }}"></script>
-    <script src="{{ ver_asset('js/jquery.form.min.js') }}"></script>
-
-    <!-- css -->
-    <link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/common.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ ver_asset('font-awesome/css/font-awesome.css') }}">
-
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- CSRF Token -->
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<title>이미지 업로드 | {{ Cache::get("config.homepage")->title }}</title>
+<!-- Scripts -->
+<script>
+    window.Laravel = {!! json_encode([
+        'csrfToken' => csrf_token(),
+    ]) !!};
+</script>
+<script src="{{ ver_asset('js/jquery-3.1.1.min.js') }}"></script>
+<script src="{{ ver_asset('js/jquery.form.min.js') }}"></script>
+<!-- css -->
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/common.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('font-awesome/css/font-awesome.css') }}">
 <style type="text/css">
 .file_input_textbox {
     float: left;
@@ -87,8 +81,6 @@
     width: 35px;
 }
 </style>
-
-    <!-- js -->
 </head>
 <body class="popup">
 

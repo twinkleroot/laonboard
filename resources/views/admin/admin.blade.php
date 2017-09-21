@@ -1,46 +1,42 @@
 <!DOCTYPE html>
 <html lang="{{ config('app.locale') }}">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- CSRF Token -->
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<title>@yield('title', '라온보드')</title>
+<!-- css -->
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('css/admin.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('font-awesome/css/font-awesome.css') }}">
+@yield('include_css')
+<!-- Scripts -->
+<script src="{{ ver_asset('js/jquery-3.1.1.min.js') }}"></script>
+<script src="{{ ver_asset('js/common.js') }}"></script>
+<script>
+    window.Laravel = {!! json_encode([
+        'csrfToken' => csrf_token(),
+    ]) !!};
 
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    function alertclose() {
+        $("#adm_save").remove();
+    }
 
-    <title>@yield('title', '라온보드')</title>
+    $(document).ready(function($){
+        var nav = $('#body_tab_type2');
 
-    <!-- css -->
-    <link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ ver_asset('css/admin.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ ver_asset('font-awesome/css/font-awesome.css') }}">
-    @yield('include_css')
-
-    <!-- Scripts -->
-    <script src="{{ ver_asset('js/jquery-3.1.1.min.js') }}"></script>
-    <script src="{{ ver_asset('js/common.js') }}"></script>
-    <script>
-        window.Laravel = {!! json_encode([
-            'csrfToken' => csrf_token(),
-        ]) !!};
-
-        function alertclose() {
-            $("#adm_save").remove();
-        }
-
-        $(document).ready(function($){
-            var nav = $('#body_tab_type2');
-
-            $(window).scroll(function () {
-                if ($(this).scrollTop() > 175) {
-                    nav.addClass("f-tab");
-                } else {
-                    nav.removeClass("f-tab");
-                }
-            });
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 175) {
+                nav.addClass("f-tab");
+            } else {
+                nav.removeClass("f-tab");
+            }
         });
-    </script>
-    @yield('include_script')
+    });
+</script>
+@yield('include_script')
 </head>
 <body>
 <div id="admin-header">

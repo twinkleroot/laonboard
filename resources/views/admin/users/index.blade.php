@@ -1,11 +1,9 @@
 @extends('admin.admin')
 
-@section('title')
-    회원 관리 | {{ Cache::get("config.homepage")->title }}
-@endsection
+@section('title')회원 관리 | {{ Cache::get("config.homepage")->title }}@endsection
 
 @section('include_script')
-    <script src="{{ ver_asset('js/common.js') }}"></script>
+<script src="{{ ver_asset('js/common.js') }}"></script>
 @endsection
 
 @section('content')

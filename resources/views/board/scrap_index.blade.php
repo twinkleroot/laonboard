@@ -1,20 +1,17 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>{{ $user->nick }}님의 스크랩 | {{ Cache::get("config.homepage")->title }}</title>
-
-    <!-- css -->
-    <link rel="stylesheet" type="text/css" href="{{ ver_asset('bootstrap/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ ver_asset('font-awesome/css/font-awesome.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/common.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ ver_asset('css/scrap.css') }}">
-
-    <!-- js -->
-    <script src="{{ ver_asset('js/common.js') }}"></script>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ $user->nick }}님의 스크랩 | {{ Cache::get("config.homepage")->title }}</title>
+<!-- css -->
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('bootstrap/css/bootstrap.min.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('font-awesome/css/font-awesome.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/common.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('css/scrap.css') }}">
+<!-- js -->
+<script src="{{ ver_asset('js/common.js') }}"></script>
 </head>
 <body class="popup">
 

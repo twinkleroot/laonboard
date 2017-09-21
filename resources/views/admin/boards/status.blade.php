@@ -1,8 +1,6 @@
 @extends('admin.admin')
 
-@section('title')
-    글, 댓글 현황 | {{ cache("config.homepage")->title }}
-@endsection
+@section('title')글, 댓글 현황 | {{ cache("config.homepage")->title }}@endsection
 
 @section('content')
 <div class="body-head">

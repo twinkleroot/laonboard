@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="utf-8">
-    <title>회원가입 알림 메일</title>
+<meta charset="utf-8">
+<title>회원가입 알림 메일</title>
 </head>
 <body style="padding: 0; margin: 0;">
     <div style="width: 600px; border: 1px solid #d8d8d8; border-radius: 4px; padding: 0 50px; font-family: '맑은 고딕', 'Malgun Gothic', sans-serif;">

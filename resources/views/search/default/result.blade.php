@@ -1,8 +1,6 @@
 @extends('layout.'. cache('config.skin')->layout. '.basic')
 
-@section('title')
-    전체검색 결과 | {{ cache("config.homepage")->title }}
-@endsection
+@section('title')전체검색 결과 | {{ cache("config.homepage")->title }}@endsection
 
 @section('include_css')
 <link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/common.css') }}">

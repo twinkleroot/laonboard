@@ -1,8 +1,6 @@
 @extends('install.layout')
 
-@section('title')
-    {{ config('app.name')." 설치" }}
-@endsection
+@section('title'){{ config('app.name')." 설치" }}@endsection
 
 @section('step')
     INSTALLATION

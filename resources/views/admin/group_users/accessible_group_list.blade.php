@@ -1,11 +1,9 @@
 @extends('admin.admin')
 
-@section('title')
-    접근 가능 그룹 | {{ $config->title }}
-@endsection
+@section('title')접근 가능 그룹 | {{ $config->title }}@endsection
 
 @section('include_script')
-    <script src="{{ ver_asset('js/common.js') }}"></script>
+<script src="{{ ver_asset('js/common.js') }}"></script>
 @endsection
 
 @section('content')

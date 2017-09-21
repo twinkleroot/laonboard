@@ -1,19 +1,15 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>[{{ $user->nick }}]님의 프로필</title>
-
-    <!-- css -->
-    <link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ ver_asset('font-awesome/css/font-awesome.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/common.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/profile.css') }}">
-
-    <!-- js -->
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[{{ $user->nick }}]님의 프로필</title>
+<!-- css -->
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('font-awesome/css/font-awesome.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/common.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/profile.css') }}">
 </head>
 <body class="popup">
 <div id="header" class="popup">

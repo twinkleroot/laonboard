@@ -1,8 +1,6 @@
 @extends('layout.'. cache('config.skin')->layout. '.basic')
 
-@section('title')
-    회원가입약관 | {{ cache("config.homepage")->title }}
-@endsection
+@section('title')회원가입약관 | {{ cache("config.homepage")->title }}@endsection
 
 @section('include_css')
 <link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/common.css') }}">

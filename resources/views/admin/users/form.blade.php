@@ -1,8 +1,6 @@
 @extends('admin.admin')
 
-@section('title')
-    회원@if($type == 'create') 추가@else 정보 수정@endif | {{ cache("config.homepage")->title }}
-@endsection
+@section('title')회원@if($type == 'create') 추가@else 정보 수정@endif | {{ cache("config.homepage")->title }}@endsection
 
 @section('include_script')
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>

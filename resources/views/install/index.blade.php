@@ -1,8 +1,6 @@
 @extends('install.layout')
 
-@section('title')
-    오류! {{ config('app.name') }} 설치하기
-@endsection
+@section('title')오류! {{ config('app.name') }} 설치하기@endsection
 
 @section('step')
     Message

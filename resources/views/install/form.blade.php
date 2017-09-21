@@ -1,8 +1,6 @@
 @extends('install.layout')
 
-@section('title')
-    {{ config('app.name')." 초기환경설정 2/3" }}
-@endsection
+@section('title'){{ config('app.name')." 초기환경설정 2/3" }}@endsection
 
 @section('step')
     INSTALLATION

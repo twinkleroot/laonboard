@@ -1,8 +1,6 @@
 @extends('layout.'. cache('config.skin')->layout. '.basic')
 
-@section('title')
-    소셜 로그인 | {{ cache("config.homepage")->title }}
-@endsection
+@section('title')소셜 로그인 | {{ cache("config.homepage")->title }}@endsection
 
 @section('include_css')
 <link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/common.css') }}">

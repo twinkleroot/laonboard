@@ -1,8 +1,6 @@
 @extends('admin.admin')
 
-@section('title')
-    {{ $board->subject }} 게시판 썸네일 삭제 | {{ cache("config.homepage")->title }}
-@endsection
+@section('title'){{ $board->subject }} 게시판 썸네일 삭제 | {{ cache("config.homepage")->title }}@endsection
 
 @section('content')
 <div class="body-head">

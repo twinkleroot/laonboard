@@ -1,14 +1,12 @@
 @extends('admin.admin')
 
-@section('title')
-    팝업레이어 관리 | {{ cache('config.homepage')->title }}
-@endsection
+@section('title')팝업레이어 관리 | {{ cache('config.homepage')->title }}@endsection
 
 @section('include_script')
-    <script src="{{ ver_asset('js/common.js') }}"></script>
-    <script>
-        var menuVal = 100600
-    </script>
+<script src="{{ ver_asset('js/common.js') }}"></script>
+<script>
+    var menuVal = 100600;
+</script>
 @endsection
 
 @section('content')

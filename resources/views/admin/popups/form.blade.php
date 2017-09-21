@@ -1,20 +1,18 @@
 @extends('admin.admin')
 
-@section('title')
-    팝업레이어 {{ $type == 'create' ? '입력' : '수정' }} | {{ cache('config.homepage')->title }}
-@endsection
+@section('title')팝업레이어 {{ $type == 'create' ? '입력' : '수정' }} | {{ cache('config.homepage')->title }}@endsection
 
 @section('include_css')
-    <link rel="stylesheet" type="text/css" href="{{ ver_asset('bootstrap-colorpicker/css/bootstrap-colorpicker.min.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('bootstrap-colorpicker/css/bootstrap-colorpicker.min.css') }}">
 @endsection
 
 @section('include_script')
-    <script src="{{ ver_asset('js/common.js') }}"></script>
-    <script src="{{ ver_asset('bootstrap-colorpicker/js/bootstrap-colorpicker.js') }}"></script>
-    <script src="{{ ver_asset('tinymce/tinymce.min.js') }}"></script>
-    <script>
-        var menuVal = 100600
-    </script>
+<script src="{{ ver_asset('js/common.js') }}"></script>
+<script src="{{ ver_asset('bootstrap-colorpicker/js/bootstrap-colorpicker.js') }}"></script>
+<script src="{{ ver_asset('tinymce/tinymce.min.js') }}"></script>
+<script>
+    var menuVal = 100600;
+</script>
 @endsection
 
 @section('content')

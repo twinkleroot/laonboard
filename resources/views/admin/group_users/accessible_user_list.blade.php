@@ -1,11 +1,9 @@
 @extends('admin.admin')
 
-@section('title')
-    {{ $group->subject }}그룹 접근가능회원 | {{ Cache::get("config.homepage")->title }}
-@endsection
+@section('title'){{ $group->subject }}그룹 접근가능회원 | {{ Cache::get("config.homepage")->title }}@endsection
 
 @section('include_script')
-    <script src="{{ ver_asset('js/common.js') }}"></script>
+<script src="{{ ver_asset('js/common.js') }}"></script>
 @endsection
 
 @section('content')

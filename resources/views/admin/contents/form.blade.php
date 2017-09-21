@@ -1,15 +1,13 @@
 @extends('admin.admin')
 
-@section('title')
-     내용 {{ $type == '' ? '입력' : '수정' }} | {{ cache('config.homepage')->title }}
-@endsection
+@section('title')내용 {{ $type == '' ? '입력' : '수정' }} | {{ cache('config.homepage')->title }}@endsection
 
 @section('include_script')
-    <script src="{{ ver_asset('js/common.js') }}"></script>
-    <script src="{{ ver_asset('tinymce/tinymce.min.js') }}"></script>
-    <script>
-        var menuVal = 300500
-    </script>
+<script src="{{ ver_asset('js/common.js') }}"></script>
+<script src="{{ ver_asset('tinymce/tinymce.min.js') }}"></script>
+<script>
+    var menuVal = 300400;
+</script>
 @endsection
 
 @section('content')

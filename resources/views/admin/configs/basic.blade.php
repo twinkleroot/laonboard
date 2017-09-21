@@ -1,8 +1,6 @@
 @extends('admin.admin')
 
-@section('title')
-    환경 설정 | {{ $configHomepage->title }}
-@endsection
+@section('title')환경 설정 | {{ $configHomepage->title }}@endsection
 
 @section('include_script')
 <script type="text/javascript">

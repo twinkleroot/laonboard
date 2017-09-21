@@ -1,8 +1,6 @@
 @extends('admin.admin')
 
-@section('title')
-    게시판 그룹 {{ $type == 'edit' ? '수정' : '생성' }} | {{ cache("config.homepage")->title }}
-@endsection
+@section('title')게시판 그룹 {{ $type == 'edit' ? '수정' : '생성' }} | {{ cache("config.homepage")->title }}@endsection
 
 @section('content')
 <form class="form-horizontal" role="form" method="POST" action="{{ $action }}">

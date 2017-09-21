@@ -1,14 +1,12 @@
 @extends('admin.admin')
 
-@section('title')
-    메일 테스트 | {{ Cache::get("config.homepage")->title }}
-@endsection
+@section('title')메일 테스트 | {{ Cache::get("config.homepage")->title }}@endsection
 
 @section('include_script')
-    <script src="{{ ver_asset('js/common.js') }}"></script>
-    <script>
-        var menuVal = 100500;
-    </script>
+<script src="{{ ver_asset('js/common.js') }}"></script>
+<script>
+    var menuVal = 100500;
+</script>
 @endsection
 
 @section('content')

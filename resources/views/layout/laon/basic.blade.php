@@ -1,32 +1,30 @@
 <!DOCTYPE html>
 <html lang="{{ config('app.locale') }}">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="csrf-token" content="{{ csrf_token() }}">
 @if(cache('config.homepage')->addMeta)
-    {!! cache('config.homepage')->addMeta !!}
+{!! cache('config.homepage')->addMeta !!}
 @endif
-    <title>
-        @yield('title', config('app.name'))
-    </title>
-    @yield('fisrt_include_css')
-    <link rel="stylesheet" type="text/css" href="{{ ver_asset('bootstrap/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ ver_asset('font-awesome/css/font-awesome.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/laon/css/style.css') }}">
-    @yield('include_css')
-    <script>
-        window.Laravel = {!! json_encode([
-            'csrfToken' => csrf_token(),
-        ]) !!};
-    </script>
-    @if(cache('config.homepage')->analytics)
-    {!! cache('config.homepage')->analytics !!}
-    @endif
-    <script src="{{ ver_asset('js/jquery-3.1.1.min.js') }}"></script>
-    <script src="{{ ver_asset('js/common.js') }}"></script>
-    @yield('include_script')
+<title>@yield('title', config('app.name'))</title>
+@yield('fisrt_include_css')
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('bootstrap/css/bootstrap.min.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('font-awesome/css/font-awesome.min.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/laon/css/style.css') }}">
+@yield('include_css')
+@if(cache('config.homepage')->analytics)
+{!! cache('config.homepage')->analytics !!}
+@endif
+<script src="{{ ver_asset('js/jquery-3.1.1.min.js') }}"></script>
+<script src="{{ ver_asset('js/common.js') }}"></script>
+<script>
+    window.Laravel = {!! json_encode([
+        'csrfToken' => csrf_token(),
+    ]) !!};
+</script>
+@yield('include_script')
 </head>
 <body>
 @yield('popup')

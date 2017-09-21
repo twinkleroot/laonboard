@@ -1,8 +1,6 @@
 @extends('install.layout')
 
-@section('title')
-    {{  config('app.name')." 라이센스 확인 1/3" }}
-@endsection
+@section('title'){{  config('app.name')." 라이센스 확인 1/3" }}@endsection
 
 @section('step')
     INSTALLATION
