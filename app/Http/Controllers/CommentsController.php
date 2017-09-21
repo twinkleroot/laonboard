@@ -61,7 +61,8 @@ class CommentsController extends Controller
 
         $comment = $this->comment->storeComment($this->writeModel, $request);
 
-        if(cache('config.email.default')->emailUse && $this->writeModel->board->use_email && $comment->email != cache('config.homepage')->superAdmin) {
+        // 기본환경설정에서 이메일 사용을 하고, 해당 게시판에서 메일발송을 사용하면
+        if(cache('config.email.default')->emailUse && $this->writeModel->board->use_email) {
             $notification = new Notification;
             $notification->sendWriteNotification($this->writeModel, $comment->id);
         }
