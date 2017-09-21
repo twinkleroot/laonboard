@@ -159,6 +159,33 @@
     </div>
 </footer>
 
+<div class="upbtn">
+    <a href="#header">
+        <i class="fa fa-angle-up"></i>
+    </a>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".upbtn").hide(); //top버튼
+        $(function () {
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 100) {
+                $('.upbtn').fadeIn();
+                } else {
+                $('.upbtn').fadeOut();
+                }
+            });
+            $('.upbtn a').click(function () {
+                $('body,html').animate({
+                scrollTop: 0
+                }, 500);
+                return false;
+            });
+        });
+    });
+</script>
+
 <script src="{{ ver_asset('bootstrap/js/bootstrap.min.js') }}"></script>
 <script src="{{ ver_asset('bootstrap/js/ie10-viewport-bug-workaround.js') }}"></script>
 </body>
