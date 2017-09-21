@@ -1,6 +1,6 @@
 @extends('layout.'. cache('config.skin')->layout. '.basic')
 
-@section('title')포인트 내역 | {{ $config->title }}@endsection
+@section('title')포인트내역 | {{ $config->title }}@endsection
 
 @section('include_css')
 <link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/common.css') }}">

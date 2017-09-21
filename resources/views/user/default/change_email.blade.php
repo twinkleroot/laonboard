@@ -1,6 +1,6 @@
 @extends('layout.'. cache('config.skin')->layout. '.basic')
 
-@section('title')메일인증 메일주소 변경 | {{ cache("config.homepage")->title }}@endsection
+@section('title')인증메일주소변경 | {{ cache("config.homepage")->title }}@endsection
 
 @section('include_css')
 <link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/common.css') }}">

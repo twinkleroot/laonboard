@@ -1,6 +1,6 @@
 @extends('layout.'. cache('config.skin')->layout. '.basic')
 
-@section('title')회원 비밀번호 확인 | {{ cache("config.homepage")->title }}@endsection
+@section('title')회원비밀번호확인 | {{ cache("config.homepage")->title }}@endsection
 
 @section('include_css')
 <link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/common.css') }}">

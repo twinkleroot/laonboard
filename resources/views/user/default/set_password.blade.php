@@ -1,6 +1,6 @@
 @extends('layout.'. cache('config.skin')->layout. '.basic')
 
-@section('title')최초 비밀번호 설정 | {{ cache("config.homepage")->title }}@endsection
+@section('title')최초비밀번호설정 | {{ cache("config.homepage")->title }}@endsection
 
 @section('include_css')
 <link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/common.css') }}">

@@ -1,6 +1,6 @@
 @extends( 'layout.'. ($board->layout ? : cache('config.skin')->layout. '.basic') )
 
-@section('title'){{ $board->subject }} 리스트 | {{ Cache::get("config.homepage")->title }}@endsection
+@section('title'){{ $board->subject }}게시판 | {{ Cache::get("config.homepage")->title }}@endsection
 
 @section('include_script')
 <script src="{{ ver_asset('js/common.js') }}"></script>
