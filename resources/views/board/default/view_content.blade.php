@@ -4,7 +4,7 @@
 <div class="bd_rd_head">
     <h1>{{ $write->subject }}</h1>
     <ul class="bd_rd_info">
-        <li class="post_info">d
+        <li class="post_info">
         @unless($write->iconPath)
             <i class="fa fa-user"></i>
         @endunless

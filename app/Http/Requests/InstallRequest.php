@@ -24,7 +24,7 @@ class InstallRequest extends FormRequest
     public function rules()
     {
         return [
-            'appUrl' => 'required|regex:/^(((http(s?))\:\/\/)?)([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(\/\S*)?$/',
+            'appUrl' => 'required',
             'mysqlHost' => 'required|regex:/^[a-zA-Z0-9.]+$/',
             'mysqlPort' => 'required|numeric',
             'mysqlDb' => 'required|regex:/^[a-zA-Z0-9_]+$/',

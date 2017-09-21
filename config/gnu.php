@@ -3,7 +3,7 @@
 
     // 상수
     'IP_DISPLAY' => '\\1.♡.\\3.\\4',
-    'VER' => Carbon\Carbon::now()->format('Ymd').'-3',
+    'VER' => Carbon\Carbon::now()->format('Ymd').'-4',
 
     // 홈페이지 기본 환경 설정
     'title' => '라라벨게시판',
