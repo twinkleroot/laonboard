@@ -148,7 +148,13 @@
                     <span class="tt_nick">{{ $write->name }}</span>
                 @endif
                 </td>
-                <td class="bd_date">@monthAndDay($write->created_at)</td>
+                <td class="bd_date">
+                    @if($write->created_at->toDateString() == Carbon\Carbon::now()->toDateString())
+                        @hourAndMin($write->created_at)
+                    @else
+                        @monthAndDay($write->created_at)
+                    @endif
+                </td>
                 <td class="bd_hits mo">{{ $write->hit }}</td>
                 @if($board->use_good)
                 <td class="bd_re mo"><span class="up">{{ $write->good }}</span></td>
