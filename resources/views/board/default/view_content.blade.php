@@ -4,7 +4,7 @@
 <div class="bd_rd_head">
     <h1>{{ $write->subject }}</h1>
     <ul class="bd_rd_info">
-        <li class="post_info">
+        <li class="post_info">d
         @unless($write->iconPath)
             <i class="fa fa-user"></i>
         @endunless
@@ -296,16 +296,18 @@
                 @endforeach
             </div>
             @endguest
-            <div class="form-group checkbox">
+            <div class="cmt_checkbox">
                 <label>
                     <input type="checkbox" name="secret" id="secret" value="secret"><span>비밀글 사용</span>
                 </label>
             </div>
+            @if($board->comment_min || $board->comment_max)
+            <div class="cmt_character">
+                <span id="charCount">0</span>글자
+            </div>
+            @endif
         </div>
     </article>
-    @if($board->comment_min || $board->comment_max)
-        <span id="charCount">0</span>글자
-    @endif
     <textarea class="form-control" rows="4" name="content" id="content" @if($board->comment_min || $board->comment_max) onkeyup="check_byte('content', 'charCount');" @endif placeholder="댓글을 입력해 주세요." required></textarea>
     @foreach ($errors->get('content') as $message)
     <span class="help-block" style="color:#a94442;">

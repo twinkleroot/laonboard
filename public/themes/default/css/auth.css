@@ -14,6 +14,12 @@
 .password_search {
 	margin: 0 0 10px 0;
 }
+@media (max-width: 325px) {
+	.checkbox,
+	.password_search {
+		font-size: 13px;
+	}
+}
 .icon {
 	float: left;
 	margin-right: 7px;

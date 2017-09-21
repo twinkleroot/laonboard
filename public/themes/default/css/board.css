@@ -735,11 +735,30 @@
         margin: 0 0 5px 0;
     }
 }
-.checkbox {
-    font-size: 14px;
+.cmt_checkbox,
+.cmt_character {
+    margin-bottom: 10px;
 }
-.checkbox input[type=checkbox] {
+.cmt_checkbox {
+    float: left;
+    display: inline-block;
+}
+.cmt_checkbox label {
+    margin: 0;
+}
+.cmt_checkbox label span {
+    font-size: 14px;
+    font-weight: normal;
+}
+.cmt_checkbox input[type=checkbox] {
     margin-right: 5px;
+}
+.cmt_character {
+    display: inline-block;
+    font-size: 14px;
+    line-height: 22px;
+    vertical-align: middle;
+    float: right;
 }
 
 /* write */
