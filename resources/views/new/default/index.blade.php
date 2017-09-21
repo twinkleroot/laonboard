@@ -54,7 +54,7 @@
                     </th>
                     @endif
                     <th class="mo">그룹</th>
-                    <th>게시판</th>
+                    <th class="mo">게시판</th>
                     <th>제목</th>
                     <th class="mo">이름</th>
                     <th>일시</th>
@@ -69,7 +69,7 @@
                     <td class="td_board mo">
                         <a href="{{ route('new.index') }}?groupId={{ $boardNew->group_id }}">{{ $boardNew->group_subject }}</a>
                     </td>
-                    <td class="td_board">
+                    <td class="td_board mo">
                         <a href="{{ route('board.index', $boardNew->table_name) }}">{{ $boardNew->subject }}</a>
                     </td>
                     <td>
