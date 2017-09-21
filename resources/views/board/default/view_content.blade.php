@@ -239,7 +239,7 @@
                 {!! urlAutoLink(clean($comment->content)) !!}
                 @endif
                 <input type="hidden" id="secretComment_{{ $comment->id }}" value="{{ $comment->option }}">
-                <textarea id="saveComment_{{ $comment->id }}" style="display:none">{{ $comment->content }}</textarea>
+                <textarea id="saveComment_{{ $comment->id }}" style="display:none">{{ strip_tags($comment->content) }}</textarea>
             </div>
             <ul class="bd_rd_cmt_ctr">
                 @if($comment->isReply == 1)

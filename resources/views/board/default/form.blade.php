@@ -133,19 +133,19 @@
             @endauth
         </div>
 
-@if($board->use_dhtml_editor && $userLevel >= $board->html_level)
+    @if($board->use_dhtml_editor && $userLevel >= $board->html_level)
         {{-- 에디터 --}}
         <div style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px;" @if($errors->get('content')) class="has-error" @endif>
-            <textarea class="editorArea" name="content" id="content">@if($type == 'update'){{ convertText(clean($write->content), 0) }}@else{{ old('content', '') }}@endif</textarea>
+            <textarea class="editorArea" name="content" id="content">@if($type == 'update'){{ convertText($write->content, 0) }}@else{{ old('content', '') }}@endif</textarea>
         </div>
-@else
+    @else
     @if(auth()->guest() || !auth()->user()->isSuperAdmin())
         @if($board->write_min || $board->write_max)
             <p id="charCountDesc">이 게시판은 최소 <strong>{{ $board->write_min }}</strong>글자 이상, 최대 <strong>{{ $board->write_max }}</strong>글자 이하까지 글을 쓰실 수 있습니다.</p>
         @endif
     @endif
         <div style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px; padding: 2px;" @if($errors->get('content')) class="has-error" @endif>
-            <textarea name="content" id="content" maxlength="65536" style="width:100%; min-height:400px; border:0;" required>@if($type == 'update'){{ convertText(clean($write->content), 0) }}@else{{ old('content', '') }}@endif</textarea>
+            <textarea name="content" id="content" maxlength="65536" style="width:100%; min-height:400px; border:0;" required>@if($type == 'update'){{ convertText($write->content, 0) }}@else{{ old('content', '') }}@endif</textarea>
         </div>
     @if(auth()->guest() || !auth()->user()->isSuperAdmin())
         @if($board->write_min || $board->write_max)
