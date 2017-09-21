@@ -1,6 +1,38 @@
 @php
     $user = isset($user) ? $user : auth()->user();
 @endphp
+<div id="top_btn">
+    <div class="top_btn_wp">
+        <a href="#" title="상단으로" class="scroll-top">상단으로</a>
+        <a href="#" title="가운데로" class="scroll-center">가운데로</a>
+        <a href="#" title="하단으로" class="scroll-bottom">하단으로</a>
+    </div>
+</div>
+<script type="text/javascript" charset="utf-8">
+$(function() {
+    $("#top_btn .scroll-top").on("click", function(e) {
+        e.preventDefault();
+        $("html, body").animate({scrollTop:0}, '500');
+        return false;
+    });
+    $("#top_btn .scroll-center").on("click", function(e) {
+        e.preventDefault();
+
+        var middle_pos = $("body").offset().top - ( $(window).height() - $("body").outerHeight(true) ) / 2;
+
+        $("html, body").animate({scrollTop:middle_pos}, '500');
+        return false;
+    });
+    $("#top_btn .scroll-bottom").on("click", function(e) {
+        e.preventDefault();
+        
+        var scrollBottom = $("html,body").scrollTop + $("html,body").height();
+        
+        $("html, body").animate({scrollTop:$(document).height()}, '500');
+        return false;
+    });
+});
+</script>
 <div class="bd_rd_head">
     <h1>{{ $write->subject }}</h1>
     <ul class="bd_rd_info">
@@ -36,13 +68,13 @@
     </ul>
     <ul class="bd_rd_btn">
         <li class="depth2">
-            <a href="{{ route('board.create', $board->table_name) }}"><i class="fa fa-pencil"></i></a>
+            <a href="{{ route('board.create', $board->table_name) }}" title="수정"><i class="fa fa-pencil"></i></a>
         </li>
         <li class="depth2">
-            <a href="{{ route('board.index', $board->table_name). '?'. $request->server('QUERY_STRING') }}"><i class="fa fa-list-ul"></i></a>
+            <a href="{{ route('board.index', $board->table_name). '?'. $request->server('QUERY_STRING') }}" title="목록으로"><i class="fa fa-list-ul"></i></a>
         </li>
         <li class="dropdown depth2">
-            <a href="#" class="dropdown-toggle bd_rd_more" data-toggle="dropdown" role="button" aria-expanded="false">
+            <a href="#" class="dropdown-toggle bd_rd_more" data-toggle="dropdown" role="button" aria-expanded="false" title="게시물관리">
                 <i class="fa fa-ellipsis-v"></i>
             </a>
             <ul class="dropdown-menu" role="menu">
