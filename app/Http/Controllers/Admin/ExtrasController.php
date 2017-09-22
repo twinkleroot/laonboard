@@ -61,6 +61,7 @@ class ExtrasController extends Controller
 
         $path = storage_path('app/public');
         $directories = File::directories($path);
+        $files = [];
         foreach($directories as $dir) {
             $files[] = File::files($dir);
         }

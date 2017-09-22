@@ -23,7 +23,7 @@
 </div>
 <div class="body-contents">
     <ul class="file_delete">
-        <?php
+        @php
             $count = 0;
             foreach($files as $file) {
                 $count++;
@@ -34,7 +34,7 @@
                     echo "<br />";
                 }
             }
-        ?>
+        @endphp
         <li>완료됨</li>
     </ul>
 
