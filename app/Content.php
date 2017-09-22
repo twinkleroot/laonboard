@@ -28,6 +28,14 @@ class Content extends Model
         $existHeadImage = File::exists($path. '_h');
         $existTailImage = File::exists($path. '_t');
 
+        // 에디터로 업로드한 이미지 경로를 추출해서 내용의 img 태그 부분을 교체한다.
+        $board = new Board();
+        $board->image_width = config('gnu.image_width');
+        $board->gallery_height = config('gnu.gallery_height');
+
+        $content->content = convertContent($content->content, $content->html);
+        $content->content = includeImagePathByEditor($board, $content->content);
+
         return [
             'content' => $content,
             'existHeadImage' => $existHeadImage,

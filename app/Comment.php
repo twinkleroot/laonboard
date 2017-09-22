@@ -29,6 +29,7 @@ class Comment
             $comment->isDelete = $editable['isDelete'];
             $comment->level = $comment->user_level;
 
+            $comment->content = convertContent($comment->content, 0);
             // 검색어 색깔 다르게 표시
             if($request->filled('keyword')) {
                 $comment->content = searchKeyword($request->keyword, $comment->content);

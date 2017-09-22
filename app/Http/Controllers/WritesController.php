@@ -79,6 +79,9 @@ class WritesController extends Controller
         // 요청 URI 추가
         $params = array_add($params, 'requestUri', $request->getRequestUri());
 
+        // Open Graph image 추출
+        $params = array_add($params, 'ogImage', pullOutImage($write->content, $board->id, $write->id, $write->file));
+
         $skin = $board->skin ? : 'default';
 
         return viewDefault("board.$skin.view", $params);
@@ -174,7 +177,7 @@ class WritesController extends Controller
         // 공백 제거
         $request->merge([
             'subject' => trim($request->subject),
-            'content' => $this->writeModel->board->use_dhtml_editor ? trim($request->content) : trim(convertContent($request->content, 2)),
+            'content' => $this->writeModel->board->use_dhtml_editor ? trim(convertContent($request->content, 1)) : trim($request->content),
         ]);
 
         $this->validate($request, $rules, $messages);
@@ -242,7 +245,7 @@ class WritesController extends Controller
         // 공백 제거
         $request->merge([
             'subject' => trim($request->subject),
-            'content' => $this->writeModel->board->use_dhtml_editor ? trim($request->content) : trim(convertContent($request->content, 2)),
+            'content' => $this->writeModel->board->use_dhtml_editor ? trim(convertContent($request->content, 1)) : trim($request->content),
         ]);
 
         $this->validate($request, $rules, $messages);

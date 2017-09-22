@@ -36,7 +36,7 @@
     </ul>
     <ul class="bd_rd_btn">
         <li class="depth2">
-            <a href="{{ route('board.create', $board->table_name) }}" title="수정"><i class="fa fa-pencil"></i></a>
+            <a href="{{ route('board.create', $board->table_name) }}" title="새글쓰기"><i class="fa fa-pencil"></i></a>
         </li>
         <li class="depth2">
             <a href="{{ route('board.index', $board->table_name). '?'. $request->server('QUERY_STRING') }}" title="목록으로"><i class="fa fa-list-ul"></i></a>
@@ -49,7 +49,7 @@
                 @if( (auth()->check() && $user->id_hashkey == $write->user_id) || !$write->user_id || session()->get('admin') )
                     <li><a href="/bbs/{{ $board->table_name }}/edit/{{ $write->id }}">수정</a></li>
                     <li>
-                        <a href="{{ route('board.destroy', ['boardName' => $board->table_name, 'writeId' => $write->id]) }}">
+                        <a href="{{ route('board.destroy', ['boardName' => $board->table_name, 'writeId' => $write->id]) }}"  onclick="del(this.href); return false;">
                             삭제
                         </a>
                     </li>
@@ -99,7 +99,7 @@
 @empty
 @endforelse
 
-    <p>{!! urlAutoLink(clean($write->content)) !!}</p>
+    <p>{!! $write->content !!}</p>
 
 @if(count($boardFiles) > 0)
     <div class="bd_file">
@@ -227,16 +227,16 @@
                 @if(str_contains($comment->option, 'secret'))
                 <img src="/themes/default/images/icon_secret.gif"> <!-- 비밀 -->
                     @if(auth()->check() && ($user->isSuperAdmin() || $user->isBoardAdmin($board) || $user->isGroupAdmin($board->group)))
-                    {!! urlAutoLink(clean($comment->content)) !!}
+                    {!! $comment->content !!}
                 @elseif(session()->get(session()->getId(). 'secret_board_'. $board->table_name. '_write_'. $comment->id))
-                    {!! urlAutoLink(clean($comment->content)) !!}
+                    {!! $comment->content !!}
                     @elseif(auth()->check() && $user->id == $comment->user_id)
-                    {!! urlAutoLink(clean($comment->content)) !!}
+                    {!! $comment->content !!}
                     @else
                     <a href="/password/type/secret?boardName={{ $board->table_name }}&writeId={{ $comment->id }}&nextUrl={{ route('board.view', [ 'boardName' => $board->table_name, 'writeId' => $comment->parent ]). '?'. Request::getQueryString(). '#comment'. $comment->id }}">댓글내용확인</a>
                     @endif
                 @else
-                {!! urlAutoLink(clean($comment->content)) !!}
+                {!! $comment->content !!}
                 @endif
                 <input type="hidden" id="secretComment_{{ $comment->id }}" value="{{ $comment->option }}">
                 <textarea id="saveComment_{{ $comment->id }}" style="display:none">{{ strip_tags($comment->content) }}</textarea>

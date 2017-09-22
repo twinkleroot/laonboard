@@ -348,12 +348,15 @@ class Write extends Model
         // 글쓰기 할때 html 체크에 따라 글 내용 보여주는 방식을 다르게 한다.
         // html = 0 - 체크안함, 1 - 체크 후 취소, 2 - 체크 후 확인
         $html = 0;
-        if (strpos($write->option, 'html1') !== false) {
+        if (stripos($write->option, 'html1') !== false) {
             $html = 1;
-        } else if (strpos($write->option, 'html2') !== false) {
+        } else if (stripos($write->option, 'html2') !== false) {
             $html = 2;
         }
 
+        $write->content = convertContent($write->content, $html);
+        // 에디터로 업로드한 이미지 경로를 추출해서 내용의 img 태그 부분을 교체한다.
+        $write->content = includeImagePathByEditor($this->board, $write->content);
         // 검색어 색깔 다르게 표시
         if($request->filled('keyword')) {
             $write->content = searchKeyword($request->keyword, $write->content);
@@ -400,10 +403,6 @@ class Write extends Model
                 });
             }
         }
-
-        // 에디터로 업로드한 이미지 경로를 추출해서 내용의 img 태그 부분을 교체한다.
-        $write->content = $this->includeImagePathByEditor($write->content);
-        $write->content = clean($write->content);
 
         // 글 제목 길이 설정에 따라 조정하기
         $write->subject = subjectLength($write->subject, $this->board->subject_len);
@@ -485,33 +484,6 @@ class Write extends Model
             // 포인트 부여(글 읽기, 파일 다운로드)
             insertPoint($userId, $boardPoint, $this->board->subject . ' ' . $write->id . $contentPiece, $this->board->table_name, $write->id, $action);
         }
-    }
-
-    // 에디터로 업로드한 이미지 경로를 추출해서 내용의 img 태그 부분을 교체한다.
-    public function includeImagePathByEditor($content)
-    {
-        // 에디터로 업로드한 이미지 경로를 추출한다.
-        $imgPattern = "/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i";
-
-        preg_match_all($imgPattern, $content, $matches);
-
-        for($i=0; $i<count($matches[1]); $i++) {
-            // 썸네일 만들기
-            $imageFileInfo = getViewThumbnail($this->board, basename($matches[1][$i]), 'editor');
-
-            $divImage1 = explode('.', $imageFileInfo['name']);
-            $divImage2 = explode('_', $divImage1[0]);
-            $realImageName = str_replace("thumb-", "", $divImage2[0]). '.'. last($divImage1);
-
-            $html = "<a href='". route('image.original'). "?type=editor&amp;imageName=". $realImageName. "'"
-                    . " class='viewOriginalImage' width='". $imageFileInfo[0]. "' height='". $imageFileInfo[1]. "' target='viewImage'>"
-                    . "<img src='/storage/editor/". $imageFileInfo['name']. "' /></a>";
-            // 글 내용에 이미지 원본보기 링크와 이미지경로를 넣어준다.
-            $replacePattern = "/<img[^>]*src=[\"']?([^>\"']+){$realImageName}[\"']?[^>]*>/i";
-            $content = preg_replace($replacePattern, $html, $content);
-        }
-
-        return $content;
     }
 
     // 이전 글, 다음 글 경로, 제목 가져오기
@@ -722,6 +694,10 @@ class Write extends Model
         $options['secret'] = $request->filled('secret') ? $request->secret : '';
         $options['mail'] = $request->filled('mail') ? $request->mail : '';
 
+        if($options['html']) {
+            $inputData['content'] = urlAutoLink($inputData['content']);
+        }
+
         foreach($options as $key => $value) {
             if($value == '') {
                 $options = array_except($options, [$key]);
@@ -892,6 +868,10 @@ class Write extends Model
         $options['html'] = $request->filled('html') ? $request->html : '';
         $options['secret'] = $request->filled('secret') ? $request->secret : '';
         $options['mail'] = $request->filled('mail') ? $request->mail : '';
+
+        if($options['html']) {
+            $inputData['content'] = urlAutoLink($inputData['content']);
+        }
 
         foreach($options as $key => $value) {
             if($value == '') {

@@ -24,6 +24,9 @@ class ContentsController extends Controller
     public function show($id)
     {
         $params = $this->content->getContentView($id);
+        // Open Graph image 추출
+        $params = array_add($params, 'ogImage', pullOutImage($params['content']->content));
+
         $skin = $params['content']->skin ? : 'default';
 
         return viewDefault("content.$skin.show", $params);

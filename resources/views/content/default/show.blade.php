@@ -31,7 +31,7 @@
                         </header>
 
                         <div id="ctt_con">
-                            {!! convertContent($content->content, $content->html, $content->tag_filter_use) !!}
+                            {!! $content->content !!}
                         </div>
                     </article>
 

@@ -11,7 +11,6 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Http\Request;
 use App\Write;
-use App\Board;
 
 class BeforeRead
 {

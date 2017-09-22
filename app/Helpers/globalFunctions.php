@@ -1,4 +1,59 @@
 <?php
+use App\BoardFile;
+
+// 에디터로 업로드한 이미지 경로를 추출해서 내용의 img 태그 부분을 교체한다.
+if(! function_exists('includeImagePathByEditor')) {
+    function includeImagePathByEditor($board, $content)
+    {
+        // 에디터로 업로드한 이미지 경로를 추출한다.
+        $imgPattern = "/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i";
+
+        preg_match_all($imgPattern, $content, $matches);
+
+        for($i=0; $i<count($matches[1]); $i++) {
+            // 썸네일 만들기
+            $imageFileInfo = getViewThumbnail($board, basename($matches[1][$i]), 'editor');
+
+            $divImage1 = explode('.', $imageFileInfo['name']);
+            $divImage2 = explode('_', $divImage1[0]);
+            $realImageName = str_replace("thumb-", "", $divImage2[0]). '.'. last($divImage1);
+
+            $html = "<a href='". route('image.original'). "?type=editor&amp;imageName=". $realImageName. "'"
+                    . " class='viewOriginalImage' width='". $imageFileInfo[0]. "' height='". $imageFileInfo[1]. "' target='viewImage'>"
+                    . "<img src='/storage/editor/". $imageFileInfo['name']. "' /></a>";
+            // 글 내용에 이미지 원본보기 링크와 이미지경로를 넣어준다.
+            $replacePattern = "/<img[^>]*src=[\"']?([^>\"']+){$realImageName}[\"']?[^>]*>/i";
+            $content = preg_replace($replacePattern, $html, $content);
+        }
+
+        return $content;
+    }
+}
+
+// Open Graph 이미지를 뽑아 낸다.
+if(! function_exists('pullOutImage')) {
+    function pullOutImage($content, $boardId=0, $writeId=0, $file=0)
+    {
+        $path = 'themes/laon/images/title_logo.gif';
+        $flag = 0;
+        if($content) {
+            $imgPattern = "/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/";
+            preg_match($imgPattern, $content, $matches);
+            if(isset($matches[1]) > 0) {
+                $path = $matches[1];
+            }
+            $flag = 1;
+        }
+        if(!$flag && $file) {
+            $boardFiles = \App\BoardFile::where([
+                'board_id' => $boardId,
+                'write_id' => $writeId
+            ])->get();
+        }
+
+        return $path;
+    }
+}
 
 if(! function_exists('ver_asset')) {
     function ver_asset($url)
@@ -553,7 +608,7 @@ if (! function_exists('htmlSymbol')) {
 
 if (! function_exists('convertContent')) {
     // 글 내용 변환
-    function convertContent($content, $html)
+    function convertContent($content, $html, $filter=true)
     {
         if($html){
             $source = array();
@@ -568,6 +623,10 @@ if (! function_exists('convertContent')) {
             }
 
             $content = preg_replace($source, $target, $content);
+
+            if($filter) {
+                $content = clean($content);
+            }
         } else { // text 이면
             // & 처리 : &amp; &nbsp; 등의 코드를 정상 출력함
             $content = htmlSymbol($content);
@@ -587,11 +646,11 @@ if (! function_exists('convertContent')) {
 if (! function_exists('urlAutoLink')) {
     function urlAutoLink($str)
     {
-        $config = cache("config.board");
+        $target = cache("config.board")->linkTarget;
 
         $str = str_replace(array("&lt;", "&gt;", "&amp;", "&quot;", "&nbsp;", "&#039;"), array("\t_lt_\t", "\t_gt_\t", "&", "\"", "\t_nbsp_\t", "'"), $str);
-        $str = preg_replace("/([^(href=\"?'?)|(src=\"?'?)]|\(|^)((http|https|ftp|telnet|news|mms):\/\/[a-zA-Z0-9\.-]+\.[가-힣\xA1-\xFEa-zA-Z0-9\.:&#=_\?\/~\+%@;\-\|\,\(\)]+)/i", "\\1<A HREF=\"\\2\" TARGET=\"{$config->linkTarget}\">\\2</A>", $str);
-        $str = preg_replace("/(^|[\"'\s(])(www\.[^\"'\s()]+)/i", "\\1<A HREF=\"http://\\2\" TARGET=\"{$config->linkTarget}\">\\2</A>", $str);
+        $str = preg_replace("/([^(href=\"?'?)|(src=\"?'?)]|\(|^)((http|https|ftp|telnet|news|mms):\/\/[a-zA-Z0-9\.-]+\.[가-힣\xA1-\xFEa-zA-Z0-9\.:&#!=_\?\/~\+%@;\-\|\,\(\)]+)/i", "\\1<a href=\"\\2\" target=\"$target\">\\2</a>", $str);
+        $str = preg_replace("/(^|[\"'\s(])?(www\.[^\"'\s()<]+)/i", "\\1<a href=\"http://\\2\" target=\"$target\">\\2</a>", $str);
         $str = preg_replace("/[0-9a-z_-]+@[a-z0-9._-]{4,}/i", "<a href=\"mailto:\\0\">\\0</a>", $str);
         $str = str_replace(array("\t_nbsp_\t", "\t_lt_\t", "\t_gt_\t", "'"), array("&nbsp;", "&lt;", "&gt;", "&#039;"), $str);
 
