@@ -188,7 +188,8 @@ class WritesController extends Controller
             }
         }
 
-        if(cache('config.email.default')->emailUse && $this->writeModel->board->use_email && $request->mail == 'mail' && $write->email != cache('config.homepage')->superAdmin) {
+        // 기본환경설정에서 이메일 사용을 하고, 해당 게시판에서 메일발송을 사용하고, 글쓴이가 답변메일을 받겠다고 하면
+        if(cache('config.email.default')->emailUse && $this->writeModel->board->use_email && $request->mail == 'mail') {
             $notification = new Notification();
             $notification->sendWriteNotification($this->writeModel, $write->id);
         }
