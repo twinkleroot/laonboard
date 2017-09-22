@@ -87,55 +87,6 @@
     color: #333;
 }
 
-#top_btn {
-    position: fixed;
-    bottom: 200px;
-    left: 0;
-    right: -30px;
-    width: 100%;
-    z-index: 9999;
-}
-#top_btn .top_btn_wp {
-    width: 1250px;
-    margin: 0 auto;
-    position: relative;
-    text-align: right;
-}
-#top_btn .top_btn_wp a {
-    display: block;
-    color: #ccc;
-    font-size: 0;
-    margin: 10px 0;
-}
-#top_btn .top_btn_wp a:hover {
-    color: #587ef6;
-}
-#top_btn .top_btn_wp a.scroll-top {
-    top: 0;
-}
-#top_btn .top_btn_wp a.scroll-top:before {
-    content: "\f077";
-    font-family: "FontAwesome";
-    font-size: 15px;
-}
-#top_btn .top_btn_wp a.scroll-center {
-    top: 20px;
-}
-#top_btn .top_btn_wp a.scroll-center:before {
-    content: "\f111";
-    font-family: "FontAwesome";
-    font-size: 15px;
-    margin: 0 1.5px;
-}
-#top_btn .top_btn_wp a.scroll-bottom {
-    top: 50px;
-}
-#top_btn .top_btn_wp a.scroll-bottom:before {
-    content: "\f078";
-    font-family: "FontAwesome";
-    font-size: 15px;
-}
-
 /* category */
 .bd_category {
     margin: 10px 0;
