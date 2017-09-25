@@ -127,8 +127,8 @@
     // 'gallery_cols' => 4,
     // 'gallery_width' => 174,
     'subject_len' => [
-        'default' => 20,
-        'gallery' => 15,
+        'default' => 60,
+        'gallery' => 50,
         'main' => 15,
     ],
 

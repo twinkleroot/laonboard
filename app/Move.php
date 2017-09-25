@@ -55,6 +55,7 @@ class Move
                 // 컬렉션의 반복문
                 $beforeWriteNum = 0;
                 $parent = 0;
+
                 foreach($originalWrites as $originalWrite) {
                     // 새로 insert하기 때문에 auto increment 되는 id값은 제거
                     $insertArray = array_except($originalWrite->toArray(), ['id', 'isReply', 'isEdit', 'isDelete']);
@@ -64,6 +65,8 @@ class Move
                     if(!$originalWrite->is_comment && !$originalWrite->reply) {
                         $parent = $lastInsertId;
                     }
+
+                    $content = $originalWrite->content;
                     // 설정에 복사,이동시 로그 남김 체크한 경우 로그 남기는 기능
                     if(!$originalWrite->is_comment && cache('config.homepage')->useCopyLog) {
                         if(str_contains($originalWrite->option, 'html')) {
@@ -74,7 +77,7 @@ class Move
                             $logTag2 = '';
                         }
 
-                        $content = $originalWrite->content. "\n". $logTag1. '[이 게시물은 '. $originalWrite->name. '님에 의해 '. Carbon::now(). ' '. $writeModel->board->subject. '게시판에서 '. ($request->type == 'copy' ? '복사' : '이동'). ' 됨]'. $logTag2;
+                        $content .= $logTag1. '[이 게시물은 '. auth()->user()->nick. '님에 의해 '. Carbon::now(). ' '. $writeModel->board->subject. '게시판에서 '. ($request->type == 'copy' ? '복사' : '이동'). ' 됨]'. $logTag2;
                     }
 
                     $toUpdateColumn = [
@@ -91,6 +94,7 @@ class Move
                     }
 
                     $destinationWrite->where('id', $lastInsertId)->update($toUpdateColumn);
+
                     // 복사할 때 원본 게시물에 첨부 파일이 있다면 board_files 테이블에 동일한 파일을 링크하는 정보를 추가해준다.
                     // 게시물 이동할 때는 board_files 테이블의 board_id와 write_id를 update(실제로는 row의 insert -> delete)한다.
                     if($originalWrite->file > 0) {
