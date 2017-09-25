@@ -66,7 +66,7 @@
             @for($i=0; $i<count(Cache::get('menuList')); $i++)
             @if(count(Cache::get('subMenuList')[$i]) > 0)
                 <li class="gnb-li dropdown">
-                    <a @if(Cache::get('menuList')[$i]['link'])href="{{ Cache::get('menuList')[$i]['link'] }}"@endif role="button" aria-expanded="false" target="_{{ Cache::get('menuList')[$i]['target'] }}">
+                    <a @if(Cache::get('menuList')[$i]['link'])href="{{ Cache::get('menuList')[$i]['link'] }}"@else href="#"@endif role="button" aria-expanded="false" target="_{{ Cache::get('menuList')[$i]['target'] }}">
                         {{ Cache::get('menuList')[$i]['name'] }}<span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" role="menu">
