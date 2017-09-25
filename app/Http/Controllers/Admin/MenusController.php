@@ -53,9 +53,11 @@ class MenusController extends Controller
 
         $rules = [
             'name.*' => 'required',
+            'link.*' => 'regex:/^(http(s)?\:\/\/)?[0-9a-zA-Z]+([\.\-][0-9a-zA-Z]+)*(:[0-9]+)?(\/?(\/[\.\w]*)+)?$/|nullable',
         ];
         $messages = [
             'name.*.required' => '빨간 테두리가 쳐진 입력칸에 메뉴를 입력해 주세요.',
+            'link.*.regex' => '링크에 올바른 url 형식으로 입력해 주세요.',
         ];
         $this->validate($request, $rules, $messages);
         // Menu 테이블의 모든 데이터를 삭제하고 auto-incrementing ID를 0으로 초기화 한다.

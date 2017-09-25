@@ -340,11 +340,11 @@ class WritesController extends Controller
     {
         return [
             'email' => 'email|max:255|nullable',
-            'homepage' => 'regex:/^(((http(s?))\:\/\/)?)([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(\/\S*)?$/|nullable',
+            'homepage' => 'regex:/^(http(s)?\:\/\/)?[0-9a-zA-Z]+([\.\-][0-9a-zA-Z]+)*(:[0-9]+)?(\/?(\/[\.\w]*)+)?$/|nullable',
             'subject' => 'required|max:255',
             'content' => 'required',
-            'link1' => 'regex:/^(((http(s?))\:\/\/)?)([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(\/\S*)?$/|nullable',
-            'link2' => 'regex:/^(((http(s?))\:\/\/)?)([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(\/\S*)?$/|nullable'
+            'link1' => 'regex:/^(http(s)?\:\/\/)?[0-9a-zA-Z]+([\.\-][0-9a-zA-Z]+)*(:[0-9]+)?(\/?(\/[\.\w]*)+)?$/|nullable',
+            'link2' => 'regex:/^(http(s)?\:\/\/)?[0-9a-zA-Z]+([\.\-][0-9a-zA-Z]+)*(:[0-9]+)?(\/?(\/[\.\w]*)+)?$/|nullable',
         ];
     }
 

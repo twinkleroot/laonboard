@@ -197,7 +197,7 @@ class GroupsController extends Controller
             'group_id.regex' => '그룹 ID에는 영문자, 숫자, 언더스코어(_)만 들어갈 수 있습니다.',
             'group_id.unique' => '이미 등록된 그룹 ID입니다. 다른 그룹 ID를 입력해 주세요.',
             'subject.required' => '그룹 제목을 입력해 주세요.',
-            'subject.alpha_dash' => '그룹 ID에는 영문자, 한글, 숫자, 대쉬(-), 언더스코어(_)만 들어갈 수 있습니다.',
+            'subject.alpha_dash' => '그룹 제목에는 영문자, 한글, 숫자, 대쉬(-), 언더스코어(_)만 들어갈 수 있습니다.',
             'admin.email' => '그룹관리자에 올바른 Email양식으로 입력해 주세요.',
             'use_access.numeric' => '접근회원사용에는 숫자만 들어갈 수 있습니다.',
         ];

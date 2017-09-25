@@ -190,7 +190,7 @@
             <tr>
                 <th>회원가입일</th>
                 <td class="table_body chknone">
-                    @datetime($user->created_at)
+                    @if($user->created_at) @date($user->created_at) @endif
                 </td>
             </tr>
             <tr>

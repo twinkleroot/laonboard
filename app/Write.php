@@ -757,8 +757,8 @@ class Write extends Model
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'file' => count($request->attach_file),
-                'link1' => $request->link1 && !str_contains($request->link1, 'http://') ? 'http://'. $request->link1 : $request->link1,
-                'link2' => $request->link2 && !str_contains($request->link2, 'http://') ? 'http://'. $request->link2 : $request->link2,
+                'link1' => $request->link1 && !str_contains($request->link1, ['http://', 'https://']) ? 'http://'. $request->link1 : $request->link1,
+                'link2' => $request->link2 && !str_contains($request->link2, ['http://', 'https://']) ? 'http://'. $request->link2 : $request->link2,
                 'hit' => 1,
                 'num' => $num,
                 'reply' => $reply,
@@ -890,11 +890,11 @@ class Write extends Model
         ]);
 
         if($inputData['link1'] && $inputData['link1'] != $write->link1) {
-            $inputData['link1'] = $inputData['link1'] && !str_contains($inputData['link1'], 'http://') ? 'http://'. $inputData['link1'] : $inputData['link1'];
+            $inputData['link1'] = $inputData['link1'] && !str_contains($inputData['link1'], ['http://', 'https://']) ? 'http://'. $inputData['link1'] : $inputData['link1'];
             $inputData['link1_hit'] = 0;
         }
         if($inputData['link2'] && $inputData['link2'] != $write->link2) {
-            $inputData['link2'] = $inputData['link2'] && !str_contains($inputData['link2'], 'http://') ? 'http://'. $inputData['link2'] : $inputData['link2'];
+            $inputData['link2'] = $inputData['link2'] && !str_contains($inputData['link2'], ['http://', 'https://']) ? 'http://'. $inputData['link2'] : $inputData['link2'];
             $inputData['link2_hit'] = 0;
         }
 

@@ -130,7 +130,7 @@ class UsersController extends Controller
             $rules = array_add($rules, 'name', 'alpha_dash|nullable');
         }
         if($this->config->homepage) {
-            $rules = array_add($rules, 'homepage', 'regex:/^(((http(s?))\:\/\/)?)([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(\/\S*)?$/|nullable');
+            $rules = array_add($rules, 'homepage', 'regex:/^(http(s)?\:\/\/)?[0-9a-zA-Z]+([\.\-][0-9a-zA-Z]+)*(:[0-9]+)?(\/?(\/[\.\w]*)+)?$/|nullable');
         }
         if($this->config->tel) {
             $rules = array_add($rules, 'tel', 'regex:/^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/|nullable');

@@ -183,7 +183,7 @@ class UsersController extends Controller
         if(isDemo()) {
             return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
         }
-        
+
         if (auth()->user()->cant('delete', $this->userModel)) {
             abort(403, '회원 삭제에 대한 권한이 없습니다.');
         }
@@ -208,7 +208,7 @@ class UsersController extends Controller
             'point' => 'bail|numeric|nullable',
             'leave_date' => 'bail|date_format:"Ymd"|nullable',
             'intercept_date' => 'bail|date_format:"Ymd"|nullable',
-            'homepage' => 'bail|regex:/^(((http(s?))\:\/\/)?)([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(\/\S*)?$/|nullable',
+            'homepage' => 'bail|regex:/^(http(s)?\:\/\/)?[0-9a-zA-Z]+([\.\-][0-9a-zA-Z]+)*(:[0-9]+)?(\/?(\/[\.\w]*)+)?$/|nullable',
             'tel' => 'bail|regex:/^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/|nullable',
             'hp' => 'bail|regex:/^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/|nullable',
             'addr1' => 'nullable',

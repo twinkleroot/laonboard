@@ -116,6 +116,8 @@ class InstallController extends Controller
             'open_date' => $nowDate,
             'today_login' => Carbon::now(),
             'email_certify' => Carbon::now(),
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ];
 
         $userId = User::insert($admin);
