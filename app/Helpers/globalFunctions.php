@@ -1,5 +1,4 @@
 <?php
-use App\BoardFile;
 
 // 에디터로 업로드한 이미지 경로를 추출해서 내용의 img 태그 부분을 교체한다.
 if(! function_exists('includeImagePathByEditor')) {
@@ -36,19 +35,29 @@ if(! function_exists('pullOutImage')) {
     {
         $path = 'themes/laon/images/title_logo.gif';
         $flag = 0;
+        // 글 내용에 포함된 이미지에서 이미지를 가져오기
         if($content) {
             $imgPattern = "/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/";
             preg_match($imgPattern, $content, $matches);
             if(isset($matches[1]) > 0) {
                 $path = $matches[1];
+                $flag = 1;
             }
-            $flag = 1;
         }
+        // 첨부파일에서 이미지 가져오기
         if(!$flag && $file) {
+            $board = \App\Board::getBoard($boardId);
             $boardFiles = \App\BoardFile::where([
                 'board_id' => $boardId,
                 'write_id' => $writeId
             ])->get();
+            foreach ($boardFiles as $boardFile) {
+                $size = getimagesize(storage_path('app/public/'. $board->table_name. '/'. $boardFile->file));
+                if($size) {
+                    $path = '/storage/'.$board->table_name.'/'.$boardFile->file;
+                    break;
+                }
+            }
         }
 
         return $path;
