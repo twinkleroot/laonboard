@@ -13,3 +13,4 @@ sftp-config.json
 /public/Markup
 /public/themes/laon
 /resources/views/layout/laon
+*.tar.gz
