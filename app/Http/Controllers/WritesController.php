@@ -258,7 +258,11 @@ class WritesController extends Controller
         // 게시 글 수정
         $this->writeModel->updateWrite($this->writeModel, $request, $writeId, $fileCount);
 
-        return redirect(route('board.view', ['boardId' => $boardName, 'writeId' => $writeId] ));
+        $queryString = $request->filled('queryString') ? '?'. $request->queryString : '';
+        
+        $returnUrl = route('board.view', ['boardId' => $boardName, 'writeId' => $writeId] ). $queryString;
+
+        return redirect($returnUrl);
     }
 
     /**

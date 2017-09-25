@@ -861,7 +861,7 @@ class Write extends Model
         $write = Write::getWrite($this->board->id, $writeId);
         $user = Auth::user();
         $inputData = $request->all();
-        $inputData = array_except($inputData, ['_method', '_token', 'file_del', 'file_content', 'attach_file', 'g-recaptcha-response', 'html', 'secret', 'mail', 'notice', 'uid', 'type', 'writeId']);
+        $inputData = array_except($inputData, ['_method', '_token', 'file_del', 'file_content', 'attach_file', 'g-recaptcha-response', 'html', 'secret', 'mail', 'notice', 'uid', 'type', 'writeId', 'queryString']);
         $inputData = $this->convertSomeField($inputData);
 
         $options = [];
@@ -899,7 +899,7 @@ class Write extends Model
         }
 
         // 비회원이거나 본인 글을 수정하는 것이 아닐 때
-        if( is_null($user) || $write->user_id != $user->id) {
+        if( !auth()->check() || (!$user->isBoardAdmin($this->board) && $write->user_id != $user->id)) {
             $inputData = array_collapse([
                 $inputData,
                 [

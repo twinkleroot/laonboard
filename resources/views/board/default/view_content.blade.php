@@ -47,9 +47,9 @@
             </a>
             <ul class="dropdown-menu" role="menu">
                 @if( (auth()->check() && $user->id_hashkey == $write->user_id) || !$write->user_id || session()->get('admin') )
-                    <li><a href="/bbs/{{ $board->table_name }}/edit/{{ $write->id }}">수정</a></li>
+                    <li><a href="/bbs/{{ $board->table_name }}/edit/{{ $write->id. (Request::getQueryString() ? '?'.Request::getQueryString() : '') }}">수정</a></li>
                     <li>
-                        <a href="{{ route('board.destroy', ['boardName' => $board->table_name, 'writeId' => $write->id]) }}"  onclick="del(this.href); return false;">
+                        <a href="{{ route('board.destroy', ['boardName' => $board->table_name, 'writeId' => $write->id]). (Request::getQueryString() ? '?'.Request::getQueryString() : '') }}"  onclick="del(this.href); return false;">
                             삭제
                         </a>
                     </li>
@@ -66,7 +66,7 @@
                         </a>
                     </li>
                 @endif
-                <li><a href="{{ route('board.create.reply', ['board' => $board->table_name, 'writeId' => $write->id]) }}">답변</a></li>
+                <li><a href="{{ route('board.create.reply', ['board' => $board->table_name, 'writeId' => $write->id]). (Request::getQueryString() ? '?'.Request::getQueryString() : '') }}">답변</a></li>
             </ul>
         </li>
     </ul>
