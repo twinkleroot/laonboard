@@ -36,7 +36,7 @@
         @endphp
         @if( ($type == 'create' && auth()->guest() )
             || ($type == 'update' && auth()->guest())
-            || ($type == 'update' && auth()->user()->isBoardAdmin($board) && $write->user_id != auth()->user()->id)
+            || ($type == 'update' && !auth()->user()->isBoardAdmin($board) && $write->user_id != auth()->user()->id)
             || ($type == 'reply' && $level >= $board->reply_level) )
         <div class="nologin">
             <div class="form-group mb10 row @if($errors->get('name'))has-error @endif">
