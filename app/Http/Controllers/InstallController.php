@@ -43,6 +43,11 @@ class InstallController extends Controller
         try {
             DB::getPdo();
         } catch (PDOException $e) {
+            // 생성된 .env파일 삭제
+            $envPath = base_path('.env');
+            if(File::exists($envPath)) {
+                File::delete($envPath);
+            }
             return view('install.setup_result', ['dbError' => 1, 'message' => $e->getMessage()]);
         }
         // 3. App Key 생성
@@ -50,9 +55,9 @@ class InstallController extends Controller
         // 4. 파일 쓰기를 위한 폴더 public/storage로 링크 걸기
         Artisan::call('storage:link');
         // 5. 본인확인을 위한 key 폴더 생성
-        $path = storage_path('okname/key');
-        if(!File::exists($path)) {
-            File::makeDirectory($path);
+        $okeyPath = storage_path('okname/key');
+        if(!File::exists($okeyPath)) {
+            File::makeDirectory($okeyPath);
         }
         // 6. DB 구성
         Artisan::call('migrate:refresh');
