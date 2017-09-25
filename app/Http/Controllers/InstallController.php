@@ -50,7 +50,10 @@ class InstallController extends Controller
         // 4. 파일 쓰기를 위한 폴더 public/storage로 링크 걸기
         Artisan::call('storage:link');
         // 5. 본인확인을 위한 key 폴더 생성
-        File::makeDirectory(storage_path('okname/key'));
+        $path = storage_path('okname/key');
+        if(!File::exists($path)) {
+            File::makeDirectory($path);
+        }
         // 6. DB 구성
         Artisan::call('migrate:refresh');
         // 7. 입력받은 관리자 데이터로 관리자 회원 추가
