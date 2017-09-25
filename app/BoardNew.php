@@ -185,7 +185,7 @@ class BoardNew extends Model
                 if($write->file > 0) {
                     // 서버에서 파일 삭제 첨부파일의 썸네일 삭제, 파일 테이블에서 파일 정보 삭제
                     $result = $boardFile->deleteWriteAndAttachFile($boardId, $writeId);
-                    if( array_search(false, $result) != false ) {
+                    if(!$result) {
                         abort(500, '정상적으로 게시글을 삭제하는데 실패하였습니다.\\n('. $boardId. '게시판 '. $writeId. '번 글의 첨부 파일 삭제)');
                     }
                 }

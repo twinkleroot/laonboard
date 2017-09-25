@@ -184,7 +184,7 @@ class Move
         $boardFile = new BoardFile();
         $board = Board::getBoard($boardName, 'table_name');
         $result = $boardFile->deleteWriteAndAttachFile($board->id, $writeId, $type);
-        if( array_search(false, $result) != false ) {
+        if(!$result) {
             abort(500, '정상적으로 게시글을 이동하는데 실패하였습니다.\\n('. $boardName. '게시판 '. $writeId. '번 글의 첨부 파일 삭제)');
         }
 
