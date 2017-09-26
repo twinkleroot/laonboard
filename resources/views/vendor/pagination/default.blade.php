@@ -2,14 +2,14 @@
 // config
 $link_limit = 7; // maximum number of mobile links (a little bit inaccurate, but will be ok for now)
 @endphp
-
+@if($paginator->hasPages())
 <ul class="pagination">
     @if ($paginator->currentPage() != 1)
     <li><a href="{{ $paginator->url(1) }}">@lang('pagination.first')</a></li>
     @else
     <li class="disabled"><span>@lang('pagination.first')</span></li>
     @endif
-@if ($paginator->hasPages() && isMobile())
+@if (isMobile())
     @for ($i = 1; $i <= $paginator->lastPage(); $i++)
         @php
         $half_total_links = floor($link_limit / 2);
@@ -68,3 +68,4 @@ $link_limit = 7; // maximum number of mobile links (a little bit inaccurate, but
     <li class="disabled"><span>@lang('pagination.last')</span></li>
     @endif
 </ul>
+@endif
