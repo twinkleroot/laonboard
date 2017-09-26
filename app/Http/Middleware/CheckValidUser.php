@@ -20,12 +20,12 @@ class CheckValidUser
         }
 
         if($request->toUser) {
-            $user = getUser($request->toUser);
-            if(!$user->id || $user->leave_date) {
+            $toUser = getUser($request->toUser);
+            if(!$toUser->id || $toUser->leave_date) {
                 return alert('회원정보가 존재하지 않습니다.\\n\\n탈퇴한 회원일 수 있습니다.');
             }
 
-            if( !$user->open && !$user->isSuperAdmin() && auth()->user()->id != $user->id) {
+            if( !auth()->user()->isSuperAdmin() && !$toUser->open && !$toUser->isSuperAdmin() && auth()->user()->id != $toUser->id) {
                 return alert('해당 회원이 정보공개를 하지 않았습니다.');
             }
         }
