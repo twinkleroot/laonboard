@@ -8,7 +8,6 @@ Homestead.yaml
 .env
 .env.example
 sftp-config.json
-/storage/okname/bin/okname_x64
 /storage/okname/key/*.key
 /public/Markup
 /public/themes/laon
