@@ -1,38 +1,66 @@
-@if ($paginator->hasPages())
-    <ul class="pagination">
-        {{-- Previous Page Link --}}
-        @if ($paginator->onFirstPage())
-            <li class="disabled"><span>@unless(isMobile())&laquo;@else @lang('pagination.previous') @endunless</span></li>
-        @else
-            <li><a href="{{ $paginator->previousPageUrl() }}" rel="prev">@unless(isMobile())&laquo;@else @lang('pagination.previous') @endunless</a></li>
+@php
+// config
+$link_limit = 7; // maximum number of mobile links (a little bit inaccurate, but will be ok for now)
+@endphp
+
+<ul class="pagination">
+    <li class="{{ ($paginator->currentPage() == 1) ? ' disabled' : '' }}">
+        <a href="{{ $paginator->url(1) }}">@lang('pagination.first')</a>
+    </li>
+@if ($paginator->hasPages() && isMobile())
+    @for ($i = 1; $i <= $paginator->lastPage(); $i++)
+        @php
+        $half_total_links = floor($link_limit / 2);
+        $from = $paginator->currentPage() - $half_total_links;
+        $to = $paginator->currentPage() + $half_total_links;
+        if ($paginator->currentPage() < $half_total_links) {
+           $to += $half_total_links - $paginator->currentPage();
+        }
+        if ($paginator->lastPage() - $paginator->currentPage() < $half_total_links) {
+            $from -= $half_total_links - ($paginator->lastPage() - $paginator->currentPage()) - 1;
+        }
+        @endphp
+        @if ($from < $i && $i < $to)
+            <li class="{{ ($paginator->currentPage() == $i) ? ' active' : '' }}">
+                <a href="{{ $paginator->url($i) }}">{{ $i }}</a>
+            </li>
+        @endif
+    @endfor
+@else
+    {{-- Previous Page Link --}}
+    @if ($paginator->onFirstPage())
+        <li class="disabled"><span>@lang('pagination.previous')</span></li>
+    @else
+        <li><a href="{{ $paginator->previousPageUrl() }}" rel="prev">@lang('pagination.previous')</a></li>
+    @endif
+
+    {{-- Pagination Elements --}}
+    @foreach ($elements as $element)
+        {{-- "Three Dots" Separator --}}
+        @if (is_string($element))
+            <li class="disabled"><span>{{ $element }}</span></li>
         @endif
 
-        {{-- Pagination Elements --}}
-        @unless(isMobile())
-        @foreach ($elements as $element)
-            {{-- "Three Dots" Separator --}}
-            @if (is_string($element))
-                <li class="disabled"><span>{{ $element }}</span></li>
-            @endif
-
-            {{-- Array Of Links --}}
-            @if (is_array($element))
-                @foreach ($element as $page => $url)
-                    @if ($page == $paginator->currentPage())
-                        <li class="active"><span>{{ $page }}</span></li>
-                    @else
-                        <li><a href="{{ $url }}">{{ $page }}</a></li>
-                    @endif
-                @endforeach
-            @endif
-        @endforeach
-        @endunless
-
-        {{-- Next Page Link --}}
-        @if ($paginator->hasMorePages())
-            <li><a href="{{ $paginator->nextPageUrl() }}" rel="next">@unless(isMobile())&raquo;@else @lang('pagination.next') @endunless</a></li>
-        @else
-            <li class="disabled"><span>@unless(isMobile())&raquo;@else @lang('pagination.next') @endunless</span></li>
+        {{-- Array Of Links --}}
+        @if (is_array($element))
+            @foreach ($element as $page => $url)
+                @if ($page == $paginator->currentPage())
+                    <li class="active"><span>{{ $page }}</span></li>
+                @else
+                    <li><a href="{{ $url }}">{{ $page }}</a></li>
+                @endif
+            @endforeach
         @endif
-    </ul>
+    @endforeach
+
+    {{-- Next Page Link --}}
+    @if ($paginator->hasMorePages())
+        <li><a href="{{ $paginator->nextPageUrl() }}" rel="next">@lang('pagination.next')</a></li>
+    @else
+        <li class="disabled"><span>@lang('pagination.next')</span></li>
+    @endif
 @endif
+    <li class="{{ ($paginator->currentPage() == $paginator->lastPage()) ? ' disabled' : '' }}">
+        <a href="{{ $paginator->url($paginator->lastPage()) }}">@lang('pagination.last')</a>
+    </li>
+</ul>
