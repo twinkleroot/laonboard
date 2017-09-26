@@ -4,9 +4,11 @@ $link_limit = 7; // maximum number of mobile links (a little bit inaccurate, but
 @endphp
 
 <ul class="pagination">
-    <li class="{{ ($paginator->currentPage() == 1) ? ' disabled' : '' }}">
-        <a href="{{ $paginator->url(1) }}">@lang('pagination.first')</a>
-    </li>
+    @if ($paginator->currentPage() != 1)
+    <li><a href="{{ $paginator->url(1) }}">@lang('pagination.first')</a></li>
+    @else
+    <li class="disabled"><span>@lang('pagination.first')</span></li>
+    @endif
 @if ($paginator->hasPages() && isMobile())
     @for ($i = 1; $i <= $paginator->lastPage(); $i++)
         @php
@@ -60,7 +62,9 @@ $link_limit = 7; // maximum number of mobile links (a little bit inaccurate, but
         <li class="disabled"><span>@lang('pagination.next')</span></li>
     @endif
 @endif
-    <li class="{{ ($paginator->currentPage() == $paginator->lastPage()) ? ' disabled' : '' }}">
-        <a href="{{ $paginator->url($paginator->lastPage()) }}">@lang('pagination.last')</a>
-    </li>
+    @if ($paginator->currentPage() != $paginator->lastPage())
+    <li><a href="{{ $paginator->url($paginator->lastPage()) }}">@lang('pagination.last')</a></li>
+    @else
+    <li class="disabled"><span>@lang('pagination.last')</span></li>
+    @endif
 </ul>
