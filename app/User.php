@@ -177,13 +177,15 @@ class User extends Authenticatable
             $socials[$sociallogin['provider']] = $sociallogin['social_id'];
         }
 
-        $path = storage_path('app/public/user/'. substr($user->email,0,2). '/'). $user->email. '.gif';
-        $url = '/storage/user/'. substr($user->email,0,2). '/'. $user->email. '.gif';
+        $folder = getIconFolderName($user->created_at);
+        $iconName = getIconName($user->id, $user->created_at);
+        $path = storage_path('app/public/user/'. $folder. '/'). $iconName. '.gif';
+        $url = '/storage/user/'. $folder. '/'. $iconName. '.gif';
 
         $editFormData = [
             'user' => $user,
             'config' => cache("config.join"),
-            'openDate' => cache("config.homepage")->openDate,				// 정보공개 변경 가능 일
+            'openDate' => cache("config.homepage")->openDate,				// 정보공개 변경  가능 일
             'nickChangable' => $this->nickChangable($user, Carbon::now()),  // 닉네임 변경여부
             'openChangable' => $openChangable[0],                           // 정보공개 변경 여부
             'dueDate' => $openChangable[1],                                 // 정보공개 언제까지 변경 못하는지 날짜
@@ -428,11 +430,13 @@ class User extends Authenticatable
             $notification->sendEmailCertify($request->get('email'), $user, $toUpdateUserInfo['nick'], $isEmailChange);
         }
 
-        $path = storage_path('app/public/user/'. substr($email,0,2). '/'). $email. '.gif';
+        $folder = getIconFolderName($user->created_at);
+        $iconName = getIconName($user->id, $user->created_at);
+        $path = storage_path('app/public/user/'. $folder. '/'). $iconName. '.gif';
         // 아이콘 삭제
         $this->iconDelete($request, $path);
         // 아이콘 업로드
-        $this->iconUpload($request, $email, $path);
+        $this->iconUpload($request, $folder, $iconName, $path);
 
         return $user->update($toUpdateUserInfo);
     }
@@ -487,7 +491,7 @@ class User extends Authenticatable
     }
 
     // 아이콘 업로드
-    public function iconUpload($request, $email, $path)
+    public function iconUpload($request, $folder, $iconName, $path)
     {
         if(isset($request->icon)) {
             if(auth()->user()->level < cache('config.join')->iconLevel) {
@@ -495,8 +499,8 @@ class User extends Authenticatable
             }
             $file = $request->icon;
             $fileName = $file->getClientOriginalName();
-            $dir = '/user/'. mb_substr($email, 0, 2, 'utf-8');
-            $storeFileName = $email. '.gif';
+            $dir = '/user/'. $folder;
+            $storeFileName = $iconName. '.gif';
             if ( preg_match("/(\.gif)$/i", $fileName) ) {
                 // 아이콘 용량이 설정값보다 이하만 업로드 가능
                 if (filesize($file) <= cache('config.join')->memberIconSize) {
@@ -638,32 +642,69 @@ class User extends Authenticatable
         $name = $request->filled('name') ? convertText(stripslashes($request->name), true) : $email;
 
         return [
-            'user' => $user,
+            'id' => $user->id_hashkey,
             'name' => $name,
-            'email' => $email,
         ];
     }
 
     // 툴팁 : 메일 보내기 실행
     public function sendFormMail($request)
     {
-        $to = decrypt($request->toUser);
+        $to = getUser($request->toUser)->email;
         if (substr_count($to, "@") > 1) {
             abort(500, '한번에 한사람에게만 메일을 발송할 수 있습니다.');
         }
         $name = $request->name;
         $email = $request->email;
         $subject = $request->subject;
-        $content = $request->content;
+        $content = stripslashes($request->content);
         $type = $request->type;
         $files = $request->file ? : [];
-        $content = stripslashes($content);
         if ($type == 2) {
             $type = 1;
             $content = str_replace("\n", "<br>", $content);
         }
 
-        Mail::to($to)->send(new FormMailSend($name, $email, $subject, $content, $type, $files));
+        try {
+            Mail::to($to)->queue(new FormMailSend($name, $email, $subject, $content, $type, $files));
+        } catch (Exception $e) {
+            if($type) {
+                $view = 'mail.default.formmail';
+            } else {
+                $view = 'mail.default.formmail_plain';
+            }
+            $params = [
+                'content' => $content
+            ];
+            $mailContent = \View::make($view, $params)->render();
+            mailer($name, $email, $to, $subject, $mailContent, 1, $files);
+        }
+    }
+
+    // 비밀번호 조합 정책에 따른 유효성 검사 메세지 추가
+    public function addPasswordMessages($messages)
+    {
+        if(cache("config.join")->passwordPolicyUpper) {
+            $messages['password.regex'] .= '대문자 1개 이상';
+        }
+        if(cache("config.join")->passwordPolicyNumber) {
+            if($messages['password.regex']) {
+                $messages['password.regex'] .= ', ';
+            }
+            $messages['password.regex'] .= '숫자 1개 이상';
+        }
+        if(cache("config.join")->passwordPolicySpecial) {
+            if($messages['password.regex']) {
+                $messages['password.regex'] .= ', ';
+            }
+            $messages['password.regex'] .= '특수문자 1개 이상';
+        }
+        if($messages['password.regex']) {
+            $messages['password.regex'] .= '이 포함된 ';
+        }
+        $messages['password.regex'] .= cache("config.join")->passwordPolicyDigits. '자리 이상의 문자열로 입력해 주세요.';
+
+        return $messages;
     }
 
 }

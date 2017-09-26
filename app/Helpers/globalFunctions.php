@@ -161,6 +161,7 @@ if (! function_exists('getPointSum')) {
             $expirePoint = getExpirePoint($userId);
             if($expirePoint > 0) {
                 $user = App\User::find($userId);
+                $content = '포인트 소멸';
                 $point = $expirePoint * (-1);
                 $pointUserPoint = $user->point + $point;
                 App\Point::insert([
@@ -824,5 +825,23 @@ if (! function_exists('subjectLength')) {
         }
 
         return $result;
+    }
+}
+
+if (! function_exists('getIconFolderName')) {
+    // 글 제목 목록에서 설정값에 따라 자르기
+    function getIconFolderName($date)
+    {
+        $userCreated = new Carbon\Carbon($date);
+
+        return $userCreated->format('Ym');
+    }
+}
+
+if (! function_exists('getIconName')) {
+    // 글 제목 목록에서 설정값에 따라 자르기
+    function getIconName($id, $date)
+    {
+        return md5($id. $date);
     }
 }

@@ -14,7 +14,7 @@ class Comment
     public function getCommentsParams($writeModel, $writeId, $request)
     {
         $comments = $writeModel
-                ->select($writeModel->getTable().'.*', 'users.level as user_level', 'users.id_hashkey as user_id_hashkey')
+                ->select($writeModel->getTable().'.*', 'users.level as user_level', 'users.id_hashkey as user_id_hashkey', 'users.created_at as user_created_at')
                 ->leftJoin('users', 'users.id', '=', $writeModel->getTable().'.user_id')
                 ->where(['parent' => $writeId, 'is_comment' => 1])
                 ->orderBy('comment')
@@ -43,9 +43,11 @@ class Comment
             }
 
             if($comment->user_id && cache('config.join')->useMemberIcon) {
-                $iconPath = storage_path('app/public/user'). '/'. mb_substr($comment->email, 0, 2, 'utf-8'). '/'. $comment->email. '.gif';
+                $folder = getIconFolderName($comment->user_created_at);
+                $iconName = getIconName($comment->user_id, $comment->user_created_at);
+                $iconPath = storage_path('app/public/user/'. $folder. '/'). $iconName. '.gif';
                 if(File::exists($iconPath)) {
-                    $comment->iconPath = '/storage/user/'. mb_substr($comment->email, 0, 2, 'utf-8'). '/'. $comment->email. '.gif';
+                    $comment->iconPath = '/storage/user/'. $folder. '/'. $iconName. '.gif';
                 }
             }
         }

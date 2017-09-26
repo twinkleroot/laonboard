@@ -93,24 +93,38 @@ class BoardNew extends Model
         $writeList = [];
         foreach($boardNewList as $boardNew) {
             $board = $boardList[$boardNew->board_id];
-            // 한 페이지에서 원글은 한번만 호출 하도록 한다.
             $writeModel->setTableName($board->table_name);
-            if( !array_has($writeList, $boardNew->write_parent) ) {
-                $writeList = array_add($writeList, $boardNew->write_parent, $writeModel->find($boardNew->write_parent));
+            // 한 페이지에서 모든 글은 한번만 select 하도록 하기 위해 글 리스트에 글을 담아 놓는다.
+            if( !array_key_exists($boardNew->write_id, $writeList) ) {
+                $writeList = array_add($writeList, $boardNew->write_id, $writeModel->find($boardNew->write_id));
             }
-            $write = $writeList[$boardNew->write_parent];
+            $write = $writeList[$boardNew->write_id];
             $user = $userList[$boardNew->user_id];
             // 회원 아이콘 경로 추가
             if($write->user_id && cache('config.join')->useMemberIcon) {
-                $iconPath = storage_path('app/public/user'). '/'. mb_substr($write->email, 0, 2, 'utf-8'). '/'. $write->email. '.gif';
+                $folder = getIconFolderName($user->created_at);
+                $iconName = getIconName($user->id, $user->created_at);
+                $iconPath = storage_path('app/public/user/'. $folder. '/'). $iconName. '.gif';
                 if(File::exists($iconPath)) {
-                    $write->iconPath = '/storage/user/'. mb_substr($write->email, 0, 2, 'utf-8'). '/'. $write->email. '.gif';
+                    $write->iconPath = '/storage/user/'. $folder. '/'. $iconName. '.gif';
                 }
             }
             // 원글, 댓글 공통 추가 데이터
             $boardNew->write = $write;
+
             $subject = subjectLength($write->subject, 60);
-            $boardNew->write->subject = $subject;
+            if($write->is_comment) {
+                if(!array_key_exists($boardNew->write_parent, $writeList)) {
+                    $parentWrite = $writeModel->find($boardNew->write_parent);
+                    $subject = subjectLength($parentWrite->subject, 60);
+                    // 한 페이지에서 모든 글은 한번만 select 하도록 하기 위해 글 리스트에 글을 담아 놓는다.
+                    $writeList = array_add($writeList, $boardNew->write_parent, $parentWrite);
+                } else {
+                    $subject = subjectLength($writeList[$boardNew->write_parent]->subject, 60);
+                }
+            }
+
+            $boardNew->writeSubject = $subject;
             $boardNew->user_email = $user->email;
             $boardNew->user_id_hashkey = $user->id_hashkey;
             $boardNew->commentTag = '';
@@ -118,8 +132,8 @@ class BoardNew extends Model
 
             // 댓글은 데이터 따로 추가
             if($boardNew->write_id != $boardNew->write_parent) {
-                $comment = $writeModel->find($boardNew->write_id);	 // 댓글
-                $boardNew->write->subject = '[코] '. $subject;    // [코] + 원글의 제목
+                $comment = $writeList[$boardNew->write_id];	 // 댓글
+                $boardNew->writeSubject = '[코] '. $subject;    // [코] + 원글의 제목
                 $boardNew->commentTag = '#comment'.$comment->id;
                 $boardNew->write->created_at = $comment->created_at;
                 $boardNew->name = $comment->name;
@@ -134,7 +148,7 @@ class BoardNew extends Model
     {
         $boardList = [];
         foreach($items as $item) {
-            if( !array_has($boardList, $item->board_id) ) {
+            if( !array_key_exists($item->board_id, $boardList) ) {
                 $boardList = array_add($boardList, $item->board_id, Board::getBoard($item->board_id, 'id'));
             }
         }
@@ -147,7 +161,7 @@ class BoardNew extends Model
     {
         $userList = [];
         foreach($items as $item) {
-            if( !array_has($userList, $item->user_id) ) {
+            if( !array_key_exists($item->user_id, $userList) ) {
                 $userList = array_add($userList, $item->user_id, $item->user_id ? User::getUser($item->user_id) : new User());
             }
         }
@@ -180,7 +194,7 @@ class BoardNew extends Model
                 if($write->file > 0) {
                     // 서버에서 파일 삭제 첨부파일의 썸네일 삭제, 파일 테이블에서 파일 정보 삭제
                     $result = $boardFile->deleteWriteAndAttachFile($boardId, $writeId);
-                    if( array_search(false, $result) != false ) {
+                    if(!$result) {
                         abort(500, '정상적으로 게시글을 삭제하는데 실패하였습니다.\\n('. $boardId. '게시판 '. $writeId. '번 글의 첨부 파일 삭제)');
                     }
                 }
