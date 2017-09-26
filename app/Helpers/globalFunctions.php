@@ -952,7 +952,7 @@ if (! function_exists('subjectLength')) {
     function subjectLength($subject, $length)
     {
         $result = $subject;
-        if(mb_strlen($subject, 'UTF-8') > $length) {
+        if($subject && mb_strlen($subject, 'UTF-8') > $length) {
             $result = mb_substr($subject, 0, $length, 'UTF-8'). '...';
         }
 

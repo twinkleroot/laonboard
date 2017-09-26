@@ -94,12 +94,9 @@ class BoardNew extends Model
         foreach($boardNewList as $boardNew) {
             $board = $boardList[$boardNew->board_id];
             $writeModel->setTableName($board->table_name);
-            // 한 페이지에서 모든 글은 한번만 select 하도록 하기 위해 글 리스트에 글과 원글을 모두 담아 놓는다.
-            if( !array_has($writeList, $boardNew->write_id) ) {
+            // 한 페이지에서 모든 글은 한번만 select 하도록 하기 위해 글 리스트에 글을 담아 놓는다.
+            if( !array_key_exists($boardNew->write_id, $writeList) ) {
                 $writeList = array_add($writeList, $boardNew->write_id, $writeModel->find($boardNew->write_id));
-                if( !array_has($writeList, $boardNew->write_parent) ) {
-                    $writeList = array_add($writeList, $boardNew->write_parent, $writeModel->find($boardNew->write_parent));
-                }
             }
             $write = $writeList[$boardNew->write_id];
             $user = $userList[$boardNew->user_id];
@@ -112,9 +109,19 @@ class BoardNew extends Model
             }
             // 원글, 댓글 공통 추가 데이터
             $boardNew->write = $write;
-            $subject = $write->is_comment
-                    ? subjectLength($writeList[$boardNew->write_parent]->subject, 60)
-                    : subjectLength($write->subject, 60);
+
+            $subject = subjectLength($write->subject, 60);
+            if($write->is_comment) {
+                if(!array_key_exists($boardNew->write_parent, $writeList)) {
+                    $parentWrite = $writeModel->find($boardNew->write_parent);
+                    $subject = subjectLength($parentWrite->subject, 60);
+                    // 한 페이지에서 모든 글은 한번만 select 하도록 하기 위해 글 리스트에 글을 담아 놓는다.
+                    $writeList = array_add($writeList, $boardNew->write_parent, $parentWrite);
+                } else {
+                    $subject = subjectLength($writeList[$boardNew->write_parent]->subject, 60);
+                }
+            }
+
             $boardNew->writeSubject = $subject;
             $boardNew->user_email = $user->email;
             $boardNew->user_id_hashkey = $user->id_hashkey;
