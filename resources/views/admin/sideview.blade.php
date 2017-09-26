@@ -1,8 +1,10 @@
 @php
-    $path = storage_path('app/public/user'). '/'. mb_substr($email, 0, 2, 'utf-8'). '/'. $email. '.gif';
+    $folder = getIconFolderName($created_at);
+    $iconName = getIconName($id, $created_at);
+    $path = storage_path('app/public/user/'. $folder. '/'). $iconName. '.gif';
     $iconPath = '';
     if(File::exists($path)) {
-        $iconPath = '/storage/user/'. mb_substr($email, 0, 2, 'utf-8'). '/'. $email. '.gif';
+        $iconPath = '/storage/user/'. $folder. '/'. $iconName. '.gif';
     }
 @endphp
 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">

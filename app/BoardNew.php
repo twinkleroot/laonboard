@@ -127,6 +127,7 @@ class BoardNew extends Model
             $boardNew->writeSubject = $subject;
             $boardNew->user_email = $user->email;
             $boardNew->user_id_hashkey = $user->id_hashkey;
+            $boardNew->user_created_at = $user->created_at;
             $boardNew->commentTag = '';
             $boardNew->name = $write->name;
 

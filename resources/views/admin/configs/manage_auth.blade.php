@@ -91,7 +91,7 @@
                         </td>
                         <td class="td_email"><a href="{{ route('admin.manageAuth.index') }}?keyword={{ $auth->user_email }}">{{ $auth->user_email }}</a></td>
                         <td class="td_nick">
-                            @component('admin.sideview', ['id' => $auth->user_id, 'nick' => $auth->user_nick, 'email' => $auth->user_email])
+                            @component('admin.sideview', ['id' => $auth->user_id, 'nick' => $auth->user_nick, 'email' => $auth->user_email, 'created_at' => $auth->user_created_at])
                             @endcomponent
                         </td>
                         <td class="td_subject">{{ $auth->menu }}</td>

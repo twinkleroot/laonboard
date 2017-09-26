@@ -100,7 +100,7 @@
                             <a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $point->user->email }}">{{ $point->user->email }}</a>
                         </td>
                         <td class="td_nick">
-                            @component('admin.sideview', ['id' => $point->user_id, 'nick' => $point->user->nick, 'email' => $point->user->email])
+                            @component('admin.sideview', ['id' => $point->user_id, 'nick' => $point->user->nick, 'email' => $point->user->email, 'created_at' => $point->user->created_at])
                             @endcomponent
                         </td>
                         <td class="td_subject">

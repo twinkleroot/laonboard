@@ -43,7 +43,7 @@
                         <td class="td_email">{{ $user->email }}</td>
 
                         <td class="td_nick">
-                            @component('admin.sideview', ['id' => $user->id, 'nick' => $user->nick, 'email' => $user->email])
+                            @component('admin.sideview', ['id' => $user->id, 'nick' => $user->nick, 'email' => $user->email, 'created_at' => $user->created_at])
                             @endcomponent
                         </td>
                         <td class="td_mngsmall">{{ $user->level }}</td>
@@ -100,7 +100,7 @@
                             <a href="/bbs/{{ $new->table_name}}/views/{{ $new->write_parent. $new->commentTag }}">{{ subjectLength($new->write->subject, 100) }}</a>
                         </td>
                         <td class="td_nick">
-                            @component('admin.sideview', ['id' => $new->user_id, 'nick' => $new->name, 'email' => $new->user_email])
+                            @component('admin.sideview', ['id' => $new->user_id, 'nick' => $new->name, 'email' => $new->user_email, 'created_at' => $new->user_created_at])
                             @endcomponent
                         </td>
                         <td class="td_mngsmall">@date($new->created_at)</td>
@@ -146,7 +146,7 @@
                             <a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $point->user->email }}">{{ $point->user->email }}</a>
                         </td>
                         <td class="td_nick">
-                            @component('admin.sideview', ['id' => $point->user_id, 'nick' => $point->user->nick, 'email' => $point->user->email])
+                            @component('admin.sideview', ['id' => $point->user_id, 'nick' => $point->user->nick, 'email' => $point->user->email, 'created_at' => $point->user->created_at])
                             @endcomponent
                         </td>
                         <td class="td_date">{{ $point->datetime }}</td>

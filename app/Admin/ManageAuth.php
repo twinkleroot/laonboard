@@ -39,7 +39,7 @@ class ManageAuth extends Model
         $order = isset($request->order) ? $request->order : '';
         $direction = isset($request->direction) ? $request->direction : '';
         $query =
-            ManageAuth::select('manage_auth.*', 'users.email as user_email', 'users.nick as user_nick')
+            ManageAuth::select('manage_auth.*', 'users.email as user_email', 'users.nick as user_nick', 'users.created_at as user_created_at')
             ->leftJoin('users', 'manage_auth.user_id', '=', 'users.id');
 
         // 검색
