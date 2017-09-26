@@ -94,11 +94,15 @@ class BoardNew extends Model
         foreach($boardNewList as $boardNew) {
             $board = $boardList[$boardNew->board_id];
             $writeModel->setTableName($board->table_name);
+            $write = '';
             // 한 페이지에서 모든 글은 한번만 select 하도록 하기 위해 글 리스트에 글을 담아 놓는다.
-            if( !array_key_exists($boardNew->write_id, $writeList) ) {
-                $writeList = array_add($writeList, $boardNew->write_id, $writeModel->find($boardNew->write_id));
+            if( !array_key_exists($board->table_name. $boardNew->write_id, $writeList) ) {
+                $write = $writeModel->find($boardNew->write_id);
+                $writeList = array_add($writeList, $board->table_name. $write->id, $write);
+            } else {
+                $write = $writeList[$board->table_name. $boardNew->write_id];
             }
-            $write = $writeList[$boardNew->write_id];
+            $subject = subjectLength($write->subject, 60);
             $user = $userList[$boardNew->user_id];
             // 회원 아이콘 경로 추가
             if($write->user_id && cache('config.join')->useMemberIcon) {
@@ -112,15 +116,14 @@ class BoardNew extends Model
             // 원글, 댓글 공통 추가 데이터
             $boardNew->write = $write;
 
-            $subject = subjectLength($write->subject, 60);
-            if($write->is_comment) {
-                if(!array_key_exists($boardNew->write_parent, $writeList)) {
+            if($boardNew->write_id != $boardNew->write_parent) {
+                if(!array_key_exists($board->table_name. $boardNew->write_parent, $writeList)) {
                     $parentWrite = $writeModel->find($boardNew->write_parent);
                     $subject = subjectLength($parentWrite->subject, 60);
                     // 한 페이지에서 모든 글은 한번만 select 하도록 하기 위해 글 리스트에 글을 담아 놓는다.
-                    $writeList = array_add($writeList, $boardNew->write_parent, $parentWrite);
+                    $writeList = array_add($writeList, $board->table_name. $parentWrite->id, $parentWrite);
                 } else {
-                    $subject = subjectLength($writeList[$boardNew->write_parent]->subject, 60);
+                    $subject = subjectLength($writeList[$board->table_name. $boardNew->write_parent]->subject, 60);
                 }
             }
 
@@ -133,10 +136,10 @@ class BoardNew extends Model
 
             // 댓글은 데이터 따로 추가
             if($boardNew->write_id != $boardNew->write_parent) {
-                $comment = $writeList[$boardNew->write_id];	 // 댓글
+                $comment = $writeList[$board->table_name. $boardNew->write_id];	 // 댓글
                 $boardNew->writeSubject = '[코] '. $subject;    // [코] + 원글의 제목
                 $boardNew->commentTag = '#comment'.$comment->id;
-                $boardNew->write->created_at = $comment->created_at;
+                // $boardNew->write->created_at = $comment->created_at;
                 $boardNew->name = $comment->name;
             }
         }
