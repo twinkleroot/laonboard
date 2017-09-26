@@ -1,5 +1,12 @@
 <?php
 
+if(! function_exists('isMobile')) {
+    function isMobile()
+    {
+        return preg_match('/phone|samsung|lgtel|mobile|[^A]skt|nokia|blackberry|android|sony/i', request()->server('HTTP_USER_AGENT'));
+    }
+}
+
 // 에디터로 업로드한 이미지 경로를 추출해서 내용의 img 태그 부분을 교체한다.
 if(! function_exists('includeImagePathByEditor')) {
     function includeImagePathByEditor($board, $content)
