@@ -102,9 +102,11 @@ class BoardNew extends Model
             $user = $userList[$boardNew->user_id];
             // 회원 아이콘 경로 추가
             if($write->user_id && cache('config.join')->useMemberIcon) {
-                $iconPath = storage_path('app/public/user'). '/'. mb_substr($write->email, 0, 2, 'utf-8'). '/'. $write->email. '.gif';
+                $folder = getIconFolderName($user->created_at);
+                $iconName = getIconName($user->id, $user->created_at);
+                $iconPath = storage_path('app/public/user/'. $folder. '/'). $iconName. '.gif';
                 if(File::exists($iconPath)) {
-                    $write->iconPath = '/storage/user/'. mb_substr($write->email, 0, 2, 'utf-8'). '/'. $write->email. '.gif';
+                    $write->iconPath = '/storage/user/'. $folder. '/'. $iconName. '.gif';
                 }
             }
             // 원글, 댓글 공통 추가 데이터
@@ -146,7 +148,7 @@ class BoardNew extends Model
     {
         $boardList = [];
         foreach($items as $item) {
-            if( !array_has($boardList, $item->board_id) ) {
+            if( !array_key_exists($item->board_id, $boardList) ) {
                 $boardList = array_add($boardList, $item->board_id, Board::getBoard($item->board_id, 'id'));
             }
         }
@@ -159,7 +161,7 @@ class BoardNew extends Model
     {
         $userList = [];
         foreach($items as $item) {
-            if( !array_has($userList, $item->user_id) ) {
+            if( !array_key_exists($item->user_id, $userList) ) {
                 $userList = array_add($userList, $item->user_id, $item->user_id ? User::getUser($item->user_id) : new User());
             }
         }

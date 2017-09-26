@@ -194,8 +194,10 @@ class AdminUser extends Model
             $user->recommend = $recommendedId;
         }
         // 아이콘 업로드
-        $path = storage_path('app/public/user/'. mb_substr($user->email, 0, 2, 'utf-8'). '/'). $user->email. '.gif';
-        $appUser->iconUpload($request, $user->email, $path);
+        $folder = getIconFolderName($user->created_at);
+        $iconName = getIconName($user->id, $user->created_at);
+        $path = storage_path('app/public/user/'. $folder. '/'). $iconName. '.gif';
+        $appUser->iconUpload($request, $folder, $iconName, $path);
 
         $user->id_hashkey = str_replace("/", "-", bcrypt($user->id));   // id 암호화
         $user->save();
@@ -206,8 +208,10 @@ class AdminUser extends Model
     public function editParams($user, $id)
     {
         // 회원아이콘 경로
-        $path = storage_path('app/public/user/'. mb_substr($user->email, 0, 2, 'utf-8'). '/'). $user->email. '.gif';
-        $url = '/storage/user/'. mb_substr($user->email, 0, 2, 'utf-8'). '/'. $user->email. '.gif';
+        $folder = getIconFolderName($user->created_at);
+        $iconName = getIconName($user->id, $user->created_at);
+        $path = storage_path('app/public/user/'. $folder. '/'). $iconName. '.gif';
+        $url = '/storage/user/'. $folder. '/'. $iconName. '.gif';
 
         $appUser = new AppUser();
         $recommend = $appUser->recommendedPerson($user);
@@ -215,8 +219,8 @@ class AdminUser extends Model
         return [
             'user' => $user,
             'id' => $id,
-            'iconUrl' => $url,
             'iconPath' => $path,
+            'iconUrl' => $url,
             'recommend' => $recommend,
             'type' => 'update',
         ];
@@ -272,11 +276,14 @@ class AdminUser extends Model
             ] ]);
         }
 
-        $path = storage_path('app/public/user/'. mb_substr($user->email, 0, 2, 'utf-8'). '/'). $user->email. '.gif';
+        // 아이콘 업로드
+        $folder = getIconFolderName($user->created_at);
+        $iconName = getIconName($user->id, $user->created_at);
+        $path = storage_path('app/public/user/'. $folder. '/'). $iconName. '.gif';
         // 아이콘 삭제
         $appUser->iconDelete($request, $path);
         // 아이콘 업로드
-        $appUser->iconUpload($request, $user->email, $path);
+        $appUser->iconUpload($request, $folder, $iconName, $path);
 
         $user->update($toUpdateUserInfo);
     }
@@ -332,24 +339,27 @@ class AdminUser extends Model
                 'signature' => '',
                 'memo' => Carbon::now()->format("Ymd"). ' 삭제함',
             ]);
-        // 포인트 테이블에서 삭제
-        Point::where('user_id', $id)->delete($id);
-        // 그룹접근가능 삭제
-        GroupUser::where('user_id', $id)->delete($id);
-        // 쪽지 삭제
-        Memo::where('send_user_id', $id)->orWhere('recv_user_id', $id)->delete($id);
-        // 스크랩 삭제
-        Scrap::where('user_id', $id)->delete($id);
-        // 관리권한 삭제
-        ManageAuth::where('user_id', $id)->delete($id);
-        // 그룹관리자인 경우 그룹관리자를 공백으로
-        $user = getUser($id);
-        Group::where('admin', $user->email)->update([ 'admin' => '' ]);
-        // 게시판관리자인 경우 게시판관리자를 공백으로
-        Board::where('admin', $user->email)->update([ 'admin' => '' ]);
-        // 아이콘 삭제
-        $path = storage_path('app/public/user/'. mb_substr($user->email, 0, 2, 'utf-8'). '/'). $user->email. '.gif';
-        File::delete($path);
+            // 포인트 테이블에서 삭제
+            Point::where('user_id', $id)->delete($id);
+            // 그룹접근가능 삭제
+            GroupUser::where('user_id', $id)->delete($id);
+            // 쪽지 삭제
+            Memo::where('send_user_id', $id)->orWhere('recv_user_id', $id)->delete($id);
+            // 스크랩 삭제
+            Scrap::where('user_id', $id)->delete($id);
+            // 관리권한 삭제
+            ManageAuth::where('user_id', $id)->delete($id);
+            // 그룹관리자인 경우 그룹관리자를 공백으로
+            $user = getUser($id);
+            Group::where('admin', $user->email)->update([ 'admin' => '' ]);
+            // 게시판관리자인 경우 게시판관리자를 공백으로
+            Board::where('admin', $user->email)->update([ 'admin' => '' ]);
+            // 아이콘 삭제
+            $appUser = new AppUser();
+            $folder = getIconFolderName($user->created_at);
+            $iconName = getIconName($user->id, $user->created_at);
+            $path = storage_path('app/public/user/'. $folder. '/'). $iconName. '.gif';
+            $appUser->iconDelete($request, $path);
         }
     }
 }

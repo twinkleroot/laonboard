@@ -177,13 +177,15 @@ class User extends Authenticatable
             $socials[$sociallogin['provider']] = $sociallogin['social_id'];
         }
 
-        $path = storage_path('app/public/user/'. substr($user->email,0,2). '/'). $user->email. '.gif';
-        $url = '/storage/user/'. substr($user->email,0,2). '/'. $user->email. '.gif';
+        $folder = getIconFolderName($user->created_at);
+        $iconName = getIconName($user->id, $user->created_at);
+        $path = storage_path('app/public/user/'. $folder. '/'). $iconName. '.gif';
+        $url = '/storage/user/'. $folder. '/'. $iconName. '.gif';
 
         $editFormData = [
             'user' => $user,
             'config' => cache("config.join"),
-            'openDate' => cache("config.homepage")->openDate,				// 정보공개 변경 가능 일
+            'openDate' => cache("config.homepage")->openDate,				// 정보공개 변경  가능 일
             'nickChangable' => $this->nickChangable($user, Carbon::now()),  // 닉네임 변경여부
             'openChangable' => $openChangable[0],                           // 정보공개 변경 여부
             'dueDate' => $openChangable[1],                                 // 정보공개 언제까지 변경 못하는지 날짜
@@ -428,11 +430,13 @@ class User extends Authenticatable
             $notification->sendEmailCertify($request->get('email'), $user, $toUpdateUserInfo['nick'], $isEmailChange);
         }
 
-        $path = storage_path('app/public/user/'. substr($email,0,2). '/'). $email. '.gif';
+        $folder = getIconFolderName($user->created_at);
+        $iconName = getIconName($user->id, $user->created_at);
+        $path = storage_path('app/public/user/'. $folder. '/'). $iconName. '.gif';
         // 아이콘 삭제
         $this->iconDelete($request, $path);
         // 아이콘 업로드
-        $this->iconUpload($request, $email, $path);
+        $this->iconUpload($request, $folder, $iconName, $path);
 
         return $user->update($toUpdateUserInfo);
     }
@@ -487,7 +491,7 @@ class User extends Authenticatable
     }
 
     // 아이콘 업로드
-    public function iconUpload($request, $email, $path)
+    public function iconUpload($request, $folder, $iconName, $path)
     {
         if(isset($request->icon)) {
             if(auth()->user()->level < cache('config.join')->iconLevel) {
@@ -495,8 +499,8 @@ class User extends Authenticatable
             }
             $file = $request->icon;
             $fileName = $file->getClientOriginalName();
-            $dir = '/user/'. mb_substr($email, 0, 2, 'utf-8');
-            $storeFileName = $email. '.gif';
+            $dir = '/user/'. $folder;
+            $storeFileName = $iconName. '.gif';
             if ( preg_match("/(\.gif)$/i", $fileName) ) {
                 // 아이콘 용량이 설정값보다 이하만 업로드 가능
                 if (filesize($file) <= cache('config.join')->memberIconSize) {
