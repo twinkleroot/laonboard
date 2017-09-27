@@ -5,27 +5,22 @@
     <h1>{{ $write->subject }}</h1>
     <ul class="bd_rd_info">
         <li class="post_info">
-        @unless($write->iconPath)
-            <i class="fa fa-user"></i>
-        @endunless
         @if($board->use_sideview)
-        @auth
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                 @if(cache('config.join')->useMemberIcon && $write->iconPath)
                 <span class="tt_icon"><img src="{{ $write->iconPath }}" /></span>
+                @else
+                <i class="fa fa-user"></i>
                 @endif
                 <span class="tt_nick">{{ $write->name }}</span>
             </a>
             @component('sideview', ['sideview' => 'board', 'board' => $board, 'write' => $write, 'category' => $currenctCategory])
             @endcomponent
         @else
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $write->name }}</a>
-            @component('sideview', ['sideview' => 'board', 'board' => $board, 'write' => $write, 'category' => $currenctCategory])
-            @endcomponent
-        @endauth
-        @else
             @if(cache('config.join')->useMemberIcon && $write->iconPath)
             <span class="tt_icon"><img src="{{ $write->iconPath }}" /></span>
+            @else
+            <i class="fa fa-user"></i>
             @endif
             <span class="tt_nick">{{ $write->name }}</span>
         @endif
@@ -195,27 +190,22 @@
         <div class="cmt_box @if(strlen($comment->comment_reply)>0) cmt_reply" style="padding-left: calc(25px * {{ strlen($comment->comment_reply) }}); @endif">
             <ul class="bd_rd_cmt_info">
                 <li class="post_info cmt_nick">
-                @unless($comment->iconPath)
-                    <i class="fa fa-user"></i>
-                @endunless
                 @if($board->use_sideview)
-                @auth
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                         @if(cache('config.join')->useMemberIcon && $comment->iconPath)
                         <span class="tt_icon"><img src="{{ $comment->iconPath }}" /></span> <!-- 아이콘 -->
+                        @else
+                        <i class="fa fa-user"></i>
                         @endif
                         <span class="tt_nick">{{ $comment->name }}</span> <!-- 닉네임 -->
                     </a>
                     @component('sideview', ['sideview' => 'board', 'board' => $board, 'write' => $comment, 'category' => $currenctCategory or ''])
                     @endcomponent
                 @else
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">{{ $comment->name }}</a>
-                    @component('sideview', ['sideview' => 'board', 'board' => $board, 'write' => $comment, 'category' => $currenctCategory or ''])
-                    @endcomponent
-                @endauth
-                @else
                     @if(cache('config.join')->useMemberIcon && $comment->iconPath)
                     <span class="tt_icon"><img src="{{ $comment->iconPath }}" /></span> <!-- 아이콘 -->
+                    @else
+                    <i class="fa fa-user"></i>
                     @endif
                     <span class="tt_nick">{{ $comment->name }}</span> <!-- 닉네임 -->
                 @endif

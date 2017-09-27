@@ -31,7 +31,7 @@
                 <td class="subject">닉네임</td>
                 <td>{{ $user->nick }}</td>
                 <td class="subject">가입일</td>
-                <td>@date($user->created_at) ({{ $diffDay }} 일)</td>
+                <td>@unless($user->isSuperAdmin())@date($user->created_at) ({{ $diffDay }} 일)@else 알 수 없음 @endunless</td>
             </tr>
             <tr>
                 <td class="subject">포인트</td>
@@ -41,7 +41,7 @@
             </tr>
             <tr>
                 <td class="subject">최종접속일</td>
-                <td colspan="3">{{ $user->today_login }}</td>
+                <td colspan="3">@unless($user->isSuperAdmin()){{ $user->today_login }}@else 알 수 없음 @endunless</td>
             </tr>
         </tbody>
     </table>

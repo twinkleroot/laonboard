@@ -35,29 +35,30 @@ class SocialLogin extends Model
         return $this->belongsTo(User::class);
     }
 
-    // 소셜로그인 정보 등록
-    public function register($request, $user)
+    public function socialLoginCallback($userFromSocial, $provider)
     {
-        $socialLogin = $this->insertSocialLogins($request->ip(), $request->provider);
+        // 연결된 소셜 로그인 정보가 있는지 확인
+        $socialLogin = SocialLogin::where([
+            'provider' => $provider,
+            'social_id' => $userFromSocial->getId(),
+        ])->first();
 
-        // User 모델과 SocialLogin 모델의 관계를 이용해서 social_logins 테이블에 가입한 user_id와 소셜 데이터 저장.
-        $user->socialLogins()->save($socialLogin);
+        if(is_null($socialLogin)) {
+            // 소셜에서 받아온 데이터를 세션에 저장한다.
+            session()->put('userFromSocial', $userFromSocial);
+            return 'view';
+        } else {
+            // 연결된 소셜 정보에 해당하는 유저로 로그인
+            $this->userToSocialLogin($socialLogin);
+            return 'redirect';
+        }
     }
 
-    public function insertSocialLogins($ip, $provider)
+    // 연결된 소셜 정보에 해당하는 유저로 로그인
+    public function userToSocialLogin($socialLogin)
     {
-        $userFromSocial = session()->get('userFromSocial');
-
-        $id = SocialLogin::insertGetId([
-            'provider' => $provider,
-            'social_id' => $userFromSocial->id,
-            'social_token' => $userFromSocial->token,
-            'ip' => $ip,
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-        ]);
-
-        return SocialLogin::find($id);
+        $userToLogin = $socialLogin->user()->first();
+        Auth::login($userToLogin);
     }
 
     // 소셜 로그인 다음 단계를 위한 파라미터를 가져온다.
@@ -86,29 +87,29 @@ class SocialLogin extends Model
         ];
     }
 
-    public function socialLoginCallback($userFromSocial, $provider)
+    // 소셜로그인 정보 등록
+    public function register($request, $user)
     {
-        // 연결된 소셜 로그인 정보가 있는지 확인
-        $socialLogin = SocialLogin::where([
+        $socialLogin = $this->insertSocialLogins($request->ip(), $request->provider);
+
+        // User 모델과 SocialLogin 모델의 관계를 이용해서 social_logins 테이블에 가입한 user_id와 소셜 데이터 저장.
+        $user->socialLogins()->save($socialLogin);
+    }
+
+    public function insertSocialLogins($ip, $provider)
+    {
+        $userFromSocial = session()->get('userFromSocial');
+
+        $id = SocialLogin::insertGetId([
             'provider' => $provider,
-            'social_id' => $userFromSocial->getId(),
-        ])->first();
+            'social_id' => $userFromSocial->id,
+            'social_token' => $userFromSocial->token,
+            'ip' => $ip,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
 
-        if(is_null($socialLogin)) {
-            // 소셜에서 받아온 데이터를 세션에 저장한다.
-            session()->put('userFromSocial', $userFromSocial);
-            return 'view';
-        } else {
-            // 연결된 소셜 정보에 해당하는 유저로 로그인
-            $this->userToSocialLogin($socialLogin);
-            return 'redirect';
-        }
+        return SocialLogin::find($id);
     }
 
-    // 연결된 소셜 정보에 해당하는 유저로 로그인
-    public function userToSocialLogin($socialLogin)
-    {
-        $userToLogin = $socialLogin->user()->first();
-        Auth::login($userToLogin);
-    }
 }

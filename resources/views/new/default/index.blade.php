@@ -131,5 +131,15 @@ function confirmDel() {
     $("#listForm").submit();
 }
 
+$(document).ready(function(){
+    $('#groupId').change(function() {
+        var gId = $('#groupId').val();
+        if(gId) {
+            location.href = '/news?groupId=' + gId;
+        } else {
+            location.href = '/news';
+        }
+    });
+});
 </script>
 @endsection

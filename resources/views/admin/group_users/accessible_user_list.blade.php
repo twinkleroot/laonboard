@@ -79,8 +79,7 @@
                         </td>
                         <td class="td_subject">{{ $user->email }}</td>
                         <td class="td_nick">
-                            {{-- {{ $user->nick }} --}}
-                            @component('admin.sideview', ['id' => $user->id, 'nick' => $user->nick, 'email' => $user->email])
+                            @component('admin.sideview', ['id' => $user->id, 'nick' => $user->nick, 'email' => $user->email, 'created_at' => $user->created_at])
                             @endcomponent
                         </td>
                         <td class="td_date">@date($user->today_login)</td>

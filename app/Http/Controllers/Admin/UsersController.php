@@ -99,9 +99,12 @@ class UsersController extends Controller
             abort(403, '회원 정보 수정에 대한 권한이 없습니다.');
         }
 
-        $user = AdminUser::getUser($id);
+        $user = AdminUser::find($id);
         if(!$user) {
-            return alertRedirect('존재하지 않는 회원입니다.', '/admin/index');
+            $user = AdminUser::whereIdHashkey($id)->first();
+            if(!$user) {
+                return alertRedirect('존재하지 않는 회원입니다.', '/admin/index');
+            }
         }
 
         $params = $this->userModel->editParams($user, $id);
