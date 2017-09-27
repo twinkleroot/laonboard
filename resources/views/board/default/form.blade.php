@@ -8,7 +8,11 @@
 @endsection
 
 @section('include_script')
+@if(isMobile())
+<script src="https://cloud.tinymce.com/dev/tinymce.min.js"></script>
+@else
 <script src="{{ ver_asset('tinymce/tinymce.min.js') }}"></script>
+@endif
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 @endsection
 
@@ -281,14 +285,23 @@ tinymce.init({
     language: 'ko_KR',
     branding: false,
     theme: "modern",
+    mobile: {
+        theme: 'beta-mobile',
+        plugins: ['autosave', 'lists'],
+        toolbar: [ 'undo', 'redo', 'fontsizeselect', 'forecolor', 'bold', 'italic', 'underline', 'bullist', 'numlist', 'removeformat' ],
+    },
     skin: "lightgray",
     height: 400,
     min_height: 400,
     min_width: 400,
-    selection_toolbar: 'bold italic | quicklink h2 h3 blockquote',
-    plugins: 'link,autolink,image,imagetools,textcolor,lists,pagebreak,table,save,insertdatetime,preview,media,searchreplace,print,contextmenu,directionality,fullscreen,noneditable,visualchars,',
+    plugins: [
+        'advlist autolink lists link charmap print preview anchor textcolor',
+        'searchreplace visualblocks code fullscreen',
+        'insertdatetime table contextmenu paste code help'
+    ],
     menubar: false,
-    toolbar: "undo redo | fontselect | fontsizeselect | forecolor backcolor bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table link media customImage",
+    toolbar1: "insert | formatselect fontselect fontsizeselect | forecolor backcolor bold italic underline removeformat | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+    toolbar2: "undo redo | customImage table code | preview fullscreen print | help",
     fontsize_formats: "8pt 10pt 12pt 14pt 18pt 24pt 36pt",
     relative_urls: false,
     setup: function(editor) {
