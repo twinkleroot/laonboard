@@ -477,6 +477,9 @@
     display: block;
     clear: both;
 }
+.content_move:first-child {
+    margin-top: 15px;
+}
 .bd_rd_count {
     text-align: center;
     font-size: 0;
