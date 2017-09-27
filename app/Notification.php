@@ -100,13 +100,16 @@ class Notification
     {
         // 에디터로 업로드한 이미지 경로를 추출한다.
         $imgPattern = "/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i";
-        $srcPattern = "/src=[\"']?([^>\"']+)[\"']?[^>]/i";
 
         preg_match_all($imgPattern, $content, $matches);
 
         for($i=0; $i<count($matches[1]); $i++) {
-            $sourcePath = "src=\"". env('APP_URL'). $matches[1][0]. "\" style=\"width:100%;\"";
+            $divImage1 = explode('.', basename($matches[1][$i]));
+            $divImage2 = explode('_', $divImage1[0]);
+            $realImageName = str_replace("thumb-", "", $divImage2[0]). '.'. last($divImage1);
 
+            $sourcePath = "src=\"". env('APP_URL'). $matches[1][$i]. "\" style=\"max_width:100%;\"";
+            $srcPattern = "/src=[\"']?([^>\"']+){$realImageName}[\"']?[^>]/i";
             $content = preg_replace($srcPattern, $sourcePath, $content);
         }
 
