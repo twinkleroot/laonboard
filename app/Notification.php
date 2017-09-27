@@ -108,7 +108,7 @@ class Notification
             $divImage2 = explode('_', $divImage1[0]);
             $realImageName = str_replace("thumb-", "", $divImage2[0]). '.'. last($divImage1);
 
-            $sourcePath = "src=\"". env('APP_URL'). $matches[1][$i]. "\" style=\"max_width:100%;\"";
+            $sourcePath = "src=\"". env('APP_URL'). $matches[1][$i]. "\" style=\"max-width:100%;\"";
             $srcPattern = "/src=[\"']?([^>\"']+){$realImageName}[\"']?[^>]/i";
             $content = preg_replace($srcPattern, $sourcePath, $content);
         }
