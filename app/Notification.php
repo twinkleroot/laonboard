@@ -16,6 +16,7 @@ class Notification
     public function sendWriteNotification($writeModel, $writeId)
     {
         $board = $writeModel->board;
+        $user = auth()->check() ? auth()->user() : new User();
         $boardAdmin = $board->admin;    // 게시판 관리자
         $groupAdmin = $board->group->admin;		// 그룹 관리자
         $superAdmin = Cache::get('config.homepage')->superAdmin;    // 최고 관리자
@@ -62,12 +63,31 @@ class Notification
         if($mailConfig->emailWriter) {
             $arrayEmail[] = $parentWrite->email;
         }
+        // 댓글 쓴 모든이에게 메일 발송이 되어 있다면 (자신에게는 발송하지 않는다)
+        if($mailConfig->emailAllCommenter) {
+            $commenters = $writeModel
+                        ->whereNotIn('email', [$write->email, $user->email, ''])
+                        ->where('parent', $write->parent)
+                        ->select('email')
+                        ->distinct()
+                        ->get();
+            foreach($commenters as $commenter) {
+                $arrayEmail[] = $commenter->email;
+            }
+        }
          // 옵션에 메일받기가 체크되어 있다면
         if(strstr($parentWrite['option'], 'mail')) {
             $arrayEmail[] = $parentWrite->email;
         }
         // null값과 중복된 메일 주소 제거
         $uniqueEmail = array_values(array_unique(array_filter($arrayEmail)));
+
+        // 현재 사용자가 최고관리자이면 최고관리자에게는 메일을 발송하지 않는다.
+        if($user->isSuperAdmin()) {
+            $uniqueEmail = array_where($uniqueEmail, function ($value, $key) use($superAdmin) {
+                return $value != $superAdmin;
+            });
+        }
 
         foreach($uniqueEmail as $to) {
             $toUser = User::where('email', $to)->first();
