@@ -78,6 +78,10 @@ div {
     display: block;
     clear: both;
 }
+#header .header_ctg ul li.on {
+    background: #395ac1;
+    color: #fff;
+}
 
 .btn-sir {
 	color: #fff !important;

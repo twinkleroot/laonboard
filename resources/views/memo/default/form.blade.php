@@ -37,7 +37,7 @@
         <ul class="container">
             <li><a href="{{ route('memo.index') }}?kind=recv">받은쪽지</a></li>
             <li><a href="{{ route('memo.index') }}?kind=send">보낸쪽지</a></li>
-            <li><a href="{{ route('memo.create') }}">쪽지쓰기</a></li>
+            <li class="on"><a href="{{ route('memo.create') }}">쪽지쓰기</a></li>
         </ul>
     </div>
 </div>
