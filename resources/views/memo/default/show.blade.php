@@ -38,8 +38,8 @@
     </div>
     <div class="header_ctg">
         <ul class="container">
-            <li><a href="{{ route('memo.index') }}?kind=recv">받은쪽지</a></li>
-            <li><a href="{{ route('memo.index') }}?kind=send">보낸쪽지</a></li>
+            <li @if($kind == 'recv')class="on"@endif><a href="{{ route('memo.index') }}?kind=recv">받은쪽지</a></li>
+            <li @if($kind == 'send')class="on"@endif><a href="{{ route('memo.index') }}?kind=send">보낸쪽지</a></li>
             <li><a href="{{ route('memo.create') }}">쪽지쓰기</a></li>
         </ul>
     </div>
