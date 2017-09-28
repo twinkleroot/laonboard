@@ -131,7 +131,7 @@
             </div>
 
             {{-- 페이지 처리 --}}
-            {{ $writes->links() }}
+            {{ $writes->appends(Request::except('page'))->withPath('searches')->links() }}
         </div>
     </div>
 </div>
