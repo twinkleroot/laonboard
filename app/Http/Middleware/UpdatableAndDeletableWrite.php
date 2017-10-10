@@ -123,10 +123,10 @@ class UpdatableAndDeletableWrite
         $commentCount = $writeModel->where('user_id', '<>', $write->user_id)
                         ->where(['parent' => $write->id, 'is_comment' => 1])
                         ->count('id');
-        if($isDelete && $commentCount >= $board->count_delete) {
+        if($isDelete && $board->count_delete && $commentCount >= $board->count_delete) {
             abort(500, '이 글과 관련된 댓글이 존재하므로 삭제할 수 없습니다.\\n\\댓글이 '. $board->count_delete. '건 이상 달린 원글은 삭제할 수 없습니다.');
         }
-        if(!$isDelete && $commentCount >= $board->count_modify) {
+        if(!$isDelete && $board->count_modify && $commentCount >= $board->count_modify) {
             abort(500, '이 글과 관련된 댓글이 존재하므로 수정할 수 없습니다.\\n\\댓글이 '. $board->count_modify. '건 이상 달린 원글은 수정할 수 없습니다.');
         }
     }

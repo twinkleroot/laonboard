@@ -79,7 +79,7 @@ class Board extends Model
         if($order) {
             $query = $query->orderBy('boards.'. $order, $direction);
         } else {
-            $query = $query->orderBy('order', 'group_id', 'table_name');
+            $query = $query->orderBy('order')->orderBy('group_id')->orderBy('table_name');
         }
 
         $boards = $query->paginate(cache("config.homepage")->pageRows);

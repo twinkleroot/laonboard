@@ -4,6 +4,7 @@
     // 상수
     'IP_DISPLAY' => '\\1.♡.\\3.\\4',
     'VER' => Carbon\Carbon::now()->format('Ymd').'-3',
+    'URL_REGEX' => '/(http(s)?\:\/\/)?[0-9a-zA-Z]+([\.\-]+[0-9a-zA-Z]+)*(:[0-9]+)?(\/?(\/[\.\w]*)+)?(([\?\&\=][\w]+)+)?/',
 
     // 홈페이지 기본 환경 설정
     'title' => '라라벨게시판',
@@ -14,6 +15,7 @@
     'openDate' => 0,
     'newDel' => 30,
     'memoDel' => 180,
+    'informDel' => 60,
     'popularDel' => 180,
     'newRows' => 15,
     'pageRows' => 10,

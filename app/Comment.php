@@ -294,9 +294,9 @@ class Comment
     }
 
     // 댓글 삭제
-    public function deleteComment($writeModel, $boardId, $commentId)
+    public function deleteComment($writeModel, $boardName, $commentId)
     {
-        $board = Board::getBoard($boardId);
+        $board = Board::getBoard($boardName, 'table_name');
         $comment = $writeModel->find($commentId);
         $write = $writeModel->find($comment->parent);
 

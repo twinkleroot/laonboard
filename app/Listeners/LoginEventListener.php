@@ -48,12 +48,18 @@ class LoginEventListener
             session()->put('admin', false);
         }
 
-        // 보낸 쪽지, 받은 쪽지가 기준 일이 지나면 자동 삭제
-        $memoDel = cache('config.homepage')->memoDel;
+        // 보낸 쪽지, 받은 쪽지가 기본환경설정에서 설정한 기간이 지나면 삭제되도록.
         Memo::orWhere('recv_user_id', $event->user->id)
             ->where('send_user_id', $event->user->id)
-            ->where('send_timestamp', '<', Carbon::now()->subDays($memoDel))
+            ->where('send_timestamp', '<', Carbon::now()->subDays(cache('config.homepage')->memoDel))
             ->delete();
+
+        // 알림이 기본환경설정에서 설정한 기간이 지나면 삭제되도록.
+        $informs = auth()->user()->notifications
+                ->where('created_at', '<', Carbon::now()->subDays(cache('config.homepage')->informDel));
+        foreach($informs as $inform) {
+            $inform->delete();
+        }
 
         // 회원 가입인 경우($isUserJoin == true) 로그인 포인트를 부여하지 않음.
         if( !$this->isUserJoin($event->user) ) {

@@ -8,12 +8,12 @@
 @endsection
 
 @section('include_script')
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 @if(isMobile())
 <script src="https://cloud.tinymce.com/dev/tinymce.min.js"></script>
 @else
 <script src="{{ ver_asset('tinymce/tinymce.min.js') }}"></script>
 @endif
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 @endsection
 
 @section('content')
@@ -32,7 +32,7 @@
     @else
         <form role="form" id="fwrite" method="post" action={{ route('board.store', $board->table_name) }} enctype="multipart/form-data" @if(auth()->guest() || !auth()->user()->isBoardAdmin($board)) onsubmit="return writeSubmit();" @endif>
     @endif
-
+        <input type="hidden" name="type" id="type" value="{{ $type }}" />
         <input type="hidden" name="writeId" id="writeId" @if($type != 'create') value="{{ $write->id }}" @endif/>
         <input type="hidden" name="uid" id="uid" value="{{ str_replace("/", "-", substr(bcrypt(date('ymdHis', time())), 10, 60)) }}" />
         {{ csrf_field() }}
@@ -42,7 +42,7 @@
         @if( ($type == 'create' && auth()->guest() )
             || ($type == 'update' && auth()->guest())
             || ($type == 'update' && !auth()->user()->isBoardAdmin($board) && $write->user_id != auth()->user()->id)
-            || ($type == 'reply' && $level >= $board->reply_level) )
+            || ($type == 'reply' && auth()->guest()) )
         <div class="nologin">
             <div class="form-group mb10 row @if($errors->get('name'))has-error @endif">
                 <div class="col-sm-3">

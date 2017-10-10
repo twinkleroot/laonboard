@@ -159,7 +159,7 @@ class Theme
         }
         $config->updateConfig(['content' => $request->contentSkin ? : 'default'], 'skin', 1);
         // 최신 게시물(메인에 노출되는) 스킨 변경
-        $config->updateConfig(['latestSkin' => $request->latestSkin ? : 'default'], 'skin', 1);
+        $config->updateConfig(['latest' => $request->latestSkin ? : 'default'], 'skin', 1);
         // 홈페이지 레이아웃 스킨 변경
         $config->updateConfig(['layout' => $request->layoutSkin ? : 'default'], 'skin', 1);
         // 메일 양식 스킨 변경

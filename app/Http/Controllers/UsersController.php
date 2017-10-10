@@ -130,7 +130,7 @@ class UsersController extends Controller
             $rules = array_add($rules, 'name', 'alpha_dash|nullable');
         }
         if($this->config->homepage) {
-            $rules = array_add($rules, 'homepage', 'regex:/^(http(s)?\:\/\/)?[0-9a-zA-Z]+([\.\-][0-9a-zA-Z]+)*(:[0-9]+)?(\/?(\/[\.\w]*)+)?$/|nullable');
+            $rules = array_add($rules, 'homepage', 'regex:'. config('gnu.URL_REGEX'). '|nullable');
         }
         if($this->config->tel) {
             $rules = array_add($rules, 'tel', 'regex:/^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/|nullable');
@@ -197,7 +197,7 @@ class UsersController extends Controller
         return alertRedirect('인증메일을 '. $result. ' 메일로 다시 보내드렸습니다.\\n\\잠시후 '. $result. ' 메일을 확인하여 주십시오.');
     }
 
-    // 개인 별 포인트 목록
+    // 회원 포인트 내역
     public function pointList($id)
     {
         if(!auth()->check() || auth()->user()->id_hashkey != $id) {

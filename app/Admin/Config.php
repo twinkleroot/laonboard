@@ -73,7 +73,7 @@ class Config extends Model
             'configSns' => cache("config.sns"),
             'configExtra' => get_object_vars(cache("config.extra")),
             'admins' => $admins,
-            'latestSkins' => getSkins('latest'),
+            'newSkins' => getSkins('new'),
             'searchSkins' => getSkins('search'),
             'userSkins' => getSkins('user'),
         ];
@@ -123,6 +123,7 @@ class Config extends Model
             'openDate' => config('gnu.openDate'),
             'newDel' => config('gnu.newDel'),
             'memoDel' => config('gnu.memoDel'),
+            'informDel' => config('gnu.informDel'),
             'popularDel' => config('gnu.popularDel'),
             'newRows' => config('gnu.newRows'),
             'pageRows' => config('gnu.pageRows'),
@@ -321,7 +322,6 @@ class Config extends Model
     {
         // DB엔 안들어가는 값은 데이터 배열에서 제외한다.
         $data = array_except($data, ['_token', '_method']);
-
         if($name) {
             Cache::forget("config.$name");
             return $this->updateConfigByOne($name, $data);
@@ -347,6 +347,7 @@ class Config extends Model
             'openDate' => $data['openDate'],
             'newDel' => $data['newDel'],
             'memoDel' => $data['memoDel'],
+            'informDel' => $data['informDel'],
             'popularDel' => $data['popularDel'],
             'newRows' => $data['newRows'],
             'pageRows' => $data['pageRows'],

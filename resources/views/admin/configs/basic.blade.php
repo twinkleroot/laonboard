@@ -146,6 +146,13 @@
                 </td>
             </tr>
             <tr>
+                <th>알림 삭제</th>
+                <td class="table_body chknone">
+                    <input type="text" name="informDel" class="form-control form_num" value="{{ $configHomepage->informDel }}">
+                    <span class="help-block">설정일이 지난 알림 자동 삭제</span>
+                </td>
+            </tr>
+            <tr>
                 <th>인기검색어 삭제</th>
                 <td class="table_body chknone">
                     <input type="text" name="popularDel" class="form-control form_num" value="{{ $configHomepage->popularDel }}">
@@ -153,7 +160,7 @@
                 </td>
             </tr>
             <tr>
-                <th>최근게시물 라인수</th>
+                <th>새글 라인수</th>
                 <td class="table_body chknone">
                     <input type="text" name="newRows" class="form-control form_num" value="{{ $configHomepage->newRows }}">라인
                     <span class="help-block">목록 한 페이지당 라인수</span>
@@ -186,10 +193,10 @@
                 </td>
             </tr> --}}
             <tr>
-                <th>최근게시물 스킨</th>
+                <th>새글 스킨</th>
                 <td class="table_body chknone">
                     <select name="newSkin" class="form-control form_middle">
-                        @foreach($latestSkins as $key => $value)
+                        @foreach($newSkins as $key => $value)
                             <option value='{{ $key }}' @if($configHomepage->newSkin == $key) selected @endif>
                                 {{ $value }}
                             </option>

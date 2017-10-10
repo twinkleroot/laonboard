@@ -21,8 +21,8 @@ class CheckValidWrite
         $board = Board::getBoard($request->boardName, 'table_name');
         $write = Write::getWrite($board->id, $request->writeId);
 
-        if(! $write) {
-            return alert('글이 존재하지 않습니다.\\n글이 삭제되었거나 이동하였을 수 있습니다.');
+        if( !$write ) {
+            return alertRedirect('글이 존재하지 않습니다.\\n글이 삭제되었거나 이동하였을 수 있습니다.', "/bbs/{$request->boardName}");
         }
 
         return $next($request);

@@ -9,9 +9,48 @@ use App\Mail\WriteNotification;
 use App\Mail\CongratulateJoin;
 use App\Mail\JoinNotification;
 use App\Mail\EmailCertify;
+use App\Notifications\InvoiceWrited;
+use Illuminate\Support\Facades\Notification as Inform;
 
 class Notification
 {
+    // 알림 보내기(데이터베이스 알림 사용)
+    public function sendInform($writeModel, $writeId)
+    {
+        $board = $writeModel->board;
+        $write = $writeModel->find($writeId);
+        $parentWrite = $write->id == $write->parent ? $write : $writeModel->find($write->parent);
+        $userEmail = [
+            $board->admin,  // 게시판 관리자
+            $board->group->admin,   // 그룹 관리자
+            $superAdmin = Cache::get('config.homepage')->superAdmin,    // 최고 관리자
+            $parentWrite->email,    // 원글 게시자
+        ];
+
+        // 하위 댓글이라면 상위 댓글 쓴 사람에게도 알림 전송
+        $commentLevel = mb_strlen($write->comment_reply, 'UTF-8');
+        if($commentLevel > 0) {
+            $parentCommentReply = mb_substr($write->comment_reply, 0, $commentLevel-2, 'UTF-8');
+            $upperComment = $writeModel->where([
+                                    'comment_reply' => $parentCommentReply,
+                                    'parent' => $write->parent,
+                                    'comment' => $write->comment
+                                ])->first();
+            $userEmail[] = $upperComment->email;
+        }
+        $uniqueEmail = array_values(array_unique(array_filter($userEmail)));
+        if(auth()->check()) {
+            $currentUserEmail = auth()->user()->email;
+            $uniqueEmail = array_where($uniqueEmail, function ($value, $key) use ($currentUserEmail){
+                return $value != $currentUserEmail;
+            });
+        }
+
+        $users = User::whereIn('email', $uniqueEmail)->get();
+
+        Inform::send($users, new InvoiceWrited($board, $write->id));
+    }
+
     // 글쓰기 후 알림 메일 보내기
     public function sendWriteNotification($writeModel, $writeId)
     {

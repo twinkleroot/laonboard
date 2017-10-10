@@ -191,11 +191,14 @@ class WritesController extends Controller
             }
         }
 
+        $notification = new Notification();
         // 기본환경설정에서 이메일 사용을 하고, 해당 게시판에서 메일발송을 사용하고, 글쓴이가 답변메일을 받겠다고 하면
         if(cache('config.email.default')->emailUse && $this->writeModel->board->use_email && $request->mail == 'mail') {
-            $notification = new Notification();
             $notification->sendWriteNotification($this->writeModel, $write->id);
         }
+
+        // 알림 전송
+        $notification->sendInform($this->writeModel, $write->id);
 
         return redirect(route('board.view', ['boardId' => $boardName, 'writeId' => $write->id] ));
     }
@@ -259,7 +262,7 @@ class WritesController extends Controller
         $this->writeModel->updateWrite($this->writeModel, $request, $writeId, $fileCount);
 
         $queryString = $request->filled('queryString') ? '?'. $request->queryString : '';
-        
+
         $returnUrl = route('board.view', ['boardId' => $boardName, 'writeId' => $writeId] ). $queryString;
 
         return redirect($returnUrl);
@@ -344,11 +347,11 @@ class WritesController extends Controller
     {
         return [
             'email' => 'email|max:255|nullable',
-            'homepage' => 'regex:/^(http(s)?\:\/\/)?[0-9a-zA-Z]+([\.\-][0-9a-zA-Z]+)*(:[0-9]+)?(\/?(\/[\.\w]*)+)?$/|nullable',
+            'homepage' => 'regex:'. config('gnu.URL_REGEX'). '|nullable',
             'subject' => 'required|max:255',
             'content' => 'required',
-            'link1' => 'regex:/^(http(s)?\:\/\/)?[0-9a-zA-Z]+([\.\-][0-9a-zA-Z]+)*(:[0-9]+)?(\/?(\/[\.\w]*)+)?$/|nullable',
-            'link2' => 'regex:/^(http(s)?\:\/\/)?[0-9a-zA-Z]+([\.\-][0-9a-zA-Z]+)*(:[0-9]+)?(\/?(\/[\.\w]*)+)?$/|nullable',
+            'link1' => 'regex:'. config('gnu.URL_REGEX'). '|nullable',
+            'link2' => 'regex:'. config('gnu.URL_REGEX'). '|nullable',
         ];
     }
 

@@ -714,7 +714,6 @@ class Write extends Model
 
         // 글 답변일 때 num과 reply 값 변경
         if($request->type == 'reply') {
-
             $write = Write::getWrite($this->board->id, $request->writeId);
 
             if($request->filled('secret')) {

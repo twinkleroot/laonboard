@@ -79,7 +79,7 @@ Route::get('users/certify/id/{id}/crypt/{crypt}', ['as' => 'user.email.certify',
 Route::post('users/existDatas', ['as' => 'user.existData', 'uses' => 'UsersController@existData']);
 
 // 내용관리
-Route::get('contents/{id}', ['as' => 'content.show', 'uses' => 'ContentsController@show']);
+Route::get('contents/{contentId}', ['as' => 'content.show', 'uses' => 'ContentsController@show']);
 
 // 처리 결과 메세지를 alert창으로 알려주는 페이지
 Route::get('messages', ['as' => 'message', 'uses' => 'MessagesController@message']);
@@ -101,6 +101,12 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('users/leave', ['as' => 'user.leave', 'uses' => 'UsersController@leave']);
     // 회원 포인트 내역
     Route::get('users/point/{id}', ['as' => 'user.point', 'uses' => 'UsersController@pointList']);
+    // 회원 알림 내역
+    Route::get('users/inform', ['as' => 'user.inform', 'uses' => 'InformsController@index']);
+    // 회원 알림 읽음 표시
+    Route::post('users/inform/{ids}', ['as' => 'user.inform.markAsRead', 'uses' => 'InformsController@markAsRead']);
+    // 회원 알림 내역 삭제
+    Route::delete('users/inform/{ids?}', ['as' => 'user.inform.destroy', 'uses' => 'InformsController@destroy']);
     // 회원 정보 수정 - 소셜 로그인 계정 연결 해제
     Route::post('users/disconnectSocialAccount', ['as' => 'user.disconnectSocialAccount', 'uses' => 'UsersController@disconnectSocialAccount']);
 

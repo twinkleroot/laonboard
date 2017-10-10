@@ -97,7 +97,7 @@
                             <a href="{{ route('board.index', $new->table_name) }}">{{ $new->subject }}</a>
                         </td>
                         <td class="td_subject">
-                            <a href="/bbs/{{ $new->table_name}}/views/{{ $new->write_parent. $new->commentTag }}">{{ subjectLength($new->write->subject, 100) }}</a>
+                            <a href="/bbs/{{ $new->table_name}}/views/{{ $new->write_parent. $new->commentTag }}">{{ $new->writeSubject }}</a>
                         </td>
                         <td class="td_nick">
                             @component('admin.sideview', ['id' => $new->user_id, 'nick' => $new->name, 'email' => $new->user_email, 'created_at' => $new->user_created_at])

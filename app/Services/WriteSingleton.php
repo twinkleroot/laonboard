@@ -15,7 +15,9 @@ class WriteSingleton
             $board = Board::getBoard($boardId);
             $writeModel->setTableName($board->table_name);
             $write = $writeModel->find($writeId);
-            $write->board_id = $board->id;
+            if($write) {
+                $write->board_id = $board->id;
+            }
         }
 
         return $write;

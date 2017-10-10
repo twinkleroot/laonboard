@@ -684,6 +684,9 @@ class User extends Authenticatable
     // 비밀번호 조합 정책에 따른 유효성 검사 메세지 추가
     public function addPasswordMessages($messages)
     {
+        if(!isset($messages['password.regex'])) {
+            $messages['password.regex'] = '';
+        }
         if(cache("config.join")->passwordPolicyUpper) {
             $messages['password.regex'] .= '대문자 1개 이상';
         }
@@ -705,6 +708,87 @@ class User extends Authenticatable
         $messages['password.regex'] .= cache("config.join")->passwordPolicyDigits. '자리 이상의 문자열로 입력해 주세요.';
 
         return $messages;
+    }
+
+    // 알림 내역 가져오기
+    public function getInforms($request=null)
+    {
+        $informs;
+        if(isset($request) && $request->filled('read')) {
+            if($request->read == 'y') {
+                $informs = auth()->user()->readNotifications;
+            } else {
+                $informs = auth()->user()->unreadNotifications;
+            }
+        } else {
+            $informs = auth()->user()->notifications;
+        }
+
+        $boardList = [];
+        $userList = [];
+        foreach($informs as $inform) {
+            $item = $inform->data;
+            $boardList = $this->addBoardList($boardList, $item);
+            $userList = $this->addUserList($userList, $item);
+            $board = $boardList[$item['tableName']];
+            $boardSubject = $board->subject;
+            $nick = $userList[$item['writeUser']]->nick;
+            $parentSubject = subjectLength($item['parentSubject'], 10);
+            $writeSubject = subjectLength($item['subject'], 10);
+            if($item['isComment']) {
+                $inform->subject = "{$nick}님이 {$boardSubject}게시판의 [{$parentSubject}] 글에 댓글 [{$writeSubject}]을 남기셨습니다.";
+            } else {
+                if($item['reply']) {
+                    $inform->subject = "{$nick}님이 {$boardSubject}게시판에 답변글 [{$writeSubject}]을 남기셨습니다.";
+                } else {
+                    $inform->subject = "{$nick}님이 {$boardSubject}게시판에 글 [{$writeSubject}]을 남기셨습니다.";
+                }
+            }
+
+        }
+
+        return $informs;
+    }
+
+    // 한 페이지에서 한 게시판 및 그룹은 한번만 불러오도록 게시판 리스트를 만들어서 가져다 쓴다.
+    public function addBoardList($boardList, $inform)
+    {
+        if( !array_key_exists($inform['tableName'], $boardList) ) {
+            return array_add($boardList, $inform['tableName'], Board::getBoard($inform['tableName'], 'tableName'));
+        }
+
+        return $boardList;
+    }
+
+    // 한 페이지에서 한 사용자는 한번만 불러오도록 사용자 리스트를 만들어서 가져다 쓴다.
+    public function addUserList($userList, $inform)
+    {
+        if( !array_key_exists($inform['writeUser'], $userList) ) {
+            return array_add($userList, $inform['writeUser'], $inform['writeUser'] ? static::getUser($inform['writeUser']) : new User());
+        }
+
+        return $userList;
+    }
+
+    // 회원 알림 읽음 표시
+    public function markAsReadInforms($ids)
+    {
+        $informs = $this->getInforms();
+        $selectInforms = $informs->whereIn('id', $ids)->markAsRead();
+    }
+
+    // 회원 알림 내역 삭제
+    public function destroyInforms($ids)
+    {
+        $informs = $this->getInforms();
+        $selectInforms = $informs;
+        if($ids) {
+            $selectInforms = $informs->whereIn('id', $ids);
+        }
+
+        foreach($selectInforms as $inform) {
+            $inform->delete();
+        }
     }
 
 }

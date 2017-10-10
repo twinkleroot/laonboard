@@ -61,11 +61,14 @@ class CommentsController extends Controller
 
         $comment = $this->comment->storeComment($this->writeModel, $request);
 
+        $notification = new Notification;
         // 기본환경설정에서 이메일 사용을 하고, 해당 게시판에서 메일발송을 사용하면
         if(cache('config.email.default')->emailUse && $this->writeModel->board->use_email) {
-            $notification = new Notification;
             $notification->sendWriteNotification($this->writeModel, $comment->id);
         }
+
+        // 알림 전송
+        $notification->sendInform($this->writeModel, $comment->id);
 
         return redirect($request->requestUri. '#comment'. $comment->id);
     }

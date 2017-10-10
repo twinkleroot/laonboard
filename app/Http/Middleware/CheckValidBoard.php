@@ -20,7 +20,7 @@ class CheckValidBoard
     {
         $board = Board::getBoard($request->boardName, 'table_name');
         if(!$board) {
-            return alert('존재하지 않는 게시판입니다. 경로를 확인해 주세요.');
+            return alertRedirect('존재하지 않는 게시판입니다. 경로를 확인해 주세요.');
         }
 
         $group = $board->group;

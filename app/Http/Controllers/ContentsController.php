@@ -18,12 +18,12 @@ class ContentsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  string  $contentId
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($contentId)
     {
-        $params = $this->content->getContentView($id);
+        $params = $this->content->getContentView($contentId);
         // Open Graph image 추출
         $params = array_add($params, 'ogImage', pullOutImage($params['content']->content));
 

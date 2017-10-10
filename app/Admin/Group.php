@@ -70,7 +70,7 @@ class Group extends Model
         if($order) {
             $query = $query->orderBy($order, $direction);
         } else {
-            $query = $query->orderBy('group_id');
+            $query = $query->orderBy('order')->orderBy('group_id');
         }
 
         $groups = $query->paginate(cache('config.homepage')->pageRows);

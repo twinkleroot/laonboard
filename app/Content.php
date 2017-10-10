@@ -21,9 +21,9 @@ class Content extends Model
     }
 
     // 내용 상세 데이터 가져오기
-    public function getContentView($id)
+    public function getContentView($contentId)
     {
-        $content = Content::where('content_id', $id)->first();
+        $content = Content::where('content_id', $contentId)->first();
         $path = storage_path('app/public/content/'. $content->content_id);
         $existHeadImage = File::exists($path. '_h');
         $existTailImage = File::exists($path. '_t');
