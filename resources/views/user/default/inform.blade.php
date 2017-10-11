@@ -17,11 +17,12 @@
         <span>전체 알림 총 {{ count($informs) }} 건</span>
     </div>
     <form id="deleteAllForm" action="{{ route('user.inform.destroy') }}" method="POST">
-    <div class="bd_btn">
-        <button type="" class="btn btn-danger" onclick="delPost('deleteAllForm')">모든알림삭제</button>
-            {{ csrf_field() }}
-            {{ method_field('DELETE') }}
-    </div>
+        {{ csrf_field() }}
+        {{ method_field('DELETE') }}
+        <input type="hidden" name="delType" value="all" />
+        <div class="bd_btn">
+            <button type="button" class="btn btn-danger" onclick="delPost('deleteAllForm')">모든알림삭제</button>
+        </div>
     </form>
     <div class="alert">
          알림 보관 기간은 {{ cache('config.homepage')->informDel }}일 입니다.
@@ -29,14 +30,15 @@
     @php
         $ids = '';
     @endphp
-    <form id="inform" action="{{ route('user.inform.markAsRead', $ids) }}" method="POST">
+    <form id="inform" action="/users/inform" method="POST">
         {{ csrf_field() }}
-        {{-- {{ method_field('DELETE') }} --}}
+        <input type="hidden" id="_method" name="_method" value="" />
+        <input type="hidden" id="ids" name="ids" value="" />
     <div class="pull-left bd_btn">
         <ul>
-            <li><button type="button" class="btn btn-default" onclick="check_all()">전체선택</button></li>
-            <li><button type="button" class="btn btn-default" id="selected_delete">선택삭제</button></li>
-            <li><button type="button" class="btn btn-default" id="selected_mark">읽음표시</button></li>
+            <li><button type="button" class="btn btn-default" onclick="checkEverything()">전체선택</button></li>
+            <li><button type="button" class="btn btn-default" id="selectedDelete">선택삭제</button></li>
+            <li><button type="button" class="btn btn-default" id="selectedMark">읽음표시</button></li>
         </ul>
     </div>
     <div class="bd_btn">
@@ -50,7 +52,7 @@
         <tbody>
             @forelse($informs as $inform)
             <tr>
-                <td class="td_chk"><input type="checkbox" name="chkId[]" class="informId" value='{{ $inform->id }}' /></td>
+                <td class="td_chk"><input type="checkbox" name="chkId[]" class="informId" value="{{ $inform->id }}" /></td>
                 <td class="td_mngsmall">
                     @php
                         $informDate = new Carbon\Carbon($inform->data['writeCreatedAt']);
@@ -69,10 +71,12 @@
                     @endif
                 </td>
                 <td>
-                    <span class="bd_subject"><a href="/bbs/{{ $inform->data['tableName'] }}/views/{{ $inform->data['parentId'] }}{{ $inform->data['isComment'] ? '#comment'. $inform->data['writeId'] : '' }}">{{ $inform->subject }}</a></span>
+                    <span class="bd_subject">
+                        <a href="/bbs/{{ $inform->data['tableName'] }}/views/{{ $inform->data['parentId'] }}{{ $inform->data['isComment'] ? '#comment'. $inform->data['writeId'] : '' }}" onclick="markAsRead(this, '{{ $inform->id }}'); return false;">{{ $inform->subject }}</a>
+                    </span>
                 </td>
                 <td class="td_mngsmall td_del">
-                    <a href="{{ route('user.inform.destroy', $inform->id) }}" class="list_del" onclick="delSingle('{{$inform->id}}')">
+                    <a href="" class="list_del">
                         <img src="/themes/default/images/ico_del.gif" alt="알림삭제">
                     </a>
                 </td>
@@ -90,19 +94,75 @@
     </table>
     <div class="pull-left bd_btn">
         <ul>
-            <li><button type="button" class="btn btn-default" onclick="check_all()">전체선택</button></li>
-            <li><button type="button" class="btn btn-default" id="selected_delete">선택삭제</button></li>
-            <li><button type="button" class="btn btn-default" id="selected_mark">읽음표시</button></li>
+            <li><button type="button" class="btn btn-default" onclick="checkEverything()">전체선택</button></li>
+            <li><button type="button" class="btn btn-default" id="selectedDelete">선택삭제</button></li>
+            <li><button type="button" class="btn btn-default" id="selectedMark">읽음표시</button></li>
         </ul>
     </div>
     </form>
 </div>
 <script>
-function check_all() {
+function checkEverything() {
     var chk = document.getElementsByName("chkId[]");
     for (i=0; i<chk.length; i++) {
         chk[i].checked = (chk[i].checked == true ? false : true);
     }
 }
+
+function markAsRead(aTag, id) {
+
+    $.ajax({
+        url: '/users/inform/ajax',
+        type: 'post',
+        data: {
+            '_token' : '{{ csrf_token() }}',
+            '_method' : 'put',
+            'id' : id
+        },
+        dataType: 'json',
+        async: false,
+        cache: false,
+        success: function(data) {
+            location.href = aTag.href;
+        }
+    });
+
+}
+
+$(function(){
+    // 선택 후 읽음 표시
+    $('#selectedMark').click(function(){
+        var ids = selectIdsByCheckBox('.informId');
+        if(ids.length == 0) {
+            alert('읽음표시할 게시물을 한 개 이상 선택하세요.')
+            return false;
+        }
+        $('#ids').val(ids);
+        $('#_method').val('put');
+        $('#inform').submit();
+    });
+    // 선택 삭제
+    $('#selectedDelete').click(function(){
+        var ids = selectIdsByCheckBox('.informId');
+        if(ids.length == 0) {
+            alert('삭제할 게시물을 한 개 이상 선택하세요.')
+            return false;
+        }
+        if(confirm("한번 삭제한 자료는 복구할 방법이 없습니다.\n\n정말 삭제하시겠습니까?")) {
+            $('#ids').val(ids);
+            $('#_method').val('delete');
+            $('#inform').submit();
+        }
+    });
+    // 개별 항목 삭제
+    $('.list_del').click(function(){
+        event.preventDefault();
+        if(confirm("한번 삭제한 자료는 복구할 방법이 없습니다.\n\n정말 삭제하시겠습니까?")) {
+            $('#ids').val($(this).closest('tr').find('.informId').val());
+            $('#_method').val('delete');
+            $('#inform').submit();
+        }
+    });
+});
 </script>
 @stop

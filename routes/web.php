@@ -104,9 +104,11 @@ Route::group(['middleware' => 'auth'], function() {
     // 회원 알림 내역
     Route::get('users/inform', ['as' => 'user.inform', 'uses' => 'InformsController@index']);
     // 회원 알림 읽음 표시
-    Route::post('users/inform/{ids}', ['as' => 'user.inform.markAsRead', 'uses' => 'InformsController@markAsRead']);
+    Route::put('users/inform', ['as' => 'user.inform.markAsRead', 'uses' => 'InformsController@markAsRead']);
     // 회원 알림 내역 삭제
-    Route::delete('users/inform/{ids?}', ['as' => 'user.inform.destroy', 'uses' => 'InformsController@destroy']);
+    Route::delete('users/inform', ['as' => 'user.inform.destroy', 'uses' => 'InformsController@destroy']);
+    // 회원 알림 읽음 표시
+    Route::put('users/inform/ajax', ['as' => 'user.inform.markAsReadOne', 'uses' => 'InformsController@markAsReadOne']);
     // 회원 정보 수정 - 소셜 로그인 계정 연결 해제
     Route::post('users/disconnectSocialAccount', ['as' => 'user.disconnectSocialAccount', 'uses' => 'UsersController@disconnectSocialAccount']);
 

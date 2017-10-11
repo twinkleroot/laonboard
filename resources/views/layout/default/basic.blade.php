@@ -105,7 +105,7 @@
                             <li><a href="{{ route('user.point', Auth::user()->id_hashkey) }}" class="point">포인트 내역</a></li>
                             @endif
                             <li><a href="{{ route('memo.index') }}?kind=recv" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지 <span class="memocount">{{ App\Memo::where('recv_user_id', Auth::user()->id)->where('read_timestamp', null)->count() }}</span></a></li>
-                            <li><a href="{{ route('user.inform') }}">알림 <span class="memocount">{{ auth()->user()->notifications->count() }}</span></a></li>
+                            <li><a href="{{ route('user.inform') }}">알림 <span class="memocount">{{ auth()->user()->unreadNotifications->count() }}</span></a></li>
                             <li>
                                 <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                     로그 아웃

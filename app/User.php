@@ -773,22 +773,32 @@ class User extends Authenticatable
     // 회원 알림 읽음 표시
     public function markAsReadInforms($ids)
     {
-        $informs = $this->getInforms();
-        $selectInforms = $informs->whereIn('id', $ids)->markAsRead();
+        $ids = explode(',', $ids);
+        foreach($ids as $id) {
+            auth()->user()->unreadNotifications->where('id', $id)->markAsRead();
+        }
     }
 
     // 회원 알림 내역 삭제
-    public function destroyInforms($ids)
+    public function destroyInforms($request)
     {
-        $informs = $this->getInforms();
-        $selectInforms = $informs;
-        if($ids) {
-            $selectInforms = $informs->whereIn('id', $ids);
+        // 모든 알림 삭제
+        if($request->filled('delType') && $request->delType == 'all') {
+            foreach(auth()->user()->notifications as $inform) {
+                $inform->delete();
+            }
+        } else {    // 선택 삭제
+            $ids = explode(',', $request->ids);
+            foreach($ids as $id) {
+                auth()->user()->notifications->where('id', $id)->first()->delete();
+            }
         }
+    }
 
-        foreach($selectInforms as $inform) {
-            $inform->delete();
-        }
+    // 회원 알림 읽음 표시
+    public function markAsReadOne($id)
+    {
+        return ['result' => auth()->user()->unreadNotifications->where('id', $id)->markAsRead()];
     }
 
 }

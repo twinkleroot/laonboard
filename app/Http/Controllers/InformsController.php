@@ -30,20 +30,26 @@ class InformsController extends Controller
         return viewDefault("user.{$this->skin}.inform", $params);
     }
 
-    // 회원 알림 읽음 표시
-    public function markAsRead(Request $request, $ids)
+    // 회원 알림 읽음 표시 (읽음 표시 버튼 클릭)
+    public function markAsRead(Request $request)
     {
-        $this->userModel->markAsReadInforms($ids);
+        $this->userModel->markAsReadInforms($request->ids);
 
         return redirect(route('user.inform'));
     }
 
     // 회원 알림 내역 삭제
-    public function destroy(Request $request, $ids=null)
+    public function destroy(Request $request)
     {
-        $this->userModel->destroyInforms($ids);
+        $this->userModel->destroyInforms($request);
 
         return redirect(route('user.inform'));
+    }
+
+    // 회원 알림 읽음 표시 (ajax)
+    public function markAsReadOne(Request $request)
+    {
+        return $this->userModel->markAsReadOne($request->id);
     }
 
 }
