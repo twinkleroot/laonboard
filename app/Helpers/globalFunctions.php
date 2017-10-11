@@ -12,13 +12,16 @@ if(! function_exists('includeImagePathByEditor')) {
     function includeImagePathByEditor($board, $content)
     {
         // 에디터로 업로드한 이미지 경로를 추출한다.
-        $imgPattern = "/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i";
+        $imgPattern = "/<img[^>]*src=[\"']?\/storage([^>\"']+)[\"']?[^>]*>/i";
 
         preg_match_all($imgPattern, $content, $matches);
 
         for($i=0; $i<count($matches[1]); $i++) {
             // 썸네일 만들기
             $imageFileInfo = getViewThumbnail($board, basename($matches[1][$i]), 'editor');
+            if(!$imageFileInfo) {
+                return $content;
+            }
 
             $divImage1 = explode('.', $imageFileInfo['name']);
             $divImage2 = explode('_', $divImage1[0]);
@@ -849,7 +852,8 @@ if (! function_exists('getViewThumbnail')) {
 
         $imgPathAndFileName = $imgPath. '/'. $imageName;
         if(!File::exists($imgPathAndFileName)) {
-            return abort(500, '첨부파일이 존재하지 않습니다.');
+            // return abort(500, '첨부파일이 존재하지 않습니다.');
+            return false;
         }
         $img = Image::make(file_get_contents($imgPathAndFileName));
         $thumbWidth = $board->image_width;
