@@ -38,7 +38,8 @@
             "database/factories"
         ],
         "psr-4": {
-            "App\\": "app/"
+            "App\\": "app/",
+            "Oneso\\LaravelPlugins\\": "vendor/oneso/laravel-plugins/src/"
         },
         "files": ["app/Helpers/globalFunctions.php"]
     },

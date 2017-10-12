@@ -79,6 +79,10 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
             'PhpParser\\' => 10,
             'PHPMailer\\PHPMailer\\' => 20,
         ),
+        'O' => 
+        array (
+            'Oneso\\LaravelPlugins\\' => 21,
+        ),
         'M' => 
         array (
             'Monolog\\' => 8,
@@ -272,6 +276,10 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         'PHPMailer\\PHPMailer\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
+        ),
+        'Oneso\\LaravelPlugins\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/oneso/laravel-plugins/src',
         ),
         'Monolog\\' => 
         array (
