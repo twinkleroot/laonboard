@@ -1,6 +1,9 @@
 @php
     $user = isset($user) ? $user : auth()->user();
 @endphp
+<div class="bd_head">
+    <a href="{{ route('board.index', $board->table_name) }}">{{ $board->subject }}</a>
+</div>
 <div class="bd_rd_head">
     <h1>{{ $write->subject }}</h1>
     <ul class="bd_rd_info">

@@ -7,15 +7,26 @@
     vertical-align: bottom;
     font-weight: 600;
     clear: both;
-    font-size: 18px;
+    font-size: 0;
     margin-bottom: 10px;
 }
 .bd_head a {
     display: inline-block;
     line-height: 20px;
+    font-size: 18px;
 }
 .bd_head a:hover {
     text-decoration: underline !important;
+}
+.bd_head:before {
+    content: "\f105";
+    font-family: FontAwesome;
+    font-size: 13px;
+    font-weight: normal;
+    margin-right: 8px;
+    line-height: 20px;
+    vertical-align: top;
+    display: inline-block;
 }
 .bd_count {
     float: left;
@@ -283,7 +294,7 @@
 
 /* 게시글 조회 */
 .bd_rd_head {
-    padding: 30px 0;
+    padding: 10px 0 30px;
     position: relative;
     z-index: 1;
     margin-bottom: 30px;
