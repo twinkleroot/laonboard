@@ -3,8 +3,7 @@
 namespace Modules\Memo\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-// use App\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 use App\Memo;
 use App\Services\ReCaptcha;
 use Exception;
