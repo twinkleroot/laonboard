@@ -9,6 +9,6 @@ class SampleController extends Controller
 {
 	public function index(Request $request)
 	{
-		return view('plugin:sample::index');
+		return view('plugin:sample::index	');
 	}
 }

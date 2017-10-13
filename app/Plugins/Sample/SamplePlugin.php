@@ -11,6 +11,7 @@ class SamplePlugin extends Plugin
 	public function __construct()
 	{
 		$this->app = app();
+
 		$this->name = 'sample';
 	}
 
@@ -18,5 +19,7 @@ class SamplePlugin extends Plugin
 	{
 		$this->enableViews();
 		$this->enableRoutes();
+
+
 	}
 }
