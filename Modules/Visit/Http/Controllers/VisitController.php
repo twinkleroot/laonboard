@@ -14,7 +14,6 @@ class VisitController extends Controller
      */
     public function index()
     {
-        dd(public_path('visit'));
         return view('visit::index');
     }
 
