@@ -19,6 +19,7 @@
         "laravel/socialite": "^3.0",
         "laravel/tinker": "~1.0",
         "mews/purifier": "^2.0",
+        "nwidart/laravel-modules": "^2.5",
         "phpmailer/phpmailer": "^6.0",
         "predis/predis": "^1.1",
         "socialiteproviders/kakao": "^3.0",
@@ -39,7 +40,7 @@
         ],
         "psr-4": {
             "App\\": "app/",
-            "Oneso\\LaravelPlugins\\": "vendor/oneso/laravel-plugins/src/"
+            "Modules\\": "Modules/",
         },
         "files": ["app/Helpers/globalFunctions.php"]
     },

@@ -186,7 +186,6 @@ return [
         Sven\FlexEnv\FlexEnvServiceProvider::class,
         Ixudra\Curl\CurlServiceProvider::class,
         Mews\Purifier\PurifierServiceProvider::class,
-        Oneso\LaravelPlugins\PluginServiceProvider::class,
     ],
 
     /*
