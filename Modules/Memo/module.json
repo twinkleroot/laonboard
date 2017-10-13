@@ -1,14 +1,14 @@
 {
-    "name": "Visit",
-    "alias": "visit",
+    "name": "Memo",
+    "alias": "memo",
     "description": "",
     "keywords": [],
     "active": 1,
     "order": 0,
     "providers": [
-        "Modules\\Visit\\Providers\\VisitServiceProvider"
+        "Modules\\Memo\\Providers\\MemoServiceProvider"
     ],
-    "aliases": {},
+    "aliases": [],
     "files": [
         "start.php"
     ],

@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Visit\Providers;
+namespace Modules\Memo\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 
-class VisitServiceProvider extends ServiceProvider
+class MemoServiceProvider extends ServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.
@@ -46,10 +46,10 @@ class VisitServiceProvider extends ServiceProvider
     protected function registerConfig()
     {
         $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('visit.php'),
+            __DIR__.'/../Config/config.php' => config_path('memo.php'),
         ], 'config');
         $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'visit'
+            __DIR__.'/../Config/config.php', 'memo'
         );
     }
 
@@ -60,7 +60,7 @@ class VisitServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/visit');
+        $viewPath = resource_path('views/modules/memo');
 
         $sourcePath = __DIR__.'/../Resources/views';
 
@@ -69,8 +69,8 @@ class VisitServiceProvider extends ServiceProvider
         ]);
 
         $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/visit';
-        }, \Config::get('view.paths')), [$sourcePath]), 'visit');
+            return $path . '/modules/memo';
+        }, \Config::get('view.paths')), [$sourcePath]), 'memo');
     }
 
     /**
@@ -80,12 +80,12 @@ class VisitServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/visit');
+        $langPath = resource_path('lang/modules/memo');
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, 'visit');
+            $this->loadTranslationsFrom($langPath, 'memo');
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'visit');
+            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'memo');
         }
     }
 

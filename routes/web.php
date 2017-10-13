@@ -112,22 +112,6 @@ Route::group(['middleware' => 'auth'], function() {
     // 회원 정보 수정 - 소셜 로그인 계정 연결 해제
     Route::post('users/disconnectSocialAccount', ['as' => 'user.disconnectSocialAccount', 'uses' => 'UsersController@disconnectSocialAccount']);
 
-    // 쪽지
-    Route::group(['middleware' => 'valid.user'], function () {
-        Route::get('memos/create/{toUser?}', ['as' => 'memo.create', 'uses' => 'MemosController@create']);
-        Route::resource('memos', 'MemosController', [
-            'except' => [
-                'edit', 'update', 'create',
-            ],
-            'names' => [
-                'index' => 'memo.index',
-                'show' => 'memo.show',
-                'store' => 'memo.store',
-                'destroy' => 'memo.destroy',
-            ],
-        ]);
-    });
-
     // 스크랩
     Route::post('scraps', ['as' => 'scrap.store', 'uses' => 'ScrapsController@store'])
         ->middleware('level.board:comment_level');

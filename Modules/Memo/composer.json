@@ -1,5 +1,5 @@
 {
-    "name": "nwidart/visit",
+    "name": "nwidart/memo",
     "description": "",
     "authors": [
         {
@@ -9,7 +9,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Modules\\Visit\\": ""
+            "Modules\\Memo\\": ""
         }
     }
 }
