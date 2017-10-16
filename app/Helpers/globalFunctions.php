@@ -491,7 +491,7 @@ if (! function_exists('insertUsePoint')) {
 if (! function_exists('viewDefault')) {
     function viewDefault($path, $params=[])
     {
-        $pathArr = explode('.', $path);
+        $pathArr = explode('.', 'themes.'.$path);
         $pathArr[1] = 'default';
         $defaultPath = implode('.', $pathArr);
         return view()->exists($path) ? view($path, $params) : view($defaultPath, $params);

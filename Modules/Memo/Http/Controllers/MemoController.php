@@ -4,7 +4,7 @@ namespace Modules\Memo\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Memo;
+use Modules\Memo\Entities\Memo;
 use App\Services\ReCaptcha;
 use Exception;
 
@@ -23,10 +23,10 @@ class MemoController extends Controller
      */
     public function index(Request $request)
     {
-        $skin = cache('config.skin')->memo ? : 'default';
+        $theme = cache('config.theme')->memo ? : 'default';
         $params = $this->memo->getIndexParams($request);
 
-        return viewDefault("memo.$skin.index", $params);
+        return viewDefault("$theme.memo.index", $params);
     }
 
     /**
@@ -36,7 +36,7 @@ class MemoController extends Controller
      */
     public function create(Request $request)
     {
-        $skin = cache('config.skin')->memo ? : 'default';
+        $theme = cache('config.theme')->memo ? : 'default';
         $params = [];
         try {
             $params = $this->memo->getCreateParams($request);
@@ -44,7 +44,7 @@ class MemoController extends Controller
             return alertClose($e->getMessage());
         }
 
-        return viewDefault("memo.$skin.form", $params);
+        return viewDefault("$theme.memo.form", $params);
     }
 
     /**
@@ -84,7 +84,7 @@ class MemoController extends Controller
      */
     public function show($id, Request $request)
     {
-        $skin = cache('config.skin')->memo ? : 'default';
+        $theme = cache('config.theme')->memo ? : 'default';
         $params = [];
         try {
             $params = $this->memo->getShowParams($id, $request);
@@ -92,7 +92,7 @@ class MemoController extends Controller
             return alert($e->getMessage());
         }
 
-        return viewDefault("memo.$skin.show", $params);
+        return viewDefault("$theme.memo.show", $params);
     }
 
     /**
@@ -111,69 +111,3 @@ class MemoController extends Controller
 
     }
 }
-
-//
-// class MemoController extends Controller
-// {
-//     /**
-//      * Display a listing of the resource.
-//      * @return Response
-//      */
-//     public function index()
-//     {
-//         return view('memo::index');
-//     }
-//
-//     /**
-//      * Show the form for creating a new resource.
-//      * @return Response
-//      */
-//     public function create()
-//     {
-//         return view('memo::create');
-//     }
-//
-//     /**
-//      * Store a newly created resource in storage.
-//      * @param  Request $request
-//      * @return Response
-//      */
-//     public function store(Request $request)
-//     {
-//     }
-//
-//     /**
-//      * Show the specified resource.
-//      * @return Response
-//      */
-//     public function show()
-//     {
-//         return view('memo::show');
-//     }
-//
-//     /**
-//      * Show the form for editing the specified resource.
-//      * @return Response
-//      */
-//     public function edit()
-//     {
-//         return view('memo::edit');
-//     }
-//
-//     /**
-//      * Update the specified resource in storage.
-//      * @param  Request $request
-//      * @return Response
-//      */
-//     public function update(Request $request)
-//     {
-//     }
-//
-//     /**
-//      * Remove the specified resource from storage.
-//      * @return Response
-//      */
-//     public function destroy()
-//     {
-//     }
-// }
