@@ -41,7 +41,6 @@
                 @forelse($users as $user)
                     <tr>
                         <td class="td_email">{{ $user->email }}</td>
-
                         <td class="td_nick">
                             @component('admin.sideview', ['id' => $user->id, 'nick' => $user->nick, 'email' => $user->email, 'created_at' => $user->created_at])
                             @endcomponent
@@ -90,10 +89,10 @@
                 <tbody>
                     @forelse($boardNews as $new)
                     <tr>
-                        <td class="td_mngsmall text-left">
+                        <td class="td_id text-left">
                             <a href="{{ route('new.index') }}?groupId={{ $new->group_id }}">{{ $new->group_subject }}</a>
                         </td>
-                        <td class="td_mngsmall text-left">
+                        <td class="td_id text-left">
                             <a href="{{ route('board.index', $new->table_name) }}">{{ $new->subject }}</a>
                         </td>
                         <td class="td_subject">
