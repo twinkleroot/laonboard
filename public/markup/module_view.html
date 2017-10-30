@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="{{ config('app.locale') }}">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- CSRF Token -->
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<link rel="shortcut icon" href="../themes/laon/favicon/favicon.ico">
+<link rel="icon" href="../themes/laon/favicon/favicon.ico">
+<title>@yield('title', '라온보드')</title>
+<!-- css -->
+<link rel="stylesheet" type="text/css" href="../themes/default/css/bootstrap/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="../css/admin.css">
+<link rel="stylesheet" type="text/css" href="../font-awesome/css/font-awesome.css">
+<!-- Scripts -->
+<script src="../js/jquery-3.1.1.min.js"></script>
+<script src="../js/common.js"></script>
+<script>
+    window.Laravel = {!! json_encode([
+        'csrfToken' => csrf_token(),
+    ]) !!};
+
+    function alertclose() {
+        $("#adm_save").remove();
+    }
+
+    $(document).ready(function($){
+        var nav = $('#body_tab_type2');
+
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 175) {
+                nav.addClass("f-tab");
+            } else {
+                nav.removeClass("f-tab");
+            }
+        });
+    });
+</script>
+</head>
+<body>
+<div id="admin-header">
+    <div class="header-title sidebarmenu">
+        <a href="{{ route('admin.index"><h1><i class="fa fa-cogs"></i>Administrator</h1></a>
+    </div>
+    <div class="box-left sidebarmenu">
+        <div class="hdbt bt-menu" id="showmenu">
+            <i class="fa fa-outdent"></i>
+        </div>
+    </div>
+    <div class="box-right pull-right">
+        <div class="hdtx">
+            <ul>
+                <li>
+                    <a href="{{ url('/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.extra_service">부가서비스</a>
+                </li>
+            </ul>
+        </div>
+        <li class="gnb-li dropdown" style="font-size: 12px; display: inline">
+            <div class="hdbt bt-user">
+                <i class="fa fa-user"></i>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                    <span class="sign">
+                        닉네임 <i class="caret"></i>
+                    </span>
+                </a>
+                <!-- 2depth -->
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="{{ route('admin.users.edit', Auth::user()->id) }}">관리자 정보 수정</a></li>
+                    <li>
+                        <a href="{{ route('logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            로그 아웃
+                        </a>
+                        <!-- 로그아웃 토큰 -->
+                        <form id="logout-form" action="{{ route('logout" method="POST" style="display: none;">
+                            {{ csrf_field() }}
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </li>
+    </div>
+</div>
+<div class="sidebar sidebarmenu">
+    <ul class="category">
+        <div class="side_1depth">
+            <a href="#" class="sd_1depth">환경설정</a>
+        </div>
+        <ul class="sd_2depth">
+            <li><a href="{{ route('admin.config')}}">기본환경설정</a></li>
+            <li><a href="#">관리권한설정</a></li>
+            <li><a href="#">테마설정</a></li>
+            <li><a href="{{ route('admin.menus.index') }}">메뉴설정</a></li>
+            <li><a href="{{ route('admin.email') }}">메일테스트</a></li>
+            <li><a href="#">팝업레이어관리</a></li>
+            <li><a href="#">세션파일 일괄삭제</a></li>
+            <li><a href="#">캐시파일 일괄삭제</a></li>
+            <li><a href="#">썸네일파일 일괄삭제</a></li>
+            <li><a href="{{ route('admin.phpinfo') }}">phpinfo()</a></li>
+            <li><a href="{{ route('admin.extra_service') }}">부가서비스</a></li>
+        </ul>
+    </ul>
+    <ul class="category">
+        <div class="side_1depth">
+            <a href="#" class="sd_1depth">회원관리</a>
+        </div>
+        <ul class="sd_2depth">
+            <li><a href="{{ route('admin.users.index') }}">회원관리</a></li>
+            <li><a href="{{ route('admin.points.index') }}">포인트관리</a></li>
+        </ul>
+    </ul>
+    <ul class="category">
+        <div class="side_1depth">
+            <a href="#" class="sd_1depth">게시판관리</a>
+        </div>
+        <ul class="sd_2depth">
+            <li><a href="{{ route('admin.boards.index') }}">게시판관리</a></li>
+            <li><a href="{{ route('admin.groups.index') }}">게시판그룹관리</a></li>
+            <li><a href="#">인기검색어관리</a></li>
+            <li><a href="#">인기검색어순위</a></li>
+            <li><a href="{{ route('contents.index') }}">내용관리</a></li>
+            <li><a href="{{ route('admin.status.write') }}">글/댓글현황</a></li>
+        </ul>
+    </ul>
+    <ul class="category">
+        <div class="side_1depth">
+            <a href="#" class="sd_1depth">모듈관리</a>
+        </div>
+        <ul class="sd_2depth">
+            <li><a href="module.html">설치된 모듈</a></li>
+            <li><a href="module_add.html">모듈 추가하기</a></li>
+        </ul>
+    </ul>
+</div>
+<div id="admin-body" class="sidebarmenu2">
+    <div class="admin-body">
+        <div class="body-head">
+            <div class="pull-left">
+                <h3>설치된 모듈</h3>
+                <ul class="fl">
+                    <li class="admin">Admin</li>
+                    <li class="depth">모듈관리</li>
+                    <li class="depth">설치된 모듈</li>
+                </ul>
+            </div>
+        </div>
+        <div id="body_tab_type2">
+            <ul>
+                <li class="tab"><a href="#module_info">요약</a></li>
+                <li class="tab"><a href="#module_update">모듈정보</a></li>
+            </ul>
+            <div class="submit_btn">
+                <a class="btn btn-default" href="module.html">모듈목록</a>
+            </div>
+        </div>
+        <div class="body-contents">
+            <div id="module">
+                <div id="module_info">
+                    <div class="image">
+                        <img src="https://sir.kr/data/file/g5_plugin/thumb-982372566_xm9AatwN_909411859b3955c1f22a948fbce461623ef1a170_760x322.png">
+                    </div>
+                    <div class="info">
+                        <h1>모듈명</h1>
+                        <ul>
+                            <li>버전: 1.0.0</li>
+                            <li>
+                                제작: 라온보드
+                                <a href="#" class="link" title="연결된 링크로 이동">연결된 링크로 이동</a>
+                            </li>
+                            <li class="module_btn">
+                                <a href="#" class="btn btn-sir">사용</a>
+                                <a href="#" class="btn btn-danger">사용중지</a>
+                                <a href="#" class="btn btn-sir">업데이트</a>
+                                <a href="#" class="btn btn-sir">삭제</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="module_update" style="height: 1000px;">
+                    상세정보
+                </div>
+            </div>
+        </div>
+        <div id="footer">
+            Copyright © {{ str_replace("http://", "", env('APP_URL')) }}. All rights reserved.
+        </div>
+    </div>
+</div>
+<div class="upbtn">
+    <a href="#admin-header">
+        <i class="fa fa-angle-up"></i>
+    </a>
+</div>
+<script>
+$(document).ready(function() {
+    $('#showmenu').click(function() {
+    var hidden = $('.sidebarmenu').data('hidden');
+    if(hidden){
+        $('.sidebarmenu').animate({
+            left: '0px'
+        },300),
+        $('.sidebarmenu2').animate({
+            left: '230px'
+        },300)
+    } else {
+        $('.sidebarmenu').animate({
+            left: '-230px'
+        },300),
+        $('.sidebarmenu2').animate({
+            left: '0px'
+        },300)
+    }
+    $('.sidebarmenu,.image').data("hidden", !hidden);
+    });
+    $('.sd_2depth').hide();
+    $('a.sd_1depth').click(function() {
+        $(this).parent().next('.sd_2depth').toggle(200);
+        return false;
+    });
+    $(".upbtn").hide(); //top버튼
+    $(function () {
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 100) {
+            $('.upbtn').fadeIn();
+            } else {
+            $('.upbtn').fadeOut();
+            }
+        });
+        $('.upbtn a').click(function () {
+            $('body,html').animate({
+            scrollTop: 0
+            }, 500);
+            return false;
+        });
+    });
+});
+</script>
+<!-- Bootstrap core JavaScript -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="../bootstrap/js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="../bootstrap/js/ie10-viewport-bug-workaround.js"></script>
+</body>
+</html>
