@@ -112,7 +112,12 @@
             <a href="#" class="sd_1depth">모듈관리</a>
         </div>
         <ul class="sd_2depth">
-            <li><a href="module.html">설치된 모듈</a></li>
+            <li>
+                <a href="module.html">설치된 모듈</a>
+                <span class="update">
+                    <span class="count">2</span>
+                </span>
+            </li>
             <li><a href="module_add.html">모듈 추가하기</a></li>
         </ul>
     </ul>
@@ -130,15 +135,28 @@
             </div>
         </div>
         <div id="body_tab_type2">
-            <ul>
-                <li class="tab"><a href="#">추천</a></li>
-                <li class="tab"><a href="#">인기</a></li>
-            </ul>
+            <span class="txt">
+                라온보드에 설치할 수 있는 모듈들을 확인합니다.
+            </span>
             <div class="submit_btn">
                 <a class="btn btn-default" href="module.html">설치된 모듈</a>
             </div>
         </div>
         <div class="body-contents">
+            <ul id="adm_btn">
+                <li><a href="#" class="btn btn-default">전체목록</a></li>
+                <li><a href="#" class="btn btn-default">추천</a></li>
+                <li><a href="#" class="btn btn-default">인기</a></li>
+            </ul>
+            <div id="adm_sch">
+                <form role="form" method="GET" action="{{ route('admin.users.index') }}">
+                    <label for="keyword" class="sr-only">검색어</label>
+                    <input type="text" name="keyword" @if($keyword != '') value="{{ $keyword }}" @endif class="search" required>
+                    <button type="submit" id="" class="btn search-icon">
+                        <i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">검색</span>
+                    </button>
+                </form>
+            </div>
             <div id="module" class="row">
                 <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="modulebox">

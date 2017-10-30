@@ -348,6 +348,19 @@ input[type=radio] {
 .sd_2depth>.on {
 	background: #616161;
 }
+.update {
+	display: inline-block;
+	position: absolute;
+	top: 0;
+	right: 20px;
+}
+.update .count {
+	color: #fff;
+	background: #587ef6;
+	font-size: 11px;
+	padding: 3px 8px;
+	border-radius: 4px;
+}
 #admin-body {
 	position: absolute;
 	left: 230px;
