@@ -47,6 +47,9 @@
 .td_mngsmall {
     text-align: center;
 }
+.bd_subject a {
+    color: #333;
+}
 .td_del {
     text-align: right;
     line-height: 20px;
