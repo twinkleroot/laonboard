@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Admin\Popular;
+use App\Models\Popular;
 
 class PopularsController extends Controller
 {
@@ -22,7 +22,8 @@ class PopularsController extends Controller
         }
 
         $params = $this->popular->getIndexParams($request);
-        return view('admin.populars.index', $params);
+
+        return view("admin.populars.index", $params);
     }
 
     public function destroy($ids)
@@ -48,6 +49,6 @@ class PopularsController extends Controller
 
         $params = $this->popular->getPopularRank($request);
 
-        return view('admin.populars.rank', $params);
+        return view("admin.populars.rank", $params);
     }
 }

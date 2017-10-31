@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Mail;
 use Auth;
 use Cache;
@@ -11,10 +10,10 @@ use Exception;
 use Socialite;
 use Carbon\Carbon;
 use App\Services\ReCaptcha;
-use App\User;
-use App\Point;
-use App\Admin\Config;
-use App\Notification;
+use App\Models\User;
+use App\Models\Point;
+use App\Models\Config;
+use App\Models\Notification;
 
 class UsersController extends Controller
 {
@@ -48,8 +47,9 @@ class UsersController extends Controller
 
         $params = $this->userModel->editParams();
         $skin = $this->skin;
+        $theme = cache('config.theme')->name;
 
-        return viewDefault("user.$skin.edit", $params);
+        return viewDefault("$theme.users.$skin.edit", $params);
     }
 
     // 회원 정보 수정 폼에 앞서 비밀번호 한번 더 확인하는 폼
@@ -59,12 +59,13 @@ class UsersController extends Controller
         $work = is_null($request->work) ? session()->get('work') : $request->work;
         $params = ['email' => $user->email, 'work' => $work];
         $skin = $this->skin;
+        $theme = cache('config.theme')->name;
 
         if(is_null($user->password)) {
             // 최초 비밀번호 설정
-            return viewDefault("user.$skin.set_password");
+            return viewDefault("$theme.users.$skin.set_password", $params);
         } else {
-            return viewDefault("user.$skin.confirm_password", $params);
+            return viewDefault("$theme.users.$skin.confirm_password", $params);
         }
     }
 
@@ -168,8 +169,9 @@ class UsersController extends Controller
     {
         $params = ['nick' => $request->nick, 'email' => $request->email,];
         $skin = $this->skin;
+        $theme = cache('config.theme')->name;
 
-        return viewDefault("user.$skin.welcome", $params);
+        return viewDefault("$theme.users.$skin.welcome", $params);
     }
 
     // 회원 정보 수정에서 소셜 연결 해제
@@ -183,8 +185,9 @@ class UsersController extends Controller
     {
         $params = ['email' => $email];
         $skin = $this->skin;
+        $theme = cache('config.theme')->name;
 
-        return viewDefault("user.$skin.change_email", $params);
+        return viewDefault("$theme.users.$skin.change_email", $params);
     }
 
     // 메일인증 메일주소 변경 실행
@@ -197,23 +200,11 @@ class UsersController extends Controller
         return alertRedirect('인증메일을 '. $result. ' 메일로 다시 보내드렸습니다.\\n\\잠시후 '. $result. ' 메일을 확인하여 주십시오.');
     }
 
-    // 회원 포인트 내역
-    public function pointList($id)
-    {
-        if(!auth()->check() || auth()->user()->id_hashkey != $id) {
-            return alert('다른 회원의 포인트 내역을 조회할 수 없습니다.');
-        }
-        $point = new Point();
-        $params = $point->getPointList(auth()->user()->id);
-        $skin = $this->skin;
-
-        return viewDefault("user.$skin.point", $params);
-    }
-
     // 자기소개
     public function profile($id)
     {
         $skin = $this->skin;
+        $theme = cache('config.theme')->name;
         $params = [];
         try {
             $params = $this->userModel->getProfileParams($id);
@@ -221,7 +212,7 @@ class UsersController extends Controller
             return alertClose($e->getMessage());
         }
 
-        return viewDefault("user.$skin.profile", $params);
+        return viewDefault("$theme.users.$skin.profile", $params);
     }
 
     // 회원 탈퇴
@@ -254,6 +245,7 @@ class UsersController extends Controller
     public function form(Request $request)
     {
         $skin = $this->skin;
+        $theme = cache('config.theme')->name;
         $params = [];
         try {
             $params = $this->userModel->getFormMailParams($request);
@@ -261,7 +253,7 @@ class UsersController extends Controller
             return alertClose($e->getMessage());
         }
 
-        return viewDefault("user.$skin.formmail", $params);
+        return viewDefault("$theme.users.$skin.formmail", $params);
     }
 
     // 메일 보내기 실행
@@ -301,7 +293,7 @@ class UsersController extends Controller
         return alertClose('메일을 정상적으로 발송하였습니다.');
     }
 
-    // ajax form validation
+    // ajax - form validation
     public function existData(Request $request)
     {
         // 해당 키와 값에 해당하는 사용자가 있는지 검사
@@ -309,6 +301,27 @@ class UsersController extends Controller
             return ['result' => true];
         }
         return ['result' => false];
+    }
+
+    // ajax - 닉네임이 금지단어와 같은지 검사
+    public function userFilter(Request $request)
+    {
+        $nick = $request->nick;
+
+        $filterStrs = explode(',', trim(implode(',', cache("config.join")->banId)));
+        $returnArr['nick'] = '';
+
+        foreach($filterStrs as $str) {
+            // 제목 필터링 (찾으면 중지)
+            $pos = stripos($nick, $str);
+            if ($pos !== false) {
+                $returnArr['nick'] = $str;
+                break;
+            }
+
+        }
+
+        return $returnArr;
     }
 
 }

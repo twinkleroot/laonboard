@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Cert;
-use File;
+use App\Models\Cert;
 
 class CertController extends Controller
 {
@@ -28,7 +26,7 @@ class CertController extends Controller
             'e_rqstData' => $result['e_rqstData'],
         ];
 
-        return view('user.hp_cert1', $params);
+        return view('certs.hp_cert1', $params);
     }
 
     // 휴대폰 본인 확인 서비스 2
@@ -36,6 +34,6 @@ class CertController extends Controller
     {
         $params = $this->cert->callbackHpcert($request);
 
-        return view('user.hp_cert2', $params);
+        return view('certs.hp_cert2', $params);
     }
 }

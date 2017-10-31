@@ -1,0 +1,17 @@
+{
+    "name": "Latest",
+    "alias": "latest",
+    "description": "",
+    "keywords": [],
+    "active": 0,
+    "order": 0,
+    "providers": [
+        "Modules\\Latest\\Providers\\LatestServiceProvider",
+        "Modules\\Latest\\Providers\\EventServiceProvider"
+    ],
+    "aliases": [],
+    "files": [
+        "start.php"
+    ],
+    "requires": []
+}

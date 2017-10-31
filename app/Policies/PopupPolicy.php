@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\User;
-use App\Admin\Popup;
+use App\Models\User;
+use App\Models\Popup;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PopupPolicy
@@ -19,8 +19,8 @@ class PopupPolicy
     /**
      * Determine whether the user can view the point.
      *
-     * @param  \App\User  $user
-     * @param  \App\Admin\Point  $point
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Point  $point
      * @return mixed
      */
     public function index(User $user, Popup $popup)
@@ -32,7 +32,7 @@ class PopupPolicy
     /**
      * Determine whether the user can create points.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      * @return mixed
      */
     public function create(User $user)
@@ -44,8 +44,8 @@ class PopupPolicy
     /**
      * Determine whether the user can update the group.
      *
-     * @param  \App\User  $user
-     * @param  \App\Admin\Group  $group
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Group  $group
      * @return mixed
      */
     public function update(User $user, Popup $popup)
@@ -57,8 +57,8 @@ class PopupPolicy
     /**
      * Determine whether the user can delete the point.
      *
-     * @param  \App\User  $user
-     * @param  \App\Admin\Point  $point
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Point  $point
      * @return mixed
      */
     public function delete(User $user, Popup $popup)

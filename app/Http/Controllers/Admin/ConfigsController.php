@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Admin\Config;
+use App\Models\Config;
 
 class ConfigsController extends Controller
 {
@@ -19,7 +19,7 @@ class ConfigsController extends Controller
     {
         $params = $this->configModel->getConfigIndexParams();
 
-        return view('admin.configs.basic', $params);
+        return view("admin.configs.basic", $params);
     }
 
     public function update(Request $request)

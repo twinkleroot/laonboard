@@ -1,4 +1,4 @@
-@extends('admin.admin')
+@extends('admin.layouts.basic')
 
 @section('title')글, 댓글 현황 | {{ cache("config.homepage")->title }}@endsection
 

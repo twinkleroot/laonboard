@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Write;
-use App\Board;
+use App\Models\Write;
+use App\Models\Board;
 use Carbon\Carbon;
 use Cache;
 use Suin\RSSWriter\Channel;

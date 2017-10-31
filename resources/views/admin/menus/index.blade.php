@@ -1,4 +1,4 @@
-@extends('admin.admin')
+@extends('admin.layouts.basic')
 
 @section('title')메뉴설정 | {{ $config->title }}@endsection
 

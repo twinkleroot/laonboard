@@ -1,4 +1,4 @@
-@extends('admin.admin')
+@extends('admin.layouts.basic')
 
 @section('title')테마 설정 | {{ cache('config.homepage')->title }}@endsection
 
@@ -49,9 +49,9 @@
 </div>
 <div class="body-contents">
     <section id="theme" class="adm_box">
-        <p>설치된 테마 : {{ count($layoutSkins) }}</p>
+        <p>설치된 테마 : {{ count($themes) }}</p>
         <ul class="theme_list">
-            @forelse($layoutSkins as $theme)
+            @forelse($themes as $theme)
                 <li class="themebox">
                     <div class="tmli_if">
                         <span class="img">
@@ -84,7 +84,7 @@
                 <div class="adm_box_bd">
                     <div class="form-horizontal">
                         <div class="form-group">
-                            <label for="layoutSkin" class="col-md-2 control-label">홈페이지 레이아웃 스킨설정</label>
+                            {{-- <label for="layoutSkin" class="col-md-2 control-label">홈페이지 레이아웃 스킨설정</label>
                             <div class="col-md-5">
                                 <select class="form-control" name="layoutSkin" id="layoutSkin">
                                     @foreach($layoutSkins as $skin)
@@ -93,7 +93,7 @@
                                         </option>
                                     @endforeach
                                 </select>
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="form-group">
                             <label for="boardSkin" class="col-md-2 control-label">전체 게시판 스킨설정</label>
@@ -156,7 +156,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label for="contentSkin" class="col-md-2 control-label">내용 관리 스킨설정</label>
                             <div class="col-md-5">
                                 <select class="form-control" name="contentSkin" id="contentSkin">
@@ -192,7 +192,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>

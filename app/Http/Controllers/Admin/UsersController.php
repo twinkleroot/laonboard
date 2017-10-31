@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Admin\Config;
-use App\Admin\AdminUser;
-use App\User as AppUser;
+use App\Models\Config;
+use App\Models\AdminUser;
+use App\Models\User as AppUser;
 
 class UsersController extends Controller
 {
@@ -29,7 +29,7 @@ class UsersController extends Controller
 
         $params = $this->userModel->userList($request);
 
-        return view('admin.users.index', $params);
+        return view("admin.users.index", $params);
     }
 
     /**
@@ -47,10 +47,12 @@ class UsersController extends Controller
             abort(403, '회원 추가에 대한 권한이 없습니다.');
         }
 
-        return view('admin.users.form', [
+        $params = [
             'user' => auth()->user(),
             'type' => 'create',
-        ]);
+        ];
+
+        return view("admin.users.form", $params);
     }
 
     /**
@@ -109,7 +111,7 @@ class UsersController extends Controller
 
         $params = $this->userModel->editParams($user, $id);
 
-        return view('admin.users.form', $params);
+        return view("admin.users.form", $params);
     }
 
     /**

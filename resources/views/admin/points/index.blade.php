@@ -1,4 +1,4 @@
-@extends('admin.admin')
+@extends('admin.layouts.basic')
 
 @section('title')포인트 관리 | {{ Cache::get("config.homepage")->title }}@endsection
 
@@ -105,7 +105,7 @@
                         </td>
                         <td class="td_subject">
                             @if(!preg_match("/^\@/", $point->rel_table) && $point->rel_table)
-                                <a href="/bbs/{{ App\Board::getBoard($point->rel_table)->table_name }}/views/{{ $point->rel_email }}" target="_blank">{{ $point->content }}</a>
+                                <a href="/bbs/{{ App\Models\Board::getBoard($point->rel_table)->table_name }}/views/{{ $point->rel_email }}" target="_blank">{{ $point->content }}</a>
                             @else
                                 {{ $point->content }}
                             @endif

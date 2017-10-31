@@ -3,12 +3,9 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Cache;
 use Hash;
-use App\Board;
-use App\Group;
-use App\User;
-use App\Write;
+use App\Models\Group;
+use App\Models\User;
 
 class UpdatableAndDeletableWrite
 {
@@ -22,8 +19,9 @@ class UpdatableAndDeletableWrite
     public function handle($request, Closure $next)
     {
         $user = auth()->user();
-        $board = Board::getBoard($request->boardName, 'table_name');
-        $writeModel = new Write();
+        $writeModel = app()->tagged('write')[0];
+        $boardModel = app()->tagged('board')[0];
+        $board = $boardModel::getBoard($request->boardName, 'table_name');
         $writeModel->board = $board;
         $writeModel->setTableName($request->boardName);
 
@@ -44,7 +42,7 @@ class UpdatableAndDeletableWrite
         } else {
             $id = $request->writeId;
         }
-        $write = Write::getWrite($board->id, $id);
+        $write = $writeModel::getWrite($board->id, $id);
         $writeUser = ( $write && $write->user_id == 0 ) ? '' : User::find($write->user_id);
         if($user) {
             if ($user->isSuperAdmin()) {// 최고관리자 통과

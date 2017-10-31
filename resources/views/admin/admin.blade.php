@@ -1,187 +1,183 @@
-<!DOCTYPE html>
-<html lang="{{ config('app.locale') }}">
-<head>
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- CSRF Token -->
-<meta name="csrf-token" content="{{ csrf_token() }}">
-<title>@yield('title', '라온보드')</title>
-<!-- css -->
-<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/bootstrap/bootstrap.min.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ ver_asset('css/admin.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ ver_asset('font-awesome/css/font-awesome.css') }}">
-@yield('include_css')
-<!-- Scripts -->
-<script src="{{ ver_asset('js/jquery-3.1.1.min.js') }}"></script>
+@extends('admin.layouts.basic')
+
+@section('title')관리자 모드 | {{ cache('config.homepage')->title }}@endsection
+
+@section('include_script')
 <script src="{{ ver_asset('js/common.js') }}"></script>
-<script>
-    window.Laravel = {!! json_encode([
-        'csrfToken' => csrf_token(),
-    ]) !!};
+@endsection
 
-    function alertclose() {
-        $("#adm_save").remove();
-    }
-
-    $(document).ready(function($){
-        var nav = $('#body_tab_type2');
-
-        $(window).scroll(function () {
-            if ($(this).scrollTop() > 175) {
-                nav.addClass("f-tab");
-            } else {
-                nav.removeClass("f-tab");
-            }
-        });
-    });
-</script>
-@yield('include_script')
-</head>
-<body>
-<div id="admin-header">
-
-    <div class="header-title sidebarmenu">
-        <a href="{{ route('admin.index') }}"><h1><i class="fa fa-cogs"></i>Administrator</h1></a>
-    </div>
-
-    <div class="box-left sidebarmenu">
-        <div class="hdbt bt-menu" id="showmenu">
-            <i class="fa fa-outdent"></i>
-        </div>
-    </div>
-
-    <div class="box-right pull-right">
-        <div class="hdtx">
-            <ul>
-                <li>
-                    <a href="{{ url('/') }}">
-                        <i class="fa fa-home"></i>
-                        <span>Home</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.extra_service') }}">부가서비스</a>
-                </li>
-            </ul>
-        </div>
-        <li class="gnb-li dropdown" style="font-size: 12px; display: inline">
-            <div class="hdbt bt-user">
-                <i class="fa fa-user"></i>
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                    <span class="sign">
-                            {{ Auth::user()->nick }} <i class="caret"></i>
-                    </span>
-                </a>
-                <!-- 2depth -->
-                <ul class="dropdown-menu" role="menu">
-                    <li><a href="{{ route('admin.users.edit', Auth::user()->id) }}">관리자 정보 수정</a></li>
-                    <li>
-                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            로그 아웃
-                        </a>
-                        <!-- 로그아웃 토큰 -->
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                            {{ csrf_field() }}
-                        </form>
-                    </li>
-                </ul>
-            </div>
-        </li>
-    </div>
-</div>
-
-<div class="sidebar sidebarmenu">
-    @foreach(cache(auth()->user()->id_hashkey.'_admin_primary_menu') as $key => $primaryMenu)
-    <ul class="category">
-        <div class="side_1depth">
-            <a href="#" class="sd_1depth">{{ $primaryMenu[0] }}</a>
-        </div>
-        @if(count(cache(auth()->user()->id_hashkey.'_admin_sub_menu')) > 0)
-        <ul class="sd_2depth">
-            @foreach(cache(auth()->user()->id_hashkey.'_admin_sub_menu') as $subMenuCode => $subMenu)
-                @if(substr($key, 0, 1) == substr($subMenuCode, 0, 1))
-                <li><a href="{{ $subMenu[1] ? route($subMenu[1]) : '' }}" id="{{ $subMenuCode }}">{{ $subMenu[0] }}</a></li>
-                @endif
-            @endforeach
+@section('content')
+<div class="body-head">
+    <div class="pull-left">
+        <h3>관리자메인</h3>
+        <ul class="fl">
+            <li class="admin">Admin</li>
+            <li class="depth">관리자메인</li>
         </ul>
-        @endif
-    </ul>
-    @endforeach
-</div>
-
-<div id="admin-body" class="sidebarmenu2">
-    <div class="admin-body">
-    @yield('content')
-
-        <div id="footer" style="">
-            Copyright © {{ str_replace("http://", "", env('APP_URL')) }}. All rights reserved.
-        </div>
     </div>
 </div>
+<div class="body-contents">
+    <section id="sch_res_list">
+        <div class="sch_res_list_hd">
+            <span class="bdname">신규가입회원 {{ $pageRows }}건 목록</span>
+            <span class="more">
+                <a href="{{ route('admin.users.index') }}"><strong>회원</strong> 전체보기<i class="fa fa-caret-right"></i></a>
+            </span>
+        </div>
+        <div class="sch_res_list_bd">
+            <span class="total">총회원수 {{ $users->total() }}명 중 차단 {{ $interceptUsers }}명, 탈퇴 : {{ $leaveUsers }}명</span>
+            <table class="table table-striped box">
+                <thead>
+                    <tr>
+                        <th>회원이메일</th>
+                        <th>닉네임</th>
+                        <th>권한</th>
+                        <th>포인트</th>
+                        <th>차단</th>
+                        <th>그룹</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @forelse($users as $user)
+                    <tr>
+                        <td class="td_email">{{ $user->email }}</td>
 
+                        <td class="td_nick">
+                            @component('admin.sideview', ['id' => $user->id, 'nick' => $user->nick, 'email' => $user->email, 'created_at' => $user->created_at])
+                            @endcomponent
+                        </td>
+                        <td class="td_mngsmall">{{ $user->level }}</td>
+                        <td class="text-left">
+                            <a href="{{ route('admin.points.index'). "?kind=email&keyword=". $user->email }}">{{ number_format($user->point) }}</a>
+                        </td>
+                        <td class="td_mngsmall">{{ $user->intercept_date ? '예' : '아니오' }}</td>
+                        <td class="td_mngsmall">
+                            <a href="{{ route('admin.accessGroups.show', $user->id) }}">{{ $user->count_groups }}</a>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="13">
+                            <span class="empty_table">
+                                <i class="fa fa-exclamation-triangle"></i> 자료가 없습니다.
+                            </span>
+                        </td>
+                    </tr>
+                @endforelse
+                </tbody>
+            </table>
+        </div>
+    </section>
 
-<div class="upbtn">
-    <a href="#admin-header">
-        <i class="fa fa-angle-up"></i>
-    </a>
+    <section id="sch_res_list">
+        <div class="sch_res_list_hd">
+            <span class="bdname">최근게시물</span>
+            <span class="more">
+                <a href="{{ route('new.index') }}"><strong>최근게시물</strong> 더보기<i class="fa fa-caret-right"></i></a>
+            </span>
+        </div>
+        <div class="sch_res_list_bd">
+            <table class="table table-striped box">
+                <thead>
+                    <tr>
+                        <th>그룹</th>
+                        <th>게시판</th>
+                        <th>제목</th>
+                        <th>이름</th>
+                        <th>일시</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($boardNews as $new)
+                    <tr>
+                        <td class="td_mngsmall text-left">
+                            <a href="{{ route('new.index') }}?groupId={{ $new->group_id }}">{{ $new->group_subject }}</a>
+                        </td>
+                        <td class="td_mngsmall text-left">
+                            <a href="{{ route('board.index', $new->table_name) }}">{{ $new->subject }}</a>
+                        </td>
+                        <td class="td_subject">
+                            <a href="/bbs/{{ $new->table_name}}/views/{{ $new->write_parent. $new->commentTag }}">{{ $new->writeSubject }}</a>
+                        </td>
+                        <td class="td_nick">
+                            @component('admin.sideview', ['id' => $new->user_id, 'nick' => $new->name, 'email' => $new->user_email, 'created_at' => $new->user_created_at])
+                            @endcomponent
+                        </td>
+                        <td class="td_mngsmall">@date($new->created_at)</td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="13">
+                            <span class="empty_table">
+                                <i class="fa fa-exclamation-triangle"></i> 자료가 없습니다.
+                            </span>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="sch_res_list">
+        <div class="sch_res_list_hd">
+            <span class="bdname">최근 포인트 발생내역</span>
+            <span class="more">
+                <a href="{{ route('admin.points.index') }}"><strong>포인트내역</strong> 전체보기<i class="fa fa-caret-right"></i></a>
+            </span>
+        </div>
+        <div class="sch_res_list_bd">
+            <span class="total">전체 {{ $points->total() }} 건 중 {{ $pageRows }}건 목록</span>
+            <table class="table table-striped box">
+                <thead>
+                    <tr>
+                        <th>회원이메일</th>
+                        <th>닉네임</th>
+                        <th>일시</th>
+                        <th>포인트내용</th>
+                        <th>포인트</th>
+                        <th>포인트합</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($points as $point)
+                    <tr>
+                        <td class="td_email">
+                            <a href="{{ route('admin.points.index') }}?kind=email&amp;keyword={{ $point->user->email }}">{{ $point->user->email }}</a>
+                        </td>
+                        <td class="td_nick">
+                            @component('admin.sideview', ['id' => $point->user_id, 'nick' => $point->user->nick, 'email' => $point->user->email, 'created_at' => $point->user->created_at])
+                            @endcomponent
+                        </td>
+                        <td class="td_date">{{ $point->datetime }}</td>
+                        <td class="td_subject">
+                            @if(!preg_match("/^\@/", $point->rel_table) && $point->rel_table)
+                                @php
+                                    $boardModel = app()->tagged('board')[0];    // 컨테이너에 저장된 Board 객체를 가져옴
+                                @endphp
+                                <a href="/bbs/{{ $boardModel::getBoard($point->rel_table)->table_name }}/views/{{ $point->rel_email }}" target="_blank">{{ $point->content }}</a>
+                            @else
+                                {{ $point->content }}
+                            @endif
+                        </td>
+                        <td class="td_mngsmall">{{ number_format($point->point) }}</td>
+                        <td class="td_mngsmall">{{ number_format($point->user_point) }}</td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="13">
+                            <span class="empty_table">
+                                <i class="fa fa-exclamation-triangle"></i> 자료가 없습니다.
+                            </span>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </section>
 </div>
-
+@endsection
 <script>
-$(document).ready(function() {
-    $("a[id='" + menuVal+ "']").parent().parent().show();
-    $("a[id='" + menuVal+ "']").css('background', '#616161');
-
-    $('#showmenu').click(function() {
-        var hidden = $('.sidebarmenu').data('hidden');
-        if(hidden){
-            $('.sidebarmenu').animate({
-                left: '0px'
-            },300),
-            $('.sidebarmenu2').animate({
-                left: '230px'
-            },300)
-        } else {
-            $('.sidebarmenu').animate({
-                left: '-230px'
-            },300),
-            $('.sidebarmenu2').animate({
-                left: '0px'
-            },300)
-        }
-        $('.sidebarmenu,.image').data("hidden", !hidden);
-    });
-
-    $('a.sd_1depth').click(function() {
-        $(this).parent().next('.sd_2depth').toggle(200);
-        return false;
-    });
-});
-
-$(document).ready(function(){
-    $(".upbtn").hide(); //top버튼
-    $(function () {
-        $(window).scroll(function () {
-            if ($(this).scrollTop() > 100) {
-            $('.upbtn').fadeIn();
-            } else {
-            $('.upbtn').fadeOut();
-            }
-        });
-        $('.upbtn a').click(function () {
-            $('body,html').animate({
-            scrollTop: 0
-            }, 500);
-            return false;
-        });
-    });
-});
+    var menuVal = 0;
 </script>
-
-<!-- Bootstrap core JavaScript -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="{{ ver_asset('bootstrap/js/bootstrap.min.js') }}"></script>
-<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-<script src="{{ ver_asset('bootstrap/js/ie10-viewport-bug-workaround.js') }}"></script>
-</body>
-</html>

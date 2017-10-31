@@ -3,8 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\Board;
-use DB;
 
 class CanActionWriteImmediately
 {
@@ -17,9 +15,12 @@ class CanActionWriteImmediately
      */
     public function handle($request, Closure $next, $action)
     {
+        $boardModel = app()->tagged('board')[0];
+        $writeModel = app()->tagged('write')[0];
+
+        $board = $boardModel::getBoard($request->boardName, 'table_name');
         $writeId = $request->writeId;
-        $board = Board::getBoard($request->boardName, 'table_name');
-        $write = DB::table('write_'.$request->boardName)->where('id', $writeId)->first();
+        $write = $writeModel::getWrite($board->id, $writeId);
 
         if(session()->get(session()->getId(). $action. '_board_'. $board->table_name. '_write_'. $writeId)) {
             return $next($request);

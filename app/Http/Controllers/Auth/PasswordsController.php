@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\User;
+use App\Models\User;
 
 class PasswordsController extends Controller
 {
@@ -20,9 +20,10 @@ class PasswordsController extends Controller
      */
     public function getRemind()
     {
+        $theme = cache('config.theme')->name ? : 'default';
         $skin = cache('config.join')->skin ? : 'default';
 
-        return viewDefault("user.$skin.password_email");
+        return viewDefault("$theme.users.$skin.password_email");
     }
 
     /**
@@ -62,9 +63,10 @@ class PasswordsController extends Controller
      */
     public function getReset($token = null)
     {
+        $theme = cache('config.theme')->name ? : 'default';
         $skin = cache('config.join')->skin ? : 'default';
 
-        return viewDefault("user.$skin.password_reset")->with('token', $token);
+        return viewDefault("$theme.users.$skin.password_reset")->with('token', $token);
     }
 
     /**

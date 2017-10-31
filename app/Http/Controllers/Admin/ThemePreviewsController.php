@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Admin\Theme;
-use App\Main;
-use App\Board;
-use App\Write;
-use App\Comment;
+use App\Models\Theme;
+use App\Models\Main;
+use App\Models\Board;
+use App\Models\Write;
+use App\Models\Comment;
 
 class ThemePreviewsController extends Controller
 {

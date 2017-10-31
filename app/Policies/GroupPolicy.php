@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
-use App\User;
-use App\Admin\Group;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use App\Models\Group;
+use App\Models\User;
 
 class GroupPolicy
 {
@@ -20,7 +20,7 @@ class GroupPolicy
      * Determine whether the user can view the group.
      *
      * @param  \App\User  $user
-     * @param  \App\Admin\Group  $group
+     * @param  \App\Models\Group  $group
      * @return mixed
      */
     public function index(User $user, Group $group)
@@ -44,7 +44,7 @@ class GroupPolicy
      * Determine whether the user can update the group.
      *
      * @param  \App\User  $user
-     * @param  \App\Admin\Group  $group
+     * @param  \App\Models\Group  $group
      * @return mixed
      */
     public function update(User $user, Group $group)
@@ -57,7 +57,7 @@ class GroupPolicy
      * Determine whether the user can delete the group.
      *
      * @param  \App\User  $user
-     * @param  \App\Admin\Group  $group
+     * @param  \App\Models\Group  $group
      * @return mixed
      */
     public function delete(User $user, Group $group)

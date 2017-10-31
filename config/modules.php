@@ -31,6 +31,7 @@ return [
             'views/index' => 'Resources/views/index.blade.php',
             'views/master' => 'Resources/views/layouts/master.blade.php',
             'scaffold/config' => 'Config/config.php',
+            'scaffold/event' => 'Config/event.php',
             'composer' => 'composer.json',
         ],
         'replacements' => [
@@ -40,6 +41,7 @@ return [
             'views/index' => ['LOWER_NAME'],
             'views/master' => ['STUDLY_NAME'],
             'scaffold/config' => ['STUDLY_NAME'],
+            'scaffold/event' => [],
             'composer' => [
                 'LOWER_NAME',
                 'STUDLY_NAME',
@@ -96,7 +98,7 @@ return [
             'migration' => ['path' => 'Database/Migrations', 'generate' => true],
             'seeder' => ['path' => 'Database/Seeders', 'generate' => true],
             'factory' => ['path' => 'Database/factories', 'generate' => true],
-            'model' => ['path' => 'Entities', 'generate' => true],
+            'model' => ['path' => 'Models', 'generate' => true],
             'controller' => ['path' => 'Http/Controllers', 'generate' => true],
             'filter' => ['path' => 'Http/Middleware', 'generate' => true],
             'request' => ['path' => 'Http/Requests', 'generate' => true],

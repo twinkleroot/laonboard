@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\Board;
 
 class CheckCert
 {
@@ -17,7 +16,8 @@ class CheckCert
     public function handle($request, Closure $next, $type)
     {
         $boardName = $request->segments()[1];
-        $board = Board::getBoard($boardName, 'table_name');
+        $board = app()->tagged('board')[0]::getBoard($boardName, 'table_name');
+
         $str = '글읽기가';
         if($type == 'write') {
             $str = '글쓰기가';

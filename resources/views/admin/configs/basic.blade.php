@@ -1,4 +1,4 @@
-@extends('admin.admin')
+@extends('admin.layouts.basic')
 
 @section('title')환경 설정 | {{ $configHomepage->title }}@endsection
 

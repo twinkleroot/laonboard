@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Admin\Popup;
+use App\Models\Popup;
 
 class PopupsController extends Controller
 {
@@ -121,7 +121,7 @@ class PopupsController extends Controller
         if(isDemo()) {
             return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
         }
-        
+
         if(auth()->user()->cant('delete', $this->popup)) {
             abort(403, '팝업 레이어 삭제에 대한 권한이 없습니다.');
         }

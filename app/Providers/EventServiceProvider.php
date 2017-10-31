@@ -4,11 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Auth\Events\Login;
-use App\Listeners\LoginEventListener;
-use SocialiteProviders\Manager\SocialiteWasCalled;
-use SocialiteProviders\Naver\NaverExtendSocialite;
-use SocialiteProviders\Kakao\KakaoExtendSocialite;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -19,13 +14,17 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         // 로그인 성공 후 이벤트
-        Login::class => [
-            LoginEventListener::class,
+        \Illuminate\Auth\Events\Login::class => [
+            \App\Listeners\LoginEventListener::class,
         ],
         // 소셜 로그인 이벤트 : 구글, 페이스북, 트위터, 깃헙 등은 기본 제공.
-        SocialiteWasCalled::class => [
-            NaverExtendSocialite::class,	// 네이버
-            KakaoExtendSocialite::class,	// 카카오
+        \SocialiteProviders\Manager\SocialiteWasCalled::class => [
+            \SocialiteProviders\Naver\NaverExtendSocialite::class,	// 네이버
+            \SocialiteProviders\Kakao\KakaoExtendSocialite::class,	// 카카오
+        ],
+        // 최신글 리스트 불러오는 이벤트
+        \App\Events\AddLatestList::class => [
+            \App\Listeners\AddLatestListListener::class,
         ],
     ];
 
@@ -36,7 +35,7 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $subscribe = [
         \App\Listeners\UsersEventListener::class,
-        \App\Listeners\WritesEventListener::class,
+        \App\Listeners\BoardsEventListener::class,
         \App\Listeners\CommentsEventListener::class,
     ];
 

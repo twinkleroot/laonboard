@@ -9,7 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Mail\EmailSendTest;
-use App\User;
+use App\Models\User;
 
 class MailsController extends Controller
 {
@@ -18,7 +18,7 @@ class MailsController extends Controller
     public function index()
     {
         if(auth()->user()->isSuperAdmin() || Gate::allows('view-admin-mailtest', getManageAuthModel($this->menuCode))) {
-            return view('admin.configs.mail_test');
+            return view("admin.configs.mail_test");
         } else {
             return alertRedirect('최고관리자 또는 관리권한이 있는 회원만 접근 가능합니다.', '/admin/index');
         }

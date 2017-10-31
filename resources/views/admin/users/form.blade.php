@@ -1,4 +1,4 @@
-@extends('admin.admin')
+@extends('admin.layouts.basic')
 
 @section('title')회원@if($type == 'create') 추가@else 정보 수정@endif | {{ cache("config.homepage")->title }}@endsection
 

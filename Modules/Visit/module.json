@@ -1,0 +1,17 @@
+{
+    "name": "Visit",
+    "alias": "visit",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\Visit\\Providers\\VisitServiceProvider",
+        "Modules\\Visit\\Providers\\EventServiceProvider"
+    ],
+    "aliases": [],
+    "files": [
+        "start.php"
+    ],
+    "requires": []
+}

@@ -1,5 +1,145 @@
 <?php
 
+// 이벤트 등록 & 끼워넣기
+if(! function_exists('mergeEvent')) {
+    function mergeEvent($path, $key)
+    {
+        $config = app()['config']->get($key,[]);
+
+        foreach(require $path as $pathKey => $value) {
+            if(isset($config[$pathKey])) {
+                // array_add
+                $config[$pathKey] = array_add($config[$pathKey], key($value), $value[key($value)]);
+                app()['config']->set($key, $config);
+            } else {
+                // array_merge
+                app()['config']->set($key, array_merge(require $path, $config));
+            }
+        }
+    }
+}
+
+// event를 이용한 hook 기능
+if(! function_exists('fireEvent')) {
+    function fireEvent($tag, ...$params)   // $args에 타입별로 한개씩만 넣기
+    {
+        $classes = config("event.$tag");
+
+        if(count($classes) > 0) {
+            // priority 오름차순으로 이벤트 실행 순서 정렬하기
+            $classes = array_sort($classes, function($value) {
+                return $value['priority'];
+            });
+
+            foreach($classes as $key => $value) {
+                if(class_exists($key)) {
+                    event(new $key(...$params));
+                }
+            }
+        }
+    }
+}
+
+// 인기 검색어 추가
+if(! function_exists('addPopular')) {
+    function addPopular($kind, $keyword, $request)
+    {
+        $kinds = [];
+        if(!is_array($kind)) {
+            if(strpos($kind, '||')) {
+                $kinds = explode('||', $kind);
+            } else {
+                $kinds = explode(',', $kind);
+            }
+        }
+
+        if(!in_array('user_id', $kinds)) {
+            $property = [
+                'word' => $keyword,
+                'date' => Carbon\Carbon::now()->toDateString(),
+                'ip' => $request->ip(),
+            ];
+            $popular = App\Models\Popular::where($property)->first();
+            if(!$popular) {
+                App\Models\Popular::insert($property);
+            }
+        }
+    }
+}
+
+// front sideview 경로를 return 한다.
+if(! function_exists('cookingMenuSubject')) {
+    function cookingMenuSubject($result, $id)
+    {
+        $menu = App\Models\Menu::where('name', $result->subject)->whereRaw("INSTR(link, '$id')")->first();
+        if ($menu) {
+            $result->subject .= ' (이미 추가 된 메뉴)';
+        }
+        return $result;
+    }
+}
+
+// front sideview 경로를 return 한다.
+if(! function_exists('getFrontSideview')) {
+    function getFrontSideview()
+    {
+        return 'themes.'. cache('config.theme')->name. '.sideviews.'. cache('config.theme')->name. '.front';
+    }
+}
+
+// 메인에 노출하는 최근 게시물 형태로 가공
+if(! function_exists('getLatestWrites')) {
+    function getLatestWrites($boards, $pageRows, $titleLength)
+    {
+        $latests = array();
+        $cacheMinutes = 60;
+        $i = 0;
+        foreach($boards as $board) {
+            $latests[$i] = Cache::remember('main-'. $board->table_name, $cacheMinutes, function() use($board, $pageRows) {
+                return DB::table('write_'. $board->table_name)
+                        ->where('is_comment', 0)
+                        ->orderBy('num')
+                        ->limit($pageRows)
+                        ->get();
+            });
+
+            $latests[$i]->board_id = $board->id;
+            $latests[$i]->board_subject = $board->subject;
+            $latests[$i]->table_name = $board->table_name;
+            $latests[$i]->new = $board->new;
+            $latests[$i]->hot = $board->hot;
+            $subjectLength = config('gnu.subject_len.main') ? : 15;
+            $write = $latests[$i]->first();
+            foreach($latests[$i] as $write) {
+                if($write) {
+                    $write->subject = subjectLength($write->subject, $subjectLength);
+                }
+            }
+
+            $i++;
+        }
+
+        return $latests;
+    }
+}
+
+// 쿠키 가져오기
+if(! function_exists('pickupCookie')) {
+    function pickupCookie($name)
+    {
+        return base64_decode(Cookie::get(md5($name)));
+    }
+}
+
+// 쿠키 생성
+if(! function_exists('makeCookie')) {
+    function makeCookie($name, $value, $minutes, $path=null, $domain=null)
+    {
+        return Cookie::make(md5($name), base64_encode($value), $minutes, $path, $domain);
+    }
+}
+
+// 모바일 환경인지
 if(! function_exists('isMobile')) {
     function isMobile()
     {
@@ -56,8 +196,9 @@ if(! function_exists('pullOutImage')) {
         }
         // 첨부파일에서 이미지 가져오기
         if(!$flag && $file) {
-            $board = \App\Board::getBoard($boardId);
-            $boardFiles = \App\BoardFile::where([
+            $boardModel = app()->tagged('board')[0];
+            $board = $boardModel::getBoard($boardId);
+            $boardFiles = App\Models\BoardFile::where([
                 'board_id' => $boardId,
                 'write_id' => $writeId
             ])->get();
@@ -75,9 +216,9 @@ if(! function_exists('pullOutImage')) {
 }
 
 if(! function_exists('ver_asset')) {
-    function ver_asset($url)
+    function ver_asset($path)
     {
-        return asset($url). '?ver='. config('gnu.VER');
+        return asset($path). '?ver='. config('gnu.VER');
     }
 }
 
@@ -85,7 +226,7 @@ if(! function_exists('ver_asset')) {
 if(! function_exists('todayWriteCount')) {
     function todayWriteCount($id)
     {
-        return App\BoardNew::whereUserId($id)->whereDate('created_at', '=', Carbon\Carbon::today()->toDateString())->count();
+        return App\Models\BoardNew::whereUserId($id)->whereDate('created_at', '=', Carbon\Carbon::today()->toDateString())->count();
     }
 }
 
@@ -177,7 +318,7 @@ if (! function_exists('insertPoint')) {
         if($userId == '') {
             return 0;
         }
-        $user = App\User::find($userId);
+        $user = App\Models\User::find($userId);
         if(is_null($user)) {
             return 0;
         }
@@ -206,7 +347,7 @@ if (! function_exists('insertPoint')) {
             $expireDate = Carbon\Carbon::now()->toDateString();
         }
 
-        App\Point::insert([
+        App\Models\Point::insert([
                     'user_id' => $userId,
                     'datetime' => Carbon\Carbon::now(),
                     'content' => addslashes($content),
@@ -224,7 +365,7 @@ if (! function_exists('insertPoint')) {
             insertUsePoint($userId, $point);
         }
         // User 테이블의 point 업데이트
-        return App\User::where('id', $userId)->increment('point', $point);
+        return App\Models\User::where('id', $userId)->increment('point', $point);
     }
 }
 
@@ -235,7 +376,7 @@ if (! function_exists('deletePoint')) {
         $result = 0;
         if($relTable || $relEmail || $relAction) {
             // 포인트 내역정보
-            $point = App\Point::where([
+            $point = App\Models\Point::where([
                 'user_id' => $userId,
                 'rel_table' => $relTable,
                 'rel_email' => $relEmail,
@@ -254,7 +395,7 @@ if (! function_exists('deletePoint')) {
                     }
                 }
 
-                $result = App\Point::where([
+                $result = App\Models\Point::where([
                     'user_id' => $userId,
                     'rel_table' => $relTable,
                     'rel_email' => $relEmail,
@@ -262,7 +403,7 @@ if (! function_exists('deletePoint')) {
                 ])->delete();
 
                 // user_point에 반영
-                App\Point::where('user_id', $userId)
+                App\Models\Point::where('user_id', $userId)
                     ->where('id', '>', $point->id)
                     ->decrement('user_point', $point->point);
 
@@ -270,7 +411,7 @@ if (! function_exists('deletePoint')) {
                 $sumPoint = getPointSum($userId);
 
                 // User의 포인트 업데이트
-                $result = App\User::where('id', $userId)->update(['point' => $sumPoint]);
+                $result = App\Models\User::where('id', $userId)->update(['point' => $sumPoint]);
             }
         }
 
@@ -282,7 +423,7 @@ if (! function_exists('deletePoint')) {
 if (! function_exists('checkPoint')) {
     function checkPoint($relTable, $relEmail, $relAction)
     {
-        return App\Point::where([
+        return App\Models\Point::where([
             'rel_table' => $relTable,
             'rel_email' => $relEmail,
             'rel_action' => $relAction,
@@ -298,11 +439,11 @@ if (! function_exists('getPointSum')) {
         if(cache('config.homepage')->pointTerm > 0) {
             $expirePoint = getExpirePoint($userId);
             if($expirePoint > 0) {
-                $user = App\User::find($userId);
+                $user = App\Models\User::find($userId);
                 $content = '포인트 소멸';
                 $point = $expirePoint * (-1);
                 $pointUserPoint = $user->point + $point;
-                App\Point::insert([
+                App\Models\Point::insert([
                     'user_id' => $userId,
                     'datetime' => Carbon\Carbon::now(),
                     'content' => addslashes($content),
@@ -322,7 +463,7 @@ if (! function_exists('getPointSum')) {
                 }
             }
             // 유효기간이 있을 때 기간이 지난 포인트 expired 체크
-            App\Point::where('user_id', $userId)
+            App\Models\Point::where('user_id', $userId)
                 ->where('expired', '<>', 1)
                 ->where('expire_date', '<>', '9999-12-31')
                 ->where('expire_date', '<', Carbon\Carbon::now()->toDateString())
@@ -330,7 +471,7 @@ if (! function_exists('getPointSum')) {
         }
 
         // 포인트 합
-        return App\Point::where('user_id', $userId)->sum('point');
+        return App\Models\Point::where('user_id', $userId)->sum('point');
     }
 }
 
@@ -339,24 +480,26 @@ if (! function_exists('getPointSum')) {
 if (! function_exists('deleteWritePoint')) {
     function deleteWritePoint($writeModel, $boardId, $writeId)
     {
-       $write = App\Write::getWrite($boardId, $writeId);
-       $board = App\Board::getBoard($boardId);
-       // 원글에서의 처리
-       $deleteResult = 0;
-       $insertResult = 0;
-       if(!$write->is_comment) {
+        $writeModel = app()->tagged('write')[0];
+        $boardModel = app()->tagged('board')[0];
+        $write = $writeModel::getWrite($boardId, $writeId);
+        $board = $boardModel::getBoard($boardId);
+        // 원글에서의 처리
+        $deleteResult = 0;
+        $insertResult = 0;
+        if(!$write->is_comment) {
            // 포인트 삭제 및 사용 포인트 다시 부여
            $deleteResult = deletePoint($write->user_id, $board->table_name, $writeId, '쓰기');
            if($deleteResult == 0) {
                $insertResult = insertPoint($write->user_id, $board->write_point * (-1), $board->subject. ' '. $writeId. ' 글삭제');
            }
-       } else {   // 댓글에서의 처리
+        } else {   // 댓글에서의 처리
            // 포인트 삭제 및 사용 포인트 다시 부여
            $deleteResult = deletePoint($write->user_id, $board->table_name, $writeId, '댓글');
            if($deleteResult == 0) {
                $insertResult = insertPoint($write->user_id, $board->write_point * (-1), $board->subject. ' '. $write->parent. '-'. $writeId. ' 댓글삭제');
            }
-       }
+        }
     }
 }
 
@@ -369,7 +512,7 @@ if (! function_exists('getExpirePoint')) {
         }
 
         $point =
-            App\Point::selectRaw('sum(point - use_point) as sum_point')
+            App\Models\Point::selectRaw('sum(point - use_point) as sum_point')
             ->where([ 'user_id' => $userId, 'expired' => 0 ])
             ->where('expire_date', '<>', '9999-12-31')
             ->where('expire_date', '<', Carbon\Carbon::now()->toDateString())
@@ -385,7 +528,7 @@ if (! function_exists('deleteUsePoint')) {
     {
         $point1 = abs($usePoint);
 
-        $query = App\Point::where('user_id', $userId)
+        $query = App\Models\Point::where('user_id', $userId)
                     ->where('expired', '<>', 1)
                     ->where('use_point', '>', 0);
         if(cache('config.homepage')->pointTerm > 0) {
@@ -403,11 +546,11 @@ if (! function_exists('deleteUsePoint')) {
                 $expired = 0;
             }
             if($point2 > $point1) {
-                App\Point::where('id', $point->id)
+                App\Models\Point::where('id', $point->id)
                     ->decrement('use_point', $point1, ['expired' => $expired]);
                 break;
             } else {
-                App\Point::where('id', $point->id)
+                App\Models\Point::where('id', $point->id)
                     ->update([
                         'use_point' => 0,
                         'expired' => $expired,
@@ -425,7 +568,7 @@ if (! function_exists('deleteExpirePoint')) {
         $point1 = abs($usePoint);
 
         $points =
-            App\Point::where([
+            App\Models\Point::where([
                 'user_id' => $userId,
                 'expired' => 1
             ])
@@ -443,11 +586,11 @@ if (! function_exists('deleteExpirePoint')) {
                 $expireDate = Carbon\Carbon::now()->addDays($configHomepage->pointTerm-1)->toDateString();
             }
             if($point2 > $point1) {
-                App\Point::where('id', $point->id)
+                App\Models\Point::where('id', $point->id)
                     ->decrement('use_point', $point1, ['expired' => $expired, 'expire_date' => $expireDate]);
                 break;
             } else {
-                App\Point::where('id', $point->id)
+                App\Models\Point::where('id', $point->id)
                     ->update([
                         'use_point' => 0,
                         'expired' => $expired,
@@ -465,7 +608,7 @@ if (! function_exists('insertUsePoint')) {
     {
         $point1 = abs($usePoint);
 
-        $points = App\Point::where('user_id', $userId)
+        $points = App\Models\Point::where('user_id', $userId)
                     ->where('id', '<>', $id)
                     ->where('expired', '=', 0)
                     ->where('use_point', '>', 0)
@@ -476,22 +619,22 @@ if (! function_exists('insertUsePoint')) {
             $point3 = $point->use_point;
 
             if(($point2 - $point3) > $point) {
-                App\Point::where('id', $id)->increment('use_point', $point1);
+                App\Models\Point::where('id', $id)->increment('use_point', $point1);
                 break;
             } else {
                 $point4 = $point2 - $point3;
-                App\Point::where('id', $id)->increment('use_point', $point4, ['expired' => 100]);
+                App\Models\Point::where('id', $id)->increment('use_point', $point4, ['expired' => 100]);
                 $point1 -= $point4;
             }
         }
     }
 }
 
-
 if (! function_exists('viewDefault')) {
     function viewDefault($path, $params=[])
     {
-        $pathArr = explode('.', 'themes.'.$path);
+        $path = 'themes.'. $path;
+        $pathArr = explode('.', $path);
         $pathArr[1] = 'default';
         $defaultPath = implode('.', $pathArr);
         return view()->exists($path) ? view($path, $params) : view($defaultPath, $params);
@@ -537,7 +680,8 @@ if (! function_exists('getSkins')) {
     // 스킨 목록을 가져온다.
     function getSkins($type)
     {
-        $path = resource_path('views/'.$type);
+        $theme = cache('config.theme')->name ? : 'default';
+        $path = resource_path("views/themes/$theme/$type");
         // $result = [];
         $result = ['' => '선택'];
         if(File::exists($path)) {
@@ -559,7 +703,7 @@ if (! function_exists('getPopularWords')) {
     {
         $from = \Carbon\Carbon::now()->subDays($dateCnt)->format("Y-m-d");
         $to = \Carbon\Carbon::now()->toDateString();
-        $populars = App\Admin\Popular::select('word', DB::raw('count(*) as cnt'))
+        $populars = App\Models\Popular::select('word', DB::raw('count(*) as cnt'))
         ->whereBetween('date', [$from, $to])
         ->groupBy('word')
         ->orderBy('cnt', 'desc')
@@ -577,12 +721,12 @@ if (! function_exists('getUser')) {
     {
         $user;
         if(mb_strlen($id, 'utf-8') > 10) {  // 커뮤니티 쪽에서 들어올 때 user의 id가 아닌 id_hashKey가 넘어온다.
-            $user = \App\User::where('id_hashkey', $id)->first();
+            $user = App\Models\User::where('id_hashkey', $id)->first();
         } else {
-            $user = \App\User::find($id);
+            $user = App\Models\User::find($id);
         }
 
-        return $user ? : new \App\User();
+        return $user ? : new App\Models\User();
     }
 }
 
@@ -823,7 +967,7 @@ if (! function_exists('getManageAuthModel')) {
     // 관리 권한 설정 데이터를 가져온다.
     function getManageAuthModel($menuCode)
     {
-        $manageAuth = \App\Admin\ManageAuth::
+        $manageAuth = App\Models\ManageAuth::
             where([
                 'user_id' => auth()->user()->id,
                 'menu' => $menuCode[0],

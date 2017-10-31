@@ -4,8 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Cache;
-use App\Admin\Config;
-use App\Admin\Menu;
+use App\Models\Config;
+use App\Models\Menu;
 
 class ConfigRegister
 {

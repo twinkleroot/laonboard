@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Scrap;
-use App\Board;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Models\Scrap;
+use App\Models\Board;
 use Exception;
 
 class ScrapsController extends Controller
@@ -26,7 +25,9 @@ class ScrapsController extends Controller
     {
         $params = $this->scrap->getIndexParams();
 
-        return view('board.scrap_index', $params);
+        $theme = cache('config.theme')->name;
+
+        return viewDefault("$theme.scraps.index", $params);
     }
 
     /**
@@ -46,7 +47,9 @@ class ScrapsController extends Controller
             return alertClose('코멘트는 스크랩 할 수 없습니다.');
         }
 
-        return view('board.scrap_form', [
+        $theme = cache('config.theme')->name;
+
+        return viewDefault("$theme.scraps.form", [
             'write' => $write,
             'boardId' => Board::getBoard($request->boardName, 'table_name')->id,
             'boardName' => $request->boardName

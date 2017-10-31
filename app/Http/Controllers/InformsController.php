@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Config;
-use App\User;
+use App\Models\Config;
+use App\Models\User;
 
 class InformsController extends Controller
 {
@@ -26,8 +26,9 @@ class InformsController extends Controller
         $params = [
             'informs' => $informs
         ];
+        $theme = cache('config.theme')->name ? : 'default';
 
-        return viewDefault("user.{$this->skin}.inform", $params);
+        return viewDefault("$theme.users.{$this->skin}.inform", $params);
     }
 
     // 회원 알림 읽음 표시 (읽음 표시 버튼 클릭)

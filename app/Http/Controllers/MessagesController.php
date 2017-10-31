@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Session;
 
 class MessagesController extends Controller
 {
     public function message(Request $request)
     {
-        return view('message', [
+        return view('common.message', [
             'message' => Session::has('message') ? Session::get('message') : '',
             'redirect' => Session::has('redirect') ? Session::get('redirect') : '',
             'popup' => Session::has('popup') ? Session::get('popup') : '',
@@ -20,7 +19,7 @@ class MessagesController extends Controller
 
     public function confirm(Request $request)
     {
-        return view('confirm', [
+        return view('common.confirm', [
             'message' => Session::has('message') ? Session::get('message') : '',
             'redirect' => Session::has('redirect') ? Session::get('redirect') : '',
         ]);

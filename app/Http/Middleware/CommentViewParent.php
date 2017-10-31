@@ -3,8 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\Board;
-use App\Write;
 
 class CommentViewParent
 {
@@ -18,10 +16,13 @@ class CommentViewParent
      */
     public function handle($request, Closure $next)
     {
-        $board = Board::getBoard($request->boardName, 'table_name');
+        $writeModel = app()->tagged('write')[0];
+        $boardModel = app()->tagged('board')[0];
+
+        $board = $boardModel::getBoard($request->boardName, 'table_name');
         $writeId = $request->writeId;
 
-        $write = Write::getWrite($board->id, $writeId);
+        $write = $writeModel::getWrite($board->id, $writeId);
         if($write->is_comment) {
             return redirect(route('board.view', ['boardId' => $request->boardName, 'writeId' => $write->parent])."#comment$writeId");
         }

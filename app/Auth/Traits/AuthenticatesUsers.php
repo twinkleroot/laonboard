@@ -4,10 +4,10 @@ namespace App\Traits;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Cache;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\RedirectsUsers;
-use App\User;
+use Cache;
+use App\Models\User;
 
 trait LoginTrait
 {

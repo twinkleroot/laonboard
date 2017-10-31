@@ -1,4 +1,4 @@
-@extends('admin.admin')
+@extends('admin.layouts.basic')
 
 @section('title')팝업레이어 {{ $type == 'create' ? '입력' : '수정' }} | {{ cache('config.homepage')->title }}@endsection
 

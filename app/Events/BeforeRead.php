@@ -10,14 +10,15 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Http\Request;
-use App\Write;
+use App\Contracts\WriteInterface;
+use App\Contracts\BoardInterface;
 
 class BeforeRead
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $request;
-    public $writeModel;
+    public $board;
     public $write;
 
     /**
@@ -25,10 +26,10 @@ class BeforeRead
      *
      * @return void
      */
-    public function __construct(Request $request, Write $writeModel, Write $write)
+    public function __construct(Request $request, BoardInterface $board, WriteInterface $write)
     {
         $this->request = $request;
-        $this->writeModel = $writeModel;
+        $this->board = $board;
         $this->write = $write;
     }
 

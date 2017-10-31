@@ -61,6 +61,8 @@ class AppServiceProvider extends ServiceProvider
             return str_replace(array(':half', ':min'), $parameters, $message);
         });
 
+        // 인터페이스와 구현 객체 바인딩, 앱 내에서 사용할 수 있도록 태그 걸기
+        $this->bindObject();
     }
 
     /**
@@ -70,6 +72,34 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+
     }
+
+    // 인터페이스와 구현 객체 바인딩, 앱 내에서 사용할 수 있도록 태그 걸기
+    private function bindObject()
+    {
+        // BoardInterface에 Board 구현체를 의존 주입
+        $this->app->bind(
+            'App\Contracts\BoardInterface',
+            'App\Models\Board'
+        );
+        // WriteInterface에 Write 구현체를 의존 주입
+        $this->app->bind(
+            'App\Contracts\WriteInterface',
+            'App\Models\Write'
+        );
+        // MainInterface에 Main 구현체를 의존 주입
+        $this->app->bind(
+            'App\Contracts\MainInterface',
+            'App\Models\Main'
+        );
+
+        // BoardInterface를 'board'로 태그
+        $this->app->tag('App\Contracts\BoardInterface', 'board');
+        // WriteInterface를 'write'로 태그
+        $this->app->tag('App\Contracts\WriteInterface', 'write');
+        // MainInterface를 'main'으로 태그
+        $this->app->tag('App\Contracts\MainInterface', 'main');
+    }
+
 }

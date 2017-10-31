@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\BoardNew;
-use Cache;
+use App\Models\BoardNew;
 
 class BoardNewsController extends Controller
 {
@@ -22,9 +20,10 @@ class BoardNewsController extends Controller
         $this->boardNew->deleteOldWrites();
 
         $params = $this->boardNew->getIndexParams($request);
-        $skin = Cache::get('config.homepage')->newSkin ? : 'default';
+        $skin = cache('config.homepage')->newSkin ? : 'default';
+        $theme = cache('config.theme')->name ? : 'default';
 
-        return viewDefault("new.$skin.index", $params);
+        return viewDefault("$theme.news.$skin.index", $params);
     }
 
     public function destroy(Request $request)

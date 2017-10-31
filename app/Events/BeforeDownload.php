@@ -10,16 +10,16 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Http\Request;
-use App\Write;
-use App\Board;
-use App\BoardFile;
+use App\Contracts\BoardInterface;
+use App\Contracts\WriteInterface;
+use App\Models\BoardFile;
 
 class BeforeDownload
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $request;
-    public $writeModel;
+    public $write;
     public $board;
     public $file;
 
@@ -29,10 +29,10 @@ class BeforeDownload
      *
      * @return void
      */
-    public function __construct(Request $request, Write $writeModel, Board $board, BoardFile $file)
+    public function __construct(Request $request, WriteInterface $write, BoardInterface $board, BoardFile $file)
     {
         $this->request = $request;
-        $this->writeModel = $writeModel;
+        $this->write = $write;
         $this->board = $board;
         $this->file = $file;
     }

@@ -1,4 +1,4 @@
-@extends('admin.admin')
+@extends('admin.layouts.basic')
 
 @section('title')캐시 일괄삭제 | {{ cache("config.homepage")->title }}@endsection
 

@@ -3,9 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Cache;
-use App\Board;
-use App\GroupUser;
+use App\Models\GroupUser;
 
 class CheckValidBoard
 {
@@ -18,7 +16,8 @@ class CheckValidBoard
      */
     public function handle($request, Closure $next)
     {
-        $board = Board::getBoard($request->boardName, 'table_name');
+        $boardModel = app()->tagged('board')[0];
+        $board = $boardModel::getBoard($request->boardName, 'table_name');
         if(!$board) {
             return alertRedirect('존재하지 않는 게시판입니다. 경로를 확인해 주세요.');
         }

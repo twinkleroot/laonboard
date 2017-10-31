@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Socialite;
-use App\SocialLogin;
-use App\User;
-use Auth;
 use Laravel\Socialite\Two\InvalidStateException;
 use GuzzleHttp\Exception\ClientException;
 use Carbon\Carbon;
+use App\Models\SocialLogin;
+use App\Models\User;
+use Socialite;
+use Auth;
 
 class SocialController extends Controller
 {
@@ -30,6 +30,7 @@ class SocialController extends Controller
     public function redirectToProvider($provider)
     {
         $config = $this->getConfig($provider);
+
         return Socialite::with($provider)->setConfig($config)->redirect();
     }
 
@@ -64,15 +65,16 @@ class SocialController extends Controller
             if($result == 'view') {
                 // 소셜 계정을 처음 사용해서 로그인 했을 경우 기존 계정과 연결/ 회원가입 화면으로 연결
                 $params = $this->socialModel->getSocialParams($provider);
-                $skin = cache("config.join")->skin ? : 'default';
+                $theme = cache('config.theme')->name ? : 'default';
+                $skin = cache('config.join')->skin ? : 'default';
 
-                return viewDefault("user.$skin.social", $params);
+                return viewDefault("$theme.users.$skin.social", $params);
             } else { // 소셜 계정으로 로그인
                 return redirect(route('home'));
             }
         } else { // 회원 정보 수정에서 소셜 계정 연결
             $message = $this->userModel->connectSocialAccount($userFromSocial, $provider, $this->request);
-            return view('message', [
+            return view('common.message', [
                 'message' => $message,
                 'popup' => 1,
                 'reload' => 1,

@@ -4,12 +4,12 @@ namespace App\Listeners;
 
 use App\Events\UpdateComment;
 use App\Events\CreateComment;
-use App\Board;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class CommentsEventListener
 {
+    public $boardModel;
     /**
      * Create the event listener.
      *
@@ -17,7 +17,7 @@ class CommentsEventListener
      */
     public function __construct()
     {
-        //
+        $this->boardModel = app()->tagged('board')[0];
     }
 
     /**
@@ -54,7 +54,7 @@ class CommentsEventListener
         $request = $event->request;
         $user = auth()->user();
         $userPoint = !$user ? 0 : $user->point;
-        $board = Board::getBoard($request->boardName, 'table_name');
+        $board = $this->boardModel::getBoard($request->boardName, 'table_name');
         // 댓글 쓰기 포인트 설정시 포인트 검사
         $tmpPoint = $userPoint > 0 ? $userPoint : 0;
         if($tmpPoint + $board->comment_point < 0 && !session()->get('admin')) {
@@ -68,7 +68,7 @@ class CommentsEventListener
         }
     }
 
-    public function updateComment(\App\Events\UpdateComment $event)
+    public function updateComment(\App\Models\Events\UpdateComment $event)
     {
         // 글 내용 검사
         if( !checkIncorrectContent($event->request) ) {

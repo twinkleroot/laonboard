@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
-use App\User;
-use App\Admin\Board;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use App\Contracts\BoardInterface;
+use App\Models\User;
 
 class BoardPolicy
 {
@@ -20,11 +20,11 @@ class BoardPolicy
     /**
      * Determine whether the user can view the board.
      *
-     * @param  \App\User  $user
-     * @param  \App\Board  $board
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Board  $board
      * @return mixed
      */
-    public function index(User $user, Board $board)
+    public function index(User $user, BoardInterface $board)
     {
         $menuCode = ['300100', 'r'];
         return getManageAuthModel($menuCode);
@@ -33,7 +33,7 @@ class BoardPolicy
     /**
      * Determine whether the user can create boards.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      * @return mixed
      */
     public function create(User $user)
@@ -45,11 +45,11 @@ class BoardPolicy
     /**
      * Determine whether the user can update the board.
      *
-     * @param  \App\User  $user
-     * @param  \App\Board  $board
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Board  $board
      * @return mixed
      */
-    public function update(User $user, Board $board)
+    public function update(User $user, BoardInterface $board)
     {
         $menuCode = ['300100', 'w'];
         return getManageAuthModel($menuCode);
@@ -58,11 +58,11 @@ class BoardPolicy
     /**
      * Determine whether the user can delete the board.
      *
-     * @param  \App\User  $user
-     * @param  \App\Board  $board
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Board  $board
      * @return mixed
      */
-    public function delete(User $user, Board $board)
+    public function delete(User $user, BoardInterface $board)
     {
         $menuCode = ['300100', 'd'];
         return getManageAuthModel($menuCode);
@@ -71,8 +71,8 @@ class BoardPolicy
     /**
      * Determine whether the user can delete the board.
      *
-     * @param  \App\User  $user
-     * @param  \App\Board  $board
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Board  $board
      * @return mixed
      */
     public function copy(User $user)

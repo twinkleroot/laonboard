@@ -1,4 +1,4 @@
-@extends('admin.admin')
+@extends('admin.layouts.basic')
 
 @section('title'){{ $board->subject }} 게시판 썸네일 삭제 | {{ cache("config.homepage")->title }}@endsection
 

@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\User;
-use App\Admin\Popular;
+use App\Models\User;
+use App\Models\Popular;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PopularPolicy
@@ -20,8 +20,8 @@ class PopularPolicy
     /**
      * Determine whether the user can view the user.
      *
-     * @param  \App\User  $user
-     * @param  \App\Admin\AdminUser\  $user
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\AdminUser\  $user
      * @return mixed
      */
     public function index(User $user, Popular $popular)
@@ -33,8 +33,8 @@ class PopularPolicy
     /**
      * Determine whether the user can update the user.
      *
-     * @param  \App\User  $user
-     * @param  \App\Admin\AdminUser\  $user
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\AdminUser\  $user
      * @return mixed
      */
     public function rank(User $user, Popular $popular)
@@ -46,8 +46,8 @@ class PopularPolicy
     /**
      * Determine whether the user can delete the user.
      *
-     * @param  \App\User  $user
-     * @param  \App\Admin\AdminUser\  $user
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\AdminUser\  $user
      * @return mixed
      */
     public function delete(User $user, Popular $popular)

@@ -1,0 +1,17 @@
+{
+    "name": "CustomMain",
+    "alias": "custommain",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\CustomMain\\Providers\\CustomMainServiceProvider",
+        "Modules\\CustomMain\\Providers\\EventServiceProvider"
+    ],
+    "aliases": [],
+    "files": [
+        "start.php"
+    ],
+    "requires": []
+}

@@ -1,4 +1,4 @@
-@extends("layout.$theme.basic")
+@extends('admin.layouts.basic')
 
 @section('title'){{ $info['themeName'] }} 테마 미리보기 | {{ cache("config.homepage")->title }}@endsection
 
@@ -62,7 +62,8 @@ body {
 
 <section id="preview_content">
     @if($type == 'index')
-        @include("latest.$skin.index")
+        @include("themes.$theme.latest.skins.$skin.index")
+        {{-- @include("latest.$skin.index") --}}
     @elseif($type == 'boardList')
     <div id="board" class="container">
         @if($board->content_head)

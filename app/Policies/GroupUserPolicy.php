@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\User;
-use App\Admin\GroupUser;
+use App\Models\User;
+use App\Models\GroupUser;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class GroupUserPolicy
@@ -19,8 +19,8 @@ class GroupUserPolicy
     /**
      * Determine whether the user can view the groupUser.
      *
-     * @param  \App\User  $user
-     * @param  \App\Admin\GroupUser  $groupUser
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\GroupUser  $groupUser
      * @return mixed
      */
     public function index(User $user, GroupUser $groupUser)
@@ -32,7 +32,7 @@ class GroupUserPolicy
     /**
      * Determine whether the user can create groupUsers.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      * @return mixed
      */
     public function create(User $user)
@@ -44,8 +44,8 @@ class GroupUserPolicy
     /**
      * Determine whether the user can delete the groupUser.
      *
-     * @param  \App\User  $user
-     * @param  \App\Admin\GroupUser  $groupUser
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\GroupUser  $groupUser
      * @return mixed
      */
     public function delete(User $user, GroupUser $groupUser)

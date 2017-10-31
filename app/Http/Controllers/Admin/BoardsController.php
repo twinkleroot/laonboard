@@ -4,18 +4,18 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Admin\Board;
-use App\Write;
-use App\Common\Util;
-use Illuminate\Auth\Access\AuthorizationException;
+use App\Contracts\BoardInterface;
+use App\Contracts\WriteInterface;
 
 class BoardsController extends Controller
 {
     public $boardModel;
+    public $writeModel;
 
-    public function __construct(Board $board)
+    public function __construct(BoardInterface $board, WriteInterface $write)
     {
         $this->boardModel = $board;
+        $this->writeModel = $write;
     }
     /**
      * Display a listing of the resource.
@@ -30,7 +30,7 @@ class BoardsController extends Controller
 
         $params = $this->boardModel->getBoardIndexParams($request);
 
-        return view('admin.boards.index', $params);
+        return view("admin.boards.index", $params);
     }
 
     /**
@@ -43,14 +43,13 @@ class BoardsController extends Controller
         if(isDemo()) {
             return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
         }
-
-        if (auth()->user()->cant('create', Board::class)) {
+        if (auth()->user()->cant('create', $this->boardModel)) {
             abort(403, '게시판 생성에 대한 권한이 없습니다.');
         }
 
         $params = $this->boardModel->getBoardCreateParams($request);
 
-        return view('admin.boards.form', $params);
+        return view("admin.boards.form", $params);
     }
 
     /**
@@ -65,7 +64,7 @@ class BoardsController extends Controller
             return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
         }
 
-        if (auth()->user()->cant('create', Board::class)) {
+        if (auth()->user()->cant('create', $this->boardModel)) {
             abort(403, '게시판 생성에 대한 권한이 없습니다.');
         }
 
@@ -102,14 +101,15 @@ class BoardsController extends Controller
      */
     public function edit(Request $request, $boardName)
     {
-        $board = Board::where('table_name', $boardName)->first();
+        $board = $this->boardModel::where('table_name', $boardName)->first();
+
         if (!auth()->user()->isBoardAdmin($board) && auth()->user()->cant('update', $this->boardModel)) {
             abort(403, '게시판 수정에 대한 권한이 없습니다.');
         }
 
         $params = $this->boardModel->getBoardEditParams($request, $board->id);
 
-        return view('admin.boards.form', $params);
+        return view("admin.boards.form", $params);
     }
 
     /**
@@ -125,7 +125,7 @@ class BoardsController extends Controller
             return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
         }
 
-        $board = Board::find($id);
+        $board = $this->boardModel::find($id);
         if (!auth()->user()->isBoardAdmin($board) && auth()->user()->cant('update', $this->boardModel)) {
             abort(403, '게시판 수정에 대한 권한이 없습니다.');
         }
@@ -184,11 +184,11 @@ class BoardsController extends Controller
 
     public function copyForm($boardName)
     {
-        if (auth()->user()->cant('copy', Board::class)) {
+        if (auth()->user()->cant('copy', $this->boardModel)) {
             abort(403, '게시판 복사에 대한 권한이 없습니다.');
         }
 
-        return view('admin.boards.copy')->with('board', Board::getBoard($boardName, 'table_name'));
+        return view("admin.boards.copy")->with('board', $this->boardModel::getBoard($boardName, 'table_name'));
     }
 
     public function copy(Request $request)
@@ -197,7 +197,7 @@ class BoardsController extends Controller
             return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
         }
 
-        if (auth()->user()->cant('copy', Board::class)) {
+        if (auth()->user()->cant('copy', $this->boardModel)) {
             abort(403, '게시판 복사에 대한 권한이 없습니다.');
         }
 
@@ -218,7 +218,7 @@ class BoardsController extends Controller
 
         $this->validate($request, $rules, $messages);
 
-        $originalBoard = Board::find($request->id);
+        $originalBoard = $this->boardModel->find($request->id);
 
         $board = $this->boardModel->copyBoard($request->all());
         // 게시판 테이블 생성
@@ -227,18 +227,18 @@ class BoardsController extends Controller
         $message = $originalBoard->subject . ' 게시판이 복사되었습니다.';
         // 구조와 데이터를 함께 복사하는 경우
         if($request->get('copy_case') == 'schema_data_both') {
+            $writeToCopy = $this->writeModel;
+            // 원본 테이블을 지정한다.
+            $writeToCopy->setTableName($originalBoard->table_name);
             // 원본 테이블의 데이터를 가져온다.
-            $originalWrite = new Write();
-            $originalWrite->setTableName($originalBoard->table_name);
-            $orginalDatas = $originalWrite->get()->toArray();
+            $orginalDatas = $writeToCopy->get()->toArray();
             foreach($orginalDatas as $key => $value) {
                 $orginalDatas[$key] = array_except($value, ['isDelete', 'isEdit', 'isReply']);
             }
 
-            // 대상 테이블의 모델을 지정하고 데이터를 넣는다.
-            $destinationWrite = new Write();
-            $destinationWrite->setTableName($board->table_name);
-            if($destinationWrite->insert($orginalDatas)) {
+            // 대상 테이블을 지정하고 데이터를 넣는다.
+            $writeToCopy->setTableName($board->table_name);
+            if($writeToCopy->insert($orginalDatas)) {
                 $message = $originalBoard->subject . ' 게시판과 데이터가 복사되었습니다.';
             } else {
                 $message = $originalBoard->subject . ' 게시판과 데이터 복사에 실패하였습니다.';
@@ -249,7 +249,7 @@ class BoardsController extends Controller
             abort(500, '게시판 복사에 실패하였습니다.');
         }
 
-        return view('message', [
+        return view('common.message', [
             'message' => $message,
             'reload' => 1,
             'popup' => 0,
@@ -267,7 +267,7 @@ class BoardsController extends Controller
         $queryString = $request->getQueryString();
         $params = array_add($params, 'queryString', $queryString);
 
-        return view('admin.boards.thumbnail_delete', $params);
+        return view("admin.boards.thumbnail_delete", $params);
     }
 
     // 유효성 검사 규칙
@@ -282,14 +282,11 @@ class BoardsController extends Controller
             'write_point' => 'bail|numeric|required',
             'comment_point' => 'bail|numeric|required',
             'download_point' => 'bail|numeric|required',
-            // 'table_width' => 'bail|numeric|required',
             'subject_len' => 'bail|numeric|required',
             'page_rows' => 'bail|numeric|required',
             'new' => 'bail|numeric|required',
             'hot' => 'bail|numeric|required',
             'image_width' => 'bail|numeric|required',
-            // 'gallery_cols' => 'bail|numeric|required',
-            // 'gallery_width' => 'bail|numeric|required',
             'gallery_height' => 'bail|numeric|required',
             'upload_size' => 'bail|numeric|required',
             'upload_count' => 'bail|numeric|required',
@@ -298,10 +295,6 @@ class BoardsController extends Controller
             'write_max' => 'bail|numeric|nullable',
             'comment_min' => 'bail|numeric|nullable',
             'comment_max' => 'bail|numeric|nullable',
-            // 'mobile_subject_len' => 'bail|numeric|required',
-            // 'mobile_page_rows' => 'bail|numeric|required',
-            // 'mobile_gallery_width' => 'bail|numeric|required',
-            // 'mobile_gallery_height' => 'bail|numeric|required',
         ];
     }
 
@@ -317,32 +310,25 @@ class BoardsController extends Controller
             'write_point.required' => '글쓰기 포인트를 입력해 주세요.',
             'comment_point.required' => '댓글쓰기 포인트를 입력해 주세요.',
             'download_point.required' => '다운로드 포인트를 입력해 주세요.',
-            // 'table_width.required' => '게시판 폭을 입력해 주세요.',
             'subject_len.required' => '제목 길이를 입력해 주세요.',
             'page_rows.required' => '페이지당 목록 수를 입력해 주세요.',
             'new.required' => '새글 아이콘을 입력해 주세요.',
             'hot.required' => '인기글 아이콘을 입력해 주세요.',
             'image_width.required' => '이미지 폭 크기를 입력해 주세요.',
-            // 'gallery_cols.required' => '갤러리 이미지 수를 입력해 주세요.',
-            // 'gallery_width.required' => '갤러리 이미지 폭을 입력해 주세요.',
             'gallery_height.required' => '갤러리 이미지 높이를 입력해 주세요.',
             'upload_size.required' => '파일 업로드 용량을 입력해 주세요.',
             'upload_count.required' => '파일 업로드 개수를 입력해 주세요.',
-
             'count_delete.numeric' => '원글 삭제 불가 : 숫자가 아닙니다.',
             'count_modify.numeric' => '원글 수정 불가 : 숫자가 아닙니다.',
             'read_point.numeric' => '글읽기 포인트 : 숫자가 아닙니다.',
             'write_point.numeric' => '글쓰기 포인트 : 숫자가 아닙니다.',
             'comment_point.numeric' => '댓글쓰기 포인트 : 숫자가 아닙니다.',
             'download_point.numeric' => '다운로드 포인트 : 숫자가 아닙니다.',
-            // 'table_width.numeric' => '게시판 폭 : 숫자가 아닙니다.',
             'subject_len.numeric' => '제목 길이 : 숫자가 아닙니다.',
             'page_rows.numeric' => '페이지당 목록 수 : 숫자가 아닙니다.',
             'new.numeric' => '새글 아이콘 : 숫자가 아닙니다.',
             'hot.numeric' => '인기글 아이콘 : 숫자가 아닙니다.',
             'image_width.numeric' => '이미지 폭 크기 : 숫자가 아닙니다.',
-            // 'gallery_cols.numeric' => '갤러리 이미지 수 : 숫자가 아닙니다.',
-            // 'gallery_width.numeric' => '갤러리 이미지 폭 : 숫자가 아닙니다.',
             'gallery_height.numeric' => '갤러리 이미지 높이 : 숫자가 아닙니다.',
             'upload_size.numeric' => '파일 업로드 용량 : 숫자가 아닙니다.',
             'upload_count.numeric' => '파일 업로드 개수 : 숫자가 아닙니다.',

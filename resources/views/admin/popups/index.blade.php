@@ -1,4 +1,4 @@
-@extends('admin.admin')
+@extends('admin.layouts.basic')
 
 @section('title')팝업레이어 관리 | {{ cache('config.homepage')->title }}@endsection
 

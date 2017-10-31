@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Admin\ManageAuth;
+use App\Models\ManageAuth;
 
 class ManageAuthsController extends Controller
 {
@@ -26,7 +26,7 @@ class ManageAuthsController extends Controller
     {
         $params = $this->authModel->getIndexParams($request);
 
-        return view('admin.configs.manage_auth', $params);
+        return view("admin.configs.manage_auth", $params);
     }
 
     /**
@@ -64,7 +64,7 @@ class ManageAuthsController extends Controller
         if(isDemo()) {
             return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
         }
-        
+
         $message = $this->authModel->deleteManageAuth($ids);
 
         return redirect()->back()->with('message', $message);

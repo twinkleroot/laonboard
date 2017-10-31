@@ -1,0 +1,18 @@
+{
+    "name": "Content",
+    "alias": "content",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\Content\\Providers\\ContentServiceProvider",
+        "Modules\\Content\\Providers\\AuthServiceProvider",
+        "Modules\\Content\\Providers\\EventServiceProvider"
+    ],
+    "aliases": [],
+    "files": [
+        "start.php"
+    ],
+    "requires": []
+}

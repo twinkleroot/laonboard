@@ -1,4 +1,4 @@
-@extends('admin.admin')
+@extends('admin.layouts.basic')
 
 @section('title')게시판 {{ $type == 'create' ? '생성' : '수정' }} | {{ cache("config.homepage")->title }}@endsection
 

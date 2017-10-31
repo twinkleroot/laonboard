@@ -7,8 +7,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use App\Point;
-use Modules\Memo\Entities\Memo;
+use App\Models\Point;
+use App\Models\Memo;
 
 class LoginEventListener
 {

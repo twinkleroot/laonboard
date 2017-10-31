@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\Board;
 use Exception;
 
 class CheckBoardLevel
@@ -24,8 +23,9 @@ class CheckBoardLevel
             $baseLevel = auth()->user()->level;  // 유저의 등급을 넣음
         }
 
+        $boardModel = app()->tagged('board')[0];
         $boardName = $request->segments()[1];
-        $board = Board::getBoard($boardName, 'table_name');
+        $board = $boardModel::getBoard($boardName, 'table_name');
 
         if($baseLevel < $board[$type]) {
             if(str_contains($type, 'list')) {

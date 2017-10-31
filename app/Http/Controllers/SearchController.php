@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Board;
-use App\Group;
-use App\GroupUser;
-use App\User;
-use App\Write;
+use App\Models\Board;
+use App\Models\Group;
+use App\Models\GroupUser;
+use App\Models\User;
+use App\Models\Write;
 use App\Services\CustomPaginator;
-use App\Admin\Popular;
+use App\Models\Popular;
 
 class SearchController extends Controller
 {
@@ -66,9 +65,10 @@ class SearchController extends Controller
             'paginationQueryString' => $queryStrings['pagination']
         ];
 
+        $theme = cache('config.theme')->name ? : 'default';
         $skin = cache('config.homepage')->searchSkin ? : 'default';
 
-        return viewDefault("search.$skin.result", $params);
+        return viewDefault("$theme.searches.$skin.result", $params);
     }
 
     // 검색 조건에 따라 Board 모델을 구한다.
@@ -152,7 +152,7 @@ class SearchController extends Controller
 
                     // 인기 검색어 추가
                     if($boardIndex == 0 && array_search('email', $kinds) === false) {
-                        $popular->addPopular($kinds, $searchStr, $request);
+                        addPopular($kinds, $searchStr, $request);
                     }
 
                     // 첫번째 검색필드 땐 operator에 따라 where 메소드 넣기, 나머진 orWhere()

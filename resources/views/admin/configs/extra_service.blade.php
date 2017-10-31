@@ -1,4 +1,4 @@
-@extends('admin.admin')
+@extends('admin.layouts.basic')
 
 @section('title')부가서비스 | {{ Cache::get("config.homepage")->title }}@endsection
 

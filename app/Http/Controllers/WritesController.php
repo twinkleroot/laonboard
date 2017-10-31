@@ -4,19 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Http\Controllers\Controller;
-use App\Write;
-use App\Point;
-use App\Board;
-use App\BoardFile;
-use App\BoardGood;
-use App\Comment;
-use App\Notification;
+use Illuminate\Pagination\Paginator;
+use App\Contracts\BoardInterface;
+use App\Contracts\WriteInterface;
+use App\Models\BoardFile;
+use App\Models\BoardGood;
+use App\Models\Comment;
+use App\Models\Notification;
 use App\Services\ReCaptcha;
+use App\Services\RssFeed;
 use Auth;
 use Cache;
-use App\Services\RssFeed;
-use Illuminate\Pagination\Paginator;
+use Module;
 
 class WritesController extends Controller
 {
@@ -24,10 +23,10 @@ class WritesController extends Controller
     public $boardFileModel;
     public $boardGoodModel;
 
-    public function __construct(Request $request, Write $write, BoardFile $boardFile, BoardGood $boardGood)
+    public function __construct(Request $request, WriteInterface $write, BoardInterface $board, BoardFile $boardFile, BoardGood $boardGood)
     {
         $this->writeModel = $write;
-        $this->writeModel->board = Board::getBoard($request->boardName, 'table_name');
+        $this->writeModel->board = $board->getBoard($request->boardName, 'table_name');
         $this->writeModel->setTableName($request->boardName);
         $this->boardFileModel = $boardFile;
         $this->boardGoodModel = $boardGood;
@@ -41,10 +40,11 @@ class WritesController extends Controller
     public function index(Request $request, $boardName)
     {
         $params = $this->writeModel->getIndexParams($this->writeModel, $request);
+        $params['skin'] = $this->writeModel->board->skin ? : 'default';
+        $theme = cache('config.theme')->name ? : 'default';
+        $params['theme'] = $theme;
 
-        $skin = $this->writeModel->board->skin ? : 'default';
-
-        return viewDefault("board.$skin.index", $params);
+        return viewDefault("$theme.boards.index", $params);
     }
 
     /**
@@ -55,10 +55,10 @@ class WritesController extends Controller
      */
     public function view(Request $request, $boardName, $writeId)
     {
-        $board = Board::getBoard($boardName, 'table_name');
-        $write = Write::getWrite($board->id, $writeId);
+        $board = $this->writeModel->board;
+        $write = $this->writeModel::getWrite($board->id, $writeId);
         // 글 읽기전 조회수 증가, 포인트 계산 이벤트 Fire
-        event(new \App\Events\BeforeRead($request, $this->writeModel, $write));
+        event(new \App\Events\BeforeRead($request, $board, $write));
 
         // 글 보기 데이터
         $params = $this->writeModel->getViewParams($this->writeModel, $writeId, $request);
@@ -81,44 +81,12 @@ class WritesController extends Controller
 
         // Open Graph image 추출
         $params = array_add($params, 'ogImage', pullOutImage($write->content, $board->id, $write->id, $write->file));
+        $params['skin'] = $this->writeModel->board->skin ? : 'default';
 
-        $skin = $board->skin ? : 'default';
+        $theme = cache('config.theme')->name ? : 'default';
+        $params['theme'] = $theme;
 
-        return viewDefault("board.$skin.view", $params);
-    }
-
-    // 글 보기 중 첨부파일 다운로드
-    public function download(Request $request, $boardName, $writeId, $fileNo)
-    {
-        $file = $this->boardFileModel->where([
-            'board_id' => $this->writeModel->board->id,
-            'write_id' => $writeId,
-            'board_file_no' => $fileNo,
-        ])->first();
-
-        event(new \App\Events\BeforeDownload($request, $this->writeModel, $this->writeModel->board, $file));
-
-        return response()->download(storage_path('app/public/'. $request->boardName. '/'. $file->file), $file->source);
-    }
-
-    // 글 보기 중 링크 연결
-    public function link($boardName, $writeId, $linkNo)
-    {
-        $linkUrl = $this->writeModel->beforeLink($this->writeModel, $writeId, $linkNo);
-
-        return view('board.link', [ 'linkUrl' => $linkUrl ]);
-    }
-
-    // 추천/비추천 ajax 메서드
-    public function good($boardName, $writeId, $good)
-    {
-        $result = $this->boardGoodModel->good($this->writeModel, $writeId, $good);
-
-        if(isset($result['error'])) {
-            return [ 'error' => $result['error'] ];
-        }
-
-        return [ 'count' => $result['count'] ];
+        return viewDefault("$theme.boards.view", $params);
     }
 
     /**
@@ -129,9 +97,12 @@ class WritesController extends Controller
     public function create(Request $request, $boardName)
     {
         $params = $this->writeModel->getCreateParams($request);
-        $skin = $this->writeModel->board->skin ? : 'default';
+        $params['skin'] = $this->writeModel->board->skin ? : 'default';
 
-        return viewDefault("board.$skin.form", $params);
+        $theme = cache('config.theme')->name ? : 'default';
+        $params['theme'] = $theme;
+
+        return viewDefault("$theme.boards.form", $params);
     }
 
     /**
@@ -191,14 +162,16 @@ class WritesController extends Controller
             }
         }
 
-        $notification = new Notification();
-        // 기본환경설정에서 이메일 사용을 하고, 해당 게시판에서 메일발송을 사용하고, 글쓴이가 답변메일을 받겠다고 하면
-        if(cache('config.email.default')->emailUse && $this->writeModel->board->use_email && $request->mail == 'mail') {
-            $notification->sendWriteNotification($this->writeModel, $write->id);
-        }
+        if(Module::has('Notification') && array_has(Module::enabled(), 'Notification')) {
+            $notification = new Notification();
+            // 기본환경설정에서 이메일 사용을 하고, 해당 게시판에서 메일발송을 사용하고, 글쓴이가 답변메일을 받겠다고 하면
+            if(cache('config.email.default')->emailUse && $this->writeModel->board->use_email && $request->mail == 'mail') {
+                $notification->sendWriteNotification($this->writeModel, $write->id);
+            }
 
-        // 알림 전송
-        $notification->sendInform($this->writeModel, $write->id);
+            // 알림 전송
+            $notification->sendInform($this->writeModel, $write->id);
+        }
 
         return redirect(route('board.view', ['boardId' => $boardName, 'writeId' => $write->id] ));
     }
@@ -212,9 +185,12 @@ class WritesController extends Controller
     public function edit(Request $request, $boardName, $writeId)
     {
         $params = $this->writeModel->getEditParams($writeId, $this->writeModel, $request);
-        $skin = $this->writeModel->board->skin ? : 'default';
+        $params['skin'] = $this->writeModel->board->skin ? : 'default';
 
-        return viewDefault("board.$skin.form", $params);
+        $theme = cache('config.theme')->name ? : 'default';
+        $params['theme'] = $theme;
+
+        return viewDefault("$theme.boards.form", $params);
     }
 
     /**
@@ -253,7 +229,7 @@ class WritesController extends Controller
 
         $this->validate($request, $rules, $messages);
 
-        $fileCount = Write::getWrite($this->writeModel->board->id, $writeId)->file;
+        $fileCount = $this->writeModel::getWrite($this->writeModel->board->id, $writeId)->file;
         if(count($request->file_del) > 0 || count($request->attach_file) > 0) {
             // 첨부 파일 변경
             $fileCount = $this->boardFileModel->updateBoardFiles($request, $this->writeModel->board->id, $writeId);
@@ -266,23 +242,6 @@ class WritesController extends Controller
         $returnUrl = route('board.view', ['boardId' => $boardName, 'writeId' => $writeId] ). $queryString;
 
         return redirect($returnUrl);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * 글 답변 폼 연결
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function createReply(Request $request, $boardName, $writeId)
-    {
-        event(new \App\Events\WriteReply($request, $boardName, $writeId));
-
-        $params = $this->writeModel->getReplyParams($writeId, $this->writeModel, $request);
-        $skin = $this->writeModel->board->skin ? : 'default';
-
-        return viewDefault("board.$skin.form", $params);
     }
 
     /**
@@ -303,7 +262,38 @@ class WritesController extends Controller
         }
 
         $returnUrl = route('board.index', $boardName). ($request->page == 1 ? '' : '?page='. $request->page);
+
         return redirect($returnUrl);
+    }
+
+    // 글 보기 중 링크 연결
+    public function link($boardName, $writeId, $linkNo)
+    {
+        $linkUrl = $this->writeModel->beforeLink($this->writeModel, $writeId, $linkNo);
+
+        $theme = cache('config.theme')->name ? : 'default';
+
+        return viewDefault("$theme.boards.link", $params);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     * 글 답변 폼 연결
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function createReply(Request $request, $boardName, $writeId)
+    {
+        event(new \App\Events\WriteReply($request, $boardName, $writeId));
+
+        $params = $this->writeModel->getReplyParams($writeId, $this->writeModel, $request);
+        $params['skin'] = $this->writeModel->board->skin ? : 'default';
+
+        $theme = cache('config.theme')->name ? : 'default';
+        $params['theme'] = $theme;
+
+        return viewDefault("$theme.boards.form", $params);
     }
 
     /**
@@ -325,6 +315,7 @@ class WritesController extends Controller
         }
 
         $returnUrl = route('board.index', $boardName). ($request->page == 1 ? '' : '?page='. $request->page);
+
         return redirect($returnUrl);
     }
 
@@ -340,6 +331,34 @@ class WritesController extends Controller
             ->header('Cache-Control', 'no-cache, must-revalidate')
             ->header('Pragma', 'no-cache')
             ->header('charset', 'utf-8');
+    }
+
+    // ajax - 게시글에 제목과 내용에 금지단어가 포함되어있는지 검사
+    public function boardFilter(Request $request)
+    {
+        $subject = $request->subject;
+        $content = $request->content;
+
+        $filterStrs = explode(',', trim(implode(',', cache("config.board")->filter)));
+        $returnArr['subject'] = '';
+        $returnArr['content'] = '';
+        foreach($filterStrs as $str) {
+            // 제목 필터링 (찾으면 중지)
+            $pos = stripos($subject, $str);
+            if ($pos !== false) {
+                $returnArr['subject'] = $str;
+                break;
+            }
+
+            // 내용 필터링 (찾으면 중지)
+            $pos = stripos($content, $str);
+            if ($pos !== false) {
+                $returnArr['content'] = $str;
+                break;
+            }
+        }
+
+        return $returnArr;
     }
 
     // 유효성 검사 규칙

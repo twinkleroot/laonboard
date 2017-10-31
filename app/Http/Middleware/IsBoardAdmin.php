@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\Board;
 
 class IsBoardAdmin
 {
@@ -16,7 +15,9 @@ class IsBoardAdmin
      */
     public function handle($request, Closure $next)
     {
-        $board = Board::getBoard($request->boardId);
+        $boardModel = app()->tagged('board')[0];
+        $board = $boardModel::getBoard($request->boardId);
+
         if(auth()->user()->isBoardAdmin($board)) {
             return $next($request);
         }

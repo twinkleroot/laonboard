@@ -32,6 +32,5 @@ class CheckInstall
         } catch (PDOException $e) {
             dd('Database Connect Error!!!');
         }
-
     }
 }

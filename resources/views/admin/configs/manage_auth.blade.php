@@ -1,4 +1,4 @@
-@extends('admin.admin')
+@extends('admin.layouts.basic')
 
 @section('title')관리권한설정 | {{ Cache::get('config.homepage')->title }}@endsection
 

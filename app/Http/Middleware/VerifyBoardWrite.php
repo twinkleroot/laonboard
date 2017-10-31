@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\Board;
 
 class VerifyBoardWrite
 {
@@ -36,7 +35,8 @@ class VerifyBoardWrite
         }
 
         $boardName = $request->segment(2);
-        $board = Board::getBoard($boardName, 'table_name');
+        $boardModel = app()->tagged('board')[0];
+        $board = $boardModel::getBoard($boardName, 'table_name');
 
         // 파일 업로드 권한 있는지 검사
         if(count($request->attach_file) > 0) {
@@ -62,7 +62,5 @@ class VerifyBoardWrite
 
         return $next($request);
     }
-
-
 
 }

@@ -6,8 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use App\Board;
-use App\Write;
+use App\Models\Board;
+use App\Models\Write;
 
 class InvoiceWrited extends Notification implements ShouldQueue
 {

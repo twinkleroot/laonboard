@@ -5,12 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use Auth;
-use Cache;
-use App\User;
-use App\Cert;
+use App\Models\User;
+use App\Models\Cert;
+use App\Models\Config;
 use App\Services\ReCaptcha;
-use App\Admin\Config;
+use Auth;
 
 class RegisterController extends Controller
 {
@@ -42,9 +41,10 @@ class RegisterController extends Controller
     // 회원 가입 약관 페이지
     public function join()
     {
-        $skin = cache("config.join")->skin ? : 'default';
+        $theme = cache('config.theme')->name ? : 'default';
+        $skin = cache('config.join')->skin ? : 'default';
 
-        return viewDefault("user.$skin.join");
+        return viewDefault("$theme.users.$skin.join");
     }
 
     // 회원 가입 폼
@@ -75,17 +75,16 @@ class RegisterController extends Controller
         session()->put("ss_cert_hash", "");
         session()->put("ss_cert_type", "");
 
-        $skin = cache("config.join")->skin ? : 'default';
-
         $messages = $this->userModel->addPasswordMessages($this->userModel->messages);
-
         $params = [
             'agreeStipulation' => $request->agreeStipulation,
             'agreePrivacy' => $request->agreePrivacy,
             'passwordMessage' => $messages['password.regex'],
         ];
+        $theme = cache('config.theme')->name ? : 'default';
+        $skin = cache('config.join')->skin ? : 'default';
 
-        return viewDefault("user.$skin.register", $params);
+        return viewDefault("$theme.users.$skin.register", $params);
     }
 
     // 회원 가입 수행
@@ -139,9 +138,10 @@ class RegisterController extends Controller
         if(!$request->agreeStipulation || !$request->agreePrivacy) {
             return alertRedirect('회원가입 약관 동의 페이지를 거치지 않고 회원가입을 진행할 수 없습니다.');
         }
-        $skin = cache("config.join")->skin ? : 'default';
+        $theme = cache('config.theme')->name ? : 'default';
+        $skin = cache('config.join')->skin ? : 'default';
 
-        return viewDefault("user.$skin.register", $request->all());
+        return viewDefault("$theme.users.$skin.register", $request->all());
     }
 
 }

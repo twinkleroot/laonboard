@@ -10,7 +10,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Http\Request;
-use App\Board;
+use App\Contracts\BoardInterface;
 
 class GetRssView
 {
@@ -23,7 +23,7 @@ class GetRssView
      *
      * @return void
      */
-    public function __construct(Request $request, Board $board)
+    public function __construct(Request $request, BoardInterface $board)
     {
         $this->request = $request;
         $this->board = $board;

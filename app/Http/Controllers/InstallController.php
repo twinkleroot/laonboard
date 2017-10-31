@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\InstallRequest;
 use File;
 use Artisan;
@@ -12,8 +11,8 @@ use Cache;
 use Exception;
 use Doctrine\DBAL\Driver\PDOException;
 use Carbon\Carbon;
-use App\User;
-use App\Admin\Config;
+use App\Models\User;
+use App\Models\Config;
 
 class InstallController extends Controller
 {

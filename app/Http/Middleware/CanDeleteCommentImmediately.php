@@ -3,8 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\Board;
-use DB;
 
 class CanDeleteCommentImmediately
 {
@@ -19,8 +17,11 @@ class CanDeleteCommentImmediately
     {
         $writeId = $request->writeId;
         $commentId = $request->commentId;
-        $board = Board::getBoard($request->boardName, 'table_name');
-        $comment = DB::table('write_'.$board->table_name)->where('id', $commentId)->first();
+        $boardModel = app()->tagged('board')[0];
+        $writeModel = app()->tagged('write')[0];
+
+        $board = $boardModel::getBoard($request->boardName, 'table_name');
+        $comment = $writeModel::getWrite($board->id, $commentId);
 
         if(session()->get(session()->getId(). 'delete_board_'. $request->boardName. '_write_'. $commentId)) {
             return $next($request);

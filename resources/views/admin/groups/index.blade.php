@@ -1,4 +1,4 @@
-@extends('admin.admin')
+@extends('admin.layouts.basic')
 
 @section('title')게시판 그룹 설정 | {{ Cache::get("config.homepage")->title }}@endsection
 

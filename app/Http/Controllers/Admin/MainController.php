@@ -4,18 +4,20 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\User;
-use App\BoardNew;
-use App\Board;
-use App\Point;
+use App\Models\User;
+use App\Models\BoardNew;
+use App\Models\Point;
 use Cache;
 use DB;
 
 class MainController extends Controller
 {
+    public $boardModel;
+
     public function __construct()
     {
         $this->middleware('admin');
+        $this->boardModel = app()->tagged('board')[0];
     }
 
     public function index()
@@ -29,8 +31,9 @@ class MainController extends Controller
             $userList, $newList, $pointList
         ]);
         $params = array_add($params, 'pageRows', $pageRows);
+        $theme = cache('config.theme')->name;
 
-        return view('admin.index', $params);
+        return view("admin.admin", $params);
     }
 
     private function getUserList($pageRows)
@@ -98,7 +101,7 @@ class MainController extends Controller
 
         foreach($points as $point) {
             if(!str_contains($point->rel_table, '@')) {
-                $board = Board::getBoard($point->rel_table, 'table_name');
+                $board = $this->boardModel::getBoard($point->rel_table, 'table_name');
                 if($board) {
                     $point->rel_table = $board->id;
                 }

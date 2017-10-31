@@ -9,7 +9,7 @@ abstract class ServiceProvider
     /**
      * The application instance.
      *
-     * @var \Illuminate\Contracts\Foundation\Application
+     * @var \Illuminate\Foundation\Application
      */
     protected $app;
 
@@ -25,19 +25,19 @@ abstract class ServiceProvider
      *
      * @var array
      */
-    public static $publishes = [];
+    protected static $publishes = [];
 
     /**
      * The paths that should be published by group.
      *
      * @var array
      */
-    public static $publishGroups = [];
+    protected static $publishGroups = [];
 
     /**
      * Create a new service provider instance.
      *
-     * @param  \Illuminate\Contracts\Foundation\Application  $app
+     * @param  \Illuminate\Foundation\Application  $app
      * @return void
      */
     public function __construct($app)
@@ -54,7 +54,7 @@ abstract class ServiceProvider
      */
     protected function mergeConfigFrom($path, $key)
     {
-        $config = $this->app['config']->get($key, []);
+        $config = $this->app['config']->get($key,[]);
 
         $this->app['config']->set($key, array_merge(require $path, $config));
     }
@@ -98,17 +98,6 @@ abstract class ServiceProvider
     protected function loadTranslationsFrom($path, $namespace)
     {
         $this->app['translator']->addNamespace($namespace, $path);
-    }
-
-    /**
-     * Register a JSON translation file path.
-     *
-     * @param  string  $path
-     * @return void
-     */
-    protected function loadJsonTranslationsFrom($path)
-    {
-        $this->app['translator']->addJsonPath($path);
     }
 
     /**
@@ -214,7 +203,7 @@ abstract class ServiceProvider
     }
 
     /**
-     * Get the paths for the provider and group.
+     * Get the paths for the provdider and group.
      *
      * @param  string  $provider
      * @param  string  $group
@@ -292,5 +281,17 @@ abstract class ServiceProvider
     public function isDeferred()
     {
         return $this->defer;
+    }
+
+    /**
+     * Get a list of files that should be compiled for the package.
+     *
+     * @deprecated
+     *
+     * @return array
+     */
+    public static function compiles()
+    {
+        return [];
     }
 }

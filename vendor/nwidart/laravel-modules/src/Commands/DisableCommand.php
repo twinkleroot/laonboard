@@ -4,6 +4,7 @@ namespace Nwidart\Modules\Commands;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
+use Artisan;
 
 class DisableCommand extends Command
 {
@@ -30,6 +31,7 @@ class DisableCommand extends Command
 
         if ($module->enabled()) {
             $module->disable();
+            Artisan::call('cache:clear');
 
             $this->info("Module [{$module}] disabled successful.");
         } else {

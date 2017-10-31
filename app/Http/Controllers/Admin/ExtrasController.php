@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\Board;
 use Gate;
 use File;
-use App\Board;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class ExtrasController extends Controller
 {
@@ -24,7 +24,9 @@ class ExtrasController extends Controller
             }
         }
 
-        return view('admin.configs.session_delete', [ 'sessions' => $results ]);
+        $theme = cache('config.theme')->name ? : 'default';
+
+        return view("admin.configs.session_delete", [ 'sessions' => $results ]);
     }
 
     // 최신글 캐시파일 일괄삭제
@@ -49,7 +51,9 @@ class ExtrasController extends Controller
             }
         }
 
-        return view('admin.configs.cache_delete', [ 'caches' => $results ]);
+        $theme = cache('config.theme')->name ? : 'default';
+
+        return view("admin.configs.cache_delete", [ 'caches' => $results ]);
     }
 
     // 썸네일 파일 일괄삭제
@@ -74,7 +78,7 @@ class ExtrasController extends Controller
             }
         }
 
-        return view('admin.configs.thumbnail_delete', [ 'files' => $results ]);
+        return view("admin.configs.thumbnail_delete", [ 'files' => $results ]);
     }
 
     // phpinfo()
@@ -97,7 +101,7 @@ class ExtrasController extends Controller
     {
         $menuCode = ['100810', 'r'];
         if(auth()->user()->isSuperAdmin() || Gate::allows('view-admin-mailtest', getManageAuthModel($menuCode))) {
-            return view('admin.configs.extra_service');
+            return view("admin.configs.extra_service");
         } else {
             return alertRedirect('최고관리자 또는 관리권한이 있는 회원만 접근 가능합니다.', '/admin/index');
         }

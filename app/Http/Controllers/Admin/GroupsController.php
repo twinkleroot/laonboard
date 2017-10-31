@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
-use App\Admin\Group;
+use App\Models\Group;
 
 class GroupsController extends Controller
 {
@@ -27,7 +28,7 @@ class GroupsController extends Controller
 
         $params = $this->groupModel->getGroupIndexParams($request);
 
-        return view('admin.groups.index', $params);
+        return view("admin.groups.index", $params);
     }
 
     /**
@@ -47,7 +48,7 @@ class GroupsController extends Controller
 
         $params = $this->groupModel->getGroupCreateParams();
 
-        return view('admin.groups.form', $params);
+        return view("admin.groups.form", $params);
     }
 
     /**
@@ -96,7 +97,7 @@ class GroupsController extends Controller
 
         $params = $this->groupModel->getGroupEditParams($group);
 
-        return view('admin.groups.form', $params);
+        return view("admin.groups.form", $params);
     }
 
     /**

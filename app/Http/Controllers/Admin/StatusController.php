@@ -7,23 +7,30 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Lava;
 use Gate;
-use App\Board;
-use App\BoardNew;
+use App\Contracts\BoardInterface;
+use App\Models\BoardNew;
 
 class StatusController extends Controller
 {
+    public $board;
+
+    public function __construct(BoardInterface $board)
+    {
+        $this->board = $board;
+    }
 
     public function index(Request $request) {
         if(isDemo()) {
             return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
         }
-        
+
         $menuCode = ['300500', 'r'];
 
         if(auth()->user()->isSuperAdmin() || Gate::allows('view-admin-mailtest', getManageAuthModel($menuCode))) {
             $params = $this->writeStatus($request);
             $chart = isset($params['renderChart']) ? $params['renderChart'] : '';
-            return view('admin.boards.status', $params)->with('chart', $chart);
+
+            return view("admin.boards.status", $params)->with("chart", $chart);
         } else {
             return alertRedirect('최고관리자 또는 관리권한이 있는 회원만 접근 가능합니다.', '/admin/index');
         }
@@ -32,7 +39,7 @@ class StatusController extends Controller
     private function writeStatus(Request $request)
     {
         // 뷰에 필요한 파라미터
-        $boards = Board::all();
+        $boards = $this->board->all();
         $periods = $this->getPeriodList();
         $params = [
             'boards' => $boards,

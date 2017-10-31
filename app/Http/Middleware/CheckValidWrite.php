@@ -2,10 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use Cache;
 use Closure;
-use App\Board;
-use App\Write;
 
 class CheckValidWrite
 {
@@ -18,8 +15,11 @@ class CheckValidWrite
      */
     public function handle($request, Closure $next)
     {
-        $board = Board::getBoard($request->boardName, 'table_name');
-        $write = Write::getWrite($board->id, $request->writeId);
+        $boardModel = app()->tagged('board')[0];
+        $writeModel = app()->tagged('write')[0];
+
+        $board = $boardModel::getBoard($request->boardName, 'table_name');
+        $write = $writeModel::getWrite($board->id, $request->writeId);
 
         if( !$write ) {
             return alertRedirect('글이 존재하지 않습니다.\\n글이 삭제되었거나 이동하였을 수 있습니다.', "/bbs/{$request->boardName}");

@@ -4,6 +4,7 @@ namespace Nwidart\Modules\Commands;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
+use Artisan;
 
 class EnableCommand extends Command
 {
