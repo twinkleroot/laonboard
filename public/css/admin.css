@@ -1219,7 +1219,7 @@ input[type=radio] {
 }
 .td_nick,
 .td_group {
-	width: 140px;
+	width: 170px;
 	text-align: left;
 }
 .td_nick.open {
