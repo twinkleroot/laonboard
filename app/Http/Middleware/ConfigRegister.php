@@ -20,7 +20,7 @@ class ConfigRegister
     {
         // 설정 캐시 등록
         $configNames = [
-            'homepage', 'board', 'join', 'cert', 'email.default', 'email.board', 'email.join', 'theme', 'skin', 'sns', 'extra'
+            'homepage', 'board', 'join', 'email.default', 'email.board', 'email.join', 'theme', 'skin', 'sns', 'extra'
         ];
         foreach($configNames as $configName) {
             $this->registerConfigCache($configName);

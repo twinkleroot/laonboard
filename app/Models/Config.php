@@ -65,7 +65,6 @@ class Config extends Model
             'configHomepage' => cache("config.homepage"),
             'configBoard' => cache("config.board"),
             'configJoin' => cache("config.join"),
-            'configCert' => cache("config.cert"),
             'configEmailDefault' => cache("config.email.default"),
             'configEmailBoard' => cache("config.email.board"),
             'configEmailJoin' => cache("config.email.join"),
@@ -88,8 +87,6 @@ class Config extends Model
                 return $this->createConfigBoard();
             case 'join':
                 return $this->createConfigJoin();
-            case 'cert':
-                return $this->createConfigCert();
             case 'email.default':
                 return $this->createConfigEmailDefault();
             case 'email.join':
@@ -114,27 +111,25 @@ class Config extends Model
     public function createConfigHomepage()
     {
         $configArr = array (
-            'title' => config('gnu.title'),
-            'superAdmin' => config('gnu.superAdmin'),
-            'usePoint' => config('gnu.usePoint'),
-            'loginPoint' => config('gnu.loginPoint'),
-            'memoSendPoint' => config('gnu.memoSendPoint'),
-            'openDate' => config('gnu.openDate'),
-            'newDel' => config('gnu.newDel'),
-            'memoDel' => config('gnu.memoDel'),
-            'informDel' => config('gnu.informDel'),
-            'popularDel' => config('gnu.popularDel'),
-            'newRows' => config('gnu.newRows'),
-            'pageRows' => config('gnu.pageRows'),
-            // 'mobilePageRows' => config('gnu.mobilePageRows'),
-            // 'writePages' => config('gnu.writePages'),
-            // 'mobilePages' => config('gnu.mobilePages'),
-            'newSkin' => config('gnu.newSkin'),
-            'searchSkin' => config('gnu.searchSkin'),
-            'useCopyLog' => config('gnu.useCopyLog'),
-            'pointTerm' => config('gnu.pointTerm'),
-            'analytics' => config('gnu.analytics'),
-            'addMeta' => config('gnu.addMeta'),
+            'title' => config('laon.title'),
+            'superAdmin' => config('laon.superAdmin'),
+            'usePoint' => config('laon.usePoint'),
+            'loginPoint' => config('laon.loginPoint'),
+            'memoSendPoint' => config('laon.memoSendPoint'),
+            'openDate' => config('laon.openDate'),
+            'newDel' => config('laon.newDel'),
+            'memoDel' => config('laon.memoDel'),
+            'newRows' => config('laon.newRows'),
+            'pageRows' => config('laon.pageRows'),
+            // 'mobilePageRows' => config('laon.mobilePageRows'),
+            // 'writePages' => config('laon.writePages'),
+            // 'mobilePages' => config('laon.mobilePages'),
+            'newSkin' => config('laon.newSkin'),
+            'searchSkin' => config('laon.searchSkin'),
+            'useCopyLog' => config('laon.useCopyLog'),
+            'pointTerm' => config('laon.pointTerm'),
+            'analytics' => config('laon.analytics'),
+            'addMeta' => config('laon.addMeta'),
         );
 
         return $this->createConfig('config.homepage', $configArr);
@@ -144,16 +139,16 @@ class Config extends Model
     public function createConfigBoard()
     {
         $configArr = array (
-            'linkTarget' => config('gnu.linkTarget'),
-            'readPoint' => config('gnu.readPoint'),
-            'writePoint' => config('gnu.writePoint'),
-            'commentPoint' => config('gnu.commentPoint'),
-            'downloadPoint' => config('gnu.downloadPoint'),
-            // 'searchPart' => config('gnu.searchPart'),
-            'imageExtension' => config('gnu.imageExtension'),
-            'flashExtension' => config('gnu.flashExtension'),
-            'movieExtension' => config('gnu.movieExtension'),
-            'filter' => config('gnu.filter'),
+            'linkTarget' => config('laon.linkTarget'),
+            'readPoint' => config('laon.readPoint'),
+            'writePoint' => config('laon.writePoint'),
+            'commentPoint' => config('laon.commentPoint'),
+            'downloadPoint' => config('laon.downloadPoint'),
+            // 'searchPart' => config('laon.searchPart'),
+            'imageExtension' => config('laon.imageExtension'),
+            'flashExtension' => config('laon.flashExtension'),
+            'movieExtension' => config('laon.movieExtension'),
+            'filter' => config('laon.filter'),
         );
 
         return $this->createConfig('config.board', $configArr);
@@ -163,61 +158,46 @@ class Config extends Model
     public function createConfigJoin()
     {
         $configArr = array (
-            'skin' => config('gnu.userSkin'),
-            'nickDate' => config('gnu.nickDate'),
-            'name' => config('gnu.name'),
-            'homepage' => config('gnu.homepage'),
-            'tel' => config('gnu.tel'),
-            'hp' => config('gnu.hp'),
-            'addr' => config('gnu.addr'),
-            'signature' => config('gnu.signature'),
-            'profile' => config('gnu.profile'),
-            'joinLevel' => config('gnu.joinLevel'),
-            'joinPoint' => config('gnu.joinPoint'),
-            'leaveDay' => config('gnu.leaveDay'),
-            'useMemberIcon' => config('gnu.useMemberIcon'),
-            'iconLevel' => config('gnu.iconLevel'),
-            'memberIconSize' => config('gnu.memberIconSize'),
-            'memberIconWidth' => config('gnu.memberIconWidth'),
-            'memberIconHeight' => config('gnu.memberIconHeight'),
-            'recommend' => config('gnu.recommend'),
-            'recommendPoint' => config('gnu.recommendPoint'),
-            'banId' => config('gnu.banId'),
-            'stipulation' => config('gnu.stipulation'),
-            'privacy' => config('gnu.privacy'),
-            'passwordPolicyUpper' => config('gnu.passwordPolicyUpper'),
-            'passwordPolicyNumber' => config('gnu.passwordPolicyNumber'),
-            'passwordPolicySpecial' => config('gnu.passwordPolicySpecial'),
-            'passwordPolicyDigits' => config('gnu.passwordPolicyDigits'),
+            'skin' => config('laon.userSkin'),
+            'nickDate' => config('laon.nickDate'),
+            'name' => config('laon.name'),
+            'homepage' => config('laon.homepage'),
+            'tel' => config('laon.tel'),
+            'hp' => config('laon.hp'),
+            'addr' => config('laon.addr'),
+            'signature' => config('laon.signature'),
+            'profile' => config('laon.profile'),
+            'joinLevel' => config('laon.joinLevel'),
+            'joinPoint' => config('laon.joinPoint'),
+            'leaveDay' => config('laon.leaveDay'),
+            'useMemberIcon' => config('laon.useMemberIcon'),
+            'iconLevel' => config('laon.iconLevel'),
+            'memberIconSize' => config('laon.memberIconSize'),
+            'memberIconWidth' => config('laon.memberIconWidth'),
+            'memberIconHeight' => config('laon.memberIconHeight'),
+            'recommend' => config('laon.recommend'),
+            'recommendPoint' => config('laon.recommendPoint'),
+            'banId' => config('laon.banId'),
+            'stipulation' => config('laon.stipulation'),
+            'privacy' => config('laon.privacy'),
+            'passwordPolicyUpper' => config('laon.passwordPolicyUpper'),
+            'passwordPolicyNumber' => config('laon.passwordPolicyNumber'),
+            'passwordPolicySpecial' => config('laon.passwordPolicySpecial'),
+            'passwordPolicyDigits' => config('laon.passwordPolicyDigits'),
         );
 
         return $this->createConfig('config.join', $configArr);
-    }
-
-    // 본인 확인 설정 가져오기
-    public function createConfigCert()
-    {
-        $configArr = array (
-            'certUse' => config('gnu.certUse'),
-            // 'certIpin' => config('gnu.certIpin'),
-            'certHp' => config('gnu.certHp'),
-            'certKcbCd' => config('gnu.certKcbCd'),
-            'certLimit' => config('gnu.certLimit'),
-            'certReq' => config('gnu.certReq'),
-        );
-
-        return $this->createConfig('config.cert', $configArr);
     }
 
     // 기본 메일 환경 설정을 config 테이블에 추가한다.
     public function createConfigEmailDefault()
     {
         $configArr = array (
-            'emailUse' => config('gnu.emailUse'),
-            'adminEmail' => config('gnu.adminEmail'),
-            'adminEmailName' => config('gnu.adminEmailName'),
-            'emailCertify' => config('gnu.emailCertify'),
-            'formmailIsMember' => config('gnu.formmailIsMember'),
+            'emailUse' => config('laon.emailUse'),
+            'adminEmail' => config('laon.adminEmail'),
+            'adminEmailName' => config('laon.adminEmailName'),
+            'emailCertify' => config('laon.emailCertify'),
+            'formmailIsMember' => config('laon.formmailIsMember'),
         );
 
         return $this->createConfig('config.email.default', $configArr);
@@ -226,11 +206,11 @@ class Config extends Model
     public function createConfigEmailBoard()
     {
         $configArr = array (
-            'emailWriteSuperAdmin' => config('gnu.emailWriteSuperAdmin'),
-            'emailWriteGroupAdmin' => config('gnu.emailWriteGroupAdmin'),
-            'emailWriteBoardAdmin' => config('gnu.emailWriteBoardAdmin'),
-            'emailWriter' => config('gnu.emailWriter'),
-            'emailAllCommenter' => config('gnu.emailAllCommenter'),
+            'emailWriteSuperAdmin' => config('laon.emailWriteSuperAdmin'),
+            'emailWriteGroupAdmin' => config('laon.emailWriteGroupAdmin'),
+            'emailWriteBoardAdmin' => config('laon.emailWriteBoardAdmin'),
+            'emailWriter' => config('laon.emailWriter'),
+            'emailAllCommenter' => config('laon.emailAllCommenter'),
         );
 
         return $this->createConfig('config.email.board', $configArr);
@@ -239,8 +219,8 @@ class Config extends Model
     public function createConfigEmailJoin()
     {
         $configArr = array (
-            'emailJoinSuperAdmin' => config('gnu.emailJoinSuperAdmin'),
-            'emailJoinUser' => config('gnu.emailJoinUser'),
+            'emailJoinSuperAdmin' => config('laon.emailJoinSuperAdmin'),
+            'emailJoinUser' => config('laon.emailJoinUser'),
         );
 
         return $this->createConfig('config.email.join', $configArr);
@@ -250,7 +230,7 @@ class Config extends Model
     public function createConfigTheme()
     {
         $configArr = array (
-            'name' => config('gnu.theme'),
+            'name' => config('laon.theme'),
         );
 
         return $this->createConfig('config.theme', $configArr);
@@ -260,12 +240,12 @@ class Config extends Model
     public function createConfigSkin()
     {
         $configArr = array (
-            'layout' => config('gnu.layoutSkin'),
-            'board' => config('gnu.boardSkin'),
-            'content' => config('gnu.contentSkin'),
-            'mail' => config('gnu.mailSkin'),
-            'memo' => config('gnu.memoSkin'),
-            'latest' => config('gnu.latestSkin'),
+            'layout' => config('laon.layoutSkin'),
+            'board' => config('laon.boardSkin'),
+            'content' => config('laon.contentSkin'),
+            'mail' => config('laon.mailSkin'),
+            'memo' => config('laon.memoSkin'),
+            'latest' => config('laon.latestSkin'),
         );
 
         return $this->createConfig('config.skin', $configArr);
@@ -330,7 +310,6 @@ class Config extends Model
         Cache::forget("config.homepage");
         Cache::forget("config.board");
         Cache::forget("config.join");
-        Cache::forget("config.cert");
         Cache::forget("config.email.default");
         Cache::forget("config.email.board");
         Cache::forget("config.email.join");
@@ -346,8 +325,6 @@ class Config extends Model
             'openDate' => $data['openDate'],
             'newDel' => $data['newDel'],
             'memoDel' => $data['memoDel'],
-            'informDel' => $data['informDel'],
-            'popularDel' => $data['popularDel'],
             'newRows' => $data['newRows'],
             'pageRows' => $data['pageRows'],
             // 'mobilePageRows' => $data['title'],
@@ -410,17 +387,6 @@ class Config extends Model
         $this->updateConfigByOne('join', $configData);
 
         $configData = [
-            'certUse' => $data['certUse'],
-            // 'certIpin' => $data['certIpin'],
-            'certHp' => $data['certHp'],
-            'certKcbCd' => $data['certKcbCd'],
-            'certLimit' => isset($data['certLimit']) ? $data['certLimit'] : 0,
-            'certReq' => isset($data['certReq']) ? $data['certReq'] : 0,
-        ];
-
-        $this->updateConfigByOne('cert', $configData);
-
-        $configData = [
             'emailUse' => isset($data['emailUse']) ? $data['emailUse'] : 0,
             'adminEmail' => $data['adminEmail'],
             'adminEmailName' => $data['adminEmailName'],
@@ -476,7 +442,7 @@ class Config extends Model
 
     }
 
-    private function updateConfigByOne($name, $data)
+    public function updateConfigByOne($name, $data)
     {
         $config = Config::where('name', 'config.'. $name)->first();
 

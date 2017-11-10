@@ -1,6 +1,6 @@
 @extends("themes.default.layouts.". ($board->layout ? : 'basic'))
 
-@section('title'){{ $board->subject }}게시판 | {{ Cache::get("config.homepage")->title }}@endsection
+@section('title'){{ $board->subject }}게시판 | {{ cache("config.homepage")->title }}@endsection
 
 @section('include_css')
 <link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/common.css') }}">

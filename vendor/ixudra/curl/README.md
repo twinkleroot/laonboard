@@ -1,6 +1,11 @@
 ixudra/curl
 ================
 
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/ixudra/curl.svg?style=flat-square)](https://packagist.org/packages/ixudra/curl)
+[![license](https://img.shields.io/github/license/ixudra/curl.svg)]()
+[![StyleCI](https://styleci.io/repos/18486198/shield)](https://styleci.io/repos/18486198)
+[![Total Downloads](https://img.shields.io/packagist/dt/ixudra/curl.svg?style=flat-square)](https://packagist.org/packages/ixudra/curl)
+
 Custom PHP cURL library for the Laravel 4 or 5 framework - developed by [Ixudra](http://ixudra.be).
 
 The package provides an easy interface for sending cURL requests from your PHP web application. The package provides an 
@@ -36,6 +41,10 @@ Pull this package in through Composer.
 
 or run in terminal:
 `composer require ixudra/curl`
+
+### Laravel 5.5+ Integration
+
+Laravel's package discovery will take care of integration for you.
 
 
 ### Laravel 5.* Integration
@@ -370,6 +379,7 @@ The response object will look like this:
 {
    "content": "Message content here",
    "status": 200,
+   "contentType": "content-type response header (ex: application/json)",
    "error": "Error message goes here (Only added if an error occurs)"
 }
 ```
@@ -407,14 +417,14 @@ any validation on the cURL options. Additional information about available cURL 
 | asJsonRequest()       |  false            | Submit the request data as JSON                                   |
 | asJsonResponse()      |  false            | Decode the response data from JSON                                |
 | asJson()              |  false            | Utility method to set both `asJsonRequest()` and `asJsonResponse()` at the same time   |
-| withHeader()          |  array()          | Add an HTTP header to the request                                 |
-| withHeaders()         |  array()          | Add multiple HTTP headers to the request                          |
+| withHeader()          |  array            | Add an HTTP header to the request                                 |
+| withHeaders()         |  array            | Add multiple HTTP headers to the request                          |
 | withContentType()     |  none             | Set the content type of the response                              |
 | withFile()            |  none             | Add a file to the form data to be sent                            |
 | containsFile()        |  false            | Should be used to submit files through forms                      |
-| withData()            |  array()          | Add an array of data to sent with the request (GET or POST)       |
-| setCookieFile()       |  none             | Set a file to store cookies in                                    |
-| setCookieJar()        |  none             | Set a file to read cookies from                                   |
+| withData()            |  array            | Add an array of data to sent with the request (GET or POST)       |
+| setCookieFile()       |  none             | Set a file to read cookies from                                   |
+| setCookieJar()        |  none             | Set a file to store cookies in                                    |
 | withOption()          |  none             | Generic method to add any cURL option to the request              |
 
 For specific information regarding parameters and return types, I encourage you to take a look at 
@@ -461,14 +471,25 @@ use the facades to access the `CurlService`.
 
 
 
+## Support
+
+Help me further develop and maintain this package by supporting me via [Patreon](https://www.patreon.com/ixudra)!!
+
+
+
+
 ## License
 
-This template is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+This package is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
 
 
 
 
 ## Contact
+
+For package questions, bug, suggestions and/or feature requests, please use the Github issue system and/or submit a pull request. When submitting an issue, always provide a detailed explanation of your problem, any response or feedback your get, log messages that might be relevant as well as a source code example that demonstrates the problem. If not, I will most likely not be able to help you with your problem. Please review the [contribution guidelines](https://github.com/ixudra/curl/blob/master/CONTRIBUTING.md) before submitting your issue or pull request.
+
+For any other questions, feel free to use the credentials listed below: 
 
 Jan Oris (developer)
 

@@ -1,6 +1,6 @@
 @extends('admin.layouts.basic')
 
-@section('title')관리권한설정 | {{ Cache::get('config.homepage')->title }}@endsection
+@section('title')관리 권한 설정 | {{ Cache::get('config.homepage')->title }}@endsection
 
 @section('include_script')
 <script src="{{ ver_asset('js/common.js') }}"></script>
@@ -9,16 +9,16 @@
 @section('content')
 <div class="body-head">
     <div class="pull-left">
-        <h3>관리권한설정</h3>
+        <h3>관리 권한 설정</h3>
         <ul class="fl">
             <li class="admin">Admin</li>
-            <li class="depth">환경설정</li>
-            <li class="depth">관리권한설정</li>
+            <li class="depth">환경 설정</li>
+            <li class="depth">관리 권한 설정</li>
         </ul>
     </div>
 </div>
 <div id="body_tab_type2">
-    <span class="txt">접근가능메뉴의 관리권한을 설정합니다.</span>
+    <span class="txt">접근 가능 메뉴의 관리 권한을 설정합니다.</span>
 </div>
 <div class="body-contents">
     @if(Session::has('message'))
@@ -50,7 +50,7 @@
             </li>
             <li>
                 <span>
-                    설정된 관리권한 {{ $manageAuthList->total() }}건
+                    설정된 관리 권한 {{ $manageAuthList->total() }}건
                 </span>
             </li>
         </ul>
@@ -119,56 +119,56 @@
             ])->links()
             : $manageAuthList->links()
         }}
+    </div>
 
-        <div id="adm_alert">
-            <span class="adm_alert_txt">다음 양식에서 회원에게 관리권한을 부여하실 수 있습니다.<br>
-            권한 <strong>r</strong>은 읽기권한, <strong>w</strong>는 쓰기권한, <strong>d</strong>는 삭제권한입니다.</span>
+    <div id="adm_alert">
+        <span class="adm_alert_txt">다음 양식에서 회원에게 관리 권한을 부여하실 수 있습니다.<br>
+        <strong>r</strong>은 읽기 권한, <strong>w</strong>는 쓰기 권한, <strong>d</strong>는 삭제 권한입니다.</span>
+    </div>
+
+    <div id="authlist_add" class="panel panel-default">
+        <div class="panel-heading bg-sir">
+            관리 권한 추가
         </div>
 
-        <div id="authlist_add" class="panel panel-default">
-            <div class="panel-heading bg-sir">
-                관리권한 추가
-            </div>
-
-            <div class="panel-body row">
-                <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.manageAuth.store') }}">
-                    {{ csrf_field() }}
-                    <div class="form-group">
-                        <label for="" class="col-sm-2 control-label">회원 이메일</label>
-                        <div class="col-sm-3">
-                            <input type="email" class="form-control required" name="email" value="{{ $keyword }}" placeholder="Email">
-                        </div>
+        <div class="panel-body row">
+            <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.manageAuth.store') }}">
+                {{ csrf_field() }}
+                <div class="form-group">
+                    <label for="" class="col-sm-2 control-label">회원 이메일</label>
+                    <div class="col-sm-3">
+                        <input type="email" class="form-control required" name="email" value="{{ $keyword }}" placeholder="Email">
                     </div>
+                </div>
 
-                    <div class="form-group">
-                        <label for="" class="col-sm-2 control-label">접근가능메뉴</label>
-                        <div class="col-sm-3">
-                            <select class="form-control required" name="menu" placeholder="접근가능메뉴">
-                                @foreach($menus as $key=>$value)
-                                    @if( !(substr($key, -3) == '000') )
-                                        <option value="{{ $key }}">{{ $key. ' '. $value[0] }}</option>
-                                    @endif
-                                @endforeach
-                            </select>
-                        </div>
+                <div class="form-group">
+                    <label for="" class="col-sm-2 control-label">접근가능메뉴</label>
+                    <div class="col-sm-3">
+                        <select class="form-control required" name="menu" placeholder="접근가능메뉴">
+                            @foreach($menus as $key=>$value)
+                                @if( !(substr($key, -3) == '000') )
+                                    <option value="{{ $key }}">{{ $key. ' '. $value[0] }}</option>
+                                @endif
+                            @endforeach
+                        </select>
                     </div>
+                </div>
 
-                    <div class="form-group">
-                        <label for="" class="col-sm-2 control-label">권한지정</label>
-                        <div class="col-sm-3">
-                            <input type="checkbox" name="r" value="r" id="r" checked><label for="r" name="authority">r (읽기)</label>
-                            <input type="checkbox" name="w" value="w" id="w"><label for="w" name="authority">w (쓰기)</label>
-                            <input type="checkbox" name="d" value="d" id="d"><label for="d" name="authority">d (삭제)</label>
-                        </div>
+                <div class="form-group">
+                    <label for="" class="col-sm-2 control-label">권한지정</label>
+                    <div class="col-sm-3">
+                        <input type="checkbox" name="r" value="r" id="r" checked><label for="r" name="authority">r (읽기)</label>
+                        <input type="checkbox" name="w" value="w" id="w"><label for="w" name="authority">w (쓰기)</label>
+                        <input type="checkbox" name="d" value="d" id="d"><label for="d" name="authority">d (삭제)</label>
                     </div>
+                </div>
 
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                          <button type="submit" class="btn btn-sir">추가</button>
-                        </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                      <button type="submit" class="btn btn-sir">추가</button>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>

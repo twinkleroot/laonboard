@@ -26,7 +26,7 @@ class StatusController extends Controller
 
         $menuCode = ['300500', 'r'];
 
-        if(auth()->user()->isSuperAdmin() || Gate::allows('view-admin-mailtest', getManageAuthModel($menuCode))) {
+        if(auth()->user()->isSuperAdmin() || Gate::allows('view-admin-status', getManageAuthModel($menuCode))) {
             $params = $this->writeStatus($request);
             $chart = isset($params['renderChart']) ? $params['renderChart'] : '';
 

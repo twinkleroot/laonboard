@@ -22,10 +22,6 @@ class EventServiceProvider extends ServiceProvider
             \SocialiteProviders\Naver\NaverExtendSocialite::class,	// 네이버
             \SocialiteProviders\Kakao\KakaoExtendSocialite::class,	// 카카오
         ],
-        // 최신글 리스트 불러오는 이벤트
-        \App\Events\AddLatestList::class => [
-            \App\Listeners\AddLatestListListener::class,
-        ],
     ];
 
     /**

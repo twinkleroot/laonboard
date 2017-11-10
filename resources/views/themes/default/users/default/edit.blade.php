@@ -13,7 +13,6 @@
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <script src="{{ url('js/postcode.js') }}"></script>
 @endif
-<script src="{{ url('js/certify.js') }}"></script>
 @endsection
 
 @section('content')
@@ -33,17 +32,7 @@
         <h3 class="panel-title">회원 정보 수정</h3>
     </div>
     <div class="panel-body row">
-        <form class="contents col-md-10 col-md-offset-1" role="form" id="userForm" name="userForm" method="POST" action="{{ route('user.update') }}" enctype="multipart/form-data" autocomplete="off" onsubmit="return userSubmit();">
-        @if(cache('config.cert')->certHp)
-            <input type="hidden" name="certType" value="">
-            <input type="hidden" name="certNo" value="">
-            @unless($config->name)
-            <input type="hidden" name="name" value="">
-            @endunless
-            @unless ($config->hp)
-            <input type="hidden" name="hp" value="">
-            @endunless
-        @endif
+        <form class="contents col-md-10 col-md-offset-1" role="form" id="userForm" name="userForm" method="POST" action="{{ route('user.update') }}" enctype="multipart/form-data" autocomplete="off" onsubmit="return userFormSubmit(this);">
             {{ csrf_field() }}
             {{ method_field('PUT') }}
 
@@ -110,46 +99,7 @@
             </div>
             @endif
 
-            @if($user->certify)
-            <div class="help bg-info mb10">
-                <span class="cert">휴대폰 본인확인 및 성인인증 완료</span>
-            </div>
-            @endif
-            @if(cache('config.cert'))
-            <div class="help bg-danger mb10">
-                <span class="warning">휴대폰 본인확인 후에는 이름과 휴대폰번호가 자동 입력되어 수동으로 입력할 수 없게 됩니다.</span>
-            </div>
-            @endif
-            @if((cache('config.cert')->certUse && cache('config.cert')->certHp) || $config->name) <!-- 이름 -->
-            <div class="form-group @if($errors->has('name'))has-error @endif">
-                <label for="name" class="control-label">이름</label>
-                <input id="name" type="text" class="form-control" name="name" value="{{ $user->name }}" @if($user->certify) readonly @endif>
-                @if ($errors->has('name'))
-                <span class="help-block">
-                    <strong>{{ $errors->first('name') }}</strong>
-                </span>
-                @endif
-            </div>
-            @endif
-            @if(cache('config.cert')->certHp)
-            <div class="form-group row">
-                <div class="col-md-12 mb10">
-                    <input type="button" class="btn btn-block btn-default btn_frmline" id="win_hp_cert" value="휴대폰 본인확인">
-                </div>
-            </div>
-            @endif
-
-            @if( (cache('config.cert')->certUse && cache('config.cert')->certHp) || $config->hp) <!-- 휴대폰번호 -->
-            <div class="form-group @if($errors->has('hp'))has-error @endif">
-                <label for="hp" class="control-label">휴대폰번호</label>
-                <input id="hp" type="text" class="form-control" name="hp" value="{{ $user->hp }}">
-                @if ($errors->has('hp'))
-                <span class="help-block">
-                    <strong>{{ $errors->first('hp') }}</strong>
-                </span>
-                @endif
-            </div>
-            @endif
+            {{ fireEvent('editUserInfo') }}
 
             @if($config->tel) <!-- 전화번호 -->
             <div class="form-group @if($errors->has('tel'))has-error @endif">
@@ -326,6 +276,7 @@
 </div>
 </div>
 </div>
+{{ fireEvent('editUserEnd') }}
 <script>
 function onSubmit(token) {
     $("#g-response").val(token);
@@ -367,29 +318,6 @@ function userSubmit() {
 }
 
 $(function(){
-
-    // 아이핀인증
-    // $("#win_ipin_cert").click(function() {
-    //     if(!cert_confirm())
-    //         return false;
-    //
-    //     var url = "http://ahn13.gnutest.com/gnu5/plugin/okname/ipin1.php";
-    //     {{-- var url = "{{ route('cert.kcb.ipin') }}"; --}}
-    //     certify_win_open('kcb-ipin', url);
-    //     return;
-    // });
-
-    // 휴대폰인증
-    $("#win_hp_cert").click(function() {
-        if(!cert_confirm())
-            return false;
-
-        @if(cache('config.cert')->certHp == 'kcb')
-            certify_win_open("kcb-hp", "{{ route('cert.kcb.hp1')}}");
-        @endif
-
-        return;
-    });
 
     var socials = [];
 

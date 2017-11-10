@@ -7,11 +7,11 @@
 {{ csrf_field() }}
 <div class="body-head">
     <div class="pull-left">
-        <h3>게시판그룹{{ $type == 'edit' ? '수정' : '생성' }}</h3>
+        <h3>게시판 그룹 {{ $type == 'edit' ? '수정' : '추가' }}</h3>
         <ul class="fl">
             <li class="admin">Admin</li>
-            <li class="depth">게시판관리</li>
-            <li class="depth">게시판추가</li>
+            <li class="depth">게시판 그룹 관리</li>
+            <li class="depth">게시판 그룹 추가</li>
         </ul>
     </div>
 </div>

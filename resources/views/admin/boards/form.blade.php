@@ -31,11 +31,11 @@
 {{ csrf_field() }}
     <div class="body-head">
         <div class="pull-left">
-            <h3>게시판 {{ $type == 'create' ? '생성' : '수정' }}</h3>
+            <h3>게시판 {{ $type == 'create' ? '추가' : '수정' }}</h3>
             <ul class="fl">
                 <li class="admin">Admin</li>
-                <li class="depth">게시판관리</li>
-                <li class="depth">게시판추가</li>
+                <li class="depth">게시판 관리</li>
+                <li class="depth">게시판 {{ $type == 'create' ? '추가' : '수정' }}</li>
             </ul>
         </div>
     </div>
@@ -606,27 +606,6 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>본인확인 사용</th>
-                    <td class="table_body">
-                        <select name="use_cert" class="form-control form_large">
-                            <option value="not-use" @if($type == 'edit' && $board->use_cert == 'not-use') selected @elseif($type != 'edit') selected @endif>사용안함</option>
-                            @if(cache('config.cert')->certUse)
-                            <option value="cert" @if($type == 'edit' && $board->use_cert == 'cert') selected @endif>본인확인된 회원전체</option>
-                            <option value="adult" @if($type == 'edit' && $board->use_cert == 'adult') selected @endif>본인확인된 성인회원만</option>
-                            <option value="hp-cert" @if($type == 'edit' && $board->use_cert == 'hp-cert') selected @endif>휴대폰 본인확인된 회원전체</option>
-                            <option value="hp-adult" @if($type == 'edit' && $board->use_cert == 'hp-adult') selected @endif>휴대폰 본인확인된 성인회원만</option>
-                            @endif
-                        </select>
-                        <span class="help-block">본인확인 여부에 따라 게시물을 조회 할 수 있도록 합니다.</span>
-                    </td>
-                    <td class="table_chk">
-                        <input type="checkbox" id="chk_group_use_cert" name="chk_group_use_cert" value="1" />
-                        <label for="chk_group_use_cert">그룹적용</label>
-                        <input type="checkbox" id="chk_all_use_cert" name="chk_all_use_cert" value="1" />
-                        <label for="chk_all_use_cert">전체적용</label>
-                    </td>
-                </tr>
-                <tr>
                     <th>파일 업로드 개수</th>
                     <td class="table_body">
                         <input type="text" name="upload_count" class="form-control form_middle required" value="{{ $board['upload_count'] }}" required/>
@@ -760,6 +739,9 @@
                         <label for="chk_all_order">전체적용</label>
                     </td>
                 </tr>
+
+                {{ fireEvent('adminBoardAbilityForm') }}
+
             </table>
         </section>
         <section id="anc_design" class="adm_box">
@@ -1206,9 +1188,9 @@ function getThemeGalleryConfig() {
     @php
         $currentSkin = $board['skin'] ? : 'default';
     @endphp
-    $("input[name=subject_len]").val("{{ config('gnu.subject_len.'. $currentSkin) }}");
-    $("input[name=gallery_height]").val("{{ config('gnu.gallery_height') }}");
-    $("input[name=image_width]").val("{{ config('gnu.image_width') }}");
+    $("input[name=subject_len]").val("{{ config('laon.subject_len.'. $currentSkin) }}");
+    $("input[name=gallery_height]").val("{{ config('laon.gallery_height') }}");
+    $("input[name=image_width]").val("{{ config('laon.image_width') }}");
 }
 
 tinymce.init({

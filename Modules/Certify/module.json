@@ -1,0 +1,23 @@
+{
+    "name": "Certify",
+    "alias": "certify",
+    "description": "\ud68c\uc6d0\uac00\uc785\/\ud68c\uc6d0\uc815\ubcf4\uc218\uc815\uacfc \ud68c\uc6d0\uad00\ub9ac\/\uac8c\uc2dc\ud310\uad00\ub9ac\uc5d0 \ud734\ub300\ud3f0 \ubcf8\uc778\uc778\uc99d\uc744 \ucd94\uac00\ud558\ub294 \ubaa8\ub4c8\uc785\ub2c8\ub2e4.",
+    "detail": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\Certify\\Providers\\CertifyServiceProvider",
+        "Modules\\Certify\\Providers\\EventServiceProvider",
+        "Modules\\Certify\\Providers\\AuthServiceProvider"
+    ],
+    "aliases": [],
+    "files": [
+        "start.php"
+    ],
+    "requires": [],
+    "author": "\ub77c\uc628\ubcf4\ub4dc",
+    "version": "1.0.0",
+    "link": "http:\/\/sir.kr",
+    "adminlink": "admin.certify.index"
+}

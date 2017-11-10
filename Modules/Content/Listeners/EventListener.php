@@ -36,11 +36,6 @@ class EventListener
      */
     public function subscribe(\Illuminate\Events\Dispatcher $events)
     {
-        // 관리자에 내용관리 메뉴 추가
-        $events->listen(
-            \Modules\Content\Events\AddAdminMenu::class,
-            __CLASS__. '@addAdminMenu'
-        );
         // 레이아웃 하단에 내용관리 목록을 추가
         $events->listen(
             \Modules\Content\Events\AddFooterContent::class,
@@ -59,22 +54,7 @@ class EventListener
     }
 
     /**
-     * 관리자에 내용관리 메뉴 추가
-     *
-     * @param \Modules\Content\Events\AddAdminMenu $event
-     */
-    public function addAdminMenu(\Modules\Content\Events\AddAdminMenu $event)
-    {
-        $user = auth()->user();
-        $cacheName = $user->id_hashkey.'_admin_sub_menu';
-        $subMenu = cache($cacheName);
-        $subMenu['300400'] = ['내용관리', 'admin.contents.index', 0];
-
-        cache([$cacheName => $subMenu], 120);
-    }
-
-    /**
-     * 관리자에 내용관리 메뉴 추가
+     * 레이아웃 하단(footerContent)에 내용관리 보기 목록 추가
      *
      * @param \Modules\Content\Events\AddFooterContent $event
      */

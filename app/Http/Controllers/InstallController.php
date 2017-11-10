@@ -139,10 +139,10 @@ class InstallController extends Controller
     {
 
         $configNames = [
-            'homepage', 'board', 'join', 'cert', 'email.default', 'email.board', 'email.join', 'theme', 'skin', 'sns', 'extra'
+            'homepage', 'board', 'join', 'email.default', 'email.board', 'email.join', 'theme', 'skin', 'sns', 'extra'
         ];
 
-        config(['gnu.superAdmin' => $request->adminEmail]);
+        config(['laon.superAdmin' => $request->adminEmail]);
 
         // 설정 캐시 등록
         foreach($configNames as $configName) {

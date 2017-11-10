@@ -53,7 +53,7 @@ class MenusController extends Controller
 
         $rules = [
             'name.*' => 'required',
-            'link.*' => 'regex:'. config('gnu.URL_REGEX'). '|nullable',
+            'link.*' => 'regex:'. config('laon.URL_REGEX'). '|nullable',
         ];
         $messages = [
             'name.*.required' => '빨간 테두리가 쳐진 입력칸에 메뉴를 입력해 주세요.',

@@ -67,5 +67,5 @@
 @endsection
 
 <script>
-    var menuVal = 300500;
+    var menuVal = 300400;
 </script>

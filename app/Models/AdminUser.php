@@ -304,11 +304,9 @@ class AdminUser extends Model
 
             if(!is_null($user)) {
                 $user->update([
-                    // 'certify' => $request->get('certify'),
                     'open' => $openArr[$index] == '1' ? 1 : 0,
                     'mailing' => $mailingArr[$index] == '1' ? 1 : 0,
                     'sms' => $smsArr[$index] == '1' ? 1 : 0,
-                    // 'adult' => $request->get('adult') == '1' ? 1 : 0,
                     'intercept_date' => $interceptArr[$index] == 1 ? Carbon::now()->format('Ymd') : null ,
                     'level' => $levelArr[$index],
                 ]);

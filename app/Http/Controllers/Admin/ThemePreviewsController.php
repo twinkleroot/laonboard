@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Theme;
-use App\Models\Main;
 use App\Models\Board;
 use App\Models\Write;
 use App\Models\Comment;
@@ -17,10 +16,9 @@ class ThemePreviewsController extends Controller
     public $writeModel;
     public $comment;
 
-    public function __construct(Theme $theme, Main $main, Comment $comment, Write $write)
+    public function __construct(Theme $theme, Comment $comment, Write $write)
     {
         $this->theme = $theme;
-        $this->main = $main;
         $this->comment = $comment;
         $this->writeModel = $write;
         $this->writeModel->board = Board::first();
@@ -32,8 +30,6 @@ class ThemePreviewsController extends Controller
     {
         // 미리 보기 데이터
         $preview = $this->theme->getPreview('index', $themeName);
-        // 메인 최신글 데이터
-        $main = $this->main->getMainContents($themeName, 'default');
         // 파라미터 배열 결합
         $params = array_collapse([$preview, $main]);
 

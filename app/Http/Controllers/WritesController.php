@@ -10,12 +10,9 @@ use App\Contracts\WriteInterface;
 use App\Models\BoardFile;
 use App\Models\BoardGood;
 use App\Models\Comment;
-use App\Models\Notification;
+use App\Models\Notice;
 use App\Services\ReCaptcha;
 use App\Services\RssFeed;
-use Auth;
-use Cache;
-use Module;
 
 class WritesController extends Controller
 {
@@ -116,7 +113,7 @@ class WritesController extends Controller
         if(!auth()->check() ||
             (!auth()->user()->isBoardAdmin($this->writeModel->board)
              && $this->writeModel->board->use_recaptcha
-             && todayWriteCount(auth()->user()->id) > config('gnu.todayWriteCount')
+             && todayWriteCount(auth()->user()->id) > config('laon.todayWriteCount')
             )) {
             ReCaptcha::reCaptcha($request);
         }
@@ -162,16 +159,14 @@ class WritesController extends Controller
             }
         }
 
-        if(Module::has('Notification') && array_has(Module::enabled(), 'Notification')) {
-            $notification = new Notification();
-            // 기본환경설정에서 이메일 사용을 하고, 해당 게시판에서 메일발송을 사용하고, 글쓴이가 답변메일을 받겠다고 하면
-            if(cache('config.email.default')->emailUse && $this->writeModel->board->use_email && $request->mail == 'mail') {
-                $notification->sendWriteNotification($this->writeModel, $write->id);
-            }
-
-            // 알림 전송
-            $notification->sendInform($this->writeModel, $write->id);
+        $notice = new Notice();
+        // 기본환경설정에서 이메일 사용을 하고, 해당 게시판에서 메일발송을 사용하고, 글쓴이가 답변메일을 받겠다고 하면
+        if(cache('config.email.default')->emailUse && $this->writeModel->board->use_email && $request->mail == 'mail') {
+            $notice->sendWriteNotice($this->writeModel, $write->id);
         }
+
+        // 글쓰기 후 이벤트 처리
+        fireEvent('afterStoreWrite', $this->writeModel, $write->id);
 
         return redirect(route('board.view', ['boardId' => $boardName, 'writeId' => $write->id] ));
     }
@@ -366,11 +361,11 @@ class WritesController extends Controller
     {
         return [
             'email' => 'email|max:255|nullable',
-            'homepage' => 'regex:'. config('gnu.URL_REGEX'). '|nullable',
+            'homepage' => 'regex:'. config('laon.URL_REGEX'). '|nullable',
             'subject' => 'required|max:255',
             'content' => 'required',
-            'link1' => 'regex:'. config('gnu.URL_REGEX'). '|nullable',
-            'link2' => 'regex:'. config('gnu.URL_REGEX'). '|nullable',
+            'link1' => 'regex:'. config('laon.URL_REGEX'). '|nullable',
+            'link2' => 'regex:'. config('laon.URL_REGEX'). '|nullable',
         ];
     }
 

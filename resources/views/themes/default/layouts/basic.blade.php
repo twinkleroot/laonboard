@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{{ config('app.locale') }}">
 <head>
 <meta charset="utf-8">
@@ -13,7 +13,7 @@
 @yield('fisrt_include_css')
 <link rel="stylesheet" type="text/css" href="{{ ver_asset('bootstrap/css/bootstrap.min.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ ver_asset('font-awesome/css/font-awesome.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/'. cache('config.theme')->name. '/css/style.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/style.css') }}">
 @yield('include_css')
 @if(cache('config.homepage')->analytics)
 {!! cache('config.homepage')->analytics !!}
@@ -33,10 +33,11 @@
         });
     });
 </script>
+
 @yield('include_script')
 </head>
 <body>
-@yield('popup')
+@yield('headerUp')
 <div id="header">
     <div class="container">
         <div class="navbar-header">
@@ -46,102 +47,21 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="logo" href="{{ url('/') }}">
-                <img src="{{ ver_asset('themes/default/images/logo2.png') }}">
-            </a>
+            {{ fireEvent('headerLefts') }}
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-            <form class="hd_sch" name="searchBox" method="get" action="{{ route('search')}}" onsubmit="">
-                <input type="hidden" name="kind" value="subject||content" />
-                <fieldset>
-                    <legend>사이트 내 전체검색</legend>
-                    <label for="keyword" class="sr-only"><strong>검색어 필수</strong></label>
-                    <input type="text" name="keyword" id="keyword" maxlength="20" required>
-                    <input type="submit" id="searchSubmit" value="검색">
-                </fieldset>
-                <input type="hidden" name="operator" value="and" />
-            </form>
-
-            <ul class="gnb navbar-nav navbar-right">
-            @for($i=0; $i<count(Cache::get('menuList')); $i++)
-            @if(count(Cache::get('subMenuList')[$i]) > 0)
-                <li class="gnb-li dropdown">
-                    <a @if(Cache::get('menuList')[$i]['link'])href="{{ Cache::get('menuList')[$i]['link'] }}"@else href="#"@endif role="button" aria-expanded="false" target="_{{ Cache::get('menuList')[$i]['target'] }}">
-                        {{ Cache::get('menuList')[$i]['name'] }}<span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu" role="menu">
-                    @for($j=0; $j<count(Cache::get('subMenuList')[$i]); $j++)
-                        <li>
-                            <a href="{{ Cache::get('subMenuList')[$i][$j]['link'] }}" target="_{{ Cache::get('menuList')[$i]['target'] }}">{{Cache::get('subMenuList')[$i][$j]['name'] }}</a>
-                        </li>
-                    @endfor
-                    </ul>
-            @else
-                <li class="gnb-li">
-                    <a href="{{ Cache::get('menuList')[$i]['link'] }}" target="_{{ Cache::get('menuList')[$i]['target'] }}">{{ Cache::get('menuList')[$i]['name'] }}</a>
-            @endif
-                </li>
-            @endfor
-                <li class="gnb-li"><a href="{{ route('new.index') }}">새글</a></li>
-                @unless(auth()->check())
-                    <li class="gnb-li"><a href="{{ route('login'). '?nextUrl='. Request::getRequestUri() }}">로그인</a></li>
-                    <li class="gnb-li"><a href="{{ route('user.join') }}">회원가입</a></li>
-                @else
-                    @if(session()->get('admin'))
-                        <li class="gnb-li"><a href="{{ route('admin.index') }}">관리자 모드</a></li>
-                    @endif
-                    <li class="gnb-li dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            {{ Auth::user()->nick }} <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                            @unless(Auth::user()->isSuperAdmin())
-                                <li><a href="{{ route('user.checkPassword') }}?work=edit">회원 정보 수정</a></li>
-                            @endunless
-                            <li>
-                                <a href="{{ route('scrap.index') }}" class="winScrap" target="_blank" onclick="winScrap(this.href); return false;">스크랩</a>
-                            </li>
-                            @if(cache('config.homepage')->usePoint)
-                            <li><a href="{{ route('user.point', Auth::user()->id_hashkey) }}" class="point">포인트 내역</a></li>
-                            @endif
-                            <li><a href="{{ route('memo.index') }}?kind=recv" class="winMemo" target="_blank" onclick="winMemo(this.href); return false;">쪽지 <span class="memocount">{{ App\Models\Memo::where('recv_user_id', Auth::user()->id)->where('read_timestamp', null)->count() }}</span></a></li>
-                            <li><a href="{{ route('user.inform') }}">알림 <span class="memocount">{{ auth()->user()->unreadNotifications->count() }}</span></a></li>
-                            <li>
-                                <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    로그 아웃
-                                </a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                    {{ csrf_field() }}
-                                </form>
-                            </li>
-                            @unless(session()->get('admin'))
-                                <li><a href="{{ route('user.checkPassword') }}?work=leave">회원 탈퇴</a></li>
-                            @endunless
-                        </ul>
-                    </li>
-                @endunless
-            </ul>
+            {{ fireEvent('headerContents') }}
         </div>
     </div>
 </div>
 <div id="contents">
-    @php fireEvent('contentUp') @endphp
     @yield('content')
-    @php fireEvent('contentDown') @endphp
 </div>
 <footer id="footer">
-    @component("themes.". cache('config.theme')->name. ".populars.list")@endcomponent
-
-    @php fireEvent('footer') @endphp
-
+    {{ fireEvent('footerUp') }}
     <div id="ft_copy">
         <div class="container">
-            <div class="link">
-                @php fireEvent('footerContent') @endphp
-            </div>
-            <div class="copy">
-                Copyright © <b>소유하신 도메인.</b> All rights reserved.
-            </div>
+            {{ fireEvent('footerContents') }}
         </div>
     </div>
 </footer>

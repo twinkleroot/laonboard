@@ -2,6 +2,7 @@
     "name": "$STUDLY_NAME$",
     "alias": "$LOWER_NAME$",
     "description": "",
+    "detail": "",
     "keywords": [],
     "active": 1,
     "order": 0,
@@ -12,5 +13,8 @@
     "files": [
         "start.php"
     ],
-    "requires": []
+    "requires": [],
+    "author": "",
+    "version": "1.0.0",
+    "link": ""
 }

@@ -9,7 +9,6 @@
 
 @section('include_script')
 <script src='https://www.google.com/recaptcha/api.js' async defer></script>
-<script src="{{ url('js/certify.js') }}"></script>
 @endsection
 
 @section('content')

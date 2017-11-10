@@ -136,7 +136,7 @@ class UsersController extends Controller
 
         $rules = array_except($rules, 'email');
         if(!$request->change_password) {
-            $rules = array_except($rules, 'change_password');
+            $rules = array_except($rules, 'password');
         } else {
             $request->merge([
                 'password' => $request->change_password
@@ -221,7 +221,7 @@ class UsersController extends Controller
             'point' => 'bail|numeric|nullable',
             'leave_date' => 'bail|date_format:"Ymd"|nullable',
             'intercept_date' => 'bail|date_format:"Ymd"|nullable',
-            'homepage' => 'bail|regex:'. config('gnu.URL_REGEX'). '/|nullable',
+            'homepage' => 'bail|regex:'. config('laon.URL_REGEX'). '/|nullable',
             'tel' => 'bail|regex:/^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/|nullable',
             'hp' => 'bail|regex:/^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/|nullable',
             'addr1' => 'nullable',

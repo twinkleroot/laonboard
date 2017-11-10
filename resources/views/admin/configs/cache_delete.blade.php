@@ -8,7 +8,7 @@
         <h3>최신글 캐시파일 일괄삭제</h3>
         <ul class="fl">
             <li class="admin">Admin</li>
-            <li class="depth">환경설정</li>
+            <li class="depth">환경 설정</li>
             <li class="depth">캐시파일 일괄삭제</li>
         </ul>
     </div>

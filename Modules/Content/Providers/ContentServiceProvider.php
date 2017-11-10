@@ -47,7 +47,7 @@ class ContentServiceProvider extends ServiceProvider
      */
     protected function registerPublic()
     {
-        $publicPath = public_path('modules/contents');
+        $publicPath = public_path('modules/content');
 
         $sourcePath = __DIR__.'/../Public';
 
@@ -75,7 +75,7 @@ class ContentServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $viewPath = resource_path('views/modules/contents');
+        $viewPath = resource_path('views/modules/content');
 
         $sourcePath = __DIR__.'/../Resources/views';
 

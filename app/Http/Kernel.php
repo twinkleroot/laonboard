@@ -83,8 +83,6 @@ class Kernel extends HttpKernel
         'admin.board' => \App\Http\Middleware\IsBoardAdmin::class,
         // 유저의 레벨과 게시판 마다의 레벨 기준을 비교해서 접근 가능 여부 판단
         'level.board' => \App\Http\Middleware\CheckBoardLevel::class,
-        // 본인확인과 성인인증 여부로 글 목록보기, 읽기, 쓰기, 수정, 답변이 가능한지 검사
-        'cert' => \App\Http\Middleware\CheckCert::class,
         // 댓글/글 수정, 삭제가 가능한지 검사
         'updatable.deletable.write' => \App\Http\Middleware\UpdatableAndDeletableWrite::class,
         // 해당 항목의 유효 여부 검사

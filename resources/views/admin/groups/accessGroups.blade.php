@@ -9,11 +9,11 @@
 @section('content')
 <div class="body-head">
     <div class="pull-left">
-        <h3>접근가능그룹</h3>
+        <h3>접근 가능 그룹</h3>
         <ul class="fl">
             <li class="admin">Admin</li>
-            <li class="depth">회원관리</li>
-            <li class="depth">회원수정</li>
+            <li class="depth">회원 관리</li>
+            <li class="depth">접근 가능 그룹</li>
         </ul>
     </div>
 </div>

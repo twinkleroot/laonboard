@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Contracts\BoardInterface;
 use App\Contracts\WriteInterface;
-use App\Models\Notification;
+use App\Models\Notice;
 use App\Models\Comment;
 use App\Services\ReCaptcha;
-use Module;
 
 class CommentsController extends Controller
 {
@@ -30,7 +29,7 @@ class CommentsController extends Controller
         if(!auth()->check() ||
             (!auth()->user()->isBoardAdmin($this->writeModel->board)
              && $this->writeModel->board->use_recaptcha
-             && todayWriteCount(auth()->user()->id) > config('gnu.todayWriteCount')
+             && todayWriteCount(auth()->user()->id) > config('laon.todayWriteCount')
             )) {
             ReCaptcha::reCaptcha($request);
         }
@@ -61,16 +60,14 @@ class CommentsController extends Controller
 
         $comment = $this->comment->storeComment($this->writeModel, $request);
 
-        if(Module::has('Notification') && array_has(Module::enabled(), 'Notification')) {
-            $notification = new Notification;
-            // 기본환경설정에서 이메일 사용을 하고, 해당 게시판에서 메일발송을 사용하면
-            if(cache('config.email.default')->emailUse && $this->writeModel->board->use_email) {
-                $notification->sendWriteNotification($this->writeModel, $comment->id);
-            }
-
-            // 알림 전송
-            $notification->sendInform($this->writeModel, $comment->id);
+        $notice = new Notice;
+        // 기본환경설정에서 이메일 사용을 하고, 해당 게시판에서 메일발송을 사용하면
+        if(cache('config.email.default')->emailUse && $this->writeModel->board->use_email) {
+            $notice->sendWriteNotice($this->writeModel, $comment->id);
         }
+
+        // 댓글쓰기 후 이벤트 처리
+        fireEvent('afterStoreComment', $this->writeModel, $comment->id);
 
         return redirect($request->requestUri. '#comment'. $comment->id);
     }

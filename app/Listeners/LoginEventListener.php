@@ -54,13 +54,6 @@ class LoginEventListener
             ->where('send_timestamp', '<', Carbon::now()->subDays(cache('config.homepage')->memoDel))
             ->delete();
 
-        // 알림이 기본환경설정에서 설정한 기간이 지나면 삭제되도록.
-        $informs = auth()->user()->notifications
-                ->where('created_at', '<', Carbon::now()->subDays(cache('config.homepage')->informDel));
-        foreach($informs as $inform) {
-            $inform->delete();
-        }
-
         // 회원 가입인 경우($isUserJoin == true) 로그인 포인트를 부여하지 않음.
         if( !$this->isUserJoin($event->user) ) {
             // 당일 첫 로그인 포인트 부여
@@ -69,6 +62,8 @@ class LoginEventListener
 
         // 소셜 로그인으로 로그인할 때 생기는 세션 해제
         session()->forget('userFromSocial');
+
+        fireEvent('afterLogin');
     }
 
     // 회원 가입 후 로그인 시키는 상태인지 검사

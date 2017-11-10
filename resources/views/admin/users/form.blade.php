@@ -36,15 +36,11 @@
 {{ csrf_field() }}
 <div class="body-head">
     <div class="pull-left">
-        @if($type == 'update')
-        <h3>회원수정</h3>
-        @else
-        <h3>회원추가</h3>
-        @endif
+        <h3>회원@if($type == 'update') 수정@else 추가@endif</h3>
         <ul class="fl">
             <li class="admin">Admin</li>
-            <li class="depth">회원관리</li>
-            <li class="depth">회원수정</li>
+            <li class="depth">회원 관리</li>
+            <li class="depth">회원@if($type == 'update') 수정@else 추가@endif</li>
         </ul>
     </div>
 </div>
@@ -54,7 +50,7 @@
         <li class="tab"><a href="#mb_basic">기본정보</a></li>
         <li class="tab"><a href="#mb_add">추가정보</a></li>
         <li class="tab"><a href="#mb_and">부가설정</a></li>
-        <li class="tab"><a href="#mb_cert">본인인증</a></li>
+        {{ fireEvent('adminUserFormTab') }}
         <li class="tab"><a href="#mb_more">여분필드</a></li>
     </ul>
     <div class="submit_btn">
@@ -398,40 +394,9 @@
             </tr>
         </table>
     </section>
-    <section id="mb_cert" class="adm_section">
-        <div class="adm_box_hd">
-            <span class="adm_box_title">본인인증</span>
-        </div>
-        <table class="adm_box_table">
-            <tr>
-                <th><label for="certify_case">본인확인방법</label></th>
-                <td class="table_body chknone">
-                    {{-- <input type="radio" name="certify" id="certify_case_ipin" value="ipin" @if($user->certify == 'ipin') checked @endif />
-                        <label for="certify_case_ipin">아이핀</label> --}}
-                    <input type="radio" name="certify" id="certify_case_hp" value="hp" @if($user->certify == 'hp') checked @endif />
-                    <label for="certify_case_hp">휴대폰</label>
-                </td>
-            </tr>
-            <tr>
-                <th><label for="certify">본인확인</th>
-                <td class="table_body chknone">
-                    <input type="radio" name="certify_signal" id="certify_yes" @if($user->certify) checked @endif value="1" />
-                    <label for="certify_yes">예</label>
-                    <input type="radio" name="certify_signal" id="certify_no" @if(!$user->certify || empty($user->certify)) checked @endif value="0" />
-                    <label for="certify_no">아니오</label>
-                </td>
-            </tr>
-            <tr>
-                <th><label for="adult">성인인증</th>
-                <td class="table_body chknone">
-                    <input type="radio" name="adult" id="adult_yes" @if($user->adult) checked @endif value="1" />
-                    <label for="adult_yes">예</label>
-                    <input type="radio" name="adult" id="adult_no" @if(!$user->adult || empty($user->adult)) checked @endif value="0" />
-                    <label for="adult_no">아니오</label>
-                </td>
-            </tr>
-        </table>
-    </section>
+
+    {{ fireEvent('adminUserForm') }}
+
     <section id="mb_more" class="adm_section">
         <div class="adm_box_hd">
             <span class="adm_box_title">여분필드</span>

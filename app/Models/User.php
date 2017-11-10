@@ -5,19 +5,16 @@ namespace App\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Auth;
-use Cache;
 use Mail;
 use File;
 use Exception;
 use App\Mail\FormMailSend;
-use App\Services\UserSingleton;
 use Carbon\Carbon;
-
 
 class User extends Authenticatable
 {
     use Notifiable;
-
+    
     protected $dates = ['today_login', 'email_certify', 'nick_date', 'open_date', ];
 
     /**
@@ -95,25 +92,19 @@ class User extends Authenticatable
         return $this->hasMany(Write::class);
     }
 
-    // Cert 모델과의 관계설정
-    public function certs()
-    {
-        return $this->hasMany(Cert::class);
-    }
-
     public function isAdmin()
     {
         if($this->isSuperAdmin()) {
             return true;
         }
 
-        if(!session()->get('admin')) {
-            if(ManageAuth::where('user_id', auth()->user()->id)->first()) {
+        if(session()->get('admin')) {
+            return true;
+        } else {
+            if(ManageAuth::where('user_id', auth()->user()->id)->where('isModule', 0)->first()) {
                 session()->put('admin', true);
                 return true;
             }
-        } else {
-            return true;
         }
 
         return false;
@@ -190,7 +181,7 @@ class User extends Authenticatable
         $editFormData = [
             'user' => $user,
             'config' => cache("config.join"),
-            'openDate' => cache("config.homepage")->openDate,				// 정보공개 변경  가능 일
+            'openDate' => cache("config.homepage")->openDate,				// 정보공개 변경 가능일
             'nickChangable' => $this->nickChangable($user, Carbon::now()),  // 닉네임 변경여부
             'openChangable' => $openChangable[0],                           // 정보공개 변경 여부
             'dueDate' => $openChangable[1],                                 // 정보공개 언제까지 변경 못하는지 날짜
@@ -278,6 +269,13 @@ class User extends Authenticatable
             'ip' => $request->ip(),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
+            'hp' =>  $request->filled('hp') ? trim($request->hp) : null,
+            'certify' => $request->filled('certify') ? $request->certify : null,
+            'adult' => $request->filled('adult') ? $request->adult : 0,
+            'birth' => $request->filled('birth') ? $request->birth : null,
+            'sex' => $request->filled('sex') ? $request->sex : null,
+            'name' => $request->filled('name') ? cleanXssTags(trim($request->name)) : null,
+            'dupinfo' => $request->filled('dupinfo') ? $request->dupinfo : null,
         ];
 
         // 이메일 인증을 사용할 경우 + 소셜 가입이 아닌 경우
@@ -298,10 +296,6 @@ class User extends Authenticatable
             $userInfo = array_collapse([$userInfo, $addUserInfo]);
         }
 
-        // 본인확인 정보가 넘어온 경우
-        $addCertInfo = $this->getCertInfo($request);
-        $userInfo = array_collapse([$userInfo, $addCertInfo]);
-
         // 회원정보로 유저를 추가한다.
         $lastInsertId = User::insertGetId($userInfo);
         $user = User::find($lastInsertId);
@@ -314,55 +308,17 @@ class User extends Authenticatable
 
         $user->save();
 
-        $notification = new Notification();
+        $notice = new Notice();
         // 회원 가입 축하 메일 발송 (인증도 포함되어 있음)
         if(cache('config.email.join')->emailJoinUser) {
-            $notification->sendCongratulateJoin($user);
+            $notice->sendCongratulateJoin($user);
         }
         // 최고관리자에게 회원 가입 알림 메일 발송
         if(cache('config.email.join')->emailJoinSuperAdmin) {
-            $notification->sendJoinNotification($user);
+            $notice->sendJoinNotice($user);
         }
 
         return $user;
-    }
-
-    // 사용자에 저장할 본인 확인 정보 가져오기
-    private function getCertInfo($request)
-    {
-        $certType = session()->get('ss_cert_type');
-        $certNo = session()->get('ss_cert_no');
-        $name = $request->filled('name') ? cleanXssTags(trim($request->name)) : null;
-        $hp = $request->filled('hp') ? trim($request->hp) : null;
-        if(cache('config.cert')->certUse && $certType && $certNo) {
-            // 해시값이 같은 경우에만 본인확인 값을 저장한다.
-            if( session()->get('ss_cert_hash') == md5($name.$certType.session()->get('ss_cert_birth').$certNo) ) {
-                $userInfo = [
-                    'hp' => $hp,
-                    'certify' => $certType,
-                    'adult' => session()->get('ss_cert_adult'),
-                    'birth' => session()->get('ss_cert_birth'),
-                    'sex' => session()->get('ss_cert_sex'),
-                    'dupinfo' => session()->get('ss_cert_dupinfo'),
-                    'name' => $name,
-                ];
-
-                return $userInfo;
-            }
-        } else {
-            $userInfo = [
-                'hp' => $hp,
-                'certify' => null,
-                'adult' => 0,
-                'birth' => null,
-                'sex' => null,
-                'name' => $name,
-            ];
-
-            return $userInfo;
-        }
-
-        return [];
     }
 
     // 회원 정보 수정
@@ -406,6 +362,13 @@ class User extends Authenticatable
             'memo' => trim($request->memo),
             'mailing' => $request->filled('mailing') ? $request->mailing : 0,
             'recommend' => $request->filled('recommend') ? $recommendedId : $user->recommend,
+            'hp' =>  $request->filled('hp') ? trim($request->hp) : null,
+            'certify' => $request->filled('certify') ? $request->certify : null,
+            'adult' => $request->filled('adult') ? $request->adult : 0,
+            'birth' => $request->filled('birth') ? $request->birth : null,
+            'sex' => $request->filled('sex') ? $request->sex : null,
+            'name' => $request->filled('name') ? cleanXssTags(trim($request->name)) : null,
+            'dupinfo' => $request->filled('dupinfo') ? $request->dupinfo : null,
         ];
 
         // 정보공개 체크박스에 체크를 했거나 기존에 open값과 open입력값이 다르다면 기존 open 값에 open 입력값을 넣는다.
@@ -415,10 +378,6 @@ class User extends Authenticatable
                 'open_date' => $nowDate
             ] ]);
         }
-
-        // 본인확인에 포함된 정보
-        $addCertInfo = $this->getCertInfo($request);
-        $toUpdateUserInfo = array_collapse([$toUpdateUserInfo, $addCertInfo]);
 
         $isEmailChange = $request->get('email') != $user->email;
         // 이메일 인증을 사용하고 이메일이 변경될 경우 이메일 인증을 다시 해야한다.
@@ -431,8 +390,8 @@ class User extends Authenticatable
             ]]);
 
             // 이메일 인증 메일 발송
-            $notification = new Notification();
-            $notification->sendEmailCertify($request->get('email'), $user, $toUpdateUserInfo['nick'], $isEmailChange);
+            $notice = new Notice();
+            $notice->sendEmailCertify($request->get('email'), $user, $toUpdateUserInfo['nick'], $isEmailChange);
         }
 
         $folder = getIconFolderName($user->created_at);
@@ -581,8 +540,8 @@ class User extends Authenticatable
         $user->save();
 
         // 이메일 인증 메일 발송
-        $notification = new Notification();
-        $notification->sendEmailCertify($user->email, $user, $user->nick, true);
+        $notice = new Notice();
+        $notice->sendEmailCertify($user->email, $user, $user->nick, true);
 
         return $user->email;
     }
@@ -715,46 +674,6 @@ class User extends Authenticatable
         return $messages;
     }
 
-    // 알림 내역 가져오기
-    public function getInforms($request=null)
-    {
-        $informs;
-        if(isset($request) && $request->filled('read')) {
-            if($request->read == 'y') {
-                $informs = auth()->user()->readNotifications;
-            } else {
-                $informs = auth()->user()->unreadNotifications;
-            }
-        } else {
-            $informs = auth()->user()->notifications;
-        }
-
-        $boardList = [];
-        $userList = [];
-        foreach($informs as $inform) {
-            $item = $inform->data;
-            $boardList = $this->addBoardList($boardList, $item);
-            $userList = $this->addUserList($userList, $item);
-            $board = $boardList[$item['tableName']];
-            $boardSubject = $board->subject;
-            $nick = $userList[$item['writeUser']]->nick;
-            $parentSubject = subjectLength($item['parentSubject'], 10);
-            $writeSubject = subjectLength($item['subject'], 10);
-            if($item['isComment']) {
-                $inform->subject = "{$nick}님이 {$boardSubject}게시판의 [{$parentSubject}] 글에 댓글 [{$writeSubject}]을 남기셨습니다.";
-            } else {
-                if($item['reply']) {
-                    $inform->subject = "{$nick}님이 {$boardSubject}게시판에 답변글 [{$writeSubject}]을 남기셨습니다.";
-                } else {
-                    $inform->subject = "{$nick}님이 {$boardSubject}게시판에 글 [{$writeSubject}]을 남기셨습니다.";
-                }
-            }
-
-        }
-
-        return $informs;
-    }
-
     // 한 페이지에서 한 게시판 및 그룹은 한번만 불러오도록 게시판 리스트를 만들어서 가져다 쓴다.
     public function addBoardList($boardList, $inform)
     {
@@ -773,37 +692,6 @@ class User extends Authenticatable
         }
 
         return $userList;
-    }
-
-    // 회원 알림 읽음 표시
-    public function markAsReadInforms($ids)
-    {
-        $ids = explode(',', $ids);
-        foreach($ids as $id) {
-            auth()->user()->unreadNotifications->where('id', $id)->markAsRead();
-        }
-    }
-
-    // 회원 알림 내역 삭제
-    public function destroyInforms($request)
-    {
-        // 모든 알림 삭제
-        if($request->filled('delType') && $request->delType == 'all') {
-            foreach(auth()->user()->notifications as $inform) {
-                $inform->delete();
-            }
-        } else {    // 선택 삭제
-            $ids = explode(',', $request->ids);
-            foreach($ids as $id) {
-                auth()->user()->notifications->where('id', $id)->first()->delete();
-            }
-        }
-    }
-
-    // 회원 알림 읽음 표시
-    public function markAsReadOne($id)
-    {
-        return ['result' => auth()->user()->unreadNotifications->where('id', $id)->markAsRead()];
     }
 
 }

@@ -49,6 +49,7 @@ class Content extends Model
         $contents = Content::orderBy('content_id')->paginate(cache('config.homepage')->pageRows);
         return $contents;
     }
+
     // 관리자 - 내용 추가 데이터 가져오기
     public function getContentCreate()
     {
@@ -60,6 +61,7 @@ class Content extends Model
             'type' => ''
         ];
     }
+
     // 관리자 - 내용 편집 데이터 가져오기
     public function getContentEdit($id)
     {
@@ -94,6 +96,7 @@ class Content extends Model
             'type' => 'update'
         ];
     }
+
     // 내용 추가 실행
     public function storeContent($request)
     {
@@ -103,6 +106,7 @@ class Content extends Model
         $this->uploadContentImage($request);
         return Content::find($id)->content_id;
     }
+
     public function updateContent($request, $id)
     {
         $toUpdate = $request->all();
@@ -121,6 +125,7 @@ class Content extends Model
         }
         return $content->content_id;
     }
+
     // 상단, 하단이미지 업로드
     public function uploadContentImage($request)
     {
@@ -131,6 +136,7 @@ class Content extends Model
             $request->timg->storeAs('content', $request->content_id. '_t');
         }
     }
+
     // 삭제 체크박스 체크시 파일 삭제
     public function deleteContentImage($contentName, $type)
     {
@@ -139,6 +145,7 @@ class Content extends Model
             File::delete($fileName);
         }
     }
+    
     // 내용 삭제
     public function deleteContent($id)
     {
@@ -150,7 +157,7 @@ class Content extends Model
 
     private function getContentSkins()
     {
-        $path = resource_path("views/modules/contents/skins");
+        $path = resource_path("views/modules/content/skins");
         // $result = [];
         $result = ['' => '선택'];
         if(File::exists($path)) {

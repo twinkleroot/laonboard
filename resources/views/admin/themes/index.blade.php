@@ -30,11 +30,11 @@
 @section('content')
 <div class="body-head">
     <div class="pull-left">
-        <h3>테마설정</h3>
+        <h3>테마 설정</h3>
         <ul class="fl">
             <li class="admin">Admin</li>
-            <li class="depth">환경설정</li>
-            <li class="depth">테마설정</li>
+            <li class="depth">환경 설정</li>
+            <li class="depth">테마 설정</li>
         </ul>
     </div>
 </div>

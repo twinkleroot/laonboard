@@ -15,6 +15,7 @@
         "itsjavi/bootstrap-colorpicker": "^2.5",
         "ixudra/curl": "^6.12",
         "khill/lavacharts": "3.0.*",
+        "larapack/config-writer": "1.*",
         "laravel/framework": "5.5.*",
         "laravel/socialite": "^3.0",
         "laravel/tinker": "~1.0",

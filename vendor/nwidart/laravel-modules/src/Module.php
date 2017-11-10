@@ -110,6 +110,55 @@ abstract class Module extends ServiceProvider
     {
         return $this->get('description');
     }
+    /**
+     * Get detail description.
+     *
+     * @return string
+     */
+    public function getDetail()
+    {
+        return $this->get('detail');
+    }
+
+    /**
+     * Get author.
+     *
+     * @return string
+     */
+    public function getAuthor()
+    {
+        return $this->get('author');
+    }
+
+    /**
+     * Get link.
+     *
+     * @return string
+     */
+    public function getLink()
+    {
+        return $this->get('link');
+    }
+
+    /**
+     * Get Admin page link.
+     *
+     * @return string
+     */
+    public function getAdminLink()
+    {
+        return $this->get('adminlink');
+    }
+
+    /**
+     * Get version.
+     *
+     * @return string
+     */
+    public function getVersion()
+    {
+        return $this->get('version');
+    }
 
     /**
      * Get alias.

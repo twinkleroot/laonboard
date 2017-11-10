@@ -9,7 +9,6 @@ use App\Models\GroupUser;
 use App\Models\User;
 use App\Models\Write;
 use App\Services\CustomPaginator;
-use App\Models\Popular;
 
 class SearchController extends Controller
 {
@@ -48,6 +47,8 @@ class SearchController extends Controller
         $queryStrings = $this->createQueryStrings();
         // 모델들을 합치고 page마다 10개 단위로 나눠서 CustomPaginator로 보내서 화면에 처리한다.
         $writesWithPagination = $this->mergeAndPaginate($writes, $queryStrings['pagination']);
+
+        fireEvent('afterSearch');
 
         $params = [
             'groups' => Group::orderBy('group_id')->get(),
@@ -131,7 +132,6 @@ class SearchController extends Controller
     private function searchWrites($request, $boards, $keywords, $kinds)
     {
         $result = [];
-        $popular = new Popular();
         // 게시판 마다 해당 검색필드와 검색어로 검색한다.
         $boardIndex = 0;
         if($this->keyword) {
@@ -148,11 +148,6 @@ class SearchController extends Controller
                 foreach($keywords as $searchStr) {
                     if(trim($searchStr) == '') {
                         continue;
-                    }
-
-                    // 인기 검색어 추가
-                    if($boardIndex == 0 && array_search('email', $kinds) === false) {
-                        addPopular($kinds, $searchStr, $request);
                     }
 
                     // 첫번째 검색필드 땐 operator에 따라 where 메소드 넣기, 나머진 orWhere()

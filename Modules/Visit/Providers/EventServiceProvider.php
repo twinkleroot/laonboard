@@ -4,10 +4,8 @@ namespace Modules\Visit\Providers;
 
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Modules\Visit\Events\PushVisitStatus;
-use Modules\Visit\Events\TestEvent1;
-use Modules\Visit\Listeners\AddVisitStatus;
-use Modules\Visit\Listeners\TestListener1;
+use Modules\Visit\Events\AddVisitStatus;
+use Modules\Visit\Listeners\AddVisitStatusListener;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -17,11 +15,8 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        PushVisitStatus::class => [
-            AddVisitStatus::class,
-        ],
-        TestEvent1::class => [
-            TestListener1::class,
+        \Modules\Visit\Events\AddVisitStatus::class => [
+            \Modules\Visit\Listeners\AddVisitStatusListener::class,
         ],
     ];
 

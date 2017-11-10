@@ -3,17 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Mail;
 use Auth;
-use Cache;
 use Exception;
-use Socialite;
 use Carbon\Carbon;
 use App\Services\ReCaptcha;
 use App\Models\User;
 use App\Models\Point;
 use App\Models\Config;
-use App\Models\Notification;
 
 class UsersController extends Controller
 {
@@ -39,11 +35,6 @@ class UsersController extends Controller
         if(auth()->user()->isSuperAdmin() ) {
             return alertRedirect('관리자의 회원정보는 관리자 화면에서 수정해 주십시오.');
         }
-
-        // 본인확인 관련 세션 초기화
-        session()->put("ss_cert_no", "");
-        session()->put("ss_cert_hash", "");
-        session()->put("ss_cert_type", "");
 
         $params = $this->userModel->editParams();
         $skin = $this->skin;
@@ -131,7 +122,7 @@ class UsersController extends Controller
             $rules = array_add($rules, 'name', 'alpha_dash|nullable');
         }
         if($this->config->homepage) {
-            $rules = array_add($rules, 'homepage', 'regex:'. config('gnu.URL_REGEX'). '|nullable');
+            $rules = array_add($rules, 'homepage', 'regex:'. config('laon.URL_REGEX'). '|nullable');
         }
         if($this->config->tel) {
             $rules = array_add($rules, 'tel', 'regex:/^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/|nullable');

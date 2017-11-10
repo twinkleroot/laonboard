@@ -15,8 +15,8 @@
         <h3>메일 테스트</h3>
         <ul class="fl">
             <li class="admin">Admin</li>
-            <li class="depth">환경설정</li>
-            <li class="depth">메일테스트</li>
+            <li class="depth">환경 설정</li>
+            <li class="depth">메일 테스트</li>
         </ul>
     </div>
 </div>

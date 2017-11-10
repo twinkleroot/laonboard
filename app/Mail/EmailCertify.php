@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\User;
+use App\Models\User;
 
 class EmailCertify extends Mailable implements ShouldQueue
 {
@@ -44,11 +44,12 @@ class EmailCertify extends Mailable implements ShouldQueue
 
         $address = cache('config.email.default')->adminEmail;
         $name = cache('config.email.default')->adminEmailName;
+        $theme = cache('config.theme')->name ? : 'default';
 
         return $this
             ->from($address, $name)
             ->subject($this->subject)
-            ->view('mail.default.email_certify')
+            ->view("themes.$theme.mails.email_certify")
             ->with([
                 'nick' => $this->nick,
                 'url' => $url,

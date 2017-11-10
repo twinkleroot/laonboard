@@ -11,9 +11,8 @@
 <link rel="stylesheet" type="text/css" href="{{ ver_asset('css/popuplayer.css') }}">
 @endsection
 
-{{-- 팝업 레이어 --}}
-@section('popup')
-    @include('themes.default.popups.index')
+@section('headerUp')
+    {{ fireEvent('headerUp') }}
 @endsection
 
 @section('content')

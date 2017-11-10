@@ -33,10 +33,11 @@ class EmailSendTest extends Mailable implements ShouldQueue
     {
         $address = cache('config.email.default')->adminEmail;
         $name = cache('config.email.default')->adminEmailName;
-        
+        $theme = cache('config.theme')->name ? : 'default';
+
         return $this->from($address, $name)
                     ->subject($this->subject)
-                    ->view('mail.default.email_send_test')
+                    ->view("themes.$theme.mails.email_send_test")
                     ->with('now', Carbon::now());
     }
 }

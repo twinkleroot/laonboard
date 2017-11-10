@@ -22,7 +22,7 @@ class MemosController extends Controller
      */
     public function index(Request $request)
     {
-        $theme = cache('config.theme')->memo ? : 'default';
+        $theme = cache('config.theme')->name ? : 'default';
         $params = $this->memo->getIndexParams($request);
 
         return viewDefault("$theme.memos.index", $params);
@@ -35,7 +35,7 @@ class MemosController extends Controller
      */
     public function create(Request $request)
     {
-        $theme = cache('config.theme')->memo ? : 'default';
+        $theme = cache('config.theme')->name ? : 'default';
         $params = [];
         try {
             $params = $this->memo->getCreateParams($request);
@@ -83,7 +83,7 @@ class MemosController extends Controller
      */
     public function show($id, Request $request)
     {
-        $theme = cache('config.theme')->memo ? : 'default';
+        $theme = cache('config.theme')->name ? : 'default';
         $params = [];
         try {
             $params = $this->memo->getShowParams($id, $request);

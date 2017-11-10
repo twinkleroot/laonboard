@@ -1,0 +1,23 @@
+{
+    "name": "CustomLayout",
+    "alias": "customlayout",
+    "description": "\ud648\ud398\uc774\uc9c0\uc758 \ub808\uc774\uc544\uc6c3 \uad6c\uc131\uc744 \uad00\ub9ac\ud560 \uc218 \uc788\ub294 \ubaa8\ub4c8\uc785\ub2c8\ub2e4.",
+    "detail": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\CustomLayout\\Providers\\CustomLayoutServiceProvider",
+        "Modules\\CustomLayout\\Providers\\EventServiceProvider",
+        "Modules\\CustomLayout\\Providers\\AuthServiceProvider"
+    ],
+    "aliases": [],
+    "files": [
+        "start.php"
+    ],
+    "requires": [],
+    "author": "\ub77c\uc628\ubcf4\ub4dc",
+    "version": "1.0.0",
+    "link": "http:\/\/sir.kr",
+    "adminlink": "admin.customlayout.index"
+}

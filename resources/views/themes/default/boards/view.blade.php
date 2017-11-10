@@ -1,6 +1,6 @@
 @extends("themes.default.layouts.". ($board->layout ? : 'basic'))
 
-@section('title'){{ $write->subject }} > {{ $board->subject }} | {{ Cache::get('config.homepage')->title }}@endsection
+@section('title'){{ $write->subject }} > {{ $board->subject }} | {{ cache('config.homepage')->title }}@endsection
 
 @section('include_script')
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>

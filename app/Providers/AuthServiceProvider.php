@@ -6,18 +6,18 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use App\Models\Point;
 use App\Models\AdminUser;
-use App\Models\Popup;
 use App\Models\Popular;
 use App\Models\GroupUser;
 use App\Models\Board;
 use App\Models\Group;
+use App\Models\ModuleSource;
 use App\Policies\BoardPolicy;
 use App\Policies\UserPolicy;
 use App\Policies\PointPolicy;
-use App\Policies\PopupPolicy;
 use App\Policies\GroupPolicy;
 use App\Policies\GroupUserPolicy;
 use App\Policies\PopularPolicy;
+use App\Policies\ModulePolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -31,9 +31,9 @@ class AuthServiceProvider extends ServiceProvider
         Group::class => GroupPolicy::class,
         GroupUser::class => GroupUserPolicy::class,
         Point::class => PointPolicy::class,
-        Popup::class => PopupPolicy::class,
         Popular::class => PopularPolicy::class,
         AdminUser::class => UserPolicy::class,
+        ModuleSource::class => ModulePolicy::class,
     ];
 
     /**

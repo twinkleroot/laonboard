@@ -187,6 +187,7 @@ return [
         Ixudra\Curl\CurlServiceProvider::class,
         Mews\Purifier\PurifierServiceProvider::class,
         Nwidart\Modules\LaravelModulesServiceProvider::class,
+        App\Modules\Providers\EventServiceProvider::class,
     ],
 
     /*
@@ -209,7 +210,8 @@ return [
         'Broadcast' => Illuminate\Support\Facades\Broadcast::class,
         'Bus' => Illuminate\Support\Facades\Bus::class,
         'Cache' => Illuminate\Support\Facades\Cache::class,
-        'Config' => Illuminate\Support\Facades\Config::class,
+        // 'Config' => Illuminate\Support\Facades\Config::class,
+        'Config' => Larapack\ConfigWriter\Facade::class,
         'Cookie' => Illuminate\Support\Facades\Cookie::class,
         'Crypt' => Illuminate\Support\Facades\Crypt::class,
         'DB' => Illuminate\Support\Facades\DB::class,
@@ -242,6 +244,7 @@ return [
         'Lava' => Khill\Lavacharts\Laravel\LavachartsFacade::class,
         'Curl' => Ixudra\Curl\Facades\Curl::class,
         'Purifier' => Mews\Purifier\Facades\Purifier::class,
+        'ConfigWriter' => Larapack\ConfigWriter\Repository::class
     ],
 
 ];

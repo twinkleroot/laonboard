@@ -48,7 +48,8 @@ class ManageAuthsController extends Controller
         ];
         $this->validate($request, $rules, $messages);
 
-        $message = $this->authModel->storeManageAuth($request);
+        $isModule = $request->filled('isModule') ? $request->isModule : 0;
+        $message = $this->authModel->storeManageAuth($request, $isModule);
 
         return redirect()->back()->with('message', $message);
     }
@@ -56,16 +57,18 @@ class ManageAuthsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($ids)
+    public function destroy(Request $request, $ids)
     {
         if(isDemo()) {
             return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
         }
 
-        $message = $this->authModel->deleteManageAuth($ids);
+        $isModule = $request->filled('isModule') ? $request->isModule : 0;
+        $message = $this->authModel->deleteManageAuth($ids, $isModule);
 
         return redirect()->back()->with('message', $message);
     }

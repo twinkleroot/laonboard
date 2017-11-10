@@ -63,6 +63,9 @@ class AppServiceProvider extends ServiceProvider
 
         // 인터페이스와 구현 객체 바인딩, 앱 내에서 사용할 수 있도록 태그 걸기
         $this->bindObject();
+
+        // 내부 모듈 이벤트 앱 설정에 추가
+        $this->mergeEventConfig();
     }
 
     /**
@@ -88,18 +91,19 @@ class AppServiceProvider extends ServiceProvider
             'App\Contracts\WriteInterface',
             'App\Models\Write'
         );
-        // MainInterface에 Main 구현체를 의존 주입
-        $this->app->bind(
-            'App\Contracts\MainInterface',
-            'App\Models\Main'
-        );
 
         // BoardInterface를 'board'로 태그
         $this->app->tag('App\Contracts\BoardInterface', 'board');
         // WriteInterface를 'write'로 태그
         $this->app->tag('App\Contracts\WriteInterface', 'write');
-        // MainInterface를 'main'으로 태그
-        $this->app->tag('App\Contracts\MainInterface', 'main');
+    }
+
+    // 내부 모듈 이벤트 앱 설정에 추가
+    private function mergeEventConfig()
+    {
+        mergeEvent(
+            __DIR__.'/../Modules/Config/event.php', 'event'
+        );
     }
 
 }

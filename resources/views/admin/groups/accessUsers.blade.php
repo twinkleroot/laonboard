@@ -1,6 +1,6 @@
 @extends('admin.layouts.basic')
 
-@section('title'){{ $group->subject }}그룹 접근가능회원 | {{ Cache::get("config.homepage")->title }}@endsection
+@section('title'){{ $group->subject }}그룹 접근 가능 회원 | {{ Cache::get("config.homepage")->title }}@endsection
 
 @section('include_script')
 <script src="{{ ver_asset('js/common.js') }}"></script>
@@ -9,11 +9,11 @@
 @section('content')
 <div class="body-head">
     <div class="pull-left">
-        <h3>'{{ $group->subject }}' 그룹 접근가능회원 (그룹아이디 : {{ $group->group_id }})</h3>
+        <h3>'{{ $group->subject }}' 그룹 접근 가능 회원 (Group Id : {{ $group->group_id }})</h3>
         <ul class="fl">
             <li class="admin">Admin</li>
-            <li class="depth">게시판관리</li>
-            <li class="depth">게시판그룹관리</li>
+            <li class="depth">게시판 그룹 관리</li>
+            <li class="depth">게시판 그룹 접근 가능 회원</li>
         </ul>
     </div>
 </div>

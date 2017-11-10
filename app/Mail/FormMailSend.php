@@ -44,6 +44,8 @@ class FormMailSend extends Mailable implements ShouldQueue
             ->from($this->email, $this->name)
             ->subject($this->subject);
 
+        $theme = cache('config.theme')->name ? : 'default';
+
         if(count($this->files) > 0) {
             foreach($this->files as $file) {
                 $mail->attach($file->path(), [
@@ -52,9 +54,9 @@ class FormMailSend extends Mailable implements ShouldQueue
             }
         }
         if($this->type) {
-            $mail->view('mail.default.formmail');
+            $mail->view("themes.$theme.mails.formmail");
         } else {
-            $mail->text('mail.default.formmail_plain');
+            $mail->text("themes.$theme.mails.formmail_plain");
         }
 
         return $mail;

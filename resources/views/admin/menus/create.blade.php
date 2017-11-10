@@ -46,7 +46,6 @@
                 <option value="group">게시판그룹</option>
                 <option value="board">게시판</option>
                 {{ fireEvent('menuSelectOption') }}
-                {{-- <option value="content">내용관리</option> --}}
             </select>
         </div>
     </div>

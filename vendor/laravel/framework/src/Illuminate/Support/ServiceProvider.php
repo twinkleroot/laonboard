@@ -9,7 +9,7 @@ abstract class ServiceProvider
     /**
      * The application instance.
      *
-     * @var \Illuminate\Foundation\Application
+     * @var \Illuminate\Contracts\Foundation\Application
      */
     protected $app;
 
@@ -25,19 +25,19 @@ abstract class ServiceProvider
      *
      * @var array
      */
-    protected static $publishes = [];
+    public static $publishes = [];
 
     /**
      * The paths that should be published by group.
      *
      * @var array
      */
-    protected static $publishGroups = [];
+    public static $publishGroups = [];
 
     /**
      * Create a new service provider instance.
      *
-     * @param  \Illuminate\Foundation\Application  $app
+     * @param  \Illuminate\Contracts\Foundation\Application  $app
      * @return void
      */
     public function __construct($app)
@@ -54,7 +54,7 @@ abstract class ServiceProvider
      */
     protected function mergeConfigFrom($path, $key)
     {
-        $config = $this->app['config']->get($key,[]);
+        $config = $this->app['config']->get($key, []);
 
         $this->app['config']->set($key, array_merge(require $path, $config));
     }
@@ -81,8 +81,12 @@ abstract class ServiceProvider
      */
     protected function loadViewsFrom($path, $namespace)
     {
-        if (is_dir($appPath = $this->app->resourcePath().'/views/vendor/'.$namespace)) {
-            $this->app['view']->addNamespace($namespace, $appPath);
+        if (is_array($this->app->config['view']['paths'])) {
+            foreach ($this->app->config['view']['paths'] as $viewPath) {
+                if (is_dir($appPath = $viewPath.'/vendor/'.$namespace)) {
+                    $this->app['view']->addNamespace($namespace, $appPath);
+                }
+            }
         }
 
         $this->app['view']->addNamespace($namespace, $path);
@@ -98,6 +102,17 @@ abstract class ServiceProvider
     protected function loadTranslationsFrom($path, $namespace)
     {
         $this->app['translator']->addNamespace($namespace, $path);
+    }
+
+    /**
+     * Register a JSON translation file path.
+     *
+     * @param  string  $path
+     * @return void
+     */
+    protected function loadJsonTranslationsFrom($path)
+    {
+        $this->app['translator']->addJsonPath($path);
     }
 
     /**
@@ -203,7 +218,7 @@ abstract class ServiceProvider
     }
 
     /**
-     * Get the paths for the provdider and group.
+     * Get the paths for the provider and group.
      *
      * @param  string  $provider
      * @param  string  $group
@@ -281,17 +296,5 @@ abstract class ServiceProvider
     public function isDeferred()
     {
         return $this->defer;
-    }
-
-    /**
-     * Get a list of files that should be compiled for the package.
-     *
-     * @deprecated
-     *
-     * @return array
-     */
-    public static function compiles()
-    {
-        return [];
     }
 }

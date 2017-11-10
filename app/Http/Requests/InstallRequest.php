@@ -24,7 +24,7 @@ class InstallRequest extends FormRequest
     public function rules()
     {
         return [
-            'appUrl' => 'required|regex:'. config('gnu.URL_REGEX'),
+            'appUrl' => 'required|regex:'. config('laon.URL_REGEX'),
             'mysqlHost' => 'required|regex:/^[a-zA-Z0-9.]+$/',
             'mysqlPort' => 'required|numeric',
             'mysqlDb' => 'required|regex:/^[a-zA-Z0-9_]+$/',

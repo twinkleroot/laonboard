@@ -24,8 +24,6 @@ class ExtrasController extends Controller
             }
         }
 
-        $theme = cache('config.theme')->name ? : 'default';
-
         return view("admin.configs.session_delete", [ 'sessions' => $results ]);
     }
 
@@ -50,8 +48,6 @@ class ExtrasController extends Controller
                 $results[] = $cacheName;
             }
         }
-
-        $theme = cache('config.theme')->name ? : 'default';
 
         return view("admin.configs.cache_delete", [ 'caches' => $results ]);
     }
@@ -89,7 +85,7 @@ class ExtrasController extends Controller
         }
 
         $menuCode = ['100800', 'r'];
-        if(auth()->user()->isSuperAdmin() || Gate::allows('view-admin-mailtest', getManageAuthModel($menuCode))) {
+        if(auth()->user()->isSuperAdmin() || Gate::allows('view-admin-phpinfo', getManageAuthModel($menuCode))) {
             return view('admin.configs.phpinfo');
         } else {
             return alertRedirect('최고관리자 또는 관리권한이 있는 회원만 접근 가능합니다.', '/admin/index');
@@ -100,7 +96,7 @@ class ExtrasController extends Controller
     public function extraService()
     {
         $menuCode = ['100810', 'r'];
-        if(auth()->user()->isSuperAdmin() || Gate::allows('view-admin-mailtest', getManageAuthModel($menuCode))) {
+        if(auth()->user()->isSuperAdmin() || Gate::allows('view-admin-extra_service', getManageAuthModel($menuCode))) {
             return view("admin.configs.extra_service");
         } else {
             return alertRedirect('최고관리자 또는 관리권한이 있는 회원만 접근 가능합니다.', '/admin/index');

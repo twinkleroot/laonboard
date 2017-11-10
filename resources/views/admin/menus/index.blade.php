@@ -1,6 +1,6 @@
 @extends('admin.layouts.basic')
 
-@section('title')메뉴설정 | {{ $config->title }}@endsection
+@section('title')메뉴 설정 | {{ $config->title }}@endsection
 
 @section('include_script')
 <script src="{{ ver_asset('js/jquery.tablednd.js') }}"></script>
@@ -11,11 +11,11 @@
 {{ csrf_field() }}
     <div class="body-head">
         <div class="pull-left">
-            <h3>메뉴설정</h3>
+            <h3>메뉴 설정</h3>
             <ul class="fl">
                 <li class="admin">Admin</li>
-                <li class="depth">환경설정</li>
-                <li class="depth">메뉴설정</li>
+                <li class="depth">환경 설정</li>
+                <li class="depth">메뉴 설정</li>
             </ul>
         </div>
     </div>

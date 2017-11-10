@@ -70,10 +70,6 @@ class RegisterController extends Controller
         if(!cache('config.sns')->googleRecaptchaClient || !cache('config.sns')->googleRecaptchaServer) {
             return alertRedirect('자동등록방지(구글 리캡챠) 키가 등록되지 않아서 회원가입을 진행할 수 없습니다. 관리자에게 문의하여 주십시오.');
         }
-        // 본인확인 관련 세션 초기화
-        session()->put("ss_cert_no", "");
-        session()->put("ss_cert_hash", "");
-        session()->put("ss_cert_type", "");
 
         $messages = $this->userModel->addPasswordMessages($this->userModel->messages);
         $params = [
@@ -105,20 +101,6 @@ class RegisterController extends Controller
 
         if($validator->fails()) {
             return redirect(route('user.register.form.get', $request->except(['password', 'password_confirmation', '_token', 'g-recaptcha-response'])))->withErrors($validator);
-        }
-
-        if(cache('config.cert')->certUse && cache('config.cert')->certReq) {
-            if( trim($request->certNo) != session()->get('ss_cert_no') || !session()->get('ss_cert_no') ) {
-                return alertErrorWithInput('회원가입을 위해서는 본인확인을 해주셔야 합니다.', 'hpCert');
-            }
-        }
-
-        if(cache('config.cert')->certUse && session()->get('ss_cert_type') && session()->get('ss_cert_dupinfo')) {
-            $cert = new Cert();
-            $checkUser = $cert->checkExistDupInfo($request->email, session()->get('ss_cert_dupinfo'));
-            if($checkUser) {
-                return alertErrorWithInput("입력하신 본인확인 정보로 가입된 내역이 존재합니다.\\n회원이메일 : ". $checkUser->email);
-            }
         }
 
         $user = $this->userModel->joinUser($request);

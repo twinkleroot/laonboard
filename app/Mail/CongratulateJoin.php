@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\User;
+use App\Models\User;
 
 class CongratulateJoin extends Mailable implements ShouldQueue
 {
@@ -40,10 +40,12 @@ class CongratulateJoin extends Mailable implements ShouldQueue
 
         $address = cache('config.email.default')->adminEmail;
         $name = cache('config.email.default')->adminEmailName;
+        $theme = cache('config.theme')->name ? : 'default';
+
         return $this
             ->from($address, $name)
             ->subject($this->subject)
-            ->view('mail.default.congratulate_join')
+            ->view("themes.$theme.mails.congratulate_join")
             ->with([
                 'user' => $this->user,
                 'url' => $url

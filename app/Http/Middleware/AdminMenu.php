@@ -18,10 +18,10 @@ class AdminMenu
     {
         $user = auth()->user();
         $menus = config('menu');
-        $primaryMenu = [];
-        $subMenu = [];
         // 세션에 등록된 메뉴가 없으면
         if(!cache($user->id_hashkey.'_admin_primary_menu')) {
+            $primaryMenu = [];
+            $subMenu = [];
             if($user->isSuperAdmin()) { // 최고관리자일 때 모든 메뉴 가져오기
                 foreach($menus as $key => $value) {
                     if( substr($key, -3) == '000') {
@@ -31,7 +31,7 @@ class AdminMenu
                     }
                 }
             } else {    // 권한을 부여받은 관리자일 경우
-                $manageMenus = ManageAuth::where('user_id', $user->id)->orderBy('menu')->get();
+                $manageMenus = ManageAuth::where(['user_id' => $user->id, 'isModule' => 0])->orderBy('menu')->get();
                 foreach($manageMenus as $manageMenu) {
                     $subMenu[$manageMenu->menu] = $menus[$manageMenu->menu];
                     $primaryMenu[substr($manageMenu->menu, 0, 1). '00000'] = $menus[substr($manageMenu->menu, 0, 1). '00000'];

@@ -1,15 +1,15 @@
 @extends('admin.layouts.basic')
 
-@section('title')부가서비스 | {{ Cache::get("config.homepage")->title }}@endsection
+@section('title')부가 서비스 | {{ Cache::get("config.homepage")->title }}@endsection
 
 @section('content')
 <div class="body-head">
     <div class="pull-left">
-        <h3>부가서비스</h3>
+        <h3>부가 서비스</h3>
         <ul class="fl">
             <li class="admin">Admin</li>
-            <li class="depth">환경설정</li>
-            <li class="depth">부가서비스</li>
+            <li class="depth">환경 설정</li>
+            <li class="depth">부가 서비스</li>
         </ul>
     </div>
 </div>

@@ -31,7 +31,6 @@ class DisableCommand extends Command
 
         if ($module->enabled()) {
             $module->disable();
-            Artisan::call('cache:clear');
 
             $this->info("Module [{$module}] disabled successful.");
         } else {

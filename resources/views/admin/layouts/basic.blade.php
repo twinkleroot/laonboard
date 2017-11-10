@@ -103,7 +103,13 @@
         <ul class="sd_2depth">
             @foreach(cache(auth()->user()->id_hashkey.'_admin_sub_menu') as $subMenuCode => $subMenu)
                 @if(substr($key, 0, 1) == substr($subMenuCode, 0, 1))
-                <li><a href="{{ $subMenu[1] ? route($subMenu[1]) : '' }}" id="{{ $subMenuCode }}">{{ $subMenu[0] }}</a></li>
+                <li><a href="{{ $subMenu[1] ? route($subMenu[1]) : '' }}" id="{{ $subMenuCode }}">{{ $subMenu[0] }}</a>
+                    @if($subMenuCode == '400100')
+                    <span class="sd_update">
+                        <span class="count">{{ count(Module::enabled()) }}</span>
+                    </span>
+                    @endif
+                </li>
                 @endif
             @endforeach
         </ul>

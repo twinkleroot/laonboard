@@ -1,15 +1,58 @@
 <?php
 
-// 이벤트 등록 & 끼워넣기
+use App\Models\Config;
+
+// 배열을 값을 기준으로 정렬
+if(! function_exists('addCustomConfig')) {
+    function addCustomConfig($name, $data)
+    {
+        $config = '';
+        if(cache("config.$name")) {
+            $config = cache("config.$name");
+        } else if($nameConfig = Config::where('name', "config.$name")->first()) {
+            $config = json_decode($nameConfig->vars);
+            Cache::forever("config.$name", $config);
+        }
+
+        if(!$config) {
+            Config::insert([
+                'name' => "config.$name",
+                'vars' => json_encode($data),
+            ]);
+
+            $config = Config::where('name', "config.$name")->first();
+
+            if($config) {
+                Cache::forever("config.$name", json_decode($config->vars));
+            }
+        }
+    }
+}
+// 배열을 값을 기준으로 정렬
+if(! function_exists('sortArray')) {
+    function sortArray($arr, $key)
+    {
+        return array_sort($arr, function($value) use($key) {
+            return $value[$key];
+        });
+    }
+}
+
+// laravel app에 event 등록
 if(! function_exists('mergeEvent')) {
-    function mergeEvent($path, $key)
+    function mergeEvent($path, $key, $change=0)
     {
         $config = app()['config']->get($key,[]);
 
         foreach(require $path as $pathKey => $value) {
             if(isset($config[$pathKey])) {
-                // array_add
-                $config[$pathKey] = array_add($config[$pathKey], key($value), $value[key($value)]);
+                if($change) {
+                    // event change - if module off, back to default event.
+                    $config[$pathKey] = $value;
+                } else {
+                    // array_add
+                    $config[$pathKey] = array_add($config[$pathKey], key($value), $value[key($value)]);
+                }
                 app()['config']->set($key, $config);
             } else {
                 // array_merge
@@ -32,38 +75,29 @@ if(! function_exists('fireEvent')) {
             });
 
             foreach($classes as $key => $value) {
-                if(class_exists($key)) {
-                    event(new $key(...$params));
+                $namespace = eventNamespace($key, $value);
+                if(class_exists($namespace) && $value['use']) {
+                    event(new $namespace(...$params));
                 }
             }
         }
     }
 }
 
-// 인기 검색어 추가
-if(! function_exists('addPopular')) {
-    function addPopular($kind, $keyword, $request)
+// module event namespace 조합
+if(! function_exists('eventNamespace')) {
+    function eventNamespace($key, $value)
     {
-        $kinds = [];
-        if(!is_array($kind)) {
-            if(strpos($kind, '||')) {
-                $kinds = explode('||', $kind);
-            } else {
-                $kinds = explode(',', $kind);
-            }
+        $first = 'Modules';
+        $second = $value['module'];
+        $third = 'Events';
+        $fourth = studly_case($key);
+        if(strtolower($value['module']) == 'laonboard') {
+            $first = 'App';
+            $second = 'Modules';
         }
 
-        if(!in_array('user_id', $kinds)) {
-            $property = [
-                'word' => $keyword,
-                'date' => Carbon\Carbon::now()->toDateString(),
-                'ip' => $request->ip(),
-            ];
-            $popular = App\Models\Popular::where($property)->first();
-            if(!$popular) {
-                App\Models\Popular::insert($property);
-            }
-        }
+        return "$first\\$second\\$third\\$fourth";
     }
 }
 
@@ -108,7 +142,7 @@ if(! function_exists('getLatestWrites')) {
             $latests[$i]->table_name = $board->table_name;
             $latests[$i]->new = $board->new;
             $latests[$i]->hot = $board->hot;
-            $subjectLength = config('gnu.subject_len.main') ? : 15;
+            $subjectLength = config('laon.subject_len.main') ? : 15;
             $write = $latests[$i]->first();
             foreach($latests[$i] as $write) {
                 if($write) {
@@ -218,7 +252,7 @@ if(! function_exists('pullOutImage')) {
 if(! function_exists('ver_asset')) {
     function ver_asset($path)
     {
-        return asset($path). '?ver='. config('gnu.VER');
+        return asset($path). '?ver='. config('laon.VER');
     }
 }
 
@@ -692,26 +726,6 @@ if (! function_exists('getSkins')) {
         }
 
         return $result;
-    }
-}
-
-if (! function_exists('getPopularWords')) {
-    // 인기검색어 출력
-    // $dateCnt : 몇일 동안
-    // $popCnt : 검색어 몇개
-    function getPopularWords($dateCnt=3, $popCnt=7)
-    {
-        $from = \Carbon\Carbon::now()->subDays($dateCnt)->format("Y-m-d");
-        $to = \Carbon\Carbon::now()->toDateString();
-        $populars = App\Models\Popular::select('word', DB::raw('count(*) as cnt'))
-        ->whereBetween('date', [$from, $to])
-        ->groupBy('word')
-        ->orderBy('cnt', 'desc')
-        ->orderBy('word')
-        ->limit($popCnt)
-        ->get();
-
-        return $populars;
     }
 }
 
