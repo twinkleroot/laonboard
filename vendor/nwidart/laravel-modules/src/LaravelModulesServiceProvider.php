@@ -20,9 +20,12 @@ class LaravelModulesServiceProvider extends ModulesServiceProvider
      */
     public function register()
     {
-        $this->registerServices();
-        $this->setupStubPath();
-        $this->registerProviders();
+        $envPath = base_path(".env");
+        if(\File::exists($envPath)) {
+            $this->registerServices();
+            $this->setupStubPath();
+            $this->registerProviders();
+        }
     }
 
     /**
@@ -44,13 +47,10 @@ class LaravelModulesServiceProvider extends ModulesServiceProvider
      */
     protected function registerServices()
     {
-        $envPath = base_path(".env");
-        if(\File::exists($envPath)) {
-            $this->app->singleton('modules', function ($app) {
-                $path = $app['config']->get('modules.paths.modules');
+        $this->app->singleton('modules', function ($app) {
+            $path = $app['config']->get('modules.paths.modules');
 
-                return new \Nwidart\Modules\Laravel\Repository($app, $path);
-            });
-        }
+            return new \Nwidart\Modules\Laravel\Repository($app, $path);
+        });
     }
 }
