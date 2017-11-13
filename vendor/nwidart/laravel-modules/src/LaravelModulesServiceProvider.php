@@ -11,7 +11,7 @@ class LaravelModulesServiceProvider extends ModulesServiceProvider
      */
     public function boot()
     {
-        if(\File::exists(base_path('env'))) {
+        if(\File::exists(base_path('.env'))) {
             $this->registerNamespaces();
             $this->registerModules();
         }
