@@ -27,6 +27,7 @@ class ContentServiceProvider extends ServiceProvider
         $this->registerFactories();
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
         $this->registerPublic();
+        $this->registerTables();
     }
 
     /**
@@ -37,6 +38,18 @@ class ContentServiceProvider extends ServiceProvider
     public function register()
     {
         //
+    }
+
+    /**
+     * Register the database tables.
+     *
+     * @return void
+     */
+    public function registerTables()
+    {
+        if(!\Schema::hasTable("contents")) {
+            \Artisan::call("migrate");
+        }
     }
 
     /**

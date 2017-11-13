@@ -27,6 +27,7 @@ class InformServiceProvider extends ServiceProvider
         $this->registerFactories();
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
         $this->registerPublic();
+        $this->registerTables();
 
         // add inform config to configs table
         $data = ['del' => config('inform.del')];
@@ -41,6 +42,18 @@ class InformServiceProvider extends ServiceProvider
     public function register()
     {
         //
+    }
+
+    /**
+     * Register the database tables.
+     *
+     * @return void
+     */
+    public function registerTables()
+    {
+        if(!\Schema::hasTable("notifications")) {
+            \Artisan::call("migrate");
+        }
     }
 
     /**

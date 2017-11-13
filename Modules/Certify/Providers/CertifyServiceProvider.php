@@ -29,6 +29,7 @@ class CertifyServiceProvider extends ServiceProvider
         $this->registerFactories();
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
         $this->registerPublic();
+        $this->registerTables();
         // cert 설정 캐시 등록
         $this->cacheCertConfig();
         // 미들웨어 등록
@@ -43,6 +44,18 @@ class CertifyServiceProvider extends ServiceProvider
     public function register()
     {
         //
+    }
+
+    /**
+     * Register the database tables.
+     *
+     * @return void
+     */
+    public function registerTables()
+    {
+        if(!\Schema::hasTable("cert_history")) {
+            \Artisan::call("migrate");
+        }
     }
 
     /**

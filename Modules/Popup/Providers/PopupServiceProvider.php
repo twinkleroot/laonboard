@@ -26,6 +26,7 @@ class PopupServiceProvider extends ServiceProvider
         $this->registerViews();
         $this->registerFactories();
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->registerTables();
     }
 
     /**
@@ -36,6 +37,18 @@ class PopupServiceProvider extends ServiceProvider
     public function register()
     {
         //
+    }
+
+    /**
+     * Register the database tables.
+     *
+     * @return void
+     */
+    public function registerTables()
+    {
+        if(!\Schema::hasTable("popups")) {
+            \Artisan::call("migrate");
+        }
     }
 
     /**
