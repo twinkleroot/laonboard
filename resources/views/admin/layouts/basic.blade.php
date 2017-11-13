@@ -105,9 +105,11 @@
                 @if(substr($key, 0, 1) == substr($subMenuCode, 0, 1))
                 <li><a href="{{ $subMenu[1] ? route($subMenu[1]) : '' }}" id="{{ $subMenuCode }}">{{ $subMenu[0] }}</a>
                     @if($subMenuCode == '400100')
-                    <span class="sd_update">
-                        <span class="count">{{ count(Module::enabled()) }}</span>
-                    </span>
+                    <a href="{{ $subMenu[1] ? route($subMenu[1]) : '' }}" id="{{ $subMenuCode }}">
+                        <span class="sd_update">
+                            <span class="count">{{ count(Module::enabled()) }}</span>
+                        </span>
+                    </a>
                     @endif
                 </li>
                 @endif
