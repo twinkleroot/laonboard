@@ -27,6 +27,7 @@ class VisitServiceProvider extends ServiceProvider
         $this->registerViews();
         $this->registerFactories();
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->registerTables();
     }
 
     /**
@@ -37,6 +38,18 @@ class VisitServiceProvider extends ServiceProvider
     public function register()
     {
         //
+    }
+
+    /**
+     * Register the database tables.
+     *
+     * @return void
+     */
+    public function registerTables()
+    {
+        if(!\Schema::hasTable("visits")) {
+            \Artisan::call("migrate");
+        }
     }
 
     /**

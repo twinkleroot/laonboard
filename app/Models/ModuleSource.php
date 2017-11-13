@@ -98,8 +98,9 @@ class ModuleSource
                 $this->publishResource($name);
             }
         } else {
-            Module::find($names)->enable();
-            $this->publishResource($names);
+            $name = $names;
+            Module::find($name)->enable();
+            $this->publishResource($name);
         }
 
         // DB table 생성

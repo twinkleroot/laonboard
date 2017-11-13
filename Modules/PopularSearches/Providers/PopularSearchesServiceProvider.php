@@ -26,6 +26,7 @@ class PopularSearchesServiceProvider extends ServiceProvider
         $this->registerViews();
         $this->registerFactories();
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->registerTables();
 
         // add popular config to configs table
         $data = ['del' => config('popularsearches.del')];
@@ -40,6 +41,18 @@ class PopularSearchesServiceProvider extends ServiceProvider
     public function register()
     {
         //
+    }
+
+    /**
+     * Register the database tables.
+     *
+     * @return void
+     */
+    public function registerTables()
+    {
+        if(!\Schema::hasTable("populars")) {
+            \Artisan::call("migrate");
+        }
     }
 
     /**
