@@ -60,7 +60,7 @@ class InstallController extends Controller
             File::makeDirectory($okeyPath);
         }
         // 6. DB 구성
-        Artisan::call('migrate:refresh');
+        Artisan::call('migrate:fresh');
         // 7. 입력받은 관리자 데이터로 관리자 회원 추가
         $this->addAdmin($request);
         // 8. 환경 설정 기본값 데이터 추가

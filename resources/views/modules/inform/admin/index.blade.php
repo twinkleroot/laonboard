@@ -56,7 +56,7 @@
         <table class="adm_box_table">
             <tr>
                 <th>알림 삭제</th>
-                <td class="table_body chknone">
+                <td class="table_body">
                     <input type="text" name="del" class="form-control form_num" value="{{ cache('config.inform')->del }}">
                     <span class="help-block">설정일이 지난 알림 자동 삭제</span>
                 </td>

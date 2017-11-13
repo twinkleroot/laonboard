@@ -28,6 +28,7 @@
         @unless(isDemo())
         <a href="{{ route('admin.popup.create') }}" class="btn btn-sir" role="button">팝업 레이어 추가</a>
         @endunless
+        <a class="btn btn-default" href="{{ route('admin.modules.index') }}">모듈목록</a>
     </div>
 </div>
 

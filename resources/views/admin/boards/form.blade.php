@@ -79,7 +79,7 @@
             <table class="adm_box_table">
                 <tr>
                     <th>TABLE</th>
-                    <td class="table_body chknone" colspan="2">
+                    <td class="table_body" colspan="2">
                         <div class="@if($errors->get('table_name')) has-error @endif">
                         @if($type == 'edit')
                             <input type="text" name="table_name" class="form-control form_input required" value="{{ $board->table_name }}" maxlength="20" readonly>
@@ -102,7 +102,7 @@
                 </tr>
                 <tr>
                     <th>그룹</th>
-                    <td class="table_body chknone" colspan="2">
+                    <td class="table_body" colspan="2">
                         <select name="group_id" class="form-control form_input" required>
                             <option value>선택</option>
                             @foreach ($groups as $group)
@@ -121,7 +121,7 @@
                 </tr>
                 <tr>
                     <th>게시판 제목</th>
-                    <td class="table_body chknone" colspan="2">
+                    <td class="table_body" colspan="2">
                         <div class="@if($errors->get('subject')) has-error @endif">
                             <input type="text" name="subject" class="form-control form_half required" @if($type == 'edit') value="{{ $board->subject }}" @endif required/>
                             @foreach ($errors->get('subject') as $message)
@@ -134,7 +134,7 @@
                 </tr>
                 {{-- <tr>
                     <th>모바일 게시판 제목</th>
-                    <td class="table_body chknone" colspan="2">
+                    <td class="table_body" colspan="2">
                         <input type="text" name="mobile_subject" class="form-control form_half" @if($type == 'edit') value="{{ $board->mobile_subject }}" @endif />
                             <span class="help-block">모바일에서 보여지는 게시판 제목이 다른 경우에 입력합니다. 입력이 없으면 기본 게시판 제목이 출력됩니다.</span>
                     </td>
@@ -1059,7 +1059,7 @@
                 </tr>
                 <tr>
                     <th>테마 이미지설정 가져오기</th>
-                    <td class="table_body chknone" colspan="2">
+                    <td class="table_body" colspan="2">
                         <button type="button" class="btn btn-sir" onclick="getThemeGalleryConfig()">가져오기</button>
                     </td>
                 </tr>
@@ -1073,7 +1073,7 @@
             <table class="adm_box_table">
                 <tr>
                     <th>기본값으로 설정</th>
-                    <td class="table_body chknone" colspan="2">
+                    <td class="table_body" colspan="2">
                         <input type="checkbox" id="config_env_point"  onclick="set_point(this.form)" />
                         <label for="config_env_point">환경설정에 입력된 포인트로 설정</label>
                     </td>
