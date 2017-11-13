@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Test1\Http\Controllers;
+namespace Modules\GoogleRecaptcha\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 
-class Test1Controller extends Controller
+class GoogleRecaptchaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,7 @@ class Test1Controller extends Controller
      */
     public function index()
     {
-        return view('test1::index');
+        return view('googlerecaptcha::index');
     }
 
     /**
@@ -23,7 +23,7 @@ class Test1Controller extends Controller
      */
     public function create()
     {
-        return view('test1::create');
+        return view('googlerecaptcha::create');
     }
 
     /**
@@ -41,7 +41,7 @@ class Test1Controller extends Controller
      */
     public function show()
     {
-        return view('test1::show');
+        return view('googlerecaptcha::show');
     }
 
     /**
@@ -50,7 +50,7 @@ class Test1Controller extends Controller
      */
     public function edit()
     {
-        return view('test1::edit');
+        return view('googlerecaptcha::edit');
     }
 
     /**

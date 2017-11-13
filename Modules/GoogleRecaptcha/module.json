@@ -1,0 +1,23 @@
+{
+    "name": "GoogleRecaptcha",
+    "alias": "googlerecaptcha",
+    "description": "구글 자동입력방지 위젯을 연결해주는 모듈입니다.",
+    "detail": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\GoogleRecaptcha\\Providers\\GoogleRecaptchaServiceProvider",
+        "Modules\\GoogleRecaptcha\\Providers\\EventServiceProvider",
+        "Modules\\GoogleRecaptcha\\Providers\\AuthServiceProvider"
+    ],
+    "aliases": {},
+    "files": [
+        "start.php", "helpers.php"
+    ],
+    "requires": [],
+    "author": "라온보드",
+    "version": "1.0.0",
+    "link": "http://sir.kr",
+    "adminlink": "admin.recaptcha.index"
+}

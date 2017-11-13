@@ -28,13 +28,9 @@ class CertifyServiceProvider extends ServiceProvider
         $this->registerViews();
         $this->registerFactories();
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
-
+        $this->registerPublic();
         // cert 설정 캐시 등록
         $this->cacheCertConfig();
-
-        // public resource publish
-        $this->registerPublic();
-
         // 미들웨어 등록
         $this->registerMiddleWare();
     }
@@ -47,6 +43,22 @@ class CertifyServiceProvider extends ServiceProvider
     public function register()
     {
         //
+    }
+
+    /**
+     * Register public resources.
+     *
+     * @return void
+     */
+    protected function registerPublic()
+    {
+        $publicPath = public_path('modules/certify');
+
+        $sourcePath = __DIR__.'/../Public';
+
+        $this->publishes([
+            $sourcePath => $publicPath
+        ], 'module-certify-public');
     }
 
     /**
@@ -79,22 +91,6 @@ class CertifyServiceProvider extends ServiceProvider
             // 라우트 이름마다 cert 미들웨어 추가
             array_push(app()['routes']->getByName("board.$routeName")->action['middleware'], 'cert');
         }
-    }
-
-    /**
-     * Register config.
-     *
-     * @return void
-     */
-    protected function registerPublic()
-    {
-        $publicPath = public_path('modules/certify');
-
-        $sourcePath = __DIR__.'/../Public';
-
-        $this->publishes([
-            $sourcePath => $publicPath
-        ], 'module-certify-public');
     }
 
     /**

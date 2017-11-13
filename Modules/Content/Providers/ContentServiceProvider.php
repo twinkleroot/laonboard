@@ -26,7 +26,6 @@ class ContentServiceProvider extends ServiceProvider
         $this->registerViews();
         $this->registerFactories();
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
-
         $this->registerPublic();
     }
 
@@ -41,7 +40,7 @@ class ContentServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register config.
+     * Register public resources.
      *
      * @return void
      */

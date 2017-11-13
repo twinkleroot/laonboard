@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Test1\Database\Seeders;
+namespace Modules\GoogleRecaptcha\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-class Test1DatabaseSeeder extends Seeder
+class GoogleRecaptchaDatabaseSeeder extends Seeder
 {
     /**
      * Run the database seeds.

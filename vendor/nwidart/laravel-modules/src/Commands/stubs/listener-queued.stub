@@ -30,4 +30,14 @@ class $CLASS$ implements ShouldQueue
     {
         //
     }
+
+    /**
+     * Register the listeners for the subscriber.
+     *
+     * @param \Illuminate\Events\Dispatcher $events
+     */
+    public function subscribe(\Illuminate\Events\Dispatcher $events)
+    {
+        //
+    }
 }

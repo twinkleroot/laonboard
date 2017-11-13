@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Certify\Providers;
+namespace Modules\GoogleRecaptcha\Providers;
 
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -21,7 +21,7 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $subscribe = [
-        \Modules\Certify\Listeners\EventListener::class,
+        \Modules\GoogleRecaptcha\Listeners\EventListener::class,
     ];
 
     /**

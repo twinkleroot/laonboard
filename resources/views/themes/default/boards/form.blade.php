@@ -8,7 +8,6 @@
 @endsection
 
 @section('include_script')
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 @if(isMobile())
 <script src="https://cloud.tinymce.com/dev/tinymce.min.js"></script>
 @else

@@ -5,7 +5,7 @@ namespace Modules\Certify\Listeners;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class HpCertifyListener
+class EventListener
 {
     /**
      * Create the event listener.

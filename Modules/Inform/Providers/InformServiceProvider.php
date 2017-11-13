@@ -26,8 +26,6 @@ class InformServiceProvider extends ServiceProvider
         $this->registerViews();
         $this->registerFactories();
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
-
-        // public resource publish
         $this->registerPublic();
 
         // add inform config to configs table
@@ -46,7 +44,7 @@ class InformServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register config.
+     * Register public resources.
      *
      * @return void
      */

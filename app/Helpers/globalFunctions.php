@@ -256,14 +256,6 @@ if(! function_exists('ver_asset')) {
     }
 }
 
-
-if(! function_exists('todayWriteCount')) {
-    function todayWriteCount($id)
-    {
-        return App\Models\BoardNew::whereUserId($id)->whereDate('created_at', '=', Carbon\Carbon::today()->toDateString())->count();
-    }
-}
-
 if (! function_exists('mailer')) {
     // 메일 보내기 (파일 여러개 첨부 가능)
     // type : text=0, html=1, text+html=2

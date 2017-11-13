@@ -26,6 +26,7 @@ class $CLASS$ extends ServiceProvider
         $this->registerViews();
         $this->registerFactories();
         $this->loadMigrationsFrom(__DIR__ . '/../$MIGRATIONS_PATH$');
+        $this->registerPublic();
     }
 
     /**
@@ -36,6 +37,22 @@ class $CLASS$ extends ServiceProvider
     public function register()
     {
         //
+    }
+
+    /**
+     * Register public resources.
+     *
+     * @return void
+     */
+    protected function registerPublic()
+    {
+        $publicPath = public_path('modules/$LOWER_NAME$');
+
+        $sourcePath = __DIR__.'/../Public';
+
+        $this->publishes([
+            $sourcePath => $publicPath
+        ], 'module-$LOWER_NAME$-public');
     }
 
     /**

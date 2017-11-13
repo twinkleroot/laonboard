@@ -1,5 +1,5 @@
 {
-    "name": "nwidart/test1",
+    "name": "nwidart/googlerecaptcha",
     "description": "",
     "authors": [
         {
@@ -9,7 +9,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Modules\\Test1\\": ""
+            "Modules\\GoogleRecaptcha\\": ""
         }
     }
 }

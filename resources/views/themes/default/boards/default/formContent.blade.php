@@ -1,4 +1,3 @@
-<!-- Board start -->
 @if($errors->any())
 <script>
     alert("{{ $errors->first() }}");
@@ -237,19 +236,9 @@
             @endif
         </div>
         <div class="pull-right">
-            @if( !auth()->check() || !auth()->user()->isBoardAdmin($board) && $board->use_recaptcha && todayWriteCount(auth()->user()->id) > config('laon.todayWriteCount') )
-            <!-- 리캡챠 -->
-            <div id='recaptcha' class="g-recaptcha"
-                data-sitekey="{{ cache('config.sns')->googleRecaptchaClient }}"
-                data-callback="onSubmit"
-                data-size="invisible" style="display:none">
-            </div>
-            <input type="hidden" name="g-recaptcha-response" id="g-response" />
-            <button type="button" class="btn btn-sir" onclick="validate();">작성완료</button>
-            @else
-            <button type="submit" class="btn btn-sir">작성완료</button>
-            @endif
+            <button type="button" class="btn btn-sir submitBtn">작성완료</button>
             <a href="{{ route("board.index", $board->table_name). (Request::getQueryString() ? '?'.Request::getQueryString() : '')}}" type="button" class="btn btn-default">취소</a>
+            {{ fireEvent('captchaPlace') }}
         </div>
     </div>
 </form>
@@ -259,6 +248,50 @@
     <input type="file" name="image_file" id="image_file" onchange="$('#imageForm').submit(); this.value='';" style="display:none">
 </form>
 <script>
+function writeSubmit() {
+    var subject = "";
+    var content = "";
+    var contentData = "";
+    var useEditor = {{ $board->use_dhtml_editor }};
+    var htmlUsable = {{ $userLevel >= $board->html_level ? 1 : 0 }};
+    if(useEditor == 1 && htmlUsable == 1) {
+        contentData = tinymce.get('content').getContent();
+    } else {
+        contentData = $('#content').val();
+    }
+
+    $.ajax({
+        url: '/ajax/filter/board',
+        type: 'post',
+        data: {
+            '_token' : '{{ csrf_token() }}',
+            'subject' : $('#subject').val(),
+            'content' : contentData
+        },
+        dataType: 'json',
+        async: false,
+        cache: false,
+        success: function(data) {
+            subject = data.subject;
+            content = data.content;
+        }
+    });
+
+    if(subject) {
+        alert("제목에 금지단어 (" + subject + ") 가 포함되어 있습니다.");
+        $('#subject').focus();
+        return false;
+    }
+
+    if(content) {
+        alert("내용에 금지단어 (" + content + ") 가 포함되어 있습니다.");
+        tinymce.get('content').focus();
+        return false;
+    }
+
+    return true;
+}
+
 tinymce.init({
     selector: '.editorArea',
     language: 'ko_KR',
@@ -311,58 +344,6 @@ function htmlAutoBr(obj) {
         obj.value = "";
     }
 }
-function onSubmit(token) {
-    $("#g-response").val(token);
-    $("#fwrite").submit();
-}
-function validate(event) {
-    if(writeSubmit()) {
-        grecaptcha.execute();
-    }
-}
-function writeSubmit() {
-    var subject = "";
-    var content = "";
-    var contentData = "";
-    var useEditor = {{ $board->use_dhtml_editor }};
-    var htmlUsable = {{ $userLevel >= $board->html_level ? 1 : 0 }};
-    if(useEditor == 1 && htmlUsable == 1) {
-        contentData = tinymce.get('content').getContent();
-    } else {
-        contentData = $('#content').val();
-    }
-
-    $.ajax({
-        url: '/ajax/filter/board',
-        type: 'post',
-        data: {
-            '_token' : '{{ csrf_token() }}',
-            'subject' : $('#subject').val(),
-            'content' : contentData
-        },
-        dataType: 'json',
-        async: false,
-        cache: false,
-        success: function(data) {
-            subject = data.subject;
-            content = data.content;
-        }
-    });
-
-    if(subject) {
-        alert("제목에 금지단어 (" + subject + ") 가 포함되어 있습니다.");
-        $('#subject').focus();
-        return false;
-    }
-
-    if(content) {
-        alert("내용에 금지단어 (" + content + ") 가 포함되어 있습니다.");
-        tinymce.get('content').focus();
-        return false;
-    }
-
-    return true;
-}
 
 $(function() {
     $(".link").click(function(){
@@ -373,19 +354,16 @@ $(function() {
     $(".file").click(function(){
         $(".file_list").toggle();
     });
+
+    {{-- 글자수 제한 --}}
+    @if(!$board->use_dhtml_editor || $userLevel < $board->html_level)
+    @if(auth()->guest() || !auth()->user()->isSuperAdmin())
+    @if($board->write_min || $board->write_max)
+    $("#content").on("keyup", function() {
+        check_byte("content", "charCount");
+    });
+    @endif
+    @endif
+    @endif
 });
 </script>
-{{-- 글자수 제한 --}}
-@if(!$board->use_dhtml_editor || $userLevel < $board->html_level)
-@if(auth()->guest() || !auth()->user()->isSuperAdmin())
-@if($board->write_min || $board->write_max)
-<script>
-    $(function() {
-        $("#content").on("keyup", function() {
-            check_byte("content", "charCount");
-        });
-    });
-</script>
-@endif
-@endif
-@endif
