@@ -47,6 +47,7 @@ class InstallController extends Controller
             if(File::exists($envPath)) {
                 File::delete($envPath);
             }
+            
             return view('install.setup_result', ['dbError' => 1, 'message' => $e->getMessage()]);
         }
         // 3. App Key 생성

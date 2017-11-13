@@ -17,8 +17,9 @@ class CreateManageAuthTable extends Migration
         Schema::create('manage_auth', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->string('menu', 20);
+            $table->string('menu', 50);
             $table->enum('auth', ['r', 'w', 'd']);
+            $table->tinyInteger('isModule')->unsigned()->default('0');
 
             $table->unique(['user_id', 'menu'], 'ma_unique');
         });

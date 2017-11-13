@@ -11,8 +11,10 @@ class LaravelModulesServiceProvider extends ModulesServiceProvider
      */
     public function boot()
     {
-        $this->registerNamespaces();
-        $this->registerModules();
+        if(\File::exists(base_path('env'))) {
+            $this->registerNamespaces();
+            $this->registerModules();
+        }
     }
 
     /**
@@ -20,12 +22,9 @@ class LaravelModulesServiceProvider extends ModulesServiceProvider
      */
     public function register()
     {
-        $envPath = base_path(".env");
-        if(\File::exists($envPath)) {
-            $this->registerServices();
-            $this->setupStubPath();
-            $this->registerProviders();
-        }
+        $this->registerServices();
+        $this->setupStubPath();
+        $this->registerProviders();
     }
 
     /**
@@ -53,4 +52,5 @@ class LaravelModulesServiceProvider extends ModulesServiceProvider
             return new \Nwidart\Modules\Laravel\Repository($app, $path);
         });
     }
+
 }
