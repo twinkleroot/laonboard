@@ -105,7 +105,6 @@ class CertifyServiceProvider extends ServiceProvider
             $configModel = new Config();
             $defaultCertConfigs = [
                 'certUse' => config('certify.certUse'),
-                // 'certIpin' => config('certify.certIpin'),
                 'certHp' => config('certify.certHp'),
                 'certKcbCd' => config('certify.certKcbCd'),
                 'certLimit' => config('certify.certLimit'),
