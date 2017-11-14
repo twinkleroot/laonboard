@@ -5,68 +5,29 @@ namespace Modules\GoogleRecaptcha\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use Ixudra\Curl\Facades\Curl;
 
 class GoogleRecaptchaController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 구글 리캡챠 서버쪽 검사
      * @return Response
      */
-    public function index()
+    public function recaptcha(Request $request)
     {
-        return view('googlerecaptcha::index');
+        $url = 'https://www.google.com/recaptcha/api/siteverify'.
+                '?secret='. cache('config.sns')->googleRecaptchaServer."11".
+                '&response='. $request['g-recaptcha-response'];
+        $flag = json_decode(Curl::to($url)->get());
+
+        $message = '';
+        if(!$flag || !$flag->success) {
+            $message = '자동등록방지 입력이 틀렸습니다. 다시 입력해 주십시오.';
+        }
+
+        return [
+            'message' => $message
+        ];
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Response
-     */
-    public function create()
-    {
-        return view('googlerecaptcha::create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     * @param  Request $request
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-    }
-
-    /**
-     * Show the specified resource.
-     * @return Response
-     */
-    public function show()
-    {
-        return view('googlerecaptcha::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @return Response
-     */
-    public function edit()
-    {
-        return view('googlerecaptcha::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * @param  Request $request
-     * @return Response
-     */
-    public function update(Request $request)
-    {
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @return Response
-     */
-    public function destroy()
-    {
-    }
 }

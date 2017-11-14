@@ -12,9 +12,15 @@
 <!-- js -->
 <script src="{{ ver_asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ ver_asset('js/common.js') }}"></script>
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body class="popup">
+<form method="post" id="mailForm" action="{{ route('user.mail.send') }}" role="form" enctype="multipart/form-data">
+    {{ csrf_field() }}
+    <input type="hidden" name="toUser" value="{{ $id }}" />
+    @auth
+    <input type="hidden" name="name" value="{{ auth()->user()->nick }}" />
+    <input type="hidden" name="email" value="{{ auth()->user()->email }}" />
+    @endauth
 <div id="header" class="popup">
     <div class="container">
         <div class="title" style="border-bottom: 0;">
@@ -22,7 +28,12 @@
         </div>
 
         <div class="cbtn">
-            <button class="btn btn-sir" onclick="validate();">메일발송</button>
+            @if(auth()->check() && auth()->user()->isSuperAdmin())
+            <button type="submit" class="btn btn-sir">메일발송</button>
+            @else
+            <button type="button" class="btn btn-sir submitBtn">메일발송</button>
+            {{ fireEvent('captchaPlace') }}
+            @endif
             <button class="btn btn-default" onclick="window.close();">창닫기</button>
         </div>
     </div>
@@ -30,13 +41,6 @@
 
 <div id="mail" class="container">
     <p class="sr-only">메일쓰기</p>
-    <form method="post" id="mailForm" action="{{ route('user.mail.send') }}" role="form" enctype="multipart/form-data">
-        {{ csrf_field() }}
-        <input type="hidden" name="toUser" value="{{ $id }}" />
-        @auth
-        <input type="hidden" name="name" value="{{ auth()->user()->nick }}" />
-        <input type="hidden" name="email" value="{{ auth()->user()->email }}" />
-        @endauth
         <table class="table box">
             <tbody>
                 @guest
@@ -108,24 +112,7 @@
                 </tr>
             </tbody>
         </table>
-        <!-- 리캡챠 -->
-        <div id='recaptcha' class="g-recaptcha"
-            data-sitekey="{{ cache('config.sns')->googleRecaptchaClient }}"
-            data-callback="onSubmit"
-            data-size="invisible" style="display:none">
-        </div>
-        <input type="hidden" name="g-recaptcha-response" id="g-response" />
-    </form>
 </div>
-
-<script>
-function onSubmit(token) {
-    $("#g-response").val(token);
-    $("#mailForm").submit();
-}
-function validate(event) {
-    grecaptcha.execute();
-}
-</script>
+</form>
 </body>
 </html>

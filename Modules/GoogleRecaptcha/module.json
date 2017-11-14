@@ -1,7 +1,7 @@
 {
     "name": "GoogleRecaptcha",
     "alias": "googlerecaptcha",
-    "description": "구글 자동입력방지 위젯을 연결해주는 모듈입니다.",
+    "description": "\uad6c\uae00 \uc790\ub3d9\uc785\ub825\ubc29\uc9c0 \uc704\uc82f\uc744 \uc5f0\uacb0\ud574\uc8fc\ub294 \ubaa8\ub4c8\uc785\ub2c8\ub2e4.",
     "detail": "",
     "keywords": [],
     "active": 1,
@@ -11,13 +11,14 @@
         "Modules\\GoogleRecaptcha\\Providers\\EventServiceProvider",
         "Modules\\GoogleRecaptcha\\Providers\\AuthServiceProvider"
     ],
-    "aliases": {},
+    "aliases": [],
     "files": [
-        "start.php", "helpers.php"
+        "start.php",
+        "helpers.php"
     ],
     "requires": [],
-    "author": "라온보드",
+    "author": "\ub77c\uc628\ubcf4\ub4dc",
     "version": "1.0.0",
-    "link": "http://sir.kr",
+    "link": "http:\/\/sir.kr",
     "adminlink": "admin.recaptcha.index"
 }

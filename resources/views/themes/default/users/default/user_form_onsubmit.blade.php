@@ -1,6 +1,10 @@
 <script>
 function userFormSubmit(form)
 {
-    return true;
+    if(userSubmit()) {
+        return true;
+    }
+    
+    return false;
 }
 </script>

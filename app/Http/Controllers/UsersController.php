@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Auth;
 use Exception;
 use Carbon\Carbon;
-use App\Services\ReCaptcha;
 use App\Models\User;
 use App\Models\Point;
 use App\Models\Config;
@@ -100,8 +99,6 @@ class UsersController extends Controller
     // 회원 정보 수정
     public function update(Request $request)
     {
-        ReCaptcha::reCaptcha($request);
-
         $params = $this->userModel->editParams();
         $skin = $this->skin;
         $user = auth()->user();
@@ -184,7 +181,6 @@ class UsersController extends Controller
     // 메일인증 메일주소 변경 실행
     public function updateEmail(Request $request)
     {
-        ReCaptcha::reCaptcha($request);
         // 메일인증 메일주소 변경
         $result = $this->userModel->changeCertifyEmail($request);
 

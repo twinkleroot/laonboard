@@ -13,7 +13,6 @@
 <!-- js -->
 <script src="{{ ver_asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ ver_asset('js/common.js') }}"></script>
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body class="popup">
 <form id="memoForm" method="post" action="{{ route('memo.store') }}" autocomplete="off">
@@ -28,7 +27,8 @@
             @if(auth()->check() && auth()->user()->isSuperAdmin())
             <button type="submit" class="btn btn-sir">보내기</button>
             @else
-            <button type="button" class="btn btn-sir" onclick="validate();">보내기</button>
+            <button type="button" class="btn btn-sir submitBtn">보내기</button>
+            {{ fireEvent('captchaPlace') }}
             @endif
             <button type="button" class="btn btn-default" onclick="window.close();">창닫기</button>
         </div>
@@ -75,25 +75,8 @@
             </tr>
         </tbody>
     </table>
-    <!-- 리캡챠 -->
-    <div id='recaptcha' class="g-recaptcha"
-        data-sitekey="{{ cache('config.sns')->googleRecaptchaClient }}"
-        data-callback="onSubmit"
-        data-size="invisible" style="display:none">
-    </div>
-    <input type="hidden" name="g-recaptcha-response" id="g-response" />
     </form>
 </div>
-
-<script>
-function onSubmit(token) {
-    $("#g-response").val(token);
-    $("#memoForm").submit();
-}
-function validate(event) {
-    grecaptcha.execute();
-}
-</script>
 
 </body>
 </html>

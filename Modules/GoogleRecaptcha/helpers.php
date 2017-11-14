@@ -1,8 +1,14 @@
 <?php
 
-if(! function_exists('todayWriteCount')) {
-    function todayWriteCount($id)
+if(! function_exists('isShowCaptchaFromWriteCount')) {
+    function isShowCaptchaFromWriteCount($id)
     {
-        return App\Models\BoardNew::whereUserId($id)->whereDate('created_at', '=', Carbon\Carbon::today()->toDateString())->count();
+        $count = App\Models\BoardNew::whereUserId($id)->whereDate('created_at', '=', Carbon\Carbon::today()->toDateString())->count();
+
+        if($count == 0 || $count > config('laon.todayWriteCount')) {
+            return true;
+        }
+        
+        return false;
     }
 }

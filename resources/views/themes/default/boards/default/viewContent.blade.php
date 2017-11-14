@@ -120,7 +120,6 @@
 @endif
 </div>
 
-<!-- 스크랩/추천/비추천 -->
 <div class="bd_rd_count">
     @auth
         <a href="{{ route('scrap.create') }}?boardName={{ $board->table_name }}&amp;writeId={{ $write->id }}" target="_blank" onclick="winScrap(this.href); return false;">
@@ -162,7 +161,6 @@
     @endauth
 </div>
 
-<!-- 이전글/다음글 -->
 <div class="bd_bna">
     <ul>
         @if($prevUrl != '')

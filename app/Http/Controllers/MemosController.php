@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Memo;
-use App\Services\ReCaptcha;
 use Exception;
 
 class MemosController extends Controller
@@ -54,9 +53,6 @@ class MemosController extends Controller
      */
     public function store(Request $request)
     {
-        if(!auth()->check() || !auth()->user()->isSuperAdmin()) {
-            ReCaptcha::reCaptcha($request);	// 구글 리캡챠 체크
-        }
         $rules = [
             'recv_nicks' => 'required',
             'memo' => 'required',

@@ -3,7 +3,6 @@
     alert("{{ $errors->first() }}");
 </script>
 @endif
-<!-- 게시글 작성 -->
 @if($type=='update')
     <form role="form" id="fwrite" method="post" action={{ route('board.update', ['boardId'=>$board->table_name, 'writeId'=>$write->id]) }} enctype="multipart/form-data" @if(auth()->user() && auth()->user()->isBoardAdmin($board)) onsubmit="return writeSubmit();" @endif>
         <input type="hidden" name="queryString" id="queryString" value="{{ Request::getQueryString() }}" />
@@ -118,7 +117,6 @@
     </div>
 
 @if($board->use_dhtml_editor && $userLevel >= $board->html_level)
-    {{-- 에디터 --}}
     <div style="border: 1px solid #ccc; background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box; margin-bottom: 10px;" @if($errors->get('content')) class="has-error" @endif>
         <textarea class="editorArea" name="content" id="content">@if($type == 'update'){{ convertText($write->content, 0) }}@else{{ old('content', '') }}@endif</textarea>
     </div>

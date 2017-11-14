@@ -74,7 +74,7 @@
 @endforelse
 </section>
 <aside id="commentWriteArea">
-<form class="cmt_write" id="commentForm" method="post" action="" autocomplete="off">
+<form class="cmt_write" id="commentForm" method="post" action="" autocomplete="off" @if(auth()->user() && auth()->user()->isBoardAdmin($board)) onsubmit="return commentSubmit();" @endif>
     {{ csrf_field() }}
     <input type="hidden" name="writeId" value="{{ $write->id }}" />
     <input type="hidden" name="commentId" id="commentId" />
@@ -136,36 +136,15 @@
 
     <div class="clearfix">
         <div class="pull-right">
-            @if( !auth()->check() || !auth()->user()->isBoardAdmin($board) && $board->use_recaptcha && todayWriteCount(auth()->user()->id) > config('laon.todayWriteCount') )
-            <input type="hidden" name="g-recaptcha-response" id="g-response" />
-            <button type="button" class="btn btn-sir" onclick="validate();">댓글등록</button>
-            @else
-            <button type="submit" id="btnSubmit" class="btn btn-sir">댓글등록</button>
-            @endif
+            <button type="button" class="btn btn-sir submitBtn">댓글등록</button>
+            {{ fireEvent('captchaPlace') }}
         </div>
     </div>
 </form>
 </aside>
-<!-- 리캡챠 -->
-<div id='recaptcha' class="g-recaptcha"
-    data-sitekey="{{ cache('config.sns')->googleRecaptchaClient }}"
-    data-callback="onSubmit"
-    data-size="invisible" style="display:none">
-</div>
 <script>
 var saveBefore = '';
 var saveHtml = document.getElementById('commentWriteArea').innerHTML;
-
-function validate(event) {
-    if(commentSubmit()) {
-        grecaptcha.execute();
-    }
-}
-
-function onSubmit(token) {
-    $("#g-response").val(token);
-    $("#commentForm").submit();
-}
 
 function commentSubmit() {
     var subject = "";

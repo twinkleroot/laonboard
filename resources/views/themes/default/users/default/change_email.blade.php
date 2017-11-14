@@ -7,10 +7,6 @@
 <link rel="stylesheet" type="text/css" href="{{ ver_asset("themes/default/css/auth.css") }}">
 @endsection
 
-@section('include_script')
-<script src='https://www.google.com/recaptcha/api.js' async defer></script>
-@endsection
-
 @section('content')
 <div class="container">
 <div class="row">
@@ -22,8 +18,8 @@
         </div>
         <div class="panel-body row">
             <form class="contents col-md-10 col-md-offset-1" id="emailForm" role="form" method="POST" action="{{ route('user.email.update') }}">
-            {{ csrf_field() }}
-            {{ method_field('PUT') }}
+                {{ csrf_field() }}
+                {{ method_field('PUT') }}
                 <input type="hidden" name="beforeEmail" value="{{ $email }}" />
 
                 <div class="panel-heading">
@@ -38,29 +34,16 @@
                 </div>
 
                 <div class="form-group">
-                    <button type="button" class="btn btn-sir" onclick="validate();">인증메일변경</button>
+                    <button type="button" class="btn btn-sir submitBtn">인증메일변경</button>
                     <a class="btn btn-sir" href="{{ route('home') }}">취소</a>
                 </div>
-                <!-- 리캡챠 -->
-                <div id='recaptcha' class="g-recaptcha"
-                    data-sitekey="{{ cache('config.sns')->googleRecaptchaClient }}"
-                    data-callback="onSubmit"
-                    data-size="invisible" style="display:none">
-                </div>
-                <input type="hidden" name="g-recaptcha-response" id="g-response" />
+
+                {{ fireEvent('captchaPlace') }}
+
             </form>
         </div>
     </div>
 </div>
 </div>
 </div>
-<script>
-function onSubmit(token) {
-    $("#g-response").val(token);
-    $("#emailForm").submit();
-}
-function validate(event) {
-    grecaptcha.execute();
-}
-</script>
 @endsection

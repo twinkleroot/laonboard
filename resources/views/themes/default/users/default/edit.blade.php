@@ -7,13 +7,12 @@
 <link rel="stylesheet" type="text/css" href="{{ ver_asset("themes/default/css/auth.css") }}">
 @endsection
 
-@section('include_script')
-<script src='https://www.google.com/recaptcha/api.js' async defer></script>
 @if($config->addr) <!-- 주소 -->
+@section('include_script')
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <script src="{{ url('js/postcode.js') }}"></script>
-@endif
 @endsection
+@endif
 
 @section('content')
 @if($errors->any())
@@ -32,7 +31,7 @@
         <h3 class="panel-title">회원 정보 수정</h3>
     </div>
     <div class="panel-body row">
-        <form class="contents col-md-10 col-md-offset-1" role="form" id="userForm" name="userForm" method="POST" action="{{ route('user.update') }}" enctype="multipart/form-data" autocomplete="off" onsubmit="return userFormSubmit(this);">
+        <form class="contents col-md-10 col-md-offset-1" role="form" id="userForm" name="userForm" method="POST" action="{{ route('user.update') }}" enctype="multipart/form-data" autocomplete="off" onsubmit="return onsubmit;">
             {{ csrf_field() }}
             {{ method_field('PUT') }}
 
@@ -261,59 +260,24 @@
             </div>
 
             <div class="form-group">
-                <button type="button" class="btn btn-sir" onclick="validate();">변경하기</button>
+                <button type="button" class="btn btn-sir submitBtn">변경하기</button>
                 <a href="{{ route('home') }}" class="btn btn-sir">취소</a>
             </div>
-            <div id='recaptcha' class="g-recaptcha"
-                data-sitekey="{{ cache('config.sns')->googleRecaptchaClient }}"
-                data-callback="onSubmit"
-                data-size="invisible" style="display:none">
-            </div>
-            <input type="hidden" name="g-recaptcha-response" id="g-response" />
+
+            {{ fireEvent('captchaPlace') }}
+
         </form>
     </div>
 </div>
 </div>
 </div>
 </div>
-{{ fireEvent('editUserEnd') }}
 <script>
-function onSubmit(token) {
-    $("#g-response").val(token);
-    $("#userForm").submit();
-}
-function validate(event) {
-    if(userSubmit()) {
-        grecaptcha.execute();
-    }
-}
+var onsubmit = function() {
 
-function userSubmit() {
-    @if($nickChangable)
-    var nick = "";
-
-    $.ajax({
-        url: '/ajax/filter/user',
-        type: 'post',
-        data: {
-            '_token' : '{{ csrf_token() }}',
-            'nick' : $('#nick').val()
-        },
-        dataType: 'json',
-        async: false,
-        cache: false,
-        success: function(data) {
-            nick = data.nick;
-        }
-    });
-
-    if(nick) {
-        alert("닉네임에 금지단어 (" + nick + ") 가 포함되어 있습니다.");
-        $('#nick').focus();
+    if(!filterNickname()) {
         return false;
     }
-    @endif
-
     return true;
 }
 
@@ -395,4 +359,7 @@ $(function(){
     });
 });
 </script>
+
+{{ fireEvent('editUserEnd') }}
+
 @endsection

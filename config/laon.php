@@ -3,7 +3,7 @@
 
     // 상수
     'IP_DISPLAY' => '\\1.♡.\\3.\\4',
-    'VER' => Carbon\Carbon::now()->format('Ymd').'-3',
+    'VER' => Carbon\Carbon::now()->format('Ymd').'-2',
     'URL_REGEX' => '/(http(s)?\:\/\/)?[0-9a-zA-Z]+([\.\-]+[0-9a-zA-Z]+)*(:[0-9]+)?(\/?(\/[\.\w]*)+)?(([\?\&\=][\w]+)+)?/',
 
     // 홈페이지 기본 환경 설정

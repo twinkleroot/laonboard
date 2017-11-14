@@ -2,6 +2,35 @@
 var errmsg = "";
 var errfld = null;
 
+// 닉네임 금지어 검사
+function filterNickname()
+{
+    var nick = "";
+
+    $.ajax({
+        url: '/ajax/filter/user',
+        type: 'post',
+        data: {
+            '_token' : window.Laravel.csrfToken,
+            'nick' : $('#nick').val()
+        },
+        dataType: 'json',
+        async: false,
+        cache: false,
+        success: function(data) {
+            nick = data.nick;
+        }
+    });
+
+    if(nick) {
+        alert("닉네임에 금지단어 (" + nick + ") 가 포함되어 있습니다.");
+        $('#nick').focus();
+        return false;
+    }
+
+    return true;
+}
+
 function initDragAndDropPlugin() {
     $("#menuTable").tableDnD({
         dragHandle: ".dragHandle",

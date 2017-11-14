@@ -4,6 +4,7 @@ namespace Modules\GoogleRecaptcha\Listeners;
 
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Modules\GoogleRecaptcha\Events\AddRecaptchaClient;
 
 class EventListener
 {
@@ -37,7 +38,7 @@ class EventListener
     {
         // 리캡챠 클라이언트 부분 추가
         $events->listen(
-            \Modules\GoogleRecaptcha\Events\AddRecaptchaClient::class,
+            AddRecaptchaClient::class,
             __CLASS__. '@addRecaptchaClient'
         );
     }
@@ -45,13 +46,16 @@ class EventListener
     /**
      * 리캡챠 클라이언트 부분 추가
      *
-     * @param \Modules\GoogleRecaptcha\Events\AddRecaptchaClient $event
+     * @param AddRecaptchaClient $event
      */
-    public function addRecaptchaClient(\Modules\GoogleRecaptcha\Events\AddRecaptchaClient $event)
+    public function addRecaptchaClient(AddRecaptchaClient $event)
     {
-        $params = [
-            'board' => \App\Models\Board::getBoard(request()->segments()[1], 'table_name')
-        ];
+        $params = [];
+        if(request()->segments()[1] == 'bbs') {
+            $params = [
+                'board' => \App\Models\Board::getBoard(request()->segments()[1], 'table_name')
+            ];
+        }
 
         echo view('modules.googlerecaptcha.client', $params);
     }

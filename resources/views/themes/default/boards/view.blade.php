@@ -3,7 +3,6 @@
 @section('title'){{ $write->subject }} > {{ $board->subject }} | {{ cache('config.homepage')->title }}@endsection
 
 @section('include_script')
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script src="{{ ver_asset('js/viewimageresize.js') }}"></script>
 <script src="{{ ver_asset('js/common.js') }}"></script>
 @endsection

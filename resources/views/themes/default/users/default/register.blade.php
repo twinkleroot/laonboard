@@ -7,10 +7,6 @@
 <link rel="stylesheet" type="text/css" href="{{ ver_asset("themes/default/css/auth.css") }}">
 @endsection
 
-@section('include_script')
-<script src='https://www.google.com/recaptcha/api.js' async defer></script>
-@endsection
-
 @section('content')
 @if($errors->any())
 <div class="alert alert-info">
@@ -36,7 +32,7 @@
     </div>
     @else
     <div class="panel-body row">
-        <form class="contents col-md-8 col-md-offset-2" id="userForm" name="userForm" role="form" method="POST" action="{{ route('user.register') }}" onsubmit="return userFormSubmit(this);">
+        <form class="contents col-md-8 col-md-offset-2" id="userForm" name="userForm" role="form" method="POST" action="{{ route('user.register') }}" onsubmit="return onsubmit;">
             {{ csrf_field() }}
             <input type="hidden" name="agreePrivacy" value="{{ isset($agreePrivacy) ? $agreePrivacy : old('agreePrivacy') }}">
             <input type="hidden" name="agreeStipulation" value="{{ isset($agreeStipulation) ? $agreeStipulation : old('agreeStipulation') }}">
@@ -98,61 +94,28 @@
             {{ fireEvent('registerForm') }}
 
             <div class="form-group">
-                <button type="button" class="btn btn-block btn-sir" onclick="validate();">회원가입</button>
+                <button type="button" class="btn btn-block btn-sir submitBtn">회원가입</button>
             </div>
-            <div id='recaptcha' class="g-recaptcha"
-                data-sitekey="{{ cache('config.sns')->googleRecaptchaClient }}"
-                data-callback="onSubmit"
-                data-size="invisible" style="display:none">
-            </div>
-            <input type="hidden" name="g-recaptcha-response" id="g-response" />
+
+            {{ fireEvent('captchaPlace') }}
+
         </form>
     </div>
     @endif
 </div>
-
 </div>
 </div>
 </div>
-{{ fireEvent('registerUserEnd') }}
 <script>
-function onSubmit(token) {
-    $("#g-response").val(token);
-    $("#userForm").submit();
-}
+var onsubmit = function() {
 
-function validate(event) {
-    if(userSubmit()) {
-        grecaptcha.execute();
-    }
-}
-
-function userSubmit() {
-    var nick = "";
-
-    $.ajax({
-        url: '/ajax/filter/user',
-        type: 'post',
-        data: {
-            '_token' : '{{ csrf_token() }}',
-            'nick' : $('#nick').val()
-        },
-        dataType: 'json',
-        async: false,
-        cache: false,
-        success: function(data) {
-            nick = data.nick;
-        }
-    });
-
-    if(nick) {
-        alert("닉네임에 금지단어 (" + nick + ") 가 포함되어 있습니다.");
-        $('#nick').focus();
+    if(!filterNickname()) {
         return false;
     }
-
     return true;
 }
-
 </script>
+
+{{ fireEvent('registerUserEnd') }}
+
 @endsection

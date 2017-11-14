@@ -54,6 +54,7 @@ function cert_confirm()
         return false;
 }
 
+// 회원 가입전 본인확인 여부 검사
 function validateCertBeforeJoin()
 {
     var message = "";
@@ -62,7 +63,7 @@ function validateCertBeforeJoin()
         url: '/certify/validate',
         type: 'post',
         data: {
-            '_token' : '{{ csrf_token() }}',
+            '_token' : window.Laravel.csrfToken,
             'certNo' : $('#certNo').val(),
         },
         dataType: 'json',
@@ -82,6 +83,7 @@ function validateCertBeforeJoin()
     return true;
 }
 
+// 같은 사람의 본인확인 데이터를 사용했는지 검사
 function existCertData()
 {
     var message = "";
@@ -90,7 +92,7 @@ function existCertData()
         url: '/certify/exist',
         type: 'post',
         data: {
-            '_token' : '{{ csrf_token() }}',
+            '_token' : window.Laravel.csrfToken,
             'email' : $('#email').val()
         },
         dataType: 'json',
@@ -110,6 +112,7 @@ function existCertData()
     return true;
 }
 
+// 사용자 데이터에 본인확인 데이터를 포함시킨다.
 function mergeUserData()
 {
     var userInfo = [];
@@ -117,7 +120,7 @@ function mergeUserData()
         url: '/certify/merge',
         type: 'post',
         data: {
-            '_token' : '{{ csrf_token() }}',
+            '_token' : window.Laravel.csrfToken,
             'name' : $("#name").val(),
             'hp' : $("#hp").val()
         },

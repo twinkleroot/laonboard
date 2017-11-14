@@ -7,7 +7,6 @@ use App\Contracts\BoardInterface;
 use App\Contracts\WriteInterface;
 use App\Models\Notice;
 use App\Models\Comment;
-use App\Services\ReCaptcha;
 
 class CommentsController extends Controller
 {
@@ -26,14 +25,6 @@ class CommentsController extends Controller
     // 댓글 저장
     public function store(Request $request)
     {
-        if(!auth()->check() ||
-            (!auth()->user()->isBoardAdmin($this->writeModel->board)
-             && $this->writeModel->board->use_recaptcha
-             && todayWriteCount(auth()->user()->id) > config('laon.todayWriteCount')
-            )) {
-            ReCaptcha::reCaptcha($request);
-        }
-
         $rules = $this->rules();
         $messages = $this->messages();
 
