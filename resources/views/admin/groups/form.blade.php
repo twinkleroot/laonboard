@@ -55,7 +55,7 @@
         <table class="adm_box_table">
             <tr>
                 <th>그룹 ID</th>
-                <td class="table_body chknone">
+                <td class="table_body">
                     <div @if($errors->get('group_id')) class="has-error" @endif>
                         <input type="text" class="form-control form_input required" name="group_id" maxlength="10" @if($type == 'edit') value="{{ $group->group_id }}" readonly @endif required/>
                         @if($type == 'edit')
@@ -72,7 +72,7 @@
             </tr>
             <tr>
                 <th>그룹 제목</th>
-                <td class="table_body chknone">
+                <td class="table_body">
                     <div @if($errors->get('subject')) class="has-error" @endif>
                         <input type="text" class="form-control form_subject required" name="subject" @if($type == 'edit') value="{{ $group->subject }}" @endif required/>
                         @if($type == 'edit')
@@ -88,7 +88,7 @@
             </tr>
             <tr>
                 <th>접속기기</th>
-                <td class="table_body chknone">
+                <td class="table_body">
                     <select class="form-control form_large" name="device">
                         <option value="both" @if($type == 'edit' && $group->device == 'both') selected @endif>PC와 모바일에서 모두 사용</option>
                         {{-- <option value="pc" @if($type == 'edit' && $group->device == 'pc') selected @endif>PC 전용</option>
@@ -99,7 +99,7 @@
             </tr>
             <tr>
                 <th>그룹관리자</th>
-                <td class="table_body chknone">
+                <td class="table_body">
                     <div @if($errors->get('admin')) class="has-error" @endif>
                         <input type="text" class="form-control" name="admin" @if($type == 'edit') value="{{ $group->admin }}" @endif />
                         @foreach ($errors->get('admin') as $message)
@@ -112,7 +112,7 @@
             </tr>
             <tr>
                 <th>접근회원사용</th>
-                <td class="table_body chknone">
+                <td class="table_body">
                     <div @if($errors->get('use_access')) class="has-error" @endif>
                         <input type="checkbox" name="use_access" value="1" id="use_access"
                             @if($type == 'edit' && $group->use_access == '1') checked @endif/>
@@ -128,7 +128,7 @@
             </tr>
             <tr>
                 <th>접근회원수</th>
-                <td class="table_body chknone">
+                <td class="table_body">
                     <div style="line-height: 34px;">
                         @if($type == 'edit')
                             <a href="{{ route('admin.accessUsers.show', $group->id)}}">{{ $group->count_users }}</a>
@@ -141,7 +141,7 @@
             @for($i=1; $i<=10; $i++)
                 <tr>
                     <th>여분필드 {{ $i }}</th>
-                    <td class="table_body chknone">
+                    <td class="table_body">
                         여분필드 {{ $i }} 제목 <input type="text" name="subj_{{ $i }}" class="form-control form_middle" @if($type == 'edit') value="{{ $group['subj_' .$i] }}" @endif />
                         여분필드 {{ $i }} 값 <input type="text" name="value_{{ $i }}" class="form-control form_middle" @if($type == 'edit') value="{{ $group['value_' .$i] }}" @endif />
                     </td>

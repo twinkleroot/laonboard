@@ -28,7 +28,7 @@
 <div id="body_tab_type2">
     <span class="txt">회원가입/회원정보수정과 회원관리/게시판관리에 휴대폰 본인인증을 추가하는 모듈입니다.</span>
     <div class="submit_btn">
-        <button type="button" class="btn btn-default" onclick="formSubmit();">설정 변경</button>
+        <button type="button" class="btn btn-default" onclick="formSubmit();">설정변경</button>
         <a class="btn btn-default" href="{{ route('admin.modules.index') }}">모듈목록</a>
     </div>
 </div>
@@ -69,7 +69,7 @@
                 <th>
                     <label for="certUse">본인확인</label>
                 </th>
-                <td class="table_body chknone">
+                <td class="table_body">
                     <select name="certUse" class="form-control form_small">
                         <option value='0' @if($configCert->certUse == 0) selected @endif>사용안함</option>
                         <option value='1' @if($configCert->certUse == 1) selected @endif>테스트</option>
@@ -81,7 +81,7 @@
                 <th>
                     <label for="certIpin">아이핀 본인확인</label>
                 </th>
-                <td class="table_body chknone">
+                <td class="table_body">
                     <select name='certIpin' class="form-control form_large">
                         <option value @if(!$configCert->certIpin) selected @endif>사용안함</option>
                         <option value='kcb' @if($configCert->certIpin == 'kcb') selected @endif>코리아크레딧뷰로(KCB) 아이핀</option>
@@ -92,7 +92,7 @@
                 <th>
                     <label for="certHp">휴대폰 본인확인</label>
                 </th>
-                <td class="table_body chknone">
+                <td class="table_body">
                     <select name='certHp' class="form-control form_large">
                         <option value @unless($configCert->certHp) selected @endunless>사용안함</option>
                         <option value='kcb' @if($configCert->certHp == 'kcb') selected @endif>코리아크레딧뷰로(KCB) 휴대폰 본인확인</option>
@@ -105,7 +105,7 @@
                 <th>
                     <label for="certKcbCd">코리아크레딧뷰로 KCB 회원사ID</label>
                 </th>
-                <td class="table_body chknone">
+                <td class="table_body">
                     <input type="text" name="certKcbCd" class="form-control form_middle" value="{{ $configCert->certKcbCd }}">
                     <span class="help-block">KCB 회원사ID를 입력해 주십시오.<br />
                     서비스에 가입되어 있지 않다면, KCB와 계약체결 후 회원사ID를 발급 받으실 수 있습니다.<br />
@@ -122,7 +122,7 @@
                 <th>
                     <label for="certLimit">본인확인 이용제한</label>
                 </th>
-                <td class="table_body chknone">
+                <td class="table_body">
                     <input type="text" name="certLimit" class="form-control form_num" value="{{ $configCert->certLimit }}">회
 
                     <span class="help-block">
@@ -136,7 +136,7 @@
                 <th>
                     <label for="certReq">본인확인 필수</label>
                 </th>
-                <td class="table_body chknone">
+                <td class="table_body">
                     <input type="checkbox" name="certReq" id="certReq" value="1" @if($configCert->certReq == 1) checked @endif>
                                 <label for="certReq">예</label>
 

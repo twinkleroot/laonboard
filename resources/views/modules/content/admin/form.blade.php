@@ -62,7 +62,7 @@
             <th>
                 <label for="co_id">ID</label>
             </th>
-            <td class="table_body chknone">
+            <td class="table_body">
                 <input type="text" name="content_id" id ="content_id" required class="form-control form_middle required" @if($type == "update") value="{{ $content->content_id }}" readonly @else value="{{ old('content_id') }}" @endif size="20" maxlength="20">
                 @if($type == "update")
                     <a href="{{ route('content.show', $content->content_id) }}" class="btn btn-sir" target="_blank">내용확인</a>
@@ -74,7 +74,7 @@
             <th>
                 <label for="subject">제목</label>
             </th>
-            <td class="table_body chknone">
+            <td class="table_body">
                 <input type="text" name="subject" id="subject" class="form-control form_half required" @if($type == "update") value="{{ $content->subject }}" @else value="{{ old('subject') }}" @endif required size="90">
             </td>
         </tr>
@@ -82,7 +82,7 @@
             <th>
                 <label for="content">내용</label>
             </th>
-            <td class="table_body chknone">
+            <td class="table_body">
                 <div style="background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box;">
                     <textarea name="content" id="content" class="editorArea">@if($type == "update"){{ $content->content }} @else {{ old('content') }} @endif</textarea>
                 </div>
@@ -92,7 +92,7 @@
             <th>
                 <label for="mobile_content">모바일 내용</label>
             </th>
-            <td class="table_body chknone">
+            <td class="table_body">
                 <div style="background: #fff; min-height: 400px; border-radius: 4px; box-sizing: border-box;">
                 <textarea name="mobile_content" id="mobile_content" class="editorArea">@if($type == 'update'){{ $content->mobile_content }}@endif</textarea>
             </div>
@@ -102,7 +102,7 @@
             <th>
                 <label for="skin">스킨</label>
             </th>
-            <td class="table_body chknone">
+            <td class="table_body">
                 <select name="skin" id="skin" class="form-control form_large">
                 @foreach($skinList as $key => $value)
                     <option value="{{ $key }}" @if($type == "update" && $key == $content->skin) selected @endif>
@@ -116,7 +116,7 @@
             <th>
                 <label for="mobile_skin">모바일스킨 디렉토리</label>
             </th>
-            <td class="table_body chknone">
+            <td class="table_body">
                 <select name="mobile_skin" id="mobile_skin" class="form-control form_large">
                 @foreach($mobileSkinList as $key => $value)
                     <option value="{{ $key }}" @if($type == "update" && $key == $content->mobile_skin) selected @endif>
@@ -130,7 +130,7 @@
             <th>
                 <label for="tag_filter_use">태그 필터링 사용</label>
             </th>
-            <td class="table_body chknone">
+            <td class="table_body">
                 <select name="tag_filter_use" id="tag_filter_use" class="form-control form_middle">
                     <option value="0" @if($type == 'update' && $content->tag_filter_use == 0) selected @endif>사용안함</option>
                     <option value="1" @if($type == 'update' && $content->tag_filter_use == 1) selected @endif>사용함</option>
@@ -142,7 +142,7 @@
             <th>
                 <label for="include_head">하단 노출</label>
             </th>
-            <td class="table_body chknone">
+            <td class="table_body">
                 <select name="show" id="show" class="form-control form_middle">
                     <option value="0" @if($type == 'update' && $content->show == 0) selected @endif>숨김</option>
                     <option value="1" @if($type == 'update' && $content->show == 1) selected @endif>노출</option>
@@ -154,7 +154,7 @@
             <th>
                 <label for="include_head">상단 파일 경로</label>
             </th>
-            <td class="table_body chknone">
+            <td class="table_body">
                 <input type="text" name="include_head" class="form-control form_large" @if($type == 'update') value="{{ $content->include_head}}" @endif id="include_head" class="frm_input" size="60">
                 <span class="help-block">설정값이 없으면 기본 상단 파일을 사용합니다.</span>
             </td>
@@ -163,7 +163,7 @@
             <th>
                 <label for="include_tail">하단 파일 경로</label>
             </th>
-            <td class="table_body chknone">
+            <td class="table_body">
                 <input type="text" name="include_tail" class="form-control form_large" @if($type == 'update') value="{{ $content->include_tail}}" @endif id="include_tail" class="frm_input" size="60">
                 <span class="help-block">설정값이 없으면 기본 하단 파일을 사용합니다.</span>
             </td>
@@ -172,7 +172,7 @@
             <th>
                 <label for="himg">상단이미지</label>
             </th>
-            <td class="table_body chknone">
+            <td class="table_body">
                 <input type="file" name="himg" id="himg">
                 @if($type == 'update' && $existHeadImage)
                     <input type="checkbox" name="himg_del" value="1" id="himg_del"> <label for="himg_del">삭제</label>
@@ -186,7 +186,7 @@
             <th>
                 <label for="timg">하단이미지</label>
             </th>
-            <td class="table_body chknone">
+            <td class="table_body">
                 <input type="file" name="timg" id="timg">
                 @if($type == 'update' && $existTailImage)
                     <input type="checkbox" name="timg_del" value="1" id="timg_del"> <label for="timg_del">삭제</label>
