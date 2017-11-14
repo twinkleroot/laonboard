@@ -47,7 +47,7 @@ class InstallController extends Controller
             if(File::exists($envPath)) {
                 File::delete($envPath);
             }
-            
+
             return view('install.setup_result', ['dbError' => 1, 'message' => $e->getMessage()]);
         }
         // 3. App Key 생성
@@ -60,7 +60,7 @@ class InstallController extends Controller
             File::makeDirectory($okeyPath);
         }
         // 6. DB 구성
-        Artisan::call('migrate:fresh');
+        Artisan::call('migrate:refresh');
         // 7. 입력받은 관리자 데이터로 관리자 회원 추가
         $this->addAdmin($request);
         // 8. 환경 설정 기본값 데이터 추가
