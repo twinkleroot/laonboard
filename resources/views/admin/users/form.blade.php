@@ -4,7 +4,7 @@
 
 @section('include_script')
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
-<script src="{{ url('js/postcode.js') }}"></script>
+<script src="{{ ver_asset('js/postcode.js') }}"></script>
 <script type="text/javascript">
     var menuVal = 200100;
     $(document).ready(function($){

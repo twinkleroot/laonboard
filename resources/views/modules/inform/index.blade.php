@@ -105,6 +105,10 @@
     </div>
     </form>
 </div>
+
+{{-- 페이지 처리 --}}
+{{ $informs->appends(Request::except('page'))->withPath('/inform')->links() }}
+
 <script>
 function checkEverything() {
     var chk = document.getElementsByName("chkId[]");
@@ -159,7 +163,7 @@ $(function(){
             $('#inform').submit();
         }
     });
-    
+
     // 개별 항목 삭제
     $('.list_del').click(function(){
         event.preventDefault();

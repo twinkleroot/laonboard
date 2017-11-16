@@ -10,7 +10,7 @@
 @if($config->addr) <!-- 주소 -->
 @section('include_script')
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
-<script src="{{ url('js/postcode.js') }}"></script>
+<script src="{{ ver_asset('js/postcode.js') }}"></script>
 @endsection
 @endif
 

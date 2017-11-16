@@ -79,6 +79,14 @@ class Inform
             $board = $boardList[$item['tableName']];
             $boardSubject = $board->subject;
             $nick = $userList[$item['writeUser']]->nick;
+            if(!$nick) {
+                $write = \App\Models\Write::getWrite($board->id, $item['writeId']);
+                if($write) {
+                    $nick = $write->name;
+                } else {
+                    $nick = '손';
+                }
+            }
             $parentSubject = subjectLength($item['parentSubject'], 10);
             $writeSubject = subjectLength($item['subject'], 10);
             if($item['isComment']) {
@@ -90,8 +98,13 @@ class Inform
                     $inform->subject = "{$nick}님이 {$boardSubject}게시판에 글 [{$writeSubject}]을 남기셨습니다.";
                 }
             }
-
         }
+
+        // 수동으로 페이징할 땐 컬렉션을 잘라주어야 한다.
+        $currentPage = $request->filled('page') ? $request->page : 1 ;
+        $informPageRow = 10;
+        $sliceInforms = $informs->slice($informPageRow * ($currentPage - 1), $informPageRow);
+        $informs = new \App\Models\CustomPaginator($sliceInforms, count($informs), $informPageRow, $currentPage);
 
         return $informs;
     }
