@@ -3,7 +3,7 @@
 
     // 상수
     'IP_DISPLAY' => '\\1.♡.\\3.\\4',
-    'VER' => Carbon\Carbon::now()->format('Ymd').'-2',
+    'VER' => Carbon\Carbon::now()->format('Ymd').'-1',
     'URL_REGEX' => '/(http(s)?\:\/\/)?[0-9a-zA-Z]+([\.\-]+[0-9a-zA-Z]+)*(:[0-9]+)?(\/?(\/[\.\w]*)+)?(([\?\&\=][\w]+)+)?/',
 
     // 홈페이지 기본 환경 설정
@@ -96,9 +96,6 @@
     // 개별 스킨 설정
     'layoutSkin' => 'default',
     'boardSkin' => 'default',
-    'contentSkin' => 'default',
-    'mailSkin' => 'default',
-    'memoSkin' => 'default',
     'latestSkin' => 'default',
 
     // 캡챠 확인할 오늘 남긴 글 갯수
@@ -117,8 +114,6 @@
     'content_head' => '',
     'content_tail' => '',
     'insert_content' => '',
-    // 'gallery_cols' => 4,
-    // 'gallery_width' => 174,
     'subject_len' => [
         'default' => 60,
         'gallery' => 50,
@@ -126,9 +121,6 @@
     ],
 
     'gallery_height' => 150,
-    // 'mobile_gallery_width' => 125,
-    // 'mobile_gallery_height' => 100,
     'image_width' => 600,
-
 
 ) ;

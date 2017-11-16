@@ -1,6 +1,6 @@
-@extends('admin.layouts.basic')
+@extends("themes.$theme.layouts.basic")
 
-@section('title'){{ $info['themeName'] }} 테마 미리보기 | {{ cache("config.homepage")->title }}@endsection
+@section('title'){{ $theme }} 테마 미리보기 | {{ cache("config.homepage")->title }}@endsection
 
 @section('include_css')
 @if($type == 'index')
@@ -16,7 +16,6 @@
 <script src="{{ ver_asset('js/common.js') }}"></script>
 @if($type != 'index')
 <script src="{{ ver_asset('js/viewimageresize.js') }}"></script>
-<script src="https://www.google.com/recaptcha/api.js"></script>
 @endif
 @endsection
 
@@ -62,15 +61,18 @@ body {
 
 <section id="preview_content">
     @if($type == 'index')
-        @include("themes.$theme.latest.skins.$skin.index")
-        {{-- @include("latest.$skin.index") --}}
+        {{ fireEvent('mainContents') }}
     @elseif($type == 'boardList')
     <div id="board" class="container">
         @if($board->content_head)
         {!! $board->content_head !!}
         @endif
 
-        @include("board.$themeName.list")
+        @if(view()->exists("themes.$theme.boards.$skin.indexContent"))
+            @include("themes.$theme.boards.$skin.indexContent")
+        @else
+            @include("themes.default.boards.default.indexContent")
+        @endif
 
         @if($board->content_tail)
         {!! $board->content_tail !!}
@@ -82,7 +84,12 @@ body {
         {!! $board->content_head !!}
         @endif
 
-        @include("board.$themeName.view_content")
+        {{-- 테마설정의 미리보기 때문에 글 보기 내용 부분은 따로 분리했다. --}}
+        @if(view()->exists("themes.$theme.boards.$skin.viewContent"))
+            @include("themes.$theme.boards.$skin.viewContent")
+        @else
+            @include("themes.default.boards.default.viewContent")
+        @endif
 
         @if($board->content_tail)
         {!! $board->content_tail !!}

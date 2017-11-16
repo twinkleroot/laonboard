@@ -14,9 +14,6 @@ class Theme
         $latestSkins = getSkins('latests');
         $newSkins = getSkins('news');
         $searchSkins = getSkins('searches');
-        // $contentSkins = getSkins('content');
-        // $mailSkins = getSkins('mail');
-        // $memoSkins = getSkins('memo');
 
         return [
             'themes' => $themes,
@@ -25,9 +22,6 @@ class Theme
             'latestSkins' => $latestSkins,
             'newSkins' => $newSkins,
             'searchSkins' => $searchSkins,
-            // 'contentSkins' => $contentSkins,
-            // 'mailSkins' => $mailSkins,
-            // 'memoSkins' => $memoSkins,
         ];
     }
 
@@ -158,20 +152,11 @@ class Theme
             $board->save();
         }
         $config->updateConfig(['board' => $request->boardSkin ? : 'default'], 'skin', 1);
-        // 내용별 스킨 변경
-        foreach(Content::cursor() as $content) {
-            $content->skin = $request->contentSkin ? : 'default';
-            $content->save();
-        }
-        // $config->updateConfig(['content' => $request->contentSkin ? : 'default'], 'skin', 1);
+
         // 최신 게시물(메인에 노출되는) 스킨 변경
         $config->updateConfig(['latest' => $request->latestSkin ? : 'default'], 'skin', 1);
         // 홈페이지 레이아웃 스킨 변경
         $config->updateConfig(['layout' => $request->layoutSkin ? : 'default'], 'skin', 1);
-        // 메일 양식 스킨 변경
-        // $config->updateConfig(['mail' => $request->mailSkin ? : 'default'], 'skin', 1);
-        // 쪽지 스킨 변경
-        // $config->updateConfig(['memo' => $request->memoSkin ? : 'default'], 'skin', 1);
         // 새글 스킨 변경
         $config->updateConfig(['newSkin' => $request->newSkin ? : 'default'], 'homepage', 1);
         // 전체 검색 스킨 변경

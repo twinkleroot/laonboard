@@ -28,7 +28,6 @@
             <button type="submit" class="btn btn-sir">보내기</button>
             @else
             <button type="button" class="btn btn-sir submitBtn">보내기</button>
-            {{ fireEvent('captchaPlace') }}
             @endif
             <button type="button" class="btn btn-default" onclick="window.close();">창닫기</button>
         </div>
@@ -75,6 +74,9 @@
             </tr>
         </tbody>
     </table>
+
+    {{ fireEvent('captchaPlace') }}
+
     </form>
 </div>
 

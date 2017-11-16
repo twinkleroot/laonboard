@@ -242,9 +242,6 @@ class Config extends Model
         $configArr = array (
             'layout' => config('laon.layoutSkin'),
             'board' => config('laon.boardSkin'),
-            'content' => config('laon.contentSkin'),
-            'mail' => config('laon.mailSkin'),
-            'memo' => config('laon.memoSkin'),
             'latest' => config('laon.latestSkin'),
         );
 
@@ -267,8 +264,6 @@ class Config extends Model
             'googleKey' => null,
             'googleSecret' => null,
             'googleRedirect' => null,
-            'googleRecaptchaClient' => null,
-            'googleRecaptchaServer' => null,
         );
 
         return $this->createConfig('config.sns', $configArr);
@@ -426,8 +421,6 @@ class Config extends Model
             'googleKey' => isset($data['googleKey']) ? $data['googleKey'] : null,
             'googleSecret' => isset($data['googleSecret']) ? $data['googleSecret'] : null,
             'googleRedirect' => isset($data['googleRedirect']) ? $data['googleRedirect'] : null,
-            'googleRecaptchaClient' => isset($data['googleRecaptchaClient']) ? $data['googleRecaptchaClient'] : null,
-            'googleRecaptchaServer' => isset($data['googleRecaptchaServer']) ? $data['googleRecaptchaServer'] : null,
         ];
 
         $this->updateConfigByOne('sns', $configData);

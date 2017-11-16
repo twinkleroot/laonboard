@@ -350,16 +350,13 @@ class Board extends Model implements BoardInterface
         $idArr = explode(',', $request->get('ids'));
         $groupIdArr = explode(',', $request->get('group_ids'));
         $skinArr = explode(',', $request->get('skin_ids'));
-        // $mobileSkinArr = explode(',', $request->get('mobile_skin_ids'));
         $subjectArr = explode(',', $request->get('subjects'));
         $readPointArr = explode(',', $request->get('read_points'));
         $writePointArr = explode(',', $request->get('write_points'));
         $commentPointArr = explode(',', $request->get('comment_points'));
         $downloadPointArr = explode(',', $request->get('download_points'));
-        $useSnsArr = explode(',', $request->get('use_snss'));
         $useSearchArr = explode(',', $request->get('use_searchs'));
         $orderArr = explode(',', $request->get('orders'));
-        // $deviceArr = explode(',', $request->get('devices'));
 
         $index = 0;
         foreach($idArr as $id) {
@@ -369,16 +366,13 @@ class Board extends Model implements BoardInterface
                 $board->update([
                     'group_id' => $groupIdArr[$index],
                     'skin' => $skinArr[$index],
-                    // 'mobile_skin' => $mobileSkinArr[$index],
                     'subject' => $subjectArr[$index],
                     'read_point' => $readPointArr[$index],
                     'write_point' => $writePointArr[$index],
                     'comment_point' => $commentPointArr[$index],
                     'download_point' => $downloadPointArr[$index],
-                    'use_sns' => $useSnsArr[$index],
                     'use_search' => $useSearchArr[$index],
                     'order' => $orderArr[$index],
-                    // 'device' => $deviceArr[$index],
                 ]);
                 $index++;
             } else {

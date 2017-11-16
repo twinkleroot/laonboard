@@ -51,7 +51,7 @@ class EventListener
     public function addRecaptchaClient(AddRecaptchaClient $event)
     {
         $params = [];
-        if(request()->segments()[1] == 'bbs') {
+        if(request()->segments()[0] == 'bbs') {
             $params = [
                 'board' => \App\Models\Board::getBoard(request()->segments()[1], 'table_name')
             ];

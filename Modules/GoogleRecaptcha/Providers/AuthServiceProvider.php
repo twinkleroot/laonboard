@@ -24,5 +24,21 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        // index
+        Gate::define('module-googlerecaptcha-index', function($user, $manageAuth) {
+            if($manageAuth) {
+                return true;
+            }
+            return false;
+        });
+
+        // update
+        Gate::define('module-googlerecaptcha-update', function($user, $manageAuth) {
+            if($manageAuth) {
+                return true;
+            }
+            return false;
+        });
+
     }
 }

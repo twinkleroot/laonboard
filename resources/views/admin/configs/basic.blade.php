@@ -48,7 +48,7 @@
         <li class="tab"><a href="#cfs_mail">메일환경</a></li>
         <li class="tab"><a href="#cfs_mail_board">글작성시 메일</a></li>
         <li class="tab"><a href="#cfs_mail_join">회원가입시 메일</a></li>
-        <li class="tab"><a href="#cfs_sns">SNS</a></li>
+        <li class="tab"><a href="#cfs_sns">소셜로그인</a></li>
         <li class="tab"><a href="#cfs_extra">여분필드</a></li>
     </ul>
 
@@ -719,7 +719,7 @@
     </section>
     <section id="cfs_sns" class="adm_box">
         <div class="adm_box_hd">
-            <span class="adm_box_title">SNS</span>
+            <span class="adm_box_title">소셜로그인</span>
         </div>
         <table class="adm_box_table">
             <tr>
@@ -796,20 +796,6 @@
                 <th>구글 Redirect URI</th>
                 <td class="table_body">
                     <input type="text" class="form-control form_large" name="googleRedirect" value="{{ $configSns->googleRedirect }}">
-                </td>
-            </tr>
-            <tr>
-                <th>구글 Invisible Recaptcha Key 클라이언트</th>
-                <td class="table_body">
-                    <input type="text" class="form-control form_large" name="googleRecaptchaClient" value="{{ $configSns->googleRecaptchaClient }}" style="display: inline-block;">
-                    <a href="https://www.google.com/recaptcha/admin" class="btn btn-sir ml15" target="_blank">키 얻기</a>
-                </td>
-            </tr>
-            <tr>
-                <th>구글 Invisible Recaptcha Key 서버</th>
-                <td class="table_body">
-                    <input type="text" class="form-control form_large" name="googleRecaptchaServer" value="{{ $configSns->googleRecaptchaServer }}" style="display: inline-block;">
-                    <a href="https://www.google.com/recaptcha/admin" class="btn btn-sir ml15" target="_blank">키 얻기</a>
                 </td>
             </tr>
         </table>

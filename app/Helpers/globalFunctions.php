@@ -2,7 +2,7 @@
 
 use App\Models\Config;
 
-// 배열을 값을 기준으로 정렬
+// 설정 값 추가
 if(! function_exists('addCustomConfig')) {
     function addCustomConfig($name, $data)
     {

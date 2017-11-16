@@ -8,7 +8,7 @@ use App\Models\Group;
 use App\Models\GroupUser;
 use App\Models\User;
 use App\Models\Write;
-use App\Services\CustomPaginator;
+use App\Models\CustomPaginator;
 
 class SearchController extends Controller
 {

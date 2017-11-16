@@ -27,6 +27,13 @@ class GoogleRecaptchaServiceProvider extends ServiceProvider
         $this->registerFactories();
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
         $this->registerPublic();
+
+        // add recaptcha config to configs table
+        $data = [
+            'googleInvisibleClient' => '',
+            'googleInvisibleServer' => '',
+        ];
+        addCustomConfig('recaptcha', $data);
     }
 
     /**

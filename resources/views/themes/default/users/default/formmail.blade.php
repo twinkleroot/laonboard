@@ -32,7 +32,6 @@
             <button type="submit" class="btn btn-sir">메일발송</button>
             @else
             <button type="button" class="btn btn-sir submitBtn">메일발송</button>
-            {{ fireEvent('captchaPlace') }}
             @endif
             <button class="btn btn-default" onclick="window.close();">창닫기</button>
         </div>
@@ -41,77 +40,80 @@
 
 <div id="mail" class="container">
     <p class="sr-only">메일쓰기</p>
-        <table class="table box">
-            <tbody>
-                @guest
-                <tr>
-                    <td class="popin">이름</td>
-                    <td @if($errors->has('name')) class="has-error" @endif>
-                        <input type="text" class="form-control" name="name">
-                        @if($errors->has('name'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('name') }}</strong>
-                        </span>
-                        @endif
-                    </td>
-                </tr>
-                <tr>
-                    <td class="popin">이메일</td>
-                    <td @if($errors->has('email')) class="has-error" @endif>
-                        <input type="text" class="form-control" name="email">
-                        @if($errors->has('email'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('email') }}</strong>
-                        </span>
-                        @endif
-                    </td>
-                </tr>
-                @endguest
-                <tr>
-                    <td class="popin">제목</td>
-                    <td @if($errors->has('subject')) class="has-error" @endif>
-                        <input type="text" class="form-control" name="subject">
-                        @if($errors->has('subject'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('subject') }}</strong>
-                        </span>
-                        @endif
-                    </td>
-                </tr>
-                <tr>
-                    <td class="popin">형식</td>
-                    <td>
-                        <input type="radio" id="type_text" name="type" value="0" checked><label for="type_text">TEXT</label>
-                        <input type="radio" id="type_html" name="type" value="1"><label for="type_html">HTML</label>
-                        <input type="radio" id="type_both" name="type" value="2"><label for="type_both">TEXT+HTML</label>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="popin">내용</td>
-                    <td @if($errors->has('content')) class="has-error" @endif>
-                        <textarea class="form-control" name="content" rows="4"></textarea>
-                        @if($errors->has('content'))
-                        <span class="help-block">
-                            <strong>{{ $errors->first('content') }}</strong>
-                        </span>
-                        @endif
-                    </td>
-                </tr>
-                <tr>
-                    <td class="popin">첨부 파일 1</td>
-                    <td>
-                        <input type="file" name="file[]" id="file1" class="frm_input">
-                        <span class="help-block">첨부 파일은 누락될 수 있으므로 메일을 보낸 후 파일이 첨부 되었는지 반드시 확인해 주시기 바랍니다.</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="popin">첨부 파일 2</td>
-                    <td>
-                        <input type="file" name="file[]" id="file2" class="frm_input">
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <table class="table box">
+        <tbody>
+            @guest
+            <tr>
+                <td class="popin">이름</td>
+                <td @if($errors->has('name')) class="has-error" @endif>
+                    <input type="text" class="form-control" name="name">
+                    @if($errors->has('name'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('name') }}</strong>
+                    </span>
+                    @endif
+                </td>
+            </tr>
+            <tr>
+                <td class="popin">이메일</td>
+                <td @if($errors->has('email')) class="has-error" @endif>
+                    <input type="text" class="form-control" name="email">
+                    @if($errors->has('email'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('email') }}</strong>
+                    </span>
+                    @endif
+                </td>
+            </tr>
+            @endguest
+            <tr>
+                <td class="popin">제목</td>
+                <td @if($errors->has('subject')) class="has-error" @endif>
+                    <input type="text" class="form-control" name="subject">
+                    @if($errors->has('subject'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('subject') }}</strong>
+                    </span>
+                    @endif
+                </td>
+            </tr>
+            <tr>
+                <td class="popin">형식</td>
+                <td>
+                    <input type="radio" id="type_text" name="type" value="0" checked><label for="type_text">TEXT</label>
+                    <input type="radio" id="type_html" name="type" value="1"><label for="type_html">HTML</label>
+                    <input type="radio" id="type_both" name="type" value="2"><label for="type_both">TEXT+HTML</label>
+                </td>
+            </tr>
+            <tr>
+                <td class="popin">내용</td>
+                <td @if($errors->has('content')) class="has-error" @endif>
+                    <textarea class="form-control" name="content" rows="4"></textarea>
+                    @if($errors->has('content'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('content') }}</strong>
+                    </span>
+                    @endif
+                </td>
+            </tr>
+            <tr>
+                <td class="popin">첨부 파일 1</td>
+                <td>
+                    <input type="file" name="file[]" id="file1" class="frm_input">
+                    <span class="help-block">첨부 파일은 누락될 수 있으므로 메일을 보낸 후 파일이 첨부 되었는지 반드시 확인해 주시기 바랍니다.</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="popin">첨부 파일 2</td>
+                <td>
+                    <input type="file" name="file[]" id="file2" class="frm_input">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    {{ fireEvent('captchaPlace') }}
+        
 </div>
 </form>
 </body>

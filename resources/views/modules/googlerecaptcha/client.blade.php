@@ -1,7 +1,4 @@
-<div id='recaptcha' class="g-recaptcha"
-    data-sitekey="{{ cache('config.sns')->googleRecaptchaClient }}"
-    data-callback="onSubmit"
-    data-size="invisible">
+<div id='recaptcha' class="g-recaptcha" data-sitekey="{{ cache("config.recaptcha")->googleInvisibleClient }}" data-callback="onSubmit" data-size="invisible"></div>
 </div>
 <input type="hidden" name="g-recaptcha-response" id="g-response" />
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
@@ -18,8 +15,10 @@ function onSubmit(token) {
 
 function recaptcha()
 {
+    var message = '';
+
     $.ajax({
-        url: '/recaptcha',
+        url: '/googlerecaptcha',
         type: 'post',
         data: {
             '_token' : window.Laravel.csrfToken,
@@ -43,9 +42,10 @@ function recaptcha()
 }
 </script>
 <script>
+
 @if(request()->segments()[0] === 'bbs')
     $(function(){
-        $(document).on('click', '.submitBtn', function(){
+        $('.submitBtn').off('click').on('click', function(){
         @php
             $userId = auth()->check() ? auth()->user()->id : 0;
         @endphp
@@ -59,7 +59,7 @@ function recaptcha()
     });
 @else
     $(function(){
-        $(document).on('click', '.submitBtn', function(){
+        $('.submitBtn').off('click').on('click', function(){
             grecaptcha.execute();
         });
     });

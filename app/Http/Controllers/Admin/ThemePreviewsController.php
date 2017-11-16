@@ -12,7 +12,6 @@ use App\Models\Comment;
 class ThemePreviewsController extends Controller
 {
     public $theme;
-    public $main;
     public $writeModel;
     public $comment;
 
@@ -31,7 +30,7 @@ class ThemePreviewsController extends Controller
         // 미리 보기 데이터
         $preview = $this->theme->getPreview('index', $themeName);
         // 파라미터 배열 결합
-        $params = array_collapse([$preview, $main]);
+        $params = $preview;
 
         return view('admin.themes.preview', $params);
     }
@@ -43,10 +42,8 @@ class ThemePreviewsController extends Controller
         $preview = $this->theme->getPreview('boardList', $themeName);
         // 글 목록 데이터
         $list = $this->writeModel->getIndexParams($this->writeModel, $request);
-        // 테마명 : 테마명에 해당하는 스킨이 존재하지 않으면 기본으로 설정
-        $themeName = view()->exists("board.$themeName.index") ? $themeName : 'default';
         // 파라미터 배열 결합
-        $params = array_collapse([$preview, $list, ['themeName' => $themeName] ]);
+        $params = array_collapse([$preview, $list, ['skin' => $list['board']->skin] ]);
 
         return view('admin.themes.preview', $params);
     }
@@ -64,10 +61,8 @@ class ThemePreviewsController extends Controller
         $comments = $this->comment->getCommentsParams($this->writeModel, $writeId, $request);
         // 이전글, 다음글 데이터 추가
         $prevAndNext = $this->writeModel->getPrevNextView($this->writeModel, $writeId, $request);
-        // 테마명 : 테마명에 해당하는 스킨이 존재하지 않으면 기본으로 설정
-        $themeName = view()->exists("board.$themeName.view") ? $themeName : 'default';
         // 파라미터 배열 결합
-        $params = array_collapse([$preview, $view, $comments, $prevAndNext, ['themeName' => $themeName, 'currenctCategory' => ''] ]);
+        $params = array_collapse([$preview, $view, $comments, $prevAndNext, ['skin' => $view['board']->skin, 'currenctCategory' => ''] ]);
 
         return view('admin.themes.preview', $params);
     }

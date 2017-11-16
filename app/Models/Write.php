@@ -3,16 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Contracts\WriteInterface;
 use Illuminate\Http\Request;
-use App\Services\CustomPaginator;
+use App\Contracts\WriteInterface;
 use Carbon\Carbon;
 use Auth;
 use Cache;
 use DB;
 use Exception;
 use File;
-use Module;
 
 class Write extends Model implements WriteInterface
 {
@@ -600,8 +598,8 @@ class Write extends Model implements WriteInterface
 
         $autosaveCount = 0;
 
-        if(auth()->user() && Module::has('autosave')) {
-            $autosaveCount = \Module\Autosave\Entities\Autosave::getAutosaveCount();
+        if(auth()->user()) {
+            $autosaveCount = Autosave::getAutosaveCount();
         }
 
         return [

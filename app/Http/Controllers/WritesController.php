@@ -11,7 +11,7 @@ use App\Models\BoardFile;
 use App\Models\BoardGood;
 use App\Models\Comment;
 use App\Models\Notice;
-use App\Services\RssFeed;
+use App\Models\RssFeed;
 
 class WritesController extends Controller
 {

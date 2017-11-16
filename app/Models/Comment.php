@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Exception;
 use File;
-use Module;
 
 class Comment
 {
@@ -222,16 +221,14 @@ class Comment
             'updated_at' => Carbon::now(),
         ]);
 
-        if(Module::has('BoardNew') && array_has(Module::enabled(), 'BoardNew')) {
-            // 새글 Insert
-            BoardNew::insert([
-                'board_id' => $board->id,
-                'write_id' => $newCommentId,
-                'write_parent' => $writeId,
-                'created_at' => Carbon::now(),
-                'user_id' => $userId
-            ]);
-        }
+        // 새글 Insert
+        BoardNew::insert([
+            'board_id' => $board->id,
+            'write_id' => $newCommentId,
+            'write_parent' => $writeId,
+            'created_at' => Carbon::now(),
+            'user_id' => $userId
+        ]);
 
         // 댓글 1 증가
         $board->update(['count_comment' => $board->count_comment + 1]);
@@ -332,11 +329,9 @@ class Comment
             abort(500, '정상적으로 게시판의 정보를 변경하는데 실패하였습니다.');
         }
 
-        if(Module::has('BoardNew') && array_has(Module::enabled(), 'BoardNew')) {
-            // 새글 삭제
-            if(!BoardNew::where(['board_id' => $board->id, 'write_id' => $commentId])->delete()) {
-                abort(500, '정상적으로 새글을 삭제하는데 실패하였습니다.');
-            }
+        // 새글 삭제
+        if(!BoardNew::where(['board_id' => $board->id, 'write_id' => $commentId])->delete()) {
+            abort(500, '정상적으로 새글을 삭제하는데 실패하였습니다.');
         }
 
         // 메인 최신글 캐시 삭제

@@ -67,7 +67,6 @@
             <input type="hidden" id='write_points' name='write_points' value='' />
             <input type="hidden" id='comment_points' name='comment_points' value='' />
             <input type="hidden" id='download_points' name='download_points' value='' />
-            <input type="hidden" id='use_snss' name='use_snss' value='' />
             <input type="hidden" id='use_searchs' name='use_searchs' value='' />
             <input type="hidden" id='orders' name='orders' value='' />
             <input type="hidden" id='devices' name='devices' value='' />
@@ -96,9 +95,6 @@
                             <th>쓰기P</th>
                             <th>댓글P</th>
                             <th>다운P</th>
-                            {{-- <th>
-                                <a class="adm_sort" href="{{ route('admin.boards.index'). $queryString }}&amp;order=use_sns&amp;direction={{$order=='use_sns' ? $direction : 'asc'}}">SNS<br />사용</a>
-                            </th> --}}
                             <th>
                                 <a class="adm_sort" href="{{ route('admin.boards.index'). $queryString }}&amp;order=use_search&amp;direction={{$order=='use_search' ? $direction : 'asc'}}">검색<br />사용</a>
                             </th>
@@ -160,9 +156,6 @@
                             <td class="td_numsmall">
                                 <input type="text" class="form-control" id="download_point_{{ $board->id }}" value="{{ $board->download_point }}">
                             </td>
-                            {{-- <td class="td_numsmall">
-                                <input type='checkbox' id='use_sns_{{ $board->id }}' value='1' {{ ($board->use_sns == '1' ? 'checked' : '') }}>
-                            </td> --}}
                             <td class="td_numsmall">
                                 <input type='checkbox' id='use_search_{{ $board->id }}' value='1' {{ ($board->use_search == '1' ? 'checked' : '') }}/>
                             </td>
@@ -242,7 +235,6 @@ $(function(){
         var write_point_array = toUpdateByText("write_point", selected_id_array);
         var comment_point_array = toUpdateByText("comment_point", selected_id_array);
         var download_point_array = toUpdateByText("download_point", selected_id_array);
-        var use_sns_array = toUpdateByCheckBox("use_sns", selected_id_array);
         var use_search_array = toUpdateByCheckBox("use_search", selected_id_array);
         var order_array = toUpdateByText("order", selected_id_array);
         var device_array = toUpdateBySelectOption("device", selected_id_array);
@@ -256,7 +248,6 @@ $(function(){
         $('#write_points').val(write_point_array);
         $('#comment_points').val(comment_point_array);
         $('#download_points').val(download_point_array);
-        $('#use_snss').val(use_sns_array);
         $('#use_searchs').val(use_search_array);
         $('#orders').val(order_array);
         $('#devices').val(device_array);

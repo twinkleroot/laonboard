@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Models;
 
 use App\Models\Write;
 use App\Models\Board;

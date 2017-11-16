@@ -104,16 +104,16 @@
             </span>
             @endforeach
         </div>
-        @if(Module::has('Autosave') && auth()->check())
-            <script src="{{ ver_asset('js/autosave.js') }}"></script>
-            <div class="bd-save col-xs-4 dropdown">
-                <a href="#" id="autosaveBtn" class="dropdown-toggle btn btn-sir" data-toggle="dropdown" role="button" aria-expanded="false">
-                    <i class="fa fa-archive"></i>
-                    <span style="margin-left: 5px" id="autosaveCount">({{ $autosaveCount }})</span>
-                </a>
-                <ul class="dropdown-menu" role="menu" id="autosavePop"></ul>
-            </div>
-        @endif
+        @auth
+        <script src="{{ ver_asset('js/autosave.js') }}"></script>
+        <div class="bd-save col-xs-4 dropdown">
+            <a href="#" id="autosaveBtn" class="dropdown-toggle btn btn-sir" data-toggle="dropdown" role="button" aria-expanded="false">
+                <i class="fa fa-archive"></i>
+                <span style="margin-left: 5px" id="autosaveCount">({{ $autosaveCount }})</span>
+            </a>
+            <ul class="dropdown-menu" role="menu" id="autosavePop"></ul>
+        </div>
+        @endauth
     </div>
 
 @if($board->use_dhtml_editor && $userLevel >= $board->html_level)
