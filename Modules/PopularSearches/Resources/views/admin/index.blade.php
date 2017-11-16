@@ -15,12 +15,12 @@
 @section('content')
 <div class="body-head">
     <div class="pull-left">
-        <h3>인기 검색어 설정</h3>
+        <h3>인기 검색어 관리</h3>
         <ul class="fl">
             <li class="admin">Admin</li>
             <li class="depth">모듈 관리</li>
             <li class="depth">설치된 모듈</li>
-            <li class="depth">인기 검색어 설정</li>
+            <li class="depth">인기 검색어 관리</li>
         </ul>
     </div>
 </div>
@@ -28,7 +28,7 @@
     {{ csrf_field() }}
     {{ method_field('put') }}
 <div id="body_tab_type2">
-    <span class="txt">인기 검색어 설정입니다.</span>
+    <span class="txt">인기 검색어 건수 {{ $populars->total() }}개</span>
     <div class="submit_btn">
         <button type="submit" class="btn btn-sir">변경</button>
         <a class="btn btn-default" href="{{ route('admin.modules.index') }}">모듈목록</a>
@@ -59,7 +59,7 @@
         <table class="adm_box_table">
             <tr>
                 <th>인기 검색어 삭제</th>
-                <td class="table_body chknone">
+                <td class="table_body">
                     <input type="text" name="del" class="form-control form_num" value="{{ cache('config.popular')->del }}">
                     <span class="help-block">설정일이 지난 인기 검색어 자동 삭제</span>
                 </td>
@@ -69,23 +69,6 @@
 </div>
 </form>
 
-<div class="body-head">
-    <div class="pull-left">
-        <h3>인기 검색어 관리</h3>
-        <ul class="fl">
-            <li class="admin">Admin</li>
-            <li class="depth">모듈 관리</li>
-            <li class="depth">설치된 모듈</li>
-            <li class="depth">인기 검색어 관리</li>
-        </ul>
-    </div>
-</div>
-<div id="body_tab_type2">
-    <span class="txt">건수 {{ $populars->total() }}개</span>
-    <div class="submit_btn">
-        <a class="btn btn-default" href="{{ route('admin.modules.index') }}">모듈목록</a>
-    </div>
-</div>
 <div class="body-contents">
     <div id="auth_list">
         <ul id="adm_btn">
