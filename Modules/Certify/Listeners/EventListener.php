@@ -124,11 +124,20 @@ class EventListener
     public function addCertConfigToManageBoardForm(\Modules\Certify\Events\AddCertConfigToManageBoardForm $event)
     {
         $segments = request()->segments();
-        // ex) $segments = [ 'admin', 'boards', 'free', 'edit' ];
+        // ex 1) $segments = [ 'admin', 'boards', 'free', 'edit' ];
+        // ex 2) $segments = [ 'admin', 'boards', 'create' ];
+
+        if(count($segments) < 4 && $segments[2] == 'create') {
+            $board = new \App\Models\Board();
+            $type = $segments[2];
+        } else {
+            $board = \App\Models\Board::whereTableName($segments[2])->first();
+            $type = $segments[3];
+        }
 
         $params = [
-            'board' => \App\Models\Board::whereTableName($segments[2])->first(),
-            'type' => $segments[3]
+            'board' => $board,
+            'type' => $type,
         ];
 
         echo view("modules.certify.admin.board_form", $params);
