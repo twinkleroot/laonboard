@@ -236,7 +236,9 @@
         <div class="pull-right">
             <button type="button" class="btn btn-sir submitBtn">작성완료</button>
             <a href="{{ route("board.index", $board->table_name). (Request::getQueryString() ? '?'.Request::getQueryString() : '')}}" type="button" class="btn btn-default">취소</a>
+
             {{ fireEvent('captchaPlace') }}
+            
         </div>
     </div>
 </form>

@@ -27,7 +27,7 @@
 <div id="body_tab_type2">
     <span class="txt">메인 페이지를 구성합니다. 우선순위에 따라 메인에 표시됩니다.</span>
     <div class="submit_btn">
-        <button type="submit" class="btn btn-sir">변경</button>
+        <button type="submit" class="btn btn-sir">설정변경</button>
         <a class="btn btn-default" href="{{ route('admin.modules.index') }}">모듈목록</a>
     </div>
 </div>

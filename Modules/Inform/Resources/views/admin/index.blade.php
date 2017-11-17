@@ -27,7 +27,7 @@
 <div id="body_tab_type2">
     <span class="txt">글,댓글쓰기 알림 설정입니다.</span>
     <div class="submit_btn">
-        <button type="submit" class="btn btn-sir">변경</button>
+        <button type="submit" class="btn btn-sir">설정변경</button>
         <a class="btn btn-default" href="{{ route('admin.modules.index') }}">모듈목록</a>
     </div>
 </div>

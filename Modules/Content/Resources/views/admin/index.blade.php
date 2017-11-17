@@ -25,7 +25,7 @@
     <span class="txt">전체 내용 {{ $contents->total() }}건</span>
     <div class="submit_btn">
         @unless(isDemo())
-        <a class="btn btn-default" href="{{ route('admin.content.create')}}" role="button">내용추가</a>
+        <a class="btn btn-sir" href="{{ route('admin.content.create')}}" role="button">내용추가</a>
         <a class="btn btn-default" href="{{ route('admin.modules.index') }}">모듈목록</a>
         @endunless
     </div>

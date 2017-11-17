@@ -28,7 +28,7 @@
     <div id="body_tab_type2">
         <span class="txt">자동 등록 방지 모듈로 구글 리캡챠(Google Invisible reCAPTCHA)를 쓰고자 할 때 필요한 설정입니다.</span>
         <div class="submit_btn">
-            <button type="button" class="btn btn-default" onclick="formSubmit();">설정변경</button>
+            <button type="button" class="btn btn-sir" onclick="formSubmit();">설정변경</button>
             <a class="btn btn-default" href="{{ route('admin.modules.index') }}">모듈목록</a>
         </div>
     </div>

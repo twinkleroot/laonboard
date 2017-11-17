@@ -461,4 +461,56 @@ class Board extends Model implements BoardInterface
         ];
     }
 
+    // 게시물 순서 변경 리스트
+    public function orderList($request, $boardName)
+    {
+        $board = Board::getBoard($boardName, 'table_name');
+        $orderBy = $board->sort_field ? : 'num, reply';
+        $writes =
+            DB::table('write_'. $boardName)
+            ->where('is_comment', 0)
+            ->orderByRaw($orderBy)
+            ->paginate();
+
+        return [
+            'writes' => $writes,
+            'board' => $board
+        ];
+    }
+
+    // 게시물 순서 변경
+    public function adjustOrder($request)
+    {
+        $ids = $request->filled('id') ? $request->id : [];
+        $boardName = $request->filled('boardName') ? $request->boardName : '';
+        if($ids && $boardName) {
+            $write = new Write();
+            $write->setTableName($boardName);
+
+            $writes = $write->whereIn('id', $ids)->get();
+            if(count($writes) == 2) {
+                // dd($writes, $writes->get(0), $writes->get(1));
+                $numOne = $writes->get(0)->num;
+                $numTwo = $writes->get(1)->num;
+                $tmpNum = 1;
+
+                $write->where('num', $numOne)->update([
+                    'num' => $tmpNum
+                ]);
+                $write->where('num', $numTwo)->update([
+                    'num' => $numOne
+                ]);
+                $write->where('num', $tmpNum)->update([
+                    'num' => $numTwo
+                ]);
+            } else {
+                abort(500, '입력/선택하신 게시물 중 하나 이상이 존재하지 않는 게시물입니다.\\n\\n확인 후 다시 입력해 주세요.');
+            }
+
+            return '게시물 순서 변경이 완료되었습니다.';
+        } else {
+            return '게시물 순서 변경에 필요한 값이 넘어오지 않았습니다.';
+        }
+    }
+
 }

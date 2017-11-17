@@ -31,6 +31,7 @@
                         <li><input type="submit" value="선택복사" onclick="document.pressed=this.value"/></li>
                         <li><input type="submit" value="선택이동" onclick="document.pressed=this.value"/></li>
                         <li><a href="{{ route('admin.boards.edit', $board->table_name) }}">게시판 설정</a></li>
+                        <li><a href="{{ route('admin.boards.orderList', $board->table_name) }}">게시글 순서조정</a></li>
                     </ul>
                 </li>
             @endif

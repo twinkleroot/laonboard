@@ -82,6 +82,7 @@
         <input type="hidden" name="requestUri" id="requestUri" value="{{ $requestUri }}"/>
     @endif
     <input type="hidden" name="_method" id="commentMethod" />
+
     <article id="comment_box">
         <div class="form-inline info_user">
             @guest  <!-- 비회원일경우 노출 -->
@@ -123,28 +124,27 @@
         <strong>{{ $message }}</strong>
     </span>
     @endforeach
-    <script>
-        $(document).on("keyup change", "textarea#content[maxlength]", function(){
-            var str = $(this).val()
-            var mx = parseInt($(this).attr("maxlength"))
-            if (str.length > mx) {
-                $(this).val(str.substr(0, mx));
-                return false;
-            }
-        });
-    </script>
 
     <div class="clearfix">
         <div class="pull-right">
             <button type="button" class="btn btn-sir submitBtn">댓글등록</button>
+
             {{ fireEvent('captchaPlace') }}
+
         </div>
     </div>
 </form>
 </aside>
+
 <script>
-var saveBefore = '';
-var saveHtml = document.getElementById('commentWriteArea').innerHTML;
+$(document).on("keyup change", "textarea#content[maxlength]", function(){
+    var str = $(this).val()
+    var mx = parseInt($(this).attr("maxlength"))
+    if (str.length > mx) {
+        $(this).val(str.substr(0, mx));
+        return false;
+    }
+});
 
 function commentSubmit() {
     var subject = "";
@@ -177,6 +177,9 @@ function commentSubmit() {
 
     return true;
 }
+
+var saveBefore = '';
+var saveHtml = document.getElementById('commentWriteArea').innerHTML;
 
 // 댓글의 답변, 수정 관련 조정 함수
 function commentBox(commentId, work) {

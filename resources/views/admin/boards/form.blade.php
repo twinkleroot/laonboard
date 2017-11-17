@@ -6,7 +6,6 @@
 <script src="{{ ver_asset('tinymce/tinymce.min.js') }}"></script>
 <script src="{{ ver_asset('js/common.js') }}"></script>
 <script type="text/javascript">
-    var menuVal = 100100;
     $(document).ready(function($){
         $(window).on('scroll', function() {
             $('.adm_box').each(function() {
@@ -86,6 +85,7 @@
                             <a href="{{ route('admin.boards.copyForm', $board->table_name) }}" class="btn btn-sir board_copy" target="win_board_copy">
                                 게시판 복사
                             </a>
+                            <a class="btn btn-sir" href="{{ route('admin.boards.orderList', $board->table_name) }}">게시물 순서조정</a>
                             <a class="btn btn-sir" href="{{ route('board.index', $board->table_name) }}">게시판 바로가기</a>
                             <a class="btn btn-sir" href="{{ route('admin.boards.thumbnail.delete', $board->table_name). $queryString }}?dir={{ $board->table_name }}" onclick="return del2(this.href, '게시판 썸네일 파일을 삭제하시겠습니까?');">게시판 썸네일 삭제</a>
                         @else

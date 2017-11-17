@@ -20,6 +20,7 @@ class BoardsController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
@@ -36,6 +37,7 @@ class BoardsController extends Controller
     /**
      * Show the form for creating a new resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function create(Request $request)
@@ -142,7 +144,12 @@ class BoardsController extends Controller
             ->with('message', $subject . ' 게시판이 수정되었습니다.');
     }
 
-    // 선택 수정 수행
+    /**
+     * selected writes update
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function selectedUpdate(Request $request)
     {
         if(isDemo()) {
@@ -164,7 +171,8 @@ class BoardsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Request $request, string $table_name
+     * @param  Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request, $id)
@@ -182,6 +190,12 @@ class BoardsController extends Controller
         return redirect(route('admin.boards.index'))->with('message', $message);
     }
 
+    /**
+     * view board copy form
+     *
+     * @param  string $boardName
+     * @return \Illuminate\Http\Response
+     */
     public function copyForm($boardName)
     {
         if (auth()->user()->cant('copy', $this->boardModel)) {
@@ -191,6 +205,12 @@ class BoardsController extends Controller
         return view("admin.boards.copy")->with('board', $this->boardModel::getBoard($boardName, 'table_name'));
     }
 
+    /**
+     * copy board
+     *
+     * @param  Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function copy(Request $request)
     {
         if(isDemo()) {
@@ -257,6 +277,13 @@ class BoardsController extends Controller
         ]);
     }
 
+    /**
+     * delete this board's thumbnail image
+     *
+     * @param  Request $request
+     * @param  string $boardName
+     * @return \Illuminate\Http\Response
+     */
     public function deleteThumbnail(Request $request, $boardName)
     {
         if(isDemo()) {
@@ -268,6 +295,41 @@ class BoardsController extends Controller
         $params = array_add($params, 'queryString', $queryString);
 
         return view("admin.boards.thumbnail_delete", $params);
+    }
+
+    /**
+     * view order list
+     *
+     * @param  Request $request
+     * @param  string $boardName
+     * @return \Illuminate\Http\Response
+     */
+    public function orderList(Request $request, $boardName)
+    {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
+        $params = $this->boardModel->orderList($request, $boardName);
+
+        return view("admin.boards.order_adjustment", $params);
+    }
+
+    /**
+     * adjust write's order
+     *
+     * @param  Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function adjustOrder(Request $request)
+    {
+        if(isDemo()) {
+            return alert('데모 화면에서는 하실(보실) 수 없는 작업입니다.');
+        }
+
+        $message = $this->boardModel->adjustOrder($request);
+
+        return redirect()->back()->with('message', $message);
     }
 
     // 유효성 검사 규칙

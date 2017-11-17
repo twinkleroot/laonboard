@@ -340,6 +340,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['web', 'auth', 'admin.menu']
     Route::post('boards/copy', ['as' => 'admin.boards.copy', 'uses' => 'Admin\BoardsController@copy']);
     Route::get('boards/{boardName}/thumbnail/delete', ['as' => 'admin.boards.thumbnail.delete', 'uses' => 'Admin\BoardsController@deleteThumbnail']);
     Route::put('boards/selected_update', ['as' => 'admin.boards.selectedUpdate', 'uses' => 'Admin\BoardsController@selectedUpdate']);
+    // 게시물 순서 조정
+    Route::get('boards/{boardName}/order', ['as' => 'admin.boards.orderList', 'uses' => 'Admin\BoardsController@orderList']);
+    Route::put('boards/order', ['as' => 'admin.boards.adjustOrder', 'uses' => 'Admin\BoardsController@adjustOrder']);
     // 게시판 관리 리소스 컨트롤러
     Route::resource('boards', 'Admin\BoardsController', [
         'except' => [

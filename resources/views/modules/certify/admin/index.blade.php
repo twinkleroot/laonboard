@@ -28,7 +28,7 @@
 <div id="body_tab_type2">
     <span class="txt">회원가입/회원정보수정과 회원관리/게시판관리에 휴대폰 본인인증을 추가하는 모듈입니다.</span>
     <div class="submit_btn">
-        <button type="button" class="btn btn-default" onclick="formSubmit();">설정변경</button>
+        <button type="button" class="btn btn-sir" onclick="formSubmit();">설정변경</button>
         <a class="btn btn-default" href="{{ route('admin.modules.index') }}">모듈목록</a>
     </div>
 </div>
