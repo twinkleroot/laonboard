@@ -22,7 +22,8 @@
     <span class="txt">게시글의 순서를 변경하면 해당 글에 달린 댓글, 답변글도 함께 변경됩니다.</span>
     <div class="submit_btn">
         @unless(isDemo())
-        <a class="btn btn-default" href="{{ route('admin.boards.edit', $board->table_name). '?'. Request::getQueryString() }}">돌아가기</a>
+        <button type="button" class="btn btn-sir" onclick="$('#listForm').submit();">선택한 게시물 순서변경</button>
+        <a class="btn btn-default" href="{{ route('admin.boards.edit', $board->table_name). '?'. Request::getQueryString() }}">게시판 설정</a>
         <a class="btn btn-default" href="{{ route('board.index', $board->table_name) }}">게시판 바로가기</a>
         @endunless
     </div>
@@ -84,7 +85,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="3">
+                        <td colspan="5">
                             <span class="empty_table">
                                 <i class="fa fa-exclamation-triangle"></i> 자료가 없습니다.
                             </span>
@@ -111,7 +112,7 @@ function listOnsubmit(form)
         }
     });
     if(cnt != 2) {
-        alert('순서를 바꿀 게시물 2개를 선택해 주세요.');
+        alert('순서를 바꿀 게시물 2개만 선택해 주세요.');
         return false;
     }
 

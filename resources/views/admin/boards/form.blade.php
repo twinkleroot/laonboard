@@ -85,7 +85,7 @@
                             <a href="{{ route('admin.boards.copyForm', $board->table_name) }}" class="btn btn-sir board_copy" target="win_board_copy">
                                 게시판 복사
                             </a>
-                            <a class="btn btn-sir" href="{{ route('admin.boards.orderList', $board->table_name) }}">게시물 순서조정</a>
+                            <a class="btn btn-sir" href="{{ route('admin.boards.orderList', $board->table_name). '?'. Request::getQueryString() }}">게시물 순서조정</a>
                             <a class="btn btn-sir" href="{{ route('board.index', $board->table_name) }}">게시판 바로가기</a>
                             <a class="btn btn-sir" href="{{ route('admin.boards.thumbnail.delete', $board->table_name). $queryString }}?dir={{ $board->table_name }}" onclick="return del2(this.href, '게시판 썸네일 파일을 삭제하시겠습니까?');">게시판 썸네일 삭제</a>
                         @else
@@ -790,8 +790,9 @@
                 <tr>
                     <th>레이아웃 파일 경로</th>
                     <td class="table_body">
-                        <input type="text" id="layout" name="layout" class="form-control form_middle" value="{{ $board['layout'] ? : 'default.basic' }}" />
-                        <span class="help-block">resources/views/layout 이하의 경로로 확장자 빼고 입력해주세요.</span>
+                        <input type="text" id="layout" name="layout" class="form-control form_middle" value="{{ $board['layout'] ? : config('laon.layout') }}" />
+                        <span class="help-block">resources/views/themes/테마이름/layouts/ 이하의 경로로 확장자 빼고 입력해주세요.</span>
+                        <span class="help-block">올바른 레이아웃 형식으로 되어 있는 파일을 입력해 주세요.</span>
                     </td>
                     <td class="table_chk">
                         <input type="checkbox" id="chk_group_layout" name="chk_group_layout" value="1" />

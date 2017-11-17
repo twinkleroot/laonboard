@@ -111,6 +111,8 @@
     'upload_size' => 1048576,
     'reply_order' => 1,
     'use_search' => 1,
+    'board_skin' => 'default',
+    'layout' => 'basic',
     'content_head' => '',
     'content_tail' => '',
     'insert_content' => '',
@@ -119,7 +121,6 @@
         'gallery' => 50,
         'main' => 15,
     ],
-
     'gallery_height' => 150,
     'image_width' => 600,
 
