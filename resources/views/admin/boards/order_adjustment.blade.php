@@ -9,11 +9,12 @@
 @section('content')
 <div class="body-head">
     <div class="pull-left">
-        <h3>게시판 관리</h3>
+        <h3>게시물 순서조정</h3>
         <ul class="fl">
             <li class="admin">Admin</li>
             <li class="depth">게시판 관리</li>
-            <li class="depth">게시글 순서 변경</li>
+            <li class="depth">게시판 수정</li>
+            <li class="depth">게시물 순서조정</li>
         </ul>
     </div>
 </div>
@@ -21,8 +22,8 @@
     <span class="txt">게시글의 순서를 변경하면 해당 글에 달린 댓글, 답변글도 함께 변경됩니다.</span>
     <div class="submit_btn">
         @unless(isDemo())
-        <button type="button" class="btn btn-sir" onclick="$('#listForm').submit();">순서변경</button>
-        <a class="btn btn-default" href="{{ route('admin.modules.index') }}">모듈목록</a>
+        <a class="btn btn-default" href="{{ route('admin.boards.edit', $board->table_name). '?'. Request::getQueryString() }}">돌아가기</a>
+        <a class="btn btn-default" href="{{ route('board.index', $board->table_name) }}">게시판 바로가기</a>
         @endunless
     </div>
 </div>
@@ -35,19 +36,19 @@
         </button>
     </div>
 @endif
-    <div>
+    <div id="adjustorder">
         <form class="form-horizontal" role="form" method="post" id="inputForm" action="{{ route('admin.boards.adjustOrder') }}" onsubmit="return inputOnsubmit(this);">
             {{ csrf_field() }}
             {{ method_field('put') }}
             <input type="hidden" name="boardName" value="{{ $board->table_name }}">
             <label for="id_0" class="control-label">바꿀 게시물 1</label>
-            <input type="text" id="id_0" name="id[]" required>
+            <input type="text" class="form-control form_small" id="id_0" name="id[]" required>
             <label for="id_1" class="control-label">바꿀 게시물 2</label>
-            <input type="text" id="id_1" name="id[]" required>
-            <button type="submit">순서 변경</button>
+            <input type="text" class="form-control form_small" id="id_1" name="id[]" required>
+            <button type="submit" class="btn btn-sir">순서 변경</button>
         </form>
     </div>
-    <div id="mb" class="">
+    <div id="mb">
         <form class="form-horizontal" role="form" method="post" id="listForm" action="{{ route('admin.boards.adjustOrder') }}" onsubmit="return listOnsubmit(this);">
             {{ csrf_field() }}
             {{ method_field('put') }}
@@ -63,7 +64,7 @@
                 <tbody>
                 @forelse ($writes as $write)
                     <tr>
-                        <td class="td_mngsmall">
+                        <td class="td_chk">
                             <input type="checkbox" name="id[]" class="writeId" value="{{ $write->id }}">
                         </td>
                         <td class="td_mngsmall">{{ $write->id }}</td>
@@ -72,8 +73,8 @@
                                 {{ subjectLength($write->subject, $board->subject_len) }}
                             </a>
                         </td>
-                        <td class="td_mngsmall">{{ $write->name }}</td>
-                        <td class="td_mngsmall">
+                        <td class="td_nick">{{ $write->name }}</td>
+                        <td class="td_date">
                             @if(date($write->created_at) == Carbon\Carbon::now()->toDateString())
                                 @hourAndMin($write->created_at)
                             @else

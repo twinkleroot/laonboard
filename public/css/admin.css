@@ -1832,3 +1832,13 @@ input[type=radio] {
 	padding: 15px;
 	border-radius: 0 0 4px 4px;
 }
+#adjustorder {
+	font-size: 0;
+	text-align: right;
+}
+#adjustorder input[type="text"] {
+	margin: 0 5px;
+}
+#adjustorder button {
+	vertical-align: top;
+}
