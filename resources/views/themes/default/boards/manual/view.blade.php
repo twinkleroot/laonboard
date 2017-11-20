@@ -41,7 +41,7 @@
                 $user = isset($user) ? $user : auth()->user();
             @endphp
             <div id="postadm">
-            @if( (auth()->check() && $user->id_hashkey == $write->user_id) || !$write->user_id || session()->get('admin') )
+            @if( (auth()->check() && $user->isBoardAdmin($board)) )
                 <ul class="postadm">
                     <li>
                         <a href="/bbs/{{ $board->table_name }}/edit/{{ $write->id. (Request::getQueryString() ? '?'.Request::getQueryString() : '') }}" class="btn btn-default">

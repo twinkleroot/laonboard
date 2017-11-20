@@ -65,7 +65,7 @@
                     <i class="fa fa-ellipsis-v"></i>
                 </a>
                 <ul class="dropdown-menu" role="menu">
-                    @if( (auth()->check() && $user->id_hashkey == $write->user_id) || !$write->user_id || session()->get('admin') )
+                    @if( (auth()->check() && $user->id_hashkey == $write->user_id) || !$write->user_id || $user->isBoardAdmin($board) )
                         <li><a href="/bbs/{{ $board->table_name }}/edit/{{ $write->id. (Request::getQueryString() ? '?'.Request::getQueryString() : '') }}">수정</a></li>
                         <li>
                             <a href="{{ route('board.destroy', ['boardName' => $board->table_name, 'writeId' => $write->id]). (Request::getQueryString() ? '?'.Request::getQueryString() : '') }}"  onclick="del(this.href); return false;">
@@ -73,7 +73,7 @@
                             </a>
                         </li>
                     @endif
-                    @if(session()->get('admin'))
+                    @if( (auth()->check() && $user->isBoardAdmin($board)) )
                         <li>
                             <a class="movePopup" href="{{ route('board.view.move', $board->table_name)}}?type=copy&amp;writeId={{ $write->id }}" target="move">
                                 복사
