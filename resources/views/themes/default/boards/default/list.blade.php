@@ -2,11 +2,6 @@
 <link rel="alternate" type="application/rss+xml" href="{{ url('rss') }}" title="RSS Feed {{ config('rss.title') }}">
 @endsection
 
-@section('include_css')
-<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/common.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/board.css') }}">
-@endsection
-
 <form name="fBoardList" id="fBoardList" action="" onsubmit="return formBoardListSubmit(this);" method="post" target="move">
     <input type="hidden" id='_method' name='_method' value='post' />
     <input type="hidden" id='type' name='type' value='' />

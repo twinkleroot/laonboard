@@ -36,11 +36,12 @@ class WritesController extends Controller
     public function index(Request $request, $boardName)
     {
         $params = $this->writeModel->getIndexParams($this->writeModel, $request);
-        $params['skin'] = $this->writeModel->board->skin ? : 'default';
+        $skin = $this->writeModel->board->skin ? : 'default';
         $theme = cache('config.theme')->name ? : 'default';
+        $params['skin'] = $skin;
         $params['theme'] = $theme;
 
-        return viewDefault("$theme.boards.index", $params);
+        return viewDefault("$theme.boards.$skin.index", $params);
     }
 
     /**
@@ -77,12 +78,13 @@ class WritesController extends Controller
 
         // Open Graph image 추출
         $params = array_add($params, 'ogImage', pullOutImage($write->content, $board->id, $write->id, $write->file));
-        $params['skin'] = $this->writeModel->board->skin ? : 'default';
 
+        $skin = $this->writeModel->board->skin ? : 'default';
         $theme = cache('config.theme')->name ? : 'default';
+        $params['skin'] = $skin;
         $params['theme'] = $theme;
 
-        return viewDefault("$theme.boards.view", $params);
+        return viewDefault("$theme.boards.$skin.view", $params);
     }
 
     /**
@@ -93,12 +95,12 @@ class WritesController extends Controller
     public function create(Request $request, $boardName)
     {
         $params = $this->writeModel->getCreateParams($request);
-        $params['skin'] = $this->writeModel->board->skin ? : 'default';
-
+        $skin = $this->writeModel->board->skin ? : 'default';
         $theme = cache('config.theme')->name ? : 'default';
+        $params['skin'] = $skin;
         $params['theme'] = $theme;
 
-        return viewDefault("$theme.boards.form", $params);
+        return viewDefault("$theme.boards.$skin.form", $params);
     }
 
     /**
@@ -171,12 +173,12 @@ class WritesController extends Controller
     public function edit(Request $request, $boardName, $writeId)
     {
         $params = $this->writeModel->getEditParams($writeId, $this->writeModel, $request);
-        $params['skin'] = $this->writeModel->board->skin ? : 'default';
-
+        $skin = $this->writeModel->board->skin ? : 'default';
         $theme = cache('config.theme')->name ? : 'default';
+        $params['skin'] = $skin;
         $params['theme'] = $theme;
 
-        return viewDefault("$theme.boards.form", $params);
+        return viewDefault("$theme.boards.$skin.form", $params);
     }
 
     /**
@@ -274,12 +276,12 @@ class WritesController extends Controller
         event(new \App\Events\WriteReply($request, $boardName, $writeId));
 
         $params = $this->writeModel->getReplyParams($writeId, $this->writeModel, $request);
-        $params['skin'] = $this->writeModel->board->skin ? : 'default';
-
+        $skin = $this->writeModel->board->skin ? : 'default';
         $theme = cache('config.theme')->name ? : 'default';
+        $params['skin'] = $skin;
         $params['theme'] = $theme;
 
-        return viewDefault("$theme.boards.form", $params);
+        return viewDefault("$theme.boards.$skin.form", $params);
     }
 
     /**

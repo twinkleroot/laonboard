@@ -26,7 +26,7 @@ return [
     'mainContents' => [
         'addLatestList' => [
             'module' => 'LaonBoard',
-            'priority' => 2,
+            'priority' => 5,
             'use' => 1,
             'description' => '메인 - 최신글 목록 추가',
         ],

@@ -1,7 +1,26 @@
+@extends("themes.default.layouts.". ($board->layout ? : 'basic'))
+
+@section('title'){{ $board->subject }}게시판 | {{ cache("config.homepage")->title }}@endsection
+
+@section('include_css')
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/common.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/board.css') }}">
+@endsection
+
+@section('include_script')
+@if(isMobile())
+<script src="https://cloud.tinymce.com/dev/tinymce.min.js"></script>
+@else
+<script src="{{ ver_asset('tinymce/tinymce.min.js') }}"></script>
+@endif
+@endsection
+
+@section('content')
+<div id="board" class="container">
 @if($errors->any())
-<script>
-    alert("{{ $errors->first() }}");
-</script>
+    <script>
+        alert("{{ $errors->first() }}");
+    </script>
 @endif
 @if($type=='update')
     <form role="form" id="fwrite" method="post" action={{ route('board.update', ['boardId'=>$board->table_name, 'writeId'=>$write->id]) }} enctype="multipart/form-data" @if(auth()->user() && auth()->user()->isBoardAdmin($board)) onsubmit="return writeSubmit();" @endif>
@@ -238,7 +257,7 @@
             <a href="{{ route("board.index", $board->table_name). (Request::getQueryString() ? '?'.Request::getQueryString() : '')}}" type="button" class="btn btn-default">취소</a>
 
             {{ fireEvent('captchaPlace') }}
-            
+
         </div>
     </div>
 </form>
@@ -247,6 +266,8 @@
     {{ csrf_field() }}
     <input type="file" name="image_file" id="image_file" onchange="$('#imageForm').submit(); this.value='';" style="display:none">
 </form>
+
+</div>
 <script>
 function writeSubmit() {
     var subject = "";
@@ -367,3 +388,4 @@ $(function() {
     @endif
 });
 </script>
+@endsection
