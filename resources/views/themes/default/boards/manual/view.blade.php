@@ -16,25 +16,9 @@
 <div class="container">
     <div class="row">
         <div class="col-md-3">
-            @if($board->use_list_view)
-                @include('themes.default.boards.manual.list')
-            @endif
-            <div id="sub_search">
-                <form method="get" action="{{ route('board.index', $board->table_name) }}" onsubmit="return searchFormSubmit(this);">
-                @if($currenctCategory != '')
-                    <input type="hidden" id='category' name='category' value='{{ $currenctCategory }}' />
-                @endif
-                <label for="kind" class="sr-only">검색대상</label>
-                    <select name="kind" id="kind" class="sr-only">
-                        <option value="content" @if($kind == 'content') selected @endif>내용</option>
-                    </select>
-                    <label for="keyword" class="sr-only">검색어</label>
-                    <input type="text" name="keyword" id="keyword" value="{{ $kind != 'user_id' ? $keyword : '' }}" class="search" required>
-                    <button type="submit" class="search-icon">
-                        <i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">검색</span>
-                    </button>
-                </form>
-            </div>
+        @if($board->use_list_view)
+            @include('themes.default.boards.manual.list')
+        @endif
         </div>
         <div class="col-md-9">
             @php
