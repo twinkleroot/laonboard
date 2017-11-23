@@ -491,33 +491,42 @@ class Board extends Model implements BoardInterface
             if(count($writes) == 2) {
                 $numOne = $writes->get(0)->num;
                 $numTwo = $writes->get(1)->num;
+                $replyOne = $writes->get(0)->reply;
+                $replyTwo = $writes->get(1)->reply;
+                $tmpReply = 'ZZZZZZ';
+                // 같은 원 글(num)일 때
                 if($numOne == $numTwo) {
-                    $replyOne = $writes->get(0)->reply;
-                    $replyTwo = $writes->get(1)->reply;
-                    $tmpReply = 'AAAAAA';
-                    // dd($replyOne, $replyTwo);
+                    $num = $numOne;
 
-                    $write->where('num', $numOne)->where('reply', $replyOne)->update([
-                        'reply' => $tmpReply
-                    ]);
-                    $write->where('num', $numOne)->where('reply', $replyTwo)->update([
-                        'reply' => $replyOne
-                    ]);
-                    $write->where('num', $numOne)->where('reply', $tmpReply)->update([
-                        'reply' => $replyTwo
-                    ]);
+                    // one = tmp;
+                    $this->changeReply($write, $num, $replyOne, $tmpReply);
+                    // two = one;
+                    $this->changeReply($write, $num, $replyTwo, $replyOne);
+                    // tmp = two;
+                    $this->changeReply($write, $num, $tmpReply, $replyTwo);
+
+                // 다른 원 글일 때
                 } else {
                     $tmpNum = 1;
 
-                    $write->where('num', $numOne)->update([
-                        'num' => $tmpNum
-                    ]);
-                    $write->where('num', $numTwo)->update([
-                        'num' => $numOne
-                    ]);
-                    $write->where('num', $tmpNum)->update([
-                        'num' => $numTwo
-                    ]);
+                    // 둘 중 하나가 다른 원글의 답변 글이라면
+                    if($replyOne || $replyTwo) {
+                        // one = tmp;
+                        $this->changeNumAndReply($write, $numOne, $replyOne, $tmpNum, $tmpReply);
+                        // two = 원래 one;
+                        $this->changeNumAndReply($write, $numTwo, $replyTwo, $numOne, $replyOne);
+                        // tmp = 원래 two;
+                        $this->changeNumAndReply($write, $tmpNum, $tmpReply, $numTwo, $replyTwo);
+
+                    // 원글 끼리의 교체
+                    } else {
+                        // one = tmp;
+                        $this->changeNum($write, $numOne, $tmpNum);
+                        // two = 원래 one;
+                        $this->changeNum($write, $numTwo, $numOne);
+                        // tmp = 원래 two;
+                        $this->changeNum($write, $tmpNum, $numTwo);
+                    }
                 }
             } else {
                 abort(500, '입력/선택하신 게시물 중 하나 이상이 존재하지 않는 게시물입니다.\\n\\n확인 후 다시 입력해 주세요.');
@@ -527,6 +536,43 @@ class Board extends Model implements BoardInterface
         } else {
             return '게시물 순서 변경에 필요한 값이 넘어오지 않았습니다.';
         }
+    }
+
+
+    // 같은 원 글(num)일 때 reply 교체
+    private function changeReply($write, $targetNum, $targetReply, $changeReply)
+    {
+        $write->where([
+            'num' => $targetNum,
+            'reply' => $targetReply,
+        ])
+        ->update([
+            'reply' => $changeReply
+        ]);
+    }
+
+    // 다른 원 글(num)일 때 num, reply 교체
+    private function changeNumAndReply($write, $targetNum, $targetReply, $changeNum, $changeReply)
+    {
+        $write->where([
+            'num' => $targetNum,
+            'reply' => $targetReply,
+        ])
+        ->update([
+            'num' => $changeNum,
+            'reply' => $changeReply,
+        ]);
+    }
+
+    // 원글 끼리의 교체
+    private function changeNum($write, $targetNum, $changeNum)
+    {
+        $write->where([
+            'num' => $targetNum,
+        ])
+        ->update([
+            'num' => $changeNum,
+        ]);
     }
 
 }
