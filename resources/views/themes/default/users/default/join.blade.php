@@ -7,10 +7,6 @@
 <link rel="stylesheet" type="text/css" href="{{ ver_asset("themes/default/css/auth.css") }}">
 @endsection
 
-@section('include_script')
-<script src='https://www.google.com/recaptcha/api.js' async defer></script>
-@endsection
-
 @section('content')
 @if($errors->any())
 <script>

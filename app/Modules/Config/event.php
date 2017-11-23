@@ -47,21 +47,4 @@ return [
             'description' => '회원정보수정 - 이름과 휴대폰 입력 기본 양식',
         ],
     ],
-    'registerUserEnd' => [
-        'defaultOnsubmitRegisterScript' => [
-            'module' => 'LaonBoard',
-            'priority' => 1,
-            'use' => 1,
-            'description' => '회원가입 - form onsubmit 함수(userFormSubmit) 선언',
-        ],
-    ],
-    'editUserEnd' => [
-        'defaultOnsubmitEditScript' => [
-            'module' => 'LaonBoard',
-            'priority' => 1,
-            'use' => 1,
-            'description' => '회원정보수정 - form onsubmit 함수(userFormSubmit) 선언',
-        ],
-    ],
-
 ];

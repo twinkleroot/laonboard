@@ -4,13 +4,14 @@
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script>
 function onSubmit(token) {
-    var form = $(".submitBtn").closest('form');
     $("#g-response").val(token);
     // ajax로 리캡챠 서버쪽 확인
     if(!recaptcha()) {
         return false;
+    } else {
+        var form = $(".submitBtn").closest('form');
+        $(form).submit();
     }
-    $(form).submit();
 }
 
 function recaptcha()
@@ -42,9 +43,17 @@ function recaptcha()
 }
 </script>
 <script>
+$(function() {
+    var clientKey = "{{ cache("config.recaptcha")->googleInvisibleClient }}";
+    if(!clientKey) {
+        alert("모듈 관리에서 자동등록방지(Google Invisible reCAPTCHA)키가 등록되지 않아서 회원가입을 진행할 수 없습니다. 관리자에게 문의하여 주십시오.");
+
+        location.href="/";
+    }
+});
 @if(request()->segments()[0] === 'bbs')
     $(function(){
-        $(document).on('click', '.submitBtn', function(){
+        $('.submitBtn').off('click').on('click', function(){
         @php
             $userId = auth()->check() ? auth()->user()->id : 0;
         @endphp
@@ -58,7 +67,7 @@ function recaptcha()
     });
 @else
     $(function(){
-        $(document).on('click', '.submitBtn', function(){
+        $('.submitBtn').off('click').on('click', function(){
             grecaptcha.execute();
         });
     });
