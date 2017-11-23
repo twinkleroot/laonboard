@@ -24,7 +24,9 @@
     @endphp
     <div class="bd_head">
         <a href="{{ route('board.index', $board->table_name) }}">{{ $board->subject }}</a>
+        @if($write->ca_name)
         <span class="ca_name">{{ $write->ca_name }}</span>
+        @endif
     </div>
     <div class="bd_rd_head">
         <h1>{{ $write->subject }}</h1>
@@ -66,7 +68,7 @@
                     <i class="fa fa-ellipsis-v"></i>
                 </a>
                 <ul class="dropdown-menu" role="menu">
-                    @if( (auth()->check() && $user->id_hashkey == $write->user_id) || !$write->user_id || $user->isBoardAdmin($board) )
+                    @if( auth()->check() && ($user->id_hashkey == $write->user_id || !$write->user_id || $user->isBoardAdmin($board)) )
                         <li><a href="/bbs/{{ $board->table_name }}/edit/{{ $write->id. (Request::getQueryString() ? '?'.Request::getQueryString() : '') }}">수정</a></li>
                         <li>
                             <a href="{{ route('board.destroy', ['boardName' => $board->table_name, 'writeId' => $write->id]). (Request::getQueryString() ? '?'.Request::getQueryString() : '') }}"  onclick="del(this.href); return false;">
