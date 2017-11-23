@@ -14,7 +14,7 @@ return [
     'menuSelectOption' => [
         'addMenuSelectOption' => [
             'module' => 'Content',
-            'priority' => 2,
+            'priority' => 1,
             'use' => 1,
             'description' => '메뉴설정 > 메뉴 추가 > 대상 선택 - 내용관리 추가',
         ],
@@ -23,7 +23,7 @@ return [
     'menuResult' => [
         'addMenuResult' => [
             'module' => 'Content',
-            'priority' => 3,
+            'priority' => 1,
             'use' => 1,
             'description' => '메뉴설정 > 메뉴 추가 > 내용관리 - 내용관리 리스트 추가',
         ],

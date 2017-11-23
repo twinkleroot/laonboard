@@ -117,7 +117,7 @@ if(! function_exists('cookingMenuSubject')) {
 if(! function_exists('getFrontSideview')) {
     function getFrontSideview()
     {
-        return 'themes.'. cache('config.theme')->name. '.sideviews.'. cache('config.theme')->name. '.front';
+        return 'themes.'. cache('config.theme')->name. '.sideviews.front';
     }
 }
 

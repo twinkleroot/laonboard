@@ -489,20 +489,36 @@ class Board extends Model implements BoardInterface
 
             $writes = $write->whereIn('id', $ids)->get();
             if(count($writes) == 2) {
-                // dd($writes, $writes->get(0), $writes->get(1));
                 $numOne = $writes->get(0)->num;
                 $numTwo = $writes->get(1)->num;
-                $tmpNum = 1;
+                if($numOne == $numTwo) {
+                    $replyOne = $writes->get(0)->reply;
+                    $replyTwo = $writes->get(1)->reply;
+                    $tmpReply = 'AAAAAA';
+                    // dd($replyOne, $replyTwo);
 
-                $write->where('num', $numOne)->update([
-                    'num' => $tmpNum
-                ]);
-                $write->where('num', $numTwo)->update([
-                    'num' => $numOne
-                ]);
-                $write->where('num', $tmpNum)->update([
-                    'num' => $numTwo
-                ]);
+                    $write->where('num', $numOne)->where('reply', $replyOne)->update([
+                        'reply' => $tmpReply
+                    ]);
+                    $write->where('num', $numOne)->where('reply', $replyTwo)->update([
+                        'reply' => $replyOne
+                    ]);
+                    $write->where('num', $numOne)->where('reply', $tmpReply)->update([
+                        'reply' => $replyTwo
+                    ]);
+                } else {
+                    $tmpNum = 1;
+
+                    $write->where('num', $numOne)->update([
+                        'num' => $tmpNum
+                    ]);
+                    $write->where('num', $numTwo)->update([
+                        'num' => $numOne
+                    ]);
+                    $write->where('num', $tmpNum)->update([
+                        'num' => $numTwo
+                    ]);
+                }
             } else {
                 abort(500, '입력/선택하신 게시물 중 하나 이상이 존재하지 않는 게시물입니다.\\n\\n확인 후 다시 입력해 주세요.');
             }

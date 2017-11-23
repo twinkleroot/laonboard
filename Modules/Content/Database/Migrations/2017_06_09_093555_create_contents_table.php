@@ -27,8 +27,6 @@ class CreateContentsTable extends Migration
                 $table->tinyInteger('tag_filter_use')->nullable()->default(0);
                 $table->integer('hit')->nullable();
                 $table->tinyInteger('show')->nullable()->default(0);
-                // $table->string('include_head')->nullable();
-                // $table->string('include_tail')->nullable();
             });
 
             // 초기 데이터 생성
