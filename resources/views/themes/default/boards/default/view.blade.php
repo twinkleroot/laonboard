@@ -24,9 +24,10 @@
     @endphp
     <div class="bd_head">
         <a href="{{ route('board.index', $board->table_name) }}">{{ $board->subject }}</a>
+        <span class="ca_name">{{ $write->ca_name }}</span>
     </div>
     <div class="bd_rd_head">
-        <h1>[{{ $write->ca_name }}] {{ $write->subject }}</h1>
+        <h1>{{ $write->subject }}</h1>
         <ul class="bd_rd_info">
             <li class="post_info">
             @if($board->use_sideview)

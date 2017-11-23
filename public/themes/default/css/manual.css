@@ -25,7 +25,7 @@ p {
 }
 #sub_menu .post_list .post {
     list-style: none;
-    font-size: 12px;
+    font-size: 16px;
 }
 #sub_menu .post_list .post a {
     padding: 5px 20px;
@@ -44,6 +44,12 @@ p {
     background: #eee;
     color: #fb513e;
     font-weight: bold;
+}
+#sub_menu .post_list .post_rpy {
+    font-size: 12px;
+}
+#sub_menu .post_list .post_rpy p {
+    padding-left: 30px;
 }
 #sub_menu .post_list .post_rpy:before {
     content: "";

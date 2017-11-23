@@ -28,6 +28,16 @@
     vertical-align: top;
     display: inline-block;
 }
+.bd_head .ca_name {
+    font-size: 18px;
+    color: #587ef6;
+}
+.bd_head .ca_name:before {
+    content: "/";
+    margin: 0 5px;
+    color: #aaa;
+    font-weight: normal;
+}
 .bd_count {
     float: left;
     line-height: 34px;
