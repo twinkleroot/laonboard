@@ -24,7 +24,9 @@
         </tr>
         @endforeach
         @endif
+
         {{ fireEvent('menuResult') }}
+        
     </tbody>
 </table>
 @else
