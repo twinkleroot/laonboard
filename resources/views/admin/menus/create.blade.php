@@ -45,7 +45,9 @@
                 <option value="">직접입력</option>
                 <option value="group">게시판그룹</option>
                 <option value="board">게시판</option>
+
                 {{ fireEvent('menuSelectOption') }}
+
             </select>
         </div>
     </div>
@@ -69,7 +71,7 @@ $(function() {
     $(document).on("click", "#add_manual", function() {
         var name = $.trim($('#name').val());
         var link = $.trim($('#link').val());
-        var code = {{ $code }};
+        var code = "{{ $code }}";
 
         addMenuList(name, link, code);
     });
@@ -77,7 +79,7 @@ $(function() {
     $(document).on("click", ".add_select", function() {
         var name = $.trim($(this).siblings("input[name='subject[]']").val());
         var link = $.trim($(this).siblings("input[name='link[]']").val());
-        var code = {{ $code }};
+        var code = "{{ $code }}";
 
         addMenuList(name, link, code);
     });
@@ -151,12 +153,6 @@ function addMenuList(name, link, code)
 
         menuList.find("table tbody").append(list);
     }
-
-    // 리스트 배경색 클래스 설정
-    // $menulist.find("tr.menu_list").each(function(index) {
-    //     $(this).removeClass("bg0 bg1")
-    //         .addClass("bg"+(index % 2));
-    // });
 
     // 부모 창의 DragAndDrop Plugin 초기화
     opener.initDragAndDropPlugin();

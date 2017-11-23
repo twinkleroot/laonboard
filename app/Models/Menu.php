@@ -176,7 +176,7 @@ class Menu extends Model
         for($i=0; $i<count($menuList); $i++) {
             $subMenuList[$i] = Menu::where('use', 1)
                     ->whereRaw('length(code) = 4')
-                    ->whereRaw('substring(code, 1, 2)=' . $menuList[$i]['code'])
+                    ->whereRaw('substring(code, 1, 2)=' . "'{$menuList[$i]['code']}'")
                     ->orderBy('order', 'asc')
                     ->orderBy('id', 'asc')
                     ->get();
