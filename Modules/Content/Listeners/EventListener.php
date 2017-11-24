@@ -82,22 +82,24 @@ class EventListener
      */
     public function addMenuResult(\Modules\Content\Events\AddMenuResult $event)
     {
-        $contents = Content::orderBy('content_id')->get();
-        $result = '';
-        foreach ($contents as $content) {
-            $content = cookingMenuSubject($content, $content->content_id);
-            $result .=
-                "<tr>
-                    <td>" . $content->subject. "</td>
-                    <td class=\"td_mngsmall text-center\">
-                        <input type=\"hidden\" name=\"subject[]\" value=\"". preg_replace('/[\'\"]/', '', $content->subject). "\">
-                        <input type=\"hidden\" name=\"link[]\" value=\"". route('content.show', $content->content_id). "\">
-                        <button type=\"button\" class=\"btn btn-default add_select\">선택</button>
-                    </td>
-                </tr>";
-        }
+        if($event->type == "content") {
+            $contents = Content::orderBy('content_id')->get();
+            $result = '';
+            foreach ($contents as $content) {
+                $content = cookingMenuSubject($content, $content->content_id);
+                $result .=
+                    "<tr>
+                        <td>" . $content->subject. "</td>
+                        <td class=\"td_mngsmall text-center\">
+                            <input type=\"hidden\" name=\"subject[]\" value=\"". preg_replace('/[\'\"]/', '', $content->subject). "\">
+                            <input type=\"hidden\" name=\"link[]\" value=\"". route('content.show', $content->content_id). "\">
+                            <button type=\"button\" class=\"btn btn-default add_select\">선택</button>
+                        </td>
+                    </tr>";
+            }
 
-        echo $result;
+            echo $result;
+        }
     }
 
 }

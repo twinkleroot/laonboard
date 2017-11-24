@@ -52,7 +52,7 @@ class Group extends Model
         $boards = getLatestWrites($boards, 5, 70);
 
         return [
-            'boardList' => $boards,
+            'latests' => $boards,
             'skin' => $skin,
             'groupName' => is_null($group) ? '' : $group->subject,
         ];

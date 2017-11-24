@@ -16,7 +16,6 @@
                 <input type="hidden" name="link[]" value=
                     @if($type == 'group') {{ route('group', $result['group_id']) }}
                     @elseif($type == 'board') {{ route('board.index', $result['table_name']) }}
-                    @elseif($type == 'content') {{ route('content.show', $result['content_id']) }}
                     @endif
                 >
                 <button type="button" class="btn btn-default add_select">선택</button>
@@ -26,7 +25,7 @@
         @endif
 
         {{ fireEvent('menuResult') }}
-        
+
     </tbody>
 </table>
 @else

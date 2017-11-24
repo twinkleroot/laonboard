@@ -77,7 +77,7 @@ if(! function_exists('fireEvent')) {
             foreach($classes as $key => $value) {
                 $namespace = eventNamespace($key, $value);
                 if(class_exists($namespace) && $value['use']) {
-                    event(new $namespace(...$params));
+                    event(new $namespace(request(), ...$params));
                 }
             }
         }
