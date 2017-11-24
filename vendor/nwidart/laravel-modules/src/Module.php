@@ -110,6 +110,17 @@ abstract class Module extends ServiceProvider
     {
         return $this->get('description');
     }
+
+    /**
+     * Get screenshot name.
+     *
+     * @return string
+     */
+    public function getScreenshotName()
+    {
+        return $this->get('screenshot');
+    }
+
     /**
      * Get detail description.
      *

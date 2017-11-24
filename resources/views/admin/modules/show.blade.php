@@ -26,7 +26,9 @@
     <div id="module">
         <div id="module_info">
             <div class="image">
-                {{-- <img src="https://sir.kr/data/file/g5_plugin/thumb-982372566_xm9AatwN_909411859b3955c1f22a948fbce461623ef1a170_760x322.png"> --}}
+                @if($module->getScreenshotName())
+                <img src="{{ ver_asset('modules/'. $module->getLowerName(). '/img/'. $module->getScreenshotName()) }}">
+                @endif
             </div>
             <div class="info">
                 <form name="moduleForm" id="moduleForm" action="" class="form-horizontal" method="post">

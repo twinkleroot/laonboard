@@ -2,6 +2,7 @@
     "name": "$STUDLY_NAME$",
     "alias": "$LOWER_NAME$",
     "description": "",
+    "screenshot": "",
     "detail": "",
     "keywords": [],
     "active": 1,
