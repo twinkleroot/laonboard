@@ -65,7 +65,15 @@ $(function() {
     $("#type").on("change", function() {
         var type = $(this).val();
 
+        // 옵션 선택 때 마다 list 불러오기
         $("#menu_result").load('/admin/menus/result', { type : type, _token : window.Laravel.csrfToken } );
+
+        // 직접 입력일 때는 상단에 추가 버튼 숨기기
+        if(type != '') {
+            $("#add_manual").hide();
+        } else {
+            $("#add_manual").show();
+        }
     });
 
     $(document).on("click", "#add_manual", function() {
