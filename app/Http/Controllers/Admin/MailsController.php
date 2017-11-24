@@ -47,7 +47,7 @@ class MailsController extends Controller
                     $params = [
                         'now' => Carbon::now()
                     ];
-                    $content = \View::make('mail.default.email_send_test', $params)->render();
+                    $content = \View::make('themes.default.mails.email_send_test', $params)->render();
 
                     mailer(
                         cache('config.email.default')->adminEmailName,

@@ -35,30 +35,37 @@ class EventListener
      */
     public function subscribe(\Illuminate\Events\Dispatcher $events)
     {
+        // 사용자 - 회원가입 양식에 본인 확인 추가
         $events->listen(
             \Modules\Certify\Events\AddCertFuncToRegister::class,
             __CLASS__ . '@addCertFuncToRegister'
         );
+        // 사용자 - 회원가입 양식 제출 전에 본인 확인 데이터 추가
         $events->listen(
             \Modules\Certify\Events\AddRegisterScript::class,
             __CLASS__ . '@addRegisterScript'
         );
+        // 사용자 - 회원정보수정 양식에 본인 확인 추가
         $events->listen(
             \Modules\Certify\Events\AddNameAndHpToEditUserInfo::class,
             __CLASS__ . '@addNameAndHpToEditUserInfo'
         );
+        // 사용자 - 회원가입 양식 제출 전에 본인 확인 데이터 추가
         $events->listen(
             \Modules\Certify\Events\AddEditScript::class,
             __CLASS__ . '@addEditScript'
         );
+        // 관리자 - 회원 관리 양식의 탭에 본인 확인 탭 추가
         $events->listen(
             \Modules\Certify\Events\AddCertTabToManageUserTab::class,
             __CLASS__ . '@addCertTabToManageUserTab'
         );
+        // 관리자 - 회원 관리 양식에 본인 확인 추가
         $events->listen(
             \Modules\Certify\Events\AddCertConfigToManageUserForm::class,
             __CLASS__ . '@addCertConfigToManageUserForm'
         );
+        // 게시판 관리 양식에 본인 확인 추가
         $events->listen(
             \Modules\Certify\Events\AddCertConfigToManageBoardForm::class,
             __CLASS__ . '@addCertConfigToManageBoardForm'
@@ -113,9 +120,11 @@ class EventListener
     // 관리자 - 회원 관리 양식에 본인 확인 추가
     public function addCertConfigToManageUserForm(\Modules\Certify\Events\AddCertConfigToManageUserForm $event)
     {
-        $params = [
-            'user' => \App\Models\User::find(request()->user),
-        ];
+        $params = [];
+        $user = \App\Models\User::find(request()->user);
+        if($user) {
+            $params['user'] = $user;
+        }
 
         echo view("modules.certify.admin.user_form", $params);
     }
