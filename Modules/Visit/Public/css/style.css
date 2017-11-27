@@ -1,0 +1,36 @@
+#visit {
+    padding: 10px 0;
+    border-top: 1px solid #d8d8d8;
+}
+#visit:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+#visit h2 {
+    float: left;
+    margin: 0;
+    font-size: 13px;
+    line-height: 20px;
+    color: #333;
+    font-weight: bold;
+    margin-right: 40px;
+}
+#visit dl,
+#visit dl dt,
+#visit dl dd {
+    float: left;
+}
+#visit dl {
+    padding: 0;
+    margin: 0;
+    font-size: 13px;
+    line-height: 20px;
+    margin-left: 20px;
+}
+#visit dl dt {
+    margin-right: 10px;
+}
+#visit dl dd {
+    margin-right: 30px;
+}

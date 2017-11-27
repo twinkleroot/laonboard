@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('modules/visit/css/style.css') }}">
 <div class="link">
     <section id="visit">
         <div class="container">

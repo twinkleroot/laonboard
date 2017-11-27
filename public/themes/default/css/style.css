@@ -200,18 +200,15 @@ body {
     color: #999;
     background-color: #fff;
 }
-#popular,
-#visit {
+#popular {
     padding: 10px 0;
 }
-#popular:after,
-#visit:after {
+#popular:after {
     content: "";
     display: block;
     clear: both;
 }
-#popular h2,
-#visit h2 {
+#popular h2 {
     float: left;
     margin: 0;
     font-size: 13px;
@@ -243,27 +240,6 @@ body {
         margin: 0px 10px 0 0;
         margin-left: 0;
     }
-}
-#visit {
-    border-top: 1px solid #d8d8d8;
-}
-#visit dl,
-#visit dl dt,
-#visit dl dd {
-    float: left;
-}
-#visit dl {
-    padding: 0;
-    margin: 0;
-    font-size: 13px;
-    line-height: 20px;
-    margin-left: 20px;
-}
-#visit dl dt {
-    margin-right: 10px;
-}
-#visit dl dd {
-    margin-right: 30px;
 }
 #ft_copy {
     padding: 20px 0;
