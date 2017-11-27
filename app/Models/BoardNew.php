@@ -193,7 +193,7 @@ class BoardNew extends Model
             if($writeId == $boardNew->write_parent) {
                 // 글쓰기에 부여된 포인트 삭제
                 deleteWritePoint($this->writeModel, $boardId, $writeId);
-                $write = $this->write::getWrite($boardId, $writeId);
+                $write = $this->writeModel::getWrite($boardId, $writeId);
                 if($write->file > 0) {
                     // 서버에서 파일 삭제 첨부파일의 썸네일 삭제, 파일 테이블에서 파일 정보 삭제
                     $result = $boardFile->deleteWriteAndAttachFile($boardId, $writeId);
