@@ -3,6 +3,7 @@
 <div class="container">
     <div class="row">
         @forelse($latests as $latest)
+        @if($latest->table_name != 'manual')
         <div class="col-md-4 col-sm-6 col-xs-12">
             <div class="lt">
                 <div class="lt_head">
@@ -52,6 +53,7 @@
                 </ul>
             </div>
         </div>
+        @endif
         @empty
         @endforelse
     </div>
