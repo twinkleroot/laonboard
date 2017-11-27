@@ -13,14 +13,16 @@ class CreatePopularsTable extends Migration
      */
     public function up()
     {
-        Schema::create('populars', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('word', 50);
-            $table->date('date');
-            $table->string('ip', 50);
+        if(!Schema::hasTable('populars')) {
+            Schema::create('populars', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('word', 50);
+                $table->date('date');
+                $table->string('ip', 50);
 
-            $table->unique(['word', 'date', 'ip'], 'index1');
-        });
+                $table->unique(['word', 'date', 'ip'], 'index1');
+            });
+        }
     }
 
     /**
@@ -30,6 +32,8 @@ class CreatePopularsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('populars');
+        if(Schema::hasTable('populars')) {
+            Schema::dropIfExists('populars');
+        }
     }
 }

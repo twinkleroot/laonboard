@@ -13,15 +13,17 @@ class CreateCertHistoryTable extends Migration
      */
     public function up()
     {
-        Schema::create('cert_history', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('user_email')->nullable();
-            $table->string('company')->nullable();
-            $table->string('method')->nullable();
-            $table->string('ip')->nullable();
-            $table->date('date')->nullable();
-            $table->time('time')->nullable();
-        });
+        if(!Schema::hasTable('cert_history')) {
+            Schema::create('cert_history', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('user_email')->nullable();
+                $table->string('company')->nullable();
+                $table->string('method')->nullable();
+                $table->string('ip')->nullable();
+                $table->date('date')->nullable();
+                $table->time('time')->nullable();
+            });
+        }
     }
 
     /**
@@ -31,6 +33,8 @@ class CreateCertHistoryTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cert_history');
+        if(Schema::hasTable('cert_history')) {
+            Schema::dropIfExists('cert_history');
+        }
     }
 }

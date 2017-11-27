@@ -13,12 +13,14 @@ class CreateVisitSumsTable extends Migration
      */
     public function up()
     {
-        Schema::create('visit_sums', function (Blueprint $table) {
-            $table->date('date')->primary();
-            $table->integer('count')->unsigned();
+        if(!Schema::hasTable('visit_sums')) {
+            Schema::create('visit_sums', function (Blueprint $table) {
+                $table->date('date')->primary();
+                $table->integer('count')->unsigned();
 
-            $table->index(['count'], 'index1');
-        });
+                $table->index(['count'], 'index1');
+            });
+        }
     }
 
     /**
@@ -28,6 +30,8 @@ class CreateVisitSumsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('visit_sums');
+        if(Schema::hasTable('visit_sums')) {
+            Schema::dropIfExists('visit_sums');
+        }
     }
 }

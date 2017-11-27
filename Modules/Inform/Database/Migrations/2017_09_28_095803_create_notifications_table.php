@@ -13,17 +13,19 @@ class CreateNotificationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('notifications', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('type');
-            $table->integer('notifiable_id')->unsigned();
-            $table->string('notifiable_type', 100);
-            $table->text('data');
-            $table->timestamp('read_at')->nullable();
-            $table->timestamps();
+        if(!Schema::hasTable('notifications')) {
+            Schema::create('notifications', function (Blueprint $table) {
+                $table->uuid('id')->primary();
+                $table->string('type');
+                $table->integer('notifiable_id')->unsigned();
+                $table->string('notifiable_type', 100);
+                $table->text('data');
+                $table->timestamp('read_at')->nullable();
+                $table->timestamps();
 
-            $table->index(['notifiable_id', 'notifiable_type'], 'notifications_notifiable_id_notifiable_type_index');
-        });
+                $table->index(['notifiable_id', 'notifiable_type'], 'notifications_notifiable_id_notifiable_type_index');
+            });
+        }
     }
 
     /**
@@ -33,6 +35,8 @@ class CreateNotificationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('notifications');
+        if(Schema::hasTable('notifications')) {
+            Schema::dropIfExists('notifications');
+        }
     }
 }

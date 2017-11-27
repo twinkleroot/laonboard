@@ -38,6 +38,8 @@ class CreateVisitsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('visits');
+        if(Schema::hasTable('visits')) {
+            Schema::dropIfExists('visits');
+        }
     }
 }
