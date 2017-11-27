@@ -1,5 +1,4 @@
 <div id='recaptcha' class="g-recaptcha" data-sitekey="{{ cache("config.recaptcha")->googleInvisibleClient }}" data-callback="onSubmit" data-size="invisible"></div>
-</div>
 <input type="hidden" name="g-recaptcha-response" id="g-response" />
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script>
