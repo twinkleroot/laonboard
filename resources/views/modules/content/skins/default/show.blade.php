@@ -19,7 +19,7 @@
                 <div class="panel-body">
                     @if(session()->get('admin'))
                     <div class="ctt_admin">
-                        <a href="{{ route('admin.contents.edit', $content->content_id)}}" class="btn btn-sir">내용 수정</a>
+                        <a href="{{ route('admin.content.edit', $content->content_id)}}" class="btn btn-sir">내용 수정</a>
                     </div>
                     @endif
                     <!-- 상단 이미지 -->
