@@ -9,6 +9,7 @@ use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Http\Request;
 use App\Models\Write;
 
 class SendInformAboutComment
@@ -23,7 +24,7 @@ class SendInformAboutComment
      *
      * @return void
      */
-    public function __construct(Write $writeModel, $commentId)
+    public function __construct(Request $request, Write $writeModel, $commentId)
     {
         $this->writeModel = $writeModel;
         $this->commentId = $commentId;

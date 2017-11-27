@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\Config;
-
 // 설정 값 추가
 if(! function_exists('addCustomConfig')) {
     function addCustomConfig($name, $data)
@@ -9,18 +7,18 @@ if(! function_exists('addCustomConfig')) {
         $config = '';
         if(cache("config.$name")) {
             $config = cache("config.$name");
-        } else if($nameConfig = Config::where('name', "config.$name")->first()) {
+        } else if($nameConfig = App\Models\Config::where('name', "config.$name")->first()) {
             $config = json_decode($nameConfig->vars);
             Cache::forever("config.$name", $config);
         }
 
         if(!$config) {
-            Config::insert([
+            App\Models\Config::insert([
                 'name' => "config.$name",
                 'vars' => json_encode($data),
             ]);
 
-            $config = Config::where('name', "config.$name")->first();
+            $config = App\Models\Config::where('name', "config.$name")->first();
 
             if($config) {
                 Cache::forever("config.$name", json_decode($config->vars));
@@ -239,10 +237,13 @@ if(! function_exists('pullOutImage')) {
                 'write_id' => $writeId
             ])->get();
             foreach ($boardFiles as $boardFile) {
-                $size = getimagesize(storage_path('app/public/'. $board->table_name. '/'. $boardFile->file));
-                if($size) {
-                    $path = '/storage/'.$board->table_name.'/'.$boardFile->file;
-                    break;
+                $boardFilePath = storage_path('app/public/'. $board->table_name. '/'. $boardFile->file);
+                if(File::exists($boardFilePath)) {
+                    $size = getimagesize($boardFilePath);
+                    if($size) {
+                        $path = '/storage/'.$board->table_name.'/'.$boardFile->file;
+                        break;
+                    }
                 }
             }
         }
