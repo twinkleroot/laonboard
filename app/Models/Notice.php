@@ -101,7 +101,9 @@ class Notice
                     'linkUrl' => $linkUrl,
                 ];
                 $theme = cache('config.theme')->name ? : 'default';
-                $mailContent = \View::make("themes.$theme.mails.write_notice", $params)->render();
+                $mailPath = "themes.$theme.mails.write_notice";
+                $mailPath = view()->exists($mailPath) ? $mailPath : "themes.default.mails.write_notice";
+                $mailContent = \View::make($mailPath, $params)->render();
 
                 mailer(
                     cache('config.email.default')->adminEmailName,
@@ -151,7 +153,9 @@ class Notice
                          ])
             ];
             $theme = cache('config.theme')->name ? : 'default';
-            $mailContent = \View::make("themes.$theme.mails.congratulate_join", $params)->render();
+            $mailPath = "themes.$theme.mails.congratulate_join";
+            $mailPath = view()->exists($mailPath) ? $mailPath : "themes.default.mails.congratulate_join";
+            $mailContent = \View::make($mailPath, $params)->render();
 
             mailer(
                 cache('config.email.default')->adminEmailName,
@@ -174,7 +178,9 @@ class Notice
                 'user' => $user,
             ];
             $theme = cache('config.theme')->name ? : 'default';
-            $mailContent = \View::make("themes.$theme.mails.join_notice", $params)->render();
+            $mailPath = "themes.$theme.mails.join_notice";
+            $mailPath = view()->exists($mailPath) ? $mailPath : "themes.default.mails.join_notice";
+            $mailContent = \View::make($mailPath, $params)->render();
 
             mailer(
                 cache('config.email.default')->adminEmailName,
@@ -203,7 +209,9 @@ class Notice
                          ]),
             ];
             $theme = cache('config.theme')->name ? : 'default';
-            $mailContent = \View::make("themes.$theme.mails.email_certify", $params)->render();
+            $mailPath = "themes.$theme.mails.email_certify";
+            $mailPath = view()->exists($mailPath) ? $mailPath : "themes.default.mails.email_certify";
+            $mailContent = \View::make($mailPath, $params)->render();
 
             mailer(
                 cache('config.email.default')->adminEmailName,
