@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('modules/popularsearches/css/style.css') }}">
 <section id="popular">
     <div class="container">
         <h2>인기검색어</h2>

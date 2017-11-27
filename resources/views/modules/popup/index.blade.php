@@ -1,5 +1,5 @@
 <!-- 팝업레이어용 CSS파일 -->
-<link rel="stylesheet" type="text/css" href="{{ ver_asset('css/popuplayer.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('modules/popup/css/style.css') }}">
 <div id="popuplayer">
     <h2>팝업레이어 알림</h2>
     @foreach($popups as $popup)

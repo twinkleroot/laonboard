@@ -26,6 +26,7 @@ class PopupServiceProvider extends ServiceProvider
         $this->registerViews();
         $this->registerFactories();
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->registerPublic();
         $this->registerTables();
     }
 
@@ -49,6 +50,22 @@ class PopupServiceProvider extends ServiceProvider
         if(!\Schema::hasTable("popups")) {
             \Artisan::call("migrate");
         }
+    }
+
+    /**
+     * Register public resources.
+     *
+     * @return void
+     */
+    protected function registerPublic()
+    {
+        $publicPath = public_path('modules/popup');
+
+        $sourcePath = __DIR__.'/../Public';
+
+        $this->publishes([
+            $sourcePath => $publicPath
+        ], 'module-popup-public');
     }
 
     /**

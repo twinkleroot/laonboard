@@ -1,0 +1,41 @@
+#popular {
+    padding: 10px 0;
+}
+#popular:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+#popular h2 {
+    float: left;
+    margin: 0;
+    font-size: 13px;
+    line-height: 20px;
+    color: #333;
+    font-weight: bold;
+    margin-right: 40px;
+}
+#popular ul {
+    padding: 0;
+    margin: 0;
+    float: left;
+    font-size: 13px;
+    line-height: 20px;
+}
+#popular ul li {
+    float: left;
+    list-style: none;
+    margin: 0 20px;
+}
+#popular ul li a {
+    color: #333;
+}
+@media (max-width: 767px) {
+    #popular ul {
+        margin: 8px 0 0;
+    }
+    #popular ul li {
+        margin: 0px 10px 0 0;
+        margin-left: 0;
+    }
+}

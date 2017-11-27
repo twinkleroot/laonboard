@@ -26,6 +26,7 @@ class PopularSearchesServiceProvider extends ServiceProvider
         $this->registerViews();
         $this->registerFactories();
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->registerPublic();
         $this->registerTables();
 
         // add popular config to configs table
@@ -53,6 +54,22 @@ class PopularSearchesServiceProvider extends ServiceProvider
         if(!\Schema::hasTable("populars")) {
             \Artisan::call("migrate");
         }
+    }
+
+    /**
+     * Register public resources.
+     *
+     * @return void
+     */
+    protected function registerPublic()
+    {
+        $publicPath = public_path('modules/popularsearches');
+
+        $sourcePath = __DIR__.'/../Public';
+
+        $this->publishes([
+            $sourcePath => $publicPath
+        ], 'module-popularsearches-public');
     }
 
     /**
