@@ -15,7 +15,7 @@
                             @endif
                             {{ $comment->name }}
                         </a>
-                        @component('sideview', ['sideview' => 'board', 'board' => $board, 'write' => $comment, 'category' => $currenctCategory or ''])
+                        @component(getFrontSideview(), ['sideview' => 'board', 'board' => $board, 'write' => $comment, 'category' => $currenctCategory or ''])
                         @endcomponent
                     @else
                         @if(cache('config.join')->useMemberIcon && $comment->iconPath)
