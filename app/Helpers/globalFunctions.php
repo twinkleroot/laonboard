@@ -117,7 +117,9 @@ if(! function_exists('cookingMenuSubject')) {
 if(! function_exists('getFrontSideview')) {
     function getFrontSideview()
     {
-        return 'themes.'. cache('config.theme')->name. '.sideviews.front';
+        $view = 'themes.'. cache('config.theme')->name. '.sideviews.front';
+        $view = view()->exists($view) ? $view : 'themes.default.sideviews.front';
+        return $view;
     }
 }
 
@@ -714,6 +716,16 @@ if (! function_exists('getSkins')) {
             $dirs = File::directories($path);
             foreach($dirs as $dir) {
                 $result[basename($dir)] = basename($dir);
+            }
+        }
+
+        if(count($result) == 1) {
+            $path = resource_path("views/themes/default/$type");
+            if(File::exists($path)) {
+                $dirs = File::directories($path);
+                foreach($dirs as $dir) {
+                    $result[basename($dir)] = basename($dir);
+                }
             }
         }
 

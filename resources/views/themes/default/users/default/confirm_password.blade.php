@@ -1,4 +1,4 @@
-@extends("themes.default.layouts.basic")
+@extends("themes.". cache('config.theme')->name. ".layouts.basic")
 
 @section('title')회원비밀번호확인 | {{ cache("config.homepage")->title }}@endsection
 

@@ -1,4 +1,4 @@
-@extends("themes.default.layouts.". ($board->layout ? : 'basic'))
+@extends("themes.". cache('config.theme')->name. ".layouts.". ($board->layout ? : 'basic'))
 
 @section('title'){{ $write->subject }} > {{ $board->subject }} | {{ cache('config.homepage')->title }}@stop
 
@@ -205,10 +205,10 @@
     </div>
 
     {{-- 댓글 --}}
-    @if(view()->exists('themes.'. cache('config.theme')->name. ".boards.$skin.comment"))
-        @include('themes.'. cache('config.theme')->name. ".boards.$skin.comment")
+    @if(view()->exists("themes.default.boards.$skin.comment"))
+        @include("themes.default.boards.$skin.comment")
     @else
-        @include('themes.'. cache('config.theme')->name. ".boards.default.comment")
+        @include("themes.default.boards.default.comment")
     @endif
 
     {{-- 전체 목록 보이기 설정시 --}}

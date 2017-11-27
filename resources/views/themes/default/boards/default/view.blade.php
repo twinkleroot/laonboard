@@ -1,4 +1,4 @@
-@extends("themes.default.layouts.". ($board->layout ? : 'basic'))
+@extends("themes.". cache('config.theme')->name. ".layouts.". ($board->layout ? : 'basic'))
 
 @section('title'){{ $write->subject }} > {{ $board->subject }} | {{ cache('config.homepage')->title }}@stop
 
@@ -205,7 +205,7 @@
     </div>
 
     {{-- 댓글 --}}
-    @include('themes.'. cache('config.theme')->name. '.boards.default.comment')
+    @include('themes.default.boards.default.comment')
 
     {{-- 전체 목록 보이기 설정시 --}}
     @include("themes.default.boards.default.list")

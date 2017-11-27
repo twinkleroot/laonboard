@@ -1,3 +1,5 @@
+<!-- 최근게시물용 CSS파일 -->
+<link rel="stylesheet" type="text/css" href="{{ ver_asset('themes/default/css/latest.css') }}">
 <div class="container">
     <div class="row">
         @forelse($latests as $latest)

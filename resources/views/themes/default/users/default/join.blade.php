@@ -1,4 +1,4 @@
-@extends("themes.default.layouts.basic")
+@extends("themes.". cache('config.theme')->name. ".layouts.basic")
 
 @section('title')회원가입약관 | {{ cache("config.homepage")->title }}@endsection
 

@@ -1,4 +1,4 @@
-@extends("themes.default.layouts.basic")
+@extends("themes.". cache('config.theme')->name. ".layouts.basic")
 
 @section('title')전체검색:{{ $keyword }} | {{ cache("config.homepage")->title }}@endsection
 

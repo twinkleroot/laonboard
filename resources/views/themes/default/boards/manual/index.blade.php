@@ -1,4 +1,4 @@
-@extends("themes.default.layouts.". ($board->layout ? : 'basic'))
+@extends("themes.". cache('config.theme')->name. ".layouts.". ($board->layout ? : 'basic'))
 
 @section('title'){{ $board->subject }}게시판 | {{ Cache::get("config.homepage")->title }}@stop
 

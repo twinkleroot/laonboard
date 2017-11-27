@@ -1,4 +1,4 @@
-@extends("themes.default.layouts.basic")
+@extends("themes.". cache('config.theme')->name. ".layouts.basic")
 
 @section('title')인증메일주소변경 | {{ cache("config.homepage")->title }}@endsection
 

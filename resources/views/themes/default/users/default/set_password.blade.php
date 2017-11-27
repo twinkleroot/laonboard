@@ -1,4 +1,4 @@
-@extends("themes.default.layouts.basic")
+@extends("themes.". cache('config.theme')->name. ".layouts.basic")
 
 @section('title')최초비밀번호설정 | {{ cache("config.homepage")->title }}@endsection
 
