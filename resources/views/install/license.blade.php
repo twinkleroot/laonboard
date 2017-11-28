@@ -13,7 +13,7 @@
         <li>2. 초기환경설정</li>
         <li>3. 설치 완료</li>
     </ul>
-    <form action="{{ route('install.form') }}" method="post" onsubmit="return frm_submit(this);">
+    <form action="{{ route('install.license.check') }}" method="post" onsubmit="return frm_submit(this);">
         {{ csrf_field() }}
         <div class="ins_inner">
             <p>

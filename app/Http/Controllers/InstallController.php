@@ -26,16 +26,18 @@ class InstallController extends Controller
         return view('install.license');
     }
 
-    public function form(Request $request)
-    {
+    public function licenseCheck(Request $request) {
         $agree = $request->filled('agree') ? $request->agree : '';
         if($agree != 'yes') {
             abort('500', '라이센스(License) 내용에 동의하셔야 설치를 계속하실 수 있습니다.');
         }
+        session()->put('agree_'. $request->_token, $agree);
 
-        $params = [
-            'agree' => $agree
-        ];
+        return redirect(route('install.form'));
+    }
+
+    public function form()
+    {
         return view('install.form', $params);
     }
 

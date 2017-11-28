@@ -13,7 +13,7 @@
         <li class="on">2. 초기환경설정</li>
         <li>3. 설치 완료</li>
     </ul>
-    @if($agree != 'yes')
+    @if(session()->get('agree_'. csrf_token()) != 'yes')
     <div class="ins_inner">
         <p>라이센스(License) 내용에 동의하셔야 설치를 계속하실 수 있습니다.</p>
         <div class="inner_btn">
