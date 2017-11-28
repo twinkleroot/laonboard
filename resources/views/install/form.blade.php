@@ -13,14 +13,6 @@
         <li class="on">2. 초기환경설정</li>
         <li>3. 설치 완료</li>
     </ul>
-    @if(session()->get('agree_'. csrf_token()) != 'yes')
-    <div class="ins_inner">
-        <p>라이센스(License) 내용에 동의하셔야 설치를 계속하실 수 있습니다.</p>
-        <div class="inner_btn">
-            <a onclick="history.back();" class="btn">뒤로가기</a>
-        </div>
-    </div>
-    @else
     <form action="{{ route('install.setup') }}" id="frm_install" method="post" autocomplete="off" onsubmit="return frm_install_submit(this);">
         <div class="ins_inner">
             <table class="ins_frm">
