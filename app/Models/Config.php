@@ -39,7 +39,7 @@ class Config extends Model
             $index++;
         }
         if($config->passwordPolicySpecial == 1) {     // 특수문자를 1개 이상 포함할 때
-            $rulePieces[$index] = '(?=.*[~!@#$%^&*()\-_=+])';
+            $rulePieces[$index] = '(?=.*[~`!@#$%^&*()\-_=+])';
             $index++;
         }
 
