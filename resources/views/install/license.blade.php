@@ -13,7 +13,8 @@
         <li>2. 초기환경설정</li>
         <li>3. 설치 완료</li>
     </ul>
-    <form action="{{ route('install.form') }}" method="get" onsubmit="return frm_submit(this);">
+    <form action="{{ route('install.form') }}" method="post" onsubmit="return frm_submit(this);">
+        {{ csrf_field() }}
         <div class="ins_inner">
             <p>
                 <strong class="st_strong">라이센스(License) 내용을 반드시 확인하십시오.</strong><br>
@@ -21,7 +22,7 @@
             </p>
             <div class="ins_ta ins_license">
                 <textarea id="license" readonly>
-프로그램 명칭  라라벨 프레임워크 5.4로 만든 게시판 (board made by laravel framework 5.4)
+프로그램 명칭  라라벨 프레임워크로 만든 게시판 (board made by laravel framework)
 저작자  (주)에스아이알소프트 (sir.kr)
 GNU 약소 일반 공중 사용 허가서
 
@@ -199,7 +200,7 @@ Yoyodye, Inc., 부사장: Ty Coon
                 </textarea>
             </div>
             <div id="ins_agree">
-                <input type="checkbox" name="agree" value="동의함" id="agree">
+                <input type="checkbox" name="agree" value="yes" id="agree">
                 <label for="agree">동의합니다.</label>
             </div>
             <div class="inner_btn">

@@ -28,8 +28,13 @@ class InstallController extends Controller
 
     public function form(Request $request)
     {
+        $agree = $request->filled('agree') ? $request->agree : '';
+        if($agree != 'yes') {
+            abort('500', '라이센스(License) 내용에 동의하셔야 설치를 계속하실 수 있습니다.');
+        }
+
         $params = [
-            'agree' => $request->filled('agree') ? $request->agree : ''
+            'agree' => $agree
         ];
         return view('install.form', $params);
     }
