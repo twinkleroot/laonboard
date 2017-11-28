@@ -32,15 +32,14 @@ class InstallController extends Controller
             abort('500', '라이센스(License) 내용에 동의하셔야 설치를 계속하실 수 있습니다.');
         }
         session()->put('agree_'. $request->_token, $agree);
-        dump('agree_'. $request->_token);
 
-        return redirect(route('install.form'));
+        return redirect(route('install.form'))->with('_token', $request->_token);
     }
 
     public function form(Request $request)
     {
-        $agree = session()->get('agree_'. $request->_token);
-        if($agree || $agree != 'yes') {
+        $agree = session()->get('agree_'. session()->get('_token'));
+        if(!$agree || $agree != 'yes') {
             abort('500', '라이센스(License) 내용에 동의하셔야 설치를 계속하실 수 있습니다.');
         }
 

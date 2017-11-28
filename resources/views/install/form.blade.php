@@ -132,7 +132,6 @@
             </div>
         </div>
     </form>
-    @endif
     <script>
         function frm_install_submit(f)
         {
