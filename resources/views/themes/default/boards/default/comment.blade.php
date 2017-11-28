@@ -129,12 +129,13 @@
         <div class="pull-right">
             <button type="button" class="btn btn-sir submitBtn">댓글등록</button>
 
-            {{ fireEvent('captchaPlace') }}
 
         </div>
     </div>
 </form>
 </aside>
+
+{{ fireEvent('captchaPlace') }}
 
 <script>
 $(document).on("keyup change", "textarea#content[maxlength]", function(){

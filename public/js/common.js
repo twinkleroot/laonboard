@@ -1,7 +1,7 @@
 // .submitBtn 클래스가 적용된 버튼에 대한 이벤트
 // (자동등록방지 등 모듈에서 submit 하기 전에 이 이벤트를 off하고 재정의 할 수 있다.)
 $(function() {
-    $('.submitBtn').off('click').on('click', function(){
+    $(document).on('click', '.submitBtn', function(){
         var form = $(".submitBtn").closest('form');
         $(form).submit();
     });

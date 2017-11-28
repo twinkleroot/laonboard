@@ -5,7 +5,7 @@
 function onSubmit(token) {
     $("#g-response").val(token);
     // ajax로 리캡챠 서버쪽 확인
-    if(!recaptcha()) {
+    if(!recaptchaServer()) {
         return false;
     } else {
         var form = $(".submitBtn").closest('form');
@@ -13,7 +13,7 @@ function onSubmit(token) {
     }
 }
 
-function recaptcha()
+function recaptchaServer()
 {
     var message = '';
 
@@ -40,8 +40,12 @@ function recaptcha()
 
     return true;
 }
-</script>
-<script>
+
+function recaptchaClient()
+{
+    grecaptcha.execute();
+}
+
 $(function() {
     var clientKey = "{{ cache("config.recaptcha")->googleInvisibleClient }}";
     if(!clientKey) {
@@ -52,12 +56,14 @@ $(function() {
 });
 @if(request()->segments()[0] === 'bbs')
     $(function(){
-        $('.submitBtn').off('click').on('click', function(){
+        $(document).off('click', '.submitBtn');
+
+        $(document).on('click', '.submitBtn', function(){
         @php
             $userId = auth()->check() ? auth()->user()->id : 0;
         @endphp
-        @if(!auth()->check() || (!auth()->user()->isBoardAdmin($board) && $board->use_recaptcha && isShowCaptchaFromWriteCount($userId) ) )
-            grecaptcha.execute();
+        @if(!auth()->check() || (!auth()->user()->isBoardAdmin($board) && isShowCaptchaFromWriteCount($userId) ) )
+            recaptchaClient();
         @else
             var form = $(".submitBtn").closest('form');
             $(form).submit();
@@ -66,8 +72,10 @@ $(function() {
     });
 @else
     $(function(){
-        $('.submitBtn').off('click').on('click', function(){
-            grecaptcha.execute();
+        $(document).off('click', '.submitBtn');
+
+        $(document).on('click', '.submitBtn', function(){
+            recaptchaClient();
         });
     });
 @endif

@@ -5,10 +5,10 @@ if(! function_exists('isShowCaptchaFromWriteCount')) {
     {
         $count = App\Models\BoardNew::whereUserId($id)->whereDate('created_at', '=', Carbon\Carbon::today()->toDateString())->count();
 
-        if($count == 0 || $count > config('laon.todayWriteCount')) {
+        if($count > config('laon.todayWriteCount')) {
             return true;
         }
-        
+
         return false;
     }
 }
