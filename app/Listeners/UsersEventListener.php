@@ -52,16 +52,17 @@ class UsersEventListener
 
     public function onCreatePasswordRemind(\App\Events\CreatePasswordRemind $event)
     {
-        $skin = cache('config.join')->skin ? : 'default';
+        $theme = cache('config.theme')->name ? : 'default';
         $address = cache('config.email.default')->adminEmail;
         $name = cache('config.email.default')->adminEmailName;
 
-        $view = "mail.$skin.reset_email_form";
+        $mailPath = "themes.$theme.mails.reset_email_form";
+        $mailPath = view()->exists($mailPath) ? $mailPath : "themes.default.mails.reset_email_form";
         $subject = '비밀번호 재설정 메일입니다.';
 
         try {
             \Mail::send(
-                $view,
+                $mailPath,
                 ['token' => $event->token],
                 function ($message) use ($event, $address, $subject, $name) {
                     $message->to($event->email);
@@ -73,7 +74,7 @@ class UsersEventListener
             $params = [
                 'token' => $event->token
             ];
-            $content = \View::make($view, $params)->render();
+            $content = \View::make($mailPath, $params)->render();
 
             mailer($name, $address, $event->email, $subject, $content);
         }

@@ -97,6 +97,47 @@
                 <button type="button" class="btn btn-block btn-sir submitBtn">회원가입</button>
             </div>
 
+            @if(cache('config.sns')->naverKey || cache('config.sns')->kakaoKey || cache('config.sns')->facebookKey || cache('config.sns')->googleKey)
+                <!-- 소셜로그인 -->
+                <div class="mdline-title">
+                    <div class="text-center">
+                        <span>Social Login</span>
+                    </div>
+                </div>
+
+                <div class="social-login">
+                    @if(cache('config.sns')->naverKey)
+                    <!-- 네이버로 로그인 -->
+                    <a href="{{ route('social', 'naver') }}" class="btn btn-block btn-naver">
+                        <div class="icon icon-naver"></div>
+                        <span class="text-left">네이버로 회원가입</span>
+                    </a>
+                    @endif
+                    @if(cache('config.sns')->kakaoKey)
+                    <!-- 카카오톡으로 로그인 -->
+                    <a href="{{ route('social', 'kakao') }}" class="btn btn-block btn-kakao">
+                        <div class="icon icon-kakao"></div>
+                        <span class="text-left">카카오톡으로 회원가입</span>
+                    </a>
+                    @endif
+                    @if(cache('config.sns')->facebookKey)
+                    <!-- 페이스북으로 로그인 -->
+                    <a href="{{ route('social', 'facebook') }}" class="btn btn-block btn-facebook">
+                        <div class="icon icon-facebook"></div>
+                        <span class="text-left">페이스북으로 회원가입</span>
+                    </a>
+                    @endif
+                    @if(cache('config.sns')->googleKey)
+                    <!-- 구글로 로그인 -->
+                    <a href="{{ route('social', 'google') }}" class="btn btn-block btn-google">
+                        <div class="icon icon-google"></div>
+                        <span class="text-left">구글로 회원가입</span>
+                    </a>
+                    @endif
+                </div>
+                @endif
+                <!-- 소셜로그인 end -->
+
             {{ fireEvent('captchaPlace') }}
 
         </form>

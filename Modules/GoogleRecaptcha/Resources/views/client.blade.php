@@ -62,7 +62,7 @@ $(function() {
         @php
             $userId = auth()->check() ? auth()->user()->id : 0;
         @endphp
-        @if(!auth()->check() || (!auth()->user()->isBoardAdmin($board) && isShowCaptchaFromWriteCount($userId) ) )
+        @if(!auth()->check() || (!auth()->user()->isBoardAdmin($board) && $board->use_recaptcha && isShowCaptchaFromWriteCount($userId) ) )
             recaptchaClient();
         @else
             var form = $(".submitBtn").closest('form');
