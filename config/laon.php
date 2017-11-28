@@ -7,7 +7,7 @@
     'URL_REGEX' => '/(http(s)?\:\/\/)?[0-9a-zA-Z]+([\.\-]+[0-9a-zA-Z]+)*(:[0-9]+)?(\/?(\/[\.\w]*)+)?(([\?\&\=][\w]+)+)?/',
 
     // 홈페이지 기본 환경 설정
-    'title' => '라라벨게시판',
+    'title' => '라온보드',
     'superAdmin' => 'admin@admin.com',
     'usePoint' => 1,
     'loginPoint' => 100,

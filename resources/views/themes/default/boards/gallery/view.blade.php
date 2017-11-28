@@ -29,7 +29,7 @@
         @endif
     </div>
     <div class="bd_rd_head">
-        <h1>[{{ $write->ca_name }}] {{ $write->subject }}</h1>
+        <h1>{{ $write->subject }}</h1>
         <ul class="bd_rd_info">
             <li class="post_info">
             @if($board->use_sideview)
