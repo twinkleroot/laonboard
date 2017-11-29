@@ -9,6 +9,7 @@ use Modules\Visit\Models\Visit;
 use Modules\Visit\Models\VisitSum;
 use Cookie;
 use Carbon\Carbon;
+use Schema;
 
 class AddVisitStatusListener
 {
@@ -31,13 +32,11 @@ class AddVisitStatusListener
      */
     public function handle(AddVisitStatus $event)
     {
-        $todayDate = Carbon::now()->toDateString();
-        $todayTime = Carbon::now()->toTimeString();
-        $yesterdayDate = Carbon::yesterday()->toDateString();
-        $request = request();
-
-        // if(pickupCookie('visit_ip') != $request->server('REMOTE_ADDR')) {
-        //     $cookie = makeCookie('visit_ip', $request->server('REMOTE_ADDR'), 1440);
+        if(Schema::hasTable('visits') && Schema::hasTable('visit_sums')) {
+            $todayDate = Carbon::now()->toDateString();
+            $todayTime = Carbon::now()->toTimeString();
+            $yesterdayDate = Carbon::yesterday()->toDateString();
+            $request = request();
 
             $remoteAddr = $request->server('REMOTE_ADDR');
             $referer = null;
@@ -73,25 +72,25 @@ class AddVisitStatusListener
                     ]);
                 }
             }
-        // }
 
-        $visitSums = VisitSum::all();
-        // 오늘
-        $visitToday = $visitSums->where('date', $todayDate)->first();
-        $todayCount = $visitToday ? $visitToday->count : 0;
-        // 어제
-        $visitYesterday = $visitSums->where('date', $yesterdayDate)->first();
-        $yesterdayCount = $visitYesterday ? $visitYesterday->count : 0;
-        // 최대
-        $visitMax = $visitSums->max('count');
-        // 전체
-        $visitTotal = $visitSums->sum('count');
+            $visitSums = VisitSum::all();
+            // 오늘
+            $visitToday = $visitSums->where('date', $todayDate)->first();
+            $todayCount = $visitToday ? $visitToday->count : 0;
+            // 어제
+            $visitYesterday = $visitSums->where('date', $yesterdayDate)->first();
+            $yesterdayCount = $visitYesterday ? $visitYesterday->count : 0;
+            // 최대
+            $visitMax = $visitSums->max('count');
+            // 전체
+            $visitTotal = $visitSums->sum('count');
 
-        $params = compact(
-            "todayCount", "yesterdayCount", "visitMax", "visitTotal"
-        );
+            $params = compact(
+                "todayCount", "yesterdayCount", "visitMax", "visitTotal"
+            );
 
-        echo view('modules.visit.index', $params);
+            echo view('modules.visit.index', $params);
+        }
     }
 
 }

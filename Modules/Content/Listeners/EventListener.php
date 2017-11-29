@@ -5,6 +5,7 @@ namespace Modules\Content\Listeners;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Content\Models\Content;
+use Schema;
 
 class EventListener
 {
@@ -60,8 +61,10 @@ class EventListener
      */
     public function addFooterContent(\Modules\Content\Events\AddFooterContent $event)
     {
-        foreach(Content::where('show', 1)->orderBy('content_id')->get() as $content) {
-            echo "<a href=\"". route('content.show', $content->content_id) ."\">". $content->subject. "</a>";
+        if(Schema::hasTable('contents')) {
+            foreach(Content::where('show', 1)->orderBy('content_id')->get() as $content) {
+                echo "<a href=\"". route('content.show', $content->content_id) ."\">". $content->subject. "</a>";
+            }
         }
     }
 
