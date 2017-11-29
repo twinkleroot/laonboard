@@ -75,12 +75,6 @@ class PopupServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('popup.php'),
-        ], 'module-popup-config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'popup'
-        );
         mergeEvent(
             __DIR__.'/../Config/event.php', 'event'
         );
