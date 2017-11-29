@@ -45,12 +45,6 @@ class CustomLayoutServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('customlayout.php'),
-        ], 'module-customlayout-config');
-        $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'customlayout'
-        );
         mergeEvent(
             __DIR__.'/../Config/event.php', 'event'
         );

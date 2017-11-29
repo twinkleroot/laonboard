@@ -73,13 +73,8 @@ class ModuleSource
     // 모듈 삭제
     public function destroyModule($request)
     {
-        $names = $request->moduleName;
-        if(is_array($names)) {
-            foreach($names as $name) {
-                Module::find($name)->delete();
-            }
-        } else {
-            Module::find($names)->delete();
+        foreach((array) $request->moduleName as $name) {
+            Module::find($name)->delete();
         }
 
         // 캐시 초기화
@@ -94,8 +89,6 @@ class ModuleSource
             Module::find($name)->enable();
             // view, resource 설치
             $this->publishResource($name);
-            // DB table 생성
-            Artisan::call("migrate");
         }
 
     }
@@ -103,15 +96,9 @@ class ModuleSource
     // 모듈 비활성화
     public function inactiveModule($request)
     {
-        $names = $request->moduleName;
-        if(is_array($names)) {
-            foreach($names as $name) {
-                Module::find($name)->disable();
-                $this->deleteManageAuth($name);
-            }
-        } else {
-            Module::find($names)->disable();
-            $this->deleteManageAuth($names);
+        foreach((array) $request->moduleName as $name) {
+            Module::find($name)->disable();
+            $this->deleteManageAuth($name);
         }
 
         // 캐시 초기화
