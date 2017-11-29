@@ -89,22 +89,15 @@ class ModuleSource
     // 모듈 활성화
     public function activeModule($request)
     {
-        $names = $request->moduleName;
-        if(is_array($names)) {
-            foreach($names as $name) {
-                // 활성화
-                Module::find($name)->enable();
-                // view, resource 설치
-                $this->publishResource($name);
-            }
-        } else {
-            $name = $names;
+        foreach((array) $request->moduleName as $name) {
+            // 활성화
             Module::find($name)->enable();
+            // view, resource 설치
             $this->publishResource($name);
+            // DB table 생성
+            Artisan::call("migrate");
         }
 
-        // DB table 생성
-        Artisan::call("migrate");
     }
 
     // 모듈 비활성화
