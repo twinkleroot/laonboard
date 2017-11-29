@@ -208,7 +208,9 @@
     @include('themes.default.boards.default.comment')
 
     {{-- 전체 목록 보이기 설정시 --}}
-    @include("themes.default.boards.default.list")
+    @if($board->use_list_view)
+        @include("themes.default.boards.default.list")
+    @endif
 
     @if($board->content_tail)
         {!! $board->content_tail !!}
