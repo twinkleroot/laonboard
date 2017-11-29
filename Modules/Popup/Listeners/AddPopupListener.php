@@ -29,8 +29,6 @@ class AddPopupListener
      */
     public function handle(AddPopup $event)
     {
-        $params = [];
-
         if(Schema::hasTable('popups')) {
             $popups = Popup::where('begin_time', '<=', Carbon::now())
                 ->where('end_time', '>', Carbon::now())
@@ -42,8 +40,8 @@ class AddPopupListener
             $params = [
                 'popups' => $popups
             ];
-        }
 
-        echo view('modules.popup.index', $params);
+            echo view('modules.popup.index', $params);
+        }
     }
 }

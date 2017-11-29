@@ -26,7 +26,7 @@ class CreateContentsTable extends Migration
                 $table->string('mobile_skin')->nullable()->default('');
                 $table->tinyInteger('tag_filter_use')->nullable()->default(0);
                 $table->integer('hit')->nullable();
-                $table->tinyInteger('show')->nullable()->default(0);
+                $table->tinyInteger('show')->nullable()->default(1);
             });
 
             // 초기 데이터 생성
