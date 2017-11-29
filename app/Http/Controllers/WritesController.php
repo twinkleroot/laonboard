@@ -261,7 +261,7 @@ class WritesController extends Controller
 
         $theme = cache('config.theme')->name ? : 'default';
 
-        return viewDefault("$theme.boards.link", $params);
+        return viewDefault("$theme.boards.link", compact('linkUrl'));
     }
 
     /**
