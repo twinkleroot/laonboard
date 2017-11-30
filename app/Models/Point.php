@@ -28,7 +28,7 @@ class Point extends Model
     // 유저 모델과의 관계 설정
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withDefault();
     }
 
     // 커뮤니티 사용자별 포인트 내역
