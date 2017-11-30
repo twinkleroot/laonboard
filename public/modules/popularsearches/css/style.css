@@ -32,7 +32,9 @@
 }
 @media (max-width: 767px) {
     #popular ul {
-        margin: 8px 0 0;
+        display: block;
+        width: 100%;
+        margin: 7px 0 0;
     }
     #popular ul li {
         margin: 0px 10px 0 0;

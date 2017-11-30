@@ -330,7 +330,7 @@ p {
     width: 100%;
     background: #f1f1f1;
     border-top: 1px solid #ddd;
-    padding: 10px 10px 4px;
+    padding: 10px;
 }
 .manual_comment_write .btnarea:after {
     content: "";
@@ -340,6 +340,8 @@ p {
 .manual_comment_write .btnarea label {
     line-height: 34px;
     margin-bottom: 0;
+    float: left;
+    margin-right: 10px;
 }
 .manual_comment_write .btnarea label.serect input[type="checkbox"] {
     height: 34px;
@@ -366,4 +368,10 @@ p {
 .manual_comment_write .btnarea .nonmember .help-block {
     font-size: 12px;
     line-height: 12px;
+}
+.manual_comment_write .btnarea .cmt_character {
+    display: inline-block;
+    line-height: 34px;
+    float: left;
+    color: #999;
 }

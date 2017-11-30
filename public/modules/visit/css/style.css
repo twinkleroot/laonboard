@@ -32,5 +32,13 @@
     margin-right: 10px;
 }
 #visit dl dd {
-    margin-right: 30px;
+    margin-right: 20px;
+}
+
+@media (max-width: 767px) {
+    #visit dl {
+        display: block;
+        width: 100%;
+        margin: 7px 0 0;
+    }
 }
