@@ -76,7 +76,7 @@ Route::put('users/emails/update', ['as' => 'user.email.update', 'uses' => 'Users
 Route::get('users/certify/id/{id}/crypt/{crypt}', ['as' => 'user.email.certify', 'uses' => 'UsersController@emailCertify']);
 
 // 닉네임, 이메일 사용이 가능한지 검사
-Route::post('users/existDatas', ['as' => 'user.existData', 'uses' => 'UsersController@existData']);
+Route::post('register/validate', ['as' => 'register.validate', 'uses' => 'Auth\RegisterController@registerValidate']);
 
 // 처리 결과 메세지를 alert창으로 알려주는 페이지
 Route::get('messages', ['as' => 'message', 'uses' => 'MessagesController@message']);

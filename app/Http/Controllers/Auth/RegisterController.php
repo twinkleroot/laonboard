@@ -81,14 +81,7 @@ class RegisterController extends Controller
     // 회원 가입 수행
     public function register(Request $request)
     {
-        $adminConfig = new Config();
-        $rulePassword = $adminConfig->getPasswordRuleByConfigPolicy();
-        $rules = array_add($this->userModel->rulesRegister, 'password', $rulePassword);
-        $messages = $this->userModel->addPasswordMessages($this->userModel->messages);
-
-        // 수동 유효성 검사
-        $validator = validator($request->all(), $rules, $messages);
-
+        $validator = $this->customValidate($request);
         if($validator->fails()) {
             return redirect(route('user.register.form.get', $request->except(['password', 'password_confirmation', '_token', 'g-recaptcha-response'])))->withErrors($validator);
         }
@@ -115,5 +108,32 @@ class RegisterController extends Controller
 
         return viewDefault("$theme.users.$skin.register", $request->all());
     }
+
+    // 수동 유효성 검사
+    public function customValidate(Request $request)
+    {
+        $adminConfig = new Config();
+        $rulePassword = $adminConfig->getPasswordRuleByConfigPolicy();
+        $rules = array_add($this->userModel->rulesRegister, 'password', $rulePassword);
+        $messages = $this->userModel->addPasswordMessages($this->userModel->messages);
+
+        return validator($request->all(), $rules, $messages);
+    }
+
+    // ajax - 회원 가입 폼 유효성 검사
+    public function registerValidate(Request $request)
+    {
+        $validator = $this->customValidate($request);
+
+        $message = [];
+        if($validator->fails()) {
+            $message = $validator->errors()->all();
+        }
+
+        return [
+            'message' => $message
+        ];
+    }
+
 
 }

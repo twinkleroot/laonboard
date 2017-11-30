@@ -7,111 +7,9 @@
 <link rel="stylesheet" type="text/css" href="{{ ver_asset("themes/default/css/auth.css") }}">
 @endsection
 
-@section('include_script')
-<script>
-function joinValidation(form) {
-    if(form.password.value.length < 3) {
-        alert('비밀번호를 3글자 이상 입력하십시오.');
-        form.password.focus();
-        return false;
-    }
-
-    if(form.password_confirmation.value.length < 3) {
-        alert('비밀번호 확인을 3글자 이상 입력하십시오.');
-        form.password_confirmation.focus();
-        return false;
-    }
-
-    if(form.password.value != form.password_confirmation.value) {
-        alert('비밀번호와 비밀번호 확인이 같지 않습니다.');
-        form.password_confirmation.focus();
-        return false;
-    }
-
-    if(form.nick.value == '') {
-        alert('닉네임을 입력해 주세요.');
-        form.nick.focus();
-        return false;
-    }
-
-    if( !checkStringFormat(form.nick.value) ) {
-        alert('닉네임엔 특수문자를 사용할 수 없습니다.');
-        form.nick.focus();
-        return false;
-    }
-
-    if(checkExistData('nick', form.nick.value)) {
-        alert('이미 가입된 닉네임입니다. 다른 닉네임을 입력해 주세요.');
-        form.nick.focus();
-        return false;
-    }
-
-    if(form.email.value == '') {
-        alert('이메일을 입력해 주세요.');
-        form.email.focus();
-        return false;
-    }
-
-    if(checkExistData('email', form.email.value)) {
-        alert('이미 가입된 이메일입니다. 다른 이메일을 입력해 주세요.');
-        form.email.focus();
-        return false;
-    }
-
-    return true;
-}
-
-function checkExistData(key, value) {
-    var data = {
-        'key' : key,
-        'value' : value,
-        '_token' : '{{ csrf_token() }}'
-    };
-    var result = false;
-    $.ajax({
-        url: '/users/existDatas',
-        type: 'POST',
-        data: data,
-        dataType: 'json',
-        async: false,
-        cache: false,
-        success: function(data) {
-            result = data.result;
-        }
-    });
-
-    return result;
-}
-
-function loginValidation(form) {
-    if(form.email.value == '') {
-        alert('이메일 : 필수 입력입니다.');
-        form.email.focus();
-        return false;
-    }
-
-    if(form.password.value == '') {
-        alert('비밀번호 : 필수 입력입니다.');
-        form.password.focus();
-        return false;
-    }
-
-    if(checkExistData('email', form.email.value) == false) {
-        alert('가입되지 않은 이메일입니다. 확인 후 다시 입력해 주세요.');
-        form.email.focus();
-        return false;
-    }
-
-    return true;
-}
-</script>
-@endsection
-
 @section('content')
 <div class="container">
 <div class="row">
-
-<!-- auth login -->
     <div class="col-md-6">
         <div class="panel panel-default">
             <div class="panel-heading bg-sir">
@@ -183,4 +81,97 @@ function loginValidation(form) {
     </div>
 </div>
 </div>
+
+<script>
+function joinValidation(form) {
+    if(form.password.value.length < 3) {
+        alert('비밀번호를 3글자 이상 입력하십시오.');
+        form.password.focus();
+        return false;
+    }
+
+    if(form.password_confirmation.value.length < 3) {
+        alert('비밀번호 확인을 3글자 이상 입력하십시오.');
+        form.password_confirmation.focus();
+        return false;
+    }
+
+    if(form.password.value != form.password_confirmation.value) {
+        alert('비밀번호와 비밀번호 확인이 같지 않습니다.');
+        form.password_confirmation.focus();
+        return false;
+    }
+
+    if(form.email.value == '') {
+        alert('이메일을 입력해 주세요.');
+        form.email.focus();
+        return false;
+    }
+
+    if(form.nick.value == '') {
+        alert('닉네임을 입력해 주세요.');
+        form.nick.focus();
+        return false;
+    }
+
+    if(!requestValidate(form)) {
+        return false;
+    }
+
+    return true;
+}
+
+function requestValidate(form) {
+    var data = {
+        'email' : form.email.value,
+        'nick' : form.nick.value,
+        'password' : form.password.value,
+        'password_confirmation' : form.password_confirmation.value,
+        '_token' : '{{ csrf_token() }}'
+    };
+
+    var message = new Array();
+    var result = true;
+    $.ajax({
+        url: '/register/validate',
+        type: 'POST',
+        data: data,
+        dataType: 'json',
+        async: false,
+        cache: false,
+        success: function(data) {
+            message = data.message;
+
+            if(message.length > 0) {
+                alert(message[0]);
+                result = false;
+            }
+        }
+    });
+
+    return result;
+}
+
+function loginValidation(form) {
+    if(form.email.value == '') {
+        alert('이메일 : 필수 입력입니다.');
+        form.email.focus();
+        return false;
+    }
+
+    if(form.password.value == '') {
+        alert('비밀번호 : 필수 입력입니다.');
+        form.password.focus();
+        return false;
+    }
+
+    if(checkExistData('email', form.email.value) == false) {
+        alert('가입되지 않은 이메일입니다. 확인 후 다시 입력해 주세요.');
+        form.email.focus();
+        return false;
+    }
+
+    return true;
+}
+</script>
 @endsection

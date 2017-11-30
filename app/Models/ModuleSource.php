@@ -12,8 +12,6 @@ class ModuleSource
     // 모듈 목록
     public function getIndexParams($request)
     {
-        Artisan::call('migrate');
-        
         $keyword = $request->filled('keyword') ? strtolower($request->keyword) : '';
         $use = $request->filled('use') ? $request->use : '';
         $enableModules = Module::enabled();

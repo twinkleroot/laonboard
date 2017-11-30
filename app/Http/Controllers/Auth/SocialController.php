@@ -9,13 +9,13 @@ use GuzzleHttp\Exception\ClientException;
 use Carbon\Carbon;
 use App\Models\SocialLogin;
 use App\Models\User;
+use App\Models\Config;
 use Socialite;
 use Auth;
 
 class SocialController extends Controller
 {
     public $request;
-    public $config;
     public $userModel;
     public $socialModel;
 

@@ -280,16 +280,6 @@ class UsersController extends Controller
         return alertClose('메일을 정상적으로 발송하였습니다.');
     }
 
-    // ajax - form validation
-    public function existData(Request $request)
-    {
-        // 해당 키와 값에 해당하는 사용자가 있는지 검사
-        if(User::where($request->key, $request->value)->first()) {
-            return ['result' => true];
-        }
-        return ['result' => false];
-    }
-
     // ajax - 닉네임이 금지단어와 같은지 검사
     public function userFilter(Request $request)
     {
