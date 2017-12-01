@@ -68,7 +68,7 @@ class CommentsEventListener
         }
     }
 
-    public function updateComment(\App\Models\Events\UpdateComment $event)
+    public function updateComment(\App\Events\UpdateComment $event)
     {
         // 글 내용 검사
         if( !checkIncorrectContent($event->request) ) {
