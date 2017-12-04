@@ -76,14 +76,14 @@ class AddVisitStatusListener
             $visitSums = VisitSum::all();
             // 오늘
             $visitToday = $visitSums->where('date', $todayDate)->first();
-            $todayCount = $visitToday ? $visitToday->count : 0;
+            $todayCount = number_format($visitToday ? $visitToday->count : 0);
             // 어제
             $visitYesterday = $visitSums->where('date', $yesterdayDate)->first();
-            $yesterdayCount = $visitYesterday ? $visitYesterday->count : 0;
+            $yesterdayCount = number_format($visitYesterday ? $visitYesterday->count : 0);
             // 최대
-            $visitMax = $visitSums->max('count');
+            $visitMax = number_format($visitSums->max('count'));
             // 전체
-            $visitTotal = $visitSums->sum('count');
+            $visitTotal = number_format($visitSums->sum('count'));
 
             $params = compact(
                 "todayCount", "yesterdayCount", "visitMax", "visitTotal"
