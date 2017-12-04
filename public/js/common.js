@@ -28,7 +28,6 @@ function writeSubmit(useEditor, htmlUsable) {
     var subject = "";
     var content = "";
     var contentData = "";
-    alert(useEditor, htmlUsable)
     if(useEditor == 1 && htmlUsable == 1) {
         contentData = tinymce.get('content').getContent();
     } else {
