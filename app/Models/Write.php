@@ -202,7 +202,8 @@ class Write extends Model implements WriteInterface
         if($kind != '' && $keyword != '') {
             if($kind == 'user_id') {
                 // 암호화된 user_id를 복호화해서 검색한다.
-                $userId = User::where('id_hashkey', $keyword)->first()->id;
+                $user = User::where('id_hashkey', $keyword)->first();
+                $userId = $user ? User::where('id_hashkey', $keyword)->first()->id : -1;
                 $query = $query->where('user_id', $userId);
             } else if(str_contains($kind, '||')) { // 제목 + 내용으로 검색
                 $kinds = explode('||', preg_replace("/\s+/", "", $kind));
