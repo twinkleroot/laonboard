@@ -11,6 +11,62 @@ $(function() {
 var errmsg = "";
 var errfld = null;
 
+function htmlAutoBr(obj) {
+    if (obj.checked) {
+        var result = confirm("자동 줄바꿈을 하시겠습니까?\n\n자동 줄바꿈은 게시물 내용중 줄바뀐 곳을<br>태그로 변환하는 기능입니다.");
+        if (result) {
+            obj.value = "html2";
+        } else {
+            obj.value = "html1";
+        }
+    } else {
+        obj.value = "";
+    }
+}
+
+function writeSubmit(useEditor, htmlUsable) {
+    var subject = "";
+    var content = "";
+    var contentData = "";
+    alert(useEditor, htmlUsable)
+    if(useEditor == 1 && htmlUsable == 1) {
+        contentData = tinymce.get('content').getContent();
+    } else {
+        contentData = $('#content').val();
+    }
+
+    $.ajax({
+        url: '/ajax/filter/board',
+        type: 'post',
+        data: {
+            '_token' : window.Laravel.csrfToken,
+            'subject' : $('#subject').val(),
+            'content' : contentData
+        },
+        dataType: 'json',
+        async: false,
+        cache: false,
+        success: function(data) {
+            subject = data.subject;
+            content = data.content;
+        }
+    });
+
+    if(subject) {
+        alert("제목에 금지단어 (" + subject + ") 가 포함되어 있습니다.");
+        $('#subject').focus();
+        return false;
+    }
+
+    if(content) {
+        alert("내용에 금지단어 (" + content + ") 가 포함되어 있습니다.");
+        tinymce.get('content').focus();
+        return false;
+    }
+
+    return true;
+}
+
 // 닉네임 금지어 검사
 function filterNickname()
 {

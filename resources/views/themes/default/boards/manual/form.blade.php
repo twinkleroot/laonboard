@@ -8,11 +8,7 @@
 @endsection
 
 @section('include_script')
-@if(isMobile())
-<script src="https://cloud.tinymce.com/dev/tinymce.min.js"></script>
-@else
-<script src="{{ ver_asset('tinymce/tinymce.min.js') }}"></script>
-@endif
+    @include("common.tinymce")
 @endsection
 
 @section('content')
@@ -22,12 +18,18 @@
         alert("{{ $errors->first() }}");
     </script>
 @endif
+
+@php
+    $useEditor = $board->use_dhtml_editor;
+    $htmlUsable = $userLevel >= $board->html_level ? 1 : 0;
+@endphp
+
 @if($type=='update')
-    <form role="form" id="fwrite" method="post" action={{ route('board.update', ['boardId'=>$board->table_name, 'writeId'=>$write->id]) }} enctype="multipart/form-data" @if(auth()->user() && auth()->user()->isBoardAdmin($board)) onsubmit="return writeSubmit();" @endif>
+    <form role="form" id="fwrite" method="post" action={{ route('board.update', ['boardId'=>$board->table_name, 'writeId'=>$write->id]) }} enctype="multipart/form-data" @if(auth()->user() && auth()->user()->isBoardAdmin($board)) onsubmit="return writeSubmit('{{ $useEditor }}', '{{ $htmlUsable }}');" @endif>
         <input type="hidden" name="queryString" id="queryString" value="{{ Request::getQueryString() }}" />
         {{ method_field('put') }}
 @else
-    <form role="form" id="fwrite" method="post" action={{ route('board.store', $board->table_name) }} enctype="multipart/form-data" @if(auth()->guest() || !auth()->user()->isBoardAdmin($board)) onsubmit="return writeSubmit();" @endif>
+    <form role="form" id="fwrite" method="post" action={{ route('board.store', $board->table_name) }} enctype="multipart/form-data" @if(auth()->guest() || !auth()->user()->isBoardAdmin($board)) onsubmit="return writeSubmit('{{ $useEditor }}', '{{ $htmlUsable }}');" @endif>
 @endif
     <input type="hidden" name="type" id="type" value="{{ $type }}" />
     <input type="hidden" name="writeId" id="writeId" @if($type != 'create') value="{{ $write->id }}" @endif/>
@@ -268,104 +270,8 @@
 </form>
 
 </div>
+
 <script>
-function writeSubmit() {
-    var subject = "";
-    var content = "";
-    var contentData = "";
-    var useEditor = {{ $board->use_dhtml_editor }};
-    var htmlUsable = {{ $userLevel >= $board->html_level ? 1 : 0 }};
-    if(useEditor == 1 && htmlUsable == 1) {
-        contentData = tinymce.get('content').getContent();
-    } else {
-        contentData = $('#content').val();
-    }
-
-    $.ajax({
-        url: '/ajax/filter/board',
-        type: 'post',
-        data: {
-            '_token' : '{{ csrf_token() }}',
-            'subject' : $('#subject').val(),
-            'content' : contentData
-        },
-        dataType: 'json',
-        async: false,
-        cache: false,
-        success: function(data) {
-            subject = data.subject;
-            content = data.content;
-        }
-    });
-
-    if(subject) {
-        alert("제목에 금지단어 (" + subject + ") 가 포함되어 있습니다.");
-        $('#subject').focus();
-        return false;
-    }
-
-    if(content) {
-        alert("내용에 금지단어 (" + content + ") 가 포함되어 있습니다.");
-        tinymce.get('content').focus();
-        return false;
-    }
-
-    return true;
-}
-
-tinymce.init({
-    selector: '.editorArea',
-    language: 'ko_KR',
-    branding: false,
-    theme: "modern",
-    mobile: {
-        theme: 'beta-mobile',
-        plugins: ['autosave', 'lists'],
-        toolbar: [ 'undo', 'redo', 'fontsizeselect', 'forecolor', 'bold', 'italic', 'underline', 'bullist', 'numlist', 'removeformat' ]
-    },
-    skin: "lightgray",
-    height: 400,
-    min_height: 400,
-    min_width: 400,
-    plugins: [
-        'advlist autolink lists link charmap print preview anchor textcolor',
-        'searchreplace visualblocks code fullscreen',
-        'insertdatetime table contextmenu paste code help'
-    ],
-    menubar: false,
-    toolbar1: "insert | formatselect fontselect fontsizeselect | forecolor backcolor bold italic underline removeformat | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
-    toolbar2: "undo redo | customImage table code | preview fullscreen print | help",
-    fontsize_formats: "8pt 10pt 12pt 14pt 18pt 24pt 36pt",
-    font_formats : "굴림=굴림;굴림체=굴림체;궁서=궁서;궁서체=궁서체;돋움=돋움;돋움체=돋움체;바탕=바탕;바탕체=바탕체;나눔고딕=나눔고딕;맑은고딕='맑은 고딕';"
-    +"Arial=Arial;Comic Sans MS='Comic Sans MS';Courier New='Courier New';Tahoma=Tahoma;Times New Roman='Times New Roman';Verdana=Verdana",
-    relative_urls: false,
-    setup: function(editor) {
-        editor.on('init', function() {
-            this.getDoc().body.style.fontSize = '10pt';
-            this.getDoc().body.style.fontFamily = '굴림체';
-        });
-        editor.addButton('customImage', {
-            text: '사진',
-            icon: 'image',
-            onclick: function () {
-                window.open('{{ route('image.form') }}','tinymcePop','width=640, height=480');
-            }
-        });
-    }
-});
-
-function htmlAutoBr(obj) {
-    if (obj.checked) {
-        var result = confirm("자동 줄바꿈을 하시겠습니까?\n\n자동 줄바꿈은 게시물 내용중 줄바뀐 곳을<br>태그로 변환하는 기능입니다.");
-        if (result)
-            obj.value = "html2";
-        else
-            obj.value = "html1";
-    } else {
-        obj.value = "";
-    }
-}
-
 $(function() {
     $(".link").click(function(){
         $(".link_list").toggle();
