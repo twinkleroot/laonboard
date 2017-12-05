@@ -110,10 +110,18 @@
 {{ $writes->appends(Request::except('page'))->withPath('/inform')->links() }}
 
 <script>
+// 전체선택 (하나라도 선택되어 있으면 전체 선택으로, 전체 선택 되어 있을때만 전체 해제로)
 function checkEverything() {
-    var chk = document.getElementsByName("chkId[]");
-    for (i=0; i<chk.length; i++) {
-        chk[i].checked = (chk[i].checked == true ? false : true);
+    var checked = [];
+    $("input[name='chkId[]']:checked").each(function ()
+    {
+        checked.push($(this).val());
+    });
+
+    if(checked.length == $("input[name='chkId[]']").length) {
+        $("input[name='chkId[]']").prop("checked", false);
+    } else {
+        $("input[name='chkId[]']").prop("checked", true);
     }
 }
 
