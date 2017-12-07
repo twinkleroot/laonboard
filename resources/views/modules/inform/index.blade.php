@@ -41,8 +41,8 @@
     <div class="pull-left bd_btn">
         <ul>
             <li><button type="button" class="btn btn-default" onclick="checkEverything()">전체선택</button></li>
-            <li><button type="button" class="btn btn-default" id="selectedDelete">선택삭제</button></li>
-            <li><button type="button" class="btn btn-default" id="selectedMark">읽음표시</button></li>
+            <li><button type="button" class="btn btn-default selectedDelete">선택삭제</button></li>
+            <li><button type="button" class="btn btn-default selectedMark">읽음표시</button></li>
         </ul>
     </div>
     <div class="bd_btn">
@@ -99,8 +99,8 @@
     <div class="pull-left bd_btn">
         <ul>
             <li><button type="button" class="btn btn-default" onclick="checkEverything()">전체선택</button></li>
-            <li><button type="button" class="btn btn-default" id="selectedDelete">선택삭제</button></li>
-            <li><button type="button" class="btn btn-default" id="selectedMark">읽음표시</button></li>
+            <li><button type="button" class="btn btn-default selectedDelete">선택삭제</button></li>
+            <li><button type="button" class="btn btn-default selectedMark">읽음표시</button></li>
         </ul>
     </div>
     </form>
@@ -147,7 +147,7 @@ function markAsRead(aTag, id) {
 
 $(function(){
     // 선택 후 읽음 표시
-    $('#selectedMark').click(function(){
+    $(".selectedMark").click(function(){
         var ids = selectIdsByCheckBox('.informId');
         if(ids.length == 0) {
             alert('읽음표시할 게시물을 한 개 이상 선택하세요.')
@@ -159,7 +159,7 @@ $(function(){
     });
 
     // 선택 삭제
-    $('#selectedDelete').click(function(){
+    $(".selectedDelete").click(function(){
         var ids = selectIdsByCheckBox('.informId');
         if(ids.length == 0) {
             alert('삭제할 게시물을 한 개 이상 선택하세요.')
