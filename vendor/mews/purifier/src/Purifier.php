@@ -75,19 +75,19 @@ class Purifier
         }
 
         $config->loadArray($this->getConfig());
-        
+
         // Load custom definition if set
         if ($definitionConfig = $this->config->get('purifier.settings.custom_definition')) {
 	        $this->addCustomDefinition($definitionConfig, $config);
         }
-        
+
         // Load custom elements if set
         if ($elements = $this->config->get('purifier.settings.custom_elements')) {
 	        if ($def = $config->maybeGetRawHTMLDefinition()) {
 		        $this->addCustomElements($elements, $def);
 	        }
         }
-        
+
         // Load custom attributes if set
         if ($attributes = $this->config->get('purifier.settings.custom_attributes')) {
 	        if ($def = $config->maybeGetRawHTMLDefinition()) {
@@ -98,14 +98,14 @@ class Purifier
         // Create HTMLPurifier object
         $this->purifier = new HTMLPurifier($this->configure($config));
     }
-    
+
     /**
 	 * Add a custom definition
 	 *
 	 * @see http://htmlpurifier.org/docs/enduser-customize.html
 	 * @param array $definitionConfig
 	 * @param HTML_Purifier_Config $configObject Defaults to using default config
-	 * 
+	 *
 	 * @return HTML_Purifier_Config $configObject
 	 */
 	private function addCustomDefinition(array $definitionConfig, $configObject = null)
@@ -114,38 +114,38 @@ class Purifier
 			$configObject = HTMLPurifier_Config::createDefault();
 			$configObject->loadArray($this->getConfig());
 		}
-		
+
 		// Setup the custom definition
 		$configObject->set('HTML.DefinitionID', $definitionConfig['id']);
 		$configObject->set('HTML.DefinitionRev', $definitionConfig['rev']);
-		
+
 		// Enable debug mode
 		if (!isset($definitionConfig['debug']) || $definitionConfig['debug']) {
 			$configObject->set('Cache.DefinitionImpl', null);
 		}
-		
+
 		// Start configuring the definition
 		if ($def = $configObject->maybeGetRawHTMLDefinition()) {
 			// Create the definition attributes
 			if (!empty($definitionConfig['attributes'])) {
 				$this->addCustomAttributes($definitionConfig['attributes'], $def);
 			}
-			
+
 			// Create the definition elements
 			if (!empty($definitionConfig['elements'])) {
 				$this->addCustomElements($definitionConfig['elements'], $def);
 			}
 		}
-		
+
 		return $configObject;
 	}
-	
+
 	/**
 	 * Add provided attributes to the provided definition
 	 *
 	 * @param array $attributes
 	 * @param HTMLPurifier_HTMLDefinition $definition
-	 * 
+	 *
 	 * @return HTMLPurifier_HTMLDefinition $definition
 	 */
 	private function addCustomAttributes(array $attributes, $definition)
@@ -156,19 +156,19 @@ class Purifier
 			$onElement = $attribute[0];
 			$attrName = $required ? $attribute[1] . '*' : $attribute[1];
 			$validValues = $attribute[2];
-			
+
 			$definition->addAttribute($onElement, $attrName, $validValues);
 		}
-		
+
 		return $definition;
 	}
-	
+
 	/**
 	 * Add provided elements to the provided definition
 	 *
 	 * @param array $elements
 	 * @param HTMLPurifier_HTMLDefinition $definition
-	 * 
+	 *
 	 * @return HTMLPurifier_HTMLDefinition $definition
 	 */
 	private function addCustomElements(array $elements, $definition)
@@ -180,7 +180,7 @@ class Purifier
 			$allowedChildren = $element[2];
 			$attributeCollection = $element[3];
 			$attributes = isset($element[4]) ? $element[4] : null;
-			
+
 			if (!empty($attributes)) {
 				$definition->addElement($name, $contentSet, $allowedChildren, $attributeCollection, $attributes);
 			} else {
@@ -205,7 +205,7 @@ class Purifier
 
     /**
      * @param HTMLPurifier_Config $config
-     * 
+     *
      * @return HTMLPurifier_Config
      */
     protected function configure(HTMLPurifier_Config $config)
@@ -215,7 +215,7 @@ class Purifier
 
     /**
      * @param null $config
-     * 
+     *
      * @return mixed|null
      */
     protected function getConfig($config = null)
@@ -243,7 +243,7 @@ class Purifier
     /**
      * @param      $dirty
      * @param null $config
-     * 
+     *
      * @return mixed
      */
     public function clean($dirty, $config = null)

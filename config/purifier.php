@@ -24,10 +24,12 @@ return [
     'settings'      => [
         'default' => [
             'HTML.Doctype'             => 'HTML 4.01 Transitional',
-            'HTML.Allowed'             => 'a[target|href|title|class], h1[class],h2[class],h3[class],h4[class],h5[class],div[class],b,strong,i,em,u,ul,ol,li,p[align|style|class],br,span[style|class],img[width|height|alt|src|class]',
+            'HTML.Allowed'             => 'a[href|title], h1[class],h2[class],h3[class],h4[class],h5[class],div[class],b,strong,i,em,u,ul,ol,li,p[align|style|class],br,span[style|class],img[width|height|alt|src|class]',
             'CSS.AllowedProperties'    =>  'font,font-size,font-weight,font-style,font-family,text-decoration,padding-left,color,background-color,text-align',
             'AutoFormat.AutoParagraph' => true,
             'AutoFormat.RemoveEmpty'   => true,
+            'HTML.Nofollow' => true,
+            'HTML.TargetBlank' => true,
         ],
         'test'    => [
             'Attr.EnableID' => true,

@@ -831,8 +831,8 @@ if (! function_exists('urlAutoLink')) {
         $target = cache("config.board")->linkTarget;
 
         $str = str_replace(array("&lt;", "&gt;", "&amp;", "&quot;", "&nbsp;", "&#039;"), array("\t_lt_\t", "\t_gt_\t", "&", "\"", "\t_nbsp_\t", "'"), $str);
-        $str = preg_replace("/([^(href=\"?'?)|(src=\"?'?)]|\(|^)((http|https|ftp|telnet|news|mms):\/\/[a-zA-Z0-9\.-]+\.[가-힣\xA1-\xFEa-zA-Z0-9\.:&#!=_\?\/~\+%@;\-\|\,\(\)]+)/i", "\\1<a href=\"\\2\" target=\"$target\">\\2</a>", $str);
-        $str = preg_replace("/(^|[\"'\s(])?(www\.[^\"'\s()<]+)/i", "\\1<a href=\"http://\\2\" target=\"$target\">\\2</a>", $str);
+        $str = preg_replace("/([^(href=\"?'?)|(src=\"?'?)]|\(|^)((http|https|ftp|telnet|news|mms):\/\/[a-zA-Z0-9\.-]+\.[가-힣\xA1-\xFEa-zA-Z0-9\.:&#!=_\?\/~\+%@;\-\|\,\(\)]+)/i", "\\1<a href=\"\\2\" target=\"$target\" rel=\"nofollow\">\\2</a>", $str);
+        $str = preg_replace("/(^|[\"'\s(])?(www\.[^\"'\s()<]+)/i", "\\1<a href=\"http://\\2\" target=\"$target\" rel=\"nofollow\">\\2</a>", $str);
         $str = preg_replace("/[0-9a-z_-]+@[a-z0-9._-]{4,}/i", "<a href=\"mailto:\\0\">\\0</a>", $str);
         $str = str_replace(array("\t_nbsp_\t", "\t_lt_\t", "\t_gt_\t", "'"), array("&nbsp;", "&lt;", "&gt;", "&#039;"), $str);
 
