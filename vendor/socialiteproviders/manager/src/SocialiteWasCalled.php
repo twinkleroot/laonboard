@@ -13,23 +13,27 @@ class SocialiteWasCalled
     const SERVICE_CONTAINER_PREFIX = 'SocialiteProviders.config.';
 
     /**
-     * @var LaravelApp
+     * @var \Illuminate\Container\Container
      */
     protected $app;
 
     /**
-     * @var ConfigRetrieverInterface
+     * @var \SocialiteProviders\Manager\Contracts\Helpers\ConfigRetrieverInterface
      */
     private $configRetriever;
 
     /**
      * @var bool
      */
-    public static $spoofedConfig = false;
+    private $spoofedConfig = [
+        'client_id' => 'spoofed_client_id',
+        'client_secret' => 'spoofed_client_secret',
+        'redirect' => 'spoofed_redirect',
+    ];
 
     /**
-     * @param LaravelApp               $app
-     * @param ConfigRetrieverInterface $configRetriever
+     * @param \Illuminate\Container\Container $app
+     * @param \SocialiteProviders\Manager\Contracts\Helpers\ConfigRetrieverInterface $configRetriever
      */
     public function __construct(Application $app, ConfigRetrieverInterface $configRetriever)
     {
@@ -44,7 +48,7 @@ class SocialiteWasCalled
      *                              Laravel\Socialite\One\AbstractProvider
      * @param string $oauth1Server  'Your\Name\Space\ClassNameServer' must extend League\OAuth1\Client\Server\Server
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function extendSocialite($providerName, $providerClass, $oauth1Server = null)
     {
@@ -71,7 +75,7 @@ class SocialiteWasCalled
     }
 
     /**
-     * @param SocialiteManager $socialite
+     * @param \Laravel\Socialite\SocialiteManager $socialite
      * @param                  $providerName
      * @param string           $providerClass
      * @param null|string      $oauth1Server
@@ -139,41 +143,43 @@ class SocialiteWasCalled
      * @param string $providerClass
      * @param string $providerName
      *
-     * @throws MissingConfigException
+     * @throws \SocialiteProviders\Manager\Exception\MissingConfigException
      *
      * @return array
      */
     protected function getConfig($providerClass, $providerName)
     {
-        $config = null;
         $additionalConfigKeys = $providerClass::additionalConfigKeys();
         $exceptionMessages = [];
+
+        // Environment Configuration
+        $config = null;
         try {
             $config = $this->configRetriever->fromEnv($providerClass::IDENTIFIER, $additionalConfigKeys);
 
-            // We will use the $spoofedConfig variable for now as a way to find out if there was no
-            // configuration in the .env file which means we should not return anything and jump
-            // to the service config check to check if something can be found there.
-            if (! static::$spoofedConfig) {
-                return $config;
-            }
-        } catch (MissingConfigException $e) {
-            $exceptionMessages[] = $e->getMessage();
-        }
-
-        $config = null;
-        try {
-            $config = $this->configRetriever->fromServices($providerName, $additionalConfigKeys);
-
-            // Here we don't need to check for the $spoofedConfig variable because this will be
-            // the end of checking for config and should contain either the proper data or an
-            // array containing spoofed values.
             return $config;
         } catch (MissingConfigException $e) {
             $exceptionMessages[] = $e->getMessage();
         }
 
-        throw new MissingConfigException(implode(PHP_EOL, $exceptionMessages));
+        // Services Configuration
+        $config = null;
+        try {
+            $config = $this->configRetriever->fromServices($providerName, $additionalConfigKeys);
+
+            return $config;
+        } catch (MissingConfigException $e) {
+            $exceptionMessages[] = $e->getMessage();
+        }
+
+        // Spoofed Configuration
+        return new Config(
+            $this->spoofedConfig['client_id'],
+            $this->spoofedConfig['client_secret'],
+            $this->spoofedConfig['redirect']
+        );
+
+        // throw new MissingConfigException(implode(PHP_EOL, $exceptionMessages));
     }
 
     /**
@@ -192,7 +198,7 @@ class SocialiteWasCalled
      * @param string $class
      * @param string $baseClass
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     private function classExtends($class, $baseClass)
     {
@@ -202,6 +208,10 @@ class SocialiteWasCalled
         }
     }
 
+    /**
+     * @param  string $providerClass
+     * @throws \InvalidArgumentException
+     */
     private function classExists($providerClass)
     {
         if (! class_exists($providerClass)) {

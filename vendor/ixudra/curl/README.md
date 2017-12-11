@@ -301,7 +301,7 @@ Alternatively, you can use the `withHeaders()` to combine multiple headers into 
 
 ### Specifying the content type
 
-Sending custom headers is easy with the `withcontentType()` method. Multiple calls can be chained together to add multiple headers to the request:
+Sending custom headers is easy with the `withContentType()` method. Multiple calls can be chained together to add multiple headers to the request:
 
 ```php
 
@@ -310,6 +310,30 @@ Sending custom headers is easy with the `withcontentType()` method. Multiple cal
     // Send a GET request to: http://www.foo.com/bar with a json content type
     $response = Curl::to('http://foo.com/bar')
         ->withContentType('application/json')
+        ->get();
+
+```
+
+
+### Using proxies
+
+If you need to send your requests via a proxy, you can use the 'withProxy()' method. The method takes five parameters:
+
+- proxy url (required)
+- port (optional)
+- type of proxy scheme (optional, e.g. `http://`, `https://`, ...)
+- username (optional)
+- password (optional)
+
+Optional parameters will be ignored if not filled in.
+
+```php
+
+    use Ixudra\Curl\Facades\Curl;
+
+    // Send a GET request to: http://www.foo.com/bar with a json content type
+    $response = Curl::to('http://foo.com/bar')
+        ->withProxy('192.168.1.1', 80, 'http://', 'Foo', 'Bar')
         ->get();
 
 ```
@@ -383,6 +407,42 @@ The response object will look like this:
    "error": "Error message goes here (Only added if an error occurs)"
 }
 ```
+
+### Response headers
+
+In some cases it might be relevant to return the response headers back to the user. This can easily be done using the `withResponseHeaders()` method.
+
+```php
+
+    use Ixudra\Curl\Facades\Curl;
+
+    // Send a GET request to http://www.foo.com/bar and return a response object with additional information including response headers
+    $response = Curl::to('http://www.foo.com/bar')
+        ->withResponseHeaders()
+        ->returnResponseObject()
+        ->get();
+            
+    $content = $response->content;
+    $headers = $response->headers;
+
+```
+
+The response object will look like this:
+
+```json
+{
+    "content": "Message content here",
+    "status": 200,
+    "contentType": "content-type response header (ex: application/json)",
+    "error": "Error message goes here (Only added if an error occurs)",
+    "headers": {
+        "header-type-1": "header-content-1",
+        "header-type-2": "header-content-2"
+    }
+}
+```
+
+It is important to note that the `withResponseHeaders()` method must be used in conjunction with the `returnResponseObject()` method in order to see the returned headers
 
 
 ### Debugging requests

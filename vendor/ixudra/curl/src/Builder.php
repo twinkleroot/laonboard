@@ -20,6 +20,7 @@ class Builder {
         'POST'                  => false,
         'HTTPHEADER'            => array(),
         'SSL_VERIFYPEER'        => false,
+        'HEADER'                => false,
     );
 
     /** @var array $packageOptions      Array with options that are not specific to cURL but are used by the package */
@@ -252,6 +253,16 @@ class Builder {
     }
 
     /**
+     * Add response headers to the response object or response array
+     *
+     * @return Builder
+     */
+    public function withResponseHeaders()
+    {
+        return $this->withCurlOption( 'HEADER', TRUE );
+    }
+
+    /**
      * Return a full response object with HTTP status and headers instead of only the content
      *
      * @return Builder
@@ -282,6 +293,35 @@ class Builder {
         return $this->withPackageOption( 'enableDebug', true )
             ->withPackageOption( 'debugFile', $logFile )
             ->withOption( 'VERBOSE', true );
+    }
+
+    /**
+     * Enable Proxy for the cURL request
+     *
+     * @param   string $proxy       Hostname
+     * @param   string $port        Port to be used
+     * @param   string $type        Scheme to be used by the proxy
+     * @param   string $username    Authentication username
+     * @param   string $password    Authentication password
+     * @return Builder
+     */
+    public function withProxy($proxy, $port = '', $type = '', $username = '', $password = '')
+    {
+        $this->withOption( 'PROXY', $proxy );
+
+        if( !empty($port) ) {
+            $this->withOption( 'PROXYPORT', $port );
+        }
+
+        if( !empty($type) ) {
+            $this->withOption( 'PROXYTYPE', $type );
+        }
+
+        if( !empty($username) && !empty($password) ) {
+            $this->withOption( 'PROXYUSERPWD', $username .':'. $password );
+        }
+
+        return $this;
     }
 
     /**
@@ -445,6 +485,13 @@ class Builder {
         // Send the request
         $response = curl_exec( $this->curlObject );
 
+        $responseHeader = null;
+        if( $this->curlOptions[ 'HEADER' ] ) {
+            $headerSize = curl_getinfo( $this->curlObject, CURLINFO_HEADER_SIZE );
+            $responseHeader = substr( $response, 0, $headerSize );
+            $response = substr( $response, $headerSize );
+        }
+
         // Capture additional request information if needed
         $responseData = array();
         if( $this->packageOptions[ 'responseObject' ] || $this->packageOptions[ 'responseArray' ] ) {
@@ -472,15 +519,32 @@ class Builder {
         }
 
         // Return the result
-        return $this->returnResponse( $response, $responseData );
+        return $this->returnResponse( $response, $responseData, $responseHeader );
+    }
+
+    /**
+     * @param   string $headerString    Response header string
+     * @return mixed
+     */
+    protected function parseHeaders($headerString)
+    {
+        $headers = array_filter(array_map(function ($x) {
+            $arr = array_map('trim', explode(':', $x, 2));
+            if( count($arr) == 2 ) {
+                return [ $arr[ 0 ] => $arr[ 1 ] ];
+            }
+        }, array_filter(array_map('trim', explode("\r\n", $headerString)))));
+
+        return array_collapse($headers);
     }
 
     /**
      * @param   mixed $content          Content of the request
      * @param   array $responseData     Additional response information
+     * @param   string $header          Response header string
      * @return mixed
      */
-    protected function returnResponse($content, array $responseData = array())
+    protected function returnResponse($content, array $responseData = array(), $header = null)
     {
         if( !$this->packageOptions[ 'responseObject' ] && !$this->packageOptions[ 'responseArray' ] ) {
             return $content;
@@ -492,6 +556,10 @@ class Builder {
         $object->contentType = $responseData[ 'content_type' ];
         if( array_key_exists('errorMessage', $responseData) ) {
             $object->error = $responseData[ 'errorMessage' ];
+        }
+
+        if( $this->curlOptions[ 'HEADER' ] ) {
+            $object->headers = $this->parseHeaders( $header );
         }
 
         if( $this->packageOptions[ 'responseObject' ] ) {

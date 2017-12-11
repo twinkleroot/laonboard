@@ -3,11 +3,9 @@
 namespace Laravel\Socialite\Two;
 
 use Illuminate\Support\Arr;
-use SocialiteProviders\Manager\ConfigTrait;
 
 class GoogleProvider extends AbstractProvider implements ProviderInterface
 {
-    use ConfigTrait;
     /**
      * The separating character for the requested scopes.
      *

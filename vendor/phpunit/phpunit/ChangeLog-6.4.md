@@ -2,6 +2,20 @@
 
 All notable changes of the PHPUnit 6.4 release series are documented in this file using the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
+## [6.4.5] - 2017-MM-DD
+
+### Fixed
+
+* Fixed [#2833](https://github.com/sebastianbergmann/phpunit/issues/2833): Test class loaded during data provider execution is not discovered
+* Fixed [#2867](https://github.com/sebastianbergmann/phpunit/issues/2867): Regression introduced by fix for [#2693](https://github.com/sebastianbergmann/phpunit/issues/2693)
+
+## [6.4.4] - 2017-11-08
+
+### Fixed
+
+* Fixed [#2814](https://github.com/sebastianbergmann/phpunit/pull/2814): Incorrect signature of `expectExceptionObject()`
+* Fixed [#2844](https://github.com/sebastianbergmann/phpunit/issues/2844): The commandline option `--whitelist` has no effect
+
 ## [6.4.3] - 2017-10-16
 
 ### Fixed
@@ -44,6 +58,8 @@ All notable changes of the PHPUnit 6.4 release series are documented in this fil
 
 * Fixed [#2750](https://github.com/sebastianbergmann/phpunit/issues/2750): Useless call to `array_map()`
 
+[6.4.5]: https://github.com/sebastianbergmann/phpunit/compare/6.4.4...6.4.5
+[6.4.4]: https://github.com/sebastianbergmann/phpunit/compare/6.4.3...6.4.4
 [6.4.3]: https://github.com/sebastianbergmann/phpunit/compare/6.4.2...6.4.3
 [6.4.2]: https://github.com/sebastianbergmann/phpunit/compare/6.4.1...6.4.2
 [6.4.1]: https://github.com/sebastianbergmann/phpunit/compare/6.4.0...6.4.1

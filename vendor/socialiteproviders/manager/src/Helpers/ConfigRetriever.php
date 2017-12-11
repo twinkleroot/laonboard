@@ -4,7 +4,6 @@ namespace SocialiteProviders\Manager\Helpers;
 
 use SocialiteProviders\Manager\Config;
 use SocialiteProviders\Manager\SocialiteWasCalled;
-use SocialiteProviders\Manager\Contracts\ConfigInterface;
 use SocialiteProviders\Manager\Exception\MissingConfigException;
 use SocialiteProviders\Manager\Contracts\Helpers\ConfigRetrieverInterface;
 
@@ -34,9 +33,9 @@ class ConfigRetriever implements ConfigRetrieverInterface
      * @param string $providerIdentifier
      * @param array  $additionalConfigKeys
      *
-     * @throws MissingConfigException
+     * @throws \SocialiteProviders\Manager\Exception\MissingConfigException
      *
-     * @return ConfigInterface
+     * @return \SocialiteProviders\Manager\Contracts\ConfigInterface
      */
     public function fromEnv($providerIdentifier, array $additionalConfigKeys = [])
     {
@@ -56,9 +55,9 @@ class ConfigRetriever implements ConfigRetrieverInterface
      * @param string $providerName
      * @param array  $additionalConfigKeys
      *
-     * @throws MissingConfigException
+     * @throws \SocialiteProviders\Manager\Exception\MissingConfigException
      *
-     * @return ConfigInterface
+     * @return \SocialiteProviders\Manager\Contracts\ConfigInterface
      */
     public function fromServices($providerName, array $additionalConfigKeys = [])
     {
@@ -111,7 +110,7 @@ class ConfigRetriever implements ConfigRetrieverInterface
     /**
      * @param string $key
      *
-     * @throws MissingConfigException
+     * @throws \SocialiteProviders\Manager\Exception\MissingConfigException
      *
      * @return string
      */
@@ -135,7 +134,7 @@ class ConfigRetriever implements ConfigRetrieverInterface
     /**
      * @param string $key
      *
-     * @throws MissingConfigException
+     * @throws \SocialiteProviders\Manager\Exception\MissingConfigException
      *
      * @return string
      */
@@ -166,7 +165,7 @@ class ConfigRetriever implements ConfigRetrieverInterface
     /**
      * @param string $providerName
      *
-     * @throws MissingConfigException
+     * @throws \SocialiteProviders\Manager\Exception\MissingConfigException
      *
      * @return array
      */

@@ -1,19 +1,21 @@
 {
-  "name": "nwidart/laravel-modules",
-  "description": "Laravel Module management",
+  "name": "twinkleroot/laravel-modules",
+  "description": "add Laravel Module management(nwidart/laravel-modules vendor)",
   "keywords": [
     "modules",
     "laravel",
     "nwidart",
     "module",
-    "rad"
+    "rad",
+    "laonboard",
+    "twinkleroot"
   ],
   "license": "MIT",
   "authors": [
     {
-      "name": "Nicolas Widart",
-      "email": "n.widart@gmail.com",
-      "homepage": "https://nicolaswidart.com",
+      "name": "Twinkle Ahn",
+      "email": "lalala13@sir.kr",
+      "homepage": "http://laonboard.com",
       "role": "Developer"
     }
   ],

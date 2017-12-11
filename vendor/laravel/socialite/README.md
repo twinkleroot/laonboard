@@ -48,6 +48,7 @@ Also, add the `Socialite` facade to the `aliases` array in your `app` configurat
 ```
 
 You will also need to add credentials for the OAuth services your application utilizes. These credentials should be placed in your `config/services.php` configuration file, and should use the key `facebook`, `twitter`, `linkedin`, `google`, `github` or `bitbucket`, depending on the providers your application requires. For example:
+
 ```php
 'github' => [
     'client_id' => 'your-github-app-id',
@@ -55,6 +56,9 @@ You will also need to add credentials for the OAuth services your application ut
     'redirect' => 'http://your-callback-url',
 ],
 ```
+
+If the `redirect` option contains a relative path, it will automatically be resolved to a fully qualified URL.
+
 ### Basic Usage
 
 Next, you are ready to authenticate users! You will need two routes: one for redirecting the user to the OAuth provider, and another for receiving the callback from the provider after authentication. We will access Socialite using the `Socialite` facade:
