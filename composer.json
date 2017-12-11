@@ -20,11 +20,11 @@
         "laravel/socialite": "^3.0",
         "laravel/tinker": "~1.0",
         "mews/purifier": "^2.0",
-        "twinkleroot/laravel-modules": "=2.6.1",
         "phpmailer/phpmailer": "^6.0",
         "predis/predis": "^1.1",
         "socialiteproviders/kakao": "^3.0",
-        "socialiteproviders/naver": "^3.0",
+        "twinkleroot/naver": "=v3.0.1",
+        "twinkleroot/laravel-modules": "=2.6.1",
         "suin/php-rss-writer": "^1.5"
     },
     "require-dev": {
