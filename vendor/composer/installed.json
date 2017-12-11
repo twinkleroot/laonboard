@@ -1211,45 +1211,6 @@
         ]
     },
     {
-        "name": "socialiteproviders/naver",
-        "version": "v3.0.0",
-        "version_normalized": "3.0.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/SocialiteProviders/Naver.git",
-            "reference": "a489331330d15b84a0b0633e2c447bab53359dee"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/SocialiteProviders/Naver/zipball/a489331330d15b84a0b0633e2c447bab53359dee",
-            "reference": "a489331330d15b84a0b0633e2c447bab53359dee",
-            "shasum": ""
-        },
-        "require": {
-            "php": "^5.6 || ^7.0",
-            "socialiteproviders/manager": "~3.0"
-        },
-        "time": "2017-01-25T09:48:29+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "SocialiteProviders\\Naver\\": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Doojin So",
-                "email": "sodoojin@gmail.com"
-            }
-        ],
-        "description": "Naver OAuth2 Provider for Laravel Socialite"
-    },
-    {
         "name": "guzzlehttp/psr7",
         "version": "1.4.2",
         "version_normalized": "1.4.2.0",
@@ -5949,5 +5910,46 @@
             "rad",
             "twinkleroot"
         ]
+    },
+    {
+        "name": "twinkleroot/social_naver",
+        "version": "v3.0.1",
+        "version_normalized": "3.0.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/twinkleroot/Naver.git",
+            "reference": "1cbd5c456ed30dd73b2065cb626bf4fd12b330d8"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/twinkleroot/Naver/zipball/1cbd5c456ed30dd73b2065cb626bf4fd12b330d8",
+            "reference": "1cbd5c456ed30dd73b2065cb626bf4fd12b330d8",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^5.6 || ^7.0",
+            "socialiteproviders/manager": "~2.0 || ~3.0"
+        },
+        "time": "2017-12-11T03:21:38+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "SocialiteProviders\\Naver\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Twinkle Ahn",
+                "email": "lalala13@sir.kr",
+                "homepage": "http://laonboard.com",
+                "role": "Developer"
+            }
+        ],
+        "description": "edit Naver OAuth2 Provider for Laravel Socialite"
     }
 ]

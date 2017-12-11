@@ -230,7 +230,7 @@ class ComposerStaticInit6035da8a4c706b3c0714125e47b3e467
         ),
         'SocialiteProviders\\Naver\\' => 
         array (
-            0 => __DIR__ . '/..' . '/socialiteproviders/naver',
+            0 => __DIR__ . '/..' . '/twinkleroot/social_naver',
         ),
         'SocialiteProviders\\Manager\\Test\\' => 
         array (

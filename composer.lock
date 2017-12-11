@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "326af3a2c43306a2c0639a5a7d8b8660",
+    "content-hash": "2ab5c490ce2e098607160623b8920b60",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -2965,43 +2965,6 @@
             "time": "2017-09-21T07:21:55+00:00"
         },
         {
-            "name": "socialiteproviders/naver",
-            "version": "v3.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/SocialiteProviders/Naver.git",
-                "reference": "a489331330d15b84a0b0633e2c447bab53359dee"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/SocialiteProviders/Naver/zipball/a489331330d15b84a0b0633e2c447bab53359dee",
-                "reference": "a489331330d15b84a0b0633e2c447bab53359dee",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^5.6 || ^7.0",
-                "socialiteproviders/manager": "~3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "SocialiteProviders\\Naver\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Doojin So",
-                    "email": "sodoojin@gmail.com"
-                }
-            ],
-            "description": "Naver OAuth2 Provider for Laravel Socialite",
-            "time": "2017-01-25T09:48:29+00:00"
-        },
-        {
             "name": "suin/php-rss-writer",
             "version": "1.6.0",
             "source": {
@@ -3970,6 +3933,45 @@
                 "twinkleroot"
             ],
             "time": "2017-12-11T00:50:13+00:00"
+        },
+        {
+            "name": "twinkleroot/social_naver",
+            "version": "v3.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/twinkleroot/Naver.git",
+                "reference": "1cbd5c456ed30dd73b2065cb626bf4fd12b330d8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/twinkleroot/Naver/zipball/1cbd5c456ed30dd73b2065cb626bf4fd12b330d8",
+                "reference": "1cbd5c456ed30dd73b2065cb626bf4fd12b330d8",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.6 || ^7.0",
+                "socialiteproviders/manager": "~2.0 || ~3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SocialiteProviders\\Naver\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Twinkle Ahn",
+                    "email": "lalala13@sir.kr",
+                    "homepage": "http://laonboard.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "edit Naver OAuth2 Provider for Laravel Socialite",
+            "time": "2017-12-11T03:21:38+00:00"
         },
         {
             "name": "vlucas/phpdotenv",

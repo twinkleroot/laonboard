@@ -25,7 +25,7 @@ return array(
     'Symfony\\Component\\CssSelector\\' => array($vendorDir . '/symfony/css-selector'),
     'Symfony\\Component\\Console\\' => array($vendorDir . '/symfony/console'),
     'Sven\\FlexEnv\\' => array($vendorDir . '/sven/flex-env/src'),
-    'SocialiteProviders\\Naver\\' => array($vendorDir . '/socialiteproviders/naver'),
+    'SocialiteProviders\\Naver\\' => array($vendorDir . '/twinkleroot/social_naver'),
     'SocialiteProviders\\Manager\\Test\\' => array($vendorDir . '/socialiteproviders/manager/tests'),
     'SocialiteProviders\\Manager\\' => array($vendorDir . '/socialiteproviders/manager/src'),
     'SocialiteProviders\\Kakao\\' => array($vendorDir . '/socialiteproviders/kakao'),
