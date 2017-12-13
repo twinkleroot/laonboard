@@ -31,7 +31,7 @@ trait AuthUsers
     {
         $referUrl = $request->server('HTTP_REFERER');
         $divUrl = explode('nextUrl=', $referUrl);
-        if(count($divUrl) > 1) {
+        if(notNullCount($divUrl) > 1) {
             $this->redirectTo = $divUrl[1];
         }
         $user = User::where('email', $request->email)->first();

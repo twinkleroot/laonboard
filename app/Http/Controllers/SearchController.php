@@ -151,7 +151,7 @@ class SearchController extends Controller
                     }
 
                     // 첫번째 검색필드 땐 operator에 따라 where 메소드 넣기, 나머진 orWhere()
-                    for($i=0; $i<count($kinds); $i++) {
+                    for($i=0; $i<notNullCount($kinds); $i++) {
                         $op = ($this->operator == 'or') ? 'or' : 'and';
                         switch ($kinds[$i]) {
                             case 'email':
@@ -191,7 +191,7 @@ class SearchController extends Controller
                 $writes = $this->recreateWrites($request, $writes, $board, $writeModel, $kinds, $keywords);
 
                 // 검색된 게시물이 있는 게시판만 결과물에 포함한다.
-                if(count($writes) > 0) {
+                if(notNullCount($writes) > 0) {
                     $result[$board->id] = $writes;
                 }
 
@@ -316,7 +316,7 @@ class SearchController extends Controller
         }
         $sliceWrites = $mergeWrites->slice($this->pageRow * ($this->page - 1), $this->pageRow);
 
-        $writes = new CustomPaginator($sliceWrites, count($mergeWrites), $this->pageRow, $this->page);
+        $writes = new CustomPaginator($sliceWrites, notNullCount($mergeWrites), $this->pageRow, $this->page);
         $writes->withPath('/search?'. $paginationQueryString);
 
         return $writes;

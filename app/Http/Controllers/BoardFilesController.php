@@ -44,8 +44,8 @@ class BoardFilesController extends Controller
         $extension = last($divImageNamesForExtension);
         // thumbnail일 경우
         $divImageNames = explode('_', $imageName);
-        if(count($divImageNames) > 1) {
-            if(count($divImageNames) == 2) {
+        if(notNullCount($divImageNames) > 1) {
+            if(notNullCount($divImageNames) == 2) {
                 $imageName = $divImageNames[0]. '.'. $extension;
             } else {
                 array_pop($divImageNames);

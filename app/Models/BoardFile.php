@@ -30,7 +30,7 @@ class BoardFile extends Model
     {
         $board = Board::getBoard($boardId);
         $files = $request->attach_file;
-        $fileCount = count($files);
+        $fileCount = notNullCount($files);
         if($fileCount > $board->upload_count) {
             abort(500, '첨부파일을 '.number_format($board->upload_count).'개 이하로 업로드 해주십시오.');
         } else {
@@ -51,11 +51,11 @@ class BoardFile extends Model
     {
         $board = Board::getBoard($boardId);
         $files = $request->attach_file;
-        $fileCount = count($files);
+        $fileCount = notNullCount($files);
         if($fileCount && $fileCount > $board->upload_count) {
             abort(500, '기존 파일을 삭제하신 후 첨부파일을 '.number_format($board->upload_count).'개 이하로 업로드 해주십시오.');
         } else {
-            for($i=0; $i<count($_FILES['attach_file']['name']); $i++) {
+            for($i=0; $i<notNullCount($_FILES['attach_file']['name']); $i++) {
                 // 파일 삭제 체크가 되어 있으면
                 if (isset($request->file_del[$i]) && $request->file_del[$i] > 0) {
                     // 삭제할 파일정보를 선택한다.
@@ -255,7 +255,7 @@ class BoardFile extends Model
             'write_id' => $writeId,
         ])->get();
 
-        if(count($delFiles) < 1) {
+        if(notNullCount($delFiles) < 1) {
             return true;
         }
 
@@ -280,7 +280,7 @@ class BoardFile extends Model
     {
         $result = true;
         // 첨부 파일 삭제
-        if(count($delFiles) > 0) {
+        if(notNullCount($delFiles) > 0) {
             foreach ($delFiles as $delFile) {
                 $result = $this->deleteFileOnServer($board, $tableName, $delFile->file) > 0 ? true : false;
             }

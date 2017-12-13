@@ -46,7 +46,7 @@ class FormMailSend extends Mailable implements ShouldQueue
 
         $theme = cache('config.theme')->name ? : 'default';
 
-        if(count($this->files) > 0) {
+        if(notNullCount($this->files) > 0) {
             foreach($this->files as $file) {
                 $mail->attach($file->path(), [
                     'as' => $file->getClientOriginalName(),

@@ -1,6 +1,6 @@
 <!-- 코멘트 -->
 <div class="bd_rd_bt">
-    <p class="bd_rd_cmthd">댓글 {{ count($comments) }}개</p>
+    <p class="bd_rd_cmthd">댓글 {{ notNullCount($comments) }}개</p>
 </div>
 
 <section id="bd_rd_cmt">

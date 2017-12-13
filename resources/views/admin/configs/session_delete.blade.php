@@ -13,7 +13,7 @@
         </ul>
     </div>
 </div>
-@if(count($sessions) == 0)
+@if(notNullCount($sessions) == 0)
     <div id="body_tab_type2">
         <span class="txt">삭제할 세션이 없습니다.</span>
     </div>

@@ -207,7 +207,7 @@
                     <input type="checkbox" id="{{ 'file_del'. $loop->index }}" name="file_del[{{ $loop->index }}]" value=1 />
                     <label for="{{ 'file_del'. $loop->index }}">{{ $boardFile->source.'('.$boardFile->filesize.') 파일 삭제' }}</label>
                 @endforeach
-                @for($i=count($boardFiles); $i<$board->upload_count; $i++)
+                @for($i=notNullCount($boardFiles); $i<$board->upload_count; $i++)
                     <input type="file" id="attach_file{{ $i }}" name="attach_file[]" placeholder="파일첨부" title="파일첨부 {{ $i + 1 }} : 용량 {{ $board->upload_size }} 바이트 이하만 업로드 가능">
                     @if($board->use_file_content)
                     <input type="text" class="form-control" id="file_content" name="file_content[]" title="파일 설명을 입력해 주세요." size="50" placeholder="파일 설명">

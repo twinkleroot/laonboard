@@ -56,7 +56,7 @@ class StatusController extends Controller
         $dataByPeriod = $this->getDataByPeriod($unit);
         // 차트를 구성할 데이터를 가져온다.
         $datas = $this->getChartSource($request, $dataByPeriod['query'], $unit);
-        if(count($datas) == 0) {
+        if(notNullCount($datas) == 0) {
             $params = array_add($params, 'message', '차트를 만들 데이터가 없습니다.');
             return $params;
         }

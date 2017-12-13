@@ -30,9 +30,9 @@
         </button>
     </div>
 @else
-    @if(Session::has('successAddress') && count(Session::get('successAddress')) > 0)
+    @if(Session::has('successAddress') && notNullCount(Session::get('successAddress')) > 0)
     <div id="adm_save">
-        <span class="adm_save_txt">다음 {{ count(Session::get('successAddress')) }}개의 메일 주소로 테스트 메일 발송이 완료되었습니다.</span>
+        <span class="adm_save_txt">다음 {{ notNullCount(Session::get('successAddress')) }}개의 메일 주소로 테스트 메일 발송이 완료되었습니다.</span>
         <button onclick="alertclose()" class="adm_alert_close">
             <i class="fa fa-times"></i>
         </button>

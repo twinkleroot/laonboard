@@ -18,9 +18,9 @@
         <a href="{{ route('admin.modules.index') }}">전체 모듈</a>
         <span class="count">{{ Module::count() }}</span>
         <a href="{{ route('admin.modules.index'). "?use=yes". ($keyword ? "&keyword=". $keyword : '') }}">사용중</a>
-        <span class="count use">{{ count(Module::enabled()) }}</span>
+        <span class="count use">{{ notNullCount(Module::enabled()) }}</span>
         <a href="{{ route('admin.modules.index'). "?use=no". ($keyword ? "&keyword=". $keyword : '') }}">미사용중</a>
-        <span class="count nonuse">{{ count(Module::disabled()) }}</span>
+        <span class="count nonuse">{{ notNullCount(Module::disabled()) }}</span>
     </span>
     <div class="submit_btn">
         {{-- <a class="btn btn-default" href="{{ route('admin.modules.create') }}" role="button">모듈 추가하기</a> --}}

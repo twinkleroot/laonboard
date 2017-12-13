@@ -37,7 +37,7 @@
         <ul id="adm_btn">
             <li>
                 <span>
-                    전체 {{ count($popups) }}건
+                    전체 {{ notNullCount($popups) }}건
                 </span>
             </li>
         </ul>

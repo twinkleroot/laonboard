@@ -125,7 +125,7 @@ class Notice
 
         preg_match_all($imgPattern, $content, $matches);
 
-        for($i=0; $i<count($matches[1]); $i++) {
+        for($i=0; $i<notNullCount($matches[1]); $i++) {
             $divImage1 = explode('.', basename($matches[1][$i]));
             $divImage2 = explode('_', $divImage1[0]);
             $realImageName = str_replace("thumb-", "", $divImage2[0]). '.'. last($divImage1);

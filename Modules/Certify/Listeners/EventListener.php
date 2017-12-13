@@ -136,7 +136,7 @@ class EventListener
         // ex 1) $segments = [ 'admin', 'boards', 'free', 'edit' ];
         // ex 2) $segments = [ 'admin', 'boards', 'create' ];
 
-        if(count($segments) < 4 && $segments[2] == 'create') {
+        if(notNullCount($segments) < 4 && $segments[2] == 'create') {
             $board = new \App\Models\Board();
             $type = $segments[2];
         } else {

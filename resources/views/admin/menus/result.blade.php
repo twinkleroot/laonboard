@@ -7,7 +7,7 @@
         </tr>
     </thead>
     <tbody>
-        @if(count($results) > 0)
+        @if(notNullCount($results) > 0)
         @foreach($results as $result)
         <tr>
             <td>{{ $result['subject'] }}</td>

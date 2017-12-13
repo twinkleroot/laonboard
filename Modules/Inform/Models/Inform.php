@@ -104,7 +104,7 @@ class Inform
         $currentPage = $request->filled('page') ? $request->page : 1 ;
         $informPageRow = 10;
         $sliceInforms = $informs->slice($informPageRow * ($currentPage - 1), $informPageRow);
-        $informs = new \App\Models\CustomPaginator($sliceInforms, count($informs), $informPageRow, $currentPage);
+        $informs = new \App\Models\CustomPaginator($sliceInforms, notNullCount($informs), $informPageRow, $currentPage);
 
         return $informs;
     }

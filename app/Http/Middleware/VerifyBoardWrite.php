@@ -39,7 +39,7 @@ class VerifyBoardWrite
         $board = $boardModel::getBoard($boardName, 'table_name');
 
         // 파일 업로드 권한 있는지 검사
-        if(count($request->attach_file) > 0) {
+        if(notNullCount($request->attach_file) > 0) {
             if($baseLevel < $board->upload_level) {
                 $message = '파일 업로드 권한이 없습니다.';
             }

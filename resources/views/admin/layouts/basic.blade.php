@@ -84,7 +84,7 @@ window.Laravel = {!! json_encode([
             <a href="#" class="sd_1depth">{{ $primaryMenu[0] }}</a>
         </div>
         {{ fireEvent('adminSubMenu') }}
-        @if(count(cache(auth()->user()->id_hashkey.'_admin_sub_menu')) > 0)
+        @if(notNullCount(cache(auth()->user()->id_hashkey.'_admin_sub_menu')) > 0)
         <ul class="sd_2depth">
         @foreach(cache(auth()->user()->id_hashkey.'_admin_sub_menu') as $subMenuCode => $subMenu)
             @if(substr($key, 0, 1) == substr($subMenuCode, 0, 1))

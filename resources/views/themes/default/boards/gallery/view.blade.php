@@ -123,10 +123,10 @@
 
     <p>{!! $write->content !!}</p>
 
-    @if(count($boardFiles) > 0)
+    @if(notNullCount($boardFiles) > 0)
         <div class="bd_file">
             <i class="fa fa-paperclip"></i>
-            <span class="bd_title">첨부된 파일 {{ count($boardFiles) }}개</span>
+            <span class="bd_title">첨부된 파일 {{ notNullCount($boardFiles) }}개</span>
             <ul class="bd_file_list" role="menu">
                 @foreach($boardFiles as $file)
                 <li>

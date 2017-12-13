@@ -37,7 +37,7 @@ class CreateContentsTable extends Migration
                 '<p align=center><b>개인정보 처리방침에 대한 내용을 입력하십시오.</b></p>',
                 '<p align=center><b>서비스 이용약관에 대한 내용을 입력하십시오.</b></p>'
             ];
-            for($i=0; $i<count($ids); $i++) {
+            for($i=0; $i<notNullCount($ids); $i++) {
                 Content::insert([
                     'content_id' => $ids[$i],
                     'html' => 1,

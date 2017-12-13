@@ -18,7 +18,7 @@
 @section('content')
 <div id="pushmsg" class="container">
     <div class="bd_head">
-        <span>전체 알림 총 {{ count($informs) }} 건</span>
+        <span>전체 알림 총 {{ notNullCount($informs) }} 건</span>
     </div>
     <form id="deleteAllForm" action="{{ route('inform.destroy') }}" method="POST">
         {{ csrf_field() }}

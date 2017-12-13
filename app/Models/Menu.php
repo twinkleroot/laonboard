@@ -96,7 +96,7 @@ class Menu extends Model
         $groupCode = null;
         $primaryCode = null;
 
-        $count = count($menus['code']);
+        $count = notNullCount($menus['code']);
 
         for($i=0; $i<$count; $i++) {
             $code = $menus['code'][$i];
@@ -173,7 +173,7 @@ class Menu extends Model
     public function getSubMenuList($menuList)
     {
         $subMenuList = [];
-        for($i=0; $i<count($menuList); $i++) {
+        for($i=0; $i<notNullCount($menuList); $i++) {
             $subMenuList[$i] = Menu::where('use', 1)
                     ->whereRaw('length(code) = 4')
                     ->whereRaw('substring(code, 1, 2)=' . "'{$menuList[$i]['code']}'")

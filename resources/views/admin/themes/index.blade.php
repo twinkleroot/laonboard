@@ -49,7 +49,7 @@
 </div>
 <div class="body-contents">
 <section id="theme" class="adm_box">
-    <p>설치된 테마 : {{ count($themes) }}</p>
+    <p>설치된 테마 : {{ notNullCount($themes) }}</p>
     <ul class="theme_list">
         @forelse($themes as $theme)
         <li class="themebox">

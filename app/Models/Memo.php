@@ -130,7 +130,7 @@ class Memo extends Model
     {
         if(!session()->get('admin')) {
             if($toList) {
-                $point = Cache::get('config.homepage')->memoSendPoint * count($toList);
+                $point = Cache::get('config.homepage')->memoSendPoint * notNullCount($toList);
                 if($point && ($currentUser->point - $point < 0)) {
                     abort(500, "보유하신 포인트(". number_format($currentUser->point). "점)가 모자라서 쪽지를 보낼 수 없습니다.");
                 }

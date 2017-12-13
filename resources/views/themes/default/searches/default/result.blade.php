@@ -57,7 +57,7 @@
                     <h2>[{{ $keyword }}] 전체검색 결과 게시판</h2>
                     <dl>
                         <dt>게시판</dt>
-                        <dd><strong class="sch_word">{{ count($boards) }}개</strong></dd>
+                        <dd><strong class="sch_word">{{ notNullCount($boards) }}개</strong></dd>
                         <dt>게시물</dt>
                         <dd><strong class="sch_word">{{ $writes->total() }}개</strong></dd>
                     </dl>
@@ -68,7 +68,7 @@
                     <ul>
                         <li><a href="/searches?{{ $allBoardTabQueryString }}">전체게시판</a></li>
                         @foreach($boards as $board)
-                            <li><a href="/searches?{{ $boardTabQueryString }}&amp;boardName={{ $board->boardName }}"><strong>{{ $board->boardSubject }}</strong> <span class="count">{{ count($board) }}</span></a></li>
+                            <li><a href="/searches?{{ $boardTabQueryString }}&amp;boardName={{ $board->boardName }}"><strong>{{ $board->boardSubject }}</strong> <span class="count">{{ notNullCount($boards) }}</span></a></li>
                         @endforeach
                     </ul>
                 </div>

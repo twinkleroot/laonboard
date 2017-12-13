@@ -84,7 +84,7 @@ class Write extends Model implements WriteInterface
         // 현재 선택한 카테고리 구하기
         $queryStr = explode('category=', urldecode($request->fullUrl()));
         $currenctCategory = '';
-        if(count($queryStr) > 1) {
+        if(notNullCount($queryStr) > 1) {
             $currenctCategory = explode('&', $queryStr[1])[0];
             $viewParams['category'] = 'category='. $currenctCategory;
         }
@@ -208,7 +208,7 @@ class Write extends Model implements WriteInterface
             } else if(str_contains($kind, '||')) { // 제목 + 내용으로 검색
                 $kinds = explode('||', preg_replace("/\s+/", "", $kind));
                 // 검색 쿼리 붙이기
-                for($i=0; $i<count($kinds); $i++) {
+                for($i=0; $i<notNullCount($kinds); $i++) {
                     if (preg_match("/[a-zA-Z]/", $keyword)) {
                         $whereStr = "INSTR(LOWER($kinds[$i]), LOWER('$keyword'))";
                     } else {
@@ -252,7 +252,7 @@ class Write extends Model implements WriteInterface
         $notices = explode(',', trim($this->board->notice));
         $notices = array_filter($notices);
 
-        return count($notices) > 0 ? true : false;
+        return notNullCount($notices) > 0 ? true : false;
     }
 
     // 수동 페이징
@@ -283,7 +283,7 @@ class Write extends Model implements WriteInterface
         // 수동으로 페이징할 땐 컬렉션을 잘라주어야 한다.
         $sliceWrites = $mergeWrites->slice($this->board->page_rows * ($currentPage - 1), $this->board->page_rows);
 
-        $writes = new CustomPaginator($sliceWrites, count($mergeWrites), $this->board->page_rows, $currentPage);
+        $writes = new CustomPaginator($sliceWrites, notNullCount($mergeWrites), $this->board->page_rows, $currentPage);
 
         return $writes;
     }
@@ -315,7 +315,7 @@ class Write extends Model implements WriteInterface
         } else {	// 에디터로 작성한 내용에 이미지가 있는지 검사해서 있으면 하나만 썸네일로 만들어서 가져온다.
             preg_match_all("/<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/i", $write->content, $matches);
 
-            for($i=0; $i<count($matches[1]); $i++) {
+            for($i=0; $i<notNullCount($matches[1]); $i++) {
                 $imageFileInfo = getViewThumbnail($this->board, basename($matches[1][$i]), 'editor', 'list');
                 $imageFileInfo = array_add($imageFileInfo, 'path', '/storage/editor/'. $imageFileInfo['name']);
                 break;
@@ -742,10 +742,10 @@ class Write extends Model implements WriteInterface
                 'homepage' => $homepage,
                 'password' => is_null($user) ? bcrypt($inputData['password']) : $password,
                 'ip' => $request->ip(),
-                'option' => count($options) > 0 ? implode(',', $options) : null,
+                'option' => notNullCount($options) > 0 ? implode(',', $options) : null,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
-                'file' => count($request->attach_file),
+                'file' => notNullCount($request->attach_file),
                 'link1' => $request->link1 && !str_contains($request->link1, ['http://', 'https://']) ? 'http://'. $request->link1 : $request->link1,
                 'link2' => $request->link2 && !str_contains($request->link2, ['http://', 'https://']) ? 'http://'. $request->link2 : $request->link2,
                 'hit' => 1,
@@ -872,7 +872,7 @@ class Write extends Model implements WriteInterface
             $inputData,
             [
                 'ip' => $request->ip(),
-                'option' => count($options) > 0 ? implode(',', $options) : null,
+                'option' => notNullCount($options) > 0 ? implode(',', $options) : null,
                 'updated_at' => Carbon::now(),
                 'file' => $file,
             ]
@@ -941,7 +941,7 @@ class Write extends Model implements WriteInterface
         preg_match_all($pattern, $content, $matches);
 
         $imageName = array();
-        for($i=0; $i<count($matches[1]); $i++) {
+        for($i=0; $i<notNullCount($matches[1]); $i++) {
             // 이미지 파일만 추출해서 배열에 담는다.
             array_push($imageName, basename($matches[1][$i]));
         }
@@ -963,7 +963,7 @@ class Write extends Model implements WriteInterface
     private function registerNotice($writeId) {
        $notice = $this->board->notice;
        $notices = explode(',', $notice);
-       if(count($notices)>0) {
+       if(notNullCount($notices)>0) {
            if(!array_search($writeId, $notices) ) {
                array_push($notices, $writeId);
                // 오름차순으로 정렬
@@ -990,7 +990,7 @@ class Write extends Model implements WriteInterface
                unset($noticeArr[$key]);
            }
            $notices = null;
-           if(count($noticeArr) > 0) {
+           if(notNullCount($noticeArr) > 0) {
                $notices = implode(',', $noticeArr);
            }
            $this->board->update(['notice' => $notices]);

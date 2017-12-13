@@ -1,6 +1,6 @@
 <div id="manual_comment">
     <div class="cmt_head">
-        <span>댓글 {{ count($comments) }}개</span>
+        <span>댓글 {{ notNullCount($comments) }}개</span>
     </div>
     <section id="cmt">
     @forelse($comments as $comment)

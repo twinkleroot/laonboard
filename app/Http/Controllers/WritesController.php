@@ -145,7 +145,7 @@ class WritesController extends Controller
 
         $write = $this->writeModel->storeWrite($this->writeModel, $request);
 
-        if(count($request->attach_file) > 0) {
+        if(notNullCount($request->attach_file) > 0) {
             try {
                 $this->boardFileModel->createBoardFiles($request, $this->writeModel->board->id, $write->id);
             } catch(Exception $e) {
@@ -218,7 +218,7 @@ class WritesController extends Controller
         $this->validate($request, $rules, $messages);
 
         $fileCount = $this->writeModel::getWrite($this->writeModel->board->id, $writeId)->file;
-        if(count($request->file_del) > 0 || count($request->attach_file) > 0) {
+        if(notNullCount($request->file_del) > 0 || notNullCount($request->attach_file) > 0) {
             // 첨부 파일 변경
             $fileCount = $this->boardFileModel->updateBoardFiles($request, $this->writeModel->board->id, $writeId);
         }

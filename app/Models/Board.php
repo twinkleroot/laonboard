@@ -105,7 +105,7 @@ class Board extends Model implements BoardInterface
             'direction' => $direction == 'desc' ? 'asc' : 'desc',
             'queryString' => $queryString,
             'skins' => getSkins('boards'),
-            // 'mobileSkins' => count(getSkins('boardMobile')) == 1 ? getSkins('board') : getSkins('boardMobile'),
+            // 'mobileSkins' => notNullCount(getSkins('boardMobile')) == 1 ? getSkins('board') : getSkins('boardMobile'),
         ];
     }
 
@@ -165,7 +165,7 @@ class Board extends Model implements BoardInterface
             'type' => 'create',
             'queryString' => '',
             'skins' => getSkins('boards'),
-            // 'mobileSkins' => count(getSkins('boardMobile')) > 1 ? getSkins('boardMobile') : getSkins('board'),
+            // 'mobileSkins' => notNullCount(getSkins('boardMobile')) > 1 ? getSkins('boardMobile') : getSkins('board'),
         ];
     }
 
@@ -212,7 +212,7 @@ class Board extends Model implements BoardInterface
             'type' => 'edit',
             'skins' => getSkins('boards'),
             'queryString' => $queryString,
-            // 'mobileSkins' => count(getSkins('boardMobile')) > 1 ? getSkins('boardMobile') : getSkins('board'),
+            // 'mobileSkins' => notNullCount(getSkins('boardMobile')) > 1 ? getSkins('boardMobile') : getSkins('board'),
         ];
     }
 
@@ -488,7 +488,7 @@ class Board extends Model implements BoardInterface
             $write->setTableName($boardName);
 
             $writes = $write->whereIn('id', $ids)->get();
-            if(count($writes) == 2) {
+            if(notNullCount($writes) == 2) {
                 $numOne = $writes->get(0)->num;
                 $numTwo = $writes->get(1)->num;
                 $replyOne = $writes->get(0)->reply;

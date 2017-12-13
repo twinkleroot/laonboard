@@ -13,7 +13,7 @@
         </ul>
     </div>
 </div>
-@if(count($caches) == 0)
+@if(notNullCount($caches) == 0)
     <div id="body_tab_type2">
         <span class="txt">삭제할 최신글 캐시파일이 없습니다.</span>
     </div>

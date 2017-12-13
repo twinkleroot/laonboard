@@ -13,7 +13,7 @@
         </ul>
     </div>
 </div>
-@if(count($files) == 0)
+@if(notNullCount($files) == 0)
     <div id="body_tab_type2">
         <span class="txt">삭제할 썸네일파일이 없습니다.</span>
     </div>

@@ -1,5 +1,19 @@
 <?php
 
+// php 7.2 에서 count(arg)에 arg가 null 이면 오류나는 문제 해결을 위해 사용
+if(! function_exists('isNotNullCount')) {
+    function notNullCount($countable)
+    {
+        if(isset($countable)) {
+            if(is_object($countable) || is_array($countable)) {
+                return count($countable);
+            }
+        }
+
+        return 0;
+    }
+}
+
 // 설정 값 추가
 if(! function_exists('addCustomConfig')) {
     function addCustomConfig($name, $data)
@@ -66,7 +80,7 @@ if(! function_exists('fireEvent')) {
     {
         $classes = config("event.$tag");
 
-        if(count($classes) > 0) {
+        if(notNullCount($classes) > 0) {
             // priority 오름차순으로 이벤트 실행 순서 정렬하기
             $classes = array_sort($classes, function($value) {
                 return $value['priority'];
@@ -190,7 +204,7 @@ if(! function_exists('includeImagePathByEditor')) {
 
         preg_match_all($imgPattern, $content, $matches);
 
-        for($i=0; $i<count($matches[1]); $i++) {
+        for($i=0; $i<notNullCount($matches[1]); $i++) {
             // 썸네일 만들기
             $imageFileInfo = getViewThumbnail($board, basename($matches[1][$i]), 'editor');
             if(!$imageFileInfo) {
@@ -720,7 +734,7 @@ if (! function_exists('getSkins')) {
             }
         }
 
-        if(count($result) == 1) {
+        if(notNullCount($result) == 1) {
             $path = resource_path("views/themes/default/$type");
             if(File::exists($path)) {
                 $dirs = File::directories($path);
@@ -876,7 +890,7 @@ if (! function_exists('searchKeyword')) {
         // "/(검색1|검색2)/i" 와 같은 패턴을 만듬
         $pattern = '';
         $bar = '';
-        for ($m=0; $m<count($s); $m++) {
+        for ($m=0; $m<notNullCount($s); $m++) {
             if (trim($s[$m]) == '') continue;
             $tmp_str = quotemeta($s[$m]);
             $tmp_str = str_replace($src, $dst, $tmp_str);
@@ -1117,7 +1131,7 @@ if (! function_exists('getEmailAddress')) {
     {
         preg_match("/[0-9a-z._-]+@[a-z0-9._-]{4,}/i", $email, $matches);
 
-        return count($matches) > 0 ? $matches[0] : '';
+        return notNullCount($matches) > 0 ? $matches[0] : '';
     }
 }
 
