@@ -140,7 +140,11 @@ class Group extends Model
         $data['created_at'] = Carbon::now();
         $data['updated_at'] = Carbon::now();
 
-        return Group::insert($data);
+        if(Group::insertGetId($data)) {
+            return $data['group_id'];
+        }
+
+        return 0;
 
     }
 

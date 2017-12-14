@@ -48,6 +48,9 @@ class BoardsController extends Controller
         if (auth()->user()->cant('create', $this->boardModel)) {
             abort(403, '게시판 생성에 대한 권한이 없습니다.');
         }
+        if(!\App\Models\Group::first()) {
+            return alertRedirect('게시판그룹이 한개 이상 생성되어야 합니다.', route('admin.groups.create'));
+        }
 
         $params = $this->boardModel->getBoardCreateParams($request);
 

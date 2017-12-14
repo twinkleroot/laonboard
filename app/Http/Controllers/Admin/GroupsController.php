@@ -73,8 +73,9 @@ class GroupsController extends Controller
             return redirect(route('admin.groups.create'))->with('message', '이미 존재하는 그룹 ID입니다.');
         }
 
-        if( $this->groupModel->storeGroup($request->all()) ) {
-            return redirect(route('admin.groups.index'))->with('message', $request->get('subject') . '게시판 그룹을 생성하였습니다.');
+        $groupId = $this->groupModel->storeGroup($request->all());
+        if($groupId) {
+            return redirect(route('admin.groups.edit', $groupId))->with('message', $request->get('subject') . '게시판 그룹을 생성하였습니다.');
         } else {
             return redirect(route('admin.groups.create'))->with('message', $request->get('subject') . '게시판 그룹 생성에 실패하였습니다.');
         }
