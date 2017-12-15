@@ -21,10 +21,8 @@
 // 기본 홈
 Route::get('/', ['as' => 'home', 'uses' => 'MainController@index'] );
 
-// 로그인 후 리다이렉트
-Route::get('/home', function() {
-    return redirect(route('home'));
-});
+// 홈으로 리다이렉트
+Route::redirect('/home', route('home'));
 
 // 게시판 그룹별 메인
 Route::get('/groups/{group}', ['as' => 'group', 'uses' => 'GroupsController@index'] );

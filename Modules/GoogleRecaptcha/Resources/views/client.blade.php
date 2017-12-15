@@ -49,7 +49,7 @@ function recaptchaClient()
 $(function() {
     var clientKey = "{{ cache("config.recaptcha")->googleInvisibleClient }}";
     if(!clientKey) {
-        alert("모듈 관리에서 자동등록방지(Google Invisible reCAPTCHA)키가 등록되지 않아서 회원가입을 진행할 수 없습니다. 관리자에게 문의하여 주십시오.");
+        alert("모듈 관리에서 자동등록방지(Google Invisible reCAPTCHA)키가 등록되지 않아서 진행할 수 없습니다. 관리자에게 문의하여 주십시오.");
 
         location.href="/";
     }
